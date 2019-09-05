@@ -55,7 +55,7 @@ final class CBModelInspector {
 
             'associations' => CBModelAssociations::fetch($ID),
 
-            'associationOf' => CBModelAssociations::fetch(null, null, $ID),
+            'associatedWith' => CBModelAssociations::fetch(null, null, $ID),
 
             'modelID' => $ID,
         ];

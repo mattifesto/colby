@@ -148,6 +148,85 @@ var CBModelInspector = {
         /**
          * @return Element
          */
+        function IDDidChange_createAssociatedWithElement() {
+            let element = CBUI.createElement(
+                "CBModelInspector_associatedWith"
+            );
+
+            if (modelData.associatedWith.length === 0) {
+                return element;
+            }
+
+            let titleElement = CBUI.createElement(
+                "CBUI_title1"
+            );
+
+            titleElement.textContent = "Associated With";
+
+            element.appendChild(titleElement);
+
+            let sectionContainerElement = CBUI.createElement(
+                "CBUI_sectionContainer"
+            );
+
+            element.appendChild(sectionContainerElement);
+
+            let sectionElement = CBUI.createElement(
+                "CBUI_section"
+            );
+
+            sectionContainerElement.appendChild(sectionElement);
+
+            modelData.associatedWith.forEach(
+                function renderAssociation(association) {
+                    let associationElement = CBUI.createElement(
+                        "CBUI_container_leftAndRight"
+                    );
+
+                    sectionElement.appendChild(associationElement);
+
+                    /* associated with ID */
+
+                    let associatedWithIDElement = CBUI.createElement(
+                        "CBUI_textSize_small CBUI_fontFamily_monospace",
+                        "a"
+                    );
+
+                    let associatedWithID = CBModel.valueAsID(
+                        association,
+                        "ID"
+                    );
+
+                    associatedWithIDElement.href = (
+                        "/admin/?c=CBModelInspector&ID=" +
+                        associatedWithID
+                    );
+
+                    associatedWithIDElement.textContent = associatedWithID;
+
+                    associationElement.appendChild(associatedWithIDElement);
+
+                    /* association key */
+
+                    let associationKeyElement = CBUI.createElement();
+
+                    associationKeyElement.textContent = CBModel.valueToString(
+                        association,
+                        "className"
+                    );
+
+                    associationElement.appendChild(associationKeyElement);
+                }
+            );
+
+            return element;
+        }
+        /* IDDidChange_createAssociatedWithElement() */
+
+
+        /**
+         * @return Element
+         */
         function IDDidChange_createAssociationsElement() {
             let element = CBUI.createElement(
                 "CBModelInspector_associations"
@@ -443,6 +522,13 @@ var CBModelInspector = {
 
             containerElement.appendChild(
                 IDDidChange_createAssociationsElement()
+            );
+
+
+            /* associated with */
+
+            containerElement.appendChild(
+                IDDidChange_createAssociatedWithElement()
             );
 
 
