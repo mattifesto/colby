@@ -117,7 +117,7 @@ final class CBModelAssociations_Tests {
         {
             if ($associations[0] != $association1) {
                 return CBTest::resultMismatchFailure(
-                    'assocations check 1',
+                    'associations check 1',
                     $associations[0],
                     $association1
                 );
@@ -148,7 +148,7 @@ final class CBModelAssociations_Tests {
         {
             if (!in_array($association2_1, $associations)) {
                 return CBTest::resultMismatchFailure(
-                    'assocations check 2_1',
+                    'associations check 2_1',
                     $associations,
                     $association2_1
                 );
@@ -161,7 +161,7 @@ final class CBModelAssociations_Tests {
         {
             if (!in_array($association2_2, $associations)) {
                 return CBTest::resultMismatchFailure(
-                    'assocations check 2_2',
+                    'associations check 2_2',
                     $associations,
                     $association2_2
                 );
