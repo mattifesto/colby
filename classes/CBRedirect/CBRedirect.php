@@ -25,15 +25,37 @@ final class CBRedirect {
      *              Example: "blog/my-day"
      *      }
      *
-     * @return ?object
+     * @return object
      */
-    static function CBModel_build(stdClass $spec): ?stdClass {
+    static function CBModel_build(stdClass $spec): stdClass {
         $model = (object)[
-            'classNameForKind' => trim(CBModel::valueToString($spec, 'classNameForKind')),
+            'classNameForKind' => trim(
+                CBModel::valueToString(
+                    $spec,
+                    'classNameForKind'
+                )
+            ),
+
             'isPublished' => !empty($spec->isPublished),
-            'publicationTimeStamp' => CBModel::valueAsInt($spec, 'publicationTimeStamp'),
-            'redirectToURI' => CBConvert::stringToURI(CBModel::valueToString($spec, 'redirectToURI')),
-            'URI' => CBConvert::stringToURI(CBModel::valueToString($spec, 'URI')),
+
+            'publicationTimeStamp' => CBModel::valueAsInt(
+                $spec,
+                'publicationTimeStamp'
+            ),
+
+            'redirectToURI' => CBConvert::stringToURI(
+                CBModel::valueToString(
+                    $spec,
+                    'redirectToURI'
+                )
+            ),
+
+            'URI' => CBConvert::stringToURI(
+                CBModel::valueToString(
+                    $spec,
+                    'URI'
+                )
+            ),
         ];
 
         $ID = CBModel::valueAsID($spec, 'ID');
@@ -48,6 +70,8 @@ final class CBRedirect {
 
         return $model;
     }
+    /* CBModel_build() */
+
 
     /**
      * @param [ID] $IDs
@@ -59,6 +83,7 @@ final class CBRedirect {
         CBPages::deletePagesFromTrashByID($IDs);
     }
 
+
     /**
      * @param [model] $models
      *
@@ -68,26 +93,42 @@ final class CBRedirect {
         CBPages::save($models);
     }
 
+
     /**
      * @param model $model
      *
      * @return ?model
      */
     static function CBPage_render(stdClass $model): void {
-        $URI = CBModel::valueToString($model, 'redirectToURI');
+        $URI = CBModel::valueToString(
+            $model,
+            'redirectToURI'
+        );
 
         if (empty($URI)) {
-            throw new Exception('The redirectToURI property value is empty.');
+            throw new Exception(
+                'The redirectToURI property value is empty.'
+            );
         }
 
         $URI = "/{$URI}/";
 
-        if ($queryString = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY)) {
+        $queryString = parse_url(
+            $_SERVER['REQUEST_URI'],
+            PHP_URL_QUERY
+        );
+
+        if ($queryString) {
             $URI = "{$URI}?{$queryString}";
         }
 
-        header("Location: {$URI}", true, 301 /* permanent */);
+        header(
+            "Location: {$URI}",
+            true,
+            301 /* permanent */
+        );
 
         exit;
     }
+    /* CBPage_render() */
 }
