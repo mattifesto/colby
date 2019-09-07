@@ -98,4 +98,18 @@ final class CBModelUpdater {
 
         CBModelUpdater::save($updater);
     }
+
+
+    /**
+     * @param object $updates
+     *
+     * @return void
+     */
+    static function updateIfExists(stdClass $updates): void {
+        $updater = CBModelUpdater::fetch($updates);
+
+        if ($updater->original !== null) {
+            CBModelUpdater::save($updater);
+        }
+    }
 }
