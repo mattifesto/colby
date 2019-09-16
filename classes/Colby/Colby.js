@@ -548,18 +548,6 @@ var Colby = {
 
 
     /**
-     * This function is out of order to get the error handler set as soon as
-     * possible.
-     *
-     * @NOTE unknown original date
-     *
-     *      Some errors will somehow disable this error handling. It's very odd.
-     *      When this happens use debugging to find the error and once you fix
-     *      it the error handling will start working again. I'm not sure exactly
-     *      which errors cause this strange behavior.
-     *
-     *      @NOTE 2019_06_14 This hasn't been seen in a while.
-     *
      * @NOTE 2016_12_28
      *
      *      Because this makes an asynchronous request it will not work if there
@@ -579,33 +567,12 @@ var Colby = {
      *      don't remember right now why this is important and it was not
      *      originally documented.
      */
-    handleError: function (message, sourceURL, line, column, error) {
-        if (typeof error !== "object" || error === null) { /* IE11 */
-            error = {};
-        }
-
-        if (error.column === undefined) { /* IE11 */
-            error.column = column;
-        }
-
-        if (error.line === undefined) { /* IE11 */
-            error.line = line;
-        }
-
-        if (error.message === undefined) { /* IE11 */
-            error.message = message;
-        }
-
-        if (error.sourceURL === undefined) { /* IE11 */
-            error.sourceURL = sourceURL;
-        }
-
-        Colby.reportError(error);
+    handleError: function (errorEvent) {
+        Colby.reportError(errorEvent.error);
 
         return false;
     },
     /* handleError() */
-
 
     /**
      * @return undefined
@@ -1330,10 +1297,14 @@ var Colby = {
 
 
 /**
- * Set the error handler as soon as possible
- * to catch errors even if they occur later in this file.
+ * Set the error handler as soon as possible to catch errors even if they occur
+ * later in this file. If CBErrorHandler is loaded it will gracefully replace
+ * this handler.
  */
-window.onerror = Colby.handleError;
+window.addEventListener(
+    'error',
+    Colby.handleError
+);
 
 
 /* initialize */
