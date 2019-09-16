@@ -1302,7 +1302,7 @@ var Colby = {
  * this handler.
  */
 window.addEventListener(
-    'error',
+    "error",
     Colby.handleError
 );
 
