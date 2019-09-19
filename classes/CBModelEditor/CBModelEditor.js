@@ -93,7 +93,7 @@ var CBModelEditor = {
      */
     saveWasRejected: function (error) {
         if (error.ajaxResponse) {
-            Colby.displayResponse(error.ajaxResponse);
+            CBUIPanel.displayAjaxResponse(error.ajaxResponse);
         } else {
             Colby.alert(
                 error.message ||
