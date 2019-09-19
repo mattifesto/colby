@@ -16,9 +16,18 @@
     z-index: 1500; /* see CBEqualizePageSettingsPart.css */
 }
 
-.CBUIPanel.showing {
+
+/**
+ * @NOTE 2019_09_18
+ *
+ *      When the deprecated CBUIPanel functions are removed the display
+ *      declaration can be removed from CBUIPanel and this rule set can be
+ *      removed.
+ */
+.CBUIPanel_showing {
     display: block;
 }
+
 
 /**
  * The background element has the transparent black background and 10px of
@@ -36,7 +45,10 @@
     padding: 10px;
 }
 
+
 /**
+ * @deprecated 2019_09_18
+ *
  * The surface element has a white background and rounded corners. It is a
  * flexbox so that the interface element can always be aligned with its bottem
  * edge by having a margin-top value of "auto".
@@ -52,6 +64,28 @@
     color: var(--CBTextColor);
     flex: 1 0 auto;
 }
+
+
+/**
+ * The surface element has a white background and rounded corners. It's single
+ * child element will be styled to fill its full area.
+ */
+.CBUIPanel_surface2 {
+    display: flex;
+
+    background-color: var(--CBBackgroundColor);
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: var(--CBTextColor);
+    flex: 1 0 auto;
+    overflow: hidden;
+}
+
+.CBUIPanel_surface2 > * {
+    flex: 1 1 auto;
+    max-width: 100%;
+}
+
 
 /**
  * The CBUIPanel_message and CBUIPanel_content mimic the styles of a

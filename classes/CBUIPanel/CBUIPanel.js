@@ -17,6 +17,12 @@
  * This is the documentation for the API of the CBUIPanel object.
  *
  *      {
+ *          function displayAjaxResponse(ajaxResponse)
+ *
+ *          function displayElement(contentElement)
+ *
+ *          -- everything below is deprecated -- -- -- -- --
+ *
  *          buttons: [object] (get, set)
  *
  *              The default button of the panel is an OK button that hides the
@@ -96,30 +102,55 @@ Colby.afterDOMContentLoaded(
 
         let api = {
 
+            displayAjaxResponse: init_displayAjaxResponse,
+
+            displayElement: init_displayElement,
+
+            /**
+             * @deprecated 2019_09_19
+             */
             get buttons() {
                 return buttons;
             },
 
+            /**
+             * @deprecated 2019_09_19
+             */
             set buttons(value) {
                 init_setButtons(value);
             },
 
+            /**
+             * @deprecated 2019_09_19
+             */
             get isShowing() {
                 return isShowing;
             },
 
+            /**
+             * @deprecated 2019_09_19
+             */
             set isShowing(value) {
                 init_setIsShowing(value);
             },
 
+            /**
+             * @deprecated 2019_09_19
+             */
             get message() {
                 return message;
             },
 
+            /**
+             * @deprecated 2019_09_19
+             */
             set message(value) {
                 init_setMessage(value);
             },
 
+            /**
+             * @deprecated 2019_09_19
+             */
             reset: init_reset,
         };
 
@@ -179,6 +210,191 @@ Colby.afterDOMContentLoaded(
 
 
         /**
+         * @param Element contentElement
+         *
+         * @return Element
+         */
+        function init_createPanelElement(contentElement) {
+            let panelElement = document.createElement("div");
+            panelElement.className = "CBUIPanel CBUIPanel_showing";
+
+            let backgroundElement = document.createElement("div");
+            backgroundElement.className = "CBUIPanel_background";
+
+            panelElement.appendChild(backgroundElement);
+
+            let surfaceElement = document.createElement("div");
+            surfaceElement.className = "CBUIPanel_surface2";
+
+            backgroundElement.appendChild(surfaceElement);
+
+            surfaceElement.appendChild(contentElement);
+
+            return panelElement;
+        }
+        /* init_createPanelElement() */
+
+
+        /**
+         * @param object ajaxResponse
+         *
+         * @return undefined
+         */
+        function init_displayAjaxResponse(ajaxResponse) {
+            let element = CBUI.createElement();
+
+            /* message */
+            {
+                let sectionContainerElement = CBUI.createElement(
+                    "CBUI_sectionContainer CBUI_padding_half"
+                );
+
+                element.appendChild(sectionContainerElement);
+
+                let sectionElement = CBUI.createElement(
+                    "CBUI_section CBUI_section_noborder"
+                );
+
+                sectionContainerElement.appendChild(sectionElement);
+
+                let textContainerElement = CBUI.createElement(
+                    "CBUI_container_topAndBottom"
+                );
+
+                sectionElement.appendChild(textContainerElement);
+
+                let textElement = CBUI.createElement();
+
+                textElement.textContent = CBModel.valueToString(
+                    ajaxResponse,
+                    "message"
+                );
+
+                textContainerElement.appendChild(textElement);
+            }
+            /* message */
+
+            /* button */
+            {
+                let sectionContainerElement = CBUI.createElement(
+                    "CBUI_sectionContainer CBUI_padding_half"
+                );
+
+                element.appendChild(sectionContainerElement);
+
+                let sectionElement = CBUI.createElement(
+                    "CBUI_section CBUI_section_inner"
+                );
+
+                sectionContainerElement.appendChild(sectionElement);
+
+                let buttonElement = CBUI.createElement(
+                    "CBUI_action"
+                );
+
+                sectionElement.appendChild(buttonElement);
+
+                if (
+                    ajaxResponse.classNameForException ===
+                    "CBModelVersionMismatchException" ||
+                    ajaxResponse.userMustLogIn
+                ) {
+                    buttonElement.textContent = "Reload";
+
+                    buttonElement.addEventListener(
+                        "click",
+                        function () {
+                            location.reload();
+                        }
+                    );
+                } else {
+                    buttonElement.textContent = "Okay";
+
+                    buttonElement.addEventListener(
+                        "click",
+                        function () {
+                            element.CBUIPanel.hide();
+                        }
+                    );
+                }
+            }
+            /* button */
+
+            if (ajaxResponse.stackTrace) {
+                let titleElement = CBUI.createElement(
+                    "CBUI_title1"
+                );
+
+                titleElement.textContent = "Stack Trace";
+
+                element.appendChild(titleElement);
+
+                let sectionContainerElement = CBUI.createElement(
+                    "CBUI_sectionContainer CBUI_padding_half"
+                );
+
+                element.appendChild(sectionContainerElement);
+
+                let sectionElement = CBUI.createElement(
+                    "CBUI_section CBUI_section_inner"
+                );
+
+                sectionContainerElement.appendChild(sectionElement);
+
+                let textContainerElement = CBUI.createElement(
+                    "CBUI_container_topAndBottom"
+                );
+
+                sectionElement.appendChild(textContainerElement);
+
+                let textElement = CBUI.createElement(
+                    "CBUI_whiteSpace_preWrap"
+                );
+
+                textElement.textContent = CBModel.valueToString(
+                    ajaxResponse,
+                    "stackTrace"
+                );
+
+                textContainerElement.appendChild(textElement);
+            }
+            /* stack trace */
+
+            init_displayElement(element);
+        }
+        /* init_displayAjaxResponse() */
+
+
+        /**
+         * @param Element contentElement
+         *
+         * @return undefined
+         */
+        function init_displayElement(contentElement) {
+            if (contentElement.CBUIPanel !== undefined) {
+                throw Error("hello");
+            }
+
+            let panelElement = init_createPanelElement(contentElement);
+
+            document.body.appendChild(panelElement);
+
+            contentElement.CBUIPanel = {
+                hide: function CBUIPanel_hide() {
+                    document.body.removeChild(panelElement);
+
+                    contentElement.parentElement.removeChild(
+                        contentElement
+                    );
+
+                    contentElement.CBUIPanel = undefined;
+                }
+            };
+        }
+        /* init_displayElement() */
+
+
+        /**
          * @return undefined
          */
         function init_reset() {
@@ -194,6 +410,7 @@ Colby.afterDOMContentLoaded(
                 ]
             );
         }
+        /* init_reset() */
 
 
         /**
@@ -238,10 +455,10 @@ Colby.afterDOMContentLoaded(
             isShowing = !!value;
 
             if (isShowing) {
-                viewportElement.classList.add("showing");
+                viewportElement.classList.add("CBUIPanel_showing");
             } else {
                 viewportElement.scrollTop = 0;
-                viewportElement.classList.remove("showing");
+                viewportElement.classList.remove("CBUIPanel_showing");
             }
         }
         /* init_setIsShowing() */
