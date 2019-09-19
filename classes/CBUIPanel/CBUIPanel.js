@@ -106,6 +106,10 @@ Colby.afterDOMContentLoaded(
 
             displayElement: init_displayElement,
 
+            displayError: init_displayError,
+
+            displayText: init_displayText,
+
             /**
              * @deprecated 2019_09_19
              */
@@ -392,6 +396,101 @@ Colby.afterDOMContentLoaded(
             };
         }
         /* init_displayElement() */
+
+
+        /**
+         * @param Error error
+         *
+         * @return undefined
+         */
+        function init_displayError(error) {
+            if (!Colby.browserIsSupported) {
+                return;
+            }
+
+            if (error.ajaxResponse) {
+                init_displayAjaxResponse(
+                    error.ajaxResponse
+                );
+            } else {
+                init_displayText(
+                    Colby.errorToMessage(error)
+                );
+            }
+        }
+        /* init_displayError() */
+
+
+        /**
+         * @param string text
+         *
+         * @return undefined
+         */
+        function init_displayText(text) {
+            let element = CBUI.createElement();
+
+            /* message */
+            {
+                let sectionContainerElement = CBUI.createElement(
+                    "CBUI_sectionContainer CBUI_padding_half"
+                );
+
+                element.appendChild(sectionContainerElement);
+
+                let sectionElement = CBUI.createElement(
+                    "CBUI_section CBUI_section_noborder"
+                );
+
+                sectionContainerElement.appendChild(sectionElement);
+
+                let textContainerElement = CBUI.createElement(
+                    "CBUI_container_topAndBottom"
+                );
+
+                sectionElement.appendChild(textContainerElement);
+
+                let textElement = CBUI.createElement();
+
+                textElement.textContent = text;
+
+                textContainerElement.appendChild(textElement);
+            }
+            /* message */
+
+            /* button */
+            {
+                let sectionContainerElement = CBUI.createElement(
+                    "CBUI_sectionContainer CBUI_padding_half"
+                );
+
+                element.appendChild(sectionContainerElement);
+
+                let sectionElement = CBUI.createElement(
+                    "CBUI_section CBUI_section_inner"
+                );
+
+                sectionContainerElement.appendChild(sectionElement);
+
+                let buttonElement = CBUI.createElement(
+                    "CBUI_action"
+                );
+
+                buttonElement.textContent = "Okay";
+
+                buttonElement.addEventListener(
+                    "click",
+                    function () {
+                        element.CBUIPanel.hide();
+                    }
+                );
+
+                sectionElement.appendChild(buttonElement);
+            }
+            /* button */
+
+            init_displayElement(element);
+        }
+        /* init_displayText() */
 
 
         /**
