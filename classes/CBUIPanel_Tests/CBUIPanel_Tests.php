@@ -9,7 +9,7 @@ final class CBUIPanel_Tests {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v480.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v525.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -20,6 +20,7 @@ final class CBUIPanel_Tests {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBUI',
             'CBUIPanel',
         ];
     }
@@ -34,11 +35,24 @@ final class CBUIPanel_Tests {
     static function CBTest_getTests(): array {
         return [
             (object)[
+                'name' => 'deprecated',
+                'title' => 'CBUIPanel deprecated',
                 'type' => 'interactive',
-                'name' => 'show',
-
-                'title' =>
-                'CBUIPanel show panel',
+            ],
+            (object)[
+                'name' => 'displayElementThreeTimes',
+                'title' => 'CBUIPanel.displayElement() three times',
+                'type' => 'interactive',
+            ],
+            (object)[
+                'name' => 'displayError',
+                'title' => 'CBUIPanel.displayError()',
+                'type' => 'interactive',
+            ],
+            (object)[
+                'name' => 'displayTextThreeTimes',
+                'title' => 'CBUIPanel.displayText() three times',
+                'type' => 'interactive',
             ],
         ];
     }

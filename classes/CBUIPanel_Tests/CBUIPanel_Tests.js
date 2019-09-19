@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBUIPanel_Tests */
 /* global
+    CBUI,
     CBUIPanel,
 */
 
@@ -11,7 +12,7 @@ var CBUIPanel_Tests = {
     /**
      * @return object
      */
-    CBTest_show: function () {
+    CBTest_deprecated: function () {
         CBUIPanel.reset();
         CBUIPanel.message = `
 
@@ -45,6 +46,91 @@ var CBUIPanel_Tests = {
             succeeded: true,
         };
     },
-    /* CBTest_show() */
+    /* CBTest_deprecated() */
+
+
+    /**
+     * @return object
+     */
+    CBTest_displayElementThreeTimes: function () {
+        display("one", "red");
+        display("two", "green");
+        display("three", "blue");
+
+        return {
+            succeeded: true,
+        };
+
+        /* -- closures -- -- -- -- -- */
+
+        function display(text, color) {
+            let contentElement = CBUI.createElement();
+            contentElement.style.backgroundColor = color;
+            contentElement.textContent = text;
+
+            contentElement.addEventListener(
+                "click",
+                function clickEventListener() {
+                    contentElement.CBUIPanel.hide();
+                }
+            );
+
+            CBUIPanel.displayElement(contentElement);
+        }
+    },
+    /* CBTest_displayElementThreeTimes() */
+
+
+    /**
+     * @return object
+     */
+    CBTest_displayError: function () {
+        CBUIPanel.displayError(
+            TypeError("This is an example error.")
+        );
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_displayError() */
+
+
+    /**
+     * @return object
+     */
+    CBTest_displayTextThreeTimes: function () {
+        CBUIPanel.displayText(
+            `
+            He was so fluttered and so glowing with his good intentions, that
+            his broken voice would scarcely answer to his call. He had been
+            sobbing violently in his conflict with the Spirit, and his face was
+            wet with tears.
+            `
+        );
+
+        CBUIPanel.displayText(
+            `
+            “I will live in the Past, the Present, and the Future!”, Scrooge
+            repeated, as he scrambled out of bed. “The Spirits of all Three
+            shall strive within me. Oh Jacob Marley! Heaven, and the Christmas
+            Time be praised for this! I say it on my knees, old Jacob; on my
+            knees!”
+            `
+        );
+
+        CBUIPanel.displayText(
+            `
+            And the bedpost was his own. The bed was his own, the room was his
+            own. Best and happiest of all, the Time before him was his own, to
+            make amends in!
+            `
+        );
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_displayTextThreeTimes() */
 };
 /* CBUIPanel_Tests */
