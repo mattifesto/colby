@@ -1089,6 +1089,21 @@ final class CBCodeAdmin {
                         'CBUIPanel.displayText().'
                     ),
                 ],
+
+
+                /**
+                 * 2019_09_19 (warning)
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'Colby\.(displayError|displayAndReportError)',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace use of Colby.displayError() and ' .
+                        'Colby.displayAndReportError() with ' .
+                        'CBUIPanel.displayError().'
+                    ),
+                ],
             ]
         );
     }
