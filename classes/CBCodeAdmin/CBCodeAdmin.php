@@ -1104,6 +1104,21 @@ final class CBCodeAdmin {
                         'CBUIPanel.displayError().'
                     ),
                 ],
+
+
+                /**
+                 * 2019_09_19 (warning)
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'Colby\.(displayResponse|displayXHRError)',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace use of Colby.displayResponse() and ' .
+                        'Colby.displayXHRError() with ' .
+                        'CBUIPanel.displayAjaxResponse().'
+                    ),
+                ],
             ]
         );
     }
