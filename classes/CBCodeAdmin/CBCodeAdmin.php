@@ -1075,6 +1075,20 @@ final class CBCodeAdmin {
                         'CBUIPanel.displayElement().'
                     ),
                 ],
+
+
+                /**
+                 * 2019_09_19 (warning)
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'Colby\.alert\(',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace use of Colby.alert() with ' .
+                        'CBUIPanel.displayText().'
+                    ),
+                ],
             ]
         );
     }
