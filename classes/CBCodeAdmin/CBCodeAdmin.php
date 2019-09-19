@@ -1119,6 +1119,23 @@ final class CBCodeAdmin {
                         'CBUIPanel.displayAjaxResponse().'
                     ),
                 ],
+
+
+                /**
+                 * 2019_09_19 (warning)
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'Colby\.(createPanel|setPanelElement|setPanelText|showPanel)',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace use of Colby.createPanel() and ' .
+                        'Colby.setPanelElement() and ' .
+                        'Colby.setPanelText() and ' .
+                        'Colby.showPanel() with ' .
+                        'CBUIPanel.'
+                    ),
+                ],
             ]
         );
     }
