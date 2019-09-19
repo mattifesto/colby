@@ -37,6 +37,8 @@ var Colby = {
 
 
     /**
+     * @deprecated 2019_09_19 use CBUIPanel.displayText()
+     *
      * @param string text
      *
      * @return undefined
@@ -113,6 +115,8 @@ var Colby = {
 
 
     /**
+     * @deprecated 2019_09_19 use CBUIPanel
+     *
      * @return undefined
      */
     createPanel: function () {
@@ -294,6 +298,8 @@ var Colby = {
 
 
     /**
+     * @deprecated 2019_09_19 use CBUIPanel.displayError()
+     *
      * Use this function with promises to display error messages to the user and
      * report the error to the server.
      *
@@ -310,6 +316,8 @@ var Colby = {
 
 
     /**
+     * @deprecated 2019_09_19 use CBUIPanel.displayError()
+     *
      * Use this function with promises to display error messages to the user.
      *
      *      callAjaxFunction().catch(Colby.displayError)
@@ -335,6 +343,8 @@ var Colby = {
 
 
     /**
+     * @deprecated 2019_09_19 use CBUIPanel.displayAjaxResponse()
+     *
      * @param object ajaxResponse
      *
      * @return undefined
@@ -407,6 +417,8 @@ var Colby = {
 
 
     /**
+     * @deprecated 2019_09_19 use CBUIPanel.displayAjaxResponse()
+     *
      * This function can be used as a handler for XHR.onerror
      *
      * @param XMLHttpRequest args.xhr
@@ -464,7 +476,7 @@ var Colby = {
     /**
      * @param Error error
      *
-     * @return string
+     * @return string (text)
      */
     errorToMessage: function (error) {
         var message = error.message || "(no message)";
@@ -816,6 +828,8 @@ var Colby = {
 
 
     /**
+     * @deprecated 2019_09_19 use CBUIPanel
+     *
      * @param Element element
      *
      * @return undefined
@@ -832,6 +846,8 @@ var Colby = {
 
 
     /**
+     * @deprecated 2019_09_19 use CBUIPanel
+     *
      * @param string text
      *
      * @return undefined
@@ -845,6 +861,8 @@ var Colby = {
 
 
     /**
+     * @deprecated 2019_09_19 use CBUIPanel
+     *
      * @return undefined
      */
     showPanel: function () {
