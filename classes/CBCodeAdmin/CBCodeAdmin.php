@@ -1061,6 +1061,20 @@ final class CBCodeAdmin {
                         '"src" property on the CBUIImageChooser object.'
                     ),
                 ],
+
+
+                /**
+                 * 2019_09_19 (warning)
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'CBUIPanel\.(buttons|isShowing|message|reset)',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace use of deprecated CBUIPanel API with ' .
+                        'CBUIPanel.displayElement().'
+                    ),
+                ],
             ]
         );
     }
