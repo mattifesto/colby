@@ -77,4 +77,6 @@ try {
         __FILE__ .
         ": \"{$message}\" in {$filename} line {$line}"
     );
+
+    exit(1);
 }
