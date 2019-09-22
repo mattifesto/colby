@@ -594,9 +594,17 @@ EOT
                 include_once $libraryVersionFilepath;
             }
 
-            include_once $libraryConfigurationFilepath;
-
+            /**
+             * The library directory must be added before the library
+             * configuration file is included so that the library configuration
+             * file can autoload classes in the library if it needs to.
+             *
+             * The library version file must run without the library directory
+             * added.
+             */
             Colby::$libraryDirectories[] = $libraryPath;
+
+            include_once $libraryConfigurationFilepath;
         }
     }
     /* loadLibrary() */
