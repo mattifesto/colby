@@ -95,7 +95,7 @@ EOT;
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v481.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v528.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -107,6 +107,7 @@ EOT;
     static function CBHTMLOutput_requiredClassNames() {
         return [
             'CBUI',
+            'CBUIPanel',
             'Colby',
         ];
     }

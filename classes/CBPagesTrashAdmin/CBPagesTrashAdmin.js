@@ -4,6 +4,7 @@
 /* exported CBPagesTrashAdmin */
 /* global
     CBUI,
+    CBUIPanel,
     Colby,
 */
 
@@ -44,7 +45,8 @@ var CBPagesTrashAdmin = {
             }
         ).catch(
             function (error) {
-                Colby.displayAndReportError(error);
+                CBUIPanel.displayError(error);
+                Colby.reportError(error);
             }
         );
 
@@ -91,7 +93,8 @@ var CBPagesTrashAdmin = {
                                 }
                             ).catch(
                                 function (error) {
-                                    Colby.displayAndReportError(error);
+                                    CBUIPanel.displayError(error);
+                                    Colby.reportError(error);
                                 }
                             );
                         }
@@ -118,11 +121,14 @@ var CBPagesTrashAdmin = {
                                         sectionItem.element
                                     );
 
-                                    Colby.alert("The page was successfully deleted.");
+                                    CBUIPanel.displayText(
+                                        "The page was successfully deleted."
+                                    );
                                 }
                             ).catch(
                                 function (error) {
-                                    Colby.displayAndReportError(error);
+                                    CBUIPanel.displayError(error);
+                                    Colby.reportError(error);
                                 }
                             );
                         }
