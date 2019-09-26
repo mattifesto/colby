@@ -334,7 +334,7 @@ var Colby = {
         if (error.ajaxResponse) {
             Colby.displayResponse(error.ajaxResponse);
         } else {
-            Colby.alert(
+            window.alert(
                 Colby.errorToMessage(error)
             );
         }
@@ -1343,7 +1343,7 @@ window.addEventListener(
     ) {
         browserIsSupported = true;
     } else {
-        Colby.alert(
+        window.alert(
             "The web browser you are using is no longer supported by this" +
             " website. Use a recent version a regularly maintained browser" +
             " such as Chrome, Edge, Firefox, or Safari."
