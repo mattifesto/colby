@@ -7,6 +7,7 @@
     CBUICommandPart,
     CBUINavigationArrowPart,
     CBUINavigationView,
+    CBUIPanel,
     CBUISelectableItem,
     CBUISelectableItemContainer,
     CBUISelector,
@@ -56,6 +57,7 @@ var CBUISpecArrayEditor = {
 
         let addCommand = CBUICommandPart.create();
         addCommand.title = "Add";
+
         addCommand.callback = function () {
             requestClassName().then(
                 function (className) {
@@ -63,7 +65,8 @@ var CBUISpecArrayEditor = {
                 }
             ).catch(
                 function (error) {
-                    Colby.displayAndReportError(error);
+                    CBUIPanel.displayError(error);
+                    Colby.reportError(error);
                 }
             );
 
@@ -144,10 +147,14 @@ var CBUISpecArrayEditor = {
 
         let copyCommand = CBUICommandPart.create();
         copyCommand.title = "Copy";
+
         copyCommand.callback = function () {
             let count = copySelectedItems();
 
-            Colby.alert(count + " items were copied to the clipboard");
+            CBUIPanel.displayText(
+                count +
+                " items were copied to the clipboard"
+            );
         };
 
         selectableItemContainer.commands.push(copyCommand);
@@ -347,7 +354,10 @@ var CBUISpecArrayEditor = {
              *
              * @return undefined
              */
-            function requestClassName_initializePromise(resolve /* , reject */) {
+            function requestClassName_initializePromise(
+                resolve
+                /* , reject */
+            ) {
                 if (
                     !Array.isArray(addableClassNames) ||
                     addableClassNames.length === 0

@@ -20,7 +20,7 @@ final class CBUISpecArrayEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v483.js', cbsysurl())
+            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl())
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -35,6 +35,7 @@ final class CBUISpecArrayEditor {
             'CBUICommandPart',
             'CBUINavigationArrowPart',
             'CBUINavigationView',
+            'CBUIPanel',
             'CBUISelectableItem',
             'CBUISelectableItemContainer',
             'CBUISelector',
@@ -42,7 +43,8 @@ final class CBUISpecArrayEditor {
             'CBUISpecClipboard',
             'CBUISpecEditor',
             'CBUIThumbnailPart',
-            'CBUITitleAndDescriptionPart'
+            'CBUITitleAndDescriptionPart',
+            'Colby',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
