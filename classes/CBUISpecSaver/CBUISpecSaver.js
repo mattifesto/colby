@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBModel */
 /* globals
+    CBUIPanel,
     Colby,
 */
 
@@ -23,7 +24,9 @@ var CBUISpecSaver = {
      */
     create: function (args) {
         if (CBUISpecSaver.specDataByID[args.spec.ID]) {
-            Colby.alert("This spec already has a specSaver.");
+            CBUIPanel.displayText(
+                "This spec already has a specSaver."
+            );
         } else {
             CBUISpecSaver.specDataByID[args.spec.ID] = {
                 fulfilledCallback: args.fulfilledCallback,
@@ -32,9 +35,12 @@ var CBUISpecSaver = {
             };
         }
 
-        var specChangedCallback = CBUISpecSaver.specDidChange.bind(undefined, {
-            ID: args.spec.ID,
-        });
+        var specChangedCallback = CBUISpecSaver.specDidChange.bind(
+            undefined,
+            {
+                ID: args.spec.ID,
+            }
+        );
 
         return {
             specChangedCallback: specChangedCallback,
@@ -53,25 +59,41 @@ var CBUISpecSaver = {
             return CBUISpecSaver.flushPromise;
         }
 
-        Object.keys(CBUISpecSaver.specDataByID).forEach(function (ID) {
-            var specData = CBUISpecSaver.specDataByID[ID];
+        Object.keys(
+            CBUISpecSaver.specDataByID
+        ).forEach(
+            function (ID) {
+                var specData = CBUISpecSaver.specDataByID[ID];
 
-            if (specData.timeoutID) {
-                clearTimeout(specData.timeoutID);
-                specData.timeoutID = undefined;
-                CBUISpecSaver.requestSave({ID: ID});
+                if (specData.timeoutID) {
+                    clearTimeout(specData.timeoutID);
+
+                    specData.timeoutID = undefined;
+
+                    CBUISpecSaver.requestSave(
+                        {
+                            ID: ID
+                        }
+                    );
+                }
+
+                if (specData.promise) {
+                    promises.push(specData.promise);
+                }
             }
+        );
 
-            if (specData.promise) {
-                promises.push(specData.promise);
+        CBUISpecSaver.flushPromise = Promise.all(
+            promises
+        ).catch(
+            function (error) {
+                Colby.reportError(error);
             }
-        });
-
-        CBUISpecSaver.flushPromise = Promise.all(promises).catch(Colby.report).then(clear, clear);
-
-        function clear() {
-            CBUISpecSaver.flushPromise = undefined;
-        }
+        ).then(
+            function () {
+                CBUISpecSaver.flushPromise = undefined;
+            }
+        );
 
         return CBUISpecSaver.flushPromise;
     },
