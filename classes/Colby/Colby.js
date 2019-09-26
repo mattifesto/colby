@@ -284,12 +284,7 @@ var Colby = {
 
 
     /**
-     * @deprecated 2019_09_19 use CBUIPanel.displayError()
-     *
-     * Use this function with promises to display error messages to the user and
-     * report the error to the server.
-     *
-     *      callAjaxFunction().catch(Colby.displayAndReportError)
+     * @deprecated 2019_09_19 use CBErrorHandler.displayAndReport()
      *
      * @param Error error
      *
