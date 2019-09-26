@@ -12,12 +12,14 @@ final class CBPagesDevelopmentAdmin {
         ];
     }
 
+
     /**
      * @return string
      */
     static function CBAdmin_group() {
         return 'Developers';
     }
+
 
     /**
      * @return void
@@ -26,14 +28,16 @@ final class CBPagesDevelopmentAdmin {
         CBHTMLOutput::pageInformation()->title = 'Pages Development Admimistration';
     }
 
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v380.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v528.js', cbsysurl()),
         ];
     }
+
 
     /**
      * Get a list of all of the pages. This code is written with the
@@ -62,6 +66,7 @@ EOT;
         ];
     }
 
+
     /**
      * @return [string]
      */
@@ -70,10 +75,12 @@ EOT;
             'CBUI',
             'CBUIExpander',
             'CBUINavigationArrowPart',
+            'CBUIPanel',
             'CBUISectionItem4',
             'CBUIStringsPart',
         ];
     }
+
 
     /**
      * @return void
@@ -91,6 +98,7 @@ EOT;
             CBModels::save($spec);
         });
     }
+
 
     /**
      * @return [string]

@@ -6,9 +6,11 @@
     CBPagesDevelopmentAdmin_pages,
     CBUI,
     CBUINavigationArrowPart,
+    CBUIPanel,
     CBUISectionItem4,
     CBUIStringsPart,
-    Colby */
+    Colby,
+*/
 
 var CBPagesDevelopmentAdmin = {
 
@@ -23,10 +25,23 @@ var CBPagesDevelopmentAdmin = {
         {
             let sectionElement = CBUI.createSection();
             let sectionItem = CBUISectionItem4.create();
+
             sectionItem.callback = function () {
-                Colby.callAjaxFunction("CBPageVerificationTask", "startForAllPages")
-                    .then(function () { Colby.alert("Verification as been started for all pages."); })
-                    .catch(Colby.displayAndReportError);
+                Colby.callAjaxFunction(
+                    "CBPageVerificationTask",
+                    "startForAllPages"
+                ).then(
+                    function () {
+                        CBUIPanel.displayText(
+                            "Verification as been started for all pages."
+                        );
+                    }
+                ).catch(
+                    function (error) {
+                        CBUIPanel.displayError(error);
+                        Colby.reportError(error);
+                    }
+                );
             };
 
             let stringsPart = CBUIStringsPart.create();
@@ -57,30 +72,45 @@ var CBPagesDevelopmentAdmin = {
         {
             let sectionElement = CBUI.createSection();
 
-            Object.keys(pagesByCategory).forEach(function (key) {
-                let pages = pagesByCategory[key];
-                let first = pages[0];
-                let title = (first.published === null ? "Unpublished" : "Published") +
-                    ` ${first.className} (${first.classNameForKind})`;
-                let sectionItem = CBUISectionItem4.create();
-                let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = title;
-                stringsPart.string2 = pages.length;
+            Object.keys(pagesByCategory).forEach(
+                function (key) {
+                    let pages = pagesByCategory[key];
+                    let first = pages[0];
 
-                stringsPart.element.classList.add("keyvalue");
-                stringsPart.element.classList.add("sidebyside");
+                    let title = (
+                        (
+                            first.published === null ?
+                            "Unpublished" :
+                            "Published"
+                        ) +
+                        ` ${first.className} (${first.classNameForKind})`
+                    );
 
-                sectionItem.appendPart(stringsPart);
-                sectionElement.appendChild(sectionItem.element);
+                    let sectionItem = CBUISectionItem4.create();
+                    let stringsPart = CBUIStringsPart.create();
+                    stringsPart.string1 = title;
+                    stringsPart.string2 = pages.length;
 
-                if (first.className !== "CBViewPage") {
-                    nonstandardPages = nonstandardPages.concat(pages);
+                    stringsPart.element.classList.add("keyvalue");
+                    stringsPart.element.classList.add("sidebyside");
+
+                    sectionItem.appendPart(stringsPart);
+                    sectionElement.appendChild(sectionItem.element);
+
+                    if (first.className !== "CBViewPage") {
+                        nonstandardPages = nonstandardPages.concat(pages);
+                    }
                 }
-            });
+            );
 
-            mainElement.appendChild(CBUI.createSectionHeader({
-                text: "Page Counts",
-            }));
+            mainElement.appendChild(
+                CBUI.createSectionHeader(
+                    {
+                        text: "Page Counts",
+                    }
+                )
+            );
+
             mainElement.appendChild(sectionElement);
             mainElement.appendChild(CBUI.createHalfSpace());
         }
@@ -88,34 +118,51 @@ var CBPagesDevelopmentAdmin = {
         if (nonstandardPages.length > 0) {
             let sectionElement = CBUI.createSection();
 
-            nonstandardPages.forEach(function (page) {
-                let sectionItem = CBUISectionItem4.create();
-                sectionItem.callback = function () {
-                    window.location = `/admin/?c=CBModelInspector&ID=${page.ID}`;
-                };
+            nonstandardPages.forEach(
+                function (page) {
+                    let sectionItem = CBUISectionItem4.create();
+                    sectionItem.callback = function () {
+                        window.location = (
+                            `/admin/?c=CBModelInspector&ID=${page.ID}`
+                        );
+                    };
 
-                let stringsPart = CBUIStringsPart.create();
+                    let stringsPart = CBUIStringsPart.create();
 
-                if (page.className === null) {
-                    stringsPart.string1 = "No Model";
-                } else {
-                    stringsPart.string1 = page.className +
-                        " " +
-                        (page.title === null ? "(no title)" : `(${page.title})`);
+                    if (page.className === null) {
+                        stringsPart.string1 = "No Model";
+                    } else {
+                        stringsPart.string1 = (
+                            page.className +
+                            " " +
+                            (
+                                page.title === null ?
+                                "(no title)" :
+                                `(${page.title})`
+                            )
+                        );
+                    }
+
+                    sectionItem.appendPart(stringsPart);
+                    sectionItem.appendPart(CBUINavigationArrowPart.create());
+                    sectionElement.appendChild(sectionItem.element);
                 }
+            );
 
-                sectionItem.appendPart(stringsPart);
-                sectionItem.appendPart(CBUINavigationArrowPart.create());
-                sectionElement.appendChild(sectionItem.element);
-            });
+            mainElement.appendChild(
+                CBUI.createSectionHeader(
+                    {
+                        text: "Nonstandard Pages",
+                    }
+                )
+            );
 
-            mainElement.appendChild(CBUI.createSectionHeader({
-                text: "Nonstandard Pages",
-            }));
             mainElement.appendChild(sectionElement);
             mainElement.appendChild(CBUI.createHalfSpace());
         }
     },
+    /* init() */
+
 
     pageToCategory: function (page) {
         let name = "";
@@ -140,6 +187,7 @@ var CBPagesDevelopmentAdmin = {
 
         return name;
     },
+    /* pageToCategory() */
 };
 
 Colby.afterDOMContentLoaded(CBPagesDevelopmentAdmin.init);
