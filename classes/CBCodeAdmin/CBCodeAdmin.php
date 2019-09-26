@@ -709,6 +709,21 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_09_19 (warning)
+                 * 2019_09_26 (error)
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'Colby\.alert\(',
+                    'severity' => 3,
+                    'title' => (
+                        'Replace use of Colby.alert() with ' .
+                        'CBUIPanel.displayText().'
+                    ),
+                ],
+
+
                 /* -- warnings -- -- -- -- -- */
 
                 /**
@@ -1073,20 +1088,6 @@ final class CBCodeAdmin {
                     'title' => (
                         'Replace use of deprecated CBUIPanel API with ' .
                         'CBUIPanel.displayElement().'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_09_19 (warning)
-                 */
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => 'Colby\.alert\(',
-                    'severity' => 4,
-                    'title' => (
-                        'Replace use of Colby.alert() with ' .
-                        'CBUIPanel.displayText().'
                     ),
                 ],
 
