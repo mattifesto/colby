@@ -5,6 +5,7 @@
 /* global
     CBImage,
     CBUI,
+    CBUIPanel,
     CBUISectionItem4,
     CBUIStringsPart,
     Colby,
@@ -51,10 +52,15 @@ var CBImagesAdmin = {
                     "startForAllImages"
                 ).then(
                     function () {
-                        Colby.alert("Verification for all images started.");
+                        CBUIPanel.displayText(
+                            "Verification for all images started."
+                        );
                     }
                 ).catch(
-                    Colby.displayAndReportError
+                    function (error) {
+                        CBUIPanel.displayError(error);
+                        Colby.reportError(error);
+                    }
                 );
             };
 
@@ -148,31 +154,23 @@ var CBImagesAdmin = {
             "CBImagesAdmin",
             "fetchImages"
         ).then(
-            fetchImages_onFulfilled
+            function (images) {
+                for (var i = 0; i < images.length; i++) {
+                    let imageElement = CBImagesAdmin.createImageElement(
+                        images[i]
+                    );
+
+                    args.element.appendChild(imageElement);
+                }
+            }
         ).catch(
-            Colby.displayAndReportError
+            function (error) {
+                CBUIPanel.displayError(error);
+                Colby.reportError(error);
+            }
         );
 
         return promise;
-
-
-        /* -- closures -- -- -- -- -- */
-
-        /**
-         * @param [object] images
-         *
-         * @return undefined
-         */
-        function fetchImages_onFulfilled(images) {
-            for (var i = 0; i < images.length; i++) {
-                let imageElement = CBImagesAdmin.createImageElement(
-                    images[i]
-                );
-
-                args.element.appendChild(imageElement);
-            }
-        }
-        /* fetchImages_onFulfilled() */
     },
     /* fetchImages() */
 };
