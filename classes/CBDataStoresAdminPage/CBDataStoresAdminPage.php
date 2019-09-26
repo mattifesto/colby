@@ -62,11 +62,11 @@ EOT;
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
-            'CBErrorHandler',
             'CBUI',
             'CBUIActionPart',
             'CBUINavigationArrowPart',
             'CBUINavigationView',
+            'CBUIPanel',
             'CBUISectionItem4',
             'CBUISelector',
             'CBUITitleAndDescriptionPart',
@@ -80,7 +80,7 @@ EOT;
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v514.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
         ];
     }
 

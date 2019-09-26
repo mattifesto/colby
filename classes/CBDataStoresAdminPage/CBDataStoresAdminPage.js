@@ -3,11 +3,11 @@
 /* jshint esnext: true */
 /* exported CBDataStoresAdminPage */
 /* global
-    CBErrorHandler,
     CBUI,
     CBUIActionPart,
     CBUINavigationArrowPart,
     CBUINavigationView,
+    CBUIPanel,
     CBUISectionItem4,
     CBUISelector,
     CBUITitleAndDescriptionPart,
@@ -34,13 +34,14 @@ var CBDataStoresAdminPage = {
                     "restart"
                 ).then(
                     function () {
-                        Colby.alert(
+                        CBUIPanel.displayText(
                             "The data store finder has been restarted."
                         );
                     }
                 ).catch(
                     function (error) {
-                        CBErrorHandler.displayAndReport(error);
+                        CBUIPanel.displayError(error);
+                        Colby.reportError(error);
                     }
                 );
             };
@@ -155,14 +156,20 @@ var CBDataStoresAdminPage = {
      * @return undefined
      */
     init: function () {
-        Colby.callAjaxFunction("CBDataStoresAdminPage", "fetchData")
-            .then(onFulfilled)
-            .catch(Colby.displayAndReportError);
-
-        function onFulfilled(value) {
-            var element = CBDataStoresAdminPage.createElement(value);
-            document.getElementsByTagName("main")[0].appendChild(element);
-        }
+        Colby.callAjaxFunction(
+            "CBDataStoresAdminPage",
+            "fetchData"
+        ).then(
+            function (value) {
+                let element = CBDataStoresAdminPage.createElement(value);
+                document.getElementsByTagName("main")[0].appendChild(element);
+            }
+        ).catch(
+            function (error) {
+                CBUIPanel.displayError(error);
+                Colby.reportError(error);
+            }
+        );
     },
 };
 
