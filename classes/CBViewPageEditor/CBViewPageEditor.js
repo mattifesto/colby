@@ -6,6 +6,7 @@
     CBImage,
     CBModel,
     CBUI,
+    CBUIPanel,
     CBUISpecArrayEditor,
     CBViewPageInformationEditor,
     Colby,
@@ -226,16 +227,21 @@ var CBViewPageEditor = {
                 "Are you sure you want to use this page as the front page?"
             )
         ) {
-            Colby.callAjaxFunction("CBSitePreferences", "setFrontPageID",
+            Colby.callAjaxFunction(
+                "CBSitePreferences",
+                "setFrontPageID",
                 {
                     ID: args.ID
                 }
             ).then(
                 function (response) {
-                    Colby.alert(response.message);
+                    CBUIPanel.displayText(response.message);
                 }
             ).catch(
-                Colby.displayAndReportError
+                function (error) {
+                    CBUIPanel.displayError(error);
+                    Colby.reportError(error);
+                }
             );
         }
     },
