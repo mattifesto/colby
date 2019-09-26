@@ -37,20 +37,6 @@ var Colby = {
 
 
     /**
-     * @deprecated 2019_09_19 use CBUIPanel.displayText()
-     *
-     * @param string text
-     *
-     * @return undefined
-     */
-    alert: function (text) {
-        Colby.setPanelText(text);
-        Colby.showPanel();
-    },
-    /* alert() */
-
-
-    /**
      * This function is often used with bind() to create a single callback from
      * multiple callbacks.
      *
