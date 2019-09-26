@@ -11,6 +11,7 @@
     CBUI,
     CBUIExpander,
     CBUINavigationView,
+    CBUIPanel,
     CBUISection,
     CBUISectionItem4,
     CBUISelector,
@@ -282,16 +283,26 @@ var CBTestAdmin = {
 
         {
             let sectionItem = CBUISectionItem4.create();
-            sectionItem.callback = function () {
-                Colby.callAjaxFunction("CBTestAdmin", "testPagesRowAndDataStoreWithoutModel")
-                    .then(function (ID) {
-                        Colby.alert(`
 
+            sectionItem.callback = function () {
+                Colby.callAjaxFunction(
+                    "CBTestAdmin",
+                    "testPagesRowAndDataStoreWithoutModel"
+                ).then(
+                    function (ID) {
+                        Colby.displayText(
+                            `
                             A row and data store with the ID "${ID}" were
                             created and a CBPageVerificationTask was restarted.
-
-                        `);
-                    });
+                            `
+                        );
+                    }
+                ).catch(
+                    function (error) {
+                        CBUIPanel.displayError(error);
+                        Colby.reportError(error);
+                    }
+                );
             };
 
             let stringsPart = CBUIStringsPart.create();
@@ -346,7 +357,8 @@ var CBTestAdmin = {
             }
         ).catch(
             function (error) {
-                Colby.displayAndReportError(error);
+                CBUIPanel.displayError(error);
+                Colby.reportError(error);
             }
         );
     },
@@ -394,7 +406,8 @@ var CBTestAdmin = {
             }
         ).catch(
             function (error) {
-                return Colby.displayAndReportError(error);
+                CBUIPanel.displayError(error);
+                Colby.reportError(error);
             }
         );
 
