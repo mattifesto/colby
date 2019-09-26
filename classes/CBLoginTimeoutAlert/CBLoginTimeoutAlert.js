@@ -1,36 +1,34 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* global
-    CBUserIsLoggedIn,
+    CBUIPanel,
     Colby,
+
+    CBLoginTimeoutAlert_userIsLoggedIn,
 */
 
-var CBLoginTimeoutAlert = {
+Colby.afterDOMContentLoaded(
+    function () {
+        let userWasLoggedIn = (
+            localStorage.getItem(
+                "CBLoginTimeoutAlert_userWasLogggedIn"
+            ) === "yes"
+        );
 
-    /**
-     * @return undefined
-     */
-    DOMContentDidLoad: function () {
-        try {
-            if (localStorage.getItem("CBUserIsLoggedIn") !== CBUserIsLoggedIn) {
-                if (localStorage.getItem("CBUserIsLoggedIn")) {
-                    var element = document.createElement("div");
-                    element.textContent = (
-                        "Your login has expired and you are currently " +
-                        "logged out. Please login again if you need the " +
-                        "privileges of a logged in user."
-                    );
-
-                    Colby.setPanelElement(element);
-                    Colby.showPanel();
-                }
-
-                localStorage.setItem("CBUserIsLoggedIn", CBUserIsLoggedIn);
+        if (userWasLoggedIn) {
+            if (!CBLoginTimeoutAlert_userIsLoggedIn) {
+                CBUIPanel.displayText(
+                    "Your login has expired and you are currently " +
+                    "logged out. Please login again if you need the " +
+                    "privileges of a logged in user."
+                );
             }
-        } catch (e) {
-            // TODO: send a silent error to the server.
         }
-    },
-};
 
-document.addEventListener("DOMContentLoaded", CBLoginTimeoutAlert.DOMContentDidLoad);
+        localStorage.setItem(
+            "CBLoginTimeoutAlert_userWasLogggedIn",
+            CBLoginTimeoutAlert_userIsLoggedIn ? "yes" : "no"
+        );
+    }
+);

@@ -11,7 +11,7 @@ final class CBLoginTimeoutAlert {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v499.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
         ];
     }
 
@@ -22,9 +22,20 @@ final class CBLoginTimeoutAlert {
     static function CBHTMLOutput_JavaScriptVariables(): array {
         return [
             [
-                'CBUserIsLoggedIn',
-                ColbyUser::getCurrentUserID() === null ? '' : 'yes',
+                'CBLoginTimeoutAlert_userIsLoggedIn',
+                ColbyUser::getCurrentUserID() !== null,
             ],
+        ];
+    }
+
+
+    /**
+     * @return string
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBUIPanel',
+            'Colby',
         ];
     }
 }
