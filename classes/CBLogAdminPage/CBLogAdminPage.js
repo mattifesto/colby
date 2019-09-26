@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBLogAdminPage */
 /* globals
+    CBErrorHandler,
     CBModel,
     CBUI,
     CBUIExpander,
@@ -109,12 +110,31 @@ var CBLogAdminPage = {
 
         /* -- closures -- -- -- -- -- */
 
+        /**
+         * @return undefined
+         */
         function handleArgsChanged() {
-            Colby.callAjaxFunction("CBLog", "fetchEntries", args)
-                .then(onFulfilled)
-                .catch(Colby.displayAndReportError);
+            Colby.callAjaxFunction(
+                "CBLog",
+                "fetchEntries",
+                args
+            ).then(
+                function (entries) {
+                    onFulfilled(entries);
+                }
+            ).catch(
+                function (error) {
+                    CBErrorHandler.displayAndReport(error);
+                }
+            );
         }
 
+
+        /**
+         * @param [object] entries
+         *
+         * @return undefined
+         */
         function onFulfilled(entries) {
             var count = 0;
 
@@ -216,6 +236,7 @@ var CBLogAdminPage = {
 
             Colby.updateTimes();
         }
+        /* onFulfilled() */
     },
     /* createElement() */
 };

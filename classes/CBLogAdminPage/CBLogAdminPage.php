@@ -30,7 +30,7 @@ final class CBLogAdminPage {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v513.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
         ];
     }
 
@@ -61,6 +61,7 @@ EOT;
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBErrorHandler',
             'CBModel',
             'CBUI',
             'CBUIExpander',
