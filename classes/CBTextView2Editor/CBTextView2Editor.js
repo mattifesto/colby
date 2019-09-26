@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBTextView2Editor */
 /* global
+    CBErrorHandler,
     CBModel,
     CBUI,
     CBUINavigationView,
@@ -216,7 +217,7 @@ var CBTextView2Editor = {
                 }
             ).catch(
                 function (error) {
-                    Colby.displayAndReportError(error);
+                    CBErrorHandler.displayAndReport(error);
                 }
             );
         }
