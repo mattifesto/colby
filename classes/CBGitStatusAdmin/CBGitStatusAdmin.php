@@ -52,6 +52,8 @@ final class CBGitStatusAdmin {
         return 'Developers';
     }
 
+
+
     /**
      * @return [string]
      */
@@ -61,26 +63,34 @@ final class CBGitStatusAdmin {
         ];
     }
 
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v480.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
         ];
     }
+
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBErrorHandler',
             'CBUI',
             'CBUIExpander',
             'CBUISectionItem4',
             'CBUIStringsPart',
+            'Colby',
         ];
     }
+
+
 
     /**
      * @return void

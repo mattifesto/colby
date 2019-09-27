@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBGitStatusAdmin */
 /* global
+    CBErrorHandler,
     CBUI,
     CBUIExpander,
     CBUISectionItem4,
@@ -84,7 +85,7 @@ var CBGitStatusAdmin = {
                 }
             ).catch(
                 function (error) {
-                    Colby.displayAndReportError(error);
+                    CBErrorHandler.displayAndReport(error);
                 }
             );
         }
