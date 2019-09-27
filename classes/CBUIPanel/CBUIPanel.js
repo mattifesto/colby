@@ -21,6 +21,9 @@
  *
  *          function displayElement(contentElement)
  *
+ *          function displayText(textContent) -> Promise
+ *
+ *
  *          -- everything below is deprecated -- -- -- -- --
  *
  *          buttons: [object] (get, set)
@@ -239,6 +242,44 @@ Colby.afterDOMContentLoaded(
         /* init_createPanelElement() */
 
 
+
+        /**
+         * Creates a tree of elements used for displaying text content without a
+         * border.
+         *
+         * @param string textContent
+         *
+         * @return Element
+         */
+        function init_createTextElement(textContent) {
+            let sectionContainerElement = CBUI.createElement(
+                "CBUI_sectionContainer CBUI_padding_half"
+            );
+
+            let sectionElement = CBUI.createElement(
+                "CBUI_section CBUI_section_noborder"
+            );
+
+            sectionContainerElement.appendChild(sectionElement);
+
+            let textContainerElement = CBUI.createElement(
+                "CBUI_container_topAndBottom"
+            );
+
+            sectionElement.appendChild(textContainerElement);
+
+            let textElement = CBUI.createElement();
+
+            textElement.textContent = textContent;
+
+            textContainerElement.appendChild(textElement);
+
+            return sectionContainerElement;
+        }
+        /* init_createTextElement() */
+
+
+
         /**
          * @param object ajaxResponse
          *
@@ -428,38 +469,14 @@ Colby.afterDOMContentLoaded(
          *
          *      The promise resolves when the user clicks the OK button.
          */
-        function init_displayText(text) {
+        function init_displayText(textContent) {
             return new Promise(
                 function (resolve) {
                     let element = CBUI.createElement();
 
-                    /* message */
-                    {
-                        let sectionContainerElement = CBUI.createElement(
-                            "CBUI_sectionContainer CBUI_padding_half"
-                        );
-
-                        element.appendChild(sectionContainerElement);
-
-                        let sectionElement = CBUI.createElement(
-                            "CBUI_section CBUI_section_noborder"
-                        );
-
-                        sectionContainerElement.appendChild(sectionElement);
-
-                        let textContainerElement = CBUI.createElement(
-                            "CBUI_container_topAndBottom"
-                        );
-
-                        sectionElement.appendChild(textContainerElement);
-
-                        let textElement = CBUI.createElement();
-
-                        textElement.textContent = text;
-
-                        textContainerElement.appendChild(textElement);
-                    }
-                    /* message */
+                    element.appendChild(
+                        init_createTextElement(textContent)
+                    );
 
                     /* button */
                     {

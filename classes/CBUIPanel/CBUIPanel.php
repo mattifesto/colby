@@ -18,7 +18,7 @@ final class CBUIPanel {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v530.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
