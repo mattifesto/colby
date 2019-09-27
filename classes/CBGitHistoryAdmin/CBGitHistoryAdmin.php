@@ -59,32 +59,49 @@ EOT;
         return 'Developers';
     }
 
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'v426.js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+        ];
     }
+
+
+
 
     /**
      * @return [[<name>, <value>]]
      */
     static function CBHTMLOutput_JavaScriptVariables(): array {
         return [
-            ['CBGitHistoryAdmin_submodules', CBGit::submodules()]
+            [
+                'CBGitHistoryAdmin_submodules',
+                CBGit::submodules(),
+            ]
         ];
     }
+
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBErrorHandler',
             'CBUI',
             'CBUIExpander',
-            'CBUISelector'
+            'CBUINavigationView',
+            'CBUISelector',
+            'Colby',
         ];
     }
+
+
 
     /**
      * @return void

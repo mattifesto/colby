@@ -3,15 +3,21 @@
 /* jshint esversion: 6 */
 /* exported CBGitHistoryAdmin */
 /* global
-    CBGitHistoryAdmin_submodules,
+    CBErrorHandler,
     CBUI,
     CBUIExpander,
     CBUINavigationView,
     CBUISelector,
-    Colby */
+    Colby,
+
+    CBGitHistoryAdmin_submodules,
+*/
 
 var CBGitHistoryAdmin = {
 
+    /**
+     * @return undefined
+     */
     init: function () {
         let main = document.getElementsByTagName("main")[0];
         let navigator = CBUINavigationView.create();
@@ -55,10 +61,12 @@ var CBGitHistoryAdmin = {
                 let year = new Date().getFullYear();
 
                 for (let i = 0; i < 20; i++) {
-                    options.push({
-                        title: year - i,
-                        value: year - i,
-                    });
+                    options.push(
+                        {
+                            title: year - i,
+                            value: year - i,
+                        }
+                    );
                 }
 
                 yearSelector.options = options;
@@ -74,9 +82,16 @@ var CBGitHistoryAdmin = {
                     { title: "website" }
                 ];
 
-                CBGitHistoryAdmin_submodules.forEach(function (name) {
-                    options.push({ title: name, value: name });
-                });
+                CBGitHistoryAdmin_submodules.forEach(
+                    function (name) {
+                        options.push(
+                            {
+                                title: name,
+                                value: name,
+                            }
+                        );
+                    }
+                );
 
                 submoduleSelector.options = options;
                 submoduleSelector.title = "Repository";
@@ -95,14 +110,23 @@ var CBGitHistoryAdmin = {
         element.appendChild(expander.element);
         element.appendChild(CBUI.createHalfSpace());
 
-        navigator.navigate({
-            element: element,
-            title: "Git History",
-        });
+        navigator.navigate(
+            {
+                element: element,
+                title: "Git History",
+            }
+        );
 
         fetch();
 
-        /* closure */
+        return;
+
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @return undefined
+         */
         function fetch() {
             let args = {
                 month: monthSelector.value + 1,
@@ -110,16 +134,25 @@ var CBGitHistoryAdmin = {
                 submodule: submoduleSelector.value,
             };
 
-            Colby.callAjaxFunction("CBGitHistoryAdmin", "fetch", args)
-                .then(onFulfilled)
-                .catch(Colby.displayAndReportError);
-
-            /* closure */
-            function onFulfilled (value) {
-                expander.message = value;
-            }
+            Colby.callAjaxFunction(
+                "CBGitHistoryAdmin",
+                "fetch",
+                args
+            ).then(
+                function (value) {
+                    expander.message = value;
+                }
+            ).catch(
+                function (error) {
+                    CBErrorHandler.displayAndReport(error);
+                }
+            );
         }
+        /* fetch() */
     },
+    /* init() */
 };
 
-Colby.afterDOMContentLoaded(CBGitHistoryAdmin.init);
+Colby.afterDOMContentLoaded(
+    CBGitHistoryAdmin.init
+);
