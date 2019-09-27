@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBUIProcessStatus */
 /* global
+    CBErrorHandler,
     CBConvert,
     CBLog,
     CBUIExpander,
@@ -39,12 +40,16 @@ var CBUIProcessStatus = {
      *      }
      */
     create: function () {
-        var afterSerial, isFetching, shouldFetchNextQuickly, processID, timeoutID;
+        let afterSerial, isFetching, shouldFetchNextQuickly;
+        let processID, timeoutID;
         let logEntryMinimumSeverity = 6;
+
         var element = document.createElement("div");
         element.className = "CBUIProcessStatus CBDarkTheme";
+
         var overviewElement = document.createElement("div");
         overviewElement.className = "overview";
+
         var entriesElement = document.createElement("div");
         entriesElement.className = "entries";
 
@@ -56,9 +61,11 @@ var CBUIProcessStatus = {
                 entriesElement.appendChild(element);
                 element.scrollIntoView();
             },
+
             clear: function () {
                 entriesElement.textContent = "";
             },
+
             get element() {
                 return element;
             },
@@ -101,12 +108,18 @@ var CBUIProcessStatus = {
                     fetchStatus
                 );
             },
+
             get processID() {
                 return processID;
             },
         };
 
-        /* closure */
+
+        /* -- closures -- -- -- -- -- */
+
+        /**
+         * @return undefined
+         */
         function fetchStatus() {
             if (isFetching) {
                 shouldFetchNextQuickly = true;
@@ -125,38 +138,76 @@ var CBUIProcessStatus = {
                 processID: processID,
             };
 
-            Colby.callAjaxFunction("CBLog", "fetchEntries", ajaxargs)
-                .then(onFetchLogEntriesFulfilled)
-                .then(fetchTaskStatus)
-                .then(onFetchTaskStatusFulfilled)
-                .then(reschedule)
-                .catch(Colby.displayAndReportError);
+            Colby.callAjaxFunction(
+                "CBLog",
+                "fetchEntries",
+                ajaxargs
+            ).then(
+                onFetchLogEntriesFulfilled
+            ).then(
+                fetchTaskStatus
+            ).then(
+                onFetchTaskStatusFulfilled
+            ).then(
+                reschedule
+            ).catch(
+                function (error) {
+                    CBErrorHandler.displayAndReport(error);
+                }
+            );
 
-            /* closure */
+            return;
+
+
+            /* -- closures -- -- -- -- -- */
+
+            /**
+             * @return undefined
+             */
             function onFetchLogEntriesFulfilled(entries) {
                 if (entries.length > 0) {
                     afterSerial = entries[entries.length - 1].serial;
 
-                    entries.forEach(function (entry) {
-                        if (entry.severity <= logEntryMinimumSeverity) {
-                            let expander = CBUIExpander.create(entry);
-                            entriesElement.appendChild(expander.element);
-                            expander.element.scrollIntoView();
+                    entries.forEach(
+                        function (entry) {
+                            if (entry.severity <= logEntryMinimumSeverity) {
+                                let expander = CBUIExpander.create(entry);
+                                entriesElement.appendChild(expander.element);
+                                expander.element.scrollIntoView();
+                            }
                         }
-                    });
+                    );
 
                     Colby.updateTimes();
                 }
             }
+            /* onFetchLogEntriesFulfilled() */
 
-            /* closure */
+
+            /**
+             * @return Promise
+             */
             function fetchTaskStatus() {
-                return Colby.callAjaxFunction("CBTasks2", "fetchStatus", {processID: processID});
+                return Colby.callAjaxFunction(
+                    "CBTasks2",
+                    "fetchStatus",
+                    {
+                        processID: processID,
+                    }
+                );
             }
+            /* fetchTaskStatus() */
 
-            /* closure */
+
+            /**
+             * @return undefined
+             */
             function onFetchTaskStatusFulfilled(status) {
-                var text = status.complete + " / " + (status.complete + status.ready);
+                var text = (
+                    status.complete +
+                    " / " +
+                    (status.complete + status.ready)
+                );
 
                 if (status.scheduled > 0) {
                     text += " Scheduled: " + status.scheduled;
@@ -175,8 +226,12 @@ var CBUIProcessStatus = {
 
                 overviewElement.textContent = text;
             }
+            /* onFetchTaskStatusFulfilled() */
 
-            /* closure */
+
+            /**
+             * @return undefined
+             */
             function reschedule() {
                 if (timeoutID === undefined) {
                     let delay = 1000;
@@ -189,9 +244,15 @@ var CBUIProcessStatus = {
                     timeoutID = setTimeout(fetchStatus, delay);
                     isFetching = undefined;
                 } else {
-                    throw new Error("CBUIProcessStatus.create() closure reschedule() is being called too often.");
+                    throw Error(
+                        "CBUIProcessStatus.create() closure reschedule() " +
+                        "is being called too often."
+                    );
                 }
             }
+            /* reschedule() */
         }
+        /* fetchStatus() */
     },
+    /* create() */
 };
