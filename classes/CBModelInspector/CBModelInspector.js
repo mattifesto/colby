@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* global
     CBArtworkElement,
+    CBErrorHandler,
     CBImage,
     CBMessageMarkup,
     CBModel,
@@ -136,7 +137,7 @@ var CBModelInspector = {
             }
         ).catch(
             function (error) {
-                Colby.displayAndReportError(error);
+                CBErrorHandler.displayAndReport(error);
             }
         );
 
@@ -432,7 +433,9 @@ var CBModelInspector = {
                     ).then(
                         report
                     ).catch(
-                        Colby.displayAndReportError
+                        function (error) {
+                            CBErrorHandler.displayAndReport(error);
+                        }
                     );
                 };
 
@@ -510,7 +513,7 @@ var CBModelInspector = {
                         }
                     ).catch(
                         function (error) {
-                            Colby.displayAndReportError(error);
+                            CBErrorHandler.displayAndReport(error);
                         }
                     );
                 };
@@ -676,7 +679,7 @@ var CBModelInspector = {
                                 }
                             ).catch(
                                 function (error) {
-                                    Colby.displayAndReportError(error);
+                                    CBErrorHandler.displayAndReport(error);
                                 }
                             );
                         }
