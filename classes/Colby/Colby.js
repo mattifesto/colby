@@ -100,38 +100,6 @@ var Colby = {
     /* callAjaxFunction() */
 
 
-    /**
-     * @deprecated 2019_09_19 use CBUIPanel
-     *
-     * @return undefined
-     */
-    createPanel: function () {
-        var panel = document.createElement("div");
-        panel.className = "CBPanelView";
-        var container = document.createElement("div");
-        container.className = "CBPanelContainer CBLightTheme";
-        var content = document.createElement("div");
-        content.className = "CBPanelContent";
-        var buttonView = document.createElement("div");
-        buttonView.className = "CBPanelButtonView";
-        var button = document.createElement("button");
-        button.textContent = "Dismiss";
-
-        buttonView.appendChild(button);
-        container.appendChild(content);
-        container.appendChild(buttonView);
-        panel.appendChild(container);
-
-        button.addEventListener(
-            "click",
-            Colby.hidePanel
-        );
-
-        Colby.panel = panel;
-        Colby.panelContent = content;
-    },
-    /* createPanel() */
-
 
     /**
      * @NOTE 2015_03_24
@@ -678,55 +646,6 @@ var Colby = {
     },
     /* responseFromXMLHttpRequest() */
 
-
-    /**
-     * @deprecated 2019_09_19 use CBUIPanel
-     *
-     * @param Element element
-     *
-     * @return undefined
-     */
-    setPanelElement: function (element) {
-        if (Colby.panel === undefined) {
-            Colby.createPanel();
-        }
-
-        Colby.panelContent.textContent = null;
-        Colby.panelContent.appendChild(element);
-    },
-    /* setPanelElement() */
-
-
-    /**
-     * @deprecated 2019_09_19 use CBUIPanel
-     *
-     * @param string text
-     *
-     * @return undefined
-     */
-    setPanelText: function (text) {
-        Colby.setPanelElement(
-            document.createTextNode(text)
-        );
-    },
-    /* setPanelText() */
-
-
-    /**
-     * @deprecated 2019_09_19 use CBUIPanel
-     *
-     * @return undefined
-     */
-    showPanel: function () {
-        if (Colby.panel === undefined) {
-            Colby.createPanel();
-        }
-
-        if (!Colby.panel.parentNode) {
-            document.body.appendChild(Colby.panel);
-        }
-    },
-    /* showPanel() */
 
 
     /**
