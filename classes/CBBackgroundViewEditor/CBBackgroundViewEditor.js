@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBBackgroundViewEditor */
 /* global
+    CBErrorHandler,
     CBImage,
     CBModel,
     CBUI,
@@ -186,7 +187,7 @@ var CBBackgroundViewEditor = {
                 }
             ).catch(
                 function (error) {
-                    Colby.displayAndReportError(error);
+                    CBErrorHandler.displayAndReport(error);
                 }
             );
         }
