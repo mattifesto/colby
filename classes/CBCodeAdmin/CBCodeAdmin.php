@@ -757,6 +757,24 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_09_19 (warning)
+                 * 2019_09_26 (error)
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'Colby\.(createPanel|setPanelElement|setPanelText|showPanel)',
+                    'severity' => 3,
+                    'title' => (
+                        'Replace use of Colby.createPanel() and ' .
+                        'Colby.setPanelElement() and ' .
+                        'Colby.setPanelText() and ' .
+                        'Colby.showPanel() with ' .
+                        'CBUIPanel.'
+                    ),
+                ],
+
+
                 /* -- warnings -- -- -- -- -- */
 
                 /**
@@ -1121,23 +1139,6 @@ final class CBCodeAdmin {
                     'title' => (
                         'Replace use of deprecated CBUIPanel API with ' .
                         'CBUIPanel.displayElement().'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_09_19 (warning)
-                 */
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => 'Colby\.(createPanel|setPanelElement|setPanelText|showPanel)',
-                    'severity' => 4,
-                    'title' => (
-                        'Replace use of Colby.createPanel() and ' .
-                        'Colby.setPanelElement() and ' .
-                        'Colby.setPanelText() and ' .
-                        'Colby.showPanel() with ' .
-                        'CBUIPanel.'
                     ),
                 ],
             ]
