@@ -9,7 +9,7 @@ final class CBViewPageInformationEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v519.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -53,11 +53,13 @@ final class CBViewPageInformationEditor {
     /* CBHTMLOutput_JavaScriptVariables() */
 
 
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBErrorHandler',
             'CBImage',
             'CBModel',
             'CBUI',
@@ -74,6 +76,7 @@ final class CBViewPageInformationEditor {
         ];
     }
     /* CBHTMLOutput_requiredClassNames */
+
 
 
     /* -- functions -- -- -- -- -- */
