@@ -4,6 +4,7 @@
 /* exported CBAdminPageForPagesFind */
 /* globals
     CBConvert,
+    CBErrorHandler,
     CBImage,
     CBUI,
     CBUINavigationArrowPart,
@@ -201,7 +202,7 @@ var CBAdminPageForPagesFind = {
             }
         ).catch(
             function (error) {
-                Colby.displayAndReportError(error);
+                CBErrorHandler.displayAndReport(error);
             }
         ).then(
             fetchPages_onFinally,
