@@ -358,21 +358,6 @@ var Colby = {
     },
 
 
-    /**
-     * @deprecated 2019_09_19 use CBUIPanel.displayAjaxResponse()
-     *
-     * This function can be used as a handler for XHR.onerror
-     *
-     * @param XMLHttpRequest args.xhr
-     *
-     * @return undefined
-     */
-    displayXHRError: function (args) {
-        Colby.displayResponse(
-            Colby.responseFromXMLHttpRequest(args.xhr)
-        );
-    },
-
 
     /**
      * @param Element element
