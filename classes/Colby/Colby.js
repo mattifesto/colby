@@ -283,45 +283,6 @@ var Colby = {
     /* dateToRelativeLocaleString() */
 
 
-    /**
-     * @deprecated 2019_09_19 use CBErrorHandler.displayAndReport()
-     *
-     * @param Error error
-     *
-     * @return undefined
-     */
-    displayAndReportError: function (error) {
-        Colby.displayError(error);
-        Colby.reportError(error);
-    },
-
-
-    /**
-     * @deprecated 2019_09_19 use CBUIPanel.displayError()
-     *
-     * Use this function with promises to display error messages to the user.
-     *
-     *      callAjaxFunction().catch(Colby.displayError)
-     *
-     * @param Error error
-     *
-     * @return undefined
-     */
-    displayError: function (error) {
-        if (!Colby.browserIsSupported) {
-            return;
-        }
-
-        if (error.ajaxResponse) {
-            Colby.displayResponse(error.ajaxResponse);
-        } else {
-            window.alert(
-                Colby.errorToMessage(error)
-            );
-        }
-    },
-    /* displayError() */
-
 
     /**
      * @deprecated 2019_09_19 use CBUIPanel.displayAjaxResponse()
