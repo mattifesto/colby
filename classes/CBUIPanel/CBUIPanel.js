@@ -424,71 +424,79 @@ Colby.afterDOMContentLoaded(
         /**
          * @param string text
          *
-         * @return undefined
+         * @return Promise
+         *
+         *      The promise resolves when the user clicks the OK button.
          */
         function init_displayText(text) {
-            let element = CBUI.createElement();
+            return new Promise(
+                function (resolve) {
+                    let element = CBUI.createElement();
 
-            /* message */
-            {
-                let sectionContainerElement = CBUI.createElement(
-                    "CBUI_sectionContainer CBUI_padding_half"
-                );
+                    /* message */
+                    {
+                        let sectionContainerElement = CBUI.createElement(
+                            "CBUI_sectionContainer CBUI_padding_half"
+                        );
 
-                element.appendChild(sectionContainerElement);
+                        element.appendChild(sectionContainerElement);
 
-                let sectionElement = CBUI.createElement(
-                    "CBUI_section CBUI_section_noborder"
-                );
+                        let sectionElement = CBUI.createElement(
+                            "CBUI_section CBUI_section_noborder"
+                        );
 
-                sectionContainerElement.appendChild(sectionElement);
+                        sectionContainerElement.appendChild(sectionElement);
 
-                let textContainerElement = CBUI.createElement(
-                    "CBUI_container_topAndBottom"
-                );
+                        let textContainerElement = CBUI.createElement(
+                            "CBUI_container_topAndBottom"
+                        );
 
-                sectionElement.appendChild(textContainerElement);
+                        sectionElement.appendChild(textContainerElement);
 
-                let textElement = CBUI.createElement();
+                        let textElement = CBUI.createElement();
 
-                textElement.textContent = text;
+                        textElement.textContent = text;
 
-                textContainerElement.appendChild(textElement);
-            }
-            /* message */
-
-            /* button */
-            {
-                let sectionContainerElement = CBUI.createElement(
-                    "CBUI_sectionContainer CBUI_padding_half"
-                );
-
-                element.appendChild(sectionContainerElement);
-
-                let sectionElement = CBUI.createElement(
-                    "CBUI_section CBUI_section_inner"
-                );
-
-                sectionContainerElement.appendChild(sectionElement);
-
-                let buttonElement = CBUI.createElement(
-                    "CBUI_action"
-                );
-
-                buttonElement.textContent = "Okay";
-
-                buttonElement.addEventListener(
-                    "click",
-                    function () {
-                        element.CBUIPanel.hide();
+                        textContainerElement.appendChild(textElement);
                     }
-                );
+                    /* message */
 
-                sectionElement.appendChild(buttonElement);
-            }
-            /* button */
+                    /* button */
+                    {
+                        let sectionContainerElement = CBUI.createElement(
+                            "CBUI_sectionContainer CBUI_padding_half"
+                        );
 
-            init_displayElement(element);
+                        element.appendChild(sectionContainerElement);
+
+                        let sectionElement = CBUI.createElement(
+                            "CBUI_section CBUI_section_inner"
+                        );
+
+                        sectionContainerElement.appendChild(sectionElement);
+
+                        let buttonElement = CBUI.createElement(
+                            "CBUI_action"
+                        );
+
+                        buttonElement.textContent = "OK";
+
+                        buttonElement.addEventListener(
+                            "click",
+                            function () {
+                                element.CBUIPanel.hide();
+                                resolve();
+                            }
+                        );
+
+                        sectionElement.appendChild(buttonElement);
+                    }
+                    /* button */
+
+                    init_displayElement(element);
+                }
+            );
+            /* new Promise */
         }
         /* init_displayText() */
 
