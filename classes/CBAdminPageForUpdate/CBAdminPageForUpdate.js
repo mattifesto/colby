@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBAdminPageForUpdate */
 /* globals
+    CBErrorHandler,
     CBMaintenance,
     CBMessageMarkup,
     CBUI,
@@ -172,7 +173,7 @@ var CBAdminPageForUpdate = {
             if (CBAdminPageForUpdate.taskIsRunning) {
                 let error = new Error("A task is already running.");
 
-                Colby.displayAndReportError(error);
+                CBErrorHandler.displayAndReport(error);
 
                 return;
             }
@@ -190,7 +191,7 @@ var CBAdminPageForUpdate = {
                 }
             ).catch(
                 function (error) {
-                    Colby.displayAndReportError(error);
+                    CBErrorHandler.displayAndReport(error);
                 }
             );
         }

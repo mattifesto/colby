@@ -56,8 +56,19 @@ final class CBAdminPageForUpdate {
     /**
      * @return [string]
      */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+        ];
+    }
+
+
+    /**
+     * @return [string]
+     */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBErrorHandler',
             'CBMaintenance',
             'CBMessageMarkup',
             'CBUI',
@@ -69,16 +80,6 @@ final class CBAdminPageForUpdate {
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
-
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [
-            Colby::flexpath(__CLASS__, 'v490.js', cbsysurl()),
-        ];
-    }
 
 
     /* -- CBInstall interfaces -- -- -- -- -- */
