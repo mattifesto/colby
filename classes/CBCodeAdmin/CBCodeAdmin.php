@@ -724,6 +724,23 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_09_19 (warning)
+                 * 2019_09_26 (error)
+                 */
+                (object)[
+                    'args' => '--ignore-file=match:CBErrorHandler.js',
+                    'filetype' => 'js',
+                    'regex' => 'Colby\.(displayError|displayAndReportError)',
+                    'severity' => 3,
+                    'title' => (
+                        'Replace use of Colby.displayError() and ' .
+                        'Colby.displayAndReportError() with ' .
+                        'CBUIPanel.displayError().'
+                    ),
+                ],
+
+
                 /* -- warnings -- -- -- -- -- */
 
                 /**
@@ -1088,21 +1105,6 @@ final class CBCodeAdmin {
                     'title' => (
                         'Replace use of deprecated CBUIPanel API with ' .
                         'CBUIPanel.displayElement().'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_09_19 (warning)
-                 */
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => 'Colby\.(displayError|displayAndReportError)',
-                    'severity' => 4,
-                    'title' => (
-                        'Replace use of Colby.displayError() and ' .
-                        'Colby.displayAndReportError() with ' .
-                        'CBUIPanel.displayError().'
                     ),
                 ],
 
