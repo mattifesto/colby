@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBGroupUserSettings */
 /* global
+    CBErrorHandler,
     CBUI,
     CBUIBooleanEditor,
     Colby,
@@ -87,7 +88,7 @@ var CBGroupUserSettings = {
             }
         ).catch(
             function (error) {
-                Colby.displayAndReportError(error);
+                CBErrorHandler.displayAndReport(error);
             }
         );
 
@@ -110,7 +111,7 @@ var CBGroupUserSettings = {
             args.spec
         ).catch(
             function (error) {
-                Colby.displayAndReportError(error);
+                CBErrorHandler.displayAndReport(error);
             }
         );
     },

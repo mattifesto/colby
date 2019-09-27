@@ -111,7 +111,7 @@ final class CBGroupUserSettings {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v488.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
         ];
     }
 
@@ -121,6 +121,7 @@ final class CBGroupUserSettings {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBErrorHandler',
             'CBUI',
             'CBUIBooleanEditor',
             'Colby',
