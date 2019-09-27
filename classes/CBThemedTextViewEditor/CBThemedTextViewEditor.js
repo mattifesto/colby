@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBThemedTextViewEditor */
 /* globals
+    CBErrorHandler,
     CBUI,
     CBUIBooleanEditor,
     CBUINavigationView,
@@ -47,7 +48,9 @@ var CBThemedTextViewEditor = {
             ).then(
                 fulfilled
             ).catch(
-                Colby.displayAndReportError
+                function (error) {
+                    CBErrorHandler.displayAndReport(error);
+                }
             );
 
             function fulfilled(convertedSpec) {

@@ -5,25 +5,6 @@ final class CBThemedTextViewEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
-        return [
-            'CBUI',
-            'CBUIBooleanEditor',
-            'CBUINavigationView',
-            'CBUIPanel',
-            'CBUISectionItem4',
-            'CBUISpecClipboard',
-            'CBUISpecEditor',
-            'CBUIStringEditor',
-            'CBUIStringsPart',
-            'Colby',
-        ];
-    }
-
-
-    /**
-     * @return [string]
-     */
     static function CBHTMLOutput_CSSURLs() {
         return [
             Colby::flexpath(__CLASS__, 'css', cbsysurl()),
@@ -36,7 +17,27 @@ final class CBThemedTextViewEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v488.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+        ];
+    }
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames() {
+        return [
+            'CBErrorHandler',
+            'CBUI',
+            'CBUIBooleanEditor',
+            'CBUINavigationView',
+            'CBUIPanel',
+            'CBUISectionItem4',
+            'CBUISpecClipboard',
+            'CBUISpecEditor',
+            'CBUIStringEditor',
+            'CBUIStringsPart',
+            'Colby',
         ];
     }
 }
