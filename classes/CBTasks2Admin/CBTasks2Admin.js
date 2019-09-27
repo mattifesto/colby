@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBTasks2Admin */
 /* global
+    CBErrorHandler,
     CBUI,
     CBUIBooleanSwitchPart,
     CBUIMessagePart,
@@ -145,6 +146,8 @@ var CBTasks2Admin = {
             };
         }
 
+
+
         /**
          * CBTasks2Admin.init() closure
          *
@@ -165,10 +168,14 @@ var CBTasks2Admin = {
                     setTimeout(fetchStatus, 500);
                 }
             ).catch(
-                Colby.displayAndReportError
+                function (error) {
+                    CBErrorHandler.displayAndReport(error);
+                }
             );
         }
     },
+
+
 
     /**
      * @param object status

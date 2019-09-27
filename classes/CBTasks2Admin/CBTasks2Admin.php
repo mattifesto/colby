@@ -19,20 +19,25 @@ final class CBTasks2Admin {
         CBHTMLOutput::pageInformation()->title = 'Tasks Administration';
     }
 
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v460.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
         ];
     }
+
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBErrorHandler',
             'CBUI',
             'CBUIBooleanSwitchPart',
             'CBUIMessagePart',
@@ -41,6 +46,8 @@ final class CBTasks2Admin {
             'CBUIStringsPart',
         ];
     }
+
+
 
     /**
      * @return void
