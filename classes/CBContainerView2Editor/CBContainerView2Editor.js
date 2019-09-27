@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBContainerView2Editor */
 /* globals
+    CBErrorHandler,
     CBImage,
     CBModel,
     CBUI,
@@ -23,7 +24,7 @@ var CBContainerView2Editor = {
      *
      * @return Element
      */
-    createEditor: function (args) {
+     createEditor: function (args) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBContainerView2Editor";
@@ -50,7 +51,7 @@ var CBContainerView2Editor = {
                 }
             ).catch(
                 function (error) {
-                    Colby.displayAndReportError(error);
+                    CBErrorHandler.displayAndReport(error);
                 }
             );
         };
