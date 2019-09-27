@@ -478,37 +478,17 @@ Colby.afterDOMContentLoaded(
                         init_createTextElement(textContent)
                     );
 
-                    /* button */
-                    {
-                        let sectionContainerElement = CBUI.createElement(
-                            "CBUI_sectionContainer CBUI_padding_half"
-                        );
-
-                        element.appendChild(sectionContainerElement);
-
-                        let sectionElement = CBUI.createElement(
-                            "CBUI_section CBUI_section_inner"
-                        );
-
-                        sectionContainerElement.appendChild(sectionElement);
-
-                        let buttonElement = CBUI.createElement(
-                            "CBUI_action"
-                        );
-
-                        buttonElement.textContent = "OK";
-
-                        buttonElement.addEventListener(
-                            "click",
-                            function () {
-                                element.CBUIPanel.hide();
-                                resolve();
+                    element.appendChild(
+                        init_createButtonElement(
+                            {
+                                callback: function () {
+                                    element.CBUIPanel.hide();
+                                    resolve();
+                                },
+                                title: "OK",
                             }
-                        );
-
-                        sectionElement.appendChild(buttonElement);
-                    }
-                    /* button */
+                        )
+                    );
 
                     init_displayElement(element);
                 }
