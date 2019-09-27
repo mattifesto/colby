@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBArtworkViewEditor */
 /* globals
+    CBErrorHandler,
     CBImage,
     CBModel,
     CBUI,
@@ -219,11 +220,12 @@ var CBArtworkViewEditor = {
                 }
             ).catch(
                 function (error) {
-                    Colby.displayAndReportError(error);
+                    CBErrorHandler.displayAndReport(error);
                 }
             );
         }
         /* createEditor_handleImageChosen() */
+
 
 
         /**
@@ -236,6 +238,7 @@ var CBArtworkViewEditor = {
         /* createEditor_handleImageRemoved() */
     },
     /* createEditor() */
+
 
 
     /**
