@@ -40,12 +40,24 @@ final class ColbyTests {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v484.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBErrorHandler',
+            'Colby',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
 
 
     /* -- CBTest interfaces -- -- -- -- -- */

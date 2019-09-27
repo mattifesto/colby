@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported ColbyTests */
 /* global
+    CBErrorHandler,
     Colby,
 */
 
@@ -72,17 +73,21 @@ var ColbyTests = {
             'string' : 'December 14, 2012 1:53 p.m.'
         });
 
-        tests.forEach(function (test) {
-            var string = Colby.dateToRelativeLocaleString(test.date, now);
+        tests.forEach(
+            function (test) {
+                var string = Colby.dateToRelativeLocaleString(test.date, now);
 
-            if (string != test.string) {
-                throw new Error("Expected: \"" +
-                                test.string +
-                                "\" but received: \"" +
-                                string +
-                                "\"");
+                if (string != test.string) {
+                    throw Error(
+                        "Expected: \"" +
+                        test.string +
+                        "\" but received: \"" +
+                        string +
+                        "\""
+                    );
+                }
             }
-        });
+        );
 
         return {
             succeeded: true,
@@ -102,7 +107,7 @@ var ColbyTests = {
             "requestWithPHPError"
         ).catch(
             function (error) {
-                Colby.displayAndReportError(error);
+                CBErrorHandler.displayAndReport(error);
 
                 testDidPass = true;
             }
