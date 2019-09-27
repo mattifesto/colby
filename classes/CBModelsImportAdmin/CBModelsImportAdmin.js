@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBModelsImportAdmin */
 /* global
+    CBErrorHandler,
     CBMaintenance,
     CBModelImporter,
     CBModelImporter_processID,
@@ -46,6 +47,9 @@ var CBModelsImportAdmin = {
 
         return;
 
+
+        /* -- closures -- -- -- -- -- */
+
         /**
          * CBModelsImportAdmin.init() closure
          *
@@ -60,66 +64,38 @@ var CBModelsImportAdmin = {
             CBMaintenance.transaction(
                 "CBModelsImportAdmin Import",
                 function () {
-                    return upload().then(dotasks).finally(finish).catch(report);
+                    return Colby.callAjaxFunction(
+                        "CBModelsImportAdmin",
+                        "uploadDataFile",
+                        {
+                            saveUnchangedModels: saveUnchangedModels,
+                        },
+                        dataFileInputElement.files[0]
+                    ).then(
+                        function () {
+                            return Colby.tasks.start();
+                        }
+                    ).finally(
+                        function () {
+                            disabled = false;
+                            dataFileInputElement.value = null;
+
+                            importActionPart.element.classList.remove(
+                                "disabled"
+                            );
+                        }
+                    ).catch(
+                        function (error) {
+                            CBErrorHandler.displayAndReport(error);
+                        }
+                    );
                 }
             );
 
             return;
-
-
-            /* -- closures -- -- -- -- -- */
-
-            /**
-             * handleDataFileInputElementChanged() closure
-             *
-             * @return Promise
-             */
-            function dotasks() {
-                return Colby.tasks.start();
-            }
-
-
-            /**
-             * handleDataFileInputElementChanged() closure
-             *
-             * @return undefined
-             */
-            function finish() {
-                disabled = false;
-                dataFileInputElement.value = null;
-
-                importActionPart.element.classList.remove("disabled");
-            }
-
-
-            /**
-             * handleDataFileInputElementChanged() closure
-             *
-             * @param Error error
-             *
-             * @return undefined
-             */
-            function report(error) {
-                Colby.displayAndReportError(error);
-            }
-
-
-            /**
-             * handleDataFileInputElementChanged() closure
-             *
-             * @return Promise
-             */
-            function upload() {
-                return Colby.callAjaxFunction(
-                    "CBModelsImportAdmin",
-                    "uploadDataFile",
-                    {
-                        saveUnchangedModels: saveUnchangedModels,
-                    },
-                    dataFileInputElement.files[0]
-                );
-            }
         }
+        /* handleDataFileInputElementChanged() */
+
 
         /**
          * CBModelsImportAdmin.init() closure
@@ -190,8 +166,11 @@ var CBModelsImportAdmin = {
             sectionElement.appendChild(sectionItem.element);
         }
     },
+    /* init() */
 };
 
 CBModelImporter.initBeforeDOMContentLoaded();
 
-Colby.afterDOMContentLoaded(CBModelsImportAdmin.init);
+Colby.afterDOMContentLoaded(
+    CBModelsImportAdmin.init
+);
