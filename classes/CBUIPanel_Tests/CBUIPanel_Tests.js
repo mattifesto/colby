@@ -10,6 +10,177 @@
 var CBUIPanel_Tests = {
 
     /**
+     * @return Promise
+     */
+    CBTest_confirmText_cancel: function () {
+        return new Promise(closure_execute);
+
+
+
+        /* -- closures -- -- -- -- -- */
+
+
+        /**
+         * @return undefined
+         */
+        function closure_execute(resolve, reject) {
+            try {
+                let originalPromise = CBUIPanel.confirmText(
+                    "This is the cancellation test."
+                );
+
+                originalPromise.then(
+                    function (response) {
+                        if (response) {
+                            resolve(
+                                {
+                                    succeeded: false,
+                                }
+                            );
+                        } else {
+                            resolve(
+                                {
+                                    succeeded: true,
+                                }
+                            );
+                        }
+                    }
+                ).catch(
+                    function (error) {
+                        reject(error);
+                    }
+                );
+
+                window.setTimeout(
+                    function () {
+                        try {
+                            originalPromise.CBUIPanel.cancel();
+                        } catch (error) {
+                            reject(error);
+                        }
+                    },
+                    100
+                );
+            } catch (error) {
+                reject(error);
+            }
+        }
+        /* closure_execute() */
+
+    },
+    /* CBTest_confirmText_cancel() */
+
+
+
+    /**
+     * @return Promise
+     */
+    CBTest_confirmText_confirm: function () {
+        return new Promise(closure_execute);
+
+
+
+        /* -- closures -- -- -- -- -- */
+
+
+        /**
+         * @return undefined
+         */
+        function closure_execute(resolve, reject) {
+            try {
+                let originalPromise = CBUIPanel.confirmText(
+                    "This is the confirmation test."
+                );
+
+                originalPromise.then(
+                    function (response) {
+                        if (response) {
+                            resolve(
+                                {
+                                    succeeded: true,
+                                }
+                            );
+                        } else {
+                            resolve(
+                                {
+                                    succeeded: false,
+                                }
+                            );
+                        }
+                    }
+                ).catch(
+                    function (error) {
+                        reject(error);
+                    }
+                );
+
+                window.setTimeout(
+                    function () {
+                        try {
+                            originalPromise.CBUIPanel.confirm();
+                        } catch (error) {
+                            reject(error);
+                        }
+                    },
+                    100
+                );
+            } catch (error) {
+                reject(error);
+            }
+        }
+        /* closure_execute() */
+
+    },
+    /* CBTest_confirmText_confirm() */
+
+
+
+    /**
+     * @return Promise
+     */
+    CBTest_confirmText_interactive: function () {
+        return new Promise(closure_execute);
+
+
+
+        /* -- closures -- -- -- -- -- */
+
+
+        /**
+         * @return undefined
+         */
+        function closure_execute(resolve, reject) {
+            try {
+                let originalPromise = CBUIPanel.confirmText(
+                    "This is the interactive CBUIPanel.confirmText() test."
+                );
+
+                originalPromise.then(
+                    function (response) {
+                        resolve(
+                            {
+                                message: response ? "confirmed" : "cancelled",
+                                succeeded: true,
+                            }
+                        );
+                    }
+                ).catch(
+                    function (error) {
+                        reject(error);
+                    }
+                );
+            } catch (error) {
+                reject(error);
+            }
+        }
+        /* closure_execute() */
+
+    },
+    /* CBTest_confirmText_interactive() */
+
+
+
+    /**
      * @return object
      */
     CBTest_deprecated: function () {

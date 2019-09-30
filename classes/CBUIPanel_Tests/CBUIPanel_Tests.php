@@ -4,15 +4,17 @@ final class CBUIPanel_Tests {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v525.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v530.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -27,13 +29,28 @@ final class CBUIPanel_Tests {
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- CBTest interfaces -- -- -- -- -- */
+
 
     /**
      * @return [object]
      */
     static function CBTest_getTests(): array {
         return [
+            (object)[
+                'name' => 'confirmText_cancel',
+                'title' => 'CBUIPanel confirmText() cancellation',
+            ],
+            (object)[
+                'name' => 'confirmText_confirm',
+                'title' => 'CBUIPanel confirmText() confirmation',
+            ],
+            (object)[
+                'name' => 'confirmText_interactive',
+                'title' => 'CBUIPanel confirmText()',
+                'type' => 'interactive',
+            ],
             (object)[
                 'name' => 'deprecated',
                 'title' => 'CBUIPanel deprecated',
@@ -57,5 +74,6 @@ final class CBUIPanel_Tests {
         ];
     }
     /* CBTest_getTests() */
+
 }
 /* CBUIPanel_Tests */
