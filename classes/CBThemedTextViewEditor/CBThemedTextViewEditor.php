@@ -12,14 +12,16 @@ final class CBThemedTextViewEditor {
     }
 
 
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v530.js', cbsysurl()),
         ];
     }
+
 
 
     /**
@@ -40,4 +42,5 @@ final class CBThemedTextViewEditor {
             'Colby',
         ];
     }
+
 }

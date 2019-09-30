@@ -24,53 +24,53 @@ var CBThemedTextViewEditor = {
      * @return undefined
      */
     convertToCBMessageView: function (spec, specChangedCallback) {
-        CBUIPanel.message = "Are you sure?";
-        CBUIPanel.buttons = [
-            {
-                title: "Yes",
-                callback: convert,
-            },
-            {
-                title: "No",
-            },
-        ];
-        CBUIPanel.isShowing = true;
-
-        function convert() {
-            CBUIPanel.reset();
-
-            CBUISpecClipboard.specs = [spec];
-
-            Colby.callAjaxFunction(
-                "CBThemedTextView",
-                "convertToCBMessageView",
-                spec
-            ).then(
-                fulfilled
-            ).catch(
-                function (error) {
-                    CBErrorHandler.displayAndReport(error);
+        CBUIPanel.confirmText(
+            `
+                Are you sure you want to convert this CBThemedTextView into a
+                CBMessageView?
+            `
+        ).then(
+            function (wasConfirmed) {
+                if (!wasConfirmed) {
+                    return;
                 }
-            );
 
-            function fulfilled(convertedSpec) {
-                Object.assign(spec, convertedSpec);
+                CBUISpecClipboard.specs = [spec];
 
-                specChangedCallback();
+                return Colby.callAjaxFunction(
+                    "CBThemedTextView",
+                    "convertToCBMessageView",
+                    spec
+                ).then(
+                    function (convertedSpec) {
+                        Object.assign(spec, convertedSpec);
 
-                let editor = CBUISpecEditor.create({
-                    spec: spec,
-                    specChangedCallback: specChangedCallback,
-                });
+                        specChangedCallback();
 
-                CBUINavigationView.replace({
-                    element: editor.element,
-                    title: spec.className,
-                });
+                        let editor = CBUISpecEditor.create(
+                            {
+                                spec: spec,
+                                specChangedCallback: specChangedCallback,
+                            }
+                        );
+
+                        CBUINavigationView.replace(
+                            {
+                                element: editor.element,
+                                title: spec.className,
+                            }
+                        );
+                    }
+                );
             }
-        }
+        ).catch(
+            function (error) {
+                CBErrorHandler.displayAndReport(error);
+            }
+        );
     },
     /* convertToCBMessageView() */
+
 
 
     /**
@@ -224,6 +224,7 @@ var CBThemedTextViewEditor = {
     /* createEditor() */
 
 
+
     /**
      * @param string? spec.contentAsMarkaround
      * @param string? spec.titleAsMarkaround
@@ -234,4 +235,5 @@ var CBThemedTextViewEditor = {
         return spec.titleAsMarkaround || spec.contentAsMarkaround;
     },
     /* CBUISpec_toDescription() */
+
 };
