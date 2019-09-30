@@ -17,11 +17,15 @@
  * This is the documentation for the API of the CBUIPanel object.
  *
  *      {
+ *          function confirmText(textContent) -> Promise -> bool
+ *
  *          function displayAjaxResponse(ajaxResponse)
  *
  *          function displayElement(contentElement)
  *
- *          function displayText(textContent) -> Promise
+ *          function displayError(error)
+ *
+ *          function displayText(textContent) -> Promise -> undefined
  *
  *
  *          -- everything below is deprecated -- -- -- -- --
@@ -105,6 +109,8 @@ Colby.afterDOMContentLoaded(
 
         let api = {
 
+            confirmText: init_confirmText,
+
             displayAjaxResponse: init_displayAjaxResponse,
 
             displayElement: init_displayElement,
@@ -112,6 +118,7 @@ Colby.afterDOMContentLoaded(
             displayError: init_displayError,
 
             displayText: init_displayText,
+
 
             /**
              * @deprecated 2019_09_19
@@ -174,7 +181,95 @@ Colby.afterDOMContentLoaded(
         return;
 
 
+
         /* -- closures -- -- -- -- -- */
+
+
+        /**
+         * @param string textContent
+         *
+         * @return Promise -> bool
+         */
+        function init_confirmText(textContent) {
+            let cancel, confirm;
+
+            let promise = new Promise(
+                init_confirmText_execute
+            );
+
+            promise.CBUIPanel = {
+                cancel: cancel,
+                confirm: confirm,
+            };
+
+            return promise;
+
+
+            /* -- closures -- -- -- -- -- */
+
+
+            /**
+             * @param function resolve
+             * @param function reject
+             *
+             * @return undefined
+             */
+            function init_confirmText_execute(resolve, reject) {
+                try {
+                    cancel = function () {
+                        try {
+                            element.CBUIPanel.hide();
+                            promise.CBUIPanel = undefined;
+                            resolve(false);
+                        } catch (error) {
+                            reject(error);
+                        }
+                    };
+
+                    confirm = function () {
+                        try {
+                            element.CBUIPanel.hide();
+                            promise.CBUIPanel = undefined;
+                            resolve(true);
+                        } catch (error) {
+                            reject(error);
+                        }
+                    };
+
+                    let element = CBUI.createElement();
+
+                    element.appendChild(
+                        init_createTextElement(textContent)
+                    );
+
+                    element.appendChild(
+                        init_createButtonElement(
+                            {
+                                callback: confirm,
+                                title: "OK",
+                            }
+                        )
+                    );
+
+                    element.appendChild(
+                        init_createButtonElement(
+                            {
+                                callback: cancel,
+                                title: "Cancel",
+                            }
+                        )
+                    );
+
+                    init_displayElement(element);
+                } catch (error) {
+                    reject(error);
+                }
+            }
+            /* init_confirmText_execute() */
+        }
+        /* init_confirmText() */
+
+
 
         /**
          * @param object args
