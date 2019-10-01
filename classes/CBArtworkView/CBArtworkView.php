@@ -64,23 +64,55 @@ final class CBArtworkView {
      */
     static function CBModel_build(stdClass $spec): ?stdClass {
         $model = (object)[
-            'alternativeText' => CBModel::value($spec, 'alternativeText', '', 'trim'),
-            'captionAsMarkdown' => CBModel::valueToString($spec, 'captionAsMarkdown'),
-            'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
-            'size' => CBModel::value($spec, 'size', 'default', 'trim'),
+            'alternativeText' => trim(
+                CBModel::valueToString($spec, 'alternativeText')
+            ),
+
+            'captionAsMarkdown' => CBModel::valueToString(
+                $spec,
+                'captionAsMarkdown'
+            ),
+
+            'CSSClassNames' => CBModel::valueToNames(
+                $spec,
+                'CSSClassNames'
+            ),
+
+            'size' => CBModel::valueAsName(
+                $spec,
+                'size'
+            ),
         ];
+
 
         /* image */
 
-        if ($imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage'])) {
+        $imageSpec = CBModel::valueAsModel(
+            $spec,
+            'image',
+            [
+                'CBImage',
+            ]
+        );
+
+        if ($imageSpec !== null) {
             $model->image = CBModel::build($imageSpec);
         }
+
+
+        /* caption */
 
         $parsedown = new Parsedown();
         $model->captionAsHTML = $parsedown->text($model->captionAsMarkdown);
 
+
+        /* done */
+
         return $model;
     }
+    /* CBModel_build() */
+
+
 
     /**
      * @param model $spec
@@ -95,6 +127,8 @@ final class CBArtworkView {
         return $spec;
     }
 
+
+
     /**
      * @param string? $model->alternativeText
      * @param string? $model->captionAsMarkdown
@@ -102,11 +136,13 @@ final class CBArtworkView {
      * @return string
      */
     static function CBModel_toSearchText(stdClass $model) {
-        $searchText[] = CBModel::value($model, 'alternativeText', '');
-        $searchText[] = CBModel::value($model, 'captionAsMarkdown', '');
+        $searchText[] = CBModel::valueToString($model, 'alternativeText');
+        $searchText[] = CBModel::valueToString($model, 'captionAsMarkdown');
 
         return implode(' ', $searchText);
     }
+
+
 
     /**
      * @param string? $model->alternativeText
@@ -145,10 +181,16 @@ final class CBArtworkView {
         CBHTMLOutput::addPinterest();
 
         $image = $model->image;
-        $alternativeText = CBModel::value($model, 'alternativeText', '');
+
+        $alternativeText = CBModel::valueToString(
+            $model,
+            'alternativeText'
+        );
+
 
         /**
-         * 2017.06.26
+         * @NOTE 2017_06_26
+         *
          * After working with customers and being annoyed with copying caption
          * into alternative text, I decided to make this imperfect change and
          * use the caption markdown as fallback alternitive text. It's more
@@ -156,12 +198,31 @@ final class CBArtworkView {
          */
 
         if (empty($alternativeText)) {
-            $alternativeText = mb_substr(CBModel::value($model, 'captionAsMarkdown', '', 'trim'), 0, 100);
+            $captionAsMarkdown = trim(
+                CBModel::valueToString(
+                    $model,
+                    'captionAsMarkdown'
+                )
+            );
+
+            $alternativeText = mb_substr(
+                $captionAsMarkdown,
+                0,
+                100
+            );
         }
 
         $alternativeTextAsHTML = cbhtml($alternativeText);
-        $captionAsHTML = CBModel::value($model, 'captionAsHTML', '');
-        $size = CBModel::value($model, 'size', 'rw1600');
+
+        $captionAsHTML = CBModel::valueToString(
+            $model,
+            'captionAsHTML'
+        );
+
+        $size = CBModel::valueAsName(
+            $model,
+            'size'
+        ) ?? 'rw1600';
 
         switch ($size) {
             case 'rw320':
@@ -256,4 +317,6 @@ final class CBArtworkView {
 
         <?php
     }
+    /* CBView_render() */
+
 }
