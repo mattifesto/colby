@@ -68,11 +68,6 @@ final class CBArtworkView {
                 CBModel::valueToString($spec, 'alternativeText')
             ),
 
-            'captionAsMarkdown' => CBModel::valueToString(
-                $spec,
-                'captionAsMarkdown'
-            ),
-
             'CSSClassNames' => CBModel::valueToNames(
                 $spec,
                 'CSSClassNames'
@@ -102,8 +97,46 @@ final class CBArtworkView {
 
         /* caption */
 
-        $parsedown = new Parsedown();
-        $model->captionAsHTML = $parsedown->text($model->captionAsMarkdown);
+        /**
+         * @NOTE 2019_10_01
+         *
+         *      The captionAsMarkdown property is deprecated.
+         */
+
+        $captionAsMarkdown = CBModel::valueToString(
+            $spec,
+            'captionAsMarkdown'
+        );
+
+        if (empty(trim($captionAsMarkdown))) {
+            $captionAsCBMessage = CBModel::valueToString(
+                $spec,
+                'captionAsCBMessage'
+            );
+
+            if (!empty(trim($captionAsCBMessage))) {
+                $model->captionAsCBMessage = $captionAsCBMessage;
+
+                $model->captionAsHTML = CBMessageMarkup::messageToHTML(
+                    $captionAsCBMessage
+                );
+
+                if (empty($model->alternativeText)) {
+                    $model->alternativeText = mb_substr(
+                        CBMessageMarkup::messageToText($captionAsCBMessage),
+                        0,
+                        100
+                    );
+                }
+            }
+        } else {
+            $parsedown = new Parsedown();
+
+            $model->captionAsMarkdown = $captionAsMarkdown;
+            $model->captionAsHTML = $parsedown->text(
+                $model->captionAsMarkdown
+            );
+        }
 
 
         /* done */
