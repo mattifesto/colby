@@ -5,6 +5,7 @@
 /* globals
     CBErrorHandler,
     CBImage,
+    CBMessageMarkup,
     CBModel,
     CBUI,
     CBUIImageChooser,
@@ -12,6 +13,7 @@
     CBUIStringEditor,
     Colby,
 */
+
 
 var CBArtworkViewEditor = {
 
@@ -59,20 +61,38 @@ var CBArtworkViewEditor = {
 
         section.appendChild(item);
 
-        item = CBUI.createSectionItem();
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
+        /* captionAsCBMessage, captionAsMarkdown */
+        {
+            let propertyName;
+            let title;
+
+            let captionAsMarkdown = CBModel.valueToString(
+                args.spec,
+                "captionAsMarkdown"
+            );
+
+            if (captionAsMarkdown.trim() === "") {
+                title = "Caption (cbmessage)";
+                propertyName = "captionAsCBMessage";
+            } else {
+                title = "Caption (markdown)";
+                propertyName = "captionAsMarkdown";
+            }
+
+            let stringEditor = CBUIStringEditor.createEditor(
                 {
-                    labelText: "Caption",
-                    propertyName: "captionAsMarkdown",
+                    labelText: title,
+                    propertyName: propertyName,
                     spec: args.spec,
                     specChangedCallback: args.specChangedCallback,
                 }
-            ).element
-        );
+            );
 
-        section.appendChild(item);
+            section.appendChild(stringEditor.element);
+        }
+        /* captionAsCBMessage, captionAsMarkdown */
+
 
         item = CBUI.createSectionItem();
         item.appendChild(
@@ -244,23 +264,41 @@ var CBArtworkViewEditor = {
     /**
      * @param object spec
      *
-     *      {
-     *          alternativeText: string?
-     *          captionAsMarkdown: string?
-     *      }
-     *
      * @return string|undefined
      */
     CBUISpec_toDescription: function (spec) {
-        if (
-            typeof spec.alternativeText === "string" &&
-            spec.alternativeText.trim().length > 0
-        ) {
-            return spec.alternativeText;
+        let alternativeText = CBModel.valueToString(
+            spec,
+            "alternativeText"
+        ).trim();
+
+        if (alternativeText !== "") {
+            return alternativeText;
+        }
+
+        let captionAsMarkdown = CBModel.valueToString(
+            spec,
+            "captionAsMarkdown"
+        ).trim();
+
+        if (captionAsMarkdown !== "") {
+            return captionAsMarkdown;
+        }
+
+        let cbmessage = CBMessageMarkup.messageToText(
+            CBModel.valueToString(
+                spec,
+                "captionAsCBMessage"
+            )
+        ).trim();
+
+        if (cbmessage === "") {
+            return undefined;
         } else {
-            return spec.captionAsMarkdown;
+            return cbmessage;
         }
     },
     /* CBUISpec_toDescription() */
+
 };
 /* CBArtworkViewEditor */
