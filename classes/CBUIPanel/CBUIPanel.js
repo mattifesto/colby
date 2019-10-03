@@ -4,6 +4,7 @@
 /* exported CBUIPanel */
 /* global
     CBConvert,
+    CBException,
     CBMessageMarkup,
     CBModel,
     CBUI,
@@ -20,6 +21,8 @@
  *          function confirmText(textContent) -> Promise -> bool
  *
  *          function displayAjaxResponse(ajaxResponse)
+ *
+ *          function displayBusyText(textContent) -> object
  *
  *          function displayElement(contentElement)
  *
@@ -112,6 +115,8 @@ Colby.afterDOMContentLoaded(
             confirmText: init_confirmText,
 
             displayAjaxResponse: init_displayAjaxResponse,
+
+            displayBusyText: init_displayBusyText,
 
             displayElement: init_displayElement,
 
@@ -505,6 +510,31 @@ Colby.afterDOMContentLoaded(
         /* init_displayAjaxResponse() */
 
 
+
+        /**
+         * @param string text
+         *
+         * @return object
+         *
+         *      {
+         *          hide: function
+         *      }
+         */
+        function init_displayBusyText(textContent) {
+            let element = CBUI.createElement();
+
+            element.appendChild(
+                init_createTextElement(textContent)
+            );
+
+            init_displayElement(element);
+
+            return element.CBUIPanel;
+        }
+        /* init_displayBusyText() */
+
+
+
         /**
          * @param Element contentElement
          *
@@ -512,7 +542,14 @@ Colby.afterDOMContentLoaded(
          */
         function init_displayElement(contentElement) {
             if (contentElement.CBUIPanel !== undefined) {
-                throw Error("hello");
+                throw CBException.withError(
+                    Error(
+                        "The contentElement argument is already " +
+                        "being displayed."
+                    ),
+                    "",
+                    "44a2f3c7d22095385de52b49193dea07b004fee3"
+                );
             }
 
             let panelElement = init_createPanelElement(contentElement);
