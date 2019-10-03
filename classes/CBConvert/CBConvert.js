@@ -212,6 +212,35 @@ var CBConvert = {
         }
     },
 
+
+
+    /**
+     * This function is used to convert a string formatted with extra whitespace
+     * into a single line. This is useful when making strings readable in code
+     * that are going to be used by a function as a single line.
+     *
+     * Example:
+     *
+     *      window.alert(
+     *          CBConvert.stringToCleanLine(`
+     *
+     *              I have sometimes sat alone here of an evening, listening,
+     *              until I have made the echoes out to be the echoes of all the
+     *              footsteps that are coming by and by into our lives.
+     *
+     *          `)
+     *      );
+     *
+     * @param string value
+     *
+     * @return string
+     */
+    stringToCleanLine: function (value) {
+        return value.replace(/\s+/, " ").trim();
+    },
+
+
+
     /**
      * @param string value
      *
@@ -220,6 +249,8 @@ var CBConvert = {
     stringToLines: function (value) {
         return value.split(/\r\n|\r|\n/);
     },
+
+
 
     /**
      * @param mixed value
