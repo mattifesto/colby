@@ -388,6 +388,7 @@ var CBModelInspector = {
 
             {
                 let sectionItem = CBUISectionItem4.create();
+
                 sectionItem.callback = function () {
                     confirm();
                 };
@@ -402,27 +403,26 @@ var CBModelInspector = {
 
                 /* stage 1 */
                 let confirm = function () {
-                    CBUIPanel.message = (
+                    CBUIPanel.confirmText(
                         "Are you sure you want to delete this model?"
+                    ).then(
+                        function (wasConfirmed) {
+                            if (wasConfirmed) {
+                                deleteModel();
+                            }
+                        }
+                    ).catch(
+                        function (error) {
+                            CBErrorHandler.displayAndReport(error);
+                        }
                     );
-
-                    CBUIPanel.buttons = [
-                        {
-                            title: "Yes",
-                            callback: deleteModel,
-                        },
-                        {
-                            title: "No",
-                        },
-                    ];
-
-                    CBUIPanel.isShowing = true;
                 };
 
                 /* stage 2 */
                 let deleteModel = function () {
-                    CBUIPanel.message = "Deleting model...";
-                    CBUIPanel.buttons = [];
+                    let controller = CBUIPanel.displayBusyText(
+                        "Deleting model..."
+                    );
 
                     Colby.callAjaxFunction(
                         "CBModels",
@@ -431,32 +431,45 @@ var CBModelInspector = {
                             ID: model.ID,
                         }
                     ).then(
-                        report
+                        function () {
+                            return new Promise(
+                                function (resolve) {
+                                    window.setTimeout(
+                                        resolve,
+                                        3000
+                                    );
+                                }
+                            );
+                        }
+                    ).then(
+                        function () {
+                            report();
+                        }
                     ).catch(
                         function (error) {
                             CBErrorHandler.displayAndReport(error);
+                        }
+                    ).finally(
+                        function () {
+                            controller.hide();
                         }
                     );
                 };
 
                 /* stage 3 */
                 let report = function () {
-                    CBUIPanel.message = (
-                        "The model has been deleted.\n\nPress OK to " +
+                    CBUIPanel.displayText(
+                        "The model has been deleted. Press OK to " +
                         "navigate to the models admin page."
-                    );
-
-                    CBUIPanel.buttons = [
-                        {
-                            title: "OK",
-                            callback: navigate,
+                    ).then(
+                        function () {
+                            window.location = "/admin/?c=CBModelsAdmin";
                         }
-                    ];
-                };
-
-                /* stage 4 */
-                let navigate = function () {
-                    window.location = "/admin/?c=CBModelsAdmin";
+                    ).catch(
+                        function (error) {
+                            CBErrorHandler.displayAndReport(error);
+                        }
+                    );
                 };
             }
 

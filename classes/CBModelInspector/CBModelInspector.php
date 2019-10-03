@@ -14,12 +14,14 @@ final class CBModelInspector {
         ];
     }
 
+
     /**
      * @return void
      */
     static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'Model Inspector';
     }
+
 
 
     /* -- CBAjax interfaces -- -- -- -- -- */
@@ -71,12 +73,14 @@ final class CBModelInspector {
     /* CBAjax_fetchModelData() */
 
 
+
     /**
      * @return string
      */
     static function CBAjax_fetchModelData_group() {
         return 'Administrators';
     }
+
 
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
@@ -86,9 +90,10 @@ final class CBModelInspector {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v531.js', cbsysurl()),
         ];
     }
+
 
 
     /**
@@ -144,6 +149,7 @@ final class CBModelInspector {
     }
 
 
+
     /* -- functions -- -- -- -- -- */
 
     /**
@@ -166,6 +172,8 @@ final class CBModelInspector {
 
         return var_export($archive->data(), true);
     }
+
+
 
     /**
      * @param hex160 $ID
@@ -203,6 +211,8 @@ final class CBModelInspector {
         return $files;
     }
 
+
+
     /**
      * @param hex160 $ID
      *
@@ -230,6 +240,8 @@ EOT;
         return $versions;
     }
 
+
+
     /**
      * @param hex160 $ID
      *
@@ -253,6 +265,8 @@ EOT;
             return $result;
         }
     }
+
+
 
     /**
      * @param hex160 $ID
@@ -289,4 +303,5 @@ EOT;
             return $result;
         }
     }
+
 }
