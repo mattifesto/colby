@@ -10,7 +10,7 @@ final class CBUIPanel_Tests {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v530.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v531.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -22,6 +22,9 @@ final class CBUIPanel_Tests {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBConvert',
+            'CBModel',
+            'CBTest',
             'CBUI',
             'CBUIPanel',
         ];
@@ -55,6 +58,10 @@ final class CBUIPanel_Tests {
                 'name' => 'deprecated',
                 'title' => 'CBUIPanel deprecated',
                 'type' => 'interactive',
+            ],
+            (object)[
+                'name' => 'displayElement_alreadyDisplayedError',
+                'title' => 'CBUIPanel.displayElement() already displayed error',
             ],
             (object)[
                 'name' => 'displayElementThreeTimes',

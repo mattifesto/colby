@@ -3,6 +3,9 @@
 /* jshint esversion: 6 */
 /* exported CBUIPanel_Tests */
 /* global
+    CBConvert,
+    CBModel,
+    CBTest,
     CBUI,
     CBUIPanel,
 */
@@ -218,6 +221,52 @@ var CBUIPanel_Tests = {
         };
     },
     /* CBTest_deprecated() */
+
+
+
+    /**
+     * @return object
+     */
+    CBTest_displayElement_alreadyDisplayedError: function() {
+        let contentElement = document.createElement("div");
+        contentElement.textContent = "content element";
+
+        CBUIPanel.displayElement(contentElement);
+
+        let actualSourceID;
+        let expectedSourceID = "44a2f3c7d22095385de52b49193dea07b004fee3";
+
+        try {
+            CBUIPanel.displayElement(contentElement);
+        } catch (error) {
+            actualSourceID = CBModel.valueAsID(
+                error,
+                "CBException.sourceID"
+            );
+        }
+
+        contentElement.CBUIPanel.hide();
+
+        if (actualSourceID !== expectedSourceID) {
+            return CBTest.resultMismatchFailure(
+                CBConvert.stringToCleanLine(`
+
+                    Verify the source ID of the error thrown when attempting to
+                    call CBUIPanel.displayElement() with an element that is
+                    already being displayed.
+
+                `),
+                actualSourceID,
+                expectedSourceID
+            );
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_displayElement_alreadyDisplayedError() */
+
 
 
     /**
