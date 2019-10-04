@@ -595,13 +595,16 @@ Colby.afterDOMContentLoaded(
 
 
         /**
-         * @param string text
+         * @param string textContent
+         * @param string buttonTextContent
+         *
+         *      The default value for this parameter is "OK".
          *
          * @return Promise
          *
          *      The promise resolves when the user clicks the OK button.
          */
-        function init_displayText(textContent) {
+        function init_displayText(textContent, buttonTextContent) {
             return new Promise(
                 function (resolve) {
                     let element = CBUI.createElement();
@@ -610,6 +613,14 @@ Colby.afterDOMContentLoaded(
                         init_createTextElement(textContent)
                     );
 
+                    buttonTextContent = CBConvert.valueToString(
+                        buttonTextContent
+                    ).trim();
+
+                    if (buttonTextContent === "") {
+                        buttonTextContent = "OK";
+                    }
+
                     element.appendChild(
                         init_createButtonElement(
                             {
@@ -617,7 +628,7 @@ Colby.afterDOMContentLoaded(
                                     element.CBUIPanel.hide();
                                     resolve();
                                 },
-                                title: "OK",
+                                title: buttonTextContent,
                             }
                         )
                     );
