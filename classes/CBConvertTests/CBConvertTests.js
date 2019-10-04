@@ -64,6 +64,9 @@ var CBConvertTests = {
             succeeded: true,
         };
     },
+    /* CBTest_centsToDollars() */
+
+
 
     /**
      * @return object|Promise
@@ -143,6 +146,35 @@ var CBConvertTests = {
             succeeded: true,
         };
     },
+    /* CBTest_dollarsAsCents() */
+
+
+
+    /**
+     * @return object
+     */
+    CBTest_stringToCleanLine: function () {
+        let actualResult = CBConvert.stringToCleanLine(
+            "   Hello.\n\nHow are you?\t\tI'm fine!\t  \n"
+        );
+
+        let expectedResult = "Hello. How are you? I'm fine!";
+
+        if (actualResult !== expectedResult) {
+            return CBTest.resultMismatchFailure(
+                "test 1",
+                actualResult,
+                expectedResult
+            );
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_stringToCleanLine() */
+
+
 
     /**
      * @return object|Promise

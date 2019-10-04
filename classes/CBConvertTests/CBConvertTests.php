@@ -4,14 +4,17 @@ final class CBConvertTests {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v469.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v533.js', cbsysurl()),
         ];
     }
+
+
 
     /**
      * @return [[<variableName>, <variableValue>]]
@@ -25,6 +28,8 @@ final class CBConvertTests {
         ];
     }
 
+
+
     /**
      * @return [string]
      */
@@ -37,7 +42,10 @@ final class CBConvertTests {
         ];
     }
 
+
+
     /* -- CBTest interfaces -- -- -- -- -- */
+
 
     /**
      * @return [[<className>, <testName>]]
@@ -55,6 +63,8 @@ final class CBConvertTests {
             ['CBConvert', 'valueToObject'],
         ];
     }
+
+
 
     /**
      * @return [[<className>, <testName>]]
@@ -88,6 +98,10 @@ final class CBConvertTests {
                 'name' => 'centsToDollars',
                 'title' => 'CBConvert::centsToDollars()',
                 'type' => 'server',
+            ],
+            (object)[
+                'name' => 'stringToCleanLine',
+                'title' => 'CBConvert.stringToCleanLine()',
             ],
             (object)[
                 'name' => 'stringToCleanLine',
