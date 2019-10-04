@@ -74,26 +74,34 @@ final class CBConvertTests {
     /* CBTest_PHPTests() */
 
 
+
     /**
      * @return [object]
      */
     static function CBTest_getTests(): array {
         return [
             (object)[
-                'title' => 'CBConvert.centsToDollars()',
                 'name' => 'centsToDollars',
+                'title' => 'CBConvert.centsToDollars()',
             ],
             (object)[
-                'type' => 'server',
-                'title' => 'CBConvert::centsToDollars()',
                 'name' => 'centsToDollars',
+                'title' => 'CBConvert::centsToDollars()',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'stringToCleanLine',
+                'title' => 'CBConvert::stringToCleanLine()',
+                'type' => 'server',
             ],
         ];
     }
     /* CBTest_getTests() */
 
 
+
     /* -- tests -- -- -- -- -- */
+
 
     /**
      * @return object
@@ -126,6 +134,35 @@ final class CBConvertTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_centsToDollars() */
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_stringToCleanLine(): stdClass {
+        $actualResult = CBConvert::stringToCleanLine(
+            "   Hello.\n\nHow are you?\t\tI'm fine!\t  \n"
+        );
+
+        $expectedResult = 'Hello. How are you? I\'m fine!';
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure(
+                'test 1',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_stringToCleanLine() */
+
+
 
     /**
      * @return object
@@ -154,6 +191,8 @@ final class CBConvertTests {
             ];
         }
     }
+
+
 
     /**
      * @return object
