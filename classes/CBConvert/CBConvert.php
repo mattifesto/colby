@@ -148,6 +148,21 @@ final class CBConvert {
     /* localAbsoluteURLToRootRelativeURL() */
 
 
+
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
+    static function stringToCleanLine(string $value): string {
+        return trim(
+            preg_replace('/\s+/', ' ', $value)
+        );
+    }
+    /* stringToCleanLine() */
+
+
+
     /**
      * Determines whether a string is a CSS background image. If so then it is
      * sanitized and returned; if not then null is returned.
