@@ -9,7 +9,7 @@ final class CBConvert {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v531.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v533.js', cbsysurl()),
         ];
     }
 

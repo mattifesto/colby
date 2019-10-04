@@ -236,7 +236,7 @@ var CBConvert = {
      * @return string
      */
     stringToCleanLine: function (value) {
-        return value.replace(/\s+/, " ").trim();
+        return value.replace(/\s+/g, " ").trim();
     },
 
 
