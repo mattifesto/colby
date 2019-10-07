@@ -44,7 +44,7 @@ final class Colby {
 
         if (defined('SCLibraryVersionNumber')) {
             $actualLibraryVersionNumber = SCLibraryVersionNumber;
-            $expectedLibraryVersionNumber = '119';
+            $expectedLibraryVersionNumber = '120';
 
             if (
                 $actualLibraryVersionNumber !==
