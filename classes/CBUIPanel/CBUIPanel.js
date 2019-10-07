@@ -390,78 +390,48 @@ Colby.afterDOMContentLoaded(
 
             /* message */
             {
-                let sectionContainerElement = CBUI.createElement(
-                    "CBUI_sectionContainer CBUI_padding_half"
-                );
-
-                element.appendChild(sectionContainerElement);
-
-                let sectionElement = CBUI.createElement(
-                    "CBUI_section CBUI_section_noborder"
-                );
-
-                sectionContainerElement.appendChild(sectionElement);
-
-                let textContainerElement = CBUI.createElement(
-                    "CBUI_container_topAndBottom"
-                );
-
-                sectionElement.appendChild(textContainerElement);
-
-                let textElement = CBUI.createElement();
-
-                textElement.textContent = CBModel.valueToString(
+                let textContent = CBModel.valueToString(
                     ajaxResponse,
                     "message"
                 );
 
-                textContainerElement.appendChild(textElement);
+                element.appendChild(
+                    init_createTextElement(textContent)
+                );
             }
             /* message */
 
             /* button */
             {
-                let sectionContainerElement = CBUI.createElement(
-                    "CBUI_sectionContainer CBUI_padding_half"
-                );
-
-                element.appendChild(sectionContainerElement);
-
-                let sectionElement = CBUI.createElement(
-                    "CBUI_section CBUI_section_inner"
-                );
-
-                sectionContainerElement.appendChild(sectionElement);
-
-                let buttonElement = CBUI.createElement(
-                    "CBUI_action"
-                );
-
-                sectionElement.appendChild(buttonElement);
+                let buttonElement;
 
                 if (
                     ajaxResponse.classNameForException ===
                     "CBModelVersionMismatchException" ||
                     ajaxResponse.userMustLogIn
                 ) {
-                    buttonElement.textContent = "Reload";
-
-                    buttonElement.addEventListener(
-                        "click",
-                        function () {
-                            location.reload();
+                    buttonElement = init_createButtonElement(
+                        {
+                            callback: function () {
+                                location.reload();
+                            },
+                            title: "Reload",
                         }
                     );
                 } else {
-                    buttonElement.textContent = "Okay";
-
-                    buttonElement.addEventListener(
-                        "click",
-                        function () {
-                            element.CBUIPanel.hide();
+                    buttonElement = init_createButtonElement(
+                        {
+                            callback: function () {
+                                element.CBUIPanel.hide();
+                            },
+                            title: "OK",
                         }
                     );
                 }
+
+                element.appendChild(
+                    buttonElement
+                );
             }
             /* button */
 
