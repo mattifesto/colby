@@ -230,6 +230,8 @@ final class CBConvert {
         return preg_split('/(\r\n|\r|\n)/', $value);
     }
 
+
+
     /**
      * Converts plain text to a simple "stub".
      *
@@ -275,11 +277,11 @@ final class CBConvert {
         $replacements = [];
 
         /* replace separator characters with a hyphen */
-        array_push($patterns, '/[\s-_]+/');
+        array_push($patterns, '/[\s\-_]+/');
         array_push($replacements, '-');
 
         /* remove unused characters */
-        array_push($patterns, '/[^a-zA-Z0-9-]/');
+        array_push($patterns, '/[^a-zA-Z0-9\-]/');
         array_push($replacements, '');
 
         /* remove leading hyphens */
@@ -298,6 +300,8 @@ final class CBConvert {
             preg_replace($patterns, $replacements, $string)
         );
     }
+
+
 
     /**
      * This function is very similar to CBConvert::stringToStub() but it handles
