@@ -11,6 +11,7 @@
     Colby,
 */
 
+
 /**
  * This file will create a CBUIPanel global variable (a property on the window
  * object) that can be used to display panels with messages and custom buttons.
@@ -24,11 +25,15 @@
  *
  *          function displayBusyText(textContent) -> object
  *
+ *          function displayCBMessage(cbmessage, buttonTextContent)
+ *          -> Promise -> undefined
+ *
  *          function displayElement(contentElement)
  *
  *          function displayError(error)
  *
- *          function displayText(textContent) -> Promise -> undefined
+ *          function displayText(textContent, buttonTextContent)
+ *          -> Promise -> undefined
  *
  *
  *          -- everything below is deprecated -- -- -- -- --
@@ -117,6 +122,8 @@ Colby.afterDOMContentLoaded(
             displayAjaxResponse: init_displayAjaxResponse,
 
             displayBusyText: init_displayBusyText,
+
+            displayCBMessage: init_displayCBMessage,
 
             displayElement: init_displayElement,
 
@@ -316,6 +323,40 @@ Colby.afterDOMContentLoaded(
         /* init_createButtonElement() */
 
 
+
+        /**
+         * Creates a tree of elements used for displaying cbmessage content
+         * without a border.
+         *
+         * @param string cbmessage
+         *
+         * @return Element
+         */
+        function init_createCBMessageElement(cbmessage) {
+            let sectionContainerElement = CBUI.createElement(
+                "CBUI_sectionContainer CBUI_padding_half"
+            );
+
+            let sectionElement = CBUI.createElement(
+                "CBUI_section CBUI_section_noborder"
+            );
+
+            sectionContainerElement.appendChild(sectionElement);
+
+            let contentElement = CBUI.createElement(
+                "CBUI_content CBContentStyleSheet"
+            );
+
+            sectionElement.appendChild(contentElement);
+
+            contentElement.innerHTML = CBMessageMarkup.messageToHTML(cbmessage);
+
+            return sectionContainerElement;
+        }
+        /* init_createCBMessageElement() */
+
+
+
         /**
          * @param Element contentElement
          *
@@ -502,6 +543,54 @@ Colby.afterDOMContentLoaded(
             return element.CBUIPanel;
         }
         /* init_displayBusyText() */
+
+
+
+        /**
+         * @param string cbmessage
+         * @param string buttonTextContent
+         *
+         *      The default value for this parameter is "OK".
+         *
+         * @return Promise
+         *
+         *      The promise resolves when the user clicks the button.
+         */
+        function init_displayCBMessage(cbmessage, buttonTextContent) {
+            return new Promise(
+                function (resolve) {
+                    let element = CBUI.createElement();
+
+                    element.appendChild(
+                        init_createCBMessageElement(cbmessage)
+                    );
+
+                    buttonTextContent = CBConvert.valueToString(
+                        buttonTextContent
+                    ).trim();
+
+                    if (buttonTextContent === "") {
+                        buttonTextContent = "OK";
+                    }
+
+                    element.appendChild(
+                        init_createButtonElement(
+                            {
+                                callback: function () {
+                                    element.CBUIPanel.hide();
+                                    resolve();
+                                },
+                                title: buttonTextContent,
+                            }
+                        )
+                    );
+
+                    init_displayElement(element);
+                }
+            );
+            /* new Promise */
+        }
+        /* init_displayCBMessage() */
 
 
 
