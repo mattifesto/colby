@@ -54,7 +54,7 @@ var CBContainerViewEditor = {
      *
      * @return string|undefined
      */
-    CBUISpec_toThumbnailURI: function (spec) {
+    CBUISpec_toThumbnailURL: function (spec) {
         let image = spec.smallImage || spec.mediumImage || spec.largeImage;
 
         if (image) {
@@ -65,18 +65,18 @@ var CBContainerViewEditor = {
         } else {
             if (Array.isArray(spec.subviews)) {
                 for (let i = 0; i < spec.subviews.length; i++) {
-                    let thumbnailURI = CBUISpec.specToThumbnailURI(
+                    let thumbnailURL = CBUISpec.specToThumbnailURL(
                         spec.subviews[i]
                     );
 
-                    if (thumbnailURI) {
-                        return thumbnailURI;
+                    if (thumbnailURL) {
+                        return thumbnailURL;
                     }
                 }
             }
         }
     },
-    /* CBUISpec_toThumbnailURI() */
+    /* CBUISpec_toThumbnailURL() */
 
 
 
