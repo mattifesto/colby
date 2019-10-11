@@ -775,10 +775,9 @@ final class CBCodeAdmin {
                 ],
 
 
-                /* -- warnings -- -- -- -- -- */
-
                 /**
-                 * 2019_06_16
+                 * 2019_06_16 (warning)
+                 * 2019_10_11 (error)
                  */
                 (object)[
                     'args' => implode(
@@ -790,12 +789,32 @@ final class CBCodeAdmin {
                     ),
                     'filetype' => 'js',
                     'regex' => '(?<!CBUISpec\\.)specToDescription',
-                    'severity' => 4,
+                    'severity' => 3,
                     'title' => (
                         'Replace specToDescription() with ' .
                         'CBUISpec_toDescription()'
                     ),
                 ],
+
+
+                /**
+                 * 2019_08_20 (warning)
+                 * 2019_10_11 (error)
+                 */
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'specToThumbnailURI|CBUISpec_toThumbnailURI',
+                    'severity' => 3,
+                    'title' => (
+                        'Replace "specToThumbnailURI" or ' .
+                        '"CBUISpec_toThumbnailURI" interface ' .
+                        'implementations with a "CBUISpec_toThumbnailURL" ' .
+                        'interface implementation.'
+                    ),
+                ],
+
+
+                /* -- warnings -- -- -- -- -- */
 
 
                 /**
@@ -1094,22 +1113,6 @@ final class CBCodeAdmin {
                     'title' => (
                         'Replace use of "setImageURLCallback" with the ' .
                         '"src" property on the CBUIImageChooser object.'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_08_20
-                 */
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => 'specToThumbnailURI|CBUISpec_toThumbnailURI',
-                    'severity' => 4,
-                    'title' => (
-                        'Replace "specToThumbnailURI" or ' .
-                        '"CBUISpec_toThumbnailURI" interface ' .
-                        'implementations with a "CBUISpec_toThumbnailURL" ' .
-                        'interface implementation.'
                     ),
                 ],
 
