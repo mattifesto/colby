@@ -8,6 +8,7 @@
     CBModel,
 */
 
+
 var CBUISpec = {
 
     /**
@@ -22,6 +23,7 @@ var CBUISpec = {
         args.specChangedCallback.call();
     },
     /* setValue() */
+
 
 
     /**
@@ -42,36 +44,22 @@ var CBUISpec = {
         }
 
         let editorObject = window[spec.className + "Editor"];
-        let callable;
+        let callable = CBModel.valueAsFunction(
+            editorObject,
+            "CBUISpec_toDescription"
+        );
 
-        if (
-            (callable = CBModel.valueAsFunction(
-                editorObject,
-                "CBUISpec_toDescription"
-            )) ||
-
-            (callable = CBModel.valueAsFunction(
-                editorObject,
-                "specToDescription"
-            ))
-        ) {
+        if (callable !== undefined) {
             return callable(spec);
-        }
-
-        else {
-            return CBModel.valueToString(spec, "title").trim() || undefined;
+        } else {
+            return CBModel.valueToString(
+                spec,
+                "title"
+            ).trim() || undefined;
         }
     },
     /* specToDescription() */
 
-
-    /**
-     * @deprecated 2019_05_29
-     */
-    specToThumbnailURI: function (spec) {
-        return CBUISpec.specToThumbnailURL(spec);
-    },
-    /* specToThumbnailURI() */
 
 
     /**
@@ -92,40 +80,23 @@ var CBUISpec = {
         }
 
         let editorObject = window[spec.className + "Editor"];
-        let callable;
+        let callable = CBModel.valueAsFunction(
+            editorObject,
+            "CBUISpec_toThumbnailURL"
+        );
 
-        if (
-            (callable = CBModel.valueAsFunction(
-                editorObject,
-                "CBUISpec_toThumbnailURL"
-            )) ||
-
-            /* deprecated */
-            (callable = CBModel.valueAsFunction(
-                editorObject,
-                "CBUISpec_toThumbnailURI"
-            )) ||
-
-            /* deprecated */
-            (callable = CBModel.valueAsFunction(
-                editorObject,
-                "specToThumbnailURI"
-            ))
-        ) {
+        if (callable !== undefined) {
             return callable(spec);
-        }
-
-        else if (spec.image) {
+        } else if (spec.image) {
             return CBImage.toURL(
                 spec.image,
                 'rw320'
             );
-        }
-
-        else {
+        } else {
             return undefined;
         }
     },
-    /* specToThumbnailURI() */
+    /* specToThumbnailURL() */
+
 };
 /* CBUISpec */
