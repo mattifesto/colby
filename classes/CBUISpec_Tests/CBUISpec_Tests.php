@@ -2,17 +2,21 @@
 
 final class CBUISpec_Tests {
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v477.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v537.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -41,7 +45,10 @@ final class CBUISpec_Tests {
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- CBTest interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [object]
@@ -49,19 +56,20 @@ final class CBUISpec_Tests {
     static function CBTest_getTests(): array {
         return [
             (object)[
-                'title' =>
-                'CBUISpec.specToDescription() tests for well-known models',
-
                 'name' => 'specToDescription',
+                'title' => (
+                    'CBUISpec.specToDescription() tests for well-known models'
+                ),
             ],
             (object)[
-                'title' =>
-                'CBUISpec.specToThumbnailURL() tests for well-known models',
-
                 'name' => 'specToThumbnailURL',
+                'title' => (
+                    'CBUISpec.specToThumbnailURL() tests for well-known models'
+                ),
             ],
         ];
     }
     /* CBTest_getTests() */
+
 }
 /* CBUISpec_Tests */

@@ -3,19 +3,20 @@
 /* jshint esversion: 6 */
 /* exported CBUISpec_Tests */
 /* exported CBUISpec_Tests_DescriptionClass1Editor */
-/* exported CBUISpec_Tests_DescriptionClass2Editor */
 /* exported CBUISpec_Tests_ThumbnailURLClass1Editor */
-/* exported CBUISpec_Tests_ThumbnailURLClass2Editor */
-/* exported CBUISpec_Tests_ThumbnailURLClass3Editor */
 /* globals
     CBModel,
     CBTest,
     CBUISpec,
 */
 
+
 var CBUISpec_Tests = {
 
+
     /* -- tests -- -- -- -- -- */
+
+
 
     /**
      * @return object
@@ -34,13 +35,6 @@ var CBUISpec_Tests = {
                     className: "CBUISpec_Tests_DescriptionClass1",
                 },
                 expectedResult: undefined,
-            },
-            {
-                spec: {
-                    className: "CBUISpec_Tests_DescriptionClass2",
-                    theTitle: "  Hello  ",
-                },
-                expectedResult: "Hello",
             },
             {
                 spec: {
@@ -144,6 +138,7 @@ var CBUISpec_Tests = {
     /* CBTest_specToDescription() */
 
 
+
     /**
      * @return object
      */
@@ -161,20 +156,6 @@ var CBUISpec_Tests = {
                     className: "CBUISpec_Tests_ThumbnailURLClass1",
                 },
                 expectedResult: undefined,
-            },
-            {
-                spec: {
-                    className: "CBUISpec_Tests_ThumbnailURLClass2",
-                    theThumbnailURL: "  Hello  ",
-                },
-                expectedResult: "Hello",
-            },
-            {
-                spec: {
-                    className: "CBUISpec_Tests_ThumbnailURLClass3",
-                    theThumbnailURL: "  Hello  ",
-                },
-                expectedResult: "Hello",
             },
             {
                 spec: {
@@ -225,8 +206,10 @@ var CBUISpec_Tests = {
         };
     },
     /* CBTest_specToThumbnailURL() */
+
 };
 /* CBUISpec_Tests */
+
 
 
 var CBUISpec_Tests_DescriptionClass1Editor = {
@@ -238,35 +221,10 @@ var CBUISpec_Tests_DescriptionClass1Editor = {
     }
 };
 
-var CBUISpec_Tests_DescriptionClass2Editor = {
-    specToDescription: function (spec) {
-        return CBModel.valueToString(
-            spec,
-            "theTitle"
-        ).trim() || undefined;
-    }
-};
+
 
 var CBUISpec_Tests_ThumbnailURLClass1Editor = {
     CBUISpec_toThumbnailURL: function (spec) {
-        return CBModel.valueToString(
-            spec,
-            "theThumbnailURL"
-        ).trim() || undefined;
-    }
-};
-
-var CBUISpec_Tests_ThumbnailURLClass2Editor = {
-    CBUISpec_toThumbnailURI: function (spec) {
-        return CBModel.valueToString(
-            spec,
-            "theThumbnailURL"
-        ).trim() || undefined;
-    }
-};
-
-var CBUISpec_Tests_ThumbnailURLClass3Editor = {
-    specToThumbnailURI: function (spec) {
         return CBModel.valueToString(
             spec,
             "theThumbnailURL"
