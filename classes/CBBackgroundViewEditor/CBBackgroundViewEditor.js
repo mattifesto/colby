@@ -17,6 +17,7 @@
     CBBackgroundViewEditor_addableClassNames,
 */
 
+
 var CBBackgroundViewEditor = {
 
     /**
@@ -161,7 +162,11 @@ var CBBackgroundViewEditor = {
 
         return element;
 
+
+
         /* -- closures -- -- -- -- -- */
+
+
 
         /**
          * @return undefined
@@ -194,6 +199,7 @@ var CBBackgroundViewEditor = {
         /* createEditor_imageWasChosen() */
 
 
+
         /**
          * @return undefined
          */
@@ -208,6 +214,7 @@ var CBBackgroundViewEditor = {
             args.specChangedCallback();
         }
         /* createEditor_imageWasRemoved() */
+
 
 
         /**
@@ -236,8 +243,10 @@ var CBBackgroundViewEditor = {
             }
         }
         /* updateImagePreview */
+
     },
     /* createEditor() */
+
 
 
     /**
@@ -255,7 +264,10 @@ var CBBackgroundViewEditor = {
     /* prepareSpec() */
 
 
+
     /* -- CBUISpec interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param object spec
@@ -284,12 +296,13 @@ var CBBackgroundViewEditor = {
     /* CBUISpec_toDescription() */
 
 
+
     /**
      * @param object spec
      *
      * @return string|undefined
      */
-    CBUISpec_toThumbnailURI: function (spec) {
+    CBUISpec_toThumbnailURL: function (spec) {
         if (spec.image) {
             return CBImage.toURL(
                 spec.image,
@@ -300,7 +313,7 @@ var CBBackgroundViewEditor = {
         } else {
             if (Array.isArray(spec.children)) {
                 for (let i = 0; i < spec.children.length; i++) {
-                    let thumbnailURI = CBUISpec.specToThumbnailURI(
+                    let thumbnailURI = CBUISpec.specToThumbnailURL(
                         spec.children[i]
                     );
 
@@ -311,6 +324,7 @@ var CBBackgroundViewEditor = {
             }
         }
     },
-    /* CBUISpec_toThumbnailURI() */
+    /* CBUISpec_toThumbnailURL() */
+
 };
 /* CBBackgroundViewEditor */

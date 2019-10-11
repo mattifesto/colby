@@ -2,12 +2,15 @@
 
 final class CBBackgroundViewEditor {
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
+    static function CBHTMLOutput_CSSURLs(): array {
         return [
             Colby::flexpath(__CLASS__, 'css', cbsysurl()),
         ];
@@ -15,21 +18,23 @@ final class CBBackgroundViewEditor {
     /* CBHTMLOutput_CSSURLs() */
 
 
+
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v536.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
 
 
+
     /**
      * @return [[string, mixed]]
      */
-    static function CBHTMLOutput_JavaScriptVariables() {
+    static function CBHTMLOutput_JavaScriptVariables(): array {
         return [
             [
                 'CBBackgroundViewEditor_addableClassNames',
@@ -40,10 +45,11 @@ final class CBBackgroundViewEditor {
     /* CBHTMLOutput_JavaScriptVariables() */
 
 
+
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+    static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBErrorHandler',
             'CBImage',
@@ -58,5 +64,6 @@ final class CBBackgroundViewEditor {
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
+
 }
 /* CBBackgroundViewEditor */
