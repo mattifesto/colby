@@ -16,7 +16,10 @@
     CBContainerViewEditor_addableClassNames,
 */
 
+
+
 var CBContainerViewEditor = {
+
 
     /**
      * @param object spec
@@ -31,7 +34,9 @@ var CBContainerViewEditor = {
         } else {
             if (Array.isArray(spec.subviews)) {
                 for (let i = 0; i < spec.subviews.length; i++) {
-                    let description = CBUISpec.specToDescription(spec.subviews[i]);
+                    let description = CBUISpec.specToDescription(
+                        spec.subviews[i]
+                    );
 
                     if (description) {
                         return description;
@@ -41,6 +46,7 @@ var CBContainerViewEditor = {
         }
     },
     /* CBUISpec_toDescription() */
+
 
 
     /**
@@ -59,7 +65,9 @@ var CBContainerViewEditor = {
         } else {
             if (Array.isArray(spec.subviews)) {
                 for (let i = 0; i < spec.subviews.length; i++) {
-                    let thumbnailURI = CBUISpec.specToThumbnailURI(spec.subviews[i]);
+                    let thumbnailURI = CBUISpec.specToThumbnailURI(
+                        spec.subviews[i]
+                    );
 
                     if (thumbnailURI) {
                         return thumbnailURI;
@@ -69,6 +77,7 @@ var CBContainerViewEditor = {
         }
     },
     /* CBUISpec_toThumbnailURI() */
+
 
 
     /**
@@ -125,36 +134,48 @@ var CBContainerViewEditor = {
         var options = [
             {
                 title: "Default",
-                description:
-                "The contents of this container have no specific purpose" +
-                " outside of being additional content.",
+                description: `
+
+                    The contents of this container have no specific purpose
+                    outside of being additional content.
+
+                `,
                 value: undefined
             },
             {
                 title: "Article",
-                description:
-                "The contents of this container represent a blog post or a" +
-                " syndicated article. This setting is not appropriate for" +
-                " regular pages such as the \"About\" page.",
+                description: `
+
+                    The contents of this container represent a blog post or a
+                    syndicated article. This setting is not appropriate for
+                    regular pages such as the \"About\" page.
+
+                `,
                 value: "article"
             },
             {
                 title: "Section",
-                description:
-                "The contents of this container represent a section in a" +
-                " document.",
+                description: `
+
+                    The contents of this container represent a section in a
+                    document.
+
+                `,
                 value: "section"
             },
             {
                 title: "Link",
-                description:
-                "This setting should only be used when this container's" +
-                " images must link to another page. Text links communicate" +
-                " much more clearly to the user and are highly preferred" +
-                " over image links and should be used whenever feasible." +
-                " Adding subviews with links inside a container using this" +
-                " setting will cause severe layout issues by design and by" +
-                " all browsers.",
+                description: `
+
+                    This setting should only be used when this container's
+                    images must link to another page. Text links communicate
+                    much more clearly to the user and are highly preferred over
+                    image links and should be used whenever feasible. Adding
+                    subviews with links inside a container using this setting
+                    will cause severe layout issues by design and by all
+                    browsers.
+
+                `,
                 value: "a"
             },
         ];
@@ -293,15 +314,23 @@ var CBContainerViewEditor = {
                 {
                     paragraphs: [
                         `
-                        Supported Class Names:
-                        `,`
-                        flow: Flow subviews from left to right and wrap into new
-                        lines. Center each line of children. Example scenario:
-                        displaying a collection of images.
-                        `,`
-                        noMinHeight: Don't use the height of the background
-                        images or any other minimum height specified as the
-                        minimum height for the view.
+
+                            Supported Class Names:
+
+                        `,
+                        `
+
+                            flow: Flow subviews from left to right and wrap into
+                            new lines. Center each line of children. Example
+                            scenario: displaying a collection of images.
+
+                        `,
+                        `
+
+                            noMinHeight: Don't use the height of the background
+                            images or any other minimum height specified as the
+                            minimum height for the view.
+
                         `,
                    ],
                 }
@@ -351,7 +380,10 @@ var CBContainerViewEditor = {
         return element;
 
 
+
         /* -- closures -- -- -- -- -- */
+
+
 
         /**
          * @return string
@@ -365,6 +397,7 @@ var CBContainerViewEditor = {
         }
 
 
+
         /**
          * @return string
          */
@@ -374,6 +407,7 @@ var CBContainerViewEditor = {
                 "rw960"
             );
         }
+
 
 
         /**
@@ -396,7 +430,10 @@ var CBContainerViewEditor = {
             return section;
 
 
+
             /* -- closures -- -- -- -- -- */
+
+
 
             /**
              * @return undefined
@@ -420,6 +457,7 @@ var CBContainerViewEditor = {
             /* createImageEditorElement_chosen() */
 
 
+
             /**
              * @return undefined
              */
@@ -428,10 +466,13 @@ var CBContainerViewEditor = {
                 args.specChangedCallback();
             }
             /* createImageEditorElement_removed() */
+
         }
         /* createImageEditorElement() */
+
     },
     /* createEditor() */
+
 
 
     /**
@@ -451,5 +492,6 @@ var CBContainerViewEditor = {
         args.specChangedCallback.call();
     },
     /* handleTagNameChanged() */
+
 };
 /* CBContainerViewEditor */
