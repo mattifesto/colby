@@ -469,11 +469,19 @@ var CBUISpecArrayEditor = {
 
             return selectableItem;
 
+
+
+            /* -- closures -- -- -- -- -- */
+
+
+
             function specChangedCallback() {
                 updateTitleAndDescription();
                 updateThumbnail();
                 specsChangedCallback();
             }
+
+
 
             function updateTitleAndDescription() {
                 let nonBreakingSpace = "\u00A0";
@@ -484,9 +492,12 @@ var CBUISpecArrayEditor = {
                 CBUISpec.specToDescription(spec) || nonBreakingSpace;
             }
 
+
+
             function updateThumbnail() {
-                thumbnailPart.src = CBUISpec.specToThumbnailURI(spec);
+                thumbnailPart.src = CBUISpec.specToThumbnailURL(spec);
             }
+
         }
         /* specToSelectableItem() */
 
