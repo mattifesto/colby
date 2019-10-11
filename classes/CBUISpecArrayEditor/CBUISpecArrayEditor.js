@@ -19,13 +19,16 @@
     Colby,
 */
 
+
+
 var CBUISpecArrayEditor = {
+
 
     /**
      * @param object args
      *
      *      {
-                addableClassNames: [string]
+     *          addableClassNames: [string]
      *          specs: [object]
      *          specsChangedCallback: function
      *      }
@@ -281,7 +284,7 @@ var CBUISpecArrayEditor = {
             selectableItemContainer.push(selectableItem);
         }
 
-        var o = {
+        let api = {
 
             /**
              * @return Element
@@ -307,7 +310,13 @@ var CBUISpecArrayEditor = {
 
         selectionChanged();
 
-        return o;
+        return api;
+
+
+
+        /* -- closures -- -- -- -- -- */
+
+
 
         /**
          * @return int
@@ -333,6 +342,9 @@ var CBUISpecArrayEditor = {
 
             return selectedSpecs.length;
         }
+        /* copySelectedItems() */
+
+
 
         /**
          * @return Promise -> string?
@@ -346,7 +358,11 @@ var CBUISpecArrayEditor = {
 
             return promise;
 
+
+
             /* -- closures -- -- -- -- -- */
+
+
 
             /**
              * @param function resolve
@@ -386,8 +402,10 @@ var CBUISpecArrayEditor = {
                 }
             }
             /* requestClassName_initializePromise() */
+
         }
         /* requestClassName() */
+
 
 
         /**
@@ -406,6 +424,9 @@ var CBUISpecArrayEditor = {
                 upCommand.disabled = true;
             }
         }
+        /* selectionChanged() */
+
+
 
         /**
          * @param object spec
@@ -414,16 +435,21 @@ var CBUISpecArrayEditor = {
          */
         function specToSelectableItem(spec) {
             let selectableItem = CBUISelectableItem.create();
-            selectableItem.callback = function () {
-                let editor = CBUISpecEditor.create({
-                    spec: spec,
-                    specChangedCallback: specChangedCallback,
-                });
 
-                CBUINavigationView.navigate({
-                    element: editor.element,
-                    title: spec.className,
-                });
+            selectableItem.callback = function () {
+                let editor = CBUISpecEditor.create(
+                    {
+                        spec: spec,
+                        specChangedCallback: specChangedCallback,
+                    }
+                );
+
+                CBUINavigationView.navigate(
+                    {
+                        element: editor.element,
+                        title: spec.className,
+                    }
+                );
             };
 
             let thumbnailPart = CBUIThumbnailPart.create();
@@ -462,7 +488,10 @@ var CBUISpecArrayEditor = {
                 thumbnailPart.src = CBUISpec.specToThumbnailURI(spec);
             }
         }
+        /* specToSelectableItem() */
+
     },
     /* create() */
+
 };
 /* CBUISpecArrayEditor */

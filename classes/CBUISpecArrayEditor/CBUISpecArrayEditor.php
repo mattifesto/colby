@@ -4,6 +4,8 @@ final class CBUISpecArrayEditor {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
@@ -15,15 +17,17 @@ final class CBUISpecArrayEditor {
     /* CBHTMLOutput_CSSURLs() */
 
 
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl())
+            Colby::flexpath(__CLASS__, 'v536.js', cbsysurl())
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -48,5 +52,6 @@ final class CBUISpecArrayEditor {
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
+
 }
 /* CBUISpecArrayEditor */
