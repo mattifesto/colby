@@ -63,7 +63,10 @@ final class CBException extends Exception {
     }
 
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -74,6 +77,7 @@ final class CBException extends Exception {
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -90,9 +94,26 @@ final class CBException extends Exception {
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- functions -- -- -- -- -- */
 
+
+
     /**
+     * @NOTE 2019_10_19
+     *
+     *      This function was created to make it easy to create exceptions
+     *      related to a model that would also display the model in JSON.
+     *      However, over time, it became a great function to create exceptions
+     *      related to any kind of value that needs to be displayed in JSON.
+     *
+     *      Furthermore, passing an object with two or more properties can
+     *      create an exception related to multiple models or any other kinds of
+     *      values.
+     *
+     *      This function should be renamed, but as of now I'm not sure what the
+     *      new name should be.
+     *
      * @param $title
      *
      *      Text describing the issue with the model. The text should be
@@ -108,37 +129,42 @@ final class CBException extends Exception {
      *
      *          CBModel::build() returned null for a cart item spec.
      *
-     * @param mixed $model
-     *
-     *      This property is mixed in cases where the error may be caused
-     *      because the model value is not an object.
+     * @param mixed $value
      *
      * @return CBException
      */
     static function createModelIssueException(
         string $title,
-        $model,
+        $value,
         ?string $sourceID = null
     ): CBException {
-        $titleAsMessage = CBMessageMarkup::stringToMessage($title);
-        $modelAsMessage = CBMessageMarkup::stringToMessage(
+        $titleAsCBMessage = CBMessageMarkup::stringToMessage(
+            $title
+        );
+
+        $valueAsCBMessage = CBMessageMarkup::stringToMessage(
             CBConvert::valueToPrettyJSON(
-                $model
+                $value
             )
         );
 
-        $message = <<<EOT
+        $cbmessage = <<<EOT
 
-            {$titleAsMessage}
+            {$titleAsCBMessage}
 
-            --- pre\n{$modelAsMessage}
+            --- pre\n{$valueAsCBMessage}
             ---
 
 EOT;
 
-        return new CBException($title, $message, $sourceID);
+        return new CBException(
+            $title,
+            $cbmessage,
+            $sourceID
+        );
     }
     /* createModelIssueException() */
+
 
 
     /**
@@ -156,6 +182,7 @@ EOT;
     /* getExtendedMessage() */
 
 
+
     /**
      * @return string
      */
@@ -163,6 +190,7 @@ EOT;
         return $this->sourceID;
     }
     /* getSourceID() */
+
 
 
     /**
@@ -178,4 +206,5 @@ EOT;
         }
     }
     /* throwableToSourceID() */
+
 }
