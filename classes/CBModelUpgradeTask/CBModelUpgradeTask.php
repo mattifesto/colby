@@ -4,6 +4,8 @@ final class CBModelUpgradeTask {
 
     /* -- CBInstall interfaces -- -- -- -- -- */
 
+
+
     /**
      * Restart this task for every existing model on every time the site is
      * upgraded. These tasks run a slightly higher than normal priority.
@@ -24,6 +26,7 @@ final class CBModelUpgradeTask {
     /* CBInstall_install */
 
 
+
     /**
      * @return [string]
      */
@@ -36,7 +39,10 @@ final class CBModelUpgradeTask {
     /* CBInstall_requiredClassNames() */
 
 
+
     /* -- CBTasks2 intrfaces -- -- -- -- -- */
+
+
 
     /**
      * @param string $ID
@@ -44,10 +50,29 @@ final class CBModelUpgradeTask {
      * @return ?object
      */
     static function CBTasks2_run(string $ID): ?stdClass {
-        $spec = CBModels::fetchSpecByID($ID);
-        $upgradedSpec = CBModel::upgrade($spec);
+        $originalSpec = CBModels::fetchSpecByID($ID);
+        $upgradedSpec = CBModel::upgrade($originalSpec);
 
-        if ($upgradedSpec != $spec) {
+        if ($originalSpec == $upgradedSpec) {
+            $originalModel = CBModelCache::fetchModelByID($ID);
+
+            $originalBuildProcessVersionNumber =
+            CBModel::toBuildProcessVersionNumber($originalModel);
+
+            $projectedBuildProcessVersionNumber =
+            CBModel::classNameToBuildProcessVersionNumber(
+                $originalModel->className
+            );
+
+            $shouldSave = (
+                $originalBuildProcessVersionNumber !==
+                $projectedBuildProcessVersionNumber
+            );
+        } else {
+            $shouldSave = true;
+        }
+
+        if ($shouldSave) {
             CBDB::transaction(
                 function () use ($upgradedSpec) {
                     CBModels::save($upgradedSpec);
@@ -58,4 +83,5 @@ final class CBModelUpgradeTask {
         return null;
     }
     /* CBTasks2_run() */
+
 }
