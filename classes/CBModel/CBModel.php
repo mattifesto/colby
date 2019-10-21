@@ -43,6 +43,8 @@ final class CBModel {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
@@ -52,6 +54,7 @@ final class CBModel {
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -65,7 +68,50 @@ final class CBModel {
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
+
+    /**
+     * This function returns the version number of the build process that the
+     * class currently uses in its CBModel_build() function.
+     *
+     * @return int
+     *
+     *      This function returns 1 by default, even for classes that haven't
+     *      implemented CBModel_build().
+     */
+    static function classNameToBuildProcessVersionNumber(
+        string $className
+    ): int {
+        $function = "{$className}::CBModel_buildProcessVersionNumber";
+
+        if (is_callable($function)) {
+            $buildProcessVersionNumber = call_user_func($function);
+
+            if (
+                !is_int($buildProcessVersionNumber) ||
+                $buildProcessVersionNumber < 1
+            ) {
+                throw new CBException(
+                    (
+                        "The value returned by {$function}() must be an " .
+                        "integer greater than zero."
+                    ),
+                    $buildProcessVersionNumber,
+                    '71681550e646738227346a2584f30b98867ec18f'
+                );
+            }
+
+            return $buildProcessVersionNumber;
+        } else {
+            return 1;
+        }
+    }
+    /* classNameToBuildProcessVersionNumber() */
+
+
 
     /**
      * This function returns a copy of the $spec parameter.
@@ -118,6 +164,8 @@ final class CBModel {
         return $copy;
     }
 
+
+
     /**
      * This function performs a deep clone of a model by serializing it to JSON
      * and then unserializing it. Since models are always serialized to JSON
@@ -133,6 +181,8 @@ final class CBModel {
     static function clone($model) {
         return json_decode(json_encode($model));
     }
+
+
 
     /**
      * Returns the the first model found with the specified property value.
@@ -163,6 +213,8 @@ final class CBModel {
 
         return null;
     }
+
+
 
     /**
      * Returns the index of the first model found with the specified property
@@ -431,9 +483,37 @@ final class CBModel {
             );
         }
 
+
+        /* build process version number */
+
+        $buildProcessVersionNumber =
+        CBModel::classNameToBuildProcessVersionNumber($className);
+
+        if ($buildProcessVersionNumber === 1) {
+
+            /**
+             * Because this property was introduced long after the CBModel class
+             * was created and because the default build process version number
+             * is 1, if the current build process version number is 1, the
+             * property is unset so that existing tests are not broken.
+             */
+
+            unset($model->CBModel_buildProcessVersionNumber);
+
+        } else {
+
+            $model->CBModel_buildProcessVersionNumber =
+            $buildProcessVersionNumber;
+
+        }
+
+
+        /* done */
+
         return $model;
     }
     /* build() */
+
 
 
     /**
@@ -454,12 +534,79 @@ final class CBModel {
         }
     }
 
+
+
+    /**
+     * This function returns the build process version number that the
+     * CBModel_build() implementation used to build a specific model.
+     *
+     * The class CBModel_buildProcessVersionNumber() implementation should be
+     * modified to return a higher version number when the build process changes
+     * in a way that previous models should be rebuilt to be corrected.
+     *
+     * Example:
+     *
+     *      Version 1 of the build process would turn a spec "isAwesome"
+     *      property value of "SOTRUE" into a model "isAwesome" property value
+     *      of false.
+     *
+     *      Later, the development team realized that, while "SOTRUE" is not the
+     *      best way to specify true, there are existing specs that are
+     *      difficult to change that should interpret "SOTRUE" to produce a
+     *      model "isAwesome" property value of true.
+     *
+     *      The solution:
+     *
+     *      1) Alter the class CBModel_build() implementation to reflect this
+     *      new build logic.
+     *
+     *      2) Implement the CBModel_buildProcessVersionNumber() function to
+     *      return 2.
+     *
+     *      3) When the system is upgraded, upgrade tasks are created for every
+     *      model. Because the build process version number has been updated for
+     *      this class, models of this class will be rebuilt and saved with the
+     *      correct property values.
+     *
+     * @param object $model
+     *
+     *      The build process version number is set on the model during
+     *      CBModel::build() so this function is not reliable for specs.
+     *
+     * @return int
+     *
+     *      Always returns an integer greater than 0. The default value is 1,
+     *      as in the "first" build process.
+     */
+    static function toBuildProcessVersionNumber(
+        stdClass $model
+    ): int {
+        $buildProcessVersionNumber = CBModel::valueAsInt(
+            $model,
+            'CBModel_buildProcessVersionNumber'
+        );
+
+        if (
+            $buildProcessVersionNumber === null ||
+            $buildProcessVersionNumber < 1
+        ) {
+            return 1;
+        } else {
+            return $buildProcessVersionNumber;
+        }
+    }
+    /* toBuildProcessVersionNumber() */
+
+
+
     /**
      * @deprecated use CBModel::build()
      */
     static function toModel(stdClass $spec) {
         return CBModel::build($spec);
     }
+
+
 
     /**
      * @param mixed $model
@@ -489,8 +636,9 @@ final class CBModel {
     }
 
 
+
     /**
-     * This function returns an upgraded version of the $spec parameter.
+     * This function returns an upgraded version of the $originalSpec parameter.
      *
      * Model specs are upgraded by model classes that implement the
      * CBModel_upgrade() interface. The interface will be passed a clone of the
@@ -505,53 +653,36 @@ final class CBModel {
      *
      * @return object
      *
-     *      If the $spec parameter is not a model, this function will return
-     *      null. Otherwise, this function will always return another model.
-     *
-     *      The returned model will always be a different object than $spec
-     *      argument. However the returned model may be equal to the $spec
-     *      argument. You can compare the $spec argument to the returned model
-     *      using == to determine if any changes were made during the upgrade.
-     *
-     *      @NOTE 2019_08_14
-     *
-     *          This function is coded properly to throw exceptions when
-     *          necessary. However, this will break many existing scenarios that
-     *          rely on the old, incorrect behavior.
-     *
-     *          For now, we log the exceptions and return null instead of
-     *          throwing them.
+     *      The returned model will always be a different object than
+     *      $originalSpec argument. However the returned model may be the same
+     *      as the $originalSpec argument. You can compare the $originalSpec
+     *      argument to the returned model using == to determine if any changes
+     *      were made during the upgrade.
      */
-    static function upgrade($originalSpec): ?stdClass {
+    static function upgrade($originalSpec): stdClass {
         if (CBConvert::valueAsModel($originalSpec) === null) {
-            CBErrorHandler::report(
-                CBException::createModelIssueException(
-                    'This spec can\'t be upgraded because it is not a model.',
-                    $originalSpec,
-                    'a38964f4fd545b2c8f568808d5f3035b168c6fc9'
-                )
+            throw CBException::createModelIssueException(
+                'This spec can\'t be upgraded because it is not a model.',
+                $originalSpec,
+                'a38964f4fd545b2c8f568808d5f3035b168c6fc9'
             );
-
-            return null;
         }
 
-        $ID = CBModel::valueAsID($originalSpec, 'ID');
+        $originalID = CBModel::valueAsID($originalSpec, 'ID');
 
-        if (!empty($ID)) {
-            CBID::push($ID);
+        if (!empty($originalID)) {
+            CBID::push($originalID);
         }
 
         $functionName = "{$originalSpec->className}::CBModel_upgrade";
 
         if (is_callable($functionName)) {
-            $upgradedSpec = CBConvert::valueAsModel(
-                call_user_func(
-                    $functionName,
-                    CBModel::clone($originalSpec)
-                )
+            $upgradedSpec = call_user_func(
+                $functionName,
+                CBModel::clone($originalSpec)
             );
 
-            if ($upgradedSpec === null) {
+            if (CBConvert::valueAsModel($upgradedSpec) === null) {
                 throw new Exception(
                     "{$function}() returned an invalid model"
                 );
@@ -559,43 +690,33 @@ final class CBModel {
 
             $upgradedID = CBModel::valueAsID($upgradedSpec, 'ID');
 
-            if ($upgradedID != $ID) {
-                $message = <<<EOT
+            if ($upgradedID != $originalID) {
+                $value = (object)[
+                    'originalSpec' => $originalSpec,
+                    'upgradedSpec' => $upgradedSpec,
+                ];
 
-                    When the {$className} model with the ID "{$ID}" was upgraded
-                    using CBModel::upgrade(), the ID was altered which is not
-                    allowed.
-
-                    The upgrade was cancelled.
-
-EOT;
-
-                CBLog::log(
-                    (object)[
-                        'message' => $message,
-                        'severity' => 3,
-                        'sourceClassName' => __CLASS__,
-                        'sourceID' => (
-                            '88c7bd6b23e18073302ef354def22d7f1f101e66'
-                        ),
-                    ]
+                throw CBException::createModelIssueException(
+                    (
+                        'The upgraded spec has a different ID than the ' .
+                        'original spec.'
+                    ),
+                    $value,
+                    '88c7bd6b23e18073302ef354def22d7f1f101e66'
                 );
-
-                /* undo upgrades */
-
-                $upgradedSpec = CBModel::clone($originalSpec);
             }
         } else {
             $upgradedSpec = CBModel::clone($originalSpec);
         }
 
-        if (!empty($ID)) {
+        if (!empty($originalID)) {
             CBID::pop();
         }
 
         return $upgradedSpec;
     }
     /* upgrade() */
+
 
 
     /**
