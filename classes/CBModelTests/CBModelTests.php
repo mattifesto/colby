@@ -2,6 +2,10 @@
 
 final class CBModelTests {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
@@ -11,28 +15,7 @@ final class CBModelTests {
         ];
     }
 
-    /**
-     * @return [[<className>, <testName>]]
-     */
-    static function CBTest_JavaScriptTests(): array {
-        return [
-            ['CBModel', 'classFunction'],
-            ['CBModel', 'equals'],
-            ['CBModel', 'value'],
-        ];
-    }
 
-    /**
-     * @return [[<className>, <testName>]]
-     */
-    static function CBTest_PHPTests(): array {
-        return [
-            ['CBModel', 'buildMinimalImplementation'],
-            ['CBModel', 'toSearchText'],
-            ['CBModel', 'upgrade'],
-            ['CBModel', 'upgradeSpecWithID'],
-        ];
-    }
 
     /**
      * @return [string]
@@ -45,11 +28,66 @@ final class CBModelTests {
         ];
     }
 
+
+
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
     /**
-     * This test checks the result to CBModel::build() when the converstion
-     * function does the minimum amount of work.
+     * @return [object]
      */
-    static function buildMinimalImplementationTest() {
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'build_minimalImplementation',
+                'title' => 'CBModel::build() minimal implementation',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'toSearchText',
+                'title' => 'CBModel::toSearchText()',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'upgrade',
+                'title' => 'CBModel::upgrade()',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'upgradeSpecWithID',
+                'title' => 'CBModel::upgrade() spec with ID',
+                'type' => 'server',
+            ],
+        ];
+    }
+
+
+
+    /**
+     * @return [[<className>, <testName>]]
+     */
+    static function CBTest_JavaScriptTests(): array {
+        return [
+            ['CBModel', 'classFunction'],
+            ['CBModel', 'equals'],
+            ['CBModel', 'value'],
+        ];
+    }
+
+
+
+    /* -- tests  -- -- -- -- -- */
+
+
+
+    /**
+     * This test checks for properties on the model that are placed by
+     * CBModel::build(), not by the implementation of CBModel_build().
+     *
+     * @return object
+     */
+    static function CBTest_build_minimalImplementation(): stdClass {
         $spec = (object)[
             'className' => 'CBModelTests_TestClass1',
             'ID' => 'c4247a40d9d85524607e6e87cc1d138806765d59',
@@ -57,6 +95,7 @@ final class CBModelTests {
         ];
 
         $model = CBModel::build($spec);
+
         $expectedModel = (object)[
             'className' => 'CBModelTests_TestClass1',
             'ID' => 'c4247a40d9d85524607e6e87cc1d138806765d59',
@@ -64,14 +103,22 @@ final class CBModelTests {
         ];
 
         if ($model != $expectedModel) {
-            throw new Exception('The model differs from the expected model.');
+            throw new Exception(
+                'The model differs from the expected model.'
+            );
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
 
+
+
     /**
-     * This test runs a CBModel::upgrade() test for all known classes.
+     * @return object
      */
-    static function toSearchTextTest() {
+    static function CBTest_toSearchText(): stdClass {
         $classNames = CBAdmin::fetchClassNames();
 
         foreach ($classNames as $className) {
@@ -81,7 +128,13 @@ final class CBModelTests {
 
             $searchText = CBModel::toSearchText($spec);
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+
+
 
     /**
      * This test creates a test spec for all known classes and passes it to
@@ -90,23 +143,30 @@ final class CBModelTests {
      * @return object
      */
     static function CBTest_upgrade(): stdClass {
-        CBLog::buffer(function () {
-            $classNames = CBAdmin::fetchClassNames();
+        CBLog::buffer(
+            function () {
+                $classNames = CBAdmin::fetchClassNames();
 
-            foreach ($classNames as $className) {
-                $spec = (object)[
-                    'className' => $className,
-                    'title' => 'This is the title of a test model created by CBTest_upgrade() in CBModelTests',
-                ];
+                foreach ($classNames as $className) {
+                    $spec = (object)[
+                        'className' => $className,
+                        'title' => (
+                            'This is the title of a test model created ' .
+                            'by CBTest_upgrade() in CBModelTests'
+                        ),
+                    ];
 
-                $upgradedSpec = CBModel::upgrade($spec);
+                    $upgradedSpec = CBModel::upgrade($spec);
+                }
             }
-        });
+        );
 
         return (object)[
             'succeeded' => true,
         ];
     }
+
+
 
     /**
      * This test verifies that if log entires are made while a spec with an ID
@@ -182,11 +242,11 @@ final class CBModelTests {
             'succeeded' => true,
         ];
     }
+
 }
 
-/**
- *
- */
+
+
 final class CBModelTests_TestClass1 {
 
     /**
@@ -204,11 +264,13 @@ final class CBModelTests_TestClass1 {
      * @param object
      */
     static function CBModel_upgrade(stdClass $spec): stdClass {
-        CBLog::log((object)[
-            'message' => 'test log entry',
-            'sourceClassName' => __CLASS__,
-            'sourceID' => '15f8d83aef490873969223172e5b218a1cb8d987',
-        ]);
+        CBLog::log(
+            (object)[
+                'message' => 'test log entry',
+                'sourceClassName' => __CLASS__,
+                'sourceID' => '15f8d83aef490873969223172e5b218a1cb8d987',
+            ]
+        );
 
         return $spec;
     }
