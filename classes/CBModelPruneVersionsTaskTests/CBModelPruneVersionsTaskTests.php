@@ -2,6 +2,34 @@
 
 final class CBModelPruneVersionsTaskTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [object]
+     */
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'assignActions',
+                'title' => 'CBModelPruneVersionsTask assign actions',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'runTask',
+                'title' => 'CBModelPruneVersionsTask',
+                'type' => 'server',
+            ],
+        ];
+    }
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
     /**
      * @return object
      */
@@ -181,7 +209,11 @@ final class CBModelPruneVersionsTaskTests {
             CBModelPruneVersionsTask::assignActions($versions);
 
             if ($versions != $expected) {
-                return CBTest::resultMismatchFailure($name, $versions, $expected);
+                return CBTest::resultMismatchFailure(
+                    $name,
+                    $versions,
+                    $expected
+                );
             }
         }
 
@@ -189,6 +221,9 @@ final class CBModelPruneVersionsTaskTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_assignActions() */
+
+
 
     /**
      * @return object
@@ -198,6 +233,7 @@ final class CBModelPruneVersionsTaskTests {
         $IDAsSQL = CBHex160::toSQL($ID);
 
         $versionNumber = 0;
+
         $versionHistory = [
             [$versionNumber += 1, 30000001, 'prune'],
 
@@ -247,12 +283,17 @@ final class CBModelPruneVersionsTaskTests {
         $spec = (object)[
             'className' => 'CBModelPruneVersionsTaskTests_class',
             'ID' => $ID,
+            'version' => 0,
         ];
 
         for ($index = 0; $index < $count; $index += 1) {
-            CBDB::transaction(function () use ($spec) {
-                CBModels::save($spec);
-            });
+            CBDB::transaction(
+                function () use ($spec) {
+                    CBModels::save($spec);
+
+                    $spec->version += 1;
+                }
+            );
         }
 
         $now = time();
@@ -260,6 +301,7 @@ final class CBModelPruneVersionsTaskTests {
         for ($index = 0; $index < $count; $index += 1) {
             $versionNumber = $versionHistory[$index][0];
             $timestamp = $now - $versionHistory[$index][1];
+
             $SQL = <<<EOT
 
                 UPDATE  CBModelVersions
@@ -272,7 +314,10 @@ EOT;
             Colby::query($SQL);
         }
 
-        CBTasks2::runSpecificTask('CBModelPruneVersionsTask', $ID);
+        CBTasks2::runSpecificTask(
+            'CBModelPruneVersionsTask',
+            $ID
+        );
 
         $SQL = <<<EOT
 
@@ -291,12 +336,19 @@ EOT;
             $versionNumber = $values[0];
 
             if ($values[2] === 'keep') {
-                array_push($expected, strval($versionNumber));
+                array_push(
+                    $expected,
+                    strval($versionNumber)
+                );
             }
         }
 
         if ($actual != $expected) {
-            return CBTest::resultMismatchFailure("Final", $actual, $expected);
+            return CBTest::resultMismatchFailure(
+                "Final",
+                $actual,
+                $expected
+            );
         }
 
         CBModels::deleteByID($ID);
@@ -305,17 +357,11 @@ EOT;
             'succeeded' => true,
         ];
     }
+    /* CBTest_runTask() */
 
-    /**
-     * @return [[<class>, <test>]]
-     */
-    static function CBUnitTests_tests(): array {
-        return [
-            ['CBModelPruneVersionsTask', 'assignActions'],
-            ['CBModelPruneVersionsTask', 'runTask'],
-        ];
-    }
 }
+
+
 
 final class CBModelPruneVersionsTaskTests_class {
 
