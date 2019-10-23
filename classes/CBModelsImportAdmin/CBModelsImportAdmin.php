@@ -15,6 +15,7 @@ final class CBModelsImportAdmin {
     }
 
 
+
     /**
      * @return void
      */
@@ -23,14 +24,13 @@ final class CBModelsImportAdmin {
     }
 
 
+
     /* -- CBAjax interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param object $args
-     *
-     *      {
-     *          saveUnchangedModels: bool?
-     *      }
      *
      * @return object
      */
@@ -39,23 +39,6 @@ final class CBModelsImportAdmin {
             CBModelImporter::processID()
         );
 
-        /**
-         * @NOTE 2019_08_16
-         *
-         *      The "save unchanged models" option can go away because we've
-         *      moved to the "process version" paradigm where a process version
-         *      number is set on the spec by CBModel_upgrade() and incremented
-         *      when the process changes.
-         *
-         *      Imported specs are upgraded before they are saved. If the
-         *      developer changes the process version, imported specs will save,
-         *      if not, they don't need to be saved.
-         */
-
-        $saveUnchangedModels = CBModel::valueToBool(
-            $args,
-            'saveUnchangedModels'
-        );
 
         /**
          * Because any error that occurs will be associated with the process ID,
@@ -167,10 +150,7 @@ final class CBModelsImportAdmin {
                         $updatedSpec = $rowSpec;
                         $updatedSpec->version = $originalSpec->version;
 
-                        if (
-                            $saveUnchangedModels ||
-                            $updatedSpec != $originalSpec
-                        ) {
+                        if ($updatedSpec != $originalSpec) {
                             $updatedSpecs[$ID] = $updatedSpec;
                         }
                     }
@@ -236,6 +216,7 @@ final class CBModelsImportAdmin {
     /* CBAjax_uploadDataFile() */
 
 
+
     /**
      * @return string
      */
@@ -244,7 +225,10 @@ final class CBModelsImportAdmin {
     }
 
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -256,14 +240,16 @@ final class CBModelsImportAdmin {
     }
 
 
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v540.js', cbsysurl()),
         ];
     }
+
 
 
     /**
@@ -275,7 +261,6 @@ final class CBModelsImportAdmin {
             'CBMaintenance',
             'CBModelImporter',
             'CBUI',
-            'CBUIBooleanSwitchPart',
             'CBUIProcessStatus',
             'CBUISectionItem4',
             'CBUIStringsPart',
@@ -283,13 +268,18 @@ final class CBModelsImportAdmin {
     }
 
 
+
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
      */
     static function CBInstall_install(): void {
-        $spec = CBModels::fetchSpecByID(CBModelsAdminMenu::ID());
+        $spec = CBModels::fetchSpecByID(
+            CBModelsAdminMenu::ID()
+        );
 
         $spec->items[] = (object)[
             'className' => 'CBMenuItem',
@@ -298,10 +288,13 @@ final class CBModelsImportAdmin {
             'URL' => '/admin/?c=CBModelsImportAdmin',
         ];
 
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save($spec);
-        });
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save($spec);
+            }
+        );
     }
+
 
 
     /**
@@ -314,7 +307,10 @@ final class CBModelsImportAdmin {
     }
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @param [string] $values
@@ -369,4 +365,5 @@ final class CBModelsImportAdmin {
         }
     }
     /* valuesAsObject() */
+
 }

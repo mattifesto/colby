@@ -8,12 +8,13 @@
     CBModelImporter,
     CBModelImporter_processID,
     CBUI,
-    CBUIBooleanSwitchPart,
     CBUIProcessStatus,
     CBUISectionItem4,
     CBUIStringsPart,
     Colby
 */
+
+
 
 var CBModelsImportAdmin = {
 
@@ -23,13 +24,16 @@ var CBModelsImportAdmin = {
     init: function() {
         let dataFileInputElement;
         let importActionPart;
-        let saveUnchangedModels = false;
         let disabled = false;
+
         let status = CBUIProcessStatus.create();
         status.processID = CBModelImporter_processID;
 
         let main = document.getElementsByTagName("main")[0];
-        main.appendChild(CBUI.createHalfSpace());
+
+        main.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         initDataFileInputElement();
 
@@ -37,7 +41,6 @@ var CBModelsImportAdmin = {
             let sectionElement = CBUI.createSection();
 
             initImportButton(sectionElement);
-            initSaveUnchangedModelsSwitch(sectionElement);
 
             main.appendChild(sectionElement);
             main.appendChild(CBUI.createHalfSpace());
@@ -48,7 +51,10 @@ var CBModelsImportAdmin = {
         return;
 
 
+
         /* -- closures -- -- -- -- -- */
+
+
 
         /**
          * CBModelsImportAdmin.init() closure
@@ -67,9 +73,7 @@ var CBModelsImportAdmin = {
                     return Colby.callAjaxFunction(
                         "CBModelsImportAdmin",
                         "uploadDataFile",
-                        {
-                            saveUnchangedModels: saveUnchangedModels,
-                        },
+                        { },
                         dataFileInputElement.files[0]
                     ).then(
                         function () {
@@ -97,6 +101,7 @@ var CBModelsImportAdmin = {
         /* handleDataFileInputElementChanged() */
 
 
+
         /**
          * CBModelsImportAdmin.init() closure
          *
@@ -116,6 +121,8 @@ var CBModelsImportAdmin = {
                 handleDataFileInputElementChanged
             );
         }
+
+
 
         /**
          * CBModelsImportAdmin.init() closure
@@ -143,31 +150,11 @@ var CBModelsImportAdmin = {
             sectionElement.appendChild(sectionItem.element);
         }
 
-        /**
-         * CBModelsImportAdmin.init() closure
-         *
-         *      Creates the "save unchanged models" switch.
-         *
-         * @param Element sectionElement
-         *
-         * @return undefined
-         */
-        function initSaveUnchangedModelsSwitch(sectionElement) {
-            let sectionItem = CBUISectionItem4.create();
-            let stringsPart = CBUIStringsPart.create();
-            stringsPart.string1 = "Save Unchanged Models";
-            let switchPart = CBUIBooleanSwitchPart.create();
-            switchPart.changed = function () {
-                saveUnchangedModels = switchPart.value;
-            };
-
-            sectionItem.appendPart(stringsPart);
-            sectionItem.appendPart(switchPart);
-            sectionElement.appendChild(sectionItem.element);
-        }
     },
     /* init() */
 };
+
+
 
 CBModelImporter.initBeforeDOMContentLoaded();
 
