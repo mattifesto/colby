@@ -53,26 +53,7 @@ final class CBModelUpgradeTask {
         $originalSpec = CBModels::fetchSpecByID($ID);
         $upgradedSpec = CBModel::upgrade($originalSpec);
 
-        if ($originalSpec == $upgradedSpec) {
-            $originalModel = CBModelCache::fetchModelByID($ID);
-
-            $originalBuildProcessVersionNumber =
-            CBModel::toBuildProcessVersionNumber($originalModel);
-
-            $projectedBuildProcessVersionNumber =
-            CBModel::classNameToBuildProcessVersionNumber(
-                $originalModel->className
-            );
-
-            $shouldSave = (
-                $originalBuildProcessVersionNumber !==
-                $projectedBuildProcessVersionNumber
-            );
-        } else {
-            $shouldSave = true;
-        }
-
-        if ($shouldSave) {
+        if ($upgradedSpec != $originalSpec) {
             CBDB::transaction(
                 function () use ($upgradedSpec) {
                     CBModels::save($upgradedSpec);
