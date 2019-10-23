@@ -74,46 +74,6 @@ final class CBModel {
 
 
     /**
-     * This function returns the version number of the build process that the
-     * class currently uses in its CBModel_build() function.
-     *
-     * @return int
-     *
-     *      This function returns 1 by default, even for classes that haven't
-     *      implemented CBModel_build().
-     */
-    static function classNameToBuildProcessVersionNumber(
-        string $className
-    ): int {
-        $function = "{$className}::CBModel_buildProcessVersionNumber";
-
-        if (is_callable($function)) {
-            $buildProcessVersionNumber = call_user_func($function);
-
-            if (
-                !is_int($buildProcessVersionNumber) ||
-                $buildProcessVersionNumber < 1
-            ) {
-                throw new CBException(
-                    (
-                        "The value returned by {$function}() must be an " .
-                        "integer greater than zero."
-                    ),
-                    $buildProcessVersionNumber,
-                    '71681550e646738227346a2584f30b98867ec18f'
-                );
-            }
-
-            return $buildProcessVersionNumber;
-        } else {
-            return 1;
-        }
-    }
-    /* classNameToBuildProcessVersionNumber() */
-
-
-
-    /**
      * This function returns a copy of the $spec parameter.
      *
      * Copies of model specs are further processed by model classes that
@@ -484,30 +444,6 @@ final class CBModel {
         }
 
 
-        /* build process version number */
-
-        $buildProcessVersionNumber =
-        CBModel::classNameToBuildProcessVersionNumber($className);
-
-        if ($buildProcessVersionNumber === 1) {
-
-            /**
-             * Because this property was introduced long after the CBModel class
-             * was created and because the default build process version number
-             * is 1, if the current build process version number is 1, the
-             * property is unset so that existing tests are not broken.
-             */
-
-            unset($model->CBModel_buildProcessVersionNumber);
-
-        } else {
-
-            $model->CBModel_buildProcessVersionNumber =
-            $buildProcessVersionNumber;
-
-        }
-
-
         /* done */
 
         return $model;
@@ -533,69 +469,6 @@ final class CBModel {
             $object1->{$key} = $value;
         }
     }
-
-
-
-    /**
-     * This function returns the build process version number that the
-     * CBModel_build() implementation used to build a specific model.
-     *
-     * The class CBModel_buildProcessVersionNumber() implementation should be
-     * modified to return a higher version number when the build process changes
-     * in a way that previous models should be rebuilt to be corrected.
-     *
-     * Example:
-     *
-     *      Version 1 of the build process would turn a spec "isAwesome"
-     *      property value of "SOTRUE" into a model "isAwesome" property value
-     *      of false.
-     *
-     *      Later, the development team realized that, while "SOTRUE" is not the
-     *      best way to specify true, there are existing specs that are
-     *      difficult to change that should interpret "SOTRUE" to produce a
-     *      model "isAwesome" property value of true.
-     *
-     *      The solution:
-     *
-     *      1) Alter the class CBModel_build() implementation to reflect this
-     *      new build logic.
-     *
-     *      2) Implement the CBModel_buildProcessVersionNumber() function to
-     *      return 2.
-     *
-     *      3) When the system is upgraded, upgrade tasks are created for every
-     *      model. Because the build process version number has been updated for
-     *      this class, models of this class will be rebuilt and saved with the
-     *      correct property values.
-     *
-     * @param object $model
-     *
-     *      The build process version number is set on the model during
-     *      CBModel::build() so this function is not reliable for specs.
-     *
-     * @return int
-     *
-     *      Always returns an integer greater than 0. The default value is 1,
-     *      as in the "first" build process.
-     */
-    static function toBuildProcessVersionNumber(
-        stdClass $model
-    ): int {
-        $buildProcessVersionNumber = CBModel::valueAsInt(
-            $model,
-            'CBModel_buildProcessVersionNumber'
-        );
-
-        if (
-            $buildProcessVersionNumber === null ||
-            $buildProcessVersionNumber < 1
-        ) {
-            return 1;
-        } else {
-            return $buildProcessVersionNumber;
-        }
-    }
-    /* toBuildProcessVersionNumber() */
 
 
 
