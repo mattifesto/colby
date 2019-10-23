@@ -13,6 +13,8 @@ final class CBModels {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
+
+
     /**
      * This function is a heavy-duty delete. It will remove the model, and it
      * will also remove the data store. If you need the files in the data store
@@ -21,7 +23,7 @@ final class CBModels {
      * @param object $args
      *
      *      {
-     *          ID: hex160
+     *          ID: string
      *      }
      *
      * @return null
@@ -29,11 +31,14 @@ final class CBModels {
     static function CBAjax_deleteByID(stdClass $args) {
         $ID = CBModel::value($args, 'ID');
 
-        CBDB::transaction(function () use ($ID) {
-            CBModels::deleteByID($ID);
-        });
+        CBDB::transaction(
+            function () use ($ID) {
+                CBModels::deleteByID($ID);
+            }
+        );
     }
     /* CBAjax_deleteByID() */
+
 
 
     /**
@@ -43,6 +48,7 @@ final class CBModels {
         return 'Administrators';
     }
     /* CBAjax_deleteByID_group() */
+
 
 
     /**
@@ -109,6 +115,7 @@ final class CBModels {
     /* CBAjax_save() */
 
 
+
     /**
      * @return string
      */
@@ -116,6 +123,7 @@ final class CBModels {
         return 'Public';
     }
     /* CBAjax_save_group() */
+
 
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
@@ -131,6 +139,7 @@ final class CBModels {
     /* CBHTMLOutput_JavaScriptURLs() */
 
 
+
     /**
      * @return [string]
      */
@@ -144,7 +153,10 @@ final class CBModels {
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * When a model is saved a task is created, so CBTasks2 is required for this
@@ -164,6 +176,8 @@ final class CBModels {
 
 
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @param stdClass $model
@@ -198,6 +212,7 @@ final class CBModels {
     /* currentUserCanWrite() */
 
 
+
     /**
      * Delete models. This function will also delete the data stores associated
      * with the models it deletes. If a data store exists, a model should also
@@ -211,20 +226,23 @@ final class CBModels {
      *      CBModels::deleteByID($ID);
      *      Colby::query('COMMIT');
      *
-     * @param hex160|[hex160] $IDs
+     * @param string|[string] $IDs
      *  All of the referenced models must have the same class name. Make
      *  separate calls for each class name.
      *
      * @return null
      */
     static function deleteByID($IDs) {
-        if (empty($IDs)) { return; }
+        if (empty($IDs)) {
+            return;
+        }
 
         if (!is_array($IDs)) {
             $IDs = [$IDs];
         }
 
         $IDsForSQL = CBHex160::toSQL($IDs);
+
         $SQL = <<<EOT
 
             SELECT DISTINCT `className`
@@ -283,13 +301,16 @@ EOT;
     /* deleteByID() */
 
 
+
     /**
-     * @param [hex160] $IDs
+     * @param [string] $IDs
      *
      * @return [int]
      */
     private static function fetchCreatedTimestampsForIDs(array $IDs) {
-        if (empty($IDs)) { return []; }
+        if (empty($IDs)) {
+            return [];
+        }
 
         $IDsAsSQL = CBHex160::toSQL($IDs);
         $SQL = <<<EOT
@@ -303,6 +324,7 @@ EOT;
         return CBDB::SQLtoArray($SQL);
     }
     /* fetchCreatedTimestampsForIDs() */
+
 
 
     /**
@@ -322,6 +344,7 @@ EOT;
         }
     }
     /* fetchModelByID() */
+
 
 
     /**
@@ -350,6 +373,7 @@ EOT;
         }
     }
     /* fetchModelByIDNullable() */
+
 
 
     /**
@@ -382,6 +406,7 @@ EOT;
     /* fetchModelsByClassName() */
 
 
+
     /**
      * @param string $className
      *
@@ -410,6 +435,7 @@ EOT;
         );
     }
     /* fetchModelsByClassName2() */
+
 
 
     /**
@@ -443,6 +469,7 @@ EOT;
         return CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
     }
     /* fetchModelsByID() */
+
 
 
     /**
@@ -479,6 +506,7 @@ EOT;
     /* fetchModelsByID2() */
 
 
+
     /**
      * Retreives a specific version of a model
      *
@@ -492,6 +520,7 @@ EOT;
     static function fetchModelByIDWithVersion($ID, $version) {
         $IDAsSQL = CBHex160::toSQL($ID);
         $versionAsSQL = (int)$version;
+
         $SQL = <<<EOT
 
             SELECT  `modelAsJSON`
@@ -501,15 +530,21 @@ EOT;
 
 EOT;
 
-        return CBDB::SQLToValue($SQL, ['valueIsJSON' => true]);
+        return CBDB::SQLToValue(
+            $SQL,
+            [
+                'valueIsJSON' => true,
+            ]
+        );
     }
     /* fetchModelByIDWithVersion() */
+
 
 
     /**
      * Fetches the spec and model for use in tasks that analyze both.
      *
-     * @param hex160 $ID
+     * @param string $ID
      *
      * @return object|false
      *
@@ -520,6 +555,7 @@ EOT;
      */
     static function fetchSpecAndModelByID($ID) {
         $IDAsSQL = CBHex160::toSQL($ID);
+
         $SQL = <<<EOT
 
             SELECT  `v`.`specAsJSON` AS `spec`, `v`.`modelAsJSON` AS `model`
@@ -543,6 +579,7 @@ EOT;
     /* fetchSpecAndModelByID() */
 
 
+
     /**
      * @deprecated use fetchSpecByIDNullable()
      *
@@ -561,6 +598,7 @@ EOT;
         }
     }
     /* fetchSpecByID() */
+
 
 
     /**
@@ -591,6 +629,7 @@ EOT;
     /* fetchSpecByIDNullable() */
 
 
+
     /**
      * Retreives the current version of specs
      *
@@ -600,8 +639,8 @@ EOT;
      * @return [model]
      *
      *      [
-     *          hex160 => model,
-     *          hex160 => model,
+     *          ID => model,
+     *          ID => model,
      *          ...
      *      ]
      */
@@ -641,6 +680,7 @@ EOT;
     /* fetchSpecsByID() */
 
 
+
     /**
      * Locks the rows for and fetches the version and created timestamp for a
      * set of IDs in preparation for an update. This will also insert rows for
@@ -662,6 +702,7 @@ EOT;
         int $modified
     ) {
         $IDsAsSQL = CBHex160::toSQL($IDs);
+
         $SQL = <<<EOT
 
             SELECT  LOWER(HEX(`ID`)) AS `ID`, `created`, `version`
@@ -690,6 +731,7 @@ EOT;
     /* selectInitialDataForUpdateByID() */
 
 
+
     /**
      * @deprecated 2019_07_09
      *
@@ -716,8 +758,9 @@ EOT;
     /* modelWithClassName() */
 
 
+
     /**
-     * @param hex160 $ID
+     * @param string $ID
      * @param int $version
      *
      * @return null
@@ -739,6 +782,7 @@ EOT;
         CBModels::save([$spec], /* force: */ true);
     }
     /* revert() */
+
 
 
     /**
@@ -770,6 +814,7 @@ EOT;
     /* CBAjax_revert() */
 
 
+
     /**
      * @return string
      */
@@ -777,6 +822,7 @@ EOT;
         return 'Administrators';
     }
     /* CBAjax_revert_group() */
+
 
 
     /**
@@ -961,6 +1007,7 @@ EOT;
     /* save() */
 
 
+
     /**
      * Saves model data
      *
@@ -1104,4 +1151,5 @@ EOT;
         Colby::query('DROP TEMPORARY TABLE CBModelsTemp');
     }
     /* saveToDatabase() */
+
 }
