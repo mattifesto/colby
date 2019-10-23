@@ -832,9 +832,11 @@ EOT;
      * succeed for the save to be successful, so it should always be called
      * inside of a transaction.
      *
-     *      Colby::query('START TRANSACTION');
-     *      CBModels::save([$spec]);
-     *      Colby::query('COMMIT');
+     *      CBDB::transaction(
+     *          function () use ($spec) {
+     *              CBModels::save($spec);
+     *          }
+     *      );
      *
      * @NOTE How model ID is determined:
      *
@@ -854,10 +856,14 @@ EOT;
      *      It's a goal to move these properties off the spec and model objects
      *      to a meta object eventually.
      *
-     * @param [object]|object $specs
+     * @param [object]|object $originalSpecs
      *
-     *  All of the specs must have the same class name. For specs of different
-     *  classes make multiple calls.
+     *      All of the specs must have the same class name. For specs of
+     *      different classes make multiple calls.
+     *
+     *      All of the specs will be clones, updated, and have their "version"
+     *      property (default value is 0) incremented before they are saved. The
+     *      specs passed in will not be changed.
      *
      * @param bool $force
      *
@@ -867,16 +873,16 @@ EOT;
      *
      * @return null
      */
-    static function save($specs, $force = false) {
-        if (empty($specs)) {
+    static function save($originalSpecs, $force = false) {
+        if (empty($originalSpecs)) {
             return; // TODO: Why are we okay with this being empty? Document.
         }
 
-        if (!is_array($specs)) {
-            $specs = [$specs];
+        if (!is_array($originalSpecs)) {
+            $originalSpecs = [$originalSpecs];
         }
 
-        $firstSpec = reset($specs);
+        $firstSpec = reset($originalSpecs);
 
         if (empty($firstSpec->className)) {
             throw new Exception(
@@ -889,22 +895,27 @@ EOT;
         $modified = time();
 
         $tuples = array_map(
-            function ($spec) use ($sharedClassName) {
-                $ID = CBModel::valueAsID($spec, 'ID');
+            function ($originalSpec) use ($sharedClassName) {
+                $ID = CBModel::valueAsID(
+                    $originalSpec,
+                    'ID'
+                );
 
                 if ($ID === null) {
                     throw new Exception(
-                        "A {$spec->className} spec being saved does not " .
-                        "have an ID."
+                        "A {$originalSpec->className} spec being saved does " .
+                        "not have an ID."
                     );
                 }
 
-                $model = CBModel::build($spec);
+                $upgradedSpec = CBModel::upgrade($originalSpec);
+
+                $model = CBModel::build($upgradedSpec);
 
                 if ($model === null) {
                     throw new Exception(
-                        "A {$spec->className} spec being saved generated " .
-                        "a null model."
+                        "A {$originalSpec->className} spec being saved " .
+                        "generated a null model."
                     );
                 }
 
@@ -915,11 +926,11 @@ EOT;
                 }
 
                 return (object)[
-                    'spec' => $spec,
+                    'spec' => $upgradedSpec,
                     'model' => $model,
                 ];
             },
-            $specs
+            $originalSpecs
         );
 
         $IDs = array_map(
@@ -959,9 +970,9 @@ EOT;
                 }
 
                 /**
-                 * 2016_06_29 In the future I would like to not set the version on
-                 * the spec. The spec should theoretically remain unchanged. It's a
-                 * data vs. metadata issue.
+                 * 2016_06_29 In the future I would like to not set the version
+                 * on the spec. The spec should theoretically remain unchanged.
+                 * It's a data vs. metadata issue.
                  *
                  * 2016_07_03 No new properties should be set on the spec or the
                  * model. Use the meta property instead.
@@ -981,9 +992,12 @@ EOT;
         if (
             is_callable($function = "{$sharedClassName}::CBModels_willSave")
         ) {
-            $models = array_map(function ($tuple) {
-                return $tuple->model;
-            }, $tuples);
+            $models = array_map(
+                function ($tuple) {
+                    return $tuple->model;
+                },
+                $tuples
+            );
 
             call_user_func($function, $models);
         } else if (
