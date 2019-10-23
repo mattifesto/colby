@@ -199,6 +199,9 @@ final class CBModelCacheTests {
 
         CBModels::save($spec);
 
+
+        /* get model from cache */
+
         $model = CBModelCache::modelByID($ID);
 
         if (!empty($model)) {
@@ -216,6 +219,13 @@ final class CBModelCacheTests {
         if (empty($model)) {
             throw new Exception('Subtest 4: The model was not cached.');
         }
+
+        /* update version after first save */
+
+        $spec->version = 1;
+
+
+        /* save again */
 
         CBModels::save($spec);
 
