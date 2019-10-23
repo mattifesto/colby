@@ -37,35 +37,40 @@ final class CBModelUpgradeTask_Tests {
             }
         );
 
-        $testSpec = (object)[
+        $testSpecVersion0 = (object)[
             'className' => 'CBModelUpgradeTask_Tests_Class1',
             'ID' => $testModelID,
         ];
 
         CBDB::transaction(
-            function () use ($testSpec) {
-                CBModels::save($testSpec);
+            function () use ($testSpecVersion0) {
+                CBModels::save($testSpecVersion0);
             }
         );
 
 
-        /* first build process version number is set */
+        /* test spec version 1 */
 
-        $testModel = CBModels::fetchModelByIDNullable($testModelID);
+        $testSpecVersion1 = CBModels::fetchSpecByIDNullable(
+            $testModelID
+        );
 
-        $actualBuildProcessVersionNumberIsSet =
-        isset($testModel->buildProcessVersionNumber);
+        $actualBuildProcessVersionNumber = CBModel::valueAsInt(
+            $testSpecVersion1,
+            'buildProcessVersionNumber'
+        );
 
-        $expectedBuildProcessVersionNumberIsSet = false;
+        $expectedBuildProcessVersionNumber = 1;
+
 
         if (
-            $actualBuildProcessVersionNumberIsSet !==
-            $expectedBuildProcessVersionNumberIsSet
+            $actualBuildProcessVersionNumber !==
+            $expectedBuildProcessVersionNumber
         ) {
             return CBTest::resultMismatchFailure(
-                'first build process version number is set',
-                $actualBuildProcessVersionNumberIsSet,
-                $expectedBuildProcessVersionNumberIsSet
+                'test spec version 1',
+                $actualBuildProcessVersionNumber,
+                $expectedBuildProcessVersionNumber
             );
         }
 
@@ -80,25 +85,35 @@ final class CBModelUpgradeTask_Tests {
         CBTasks2::runSpecificTask('CBModelUpgradeTask', $testModelID);
 
 
-        /* second build process version number */
+        /* test spec version 1 */
 
-        $testModel = CBModels::fetchModelByIDNullable($testModelID);
+        $testSpecVersion2 = CBModels::fetchSpecByIDNullable(
+            $testModelID
+        );
 
-        $actualBuildProcessVersionNumber =
-        CBModel::toBuildProcessVersionNumber($testModel);
+        $actualBuildProcessVersionNumber = CBModel::valueAsInt(
+            $testSpecVersion2,
+            'buildProcessVersionNumber'
+        );
 
         $expectedBuildProcessVersionNumber = 2;
+
 
         if (
             $actualBuildProcessVersionNumber !==
             $expectedBuildProcessVersionNumber
         ) {
             return CBTest::resultMismatchFailure(
-                'second build process version number',
+                'test spec version 2',
                 $actualBuildProcessVersionNumber,
                 $expectedBuildProcessVersionNumber
             );
         }
+
+
+        /* reset */
+
+        CBModelUpgradeTask_Tests_Class1::$buildProcessVersionNumber = 1;
 
 
         /* delete test model */
@@ -125,14 +140,21 @@ final class CBModelUpgradeTask_Tests_Class1 {
 
 
 
-    static function CBModel_build(stdClass $spec): stdClass {
+    static function CBModel_build(
+        stdClass $spec
+    ): stdClass {
         return (object)[];
     }
 
 
 
-    static function CBModel_buildProcessVersionNumber(): int {
-        return CBModelUpgradeTask_Tests_Class1::$buildProcessVersionNumber;
+    static function CBModel_upgrade(
+        stdClass $upgradableSpec
+    ): stdClass {
+        $upgradableSpec->buildProcessVersionNumber =
+        CBModelUpgradeTask_Tests_Class1::$buildProcessVersionNumber;
+
+        return $upgradableSpec;
     }
 
 }
