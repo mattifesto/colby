@@ -98,33 +98,58 @@ final class ColbyConvert {
         return $amountInCents;
     }
 
+
+
     /**
-     * @note functional programming
-     * @note needs testing
-     *
      * This function coalesces adjacent lines into paragraphs. Aside from
      * gluing adjacent lines together with a space character, no other
      * transformations on the text occur.
      *
-     * @return array
+     * @param [string] $lines
+     *
+     * @return [string]
      */
-    static function linesToParagraphs($lines) {
-        $paragraphs = array_reduce($lines, function($carry, $string) {
-            if (trim($string) == '') {
-                array_push($carry, array());
-            } else {
-                $array          = end($carry);
-                $array[]        = $string;
-                $key            = key($carry);
-                $carry[$key]    = $array;
+    static function linesToParagraphs(array $lines): array {
+        $paragraphs = array_reduce(
+            $lines,
+            function($carry, $string) {
+                if (trim($string) == '') {
+                    array_push(
+                        $carry,
+                        []
+                    );
+                } else {
+                    $array          = end($carry);
+                    $array[]        = $string;
+                    $key            = key($carry);
+                    $carry[$key]    = $array;
+                }
+                return $carry;
+            },
+            [[]]
+        );
+
+        $paragraphs = array_filter(
+            $paragraphs,
+            function($paragraph) {
+                return !empty($paragraph);
             }
-            return $carry;
-        }, array(array()));
+        );
 
-        $paragraphs = array_filter($paragraphs, function($paragraph) { return !empty($paragraph); });
-
-        return array_map(function($paragraph) { return implode(' ', $paragraph); }, $paragraphs);
+        return array_values(
+            array_map(
+                function($paragraph) {
+                    return implode(
+                        ' ',
+                        $paragraph
+                    );
+                },
+                $paragraphs
+            )
+        );
     }
+    /* linesToParagraphs() */
+
 
 
     /**
