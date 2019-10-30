@@ -554,9 +554,9 @@ EOT;
 
 
     /**
-     * @param string testTitle
-     * @param mixed value
-     * @param string message
+     * @param string $testTitle
+     * @param mixed $value
+     * @param string $issueCBMessage
      *
      * @return object
      */
