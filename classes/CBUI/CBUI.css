@@ -20,6 +20,8 @@
     user-select: none;
 }
 
+
+
 /**
  * 2019_09_05
  */
@@ -27,6 +29,14 @@ a.CBUI_action {
     cursor: auto;
     text-decoration: none;
 }
+
+
+
+.CBUI_alignItems_end {
+    align-items: flex-end;
+}
+
+
 
 /**
  * 2019_02_23
