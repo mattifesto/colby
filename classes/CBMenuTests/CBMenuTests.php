@@ -2,7 +2,33 @@
 
 final class CBMenuTests {
 
-    static function CBTests_classTest() {
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [object]
+     */
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'general',
+                'title' => 'CBMenu',
+                'type' => 'server',
+            ],
+        ];
+    }
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_general(): stdClass {
         $spec = (object)[
             'className' => 'CBMenu',
             'items' => [
@@ -12,6 +38,11 @@ final class CBMenuTests {
                 ],
             ],
         ];
+
+
+        /* build */
+
+        $actualModel = CBModel::build($spec);
 
         $expectedModel = (object)[
             'className' => 'CBMenu',
@@ -25,28 +56,33 @@ final class CBMenuTests {
             ],
         ];
 
-        $model = CBModel::build($spec);
-
-        if ($model != $expectedModel) {
-            return (object)[
-                'message' =>
-                    "The result built model does not match the expected built model.\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($model, $expectedModel),
-            ];
+        if ($actualModel != $expectedModel) {
+            return CBTest::resultMismatchFailure(
+                'build',
+                $actualModel,
+                $expectedModel
+            );
         }
 
-        $searchText = CBModel::toSearchText($model);
+
+        /* toSearchText */
+
+        $actualSearchText = CBModel::toSearchText($actualModel);
         $expectedSearchText = 'CBMenu';
 
-        if ($searchText !== $expectedSearchText) {
-            return (object)[
-                'message' =>
-                    "The result search text does not match the expected search text.\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($searchText, $expectedSearchText),
-            ];
+        if ($actualSearchText !== $expectedSearchText) {
+            return CBTest::resultMismatchFailure(
+                'toSearchText',
+                $actualSearchText,
+                $expectedSearchText
+            );
         }
 
-        $upgradedSpec = CBModel::upgrade($spec);
+
+        /* upgrade */
+
+        $actualUpgradedSpec = CBModel::upgrade($spec);
+
         $expectedUpgradedSpec = (object)[
             'className' => 'CBMenu',
             'items' => [
@@ -57,12 +93,21 @@ final class CBMenuTests {
             ],
         ];
 
-        if ($upgradedSpec != $expectedUpgradedSpec) {
-            return (object)[
-                'message' =>
-                    "The result upgraded spec does not match the expected upgraded spec.\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($upgradedSpec, $expectedUpgradedSpec),
-            ];
+        if ($actualUpgradedSpec != $expectedUpgradedSpec) {
+            return CBTest::resultMismatchFailure(
+                'upgrade',
+                $actualUpgradedSpec,
+                $expectedUpgradedSpec
+            );
         }
+
+
+        /* done */
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_general() */
+
 }
