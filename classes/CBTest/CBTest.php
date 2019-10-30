@@ -4,6 +4,8 @@ final class CBTest {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return array
      */
@@ -13,6 +15,7 @@ final class CBTest {
     /* CBAjax_getPHPTests() */
 
 
+
     /**
      * @return string
      */
@@ -20,6 +23,7 @@ final class CBTest {
         return 'Developers';
     }
     /* CBAjax_getPHPTests_group() */
+
 
 
     /**
@@ -142,6 +146,7 @@ EOT;
     /* CBAjax_run() */
 
 
+
     /**
      * @return string
      */
@@ -151,7 +156,10 @@ EOT;
     /* CBAjax_run_group() */
 
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -162,6 +170,7 @@ EOT;
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -178,21 +187,29 @@ EOT;
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @return [object]
      *
      *      {
-     *          title: string
      *          description: string
+     *
      *          name: string
      *
-     *              The name of the test.
+     *              The name of the test. The function that will be called to
+     *              perform the test will be CBTest_<name>().
      *
      *          testClassName: string
      *
      *              The class that implements the test function in JavaScript.
+     *              If not specified this will be the class name that
+     *              implemented the CBTest_getTests() interface.
+     *
+     *          title: string
      *
      *          type: string
      *
@@ -217,6 +234,7 @@ EOT;
         return $tests;
     }
     /* getTests() */
+
 
 
     /**
@@ -262,6 +280,7 @@ EOT;
         return $tests;
     }
     /* getTests_classNameToJavaScriptTests() */
+
 
 
     /**
@@ -312,6 +331,7 @@ EOT;
         return $tests;
     }
     /* getTests_classNameToTests() */
+
 
 
     /**
@@ -371,6 +391,8 @@ EOT;
 
         return $tests;
     }
+    /* PHPTests() */
+
 
 
     /**
@@ -429,6 +451,9 @@ EOT;
             'message' => $message,
         ];
     }
+    /* resultMismatchFailure() */
+
+
 
     /**
      * @param string $testTitle
@@ -529,6 +554,9 @@ EOT;
             'sourceID' => '3098da7e4559278488a42ad81fbaef5fe0a7575e',
         ];
     }
+    /* resultMismatchFailureDiff() */
+
+
 
     /**
      * @param string testTitle
@@ -581,4 +609,6 @@ EOT;
             'message' => $message,
         ];
     }
+    /* valueIssueFailure() */
+
 }
