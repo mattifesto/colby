@@ -1,3 +1,3 @@
 <?php
 
-define('CBSystemVersionNumber', '541');
+define('CBSystemVersionNumber', '542');
