@@ -814,6 +814,20 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_08_15 (warning)
+                 * 2019_10_30 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'CBTests_classTest',
+                    'severity' => 3,
+                    'title' => (
+                        'Replace CBTests_classTest() with an actual test.'
+                    ),
+                ],
+
+
                 /* -- warnings -- -- -- -- -- */
 
 
@@ -1055,19 +1069,6 @@ final class CBCodeAdmin {
                     'title' => (
                         'Replace use of currentUserNumericID with ' .
                         'the hex user ID'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_08_15
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'CBTests_classTest',
-                    'severity' => 4,
-                    'title' => (
-                        'Replace CBTests_classTest() with an actual test.'
                     ),
                 ],
 

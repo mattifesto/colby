@@ -339,7 +339,6 @@ EOT;
      */
     static function PHPTests(): array {
         $tests = [
-            ['CB',                      'class'],
             ['CBConvert',               'linesToParagraphs'],
             ['CBConvert',               'stringToLines'],
             ['CBConvert',               'valueAsInt'],
