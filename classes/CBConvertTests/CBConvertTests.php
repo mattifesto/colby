@@ -5,6 +5,7 @@ final class CBConvertTests {
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
 
+
     /**
      * @return [string]
      */
@@ -45,6 +46,7 @@ final class CBConvertTests {
 
 
     /* -- CBTest interfaces -- -- -- -- -- */
+
 
 
     /**
@@ -117,6 +119,7 @@ final class CBConvertTests {
     /* -- tests -- -- -- -- -- */
 
 
+
     /**
      * @return object
      */
@@ -182,6 +185,9 @@ final class CBConvertTests {
      * @return object
      */
     static function CBTest_stringToLines(): stdClass {
+
+        /* test 1 */
+
         $testValue = "one\ntwo\rthree\r\nfour\rfive\nsix";
         $actualResult = CBConvert::stringToLines($testValue);
         $expectedResult = [
@@ -199,12 +205,58 @@ final class CBConvertTests {
                 $actualResult,
                 $expectedResult
             );
-        } else {
-            return (object)[
-                'succeeded' => true,
-            ];
         }
+
+
+        /* test 2 */
+
+        $test2String = (
+            "abc \r" .
+            " bcd \n" .
+            " cde \r\n" .
+            " def \n\r" .
+            " efg \r\n\r" .
+            " fgh \r\n\n" .
+            " ghi \r\r\n" .
+            " hij \r\n\r\n" .
+            " ijk"
+        );
+
+        $actualResult = CBConvert::stringToLines($test2String);
+
+        $expectedResult = [
+            'abc ',
+            ' bcd ',
+            ' cde ',
+            ' def ',
+            '',
+            ' efg ',
+            '',
+            ' fgh ',
+            '',
+            ' ghi ',
+            '',
+            ' hij ',
+            '',
+            ' ijk'
+        ];
+
+        if ($actualResult != $expectedResult) {
+            return CBTest::resultMismatchFailure(
+                'test 2',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+
+        /* done */
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_stringToLines() */
 
 
 
@@ -248,6 +300,9 @@ final class CBConvertTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_stringToStub() */
+
+
 
     /**
      * @return object
@@ -276,6 +331,9 @@ final class CBConvertTests {
             ];
         }
     }
+    /* CBTest_stringToURI() */
+
+
 
     /**
      * @return object
@@ -298,6 +356,9 @@ final class CBConvertTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_valueAsMoniker() */
+
+
 
     /**
      * @return object
@@ -320,6 +381,9 @@ final class CBConvertTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_valueAsName() */
+
+
 
     /**
      * @return object
@@ -342,6 +406,9 @@ final class CBConvertTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_valueAsNames() */
+
+
 
     /**
      * @return object
@@ -415,6 +482,9 @@ EOT;
             'succeeded' => true,
         ];
     }
+    /* CBTest_valueAsNumber() */
+
+
 
     /**
      * @return object
@@ -483,8 +553,13 @@ EOT;
             'succeeded' => true,
         ];
     }
+    /* CBTest_valueToBool() */
+
+
 
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @deprecated use CBTest::resultMismatchFailure()
@@ -520,6 +595,8 @@ EOT;
         return $message;
     }
 
+
+
     /**
      * return void
      */
@@ -539,52 +616,6 @@ EOT;
         }
     }
 
-
-    /**
-     * return void
-     */
-    static function strngToLinesTest() {
-        $text = (
-            "abc \r" .
-            " bcd \n" .
-            " cde \r\n" .
-            " def \n\r" .
-            " efg \r\n\r" .
-            " fgh \r\n\n" .
-            " ghi \r\r\n" .
-            " hij \r\n\r\n" .
-            " ijk"
-        );
-
-        $expected = [
-            'abc ',
-            ' bcd ',
-            ' cde ',
-            ' def ',
-            '',
-            ' efg ',
-            '',
-            ' fgh ',
-            '',
-            ' ghi ',
-            '',
-            ' hij ',
-            '',
-            ' ijk'
-        ];
-
-        $actual     = CBConvert::stringToLines($text);
-        $diff       = array_diff($actual, $expected);
-
-        if ($diff) {
-            $JSON = json_encode($diff);
-            throw new Exception(
-                "runTestForTextToLineArray: The array returned does not " .
-                "match the expected array with these differences: {$JSON}."
-            );
-        }
-    }
-    /* textToLinesTest() */
 
 
     /**
@@ -622,6 +653,8 @@ EOT;
             }
         }
     }
+    /* valueAsIntTest() */
+
 
 
     /**
@@ -715,6 +748,9 @@ EOT;
 
         return null;
     }
+    /* valueAsModelTest() */
+
+
 
     /**
      * @return [object]
@@ -779,6 +815,9 @@ EOT;
             ],
         ];
     }
+    /* valueAsMonikerTestCases() */
+
+
 
     /**
      * @return [object]
@@ -823,6 +862,9 @@ EOT;
             ],
         ];
     }
+    /* valueAsNameTestCases() */
+
+
 
     /**
      * @return [object]
@@ -851,4 +893,6 @@ EOT;
             ],
         ];
     }
+    /* valueAsNamesTestCases() */
+
 }
