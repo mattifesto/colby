@@ -102,6 +102,11 @@ final class CBConvertTests {
                 'type' => 'server',
             ],
             (object)[
+                'name' => 'linesToParagraphs',
+                'title' => 'ColbyConvert::linesToParagraphs()',
+                'type' => 'server',
+            ],
+            (object)[
                 'name' => 'stringToCleanLine',
                 'title' => 'CBConvert.stringToCleanLine()',
             ],
@@ -152,6 +157,46 @@ final class CBConvertTests {
         ];
     }
     /* CBTest_centsToDollars() */
+
+
+
+    /**
+     * return object
+     */
+    static function CBTest_linesToParagraphs(): stdClass {
+        $lines = [
+            'a',
+            ' b ',
+            ' ',
+            '    ',
+            '',
+            '    c',
+            '  d'
+        ];
+
+        $actualResult = ColbyConvert::linesToParagraphs($lines);
+
+        $expectedResult = [
+            'a  b ',
+            '    c   d'
+        ];
+
+        if ($actualResult != $expectedResult) {
+            return CBTest::resultMismatchFailure(
+                'test 1',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+
+        /* done */
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_linesToParagraphs() */
 
 
 
@@ -593,27 +638,6 @@ EOT;
 EOT;
 
         return $message;
-    }
-
-
-
-    /**
-     * return void
-     */
-    static function linesToParagraphsTest() {
-        $lines      = ['a', ' b ', ' ', '    ', '', '    c', '  d'];
-        $expected   = ['a  b ', '    c   d'];
-        $actual     = ColbyConvert::linesToParagraphs($lines);
-        $diff       = array_diff($actual, $expected);
-
-        if ($diff) {
-            $JSON = json_encode($diff);
-            throw new Exception(
-                "runTestForLineArrayToParagraphArray: The array returned " .
-                "does not match the expected array with these " .
-                "differences: {$JSON}."
-            );
-        }
     }
 
 
