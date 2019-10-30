@@ -73,7 +73,6 @@ final class CBConvertTests {
      */
     static function CBTest_PHPTests(): array {
         return [
-            ['CBConvert', 'stringToLines'],
             ['CBConvert', 'stringToStub'],
             ['CBConvert', 'stringToURI'],
             ['CBConvert', 'valueAsMoniker'],
@@ -113,6 +112,11 @@ final class CBConvertTests {
             (object)[
                 'name' => 'stringToCleanLine',
                 'title' => 'CBConvert::stringToCleanLine()',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'stringToLines',
+                'title' => 'CBConvert::stringToLines()',
                 'type' => 'server',
             ],
         ];
