@@ -14,6 +14,8 @@
     Colby,
 */
 
+
+
 var CBAdminPageForUpdate = {
 
     /**
@@ -157,7 +159,11 @@ var CBAdminPageForUpdate = {
 
         return;
 
+
+
         /* -- closures -- -- -- -- -- */
+
+
 
         /**
          * TODO maybe make task not a closure
@@ -198,6 +204,7 @@ var CBAdminPageForUpdate = {
         /* task() */
 
 
+
         /**
          * @return Promise
          */
@@ -221,6 +228,7 @@ var CBAdminPageForUpdate = {
             return promise;
         }
         /* promiseToBackupDatabase() */
+
 
 
         /**
@@ -261,6 +269,7 @@ var CBAdminPageForUpdate = {
         /* promiseToPullUpdates() */
 
 
+
         /**
          * @return Promise
          */
@@ -284,8 +293,10 @@ var CBAdminPageForUpdate = {
             return promise;
         }
         /* promiseToUpdateSite() */
+
     },
     /* init() */
+
 };
 
 Colby.afterDOMContentLoaded(CBAdminPageForUpdate.init);

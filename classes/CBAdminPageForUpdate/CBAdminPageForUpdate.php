@@ -4,6 +4,8 @@ final class CBAdminPageForUpdate {
 
     private static $installationIsRequired = false;
 
+
+
     /**
      * @return [string]
      */
@@ -15,12 +17,14 @@ final class CBAdminPageForUpdate {
     }
 
 
+
     /**
      * @return string
      */
     static function CBAdmin_group(): string {
         return 'Developers';
     }
+
 
 
     /**
@@ -31,7 +35,10 @@ final class CBAdminPageForUpdate {
     }
 
 
+
     /* -- CBAjax interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
@@ -39,7 +46,8 @@ final class CBAdminPageForUpdate {
     static function CBAjax_backupDatabase(): void {
         CBAdminPageForUpdate::backupDatabase();
     }
-    /* CBAjax_update() */
+    /* CBAjax_backupDatabase() */
+
 
 
     /**
@@ -48,10 +56,68 @@ final class CBAdminPageForUpdate {
     static function CBAjax_backupDatabase_group(): string {
         return 'Developers';
     }
+    /* CBAjax_backupDatabase_group() */
+
+
+
+    /**
+     * @return object
+     *
+     *      {
+     *          output: string
+     *          succeeded: bool
+     *      }
+     */
+    static function CBAjax_pull(): stdClass {
+        $output = [];
+
+        CBGit::pull($output, $exitCode);
+
+        if (empty($exitCode)) {
+            CBGit::submoduleUpdate($output, $exitCode);
+        }
+
+        return (object)[
+            'output' => implode("\n", $output),
+            'succeeded' => empty($exitCode),
+        ];
+    }
+    /* CBAjax_pull() */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_pull_group(): string {
+        return 'Developers';
+    }
+
+
+
+    /**
+     * @return void
+     */
+    static function CBAjax_update(): void {
+        CBAdminPageForUpdate::update();
+    }
+    /* CBAjax_update() */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_update_group(): string {
+        return 'Developers';
+    }
     /* CBAjax_update_group() */
 
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -61,6 +127,7 @@ final class CBAdminPageForUpdate {
             Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
         ];
     }
+
 
 
     /**
@@ -82,7 +149,10 @@ final class CBAdminPageForUpdate {
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
@@ -113,6 +183,8 @@ final class CBAdminPageForUpdate {
 
         CBModelUpdater::save($updater);
     }
+    /* CBInstall_install() */
+
 
 
     /**
@@ -125,7 +197,10 @@ final class CBAdminPageForUpdate {
     }
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @return void
@@ -232,6 +307,7 @@ final class CBAdminPageForUpdate {
     /* backupDatabase() */
 
 
+
     /**
      * @return bool
      *
@@ -260,38 +336,6 @@ EOT;
         }
     }
 
-
-    /**
-     * @return object
-     *
-     *      {
-     *          output: string
-     *          succeeded: bool
-     *      }
-     */
-    static function CBAjax_pull(): stdClass {
-        $output = [];
-
-        CBGit::pull($output, $exitCode);
-
-        if (empty($exitCode)) {
-            CBGit::submoduleUpdate($output, $exitCode);
-        }
-
-        return (object)[
-            'output' => implode("\n", $output),
-            'succeeded' => empty($exitCode),
-        ];
-    }
-    /* CBAjax_pull() */
-
-
-    /**
-     * @return string
-     */
-    static function CBAjax_pull_group(): string {
-        return 'Developers';
-    }
 
 
     /**
@@ -345,6 +389,7 @@ EOT;
     /* removeOldBackupFiles() */
 
 
+
     /**
      * @return void
      */
@@ -355,21 +400,4 @@ EOT;
         CBAdminPageForUpdate::$installationIsRequired = false;
     }
 
-
-    /**
-     * @return void
-     */
-    static function CBAjax_update(): void {
-        CBAdminPageForUpdate::update();
-    }
-    /* CBAjax_update() */
-
-
-    /**
-     * @return string
-     */
-    static function CBAjax_update_group(): string {
-        return 'Developers';
-    }
-    /* CBAjax_update_group() */
 }
