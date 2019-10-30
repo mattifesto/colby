@@ -119,6 +119,11 @@ final class CBConvertTests {
                 'title' => 'CBConvert::stringToLines()',
                 'type' => 'server',
             ],
+            (object)[
+                'name' => 'valueAsInt',
+                'title' => 'CBConvert::valueAsInt()',
+                'type' => 'server',
+            ],
         ];
     }
     /* CBTest_getTests() */
@@ -387,6 +392,51 @@ final class CBConvertTests {
     /**
      * @return object
      */
+    static function CBTest_valueAsInt(): stdClass {
+        $tests = [
+            [0, 0],
+            [5, 5],
+            [5.0, 5],
+            [5.1, null],
+            ["5", 5],
+            [" 5 ", 5],
+            ["5.0", 5],
+            ["5.1", null],
+            ["five", null],
+            [null, null],
+            [true, null],
+            [false, null],
+            [[], null],
+            [(object)[], null],
+        ];
+
+        foreach ($tests as $test) {
+            $actualResult = CBConvert::valueAsInt($test[0]);
+            $expectedResult = $test[1];
+
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    json_encode($test[0]),
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+
+        /* done */
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_valueAsInt() */
+
+
+
+    /**
+     * @return object
+     */
     static function CBTest_valueAsMoniker(): stdClass {
         foreach (CBConvertTests::valueAsMonikerTestCases() as $testCase) {
             $actualResult = CBConvert::valueAsMoniker($testCase->originalValue);
@@ -643,45 +693,6 @@ EOT;
 
         return $message;
     }
-
-
-
-    /**
-     * @return null
-     */
-    static function valueAsIntTest() {
-        $tests = [
-            [0, 0],
-            [5, 5],
-            [5.0, 5],
-            [5.1, null],
-            ["5", 5],
-            [" 5 ", 5],
-            ["5.0", 5],
-            ["5.1", null],
-            ["five", null],
-            [null, null],
-            [true, null],
-            [false, null],
-            [[], null],
-            [(object)[], null],
-        ];
-
-        foreach ($tests as $test) {
-            $result = CBConvert::valueAsInt($test[0]);
-
-            if ($result !== $test[1]) {
-                $inputAsJSON = json_encode($test[0]);
-                $actualResultAsJSON = json_encode($result);
-                $expectedResultAsJSON = json_encode($test[1]);
-                throw new Exception(
-                    "The tested input: {$inputAsJSON} produced: " .
-                    "{$actualResultAsJSON} instead of: {$expectedResultAsJSON}"
-                );
-            }
-        }
-    }
-    /* valueAsIntTest() */
 
 
 

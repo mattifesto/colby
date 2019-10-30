@@ -339,7 +339,6 @@ EOT;
      */
     static function PHPTests(): array {
         $tests = [
-            ['CBConvert',               'valueAsInt'],
             ['CBConvert',               'valueAsModel'],
             ['CBDataStore',             'createAndDelete'],
             ['CBDataStore',             'directoryNameFromDocumentRoot'],
