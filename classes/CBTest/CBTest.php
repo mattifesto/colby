@@ -339,7 +339,6 @@ EOT;
      */
     static function PHPTests(): array {
         $tests = [
-            ['CBConvert',               'valueAsModel'],
             ['CBDataStore',             'createAndDelete'],
             ['CBDataStore',             'directoryNameFromDocumentRoot'],
             ['CBDataStore',             'toURL'],
@@ -564,7 +563,7 @@ EOT;
     static function valueIssueFailure(
         string $testTitle,
         $value,
-        string $issueMessage
+        string $issueCBMessage
     ): stdClass {
         $testTitleAsMessage = CBMessageMarkup::stringToMessage(
             $testTitle
@@ -574,7 +573,7 @@ EOT;
             CBConvert::valueToPrettyJSON($value)
         );
 
-        $message = <<<EOT
+        $cbmessage = <<<EOT
 
             --- dl
                 --- dt
@@ -587,7 +586,7 @@ EOT;
                     issue
                 ---
                 --- dd
-                    ${issueMessage}
+                    ${issueCBMessage}
                 ---
                 --- dt
                     value
@@ -602,7 +601,7 @@ EOT;
 
         return (object)[
             'succeeded' => false,
-            'message' => $message,
+            'message' => $cbmessage,
         ];
     }
     /* valueIssueFailure() */

@@ -124,6 +124,11 @@ final class CBConvertTests {
                 'title' => 'CBConvert::valueAsInt()',
                 'type' => 'server',
             ],
+            (object)[
+                'name' => 'valueAsModel',
+                'title' => 'CBConvert::valueAsModel',
+                'type' => 'server',
+            ],
         ];
     }
     /* CBTest_getTests() */
@@ -437,6 +442,93 @@ final class CBConvertTests {
     /**
      * @return object
      */
+    static function CBTest_valueAsModel(): stdClass {
+        $validModels = [
+            (object)[
+                'className' => 'CBViewPage',
+            ],
+            (object)[
+                'className' => ' ',
+            ],
+            (object)[
+                'className' => ' CBViewPage',
+            ],
+            (object)[
+                'className' => 'CBViewPage ',
+            ],
+        ];
+
+        foreach ($validModels as $model) {
+            if (CBConvert::valueAsModel($model) === null) {
+                return CBTest::valueIssueFailure(
+                    'valid model',
+                    $model,
+                    (
+                        'The test object is a valid model but was not ' .
+                        'considered so by CBConvert::valueAsModel()'
+                    )
+                );
+            }
+        }
+
+        $invalidModels = [
+            2,
+            5.5,
+            "hello",
+            [],
+            (object)[
+                'className' => '',
+            ],
+        ];
+
+        foreach($invalidModels as $model) {
+            if (CBConvert::valueAsModel($model) !== null) {
+                return CBTest::valueIssueFailure(
+                    'invalid model',
+                    $model,
+                    (
+                        'The test object is not a valid model but was ' .
+                        'considered valid by CBConvert::valueAsModel()'
+                    )
+                );
+            }
+        }
+
+
+        /* deprecated PHP-only class name matching tests */
+
+        $model = (object)[
+            'className' => 'CBFoo',
+        ];
+
+        if (
+            CBConvert::valueAsModel(
+                $model,
+                ['CBFee', 'CBFaa', 'CBFoo']
+            ) !== $model
+        ) {
+            return (object)[
+                'failed' => true,
+                'message' =>
+                    'The (CBConvert::valueAsModel\(\) (code)) class name ' .
+                    'matching test failed.',
+            ];
+        }
+
+
+        /* done */
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_valueAsModel() */
+
+
+
+    /**
+     * @return object
+     */
     static function CBTest_valueAsMoniker(): stdClass {
         foreach (CBConvertTests::valueAsMonikerTestCases() as $testCase) {
             $actualResult = CBConvert::valueAsMoniker($testCase->originalValue);
@@ -693,101 +785,6 @@ EOT;
 
         return $message;
     }
-
-
-
-    /**
-     * @return object|null
-     */
-    static function valueAsModelTest(): ?stdClass {
-        $validModels = [
-            (object)[
-                'className' => 'CBViewPage',
-            ],
-            (object)[
-                'className' => ' ',
-            ],
-            (object)[
-                'className' => ' CBViewPage',
-            ],
-            (object)[
-                'className' => 'CBViewPage ',
-            ],
-        ];
-
-        foreach($validModels as $model) {
-            if (CBConvert::valueAsModel($model) === null) {
-                $modelAsJSON = CBConvert::valueToPrettyJSON($model);
-                $message = <<<EOT
-
-                    The following object is a valid model but not considered
-                    so by CBConvert::valueAsModel():
-
-                    --- pre\n{$modelAsJSON}
-                    ---
-
-EOT;
-
-                return (object)[
-                    'failed' => true,
-                    'message' => $message,
-                ];
-            }
-        }
-
-        $invalidModels = [
-            2,
-            5.5,
-            "hello",
-            [],
-            (object)[
-                'className' => '',
-            ],
-        ];
-
-        foreach($invalidModels as $model) {
-            if (CBConvert::valueAsModel($model) !== null) {
-                $modelAsJSON = CBConvert::valueToPrettyJSON($model);
-                $message = <<<EOT
-
-                    The following object is an invalid model but not considered
-                    so by CBConvert::valueAsModel():
-
-                    --- pre\n{$modelAsJSON}
-                    ---
-
-EOT;
-
-                return (object)[
-                    'failed' => true,
-                    'message' => $message,
-                ];
-            }
-        }
-
-        /* deprecated PHP-only class name matching tests */
-
-        $model = (object)[
-            'className' => 'CBFoo',
-        ];
-
-        if (
-            CBConvert::valueAsModel(
-                $model,
-                ['CBFee', 'CBFaa', 'CBFoo']
-            ) !== $model
-        ) {
-            return (object)[
-                'failed' => true,
-                'message' =>
-                    'The (CBConvert::valueAsModel\(\) (code)) class name ' .
-                    'matching test failed.',
-            ];
-        }
-
-        return null;
-    }
-    /* valueAsModelTest() */
 
 
 
