@@ -96,6 +96,77 @@ final class CBAdminPageForUpdate {
 
 
     /**
+     * @return object
+     */
+    static function CBAjax_pullColby(): stdClass {
+        $originalDirectory = getcwd();
+
+        if ($originalDirectory === false) {
+            throw new CBException(
+                'getcwd() returned false',
+                '',
+                '7d55fc39bd8246bc6f0f0131aedb12000cffbfd8'
+            );
+        }
+
+        $colbyDirectory = cbsysdir();
+
+        $output = [
+            "$ cd {$colbyDirectory}",
+            '',
+        ];
+
+        chdir($colbyDirectory);
+
+        CBExec::exec(
+            'git pull',
+            $output,
+            $exitCode
+        );
+
+        if (
+            empty($exitCode) &&
+            function_exists('sclibdir')
+        ) {
+            $shoppingCartDirectory = sclibdir();
+
+            array_push(
+                $output,
+                '',
+                "$ cd {$shoppingCartDirectory}",
+                ''
+            );
+
+            chdir($shoppingCartDirectory);
+
+            CBExec::exec(
+                'git pull',
+                $output,
+                $exitCode
+            );
+        }
+
+        chdir($originalDirectory);
+
+        return (object)[
+            'output' => implode("\n", $output),
+            'succeeded' => empty($exitCode),
+        ];
+    }
+    /* CBAjax_pullColby() */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_pullColby_group(): string {
+        return 'Developers';
+    }
+
+
+
+    /**
      * @return void
      */
     static function CBAjax_update(): void {
@@ -124,7 +195,7 @@ final class CBAdminPageForUpdate {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v543.js', cbsysurl()),
         ];
     }
 

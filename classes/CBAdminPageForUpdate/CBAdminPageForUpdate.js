@@ -31,24 +31,32 @@ var CBAdminPageForUpdate = {
         {
             let section = CBUISection.create();
 
-            /* backup, pull, and update */
+            /* backup, pull website, and update */
             {
                 let sectionItem = CBUISectionItem4.create();
                 sectionItem.callback = function () {
                     task(
-                        "Backup, Pull, and Update",
+                        "Backup, Pull Website, and Update",
                         function () {
-                            return promiseToBackupDatabase().then(
-                                promiseToPullUpdates
+                            return Promise.resolve().then(
+                                function () {
+                                    return promiseToBackupDatabase();
+                                }
+                            ).then (
+                                function () {
+                                    return promiseToPullWebsite();
+                                }
                             ).then(
-                                promiseToUpdateSite
+                                function () {
+                                    return promiseToUpdateSite();
+                                }
                             );
                         }
                     );
                 };
 
                 let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Backup, Pull, and Update";
+                stringsPart.string1 = "Backup, Pull Website, and Update";
 
                 stringsPart.element.classList.add("action");
 
@@ -56,14 +64,14 @@ var CBAdminPageForUpdate = {
                 section.appendItem(sectionItem);
             }
 
-            /* pull and update */
+            /* pull website and update */
             {
                 let sectionItem = CBUISectionItem4.create();
                 sectionItem.callback = function () {
                     task(
-                        "Pull and Update",
+                        "Pull Website and Update",
                         function () {
-                            return promiseToPullUpdates().then(
+                            return promiseToPullWebsite().then(
                                 promiseToUpdateSite
                             );
                         }
@@ -71,7 +79,7 @@ var CBAdminPageForUpdate = {
                 };
 
                 let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Pull and Update";
+                stringsPart.string1 = "Pull Website and Update";
 
                 stringsPart.element.classList.add("action");
 
@@ -112,15 +120,15 @@ var CBAdminPageForUpdate = {
                 let sectionItem = CBUISectionItem4.create();
                 sectionItem.callback = function () {
                     task(
-                        "Git Pull",
+                        "Pull Website",
                         function () {
-                            return promiseToPullUpdates();
+                            return promiseToPullWebsite();
                         }
                     );
                 };
 
                 let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Git Pull";
+                stringsPart.string1 = "Pull Website";
 
                 stringsPart.element.classList.add("action");
 
@@ -153,6 +161,10 @@ var CBAdminPageForUpdate = {
             main.appendChild(CBUI.createHalfSpace());
         }
 
+        main.appendChild(
+            createPullColbySectionElement()
+        );
+
         /* output */
 
         main.appendChild(outputElement);
@@ -162,6 +174,62 @@ var CBAdminPageForUpdate = {
 
 
         /* -- closures -- -- -- -- -- */
+
+
+
+        /**
+         * @return Element
+         */
+        function createPullColbySectionElement() {
+            let sectionContainerElement = CBUI.createElement(
+                "CBUI_sectionContainer"
+            );
+
+            let sectionElement = CBUI.createElement(
+                "CBUI_section"
+            );
+
+            sectionContainerElement.appendChild(
+                sectionElement
+            );
+
+            let actionElement = CBUI.createElement(
+                "CBUI_action"
+            );
+
+            sectionElement.appendChild(
+                actionElement
+            );
+
+            actionElement.textContent = "Backup, Pull Colby, and Update";
+
+            actionElement.addEventListener(
+                "click",
+                function () {
+                    task(
+                        "Backup and Update Colby",
+                        function () {
+                            return Promise.resolve().then(
+                                function () {
+                                    return promiseToBackupDatabase();
+                                }
+                            ).then(
+                                function () {
+                                    return promiseToPullColby();
+                                }
+                            ).then(
+                                function () {
+                                    return promiseToUpdateSite();
+                                }
+                            );
+                        }
+                    );
+                }
+            );
+
+            return sectionContainerElement;
+        }
+        /* createPullColbySectionElement() */
 
 
 
@@ -234,9 +302,9 @@ var CBAdminPageForUpdate = {
         /**
          * @return Promise
          */
-        function promiseToPullUpdates() {
+        function promiseToPullWebsite() {
             let expander = CBUIExpander.create();
-            expander.title = "git pull in progress";
+            expander.title = "pull website in progress";
             expander.timestamp = Date.now() / 1000;
 
             outputElement.appendChild(expander.element);
@@ -255,18 +323,58 @@ var CBAdminPageForUpdate = {
                     expander.message = message;
                     expander.timestamp = Date.now() / 1000;
 
-                    if (!response.succeeded) {
-                        expander.title = "git pull failed";
-                        expander.severity = 3;
+                    if (response.succeeded) {
+                        expander.title = "pull website completed";
                     } else {
-                        expander.title = "git pull completed";
+                        expander.title = "pull website failed";
+                        expander.severity = 3;
                     }
                 }
             );
 
             return promise;
         }
-        /* promiseToPullUpdates() */
+        /* promiseToPullWebsite() */
+
+
+
+        /**
+         * @return Promise
+         */
+        function promiseToPullColby() {
+            let expander = CBUIExpander.create();
+            expander.title = "pull colby in progress";
+            expander.timestamp = Date.now() / 1000;
+
+            outputElement.appendChild(
+                expander.element
+            );
+
+            let promise = Colby.callAjaxFunction(
+                "CBAdminPageForUpdate",
+                "pullColby"
+            ).then(
+                function (response) {
+                    let message = [
+                        "--- pre green",
+                        CBMessageMarkup.stringToMessage(response.output),
+                        "---",
+                    ].join("\n");
+
+                    expander.message = message;
+                    expander.timestamp = Date.now() / 1000;
+
+                    if (response.succeeded) {
+                        expander.title = "pull colby completed";
+                    } else {
+                        expander.title = "pull colby failed";
+                        expander.severity = 3;
+                    }
+                }
+            );
+
+            return promise;
+        }
 
 
 
