@@ -1145,6 +1145,19 @@ final class CBCodeAdmin {
                         'CBUIPanel.displayElement().'
                     ),
                 ],
+
+
+                /**
+                 * 2019_10_31 (warning)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'CBUnitTests_tests',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace CBUnitTests_tests() with CBTest_getTests().'
+                    ),
+                ],
             ]
         );
     }
