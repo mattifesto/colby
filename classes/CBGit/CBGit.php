@@ -9,25 +9,28 @@ final class CBGit {
      *
      * @return void
      */
-    static function exec(string $command, array &$output, &$exitCode): void {
+    static function exec(
+        string $command,
+        array &$output,
+        &$exitCode
+    ): void {
         $pwd = getcwd();
 
         chdir(cbsitedir());
 
         try {
-            array_push($output, "$ {$command}");
-
-            exec("{$command} 2>&1", $output2, $exitCode);
-
-            if (!empty($exitCode)) {
-                array_push($output, "! returned exit code: {$exitCode}");
-            }
-
-            $output = array_merge($output, $output2);
+            CBExec::exec(
+                $command,
+                $output,
+                $exitCode
+            );
         } finally {
             chdir($pwd);
         }
     }
+    /* exec() */
+
+
 
     /**
      * @param array &$output
@@ -35,9 +38,18 @@ final class CBGit {
      *
      * @return void
      */
-    static function pull(array &$output, &$exitCode): void {
-        CBGit::exec('git pull' , $output, $exitCode);
+    static function pull(
+        array &$output,
+        &$exitCode
+    ): void {
+        CBGit::exec(
+            'git pull',
+            $output,
+            $exitCode
+        );
     }
+
+
 
     /**
      * @return [string]
@@ -48,16 +60,26 @@ final class CBGit {
         chdir(cbsitedir());
 
         try {
-            exec('git submodule--helper list', $submodules);
+            exec(
+                'git submodule--helper list',
+                $submodules
+            );
         } finally {
             chdir($pwd);
         }
 
-        return array_map(function ($item) {
-            $columns = preg_split('/\s/', $item);
-            return $columns[3];
-        }, $submodules);
+        return array_map(
+            function ($item) {
+                $columns = preg_split('/\s/', $item);
+
+                return $columns[3];
+            },
+            $submodules
+        );
     }
+    /* submodules() */
+
+
 
     /**
      * @param array &$output
@@ -71,10 +93,21 @@ final class CBGit {
          * The "git sync" command will synchronize submodules if the remove
          * URL has changed in .gitmodules.
          */
-        CBGit::exec('git submodule sync --recursive' , $output, $exitCode);
+
+        CBGit::exec(
+            'git submodule sync --recursive',
+            $output,
+            $exitCode
+        );
 
         if (empty($exitCode)) {
-            CBGit::exec('git submodule update --init --recursive', $output, $exitCode);
+            CBGit::exec(
+                'git submodule update --init --recursive',
+                $output,
+                $exitCode
+            );
         }
     }
+    /* submoduleUpdate() */
+
 }
