@@ -2,14 +2,29 @@
 
 final class CBTextBoxViewTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
     /**
-     * @return [[<class>, <function>]]
+     * @return [object]
      */
-    static function CBUnitTests_tests(): array {
+    static function CBTest_getTests(): array {
         return [
-            ['CBTextBoxView', 'upgrade'],
+            (object)[
+                'name' => 'upgrade',
+                'title' => 'CBTextBoxView::upgrade()',
+                'type' => 'server',
+            ],
         ];
     }
+
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
 
     /**
      * @return object
@@ -68,41 +83,35 @@ EOT
             return true;
         };
 
+
+        /* test 1 */
+
         if (!$bufferIsValid($buffer)) {
-            $bufferAsMessage = CBMessageMarkup::stringToMessage(
-                CBConvert::valueToPrettyJSON($buffer)
+            return CBTest::valueIssueFailure(
+                'test 1',
+                $buffer,
+                'The log entry buffer is not what was expected.'
             );
-
-            $message = <<<EOT
-
-                The log entry buffer is not what was expected:
-
-                --- pre\n{$bufferAsMessage}
-                ---
-
-EOT;
-
-            return (object)[
-                'message' => $message,
-            ];
         }
+
+
+        /* test 2 */
 
         if ($result != $expected) {
-            $message = CBConvertTests::resultAndExpectedToMessage($result, $expected);
-
-            return (object)[
-                'message' => <<<EOT
-
-                    The result upgraded spec does not match the expected upgrade spec:
-
-                    {$message}
-
-EOT
-            ];
+            return CBTest::resultMismatchFailure(
+                'test 2',
+                $result,
+                $expected
+            );
         }
+
+
+        /* done */
 
         return (object)[
             'succeeded' => true,
         ];
     }
+    /* CBTest_upgrade() */
+
 }
