@@ -1,30 +1,30 @@
 <?php
 
 /**
- * A CBException allows developers to throw exceptions with a longer extended
- * message formatted with message markup.
+ * A CBException allows developers to throw exceptions with a longer CBMessage
+ * and a source ID.
  *
  *      $exception->getMesssage()
  *
  *          Returns the same type of text string as any other exception.
  *
- *      $exception->getExtendedMessage()
+ *      $exception->getCBMessage()
  *
- *          Returns a string of message markup that replaces the text string
- *          returned by getMessage(). In cases where an extended message would
- *          add nothing, it will be set to an empty string which indicates that
- *          the standard exception message should be used.
+ *          Returns a CBMessage string that replaces the text string returned by
+ *          getMessage(). In cases where a CBMessage would add nothing, it will
+ *          be set to an empty string which indicates that the text exception
+ *          message should be used.
  *
  *      Which to display?
  *
- *          If the extended message is a non-empty string and the UI situation
- *          can display a full message, use the extended message.
+ *          If the CBMessage is a non-empty string and the UI situation
+ *          can display a full message, use the CBMessage.
  *
- *          Otherwise, use the standard exception message.
+ *          Otherwise, use the text exception message.
  */
 final class CBException extends Exception {
 
-    private $extendedMessage;
+    private $cbmessage;
     private $sourceID;
 
 
@@ -35,7 +35,7 @@ final class CBException extends Exception {
      *
      *      A plain text message.
      *
-     * @param string $extendedMessage
+     * @param string $cbmessage
      *
      *      A message formatted with message markup.
      *
@@ -51,14 +51,14 @@ final class CBException extends Exception {
      */
     public function __construct(
         string $message,
-        string $extendedMessage,
+        string $cbmessage,
         ?string $sourceID = null,
         int $code = 0,
         Throwable $previous = null
     ) {
         parent::__construct($message, $code, $previous);
 
-        $this->extendedMessage = $extendedMessage;
+        $this->cbmessage = $cbmessage;
         $this->sourceID = $sourceID;
     }
 
@@ -170,16 +170,26 @@ EOT;
     /**
      * @return string
      */
-    function getExtendedMessage(): string {
-        if ($this->extendedMessage === '') {
+    function getCBMessage(): string {
+        if ($this->cbmessage === '') {
             return CBMessageMarkup::stringToMessage(
                 $this->getMessage()
             );
         } else {
-            return $this->extendedMessage;
+            return $this->cbmessage;
         }
     }
-    /* getExtendedMessage() */
+
+
+
+    /**
+     * @deprecated use getCBMessage()
+     *
+     * @return string
+     */
+    function getExtendedMessage(): string {
+        return $this->getCBMessage();
+    }
 
 
 
@@ -190,6 +200,22 @@ EOT;
         return $this->sourceID;
     }
     /* getSourceID() */
+
+
+
+    /**
+     * @param Throwable $throwable
+     *
+     * @returh string
+     */
+    static function throwableToCBMessage(Throwable $throwable): string {
+        if ($throwable instanceof CBException) {
+            return $throwable->getCBMessage();
+        } else {
+            return '';
+        }
+    }
+    /* throwableToCBMessage() */
 
 
 
