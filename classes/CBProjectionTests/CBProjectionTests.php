@@ -2,20 +2,94 @@
 
 final class CBProjectionTests {
 
-    static function test() {
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [object]
+     */
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'general',
+                'title' => 'CBProjection',
+                'type' => 'server',
+            ],
+        ];
+    }
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_general(): stdClass {
         $projection = CBProjection::withSize(100, 200);
         $projection = CBProjection::scale($projection, 0.5);
 
-        if ($projection->destination->width != 50 || $projection->destination->height != 100) {
-            throw new RuntimeException('CBProjection::scale() test failed. Projection: ' . json_encode($projection));
+
+        $actualResult = $projection->destination->width;
+        $expectedResult = 50;
+
+        if ($actualResult != $expectedResult) {
+            return CBTest::resultMismatchFailure(
+                'width test 1',
+                $actualResult,
+                $expectedResult
+            );
         }
+
+
+        $actualResult = $projection->destination->height;
+        $expectedResult = 100;
+
+        if ($actualResult != $expectedResult) {
+            return CBTest::resultMismatchFailure(
+                'height test 1',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
 
         $projection = CBProjection::withSize(100, 200);
         $projection = CBProjection::applyOpString($projection, "s0.5");
 
-        if ($projection->destination->width != 50 || $projection->destination->height != 100) {
-            throw new RuntimeException('CBProjection::applyOpString(..., "s0.5") test failed. Projection: ' . json_encode($projection));
+
+        $actualResult = $projection->destination->width;
+        $expectedResult = 50;
+
+        if ($actualResult != $expectedResult) {
+            return CBTest::resultMismatchFailure(
+                'width test 2',
+                $actualResult,
+                $expectedResult
+            );
         }
 
+
+        $actualResult = $projection->destination->height;
+        $expectedResult = 100;
+
+        if ($actualResult != $expectedResult) {
+            return CBTest::resultMismatchFailure(
+                'height test 2',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_general() */
+
 }
