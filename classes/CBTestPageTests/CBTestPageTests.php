@@ -2,20 +2,54 @@
 
 final class CBTestPageTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
     /**
-     * @return null
+     * @return [object]
      */
-    static function test() {
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'general',
+                'title' => 'CBTestPage',
+                'type' => 'server',
+            ],
+        ];
+    }
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_general(): stdClass {
         $ID = '1406f65b87c45a3927672cf3634a88d6daeca48b';
         $IDAsSQL = CBHex160::toSQL($ID);
-        $countSQL = "SELECT COUNT(*) FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}";
 
-        CBDB::transaction(function () use ($ID) {
-            CBModels::deleteByID([$ID]);
-        });
+        $countSQL = <<<EOT
+
+            SELECT  COUNT(*)
+            FROM    ColbyPages
+            WHERE   archiveID = {$IDAsSQL}
+
+        EOT;
+
+        CBDB::transaction(
+            function () use ($ID) {
+                CBModels::deleteByID([$ID]);
+            }
+        );
 
         if (CBDB::SQLToValue($countSQL) !== '0') {
-            throw new Exception('The test page already exists in the `ColbyPages` table.');
+            throw new Exception(
+                'The test page already exists in the `ColbyPages` table.'
+            );
         }
 
         $spec = (object)[
@@ -28,20 +62,34 @@ final class CBTestPageTests {
             'URI' => 'hello-world',
         ];
 
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save([$spec]);
-        });
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save([$spec]);
+            }
+        );
 
         if (CBDB::SQLToValue($countSQL) !== '1') {
-            throw new Exception('The test page does not exist in the `ColbyPages` table.');
+            throw new Exception(
+                'The test page does not exist in the `ColbyPages` table.'
+            );
         }
 
         /* test search text */
 
-        $searchText = CBDB::SQLToValue("SELECT `searchText` FROM `ColbyPages` WHERE `archiveID` = {$IDAsSQL}");
+        $searchText = CBDB::SQLToValue(
+            <<<EOT
+
+                SELECT  searchText
+                FROM    ColbyPages
+                WHERE   archiveID = {$IDAsSQL}
+
+            EOT
+        );
 
         if (!preg_match('/^Hello, world! A test page for/', $searchText)) {
-            throw new Exception("The test doesn't recognize the page search text: {$searchText}");
+            throw new Exception(
+                "The test doesn't recognize the page search text: {$searchText}"
+            );
         }
 
         /* test render */
@@ -60,12 +108,23 @@ final class CBTestPageTests {
         // Comment out the remaining lines of this function to leave the test
         // page in so that it can be viewed and searched for.
 
-        CBDB::transaction(function () use ($ID) {
-            CBModels::deleteByID([$ID]);
-        });
+        CBDB::transaction(
+            function () use ($ID) {
+                CBModels::deleteByID([$ID]);
+            }
+        );
 
         if (CBDB::SQLToValue($countSQL) !== '0') {
-            throw new Exception('The test page still exists in the `ColbyPages` table.');
+            throw new Exception(
+                'The test page still exists in the `ColbyPages` table.'
+            );
         }
+
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_general() */
+
 }
