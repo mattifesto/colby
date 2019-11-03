@@ -8,7 +8,13 @@
     CBModel,
 */
 
+
+
 var CBModels = {
+
+    /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @param ID ID
@@ -33,6 +39,7 @@ var CBModels = {
         );
     },
     /* delete() */
+
 
 
     /**
@@ -90,6 +97,7 @@ var CBModels = {
     /* fetch() */
 
 
+
     /**
      * @deprecated use CBModels.fetch()
      */
@@ -97,6 +105,7 @@ var CBModels = {
         return CBModels.fetch(ID, sessionStorage);
     },
     /* fetchFromSessionStorage() */
+
 
 
     /**
@@ -148,6 +157,7 @@ var CBModels = {
     /* fetchAndUpdate() */
 
 
+
     /**
      * @param ID ID
      *
@@ -161,6 +171,7 @@ var CBModels = {
         return "ID_" + ID;
     },
     /* IDToStorageKey() */
+
 
 
     /**
@@ -225,6 +236,7 @@ var CBModels = {
     /* save() */
 
 
+
     /**
      * @param ID ID
      * @param object spec
@@ -236,4 +248,5 @@ var CBModels = {
         CBModels.save(ID, spec, version, sessionStorage);
     }
     /* saveToSessionStorage() */
+
 };
