@@ -2,12 +2,18 @@
 
 final class CBTestAdmin {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return string
      */
     static function CBAdmin_group() {
         return 'Developers';
     }
+
+
 
     /**
      * @return [string]
@@ -19,12 +25,20 @@ final class CBTestAdmin {
         ];
     }
 
+
+
     /**
      * @return void
      */
     static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'Test Administration';
     }
+
+
+
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return ID
@@ -37,6 +51,8 @@ final class CBTestAdmin {
         return $ID;
     }
 
+
+
     /**
      * @return string
      */
@@ -45,7 +61,10 @@ final class CBTestAdmin {
     }
 
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -58,19 +77,21 @@ final class CBTestAdmin {
     /* CBHTMLOutput_CSSURLs() */
 
 
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v544.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
 
 
+
     /**
-     * @return [[string (name), string (value)]]
+     * @return [[<name>, <value>]]
      */
     static function CBHTMLOutput_JavaScriptVariables() {
         return [
@@ -81,6 +102,7 @@ final class CBTestAdmin {
         ];
     }
     /* CBHTMLOutput_JavaScriptVariables() */
+
 
 
     /**
@@ -118,7 +140,10 @@ final class CBTestAdmin {
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * This image can be used for testing purposes. Do not modify the original.
@@ -130,12 +155,14 @@ final class CBTestAdmin {
     }
 
 
+
     /**
      * @return string
      */
     static function testImageURL() {
         return cbsysurl() . '/classes/' . __CLASS__ . '/2017.02.02.TestImage.jpg';
     }
+
 
 
     /**
@@ -146,5 +173,6 @@ final class CBTestAdmin {
     static function testImageID() {
         return '3dd8e721048bbe8ea5f0c043fab73277a0b0044c';
     }
+
 }
 /* CBTestAdmin */

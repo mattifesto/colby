@@ -26,6 +26,15 @@ var CBTestAdmin = {
     errorCount: 0,
     testImageID: "3dd8e721048bbe8ea5f0c043fab73277a0b0044c",
 
+
+
+    /* -- functions -- -- -- -- -- */
+
+
+
+    /**
+     * @return object
+     */
     createStatus: function () {
         var element = document.createElement("div");
         element.className = "status";
@@ -34,6 +43,8 @@ var CBTestAdmin = {
             element: element,
         };
     },
+
+
 
     /**
      * @param object test
@@ -107,6 +118,7 @@ var CBTestAdmin = {
     /* convertJavaScriptTestToFunction() */
 
 
+
     /**
      * @return Element
      */
@@ -162,19 +174,6 @@ var CBTestAdmin = {
                 );
                 /* CBTestAdmin_tests.forEach */
 
-
-                CBTestAdmin.serverTests.forEach(
-                    function (serverTest, index) {
-                        options.push(
-                            {
-                                title:
-                                `${serverTest[0]} / ${serverTest[1]} ` +
-                                `[old style server test]`,
-                                value: index,
-                            }
-                        );
-                    }
-                );
 
                 options.sort(
                     function (a, b) {
@@ -332,37 +331,25 @@ var CBTestAdmin = {
     /* createTestUI() */
 
 
+
     /**
      * @return undefined
      */
     DOMContentDidLoad: function() {
-        Colby.callAjaxFunction(
-            "CBTest",
-            "getPHPTests"
-        ).then(
-            function (tests) {
-                CBTestAdmin.serverTests = tests;
+        let main = document.getElementsByTagName("main")[0];
+        let navigator = CBUINavigationView.create();
 
-                let main = document.getElementsByTagName("main")[0];
-                let navigator = CBUINavigationView.create();
+        main.appendChild(navigator.element);
 
-                main.appendChild(navigator.element);
-
-                navigator.navigate(
-                    {
-                        title: "Test",
-                        element: CBTestAdmin.createTestUI(),
-                    }
-                );
-            }
-        ).catch(
-            function (error) {
-                CBUIPanel.displayError(error);
-                Colby.reportError(error);
+        navigator.navigate(
+            {
+                title: "Test",
+                element: CBTestAdmin.createTestUI(),
             }
         );
     },
     /* DOMContentDidLoad() */
+
 
 
     /**
@@ -390,10 +377,6 @@ var CBTestAdmin = {
             }
         ).then(
             function (value) {
-                return CBTestAdmin.runServerTests(value);
-            }
-        ).then(
-            function (value) {
                 return handleRunTests_onFulfilled(value);
             }
         ).catch(
@@ -414,7 +397,10 @@ var CBTestAdmin = {
         return;
 
 
+
         /* -- closures -- -- -- -- -- */
+
+
 
         /**
          * @return undefined
@@ -433,6 +419,7 @@ var CBTestAdmin = {
             expander.element.scrollIntoView();
         }
         /* handleRunTests_onFulfilled() */
+
 
 
         /**
@@ -456,6 +443,7 @@ var CBTestAdmin = {
         /* handleRunTests_onRejected() */
 
 
+
         /**
          * @return undefined
          */
@@ -465,8 +453,10 @@ var CBTestAdmin = {
             CBTestAdmin.fileInputElementIsResetting = undefined;
         }
         /* handleRunTests_onFinally() */
+
     },
     /* handleRunTests() */
+
 
 
     /**
@@ -504,96 +494,6 @@ var CBTestAdmin = {
     /* runJavaScriptTests() */
 
 
-    /**
-     * @return Promise
-     */
-    runServerTests: function () {
-        return new Promise(
-            function (resolve, reject) {
-                let i = 0;
-
-                if (CBTestAdmin.selectedTest !== undefined) {
-                    i = CBTestAdmin.selectedTest;
-                }
-
-                next();
-
-                function run(test) {
-                    var className = test[0];
-                    var functionName = test[1];
-
-                    let title = "The server test " +
-                        (functionName ? `"${functionName}" ` : "") +
-                        "for " +
-                        className;
-                    let expander = CBUIExpander.create();
-                    expander.title = title + " (running)";
-
-                    CBTestAdmin.status.element.appendChild(expander.element);
-                    expander.element.scrollIntoView();
-
-                    let args = {
-                        className: className,
-                        testName: functionName,
-                    };
-
-                    Colby.callAjaxFunction(
-                        "CBTest",
-                        "run",
-                        args
-                    ).then(
-                        function (value) {
-                            return onFulfilled(value);
-                        }
-                    ).catch(
-                        function (error) {
-                            return onRejected(error);
-                        }
-                    );
-
-                    function onFulfilled(value) {
-                        let status = value.succeeded ? "succeeded" : "failed";
-                        let message = value.message || "";
-
-                        expander.title = `${title} ${status}`;
-                        expander.message = message;
-                        expander.timestamp = Date.now() / 1000;
-
-                        if (!value.succeeded) {
-                            CBTestAdmin.errorCount += 1;
-                            expander.severity = 3;
-                        }
-
-                        if (CBTestAdmin.selectedTest === undefined) {
-                            next();
-                        } else {
-                            resolve();
-                        }
-                    }
-
-                    function onRejected(error) {
-                        CBTestAdmin.errorCount += 1;
-                        expander.severity = 3;
-                        expander.title = `${title} failed`;
-                        expander.message = error.message;
-
-                        reject(error);
-                    }
-                }
-
-                /* closure */
-                function next() {
-                    if (i < CBTestAdmin.serverTests.length) {
-                        run(CBTestAdmin.serverTests[i]);
-                        i += 1;
-                    } else {
-                        resolve();
-                    }
-                }
-            }
-        );
-        /* new Promise() */
-    },
 
     /**
      * @param object test
@@ -660,7 +560,10 @@ var CBTestAdmin = {
         return promise;
 
 
+
         /* -- closures -- -- -- -- -- */
+
+
 
         /**
          * @return undefined
@@ -715,10 +618,17 @@ var CBTestAdmin = {
             `;
         }
         /* runTest_onRejected() */
+
     },
     /* runTest() */
+
 };
 /* CBTestAdmin */
 
 
-Colby.afterDOMContentLoaded(CBTestAdmin.DOMContentDidLoad);
+
+Colby.afterDOMContentLoaded(
+    function () {
+        CBTestAdmin.DOMContentDidLoad();
+    }
+);
