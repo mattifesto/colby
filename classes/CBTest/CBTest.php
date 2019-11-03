@@ -7,26 +7,6 @@ final class CBTest {
 
 
     /**
-     * @return array
-     */
-    static function CBAjax_getPHPTests(): array {
-        return [];
-    }
-    /* CBAjax_getPHPTests() */
-
-
-
-    /**
-     * @return string
-     */
-    static function CBAjax_getPHPTests_group(): string {
-        return 'Developers';
-    }
-    /* CBAjax_getPHPTests_group() */
-
-
-
-    /**
      * @param object $args
      *
      *      {
