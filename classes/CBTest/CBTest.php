@@ -10,7 +10,7 @@ final class CBTest {
      * @return array
      */
     static function CBAjax_getPHPTests(): array {
-        return CBTest::PHPTests();
+        return [];
     }
     /* CBAjax_getPHPTests() */
 
@@ -231,6 +231,11 @@ EOT;
             );
         }
 
+        $tests = array_merge(
+            $tests,
+            CBTest::PHPTests()
+        );
+
         return $tests;
     }
     /* getTests() */
@@ -335,7 +340,12 @@ EOT;
 
 
     /**
-     * @return [[<className>, <testName>]]
+     * @deprecated 2019_11_03
+     *
+     *      Implement CBTest_getTests() instead of CBTest_PHPTests() or
+     *      CBUnitTests_tests().
+     *
+     * @return [object]
      */
     static function PHPTests(): array {
         $tests = [
@@ -353,8 +363,6 @@ EOT;
             ['CBMarkaround',            'paragraphToHTML'],
             ['CBPageLayout',            'build'],
             ['CBPages',                 'stringToDencodedURIPath'],
-            ['CBProjection'],
-            ['CBTestPage'],
             ['CBView',                  'render'],
             ['CBView',                  'toSubviews'],
             ['ColbyMarkaroundParser',   'orderedList'],
@@ -383,6 +391,28 @@ EOT;
                 );
             }
         }
+
+        $tests = array_map(
+            function (array $test): stdClass {
+                if (count($test) < 2) {
+                    throw CBException::createModelIssueException(
+                        'Invalid PHP test specification.',
+                        $test
+                    );
+                }
+
+                $testClassName = $test[0];
+                $testName = $test[1];
+
+                return (object)[
+                    'name' => $testName,
+                    'testClassName' => $testClassName,
+                    'title' => "{$testClassName} => {$testName}",
+                    'type' => 'server',
+                ];
+            },
+            $tests
+        );
 
         return $tests;
     }
