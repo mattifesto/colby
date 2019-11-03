@@ -13,6 +13,8 @@ class CBModelEditor {
 
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
@@ -23,6 +25,7 @@ class CBModelEditor {
     }
 
 
+
     /**
      * @return void
      */
@@ -31,7 +34,10 @@ class CBModelEditor {
     }
 
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -42,12 +48,14 @@ class CBModelEditor {
         return [
             'CBUI',
             'CBUINavigationView',
+            'CBUIPanel',
             'CBUISpecEditor',
             'CBUISpecSaver',
             'Colby',
             $originalSpec->className . 'Editor',
         ];
     }
+
 
 
     /**
@@ -58,6 +66,7 @@ class CBModelEditor {
             Colby::flexpath(__CLASS__, 'v525.js', cbsysurl()),
         ];
     }
+
 
 
     /**
@@ -73,8 +82,14 @@ class CBModelEditor {
     }
 
 
+
     /* -- functions -- -- -- -- -- */
 
+
+
+    /**
+     * @return object
+     */
     private static function fetchOriginalSpec(): stdClass {
         static $originalSpec;
         static $originalSpecHasBeenFetched = false;
@@ -150,4 +165,5 @@ class CBModelEditor {
         return $originalSpec;
     }
     /* fetchOriginalSpec() */
+
 }

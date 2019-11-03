@@ -5,12 +5,15 @@
 /* global
     CBUI,
     CBUINavigationView,
+    CBUIPanel,
     CBUISpecEditor,
     CBUISpecSaver,
     Colby,
 
     CBModelEditor_originalSpec,
 */
+
+
 
 var CBModelEditor = {
 
