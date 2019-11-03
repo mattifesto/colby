@@ -139,7 +139,12 @@ var CBTestAdmin = {
         input.style.display = "none";
         CBTestAdmin.fileInputElement = input;
 
-        input.addEventListener("change", CBTestAdmin.handleRunTests);
+        input.addEventListener(
+            "change",
+            function () {
+                CBTestAdmin.handleRunTests();
+            }
+        );
 
         containerElement.appendChild(input);
 
@@ -355,7 +360,7 @@ var CBTestAdmin = {
     /**
      * @return undefined
      */
-    handleRunTests: function () {
+    handleRunTests() {
         CBTestAdmin.errorCount = 0;
 
         Promise.resolve().then(
