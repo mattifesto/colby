@@ -356,17 +356,6 @@ var CBTestAdmin = {
      * @return undefined
      */
     handleRunTests: function () {
-
-        /**
-         * IE11 incorrectly fires the changed event on the input element when
-         * its value is reset to null when the tests are complete. This test
-         * makes this function return early if it is called in this situation.
-         */
-
-        if (CBTestAdmin.fileInputElementIsResetting) {
-            return;
-        }
-
         CBTestAdmin.errorCount = 0;
 
         Promise.resolve().then(
