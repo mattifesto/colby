@@ -9,7 +9,11 @@ final class CBExceptionView {
 
     private static $throwableStack = [];
 
+
+
     /* -- CBView interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param object $model
@@ -38,13 +42,36 @@ final class CBExceptionView {
             <?php
 
             if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
-                $stackTrace = CBConvert::throwableToStackTrace($throwable);
+                $cbmessage = CBException::throwableToCBMessage($throwable);
 
-                ?>
+                $stackTraceAsCBMessage = CBMessageMarkup::stringToMessage(
+                    CBConvert::throwableToStackTrace($throwable)
+                );
 
-                <div class="trace"><?= cbhtml($stackTrace) ?></div>
+                $cbmessage = <<<EOT
 
-                <?php
+                    {$cbmessage}
+
+                    --- dl
+                        --- dt
+                        Stack
+                        ---
+                        --- dd
+                            --- trace\n{$stackTraceAsCBMessage}
+                            ---
+                        ---
+                    ---
+
+                EOT;
+
+                if ($cbmessage !== '') {
+                    CBView::renderSpec(
+                        (object)[
+                            'className' => 'CBMessageView',
+                            'markup' => $cbmessage,
+                        ]
+                    );
+                }
             } else {
                 $message = <<<EOT
 
@@ -57,10 +84,12 @@ final class CBExceptionView {
 
 EOT;
 
-                CBView::renderSpec((object)[
-                    'className' => 'CBMessageView',
-                    'markup' => $message,
-                ]);
+                CBView::renderSpec(
+                    (object)[
+                        'className' => 'CBMessageView',
+                        'markup' => $message,
+                    ]
+                );
             }
 
             ?>
@@ -69,8 +98,13 @@ EOT;
 
         <?php
     }
+    /* CBView_render() */
+
+
 
     /* -- CBModel interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -80,6 +114,8 @@ EOT;
             Colby::flexpath(__CLASS__, 'v385.css', cbsysurl()),
         ];
     }
+
+
 
     /**
      * @param object $spec
@@ -92,14 +128,22 @@ EOT;
         ];
     }
 
+
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @return void
      */
     static function popThrowable(): void {
-        array_pop(CBExceptionView::$throwableStack);
+        array_pop(
+            CBExceptionView::$throwableStack
+        );
     }
+
+
 
     /**
      * @param Throwable $throwable
@@ -107,6 +151,10 @@ EOT;
      * @return void
      */
     static function pushThrowable(Throwable $throwable): void {
-        array_push(CBExceptionView::$throwableStack, $throwable);
+        array_push(
+            CBExceptionView::$throwableStack,
+            $throwable
+        );
     }
+
 }
