@@ -385,7 +385,9 @@ var CBTestAdmin = {
             }
         ).then(
             function () {
-                return handleRunTests_onFinally();
+                CBTestAdmin.fileInputElementIsResetting = true;
+                CBTestAdmin.fileInputElement.value = null;
+                CBTestAdmin.fileInputElementIsResetting = undefined;
             }
         ).catch(
             function (error) {
@@ -441,18 +443,6 @@ var CBTestAdmin = {
             expander.element.scrollIntoView();
         }
         /* handleRunTests_onRejected() */
-
-
-
-        /**
-         * @return undefined
-         */
-        function handleRunTests_onFinally() {
-            CBTestAdmin.fileInputElementIsResetting = true;
-            CBTestAdmin.fileInputElement.value = null;
-            CBTestAdmin.fileInputElementIsResetting = undefined;
-        }
-        /* handleRunTests_onFinally() */
 
     },
     /* handleRunTests() */
