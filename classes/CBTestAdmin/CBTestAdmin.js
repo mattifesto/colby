@@ -378,12 +378,34 @@ var CBTestAdmin = {
                 }
             }
         ).then(
-            function (value) {
-                return handleRunTests_onFulfilled(value);
+            function () {
+                let expander = CBUIExpander.create();
+
+                if (CBTestAdmin.errorCount > 0) {
+                    expander.severity = 3;
+                    expander.title = `Finished running tests, ${CBTestAdmin.errorCount} failed`;
+                } else {
+                    expander.title = "All tests completed successfully";
+                }
+
+                CBTestAdmin.status.element.appendChild(expander.element);
+                expander.element.scrollIntoView();
             }
         ).catch(
             function (error) {
-                return handleRunTests_onRejected(error);
+                Colby.reportError(error);
+
+                let expander = CBUIExpander.create();
+
+                expander.severity = 3;
+                expander.title = error.message;
+
+                if (error.CBException) {
+                    expander.message = error.CBException.extendedMessage;
+                }
+
+                CBTestAdmin.status.element.appendChild(expander.element);
+                expander.element.scrollIntoView();
             }
         ).then(
             function () {
@@ -397,55 +419,6 @@ var CBTestAdmin = {
                 Colby.reportError(error);
             }
         );
-
-        return;
-
-
-
-        /* -- closures -- -- -- -- -- */
-
-
-
-        /**
-         * @return undefined
-         */
-        function handleRunTests_onFulfilled() {
-            let expander = CBUIExpander.create();
-
-            if (CBTestAdmin.errorCount > 0) {
-                expander.severity = 3;
-                expander.title = `Finished running tests, ${CBTestAdmin.errorCount} failed`;
-            } else {
-                expander.title = "All tests completed successfully";
-            }
-
-            CBTestAdmin.status.element.appendChild(expander.element);
-            expander.element.scrollIntoView();
-        }
-        /* handleRunTests_onFulfilled() */
-
-
-
-        /**
-         * @return undefined
-         */
-        function handleRunTests_onRejected(error) {
-            Colby.reportError(error);
-
-            let expander = CBUIExpander.create();
-
-            expander.severity = 3;
-            expander.title = error.message;
-
-            if (error.CBException) {
-                expander.message = error.CBException.extendedMessage;
-            }
-
-            CBTestAdmin.status.element.appendChild(expander.element);
-            expander.element.scrollIntoView();
-        }
-        /* handleRunTests_onRejected() */
-
     },
     /* handleRunTests() */
 
