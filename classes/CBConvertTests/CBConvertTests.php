@@ -369,26 +369,22 @@ final class CBConvertTests {
     static function CBTest_stringToURI(): stdClass {
 
         /* test 1 */
+
         $testcase = '   / foo /bar   /// baz/ /';
         $expected = 'foo/bar/baz';
         $result = CBConvert::stringToURI($testcase);
 
         if ($result != $expected) {
-            return (object)[
-                'message' => (
-                    "The result of test 1 did not match the expected " .
-                    "value.\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage(
-                        $result,
-                        $expected
-                    )
-                ),
-            ];
-        } else {
-            return (object)[
-                'succeeded' => true,
-            ];
+            return CBTest::resultMismatchFailure(
+                'test 1',
+                $result,
+                $expected
+            );
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
     /* CBTest_stringToURI() */
 
