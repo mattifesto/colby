@@ -339,7 +339,6 @@ EOT;
             ['CBDB',                    'SQLToAssociativeArray'],
             ['CBDB',                    'SQLToValue'],
             ['CBImage',                 'upgrade'],
-            ['CBImages',                'resize'],
             ['CBMarkaround',            'paragraphToHTML'],
             ['CBPageLayout',            'build'],
             ['CBPages',                 'stringToDencodedURIPath'],

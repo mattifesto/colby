@@ -4,6 +4,8 @@ final class CBImagesTests {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
@@ -13,6 +15,7 @@ final class CBImagesTests {
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -27,17 +30,38 @@ final class CBImagesTests {
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- CBTest interfaces -- -- -- -- -- */
 
+
+
     /**
-     * @return [[<className>, <testName>]]
+     * @return [object]
      */
-    static function CBTest_JavaScriptTests(): array {
+    static function CBTest_getTests(): array {
         return [
-            ['CBImages', 'deleteByID'],
-            ['CBImages', 'upload'],
+            (object)[
+                'name' => 'upload',
+                'title' => 'CBImages 01 upload',
+            ],
+            (object)[
+                'name' => 'resize',
+                'title' => 'CBImages 02 resize',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'deleteByID',
+                'title' => 'CBImages 99 deleteByID',
+            ],
         ];
     }
+    /* CBTest_getTests() */
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
 
     /**
      * When a request is made to reduce an image to a size larger than the
@@ -47,9 +71,9 @@ final class CBImagesTests {
      * The test image should have been uploaded by earlier tests in the overall
      * testing process.
      *
-     * @return void
+     * @return object
      */
-    static function resizeTest(): void {
+    static function CBTest_resize(): stdClass {
         CBImages::reduceImage(
             CBTestAdmin::testImageID(),
             'jpeg',
@@ -72,11 +96,17 @@ final class CBImagesTests {
         $sha2 = sha1_file($filepath2);
 
         if ($sha1 !== $sha2) {
-            throw new Exception(
-                'The original image file and a reduced version to a larger'
-                . ' size are not the same file.'
+            return CBTest::resultMismatchFailure(
+                'sha',
+                $sha1,
+                $sha2
             );
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
-    /* resizeTest() */
+    /* CBTest_resize() */
+
 }
