@@ -844,6 +844,20 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_10_31 (warning)
+                 * 2019_11_04 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'CBUnitTests_tests',
+                    'severity' => 3,
+                    'title' => (
+                        'Replace CBUnitTests_tests() with CBTest_getTests().'
+                    ),
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
@@ -1146,19 +1160,6 @@ final class CBCodeAdmin {
                     'title' => (
                         'Replace use of deprecated CBUIPanel API with ' .
                         'CBUIPanel.displayElement().'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_10_31 (warning)
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'CBUnitTests_tests',
-                    'severity' => 4,
-                    'title' => (
-                        'Replace CBUnitTests_tests() with CBTest_getTests().'
                     ),
                 ],
             ]
