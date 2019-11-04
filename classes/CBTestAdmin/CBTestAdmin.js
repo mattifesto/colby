@@ -1,8 +1,9 @@
 "use strict";
 /* jshint strict: global */
-/* jshint esversion: 6 */
+/* jshint esversion: 8 */
 /* global
     CBConvert,
+    CBErrorHandler,
     CBException,
     CBMessageMarkup,
     CBModel,
@@ -144,7 +145,7 @@
             input.addEventListener(
                 "change",
                 function () {
-                    CBTestAdmin.handleRunTests();
+                    handleRunTests();
                 }
             );
 
@@ -223,20 +224,24 @@
                     runElement.addEventListener(
                         "click",
                         function () {
-                            CBTestAdmin.status.element.textContent = "";
+                            try {
+                                CBTestAdmin.status.element.textContent = "";
 
-                            if (CBTestAdmin.selectedTest === undefined) {
-                                input.click();
-                            }
+                                if (CBTestAdmin.selectedTest === undefined) {
+                                    input.click();
+                                }
 
-                            else if (
-                                typeof CBTestAdmin.selectedTest === "object"
-                            ) {
-                                CBTestAdmin.runTest(CBTestAdmin.selectedTest);
-                            }
+                                else if (
+                                    typeof CBTestAdmin.selectedTest === "object"
+                                ) {
+                                    runTest(CBTestAdmin.selectedTest);
+                                }
 
-                            else {
-                                CBTestAdmin.handleRunTests();
+                                else {
+                                    handleRunTests();
+                                }
+                            } catch (error) {
+                                CBErrorHandler.displayAndReport(error);
                             }
                         }
                     );
@@ -384,244 +389,203 @@
         },
         /* DOMContentDidLoad() */
 
+    };
+    /* window.CBTestAdmin */
+
+
+
+    /* -- closures -- -- -- -- -- */
+
+
+
+    /**
+     * @return Promise -> undefined
+     */
+    async function handleRunTests() {
+        CBTestAdmin.errorCount = 0;
+
+        try {
+            if (CBTestAdmin.selectedTest === undefined) {
+                await runJavaScriptTests();
+            }
+
+            let expander = CBUIExpander.create();
+
+            if (CBTestAdmin.errorCount > 0) {
+                expander.severity = 3;
+                expander.title = (
+                    `Finished running tests, ` +
+                    `${CBTestAdmin.errorCount} failed`
+                );
+            } else {
+                expander.title = "All tests completed successfully";
+            }
+
+            CBTestAdmin.status.element.appendChild(expander.element);
+            expander.element.scrollIntoView();
+        } catch (error) {
+            CBErrorHandler.displayAndReport(error);
+        } finally {
+            CBTestAdmin.fileInputElementIsResetting = true;
+            CBTestAdmin.fileInputElement.value = null;
+            CBTestAdmin.fileInputElementIsResetting = undefined;
+        }
+    }
+    /* handleRunTests() */
+
+
+
+    /**
+     * @return Promise -> undefined
+     *
+     *      The promise returned by this function will not reject when an
+     *      individual test fails because every test reports its own errors
+     *      so that every test will run even if a test before it fails.
+     */
+    async function runJavaScriptTests() {
+        for (
+            let index = 0;
+            index < CBTestAdmin_tests.length;
+            index += 1
+        ) {
+            let currentTest = CBTestAdmin_tests[index];
+
+            let type = CBModel.valueToString(
+                currentTest,
+                "type"
+            );
+
+            if (type === "interactive" || type === "interactive_server") {
+                continue;
+            }
+
+            await runTest(currentTest);
+        }
+    }
+    /* runJavaScriptTests() */
+
+
+
+    /**
+     * @param object test
+     *
+     *      {
+     *          type: string
+     *          testClassName: string
+     *          name: string
+     *      }
+     *
+     * @return Promise
+     */
+    async function runTest(test) {
+        let expander;
+        let title;
+
+        try {
+            title = CBModel.valueToString(test, "title");
+
+            expander = CBUIExpander.create();
+            expander.title = title + " (running)";
+
+            CBTestAdmin.status.element.appendChild(expander.element);
+            expander.element.scrollIntoView();
+
+            let runTestFunction =
+            CBTestAdmin.convertJavaScriptTestToFunction(test);
+
+            let progress;
+
+            let args = {
+                set progress(value) {
+                    progress = value;
+
+                    let percent = (progress * 100).toFixed(1);
+
+                    expander.title = title + ` (running ${percent}%)`;
+                },
+                get progress() {
+                    return progress;
+                },
+                get test() {
+                    return test;
+                },
+            };
+
+            let value = await runTestFunction(args);
+
+            runTest_onFulfilled(value);
+        } catch (error) {
+            runTest_onRejected(error);
+        }
+
+
+
+        /* -- closures -- -- -- -- -- */
+
 
 
         /**
          * @return undefined
          */
-        handleRunTests() {
-            CBTestAdmin.errorCount = 0;
+        function runTest_onFulfilled(value) {
+            let message;
+            let status;
 
-            Promise.resolve().then(
-                function (value) {
-                    if (CBTestAdmin.selectedTest === undefined) {
-                        return CBTestAdmin.runJavaScriptTests(value);
-                    }
-                }
-            ).then(
-                function () {
-                    let expander = CBUIExpander.create();
-
-                    if (CBTestAdmin.errorCount > 0) {
-                        expander.severity = 3;
-                        expander.title = (
-                            `Finished running tests, ` +
-                            `${CBTestAdmin.errorCount} failed`
-                        );
-                    } else {
-                        expander.title = "All tests completed successfully";
-                    }
-
-                    CBTestAdmin.status.element.appendChild(expander.element);
-                    expander.element.scrollIntoView();
-                }
-            ).catch(
-                function (error) {
-                    Colby.reportError(error);
-
-                    let expander = CBUIExpander.create();
-
-                    expander.severity = 3;
-                    expander.title = error.message;
-
-                    if (error.CBException) {
-                        expander.message = error.CBException.extendedMessage;
-                    }
-
-                    CBTestAdmin.status.element.appendChild(expander.element);
-                    expander.element.scrollIntoView();
-                }
-            ).then(
-                function () {
-                    CBTestAdmin.fileInputElementIsResetting = true;
-                    CBTestAdmin.fileInputElement.value = null;
-                    CBTestAdmin.fileInputElementIsResetting = undefined;
-                }
-            ).catch(
-                function (error) {
-                    CBUIPanel.displayError(error);
-                    Colby.reportError(error);
-                }
-            );
-        },
-        /* handleRunTests() */
-
-
-
-        /**
-         * @return Promise
-         *
-         *      The promise returned by this function will not reject when an
-         *      individual test fails because every test reports its own errors
-         *      so that every test will run even if a test before it fails.
-         */
-        runJavaScriptTests() {
-            let promise;
-
-            CBTestAdmin_tests.forEach(
-                function (currentTest) {
-                    let type = CBModel.valueToString(currentTest, "type");
-
-                    if (
-                        type === "interactive" ||
-                        type === "interactive_server"
-                    ) {
-                        return;
-                    }
-
-                    if (promise === undefined) {
-                        promise = CBTestAdmin.runTest(currentTest);
-                    } else {
-                        promise = promise.then(
-                            function () {
-                                return CBTestAdmin.runTest(currentTest);
-                            }
-                        );
-                    }
-                }
-            );
-
-            return promise;
-        },
-        /* runJavaScriptTests() */
-
-
-
-        /**
-         * @param object test
-         *
-         *      {
-         *          type: string
-         *          testClassName: string
-         *          name: string
-         *      }
-         *
-         * @return Promise
-         */
-        runTest(test) {
-            let expander;
-            let title;
-
-            let promise = new Promise(
-                function (resolve) {
-                    title = CBModel.valueToString(test, "title");
-
-                    expander = CBUIExpander.create();
-                    expander.title = title + " (running)";
-
-                    CBTestAdmin.status.element.appendChild(expander.element);
-                    expander.element.scrollIntoView();
-
-                    let runTestNow =
-                    CBTestAdmin.convertJavaScriptTestToFunction(test);
-
-                    resolve(runTestNow);
-                }
-            ).then(
-                function (runTestNow) {
-                    let progress;
-
-                    let args = {
-                        set progress(value) {
-                            progress = value;
-
-                            let percent = (progress * 100).toFixed(1);
-
-                            expander.title = title + ` (running ${percent}%)`;
-                        },
-                        get progress() {
-                            return progress;
-                        },
-                        get test() {
-                            return test;
-                        },
-                    };
-
-                    return runTestNow(args);
-                }
-            ).then(
-                function (value) {
-                    return runTest_onFulfilled(value);
-                }
-            ).catch(
-                function (error) {
-                    return runTest_onRejected(error);
-                }
-            );
-
-            return promise;
-
-
-
-            /* -- closures -- -- -- -- -- */
-
-
-
-            /**
-             * @return undefined
-             */
-            function runTest_onFulfilled(value) {
-                let message;
-                let status;
-
-                if (typeof value === "object") {
-                    if (value.succeeded) {
-                        status = "passed";
-                    } else {
-                        status = "failed";
-                        CBTestAdmin.errorCount += 1;
-                        expander.severity = 3;
-                    }
-
-                    message = value.message || status;
+            if (typeof value === "object") {
+                if (value.succeeded) {
+                    status = "passed";
                 } else {
+                    status = "failed";
                     CBTestAdmin.errorCount += 1;
                     expander.severity = 3;
-                    message = `
-
-                        This test failed because the test function did not
-                        return an object.
-
-                    `;
                 }
 
-                expander.title = `${title} (${status})`;
-                expander.message = message;
-            }
-            /* runTest_onFulfilled() */
-
-
-
-            /**
-             * @return undefined
-             */
-            function runTest_onRejected(error) {
-                let descriptionAsMessage = CBMessageMarkup.stringToMessage(
-                    CBConvert.errorToDescription(error)
-                );
-                let stackTraceAsMessage = CBMessageMarkup.stringToMessage(
-                    CBConvert.errorToStackTrace(error)
-                );
-
+                message = value.message || status;
+            } else {
                 CBTestAdmin.errorCount += 1;
                 expander.severity = 3;
-                expander.title = `${title} failed`;
-                expander.message = `
+                message = `
 
-                    ${descriptionAsMessage}
-
-                    --- pre\n${stackTraceAsMessage}
-                    ---
+                    This test failed because the test function did not
+                    return an object.
 
                 `;
             }
-            /* runTest_onRejected() */
 
-        },
-        /* runTest() */
+            expander.title = `${title} (${status})`;
+            expander.message = message;
+        }
+        /* runTest_onFulfilled() */
 
-    };
-    /* window.CBTestAdmin */
+
+
+        /**
+         * @return undefined
+         */
+        function runTest_onRejected(error) {
+            let descriptionAsMessage = CBMessageMarkup.stringToMessage(
+                CBConvert.errorToDescription(error)
+            );
+            let stackTraceAsMessage = CBMessageMarkup.stringToMessage(
+                CBConvert.errorToStackTrace(error)
+            );
+
+            CBTestAdmin.errorCount += 1;
+            expander.severity = 3;
+            expander.title = `${title} failed`;
+            expander.message = `
+
+                ${descriptionAsMessage}
+
+                --- pre\n${stackTraceAsMessage}
+                ---
+
+            `;
+        }
+        /* runTest_onRejected() */
+
+    }
+    /* runTest() */
 
 })();
 

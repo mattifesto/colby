@@ -111,6 +111,7 @@ final class CBTestAdmin {
     static function CBHTMLOutput_requiredClassNames() {
         $classNames = [
             'CBConvert',
+            'CBErrorHandler',
             'CBException',
             'CBMessageMarkup',
             'CBModel',
