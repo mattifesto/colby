@@ -2,6 +2,29 @@
 
 final class CBMaintenanceTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [object]
+     */
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'lock',
+                'title' => 'CBMaintenance::lock()',
+                'type' => 'server',
+            ],
+        ];
+    }
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
     /**
      * @return object
      */
@@ -16,20 +39,31 @@ final class CBMaintenanceTests {
         $actual = CBMaintenance::isLocked();
 
         if ($actual !== $expected) {
-            return CBTest::resultMismatchFailure($testTitle, $actual, $expected);
+            return CBTest::resultMismatchFailure(
+                $testTitle,
+                $actual,
+                $expected
+            );
         };
 
         /* --- */
 
         $testTitle = 'Lock';
         $expected = true;
-        $actual = CBMaintenance::lock((object)[
-            'holderID' => $holderID,
-            'title' => $title,
-        ]);
+
+        $actual = CBMaintenance::lock(
+            (object)[
+                'holderID' => $holderID,
+                'title' => $title,
+            ]
+        );
 
         if ($actual !== $expected) {
-            return CBTest::resultMismatchFailure($testTitle, $actual, $expected);
+            return CBTest::resultMismatchFailure(
+                $testTitle,
+                $actual,
+                $expected
+            );
         };
 
         /* --- */
@@ -39,20 +73,31 @@ final class CBMaintenanceTests {
         $actual = CBMaintenance::isLocked();
 
         if ($actual !== $expected) {
-            return CBTest::resultMismatchFailure($testTitle, $actual, $expected);
+            return CBTest::resultMismatchFailure(
+                $testTitle,
+                $actual,
+                $expected
+            );
         };
 
         /* --- */
 
         $testTitle = 'Lock with new holder while already locked';
         $expected = false;
-        $actual = CBMaintenance::lock((object)[
-            'holderID' => CBHex160::random(),
-            'title' => $title,
-        ]);
+
+        $actual = CBMaintenance::lock(
+            (object)[
+                'holderID' => CBHex160::random(),
+                'title' => $title,
+            ]
+        );
 
         if ($actual !== $expected) {
-            return CBTest::resultMismatchFailure($testTitle, $actual, $expected);
+            return CBTest::resultMismatchFailure(
+                $testTitle,
+                $actual,
+                $expected
+            );
         };
 
         /* --- */
@@ -64,20 +109,17 @@ final class CBMaintenanceTests {
         $actual = CBMaintenance::isLocked();
 
         if ($actual !== $expected) {
-            return CBTest::resultMismatchFailure($testTitle, $actual, $expected);
+            return CBTest::resultMismatchFailure(
+                $testTitle,
+                $actual,
+                $expected
+            );
         };
 
         return (object)[
             'succeeded' => true,
         ];
     }
+    /* CBTest_lock() */
 
-    /**
-     * @return [[<class>, <test>]]
-     */
-    static function CBUnitTests_tests(): array {
-        return [
-            ['CBMaintenance', 'lock'],
-        ];
-    }
 }
