@@ -2,6 +2,29 @@
 
 final class CBPageFrameCatalogTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [object]
+     */
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'test',
+                'title' => 'CBPageFrameCatalog',
+                'type' => 'server',
+            ],
+        ];
+    }
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
     /**
      * @return object
      */
@@ -16,17 +39,18 @@ final class CBPageFrameCatalogTests {
         CBPageFrameCatalog::install('CBPageFrameCatalogTests_frame2');
 
         $frameClassNames = CBPageFrameCatalog::fetchClassNames();
+
         $expectedClassNames = [
             'CBPageFrameCatalogTests_frame1',
             'CBPageFrameCatalogTests_frame2',
         ];
 
         if ($frameClassNames != $expectedClassNames) {
-            return (object)[
-                'message' =>
-                    "The frame class names do not match the expected class names\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($frameClassNames, $expectedClassNames),
-            ];
+            return CBTest::resultMismatchFailure(
+                'test 1',
+                $frameClassNames,
+                $expectedClassNames
+            );
         }
 
         CBModels::deleteByID(CBPageFrameCatalog::$testID);
@@ -37,17 +61,11 @@ final class CBPageFrameCatalogTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_test() */
 
-
-    /**
-     * @return [[<class>, <name>]]
-     */
-    static function CBUnitTests_tests(): array {
-        return [
-            ['CBPageFrameCatalog', 'test']
-        ];
-    }
 }
+
+
 
 final class CBPageFrameCatalogTests_frame1 {
     static function CBPageFrame_render(callable $renderContent): void {
@@ -56,6 +74,8 @@ final class CBPageFrameCatalogTests_frame1 {
         echo __CLASS__ . 'end';
     }
 }
+
+
 
 final class CBPageFrameCatalogTests_frame2 {
     static function CBPageFrame_render(callable $renderContent): void {
