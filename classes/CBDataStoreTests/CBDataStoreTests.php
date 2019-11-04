@@ -39,15 +39,21 @@ class CBDataStoreTests {
             ['/foo/bar/', null],
         ];
 
-        foreach ($cases as $case) {
-            $result = CBDataStore::URIToFilepath($case[0]);
-            $expected = $case[1];
+        for (
+            $index = 0;
+            $index < count($cases);
+            $index += 1
+        ) {
+            $case = $cases[$index];
+            $actualResult = CBDataStore::URIToFilepath($case[0]);
+            $expectedResult = $case[1];
 
-            if ($result !== $expected) {
-                return (object)[
-                    'message' => "The result for \"{$case[0]}\" is not what was expected.\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($result, $expected),
-                ];
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    "test index {$index}",
+                    $actualResult,
+                    $expectedResult
+                );
             }
         }
 
