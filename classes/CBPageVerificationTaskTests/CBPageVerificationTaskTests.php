@@ -2,6 +2,71 @@
 
 final class CBPageVerificationTaskTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [object]
+     */
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'deprecatedAndUnsupportedViews',
+                'title' => (
+                    'CBPageVerificationTask deprecatedAndUnsupportedViews'
+                ),
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'findDeprecatedSubviewClassNames',
+                'title' => (
+                    'CBPageVerificationTask findDeprecatedSubviewClassNames'
+                ),
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'findUnsupportedSubviewClassNames',
+                'title' => (
+                    'CBPageVerificationTask findUnsupportedSubviewClassNames'
+                ),
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'hasColbyPagesRow',
+                'title' => 'CBPageVerificationTask hasColbyPagesRow',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'importThumbnailURLToImage',
+                'title' => 'CBPageVerificationTask importThumbnailURLToImage',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'invalidImageProperty',
+                'title' => 'CBPageVerificationTask invalidImageProperty',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'rowWithNoModel',
+                'title' => 'CBPageVerificationTask rowWithNoModel',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'upgradeThumbnailURLToImage',
+                'title' => 'CBPageVerificationTask upgradeThumbnailURLToImage',
+                'type' => 'server',
+            ],
+        ];
+    }
+    /* CBTest_getTests() */
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
     /**
      * @return object
      */
@@ -72,6 +137,7 @@ final class CBPageVerificationTaskTests {
     /* CBTest_deprecatedAndUnsupportedViews() */
 
 
+
     /**
      * @return object
      */
@@ -104,6 +170,7 @@ final class CBPageVerificationTaskTests {
         ];
     }
     /* CBTest_findDeprecatedSubviewClassNames() */
+
 
 
     /**
@@ -143,36 +210,35 @@ final class CBPageVerificationTaskTests {
     /* CBTest_findUnsupportedSubviewClassNames() */
 
 
+
     /**
      * @return object
      */
     static function CBTest_hasColbyPagesRow(): stdClass {
         $ID = '722880dadcef3874157d086b4eceeae83194173f';
+
         $spec = (object)[
             'className' => 'CBViewPage',
             'ID' => $ID,
             'title' => 'Test Page For ' . __METHOD__ . '()',
         ];
 
-        CBDB::transaction(function () use ($ID) {
-            CBModels::deleteByID($ID);
-        });
+        CBDB::transaction(
+            function () use ($ID) {
+                CBModels::deleteByID($ID);
+            }
+        );
 
         $result = CBPageVerificationTask::run($ID);
         $actual = $result->hasColbyPagesRow;
         $expected = false;
 
         if ($actual !== $expected) {
-            return (object)[
-                'failed' => true,
-                'message' => (
-                    "Test 1 failed:\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage(
-                        $actual,
-                        $expected
-                    )
-                ),
-            ];
+            return CBTest::resultMismatchFailure(
+                'test 1',
+                $actual,
+                $expected
+            );
         }
 
         CBDB::transaction(
@@ -186,16 +252,11 @@ final class CBPageVerificationTaskTests {
         $expected = true;
 
         if ($actual !== $expected) {
-            return (object)[
-                'failed' => true,
-                'message' => (
-                    "Test 2 failed:\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage(
-                        $actual,
-                        $expected
-                    )
-                ),
-            ];
+            return CBTest::resultMismatchFailure(
+                'test 2',
+                $actual,
+                $expected
+            );
         }
 
         CBDB::transaction(
@@ -209,6 +270,7 @@ final class CBPageVerificationTaskTests {
         ];
     }
     /* CBTest_hasColbyPagesRow() */
+
 
 
     /**
@@ -341,6 +403,7 @@ final class CBPageVerificationTaskTests {
     /* CBTest_importThumbnailURLToImage() */
 
 
+
     /**
      * @return object
      */
@@ -428,6 +491,7 @@ final class CBPageVerificationTaskTests {
     /* CBTest_invalidImageProperty() */
 
 
+
     /**
      * @return ?object
      */
@@ -464,6 +528,7 @@ final class CBPageVerificationTaskTests {
         ];
     }
     /* CBTest_rowWithNoModel() */
+
 
 
     /**
@@ -592,22 +657,9 @@ EOT;
     /* CBTest_upgradeThumbnailURLToImage() */
 
 
-    /**
-     * @return [[<class>, <test>]]
-     */
-    static function CBUnitTests_tests(): array {
-        return [
-            ['CBPageVerificationTask', 'deprecatedAndUnsupportedViews'],
-            ['CBPageVerificationTask', 'findDeprecatedSubviewClassNames'],
-            ['CBPageVerificationTask', 'findUnsupportedSubviewClassNames'],
-            ['CBPageVerificationTask', 'hasColbyPagesRow'],
-            ['CBPageVerificationTask', 'importThumbnailURLToImage'],
-            ['CBPageVerificationTask', 'invalidImageProperty'],
-            ['CBPageVerificationTask', 'rowWithNoModel'],
-            ['CBPageVerificationTask', 'upgradeThumbnailURLToImage'],
-        ];
-    }
-    /* CBUnitTests_tests() */
+
+    /* -- functions -- -- -- -- -- */
+
 
 
     /**
@@ -688,6 +740,7 @@ EOT;
     /* createPagesRowAndDataStoreWithoutModel() */
 
 
+
     /**
      * @return model
      */
@@ -737,5 +790,6 @@ EOT;
         ];
     }
     /* specWithDeprecatedAndUnsupportedViews() */
+
 }
 /* CBPageVerificationTaskTests */
