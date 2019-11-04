@@ -11,9 +11,6 @@
 /**
  * @NOTE 2019_09_26
  *
- * This function is currently approved to replace Colby.displayAndReportError()
- * as a start to move error handling out of the Colby.js file.
- *
  * It's uncertain if this class should exist. CBUIPanel has a displayError()
  * function and maybe that code should be moved into this class.
  *
@@ -22,6 +19,10 @@
 var CBErrorHandler = {
 
     /**
+     * This function is currently approved to replace
+     * Colby.displayAndReportError() as a start to move error handling out of
+     * the Colby.js file.
+     *
      * Example:
      *
      *      Colby.callAjaxFunction(

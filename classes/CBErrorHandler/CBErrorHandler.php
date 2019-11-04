@@ -4,14 +4,17 @@ final class CBErrorHandler {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v544.js', cbsysurl()),
         ];
     }
+
 
 
     /**
@@ -25,7 +28,10 @@ final class CBErrorHandler {
     }
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * This is the default exception handler.
@@ -77,6 +83,7 @@ final class CBErrorHandler {
     /* handle() */
 
 
+
     /**
      * This function renders an HTML page to display an error message. It is
      * meant to be called only by an exception handler.
@@ -120,6 +127,7 @@ final class CBErrorHandler {
         }
     }
     /* renderErrorReportPage() */
+
 
 
     /**
@@ -182,6 +190,7 @@ final class CBErrorHandler {
         }
     }
     /* renderErrorReportPageForInnerError() */
+
 
 
     /**
@@ -344,5 +353,6 @@ EOT;
         }
     }
     /* report() */
+
 }
 /* CBErrorHandler */
