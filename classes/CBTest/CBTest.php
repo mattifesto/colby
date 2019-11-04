@@ -322,8 +322,7 @@ EOT;
     /**
      * @deprecated 2019_11_03
      *
-     *      Implement CBTest_getTests() instead of CBTest_PHPTests() or
-     *      CBUnitTests_tests().
+     *      Implement CBTest_getTests() instead of CBTest_PHPTests().
      *
      * @return [object]
      */
@@ -354,15 +353,6 @@ EOT;
         foreach ($classNames as $className) {
             if (
                 is_callable($function = "{$className}::CBTest_PHPTests")
-            ) {
-                $tests = array_merge(
-                    $tests,
-                    call_user_func($function)
-                );
-            }
-
-            else if (
-                is_callable($function = "{$className}::CBUnitTests_tests")
             ) {
                 $tests = array_merge(
                     $tests,
