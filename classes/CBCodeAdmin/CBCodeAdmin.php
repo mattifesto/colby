@@ -828,7 +828,25 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_08_15 (warning)
+                 * 2019_11_04 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'resultAndExpectedToMessage',
+                    'severity' => 3,
+                    'title' => (
+                        'Replace ' .
+                        'CBConvertTests::resultAndExpectedToMessage() ' .
+                        'with CBTest::resultMismatchFailure().'
+                    ),
+                ],
+
+
+
                 /* -- warnings -- -- -- -- -- */
+
 
 
                 /**
@@ -1069,21 +1087,6 @@ final class CBCodeAdmin {
                     'title' => (
                         'Replace use of currentUserNumericID with ' .
                         'the hex user ID'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_08_15
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'CBConvertTests::resultAndExpectedToMessage\(',
-                    'severity' => 4,
-                    'title' => (
-                        'Replace ' .
-                        'CBConvertTests::resultAndExpectedToMessage() ' .
-                        'with CBTest::resultMismatchFailure().'
                     ),
                 ],
 
