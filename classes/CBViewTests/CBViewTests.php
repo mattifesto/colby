@@ -2,6 +2,37 @@
 
 final class CBViewTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [object]
+     */
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'filterSubviews',
+                'title' => 'CBView::filterSubviews()',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'getAndSetSubviews',
+                'title' => 'CBView::getAndSetSubviews()',
+                'type' => 'server',
+            ],
+        ];
+    }
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
+    /**
+     * @return object
+     */
     static function CBTest_filterSubviews(): stdClass {
         $originalViewModel = (object)[
             'subviews' => [
@@ -51,18 +82,27 @@ final class CBViewTests {
 
         $actualViewModel = CBModel::clone($originalViewModel);
 
-        CBView::filterSubviews($actualViewModel, function ($viewModel) {
-            return CBModel::valueToString($viewModel, 'action') != 'remove';
-        });
+        CBView::filterSubviews(
+            $actualViewModel,
+            function ($viewModel) {
+                return CBModel::valueToString($viewModel, 'action') != 'remove';
+            }
+        );
 
         if ($actualViewModel != $expectedViewModel) {
-            return CBTest::resultMismatchFailure('Test 1', $actualViewModel, $expectedViewModel);
+            return CBTest::resultMismatchFailure(
+                'Test 1',
+                $actualViewModel,
+                $expectedViewModel
+            );
         }
 
         return (object)[
             'succeeded' => 'true',
         ];
     }
+    /* CBTest_filterSubviews() */
+
 
 
     /**
@@ -76,16 +116,20 @@ final class CBViewTests {
                 'className' => $className,
             ];
 
-            CBView::setSubviews($model, CBViewTests::testSubviewSpecs());
+            CBView::setSubviews(
+                $model,
+                CBViewTests::testSubviewSpecs()
+            );
 
-            $subviews = CBView::getSubviews($model);
+            $actualSubviews = CBView::getSubviews($model);
+            $expectedSubviews = CBViewTests::testSubviewSpecs();
 
-            if ($subviews != CBViewTests::testSubviewSpecs()) {
-                return (object)[
-                    'message' =>
-                        "For a {$className} spec, the value returned by getSubviews() does not match the value set with setSubviews().\n\n" .
-                        CBConvertTests::resultAndExpectedToMessage($subviews, CBViewTests::testSubviewSpecs()),
-                ];
+            if ($actualSubviews != $expectedSubviews) {
+                return CBTest::resultMismatchFailure(
+                    'test 1',
+                    $actualSubviews,
+                    $expectedSubviews
+                );
             }
         }
 
@@ -93,17 +137,8 @@ final class CBViewTests {
             'succeeded' => 'true',
         ];
     }
+    /* CBTest_getAndSetSubviews() */
 
-
-    /**
-     * @return [[<class>, <test>]]
-     */
-    static function CBUnitTests_tests(): array {
-        return [
-            ['CBView', 'filterSubviews'],
-            ['CBView', 'getAndSetSubviews'],
-        ];
-    }
 
 
     /**
@@ -142,6 +177,7 @@ final class CBViewTests {
     }
 
 
+
     /**
      * @return [model]
      */
@@ -155,12 +191,14 @@ final class CBViewTests {
     }
 
 
+
     /**
      * @return string
      */
     static function testSubviewSearchText(): string {
         return '42 CBTestView';
     }
+
 
 
     /**
@@ -176,6 +214,7 @@ final class CBViewTests {
     }
 
 
+
     /**
      * @return [model]
      */
@@ -187,6 +226,7 @@ final class CBViewTests {
             ],
         ];
     }
+
 
 
     /**
@@ -203,4 +243,5 @@ final class CBViewTests {
             $result = CBView::toSubviews($model);
         }
     }
+
 }
