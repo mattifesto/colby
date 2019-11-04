@@ -2,14 +2,28 @@
 
 final class CBFlexBoxViewTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
     /**
-     * @return [[<class>, <function>]]
+     * @return [object]
      */
-    static function CBUnitTests_tests(): array {
+    static function CBTest_getTests(): array {
         return [
-            ['CBFlexBoxView', 'upgrade'],
+            (object)[
+                'name' => 'upgrade',
+                'title' => 'CBFlexBoxView upgrade',
+                'type' => 'server',
+            ],
         ];
     }
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
 
     /**
      * @return object
@@ -53,12 +67,18 @@ final class CBFlexBoxViewTests {
             ],
         ];
 
-        $entries = CBLog::buffer(function () use ($original, &$actual) {
-            $actual = CBModel::upgrade($original);
-        });
+        $entries = CBLog::buffer(
+            function () use ($original, &$actual) {
+                $actual = CBModel::upgrade($original);
+            }
+        );
 
         if ($actual != $expected) {
-            return CBTest::resultMismatchFailure('upgrade', $actual, $expected);
+            return CBTest::resultMismatchFailure(
+                'upgrade',
+                $actual,
+                $expected
+            );
         }
 
         /* log entry count */
@@ -91,4 +111,6 @@ final class CBFlexBoxViewTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_upgrade() */
+
 }
