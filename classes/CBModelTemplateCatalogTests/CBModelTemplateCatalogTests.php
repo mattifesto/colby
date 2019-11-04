@@ -2,57 +2,104 @@
 
 final class CBModelTemplateCatalogTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [object]
+     */
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'test',
+                'title' => 'CBModelTemplateCatalog',
+                'type' => 'server',
+            ],
+        ];
+    }
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
     /**
      * @return object
      */
     static function CBTest_test(): stdClass {
-        CBModelTemplateCatalog::$testID = '2933b216beb27fe98400106b4d235165b0e12852';
+        CBModelTemplateCatalog::$testID =
+        '2933b216beb27fe98400106b4d235165b0e12852';
 
         CBModelTemplateCatalog::CBInstall_install();
-        CBModelTemplateCatalog::install('CBModelTemplateCatalogTests_template1');
-        CBModelTemplateCatalog::install('CBModelTemplateCatalogTests_template2');
-        CBModelTemplateCatalog::install('CBModelTemplateCatalogTests_template3');
-        CBModelTemplateCatalog::install('CBModelTemplateCatalogTests_template3');
 
-        $templateClassNames = CBModelTemplateCatalog::fetchTemplateClassNamesByTargetClassName('Foo');
+        CBModelTemplateCatalog::install(
+            'CBModelTemplateCatalogTests_template1'
+        );
+
+        CBModelTemplateCatalog::install(
+            'CBModelTemplateCatalogTests_template2'
+        );
+
+        CBModelTemplateCatalog::install(
+            'CBModelTemplateCatalogTests_template3'
+        );
+
+        CBModelTemplateCatalog::install(
+            'CBModelTemplateCatalogTests_template3'
+        );
+
+        $templateClassNames =
+        CBModelTemplateCatalog::
+        fetchTemplateClassNamesByTargetClassName('Foo');
+
         $expectedClassNames = [
             'CBModelTemplateCatalogTests_template1',
             'CBModelTemplateCatalogTests_template2',
         ];
 
         if ($templateClassNames != $expectedClassNames) {
-            return (object)[
-                'message' =>
-                    "1: The template class names do not match the expected class names.\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($templateClassNames, $expectedClassNames),
-            ];
+            return CBTest::resultMismatchFailure(
+                'test 1',
+                $templateClassNames,
+                $expectedClassNames
+            );
         }
 
-        $templateClassNames = CBModelTemplateCatalog::fetchTemplateClassNamesByTargetClassName('Bar');
+        $templateClassNames =
+        CBModelTemplateCatalog::
+        fetchTemplateClassNamesByTargetClassName('Bar');
+
         $expectedClassNames = [
             'CBModelTemplateCatalogTests_template3',
         ];
 
         if ($templateClassNames != $expectedClassNames) {
-            return (object)[
-                'message' =>
-                    "2: The template class names do not match the expected class names.\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($templateClassNames, $expectedClassNames),
-            ];
+            return CBTest::resultMismatchFailure(
+                'test 2',
+                $templateClassNames,
+                $expectedClassNames
+            );
         }
 
-        $templateClassNames = CBModelTemplateCatalog::fetchTemplateClassNamesByTargetClassName('Baz');
+        $templateClassNames =
+        CBModelTemplateCatalog::
+        fetchTemplateClassNamesByTargetClassName('Baz');
+
         $expectedClassNames = [];
 
         if ($templateClassNames != $expectedClassNames) {
-            return (object)[
-                'message' =>
-                    "3: The template class names do not match the expected class names.\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($templateClassNames, $expectedClassNames),
-            ];
+            return CBTest::resultMismatchFailure(
+                'test 3',
+                $templateClassNames,
+                $expectedClassNames
+            );
         }
 
-        CBModels::deleteByID(CBModelTemplateCatalog::$testID);
+        CBModels::deleteByID(
+            CBModelTemplateCatalog::$testID
+        );
 
         CBModelTemplateCatalog::$testID = null;
 
@@ -60,16 +107,11 @@ final class CBModelTemplateCatalogTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_test() */
 
-    /**
-     * @return [[<class>, <name>]]
-     */
-    static function CBUnitTests_tests(): array {
-        return [
-            ['CBModelTemplateCatalog', 'test']
-        ];
-    }
 }
+
+
 
 final class CBModelTemplateCatalogTests_template1 {
     static function CBModelTemplate_spec(): stdClass {
@@ -79,6 +121,8 @@ final class CBModelTemplateCatalogTests_template1 {
     }
 }
 
+
+
 final class CBModelTemplateCatalogTests_template2 {
     static function CBModelTemplate_spec(): stdClass {
         return (object)[
@@ -86,6 +130,8 @@ final class CBModelTemplateCatalogTests_template2 {
         ];
     }
 }
+
+
 
 final class CBModelTemplateCatalogTests_template3 {
     static function CBModelTemplate_spec(): stdClass {
