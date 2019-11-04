@@ -2,6 +2,29 @@
 
 final class CBPageKindCatalogTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [object]
+     */
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'test',
+                'title' => 'CBPageKindCatalog',
+                'type' => 'server',
+            ],
+        ];
+    }
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
     /**
      * @return object
      */
@@ -16,6 +39,7 @@ final class CBPageKindCatalogTests {
         CBPageKindCatalog::install('CBPageKindCatalogTests_pageKind2');
 
         $actualClassNames = CBPageKindCatalog::fetchClassNames();
+
         $expectedClassNames = [
             'CBPageKindCatalogTests_pageKind1',
             'CBPageKindCatalogTests_pageKind2',
@@ -26,27 +50,27 @@ final class CBPageKindCatalogTests {
         CBPageKindCatalog::$testID = null;
 
         if ($actualClassNames != $expectedClassNames) {
-            return CBTest::resultMismatchFailure('subtest1', $actualClassNames, $expectedClassNames);
+            return CBTest::resultMismatchFailure(
+                'subtest1',
+                $actualClassNames,
+                $expectedClassNames
+            );
         }
 
         return (object)[
             'succeeded' => true,
         ];
     }
+    /* CBTest_test() */
 
-
-    /**
-     * @return [[<class>, <name>]]
-     */
-    static function CBUnitTests_tests(): array {
-        return [
-            ['CBPageKindCatalog', 'test']
-        ];
-    }
 }
+
+
 
 final class CBPageKindCatalogTests_pageKind1 {
 }
+
+
 
 final class CBPageKindCatalogTests_pageKind2 {
 }
