@@ -2,6 +2,29 @@
 
 final class CBPageFrameTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [object]
+     */
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'test',
+                'title' => 'CBPageFrame',
+                'type' => 'server',
+            ],
+        ];
+    }
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
     /**
      * @return object
      */
@@ -18,27 +41,22 @@ final class CBPageFrameTests {
         $expected = 'framebegin content frameend';
 
         if ($result != $expected) {
-            return (object)[
-                'message' =>
-                    "The rendered frame output was not what was expected.\n\n" .
-                    CBConvertTests::resultAndExpectedToMessage($result, $expected),
-            ];
+            return CBTest::resultMismatchFailure(
+                'test 1',
+                $result,
+                $expected
+            );
         }
 
         return (object)[
             'succeeded' => true,
         ];
     }
+    /* CBTest_test() */
 
-    /**
-     * @return [[<class>, <function>]]
-     */
-    static function CBUnitTests_tests(): array {
-        return [
-            ['CBPageFrame', 'test'],
-        ];
-    }
 }
+
+
 
 final class CBPageFrameTests_frame {
 
