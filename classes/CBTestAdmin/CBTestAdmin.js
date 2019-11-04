@@ -34,7 +34,7 @@ var CBTestAdmin = {
     /**
      * @return object
      */
-    createStatus: function () {
+    createStatus() {
         var element = document.createElement("div");
         element.className = "status";
 
@@ -56,7 +56,7 @@ var CBTestAdmin = {
      *
      * @return function
      */
-    convertJavaScriptTestToFunction: function (test) {
+    convertJavaScriptTestToFunction(test) {
         let type = CBModel.valueToString(test, "type");
 
         if (type === "server" || type === "interactive_server") {
@@ -121,7 +121,7 @@ var CBTestAdmin = {
     /**
      * @return Element
      */
-    createTestUI: function () {
+    createTestUI() {
         var element = document.createElement("div");
         element.className = "CBTestUI";
         var containerElement = document.createElement("div");
@@ -348,7 +348,7 @@ var CBTestAdmin = {
     /**
      * @return undefined
      */
-    DOMContentDidLoad: function() {
+    DOMContentDidLoad() {
         let main = document.getElementsByTagName("main")[0];
         let navigator = CBUINavigationView.create();
 
@@ -458,7 +458,7 @@ var CBTestAdmin = {
      *      individual test fails because every test reports its own errors so
      *      that every test will run even if a test before it fails.
      */
-    runJavaScriptTests: function () {
+    runJavaScriptTests() {
         let promise;
 
         CBTestAdmin_tests.forEach(
@@ -498,7 +498,7 @@ var CBTestAdmin = {
      *
      * @return Promise
      */
-    runTest: function (test) {
+    runTest(test) {
         let expander;
         let title;
 
