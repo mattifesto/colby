@@ -2,14 +2,28 @@
 
 final class CBTextViewTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
     /**
-     * @return [[<class>, <function>]]
+     * @return [object]
      */
-    static function CBUnitTests_tests(): array {
+    static function CBTest_getTests(): array {
         return [
-            ['CBTextView', 'upgrade'],
+            (object)[
+                'name' => 'upgrade',
+                'title' => 'CBTextView upgrade()',
+                'type' => 'server',
+            ],
         ];
     }
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
 
     /**
      * @return object
@@ -22,7 +36,7 @@ final class CBTextViewTests {
             This is the second paragraph - that talks about {The Wind
             and the Willows}.
 
-EOT;
+        EOT;
 
         $original = (object)[
             'className' => 'CBTextView',
@@ -68,7 +82,7 @@ EOT;
                 --- pre\n{$bufferAsMessage}
                 ---
 
-EOT;
+            EOT;
 
             return (object)[
                 'message' => $message,
@@ -76,21 +90,17 @@ EOT;
         }
 
         if ($result != $expected) {
-            $message = CBConvertTests::resultAndExpectedToMessage($result, $expected);
-
-            return (object)[
-                'message' => <<<EOT
-
-                    The result upgraded spec does not match the expected upgrade spec:
-
-                    {$message}
-
-EOT
-            ];
+            return CBTest::resultMismatchFailure(
+                'test 2',
+                $result,
+                $expected
+            );
         }
 
         return (object)[
             'succeeded' => true,
         ];
     }
+    /* CBTest_upgrade() */
+
 }
