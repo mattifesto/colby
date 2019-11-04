@@ -2,23 +2,66 @@
 
 final class CBLogTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [object]
+     */
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'bufferEndClean',
+                'title' => 'CBLog bufferEndClean',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'bufferEndFlush',
+                'title' => 'CBLog bufferEndFlush',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'noClassName',
+                'title' => 'CBLog noClassName',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'noMessage',
+                'title' => 'CBLog noMessage',
+                'type' => 'server',
+            ],
+        ];
+    }
+    /* CBTest_getTests() */
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
     /**
      * @return object
      */
     static function CBTest_bufferEndClean(): stdClass {
         CBLog::bufferStart();
 
-        CBLog::log((object)[
-            'className' => __CLASS__,
-            'message' => 'CBLogTests_firstBuffer',
-        ]);
+        CBLog::log(
+            (object)[
+                'className' => __CLASS__,
+                'message' => 'CBLogTests_firstBuffer',
+            ]
+        );
 
         CBLog::bufferStart();
 
-        CBLog::log((object)[
-            'className' => __CLASS__,
-            'message' => 'CBLogTests_secondBuffer',
-        ]);
+        CBLog::log(
+            (object)[
+                'className' => __CLASS__,
+                'message' => 'CBLogTests_secondBuffer',
+            ]
+        );
 
         CBLog::bufferEndClean();
 
@@ -53,6 +96,9 @@ EOT;
             'succeeded' => true,
         ];
     }
+    /* CBTest_bufferEndClean() */
+
+
 
     /**
      * @return object
@@ -67,23 +113,27 @@ EOT;
             It should be deleted by the test, so if you see this in the log
             investigate why it wasn't.
 
-EOT;
+        EOT;
 
         CBLog::bufferStart();
 
-        CBLog::log((object)[
-            'message' => $message,
-            'sourceClassName' => __CLASS__,
-            'sourceID' => $sourceID,
-        ]);
+        CBLog::log(
+            (object)[
+                'message' => $message,
+                'sourceClassName' => __CLASS__,
+                'sourceID' => $sourceID,
+            ]
+        );
 
         CBLog::bufferEndFlush();
 
         /* log entry count */
 
-        $entries = CBLog::entries((object)[
-            'sourceID' => $sourceID,
-        ]);
+        $entries = CBLog::entries(
+            (object)[
+                'sourceID' => $sourceID,
+            ]
+        );
 
         $actual = count($entries);
         $expected = 1;
@@ -99,13 +149,18 @@ EOT;
         /* delete log entry */
 
         $sourceIDAsSQL = CBHex160::toSQL($sourceID);
-        Colby::query("DELETE FROM CBLog WHERE sourceID = {$sourceIDAsSQL}");
+
+        Colby::query(
+            "DELETE FROM CBLog WHERE sourceID = {$sourceIDAsSQL}"
+        );
 
         /* log entry count after delete */
 
-        $entries = CBLog::entries((object)[
-            'sourceID' => $sourceID,
-        ]);
+        $entries = CBLog::entries(
+            (object)[
+                'sourceID' => $sourceID,
+            ]
+        );
 
         $actual = count($entries);
         $expected = 0;
@@ -124,6 +179,9 @@ EOT;
             'succeeded' => true,
         ];
     }
+    /* CBTest_bufferEndFlush() */
+
+
 
     /**
      * @return object
@@ -171,7 +229,7 @@ EOT;
                 --- pre\n{$bufferAsMessage}
                 ---
 
-EOT;
+            EOT;
 
             return (object)[
                 'message' => $message,
@@ -183,6 +241,9 @@ EOT;
             'succeeded' => true,
         ];
     }
+    /* CBTest_noClassName() */
+
+
 
     /**
      * @return object
@@ -230,7 +291,7 @@ EOT;
                 --- pre\n{$bufferAsMessage}
                 ---
 
-EOT;
+            EOT;
 
             return (object)[
                 'message' => $message,
@@ -242,16 +303,6 @@ EOT;
             'succeeded' => true,
         ];
     }
+    /* CBTest_noMessage() */
 
-    /**
-     * @return [[<class>, <test>]]
-     */
-    static function CBUnitTests_tests(): array {
-        return [
-            ['CBLog', 'bufferEndClean'],
-            ['CBLog', 'bufferEndFlush'],
-            ['CBLog', 'noClassName'],
-            ['CBLog', 'noMessage'],
-        ];
-    }
 }
