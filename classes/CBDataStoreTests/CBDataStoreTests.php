@@ -2,12 +2,36 @@
 
 class CBDataStoreTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [[<classname>, <testname>]]
+     */
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'URIToFilepath',
+                'title' => 'CBDataStore::URIToFilepath()',
+                'type' => 'server',
+            ],
+        ];
+    }
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
     /**
      * @return object
      */
     static function CBTest_URIToFilepath(): stdClass {
         $relative = '/colby/classes/CBDataStore/CBDataStore.php';
         $filepath = cbsitedir() . $relative;
+
         $cases = [
             [cbsiteurl() . $relative, $filepath],
             [$relative, $filepath],
@@ -31,15 +55,9 @@ class CBDataStoreTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_URIToFilepath() */
 
-    /**
-     * @return [[<classname>, <testname>]]
-     */
-    static function CBUnitTests_tests(): array {
-        return [
-            ['CBDataStore', 'URIToFilepath']
-        ];
-    }
+
 
     /**
      * @return null
@@ -59,6 +77,8 @@ class CBDataStoreTests {
         }
     }
 
+
+
     /**
      * @return null
      */
@@ -77,6 +97,8 @@ class CBDataStoreTests {
         }
     }
 
+
+
     /**
      * @return null
      */
@@ -92,6 +114,8 @@ class CBDataStoreTests {
         CBDataStore::deleteByID($ID);
         CBDataStoreTests::confirmDeleted($ID);
     }
+
+
 
     /**
      * @return null
@@ -114,6 +138,7 @@ class CBDataStoreTests {
                 "Items only in expected: {$expectedOnly} Items only in actual: {$actualOnly}");
         }
     }
+
 
 
     /**
@@ -139,6 +164,7 @@ class CBDataStoreTests {
             throw new Exception("The actual URL: {$a} does not match the expected URL: {$e}");
         }
     }
+
 
 
     /**
