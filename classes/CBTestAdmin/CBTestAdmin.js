@@ -12,7 +12,6 @@
     CBUIExpander,
     CBUINavigationView,
     CBUIPanel,
-    CBUISection,
     CBUISectionItem4,
     CBUISelector,
     CBUIStringsPart,
@@ -149,7 +148,15 @@ var CBTestAdmin = {
         containerElement.appendChild(input);
 
         {
-            let section = CBUISection.create();
+            let sectionContainerElement = CBUI.createElement(
+                "CBUI_sectionContainer"
+            );
+
+            let sectionElement = CBUI.createElement(
+                "CBUI_section"
+            );
+
+            sectionContainerElement.appendChild(sectionElement);
 
             {
                 let options = [];
@@ -198,34 +205,35 @@ var CBTestAdmin = {
                     CBTestAdmin.selectedTest = selector.value;
                 };
 
-                section.appendItem(selector);
+                sectionElement.appendChild(selector.element);
             }
 
             {
-                let sectionItem = CBUISectionItem4.create();
-                sectionItem.callback = function () {
-                    CBTestAdmin.status.element.textContent = "";
+                let runElement = CBUI.createElement(
+                    "CBUI_action"
+                );
 
-                    if (CBTestAdmin.selectedTest === undefined) {
-                        input.click();
-                    } else if (typeof CBTestAdmin.selectedTest === "object") {
-                        CBTestAdmin.runTest(CBTestAdmin.selectedTest);
-                    } else {
-                        CBTestAdmin.handleRunTests();
+                sectionElement.appendChild(runElement);
+
+                runElement.textContent = "Run";
+
+                runElement.addEventListener(
+                    "click",
+                    function () {
+                        CBTestAdmin.status.element.textContent = "";
+
+                        if (CBTestAdmin.selectedTest === undefined) {
+                            input.click();
+                        } else if (typeof CBTestAdmin.selectedTest === "object") {
+                            CBTestAdmin.runTest(CBTestAdmin.selectedTest);
+                        } else {
+                            CBTestAdmin.handleRunTests();
+                        }
                     }
-                };
-
-                let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Run";
-
-                stringsPart.element.classList.add("action");
-
-                sectionItem.appendPart(stringsPart);
-                section.appendItem(sectionItem);
+                );
             }
 
-            containerElement.appendChild(section.element);
-            containerElement.appendChild(CBUI.createHalfSpace());
+            containerElement.appendChild(sectionContainerElement);
         }
 
 

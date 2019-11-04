@@ -119,7 +119,6 @@ final class CBTestAdmin {
             'CBUIExpander',
             'CBUINavigationView',
             'CBUIPanel',
-            'CBUISection',
             'CBUISectionItem4',
             'CBUISelector',
             'CBUIStringsPart',
