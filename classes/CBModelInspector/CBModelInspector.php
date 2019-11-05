@@ -4,6 +4,8 @@ final class CBModelInspector {
 
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
@@ -13,6 +15,7 @@ final class CBModelInspector {
             'inspector',
         ];
     }
+
 
 
     /**
@@ -25,6 +28,8 @@ final class CBModelInspector {
 
 
     /* -- CBAjax interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param object $args
@@ -85,12 +90,14 @@ final class CBModelInspector {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v531.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v544.js', cbsysurl()),
         ];
     }
 
@@ -124,6 +131,8 @@ final class CBModelInspector {
             ],
         ];
     }
+    /* CBHTMLOutput_JavaScriptVariables() */
+
 
 
     /**
@@ -152,6 +161,8 @@ final class CBModelInspector {
 
     /* -- functions -- -- -- -- -- */
 
+
+
     /**
      * @param hex160 $ID
      *
@@ -176,7 +187,7 @@ final class CBModelInspector {
 
 
     /**
-     * @param hex160 $ID
+     * @param string $ID
      *
      * @return [object]
      */
@@ -204,22 +215,27 @@ final class CBModelInspector {
             $iterator->next();
         }
 
-        usort($files, function ($file1, $file2) {
-            return $file1->text <=> $file2->text;
-        });
+        usort(
+            $files,
+            function ($file1, $file2) {
+                return $file1->text <=> $file2->text;
+            }
+        );
 
         return $files;
     }
+    /* fetchDataStoreFiles() */
 
 
 
     /**
-     * @param hex160 $ID
+     * @param string $ID
      *
      * @return [object]
      */
     private static function fetchModelVersions(string $ID): array {
         $IDAsSQL = CBHex160::toSQL($ID);
+
         $SQL = <<<EOT
 
             SELECT      version,
@@ -231,7 +247,7 @@ final class CBModelInspector {
             WHERE       ID = {$IDAsSQL}
             ORDER BY    version DESC
 
-EOT;
+        EOT;
 
         $versions = CBDB::SQLToObjects($SQL);
 
@@ -243,19 +259,20 @@ EOT;
 
 
     /**
-     * @param hex160 $ID
+     * @param string $ID
      *
      * @return ?stdClass
      */
     private static function fetchRowFromCBImages(string $ID): ?stdClass {
         $IDAsSQL = CBHex160::toSQL($ID);
+
         $SQL = <<<EOT
 
             SELECT  `created`, `modified`, `extension`
             FROM    `CBImages`
             WHERE   `ID` = {$IDAsSQL}
 
-EOT;
+        EOT;
 
         $result = CBDB::SQLToObject($SQL);
 
@@ -265,16 +282,18 @@ EOT;
             return $result;
         }
     }
+    /* fetchRowFromCBImages() */
 
 
 
     /**
-     * @param hex160 $ID
+     * @param string $ID
      *
      * @return ?stdClass
      */
     private static function fetchRowFromColbyPages(string $ID): ?stdClass {
         $IDAsSQL = CBHex160::toSQL($ID);
+
         $SQL = <<<EOT
 
             SELECT  LOWER(HEX(`archiveID`)) as `archiveID`,
@@ -292,7 +311,7 @@ EOT;
             FROM    `ColbyPages`
             WHERE   `archiveId` = {$IDAsSQL}
 
-EOT;
+        EOT;
 
         $result = CBDB::SQLToObject($SQL);
 
@@ -303,5 +322,6 @@ EOT;
             return $result;
         }
     }
+    /* fetchRowFromColbyPages() */
 
 }

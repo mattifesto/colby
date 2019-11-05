@@ -45,7 +45,9 @@ var CBModelInspector = {
             }
         );
 
-        navigationHomeElement.appendChild(CBUI.createHalfSpace());
+        navigationHomeElement.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         {
             let sectionElement = CBUI.createSection();
@@ -65,11 +67,17 @@ var CBModelInspector = {
             sectionElement.appendChild(sectionItemElement);
 
             navigationHomeElement.appendChild(sectionElement);
-            navigationHomeElement.appendChild(CBUI.createHalfSpace());
+
+            navigationHomeElement.appendChild(
+                CBUI.createHalfSpace()
+            );
         }
 
         navigationHomeElement.appendChild(modelInformationElement);
-        navigationHomeElement.appendChild(CBUI.createHalfSpace());
+
+        navigationHomeElement.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         let mainElement = document.getElementsByTagName("main")[0];
         mainElement.appendChild(navigator.element);
@@ -84,6 +92,7 @@ var CBModelInspector = {
         IDDidChangeCallback();
     },
     /* init() */
+
 
 
     /**
@@ -144,7 +153,10 @@ var CBModelInspector = {
         return;
 
 
+
         /* -- closures -- -- -- -- -- */
+
+
 
         /**
          * @return Element
@@ -225,6 +237,7 @@ var CBModelInspector = {
         /* IDDidChange_createAssociatedWithElement() */
 
 
+
         /**
          * @return Element
          */
@@ -300,6 +313,7 @@ var CBModelInspector = {
         /* IDDidChange_createAssociationsElement() */
 
 
+
         /**
          * @return undefined
          */
@@ -341,32 +355,49 @@ var CBModelInspector = {
                 container.style.padding = "0 20px";
                 container.style.justifyContent = "center";
 
-                let artworkElement = CBArtworkElement.create({
-                    URL: CBImage.toURL(model, "rw1600"),
-                    aspectRatioWidth: model.width,
-                    aspectRatioHeight: model.height,
-                    maxWidth: 800,
-                });
+                let artworkElement = CBArtworkElement.create(
+                    {
+                        URL: CBImage.toURL(model, "rw1600"),
+                        aspectRatioWidth: model.width,
+                        aspectRatioHeight: model.height,
+                        maxWidth: 800,
+                    }
+                );
 
                 container.appendChild(artworkElement);
                 containerElement.appendChild(container);
-                containerElement.appendChild(CBUI.createHalfSpace());
+
+                containerElement.appendChild(
+                    CBUI.createHalfSpace()
+                );
             }
 
-            section.appendChild(CBUI.createKeyValueSectionItem({
-                key: "Class Name",
-                value: model.className,
-            }).element);
+            section.appendChild(
+                CBUI.createKeyValueSectionItem(
+                    {
+                        key: "Class Name",
+                        value: model.className,
+                    }
+                ).element
+            );
 
-            section.appendChild(CBUI.createKeyValueSectionItem({
-                key: "Title",
-                value: model.title,
-            }).element);
+            section.appendChild(
+                CBUI.createKeyValueSectionItem(
+                    {
+                        key: "Title",
+                        value: model.title,
+                    }
+                ).element
+            );
 
-            section.appendChild(CBUI.createKeyValueSectionItem({
-                key: "Description",
-                value: model.description,
-            }).element);
+            section.appendChild(
+                CBUI.createKeyValueSectionItem(
+                    {
+                        key: "Description",
+                        value: model.description,
+                    }
+                ).element
+            );
 
             {
                 let sectionItem = CBUISectionItem4.create();
@@ -473,7 +504,9 @@ var CBModelInspector = {
                 };
             }
 
-            containerElement.appendChild(CBUI.createHalfSpace());
+            containerElement.appendChild(
+                CBUI.createHalfSpace()
+            );
 
             /* associated image */
             {
@@ -599,7 +632,9 @@ var CBModelInspector = {
                     sectionItem.callback = function () {
                         let element = document.createElement("div");
 
-                        element.appendChild(CBUI.createHalfSpace());
+                        element.appendChild(
+                            CBUI.createHalfSpace()
+                        );
 
                         {
                             let sectionElement = CBUI.createSection();
@@ -638,7 +673,10 @@ var CBModelInspector = {
                             `;
 
                             element.appendChild(expander.element);
-                            element.appendChild(CBUI.createHalfSpace());
+
+                            element.appendChild(
+                                CBUI.createHalfSpace()
+                            );
                         }
 
                         {
@@ -664,7 +702,10 @@ var CBModelInspector = {
                             `;
 
                             element.appendChild(expander.element);
-                            element.appendChild(CBUI.createHalfSpace());
+
+                            element.appendChild(
+                                CBUI.createHalfSpace()
+                            );
                         }
 
                         CBUINavigationView.context.navigate(
@@ -699,14 +740,20 @@ var CBModelInspector = {
                     };
 
                     sectionItem.appendPart(stringsPart);
-                    sectionItem.appendPart(CBUINavigationArrowPart.create());
+
+                    sectionItem.appendPart(
+                        CBUINavigationArrowPart.create()
+                    );
+
                     section.appendChild(sectionItem.element);
                 });
 
                 containerElement.appendChild(section);
             }
 
-            containerElement.appendChild(CBUI.createHalfSpace());
+            containerElement.appendChild(
+                CBUI.createHalfSpace()
+            );
 
             if (modelData.rowFromColbyPages) {
                 containerElement.appendChild(
@@ -790,9 +837,12 @@ var CBModelInspector = {
             Colby.updateTimes();
         }
         /* IDDidChange_render() */
+
     },
     /* IDDidChange() */
+
 };
+
 
 
 Colby.afterDOMContentLoaded(
