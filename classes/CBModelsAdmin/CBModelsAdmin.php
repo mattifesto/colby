@@ -5,7 +5,11 @@ final class CBModelsAdmin {
     static $page = '';
     static $modelClassName = '';
 
+
+
     /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
@@ -21,6 +25,7 @@ final class CBModelsAdmin {
         );
     }
     /* CBAdmin_initialize() */
+
 
 
     /**
@@ -44,6 +49,7 @@ final class CBModelsAdmin {
     }
 
 
+
     /**
      * @return void
      */
@@ -52,7 +58,10 @@ final class CBModelsAdmin {
     }
 
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -63,6 +72,7 @@ final class CBModelsAdmin {
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -120,6 +130,7 @@ final class CBModelsAdmin {
     /* CBHTMLOutput_JavaScriptVariables() */
 
 
+
     /**
      * @return [string]
      */
@@ -135,22 +146,30 @@ final class CBModelsAdmin {
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @return [object]
      */
     private static function fetchModelList() {
-        $modelClassNameAsSQL = CBDB::stringToSQL(cb_query_string_value('modelClassName'));
+        $modelClassNameAsSQL = CBDB::stringToSQL(
+            cb_query_string_value('modelClassName')
+        );
+
         $SQL = <<<EOT
 
-            SELECT  LOWER(HEX(`ID`)) AS `ID`, `title`
-            FROM    `CBModels`
-            WHERE   `className` = {$modelClassNameAsSQL}
+            SELECT  LOWER(HEX(ID)) AS ID,
+                    title
+            FROM    CBModels
+            WHERE   className = {$modelClassNameAsSQL}
 
-EOT;
+        EOT;
 
         return CBDB::SQLToObjects($SQL);
     }
     /* fetchModelList() */
+
 }
