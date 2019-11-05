@@ -507,61 +507,10 @@
                     model.className !== "CBImage" ||
                     CBModelInspector_associatedImageModel !== null
                 ){
-                    let titleElement = document.createElement("div");
-                    titleElement.className = "CBUI_title1";
-                    titleElement.textContent = "Associated Image";
-                    containerElement.appendChild(titleElement);
-
-                    let sectionContainerElement = document.createElement("div");
-                    sectionContainerElement.className = "CBUI_section_container";
-                    containerElement.appendChild(sectionContainerElement);
-
-                    let sectionElement = document.createElement("div");
-                    sectionElement.className = "CBUI_section";
-                    sectionContainerElement.appendChild(sectionElement);
-
-                    let chooser = CBUIImageChooser.create();
-                    sectionElement.appendChild(chooser.element);
-
-                    if (CBModelInspector_associatedImageModel !== null) {
-                        chooser.src = CBImage.toURL(
-                            CBModelInspector_associatedImageModel,
-                            "rw1600"
-                        );
-                    }
-
-                    chooser.chosen = function (args) {
-                        Colby.callAjaxFunction(
-                            "CBImages",
-                            "upload",
-                            undefined,
-                            args.file
-                        ).then(
-                            function (imageSpec) {
-                                return Colby.callAjaxFunction(
-                                    "CBModelToCBImageAssociation",
-                                    "replaceImageID",
-                                    {
-                                        modelID: CBModelInspector_modelID,
-                                        imageID: imageSpec.ID,
-                                    }
-                                ).then(
-                                    function () {
-                                        chooser.src = CBImage.toURL(
-                                            imageSpec,
-                                            "rw1600"
-                                        );
-                                    }
-                                );
-                            }
-                        ).catch(
-                            function (error) {
-                                CBErrorHandler.displayAndReport(error);
-                            }
-                        );
-                    };
+                    containerElement.appendChild(
+                        createAssociatedImageEditorElement(model)
+                    );
                 }
-                /* associated image */
 
 
                 /* associations */
@@ -848,7 +797,87 @@
 
 
     /**
+     * @return Element
+     */
+    function createAssociatedImageEditorElement() {
+        let editorElement = CBUI.createElement(
+            "CBModelInspector_associatedImageEditor"
+        );
+
+        let titleElement = CBUI.createElement(
+            "CBUI_title1"
+        );
+
+        editorElement.appendChild(titleElement);
+
+        titleElement.textContent = "Associated Image";
+
+        let sectionContainerElement = CBUI.createElement(
+            "CBUI_sectionContainer"
+        );
+
+        editorElement.appendChild(sectionContainerElement);
+
+        let sectionElement = CBUI.createElement(
+            "CBUI_section"
+        );
+
+        sectionContainerElement.appendChild(sectionElement);
+
+        let chooser = CBUIImageChooser.create();
+
+        sectionElement.appendChild(
+            chooser.element
+        );
+
+        if (CBModelInspector_associatedImageModel !== null) {
+            chooser.src = CBImage.toURL(
+                CBModelInspector_associatedImageModel,
+                "rw1600"
+            );
+        }
+
+        chooser.chosen = function (args) {
+            Colby.callAjaxFunction(
+                "CBImages",
+                "upload",
+                undefined,
+                args.file
+            ).then(
+                function (imageSpec) {
+                    return Colby.callAjaxFunction(
+                        "CBModelToCBImageAssociation",
+                        "replaceImageID",
+                        {
+                            modelID: CBModelInspector_modelID,
+                            imageID: imageSpec.ID,
+                        }
+                    ).then(
+                        function () {
+                            chooser.src = CBImage.toURL(
+                                imageSpec,
+                                "rw1600"
+                            );
+                        }
+                    );
+                }
+            ).catch(
+                function (error) {
+                    CBErrorHandler.displayAndReport(error);
+                }
+            );
+        };
+
+        return editorElement;
+    }
+    /* createAssociatedImageEditorElement() */
+
+
+
+    /**
      * This function renders the image for a CBImage model.
+     *
+     * @param object model
      *
      * @return Element
      */
