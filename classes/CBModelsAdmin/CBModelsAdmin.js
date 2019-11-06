@@ -3,11 +3,15 @@
 /* jshint esversion: 6 */
 /* exported CBModelsAdmin */
 /* globals
+    CBImage,
     CBUI,
     CBUINavigationArrowPart,
     CBUISectionItem4,
+    CBUIThumbnailPart,
     CBUITitleAndDescriptionPart,
     Colby,
+
+    CBModelsAdmin,
 
     CBModelsAdmin_classHasTemplates,
     CBModelsAdmin_modelClassName,
@@ -16,53 +20,81 @@
     CBModelsAdmin_page,
 */
 
-var CBModelsAdmin = {
+
+(function () {
+
+    window.CBModelsAdmin = {
+
+        /**
+         * @return undefined
+         */
+        initialize: function () {
+            switch (CBModelsAdmin_page) {
+                case "modelList":
+                    renderModelList();
+                    break;
+                default:
+                    renderClassNameList();
+                    break;
+            }
+        },
+
+    };
+    /* window.CBModelsAdmin */
+
 
     /**
      * @return undefined
      */
-    initialize: function () {
-        switch (CBModelsAdmin_page) {
-            case "modelList":
-                CBModelsAdmin.renderModelList();
-                break;
-            default:
-                CBModelsAdmin.renderClassNameList();
-                break;
-        }
-    },
-
-    /**
-     * @return undefined
-     */
-    renderClassNameList: function () {
+    function renderClassNameList() {
         var mainElement = document.getElementsByTagName("main")[0];
-        mainElement.appendChild(CBUI.createHalfSpace());
+
+        mainElement.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         let sectionElement = CBUI.createSection();
 
-        CBModelsAdmin_modelClassNames.forEach(function (className) {
-            let sectionItem = CBUISectionItem4.create();
-            let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
-            titleAndDescriptionPart.title = className;
+        CBModelsAdmin_modelClassNames.forEach(
+            function (className) {
+                let sectionItem = CBUISectionItem4.create();
 
-            sectionItem.callback = function () {
-                window.location = "/admin/?c=CBModelsAdmin&p=modelList&modelClassName=" + className;
-            };
+                let titleAndDescriptionPart =
+                CBUITitleAndDescriptionPart.create();
 
-            sectionItem.appendPart(titleAndDescriptionPart);
-            sectionItem.appendPart(CBUINavigationArrowPart.create());
-            sectionElement.appendChild(sectionItem.element);
-        });
+                titleAndDescriptionPart.title = className;
+
+                sectionItem.callback = function () {
+                    window.location = (
+                        "/admin/?c=CBModelsAdmin&p=modelList&modelClassName=" +
+                        className
+                    );
+                };
+
+                sectionItem.appendPart(titleAndDescriptionPart);
+
+                sectionItem.appendPart(
+                    CBUINavigationArrowPart.create()
+                );
+
+                sectionElement.appendChild(sectionItem.element);
+            }
+        );
 
         mainElement.appendChild(sectionElement);
-        mainElement.appendChild(CBUI.createHalfSpace());
-    },
+
+        mainElement.appendChild(
+            CBUI.createHalfSpace()
+        );
+    }
+    /* renderClassNameList() */
+
+
 
     /**
      * @return undefined
      */
-    renderModelList: function () {
+    function renderModelList() {
         var mainElement = document.getElementsByTagName("main")[0];
         let titleItem = CBUI.createHeaderItem();
         titleItem.textContent = CBModelsAdmin_modelClassName + " Models";
@@ -72,15 +104,22 @@ var CBModelsAdmin = {
         if (CBModelsAdmin_classHasTemplates) {
             var createItem = CBUI.createHeaderItem();
             createItem.textContent = "Create";
-            createItem.href = `/admin/?c=CBModelsAdminTemplateSelector&modelClassName=${CBModelsAdmin_modelClassName}`;
+            createItem.href = (
+                "/admin/?c=CBModelsAdminTemplateSelector&modelClassName=" +
+                CBModelsAdmin_modelClassName
+            );
 
             rightElements = [createItem.element];
         }
 
-        mainElement.appendChild(CBUI.createHeader({
-            centerElement: titleItem.element,
-            rightElements: rightElements,
-        }));
+        mainElement.appendChild(
+            CBUI.createHeader(
+                {
+                    centerElement: titleItem.element,
+                    rightElements: rightElements,
+                }
+            )
+        );
 
         mainElement.appendChild(CBUI.createHalfSpace());
 
@@ -91,11 +130,30 @@ var CBModelsAdmin = {
                 var sectionItem = CBUISectionItem4.create();
 
                 sectionItem.callback = function () {
-                    window.location = "/admin/?c=CBModelEditor&ID=" +
-                                      encodeURIComponent(model.ID);
+                    window.location = (
+                        "/admin/?c=CBModelEditor&ID=" +
+                        encodeURIComponent(model.ID)
+                    );
                 };
 
-                var titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
+                /* thumbnail part */
+
+                let thumbnailPart = CBUIThumbnailPart.create();
+
+                sectionItem.appendPart(thumbnailPart);
+
+                if (model.image) {
+                    thumbnailPart.src = CBImage.toURL(
+                        model.image,
+                        'rs200clc200'
+                    );
+                }
+
+                /* title and description part */
+
+                var titleAndDescriptionPart =
+                CBUITitleAndDescriptionPart.create();
+
                 var title = model.title ? model.title.trim() : '';
 
                 if (title === "") {
@@ -138,9 +196,20 @@ var CBModelsAdmin = {
             });
 
             mainElement.appendChild(section);
-            mainElement.appendChild(CBUI.createHalfSpace());
-        }
-    },
-};
 
-Colby.afterDOMContentLoaded(CBModelsAdmin.initialize);
+            mainElement.appendChild(
+                CBUI.createHalfSpace()
+            );
+        }
+    }
+    /* renderModelList() */
+
+})();
+
+
+
+Colby.afterDOMContentLoaded(
+    function () {
+        CBModelsAdmin.initialize();
+    }
+);

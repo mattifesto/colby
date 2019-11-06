@@ -136,10 +136,12 @@ final class CBModelsAdmin {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBImage',
             'CBUI',
             'CBUINavigationArrowPart',
             'CBUISectionItem4',
             'CBUITitleAndDescriptionPart',
+            'CBUIThumbnailPart',
             'Colby',
         ];
     }
@@ -161,14 +163,38 @@ final class CBModelsAdmin {
 
         $SQL = <<<EOT
 
-            SELECT  LOWER(HEX(ID)) AS ID,
-                    title
-            FROM    CBModels
-            WHERE   className = {$modelClassNameAsSQL}
+            SELECT      LOWER(HEX(CBModelsTable.ID)) AS ID,
+                        CBModelsTable.title AS title,
+                        CBModelVersionsTable_images.modelAsJSON AS image
+
+            FROM        CBModels as CBModelsTable
+
+            LEFT JOIN   CBModelAssociations AS CBModelAssociationsTable
+                ON      CBModelsTable.ID = CBModelAssociationsTable.ID AND
+                        CBModelAssociationsTable.className = "CBModelToCBImageAssociation"
+
+            LEFT JOIN   CBModels as CBModelsTable_images
+                ON      CBModelAssociationsTable.associatedID = CBModelsTable_images.ID
+
+            LEFT JOIN   CBModelVersions as CBModelVersionsTable_images
+                ON      CBModelsTable_images.ID = CBModelVersionsTable_images.ID AND
+                        CBModelsTable_images.version = CBModelVersionsTable_images.version
+
+            WHERE       CBModelsTable.className = {$modelClassNameAsSQL}
+
+            ORDER BY    CBModelsTable.created DESC
 
         EOT;
 
-        return CBDB::SQLToObjects($SQL);
+        $modelList = CBDB::SQLToObjects($SQL);
+
+        foreach($modelList as $modelListItem) {
+            if ($modelListItem->image !== null) {
+                $modelListItem->image = json_decode($modelListItem->image);
+            }
+        }
+
+        return $modelList;
     }
     /* fetchModelList() */
 
