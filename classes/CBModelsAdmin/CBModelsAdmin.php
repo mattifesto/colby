@@ -68,7 +68,7 @@ final class CBModelsAdmin {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v520.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v544.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */

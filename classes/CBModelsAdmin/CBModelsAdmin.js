@@ -1,7 +1,6 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esversion: 6 */
-/* exported CBModelsAdmin */
 /* globals
     CBImage,
     CBUI,
@@ -10,8 +9,6 @@
     CBUIThumbnailPart,
     CBUITitleAndDescriptionPart,
     Colby,
-
-    CBModelsAdmin,
 
     CBModelsAdmin_classHasTemplates,
     CBModelsAdmin_modelClassName,
@@ -23,12 +20,20 @@
 
 (function () {
 
-    window.CBModelsAdmin = {
+    let mainElement;
 
-        /**
-         * @return undefined
-         */
-        initialize: function () {
+    Colby.afterDOMContentLoaded(
+        function () {
+            mainElement = document.getElementsByTagName("main")[0];
+
+            if (
+                mainElement === undefined ||
+                !mainElement.classList.contains("CBModelsAdmin")
+            ) {
+                mainElement = undefined;
+                return;
+            }
+
             switch (CBModelsAdmin_page) {
                 case "modelList":
                     renderModelList();
@@ -37,18 +42,19 @@
                     renderClassNameList();
                     break;
             }
-        },
+        }
+    );
 
-    };
-    /* window.CBModelsAdmin */
+
+
+    /* -- closures -- -- -- -- -- */
+
 
 
     /**
      * @return undefined
      */
     function renderClassNameList() {
-        var mainElement = document.getElementsByTagName("main")[0];
-
         mainElement.appendChild(
             CBUI.createHalfSpace()
         );
@@ -95,7 +101,6 @@
      * @return undefined
      */
     function renderModelList() {
-        var mainElement = document.getElementsByTagName("main")[0];
         let titleItem = CBUI.createHeaderItem();
         titleItem.textContent = CBModelsAdmin_modelClassName + " Models";
 
@@ -121,7 +126,9 @@
             )
         );
 
-        mainElement.appendChild(CBUI.createHalfSpace());
+        mainElement.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         if (CBModelsAdmin_modelList.length > 0) {
             var section = CBUI.createSection();
@@ -205,11 +212,3 @@
     /* renderModelList() */
 
 })();
-
-
-
-Colby.afterDOMContentLoaded(
-    function () {
-        CBModelsAdmin.initialize();
-    }
-);
