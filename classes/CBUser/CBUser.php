@@ -4,6 +4,8 @@ final class CBUser {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
@@ -15,7 +17,10 @@ final class CBUser {
     /* CBHTMLOutput_JavaScriptURLs() */
 
 
+
     /* -- CBModel interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param object $spec
@@ -37,15 +42,20 @@ final class CBUser {
             'description' => trim(
                 CBModel::valueToString($spec, 'description')
             ),
+
             'facebook' => CBModel::clone(
                 CBModel::valueToObject($spec, 'facebook')
             ),
+
             'lastLoggedIn' => CBModel::valueAsInt($spec, 'lastLoggedIn') ?? 0,
+
             'title' => trim(
                 CBModel::valueToString($spec, 'title')
             ),
+
             'userID' => $userNumericID,
         ];
     }
     /* CBModel_build() */
+
 }
