@@ -2,7 +2,10 @@
 
 define('CBUserCookieName', 'colby-user-encrypted-data');
 
+
+
 final class ColbyUser {
+
     private $hash = null;
     private $id = null;
     private $groups = array();
@@ -30,11 +33,14 @@ final class ColbyUser {
 
     private static $currentUserRow = null;
 
+
+
     /**
      * @return ColbyUser
      */
     private function __construct() {
     }
+
 
 
     /**
@@ -50,6 +56,7 @@ final class ColbyUser {
 
         return ColbyUser::$currentUser;
     }
+
 
 
     /**
@@ -69,12 +76,14 @@ final class ColbyUser {
     }
 
 
+
     /**
      * @return bool
      */
     static function currentUserIsLoggedIn(): bool {
         return !empty(ColbyUser::$currentUserID);
     }
+
 
 
     /**
@@ -110,6 +119,8 @@ final class ColbyUser {
         }
     }
 
+
+
     /**
      * @param int $facebookUserID
      *
@@ -123,10 +134,11 @@ final class ColbyUser {
             FROM    `ColbyUsers`
             WHERE   `facebookId` = {$facebookUserID}
 
-EOT;
+        EOT;
 
         return CBDB::SQLToObject($SQL);
     }
+
 
 
     /**
@@ -139,7 +151,7 @@ EOT;
             FROM    `information_schema`.`tables`
             WHERE   `table_schema` = DATABASE()
 
-EOT;
+        EOT;
 
         $tableNames = CBDB::SQLToArray($SQL);
         $groupNames = [];
@@ -158,6 +170,7 @@ EOT;
 
         return $groupNames;
     }
+
 
 
     /**
@@ -185,11 +198,12 @@ EOT;
             FROM    `ColbyUsers`
             WHERE   `hash` = {$userHashAsSQL}
 
-EOT;
+        EOT;
 
         return CBDB::SQLToObject($SQL);
     }
     /* fetchUserDataByHash() */
+
 
 
     /**
@@ -201,6 +215,7 @@ EOT;
         return ColbyUser::$currentUserID;
     }
     /* getCurrentUserID() */
+
 
 
     /**
@@ -220,6 +235,7 @@ EOT;
 
         return "ColbyUsersWhoAre{$groupName}";
     }
+
 
 
     /**
@@ -280,6 +296,7 @@ EOT;
     /* initialize() */
 
 
+
     /**
      * @deprecated 2018_04_17
      *
@@ -290,6 +307,7 @@ EOT;
     public function isLoggedIn() {
         return !!$this->id;
     }
+
 
 
     /**
@@ -323,7 +341,7 @@ EOT;
             FROM `{$tableName}`
             WHERE `userId` = {$userIDAsSQL}
 
-EOT;
+        EOT;
 
         try {
             $isMember = CBDB::SQLToValue($SQL) > 0;
@@ -333,6 +351,7 @@ EOT;
 
         return $isMember;
     }
+
 
 
     /**
@@ -363,7 +382,7 @@ EOT;
             FROM `ColbyUsersWhoAre{$group}`
             WHERE `userId` = '{$this->id}'
 
-EOT;
+        EOT;
 
         $result = Colby::mysqli()->query($sql);
 
@@ -387,6 +406,8 @@ EOT;
 
         return $this->groups[$group];
     }
+    /* isOneOfThe() */
+
 
 
     /**
@@ -454,7 +475,7 @@ EOT;
                 WHERE
                     `id` = {$userIdentity->ID}
 
-EOT;
+            EOT;
 
             Colby::query($sql);
         }
@@ -464,7 +485,9 @@ EOT;
             $userIdentity = (object)[
                 'hash' => CBHex160::random(),
             ];
+
             $userHashAsSQL = CBHex160::toSQL($userIdentity->hash);
+
             $sql = <<<EOT
 
                 INSERT INTO `ColbyUsers` (
@@ -487,7 +510,7 @@ EOT;
                     0
                 )
 
-EOT;
+            EOT;
 
             Colby::query($sql);
 
@@ -573,6 +596,7 @@ EOT;
     /* loginCurrentUser() */
 
 
+
     /**
      * This function must be called before any output is generated because it
      * sets a cookie.
@@ -580,6 +604,7 @@ EOT;
     static function logoutCurrentUser() {
         ColbyUser::removeUserCookie();
     }
+
 
 
     /**
@@ -620,6 +645,7 @@ EOT;
     }
 
 
+
     /**
      * This function must be called before any output is generated because it
      * sets a cookie.
@@ -632,6 +658,7 @@ EOT;
 
         setcookie(CBUserCookieName, '', $time, '/');
     }
+
 
 
     /**
@@ -657,19 +684,20 @@ EOT;
                     NOW()
                 )
 
-EOT;
+            EOT;
         } else {
             $SQL = <<<EOT
 
                 DELETE FROM {$tableName}
                 WHERE userId = {$userNumericID}
 
-EOT;
+            EOT;
         }
 
         Colby::query($SQL);
     }
     /* updateGroupMembership() */
+
 
 
     /**
@@ -712,7 +740,7 @@ EOT;
             FROM `ColbyUsers`
             WHERE `id` = {$sqlUserId}
 
-EOT;
+        EOT;
 
         $result = Colby::query($sql);
 
@@ -736,6 +764,7 @@ EOT;
         return $userRow;
     }
     /* userRow() */
+
 }
 
 ColbyUser::initialize();
