@@ -1,11 +1,11 @@
-.CBAdminPageForUserSettings .identity {
+.CBAdminPageForUserSettings_user {
     align-items: center;
     display: flex;
     flex-direction: column;
     margin: 10px 20px;
 }
 
-.CBAdminPageForUserSettings .identity img {
+.CBAdminPageForUserSettings_user img {
     display: block;
     height: 100px;
     object-fit: contain;
