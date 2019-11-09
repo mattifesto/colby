@@ -344,62 +344,6 @@ final class ColbyUser {
 
 
     /**
-     * @deprecated use ColbyUser::isMemberOfGroup()
-     *
-     * @return bool
-     */
-    function isOneOfThe($group) {
-        if ($group === 'Public') {
-            return true;
-        }
-
-        if (!preg_match('/^[a-zA-Z0-9]+$/', $group)) {
-            throw new InvalidArgumentException('group');
-        }
-
-        if (!$this->id) {
-            return false;
-        }
-
-        if (isset($this->groups[$group])) {
-            return $this->groups[$group];
-        }
-
-        $sql = <<<EOT
-
-            SELECT COUNT(*) AS `isOneOfTheGroup`
-            FROM `ColbyUsersWhoAre{$group}`
-            WHERE `userId` = '{$this->id}'
-
-        EOT;
-
-        $result = Colby::mysqli()->query($sql);
-
-        /**
-         * An error will generally mean that the table doesn't exist in which
-         * case the user is not considered to belong to the group.
-         *
-         * Errors produced for other reasons will be very rare and if they
-         * represent a bad database state they will be caught by other queries.
-         */
-
-        if (Colby::mysqli()->error) {
-            $isOneOfTheGroup = false;
-        } else {
-            $isOneOfTheGroup = $result->fetch_object()->isOneOfTheGroup;
-
-            $result->free();
-        }
-
-        $this->groups[$group] = !!$isOneOfTheGroup;
-
-        return $this->groups[$group];
-    }
-    /* isOneOfThe() */
-
-
-
-    /**
      * This function is called at after Facebook authenticates a user that wants
      * to log in. It updates the database and sets a cookie in the user's
      * browser confirms their identity and that they are logged in for future
