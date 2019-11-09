@@ -6,6 +6,10 @@
  */
 final class CBAdminPageFooterView {
 
+    /* -- CBView interfaces -- -- -- -- -- */
+
+
+
     /**
      * @param object $model
      *
@@ -23,18 +27,18 @@ final class CBAdminPageFooterView {
 
                 <?php
 
-                if (ColbyUser::current()->isLoggedIn()) {
-                    $logoutURLForHTML = cbhtml(ColbyUser::logoutURL());
+                if (ColbyUser::currentUserIsLoggedIn()) {
+                    $logoutURLAsHTML = cbhtml(ColbyUser::logoutURL());
                     $userName = ColbyUser::userRow()->facebookName;
-                    $userNameHTML = cbhtml($userName);
+                    $userNameAsHTML = cbhtml($userName);
 
                     ?>
 
                     <li>
-                        <?= $userNameHTML ?>
+                        <?= $userNameAsHTML ?>
                     </li>
                     <li>
-                        <a href="<?= $logoutURLForHTML ?>">log out</a>
+                        <a href="<?= $logoutURLAsHTML ?>">log out</a>
                     </li>
 
                     <?php
@@ -50,6 +54,11 @@ final class CBAdminPageFooterView {
     /* CBView_render() */
 
 
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
@@ -59,4 +68,5 @@ final class CBAdminPageFooterView {
         ];
     }
     /* CBHTMLOutput_CSSURLs() */
+
 }
