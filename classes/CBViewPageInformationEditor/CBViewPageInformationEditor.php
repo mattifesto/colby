@@ -4,6 +4,8 @@ final class CBViewPageInformationEditor {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
@@ -13,6 +15,7 @@ final class CBViewPageInformationEditor {
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -81,6 +84,8 @@ final class CBViewPageInformationEditor {
 
     /* -- functions -- -- -- -- -- */
 
+
+
     /**
      * @return [{stdClass}]
      */
@@ -92,8 +97,9 @@ final class CBViewPageInformationEditor {
             JOIN `ColbyUsersWhoAreAdministrators` AS `administrator`
             ON `user`.`ID` = `administrator`.`userID`
 
-EOT;
+        EOT;
 
         return CBDB::SQLToObjects($SQL);
     }
+
 }
