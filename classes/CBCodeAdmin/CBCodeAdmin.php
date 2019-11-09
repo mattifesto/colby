@@ -880,6 +880,20 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_11_09 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'isLoggedIn',
+                    'severity' => 3,
+                    'title' => (
+                        'Replace use of ->isLoggedIn() with ' .
+                        'ColbyUser::currentUserIsLoggedIn()'
+                    ),
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
