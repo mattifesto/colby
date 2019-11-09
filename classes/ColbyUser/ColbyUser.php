@@ -300,19 +300,6 @@ final class ColbyUser {
 
 
     /**
-     * @deprecated 2018_04_17
-     *
-     *      Use ColbyUser::currentUserIsLoggedIn())
-     *
-     * @return bool
-     */
-    public function isLoggedIn() {
-        return !!$this->id;
-    }
-
-
-
-    /**
      * ColbyUser::currentUserIsMemberOfGroup() is a more efficient alternative
      * for the current user.
      *
