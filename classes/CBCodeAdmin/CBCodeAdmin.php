@@ -936,6 +936,21 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_11_09 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'timestampToFriendlyTime',
+                    'severity' => 3,
+                    'title' => (
+                        'Replace use of ' .
+                        'ColbyConvert::timestampToFriendlyTime() with ' .
+                        'client side timestamp conversons.'
+                    ),
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
