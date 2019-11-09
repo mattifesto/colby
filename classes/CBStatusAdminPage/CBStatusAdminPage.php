@@ -5,6 +5,10 @@
  */
 final class CBStatusAdminPage {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
     /**
      * @param string $pageStub
      *
@@ -17,6 +21,7 @@ final class CBStatusAdminPage {
         ];
     }
     /* CBAdmin_menuNamePath() */
+
 
 
     /**
@@ -46,7 +51,7 @@ final class CBStatusAdminPage {
             --- CBUI_title1
             Versions
             ---
-EOT;
+        EOT;
 
         echo CBMessageMarkup::messageToHTML($message);
 
@@ -107,7 +112,10 @@ EOT;
     /* CBAdmin_render() */
 
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -118,6 +126,7 @@ EOT;
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -220,7 +229,7 @@ EOT;
                     The website (.gitigore (code)) file is different than the
                     (colby/setup/gitigore.template.data (code)) file.
 
-EOT;
+                EOT;
 
                 array_push($issues, $message);
             }
@@ -234,7 +243,7 @@ EOT;
                     The website (.htaccess (code)) file is different than the
                     (colby/setup/htaccess.template.data (code)) file.
 
-EOT;
+                EOT;
 
                 array_push($issues, $message);
             }
@@ -249,7 +258,7 @@ EOT;
 
                     Page kind classes should install themselves.
 
-EOT;
+                EOT;
 
                 $issues[] = $message;
             }
@@ -299,7 +308,7 @@ EOT;
                     (CBPageSettings_defaultClassName(code)) as a temporary
                     workaround.
 
-EOT;
+                EOT;
 
                 $issues[] = $message;
             }
@@ -318,6 +327,7 @@ EOT;
     /* CBHTMLOutput_JavaScriptVariables() */
 
 
+
     /**
      * @return [string]
      */
@@ -332,7 +342,10 @@ EOT;
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -348,7 +361,7 @@ EOT;
             GROUP BY    `URI`
             HAVING      COUNT(*) > 1
 
-EOT;
+        EOT;
 
         $URIs = CBDB::SQLToArray($SQL);
 
@@ -363,12 +376,14 @@ EOT;
     /* fetchDuplicateURIMessages() */
 
 
+
     /**
      * @return string
      */
     static function duplicateURIToMessage($URI): string {
         $message = '';
         $URIAsSQL = CBDB::stringToSQL($URI);
+
         $SQL = <<<EOT
 
             SELECT      LOWER(HEX(`CBModels`.`ID`)) AS ID,
@@ -379,7 +394,7 @@ EOT;
                         `published` IS NOT NULL
             ORDER BY    `published` ASC
 
-EOT;
+        EOT;
 
         $data = CBDB::SQLToObjects($SQL);
 
@@ -393,10 +408,12 @@ EOT;
             /{$URI}/
 
             {$message}
-EOT;
+
+        EOT;
 
         return $message;
     }
     /* duplicateURIToMessage() */
+
 }
 /* CBStatusAdminPage */
