@@ -894,6 +894,21 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_11_09 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'isOneOfThe',
+                    'severity' => 3,
+                    'title' => (
+                        'Replace use of ->isOneOfThe() with ' .
+                        'ColbyUser::isMemberOfGroup() or ' .
+                        'ColbyUser::currentUserIsMemberOfGroup()'
+                    ),
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
