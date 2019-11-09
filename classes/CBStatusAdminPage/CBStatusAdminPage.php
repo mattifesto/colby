@@ -136,7 +136,7 @@ EOT;
         $issues = [];
         $duplicateURIMessages = CBStatusAdminPage::fetchDuplicateURIMessages();
 
-        if (ColbyUser::current()->isOneOfThe('Developers')) {
+        if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
             $deprecatedConstants = [
                 ['CBSiteIsBeingDebugged', 'Use site preferences.'],
                 ['CBSiteIsBeingDubugged', 'Use site preferences.'],
