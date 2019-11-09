@@ -14,7 +14,7 @@ final class CBUpgradesForVersion446 {
                     TABLE_NAME = 'CBLog' AND
                     COLUMN_NAME = 'sourceClassName'
 
-EOT;
+        EOT;
 
         if (CBConvert::valueAsInt(CBDB::SQLToValue($SQL)) === 0) {
 
@@ -51,19 +51,28 @@ EOT;
                 DROP INDEX className_ID_serial,
                 DROP INDEX severity_serial,
 
-                CHANGE COLUMN   className   sourceClassName VARCHAR(80) NOT NULL    AFTER severity,
-                CHANGE COLUMN   ID          modelID         BINARY(20)              AFTER message,
-                CHANGE COLUMN   processID   processID       BINARY(20)              AFTER modelID,
+                CHANGE COLUMN   className   sourceClassName VARCHAR(80) NOT NULL
+                    AFTER severity,
 
-                ADD COLUMN                  sourceID        BINARY(20)              AFTER sourceClassName,
+                CHANGE COLUMN   ID          modelID         BINARY(20)
+                    AFTER message,
+
+                CHANGE COLUMN   processID   processID       BINARY(20)
+                    AFTER modelID,
+
+                ADD COLUMN                  sourceID        BINARY(20)
+                    AFTER sourceClassName,
 
                 ADD INDEX sourceClassName_serial (sourceClassName, serial)
 
-EOT;
+            EOT;
 
             Colby::query($SQL);
         }
     }
+    /* CBInstall_install() */
+
+
 
     /**
      * @return [string]
@@ -73,4 +82,5 @@ EOT;
             'CBLogTable'
         ];
     }
+
 }
