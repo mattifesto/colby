@@ -16,6 +16,8 @@ final class CBAdminPageFooterView {
      * @return void
      */
     static function CBView_render(stdClass $model): void {
+        $currentUserID = ColbyUser::getCurrentUserID();
+
         ?>
 
         <div class="CBAdminPageFooterView">
@@ -27,18 +29,25 @@ final class CBAdminPageFooterView {
 
                 <?php
 
-                if (ColbyUser::currentUserIsLoggedIn()) {
-                    $logoutURLAsHTML = cbhtml(ColbyUser::logoutURL());
-                    $userName = ColbyUser::userRow()->facebookName;
-                    $userNameAsHTML = cbhtml($userName);
+                if ($currentUserID !== null) {
+                    $currentUserModel = CBModelCache::fetchModelByID(
+                        $currentUserID
+                    );
+
+                    $logoutURL = ColbyUser::logoutURL();
+
+                    $userName = CBModel::valueToString(
+                        $currentUserModel,
+                        'title'
+                    );
 
                     ?>
 
                     <li>
-                        <?= $userNameAsHTML ?>
+                        <?= cbhtml($userName) ?>
                     </li>
                     <li>
-                        <a href="<?= $logoutURLAsHTML ?>">log out</a>
+                        <a href="<?= cbhtml($logoutURL) ?>">log out</a>
                     </li>
 
                     <?php
