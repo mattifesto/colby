@@ -923,6 +923,19 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_11_09 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'userRow',
+                    'severity' => 3,
+                    'title' => (
+                        'Replace use of userRow() with CBUser models.'
+                    ),
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
