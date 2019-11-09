@@ -210,42 +210,6 @@ final class ColbyConvert {
     /**
      * 2013.05.05
      *
-     * This function looks up the time zone that Facebook gives us for a user
-     * and converts a timestamp to that time zone. However, Colby has since
-     * moved to sending timestamps to the browser for the browser to convert
-     * to whatever it feels the user's current time zone is.
-     *
-     * So, this function is not very useful especially since a user has to be
-     * logged in. Furthermore, for some reason it's outputting in the RFC3399
-     * format which is really not very friendly.
-     *
-     * Most likely, this function should be removed. I'm letting it stay
-     * for now because I need to think more about whether it is potentially
-     * useful. Also, when we remove this we might want to stop storing the
-     * Facebook time zone data since I can't think of a use for that anymore
-     * either.
-     *
-     * @return string
-     */
-    static function timestampToLocalUserTime($timestamp) {
-        $date = new DateTime("@{$timestamp}", new DateTimeZone('UTC'));
-
-        if ($userRow = ColbyUser::userRow()) {
-            $timeZoneName = timezone_name_from_abbr('', $userRow->facebookTimeZone * 3600, false);
-
-            $timeZone = new DateTimeZone($timeZoneName);
-
-            $date->setTimeZone($timeZone);
-        }
-
-        return $date->format(DateTime::RFC3339);
-    }
-
-
-
-    /**
-     * 2013.05.05
-     *
      * At this time Colby still supports IE8 and on that browser the javascript
      * timestamp display does not work. While Colby supports IE8 this function
      * can provide a readable date string for a timespan that's better than
