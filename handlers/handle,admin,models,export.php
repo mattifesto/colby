@@ -1,10 +1,11 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Administrators')) {
+if (!ColbyUser::currentUserIsMemberOfGroup('Administrators')) {
     return include cbsysdir() . '/handlers/handle-authorization-failed.php';
 }
 
-$spec = CBModels::fetchSpecByID($_GET['ID']);
+$modelToExportID = cb_query_string_value('ID');
+$spec = CBModels::fetchSpecByID($modelToExportID);
 $specAsJSON = json_encode($spec, JSON_PRETTY_PRINT);
 $server = $_SERVER['SERVER_NAME'];
 $title = empty(trim($spec->title)) ? 'Untitled Model' : $spec->title;
