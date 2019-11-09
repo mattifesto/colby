@@ -909,6 +909,20 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_11_09 (error)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'fetchUserDataByHash',
+                    'severity' => 3,
+                    'title' => (
+                        'Replace use of ColbyUser::fetchUserDataByHash() ' .
+                        'with CBModels::fetchModelByIDNullable().'
+                    ),
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
@@ -1211,20 +1225,6 @@ final class CBCodeAdmin {
                     'title' => (
                         'Replace use of deprecated CBUIPanel API with ' .
                         'CBUIPanel.displayElement().'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_11_09 (warning)
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'fetchUserDataByHash',
-                    'severity' => 4,
-                    'title' => (
-                        'Replace use of ColbyUser::fetchUserDataByHash() ' .
-                        'with CBModels::fetchModelByIDNullable().'
                     ),
                 ],
 
