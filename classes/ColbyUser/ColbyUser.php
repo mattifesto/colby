@@ -174,41 +174,6 @@ final class ColbyUser {
 
 
     /**
-     * @deprecated use CBUser models
-     *
-     * @param mixed $userHash
-     *
-     * @return object|false
-     *
-     *      Returns an object if the user exists; otherwise false.
-     */
-    static function fetchUserDataByHash($userHash) {
-        if (empty($userHash)) {
-            return false;
-        }
-
-        $userHashAsSQL = CBHex160::toSQL($userHash);
-        $SQL = <<<EOT
-
-            SELECT  `id`,
-                    LOWER(HEX(`hash`)) as `hash`,
-                    `facebookAccessToken`,
-                    `facebookId`,
-                    `facebookName`,
-                    `facebookFirstName`,
-                    `facebookLastName`
-            FROM    `ColbyUsers`
-            WHERE   `hash` = {$userHashAsSQL}
-
-        EOT;
-
-        return CBDB::SQLToObject($SQL);
-    }
-    /* fetchUserDataByHash() */
-
-
-
-    /**
      * @return ID|null
      *
      * Returns the current user ID if a user is logged in; otherwise null.
