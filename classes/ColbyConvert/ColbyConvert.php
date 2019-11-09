@@ -2,6 +2,10 @@
 
 final class ColbyConvert {
 
+    /* -- functions -- -- -- -- -- */
+
+
+
     /**
      * Sanitizes a cents string into a cents int. If the string is not a valid
      * cents string, null is returned.
@@ -19,6 +23,8 @@ final class ColbyConvert {
             return null;
         }
     }
+
+
 
     /**
      * This function converts an amount expressed in dollars with limited
@@ -174,6 +180,8 @@ final class ColbyConvert {
         return addcslashes($text, "\\\n\r\t");
     }
 
+
+
     /**
      * @return string
      */
@@ -242,6 +250,8 @@ final class ColbyConvert {
             date(get_option('time_format'), $localTimeStamp);
     }
 
+
+
     /**
      * @param int? $timestamp
      * @param string? $nullTextContent
@@ -264,6 +274,8 @@ final class ColbyConvert {
             return "<span {$classAttribute} {$nullTextContentAttribute}></span>";
         }
     }
+
+
 
     /**
      * 2013.05.05
@@ -298,6 +310,8 @@ final class ColbyConvert {
 
         return $date->format(DateTime::RFC3339);
     }
+
+
 
     /**
      * 2013.05.05
@@ -336,12 +350,16 @@ final class ColbyConvert {
          return date('F j, Y g:i a T', $timestamp);
     }
 
+
+
     /**
      * @return string
      */
     static function timestampToRFC3339($timestamp) {
         return gmdate(DateTime::RFC3339, $timestamp);
     }
+
+
 
     /**
      * This function should basically be deprecated because the MySQL
@@ -366,10 +384,13 @@ final class ColbyConvert {
         }
     }
 
+
+
     /**
      * @return string
      */
     static function timestampToYearMonth($timestamp) {
         return gmdate('Ym', $timestamp);
     }
+
 }
