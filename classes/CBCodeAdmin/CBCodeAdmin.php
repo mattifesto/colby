@@ -1198,6 +1198,20 @@ final class CBCodeAdmin {
                         'with CBModels::fetchModelByIDNullable().'
                     ),
                 ],
+
+
+                /**
+                 * 2019_11_09 (warning)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'ColbyUsers',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace use of the ColbyUsers table with CBUser ' .
+                        'models.'
+                    ),
+                ],
             ]
         );
     }
