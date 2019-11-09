@@ -4,6 +4,8 @@ final class CBCodeAdmin {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
+
+
     /**
      * @param object $args
      *
@@ -19,6 +21,7 @@ final class CBCodeAdmin {
     /* CBAjax_search() */
 
 
+
     /**
      * @return string
      */
@@ -27,7 +30,10 @@ final class CBCodeAdmin {
     }
 
 
+
     /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -40,6 +46,7 @@ final class CBCodeAdmin {
     }
 
 
+
     /**
      * @return void
      */
@@ -48,7 +55,10 @@ final class CBCodeAdmin {
     }
 
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -59,6 +69,8 @@ final class CBCodeAdmin {
         ];
     }
 
+
+
     /**
      * @return [string]
      */
@@ -67,6 +79,7 @@ final class CBCodeAdmin {
             Colby::flexpath(__CLASS__, 'v518.js', cbsysurl()),
         ];
     }
+
 
 
     /**
@@ -80,6 +93,7 @@ final class CBCodeAdmin {
             ],
         ];
     }
+
 
 
     /**
@@ -97,7 +111,10 @@ final class CBCodeAdmin {
     }
 
 
+
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
@@ -123,6 +140,7 @@ final class CBCodeAdmin {
     /* CBInstall_install() */
 
 
+
     /**
      * @return [string]
      */
@@ -133,7 +151,10 @@ final class CBCodeAdmin {
     }
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * You can create a class in each library in which to implement the
@@ -223,6 +244,7 @@ final class CBCodeAdmin {
         return $output;
     }
     /* search() */
+
 
 
     /**
@@ -1160,6 +1182,20 @@ final class CBCodeAdmin {
                     'title' => (
                         'Replace use of deprecated CBUIPanel API with ' .
                         'CBUIPanel.displayElement().'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_11_09 (warning)
+                 */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'fetchUserDataByHash',
+                    'severity' => 4,
+                    'title' => (
+                        'Replace use of ColbyUser::fetchUserDataByHash() ' .
+                        'with CBModels::fetchModelByIDNullable().'
                     ),
                 ],
             ]
