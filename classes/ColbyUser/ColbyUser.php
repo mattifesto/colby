@@ -174,11 +174,13 @@ final class ColbyUser {
 
 
     /**
+     * @deprecated use CBUser models
+     *
      * @param mixed $userHash
      *
      * @return object|false
      *
-     *      Returns an object is the user is logged in; otherwise false.
+     *      Returns an object if the user exists; otherwise false.
      */
     static function fetchUserDataByHash($userHash) {
         if (empty($userHash)) {
@@ -701,14 +703,14 @@ final class ColbyUser {
 
 
     /**
-     * @deprecated use ColbyUser::fetchUserDataByHash()
+     * @deprecated use CBUser models
      *
      * @param int $userId
      *
      *  If $userId is null the method returns the user row for the currently
      *  logged in user or null of nobody is logged in.
      *
-     * @return stdClass | null
+     * @return object|null
      *
      *  Returns the user row for a given user id. If the userId doesn't exist
      *  null is returned.
