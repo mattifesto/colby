@@ -1,6 +1,6 @@
 <?php
 
-if (!ColbyUser::current()->isOneOfThe('Administrators')) {
+if (!ColbyUser::currentUserIsMemberOfGroup('Administrators')) {
     return include cbsysdir() . '/handlers/handle-authorization-failed.php';
 }
 
@@ -14,23 +14,25 @@ if (empty($version)) {
 }
 
 if ($model === false) {
-    $IDAsHTML = CBMessageMarkup::stringToMarkup($ID);
-    $message = <<<EOT
+    $IDAsHTML = CBMessageMarkup::stringToMessage($ID);
+
+    $cbmessage = <<<EOT
 
         There is no model in the CBModels table for a page with the ID
         ({$IDAsHTML} (code)).
 
-EOT;
+    EOT;
 
     $spec = CBModelTemplateCatalog::fetchLivePageTemplate();
     $spec->title = 'Page Preview Error';
+
     $spec->sections = [
         (object)[
             'className' => 'CBPageTitleAndDescriptionView',
         ],
         (object)[
             'className' => 'CBMessageView',
-            'markup' => $message,
+            'markup' => $cbmessage,
         ]
     ];
 
