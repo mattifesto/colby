@@ -1,7 +1,7 @@
 <?php
 
 $spec = CBModelTemplateCatalog::fetchLivePageTemplate();
-$currentUserIsLoggedIn = ColbyUser::current()->isLoggedIn();
+$currentUserIsLoggedIn = ColbyUser::currentUserIsLoggedIn();
 $spec->title = $currentUserIsLoggedIn ? 'Authorization Failed' : 'Please Log In';
 $spec->description = 'You are not authorized to view this page.';
 
