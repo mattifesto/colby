@@ -350,9 +350,10 @@ final class ColbyUser {
         $sqlFacebookName = "'{$sqlFacebookName}'";
 
         /**
-         * First name, last name, and time zone are deprecated.
-         * TODO: Remove them from the table, they are not used anyway. This
-         * table needs to updated to store JSON or use a model.
+         * @TODO
+         *
+         *      The ColbyUsers table is deprecated and will be removed. First
+         *      name, last name, and time zone are deprecated.
          */
 
         Colby::query('START TRANSACTION');
