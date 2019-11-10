@@ -680,7 +680,6 @@ EOT;
         $thumbnailURLAsSQL = 'NULL';
         $searchTextAsSQL = 'NULL';
         $publishedAsSQL = 'NULL';
-        $publishedByAsSQL = 'NULL';
         $publishedMonthAsSQL = 'NULL';
 
         CBDataStore::deleteByID($ID);
@@ -701,11 +700,10 @@ EOT;
                 {$thumbnailURLAsSQL},
                 {$searchTextAsSQL},
                 {$publishedAsSQL},
-                {$publishedByAsSQL},
                 {$publishedMonthAsSQL}
             )
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
 
