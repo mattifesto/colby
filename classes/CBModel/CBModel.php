@@ -192,7 +192,11 @@ final class CBModel {
      *      Returns an int for numeric arrays and a string for associative
      *      arrays. Returns null if no match is found.
      */
-    static function indexOf(array $models, string $propertyName, $propertyValue) {
+    static function indexOf(
+        array $models,
+        string $propertyName,
+        $propertyValue
+    ) {
         foreach ($models as $index => $model) {
             $value = CBModel::value($model, $propertyName);
 
@@ -203,6 +207,7 @@ final class CBModel {
 
         return null;
     }
+
 
 
     /**
@@ -264,6 +269,7 @@ final class CBModel {
         return $ID;
     }
     /* toID() */
+
 
 
     /**
@@ -501,11 +507,23 @@ final class CBModel {
 
         if (is_callable($function = "{$className}::CBModel_toSearchText")) {
             $text = call_user_func($function, $model);
-        } else if (is_callable($function = "{$className}::modelToSearchText")) { // deprecated
+        }
+
+        /* deprecated */
+        else if (is_callable($function = "{$className}::modelToSearchText")) {
             $text = call_user_func($function, $model);
         }
 
-        return implode(' ', array_filter([$text, $className, $ID]));
+        return implode(
+            ' ',
+            array_filter(
+                [
+                    $text,
+                    $className,
+                    $ID,
+                ]
+            )
+        );
     }
 
 
@@ -618,7 +636,12 @@ final class CBModel {
      *
      * @return mixed
      */
-    static function value($model, $keyPath, $default = null, callable $transform = null) {
+    static function value(
+        $model,
+        $keyPath,
+        $default = null,
+        callable $transform = null
+    ) {
         $keys = explode('.', $keyPath);
         $propertyName = array_pop($keys);
 
@@ -640,20 +663,27 @@ final class CBModel {
             return $default;
         }
     }
+    /* value() */
+
+
 
     /**
      * This is a convenience function for:
      *
-     *      CBConvert::valueAsHex160(CBModel::value(...))
+     *      CBConvert::valueAsID(CBModel::value(...))
      *
      * @param mixed $model
      * @param string $keyPath
      *
-     * @return hex160|null
+     * @return string|null
      */
     static function valueAsID($model, string $keyPath): ?string {
-        return CBConvert::valueAsHex160(CBModel::value($model, $keyPath));
+        return CBConvert::valueAsID(
+            CBModel::value($model, $keyPath)
+        );
     }
+
+
 
     /**
      * This is a convenience function for:
@@ -666,8 +696,12 @@ final class CBModel {
      * @return ?int
      */
     static function valueAsInt($model, string $keyPath): ?int {
-        return CBConvert::valueAsInt(CBModel::value($model, $keyPath));
+        return CBConvert::valueAsInt(
+            CBModel::value($model, $keyPath)
+        );
     }
+
+
 
     /**
      * This is a convenience function for:
@@ -679,9 +713,18 @@ final class CBModel {
      *
      * @return ?model
      */
-    static function valueAsModel($model, string $keyPath, array $classNames = []): ?stdClass {
-        return CBConvert::valueAsModel(CBModel::value($model, $keyPath), $classNames);
+    static function valueAsModel(
+        $model,
+        string $keyPath,
+        array $classNames = []
+    ): ?stdClass {
+        return CBConvert::valueAsModel(
+            CBModel::value($model, $keyPath),
+            $classNames
+        );
     }
+
+
 
     /**
      * @deprecated use CBModel::valueAsName()
@@ -692,8 +735,11 @@ final class CBModel {
      * @return ?string
      */
     static function valueAsMoniker($model, string $keyPath): ?string {
-        return CBConvert::valueAsMoniker(CBModel::value($model, $keyPath));
+        return CBConvert::valueAsMoniker(
+            CBModel::value($model, $keyPath)
+        );
     }
+
 
 
     /**
@@ -707,6 +753,7 @@ final class CBModel {
             CBModel::value($model, $keyPath)
         );
     }
+
 
 
     /**
@@ -724,6 +771,7 @@ final class CBModel {
     }
 
 
+
     /**
      * This is a convenience function for:
      *
@@ -735,8 +783,12 @@ final class CBModel {
      * @return ?float
      */
     static function valueAsNumber($model, string $keyPath): ?float {
-        return CBConvert::valueAsNumber(CBModel::value($model, $keyPath));
+        return CBConvert::valueAsNumber(
+            CBModel::value($model, $keyPath)
+        );
     }
+
+
 
     /**
      * This is a convenience function for:
@@ -749,8 +801,12 @@ final class CBModel {
      * @return ?object
      */
     static function valueAsObject($model, string $keyPath): ?stdClass {
-        return CBConvert::valueAsObject(CBModel::value($model, $keyPath));
+        return CBConvert::valueAsObject(
+            CBModel::value($model, $keyPath)
+        );
     }
+
+
 
     /**
      * This is a convenience function for:
@@ -763,8 +819,12 @@ final class CBModel {
      * @return [mixed]
      */
     static function valueToArray($model, string $keyPath): array {
-        return CBConvert::valueToArray(CBModel::value($model, $keyPath));
+        return CBConvert::valueToArray(
+            CBModel::value($model, $keyPath)
+        );
     }
+
+
 
     /**
      * This is a convenience function for:
@@ -780,8 +840,12 @@ final class CBModel {
      * @return bool
      */
     static function valueToBool($model, string $keyPath): bool {
-        return CBConvert::valueToBool(CBModel::value($model, $keyPath));
+        return CBConvert::valueToBool(
+            CBModel::value($model, $keyPath)
+        );
     }
+
+
 
     /**
      * @param mixed $model
@@ -789,11 +853,16 @@ final class CBModel {
      *
      * @return [string]
      */
-    static function valueToCommaSeparatedValues($model, string $keyPath): array {
+    static function valueToCommaSeparatedValues(
+        $model,
+        string $keyPath
+    ): array {
         return CBConvert::valueToCommaSeparatedValues(
             CBModel::value($model, $keyPath)
         );
     }
+
+
 
     /**
      * This is a convenience function for:
@@ -806,8 +875,11 @@ final class CBModel {
      * @return object
      */
     static function valueToObject($model, string $keyPath): stdClass {
-        return CBConvert::valueToObject(CBModel::value($model, $keyPath));
+        return CBConvert::valueToObject(
+            CBModel::value($model, $keyPath)
+        );
     }
+
 
 
     /**
@@ -823,8 +895,11 @@ final class CBModel {
      * @return [string]
      */
     static function valueToNames($model, string $keyPath): array {
-        return CBConvert::valueToNames(CBModel::value($model, $keyPath));
+        return CBConvert::valueToNames(
+            CBModel::value($model, $keyPath)
+        );
     }
+
 
 
     /**
@@ -838,6 +913,9 @@ final class CBModel {
      * @return string
      */
     static function valueToString($model, string $keyPath): string {
-        return CBConvert::valueToString(CBModel::value($model, $keyPath));
+        return CBConvert::valueToString(
+            CBModel::value($model, $keyPath)
+        );
     }
+
 }
