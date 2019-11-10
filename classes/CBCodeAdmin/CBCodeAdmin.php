@@ -967,6 +967,22 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_11_10 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        The ColbyUser class can no longer construct instances.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'ColbyUser::current\(',
+                    'severity' => 3,
+                    'title' => 'ColbyUser::current()',
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
