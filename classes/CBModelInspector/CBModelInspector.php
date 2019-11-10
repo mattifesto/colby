@@ -296,20 +296,21 @@ final class CBModelInspector {
 
         $SQL = <<<EOT
 
-            SELECT  LOWER(HEX(`archiveID`)) as `archiveID`,
-                    `className`,
-                    `classNameForKind`,
-                    `created`,
-                    `iteration`,
-                    `modified`,
-                    `URI`,
-                    `thumbnailURL`,
-                    `searchText`,
-                    `published`,
-                    `publishedBy`,
-                    `keyValueData`
-            FROM    `ColbyPages`
-            WHERE   `archiveId` = {$IDAsSQL}
+            SELECT  LOWER(HEX(archiveID)) as archiveID,
+                    className,
+                    classNameForKind,
+                    created,
+                    iteration,
+                    modified,
+                    URI,
+                    thumbnailURL,
+                    searchText,
+                    published,
+                    keyValueData
+
+            FROM    ColbyPages
+
+            WHERE   archiveId = {$IDAsSQL}
 
         EOT;
 
