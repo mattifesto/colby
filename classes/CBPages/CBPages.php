@@ -8,10 +8,35 @@
  */
 class CBPages {
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return void
      */
-    static function createPagesTable($args = []): void {
+    static function CBInstall_install(): void {
+        CBPages::createPagesTable();
+
+        CBPages::createPagesTable(
+            [
+                'name' => 'CBPagesInTheTrash',
+            ]
+        );
+    }
+
+
+
+    /* -- functions -- -- -- -- -- */
+
+
+
+    /**
+     * @return void
+     */
+    static function createPagesTable(
+        $args = []
+    ): void {
         $name = 'ColbyPages'; $temporary = false;
         extract($args, EXTR_IF_EXISTS);
 
@@ -20,6 +45,7 @@ class CBPages {
         }
 
         $options = $temporary ? 'TEMPORARY' : '';
+
         $SQL = <<<EOT
 
             CREATE {$options} TABLE IF NOT EXISTS `{$name}` (
@@ -36,11 +62,14 @@ class CBPages {
                 `published`             BIGINT,
                 `publishedBy`           BIGINT UNSIGNED,
                 `publishedMonth`        MEDIUMINT,
+
                 PRIMARY KEY     (archiveID),
+
                 KEY             `URI_published` (
                                     `URI`,
                                     `published`
                                 ),
+
                 KEY             `classNameForKind_publishedMonth_published` (
                                     `classNameForKind`,
                                     `publishedMonth`,
@@ -48,30 +77,36 @@ class CBPages {
                                 ),
 
                 /* indexes used by the admin interface */
+
                 KEY             `created` (
                                     `created`
                                 ),
+
                 KEY             `modified` (
                                     `modified`
                                 ),
+
                 KEY             `classNameForKind_created` (
                                     `classNameForKind`,
                                     `created`
                                 ),
+
                 KEY             `classNameForKind_modified` (
                                     `classNameForKind`,
                                     `modified`
                                 )
+
             )
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
             COLLATE=utf8mb4_unicode_520_ci
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
     }
     /* createPagesTable() */
+
 
 
     /**
@@ -97,6 +132,7 @@ EOT;
     }
 
 
+
     /**
      * Deletes rows from the ColbyPagesIntheTrash table.
      *
@@ -120,6 +156,7 @@ EOT;
         );
     }
     /* deletePagesFromTrashByID() */
+
 
 
     /**
@@ -148,19 +185,6 @@ EOT;
     }
 
 
-    /**
-     * @return void
-     */
-    static function CBInstall_install(): void {
-        CBPages::createPagesTable();
-
-        CBPages::createPagesTable(
-            [
-                'name' => 'CBPagesInTheTrash',
-            ]
-        );
-    }
-
 
     /**
      * Sometimes pages are considered "well-known" or "special" because they
@@ -188,6 +212,7 @@ EOT;
 
         return CBDB::SQLToArray($SQL);
     }
+
 
 
     /**
@@ -297,6 +322,7 @@ EOT;
     /* modelToRowValues() */
 
 
+
     /**
      * @return void
      */
@@ -333,6 +359,7 @@ EOT;
     /* moveRowWithDataStoreIDToTheTrash() */
 
 
+
     /**
      * @return void
      */
@@ -360,13 +387,14 @@ EOT;
             FROM    `CBPagesInTheTrash`
             WHERE   `archiveID` = {$archiveIDForSQL}
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
 
         CBPages::deletePagesFromTrashByID([$dataStoreID]);
     }
     /* recoverRowWithDataStoreIDFromTheTrash() */
+
 
 
     /**
@@ -379,12 +407,14 @@ EOT;
     }
 
 
+
     /**
      * @return string
      */
     static function CBAjax_moveToTrash_group(): string {
         return 'Administrators';
     }
+
 
 
     /**
@@ -422,15 +452,17 @@ EOT;
                 )
                 VALUES {$values}
 
-EOT;
+            EOT;
 
             Colby::query($SQL);
 
             $SQL = <<<EOT
 
                 UPDATE  `ColbyPages`            AS `p`
+
                 JOIN    `CBPagesTemporary`      AS `t`
                             ON `p`.`archiveID`  = `t`.`archiveID`
+
                 SET     `p`.`keyValueData`      = `t`.`keyValueData`,
                         `p`.`className`         = `t`.`className`,
                         `p`.`classNameForKind`  = `t`.`classNameForKind`,
@@ -444,54 +476,61 @@ EOT;
                         `p`.`publishedBy`       = `t`.`publishedBy`,
                         `p`.`publishedMonth`    = `t`.`publishedMonth`
 
-EOT;
+            EOT;
 
             Colby::query($SQL);
 
             $SQL = <<<EOT
 
-            INSERT INTO `ColbyPages` (
-                `archiveID`,
-                `keyValueData`,
-                `className`,
-                `classNameForKind`,
-                `created`,
-                `iteration`,
-                `modified`,
-                `URI`,
-                `thumbnailURL`,
-                `searchText`,
-                `published`,
-                `publishedBy`,
-                `publishedMonth`
-            )
-            SELECT
-                `t`.`archiveID`,
-                `t`.`keyValueData`,
-                `t`.`className`,
-                `t`.`classNameForKind`,
-                `t`.`created`,
-                `t`.`iteration`,
-                `t`.`modified`,
-                `t`.`URI`,
-                `t`.`thumbnailURL`,
-                `t`.`searchText`,
-                `t`.`published`,
-                `t`.`publishedBy`,
-                `t`.`publishedMonth`
-            FROM        `CBPagesTemporary`  AS `t`
-            LEFT JOIN   `ColbyPages`        AS `p`
-                            ON `t`.`archiveID` = `p`.`archiveID`
-            WHERE       `p`.`archiveID` IS NULL
+                INSERT INTO `ColbyPages` (
+                    `archiveID`,
+                    `keyValueData`,
+                    `className`,
+                    `classNameForKind`,
+                    `created`,
+                    `iteration`,
+                    `modified`,
+                    `URI`,
+                    `thumbnailURL`,
+                    `searchText`,
+                    `published`,
+                    `publishedBy`,
+                    `publishedMonth`
+                )
 
-EOT;
+                SELECT
+                    `t`.`archiveID`,
+                    `t`.`keyValueData`,
+                    `t`.`className`,
+                    `t`.`classNameForKind`,
+                    `t`.`created`,
+                    `t`.`iteration`,
+                    `t`.`modified`,
+                    `t`.`URI`,
+                    `t`.`thumbnailURL`,
+                    `t`.`searchText`,
+                    `t`.`published`,
+                    `t`.`publishedBy`,
+                    `t`.`publishedMonth`
+
+                FROM        `CBPagesTemporary`  AS `t`
+
+                LEFT JOIN   `ColbyPages`        AS `p`
+                                ON `t`.`archiveID` = `p`.`archiveID`
+
+                WHERE       `p`.`archiveID` IS NULL
+
+            EOT;
 
             Colby::query($SQL);
         } finally {
-            Colby::query("DROP TEMPORARY TABLE `CBPagesTemporary`");
+            Colby::query(
+                "DROP TEMPORARY TABLE `CBPagesTemporary`"
+            );
         }
     }
     /* save() */
+
 
 
     /**
@@ -500,7 +539,13 @@ EOT;
      * @return ?string
      */
     static function searchClauseFromString($string): ?string {
-        $words = preg_split('/[\s,]+/', $string, null, PREG_SPLIT_NO_EMPTY);
+        $words = preg_split(
+            '/[\s,]+/',
+            $string,
+            null,
+            PREG_SPLIT_NO_EMPTY
+        );
+
         $clauses = [];
 
         foreach ($words as $word) {
@@ -518,6 +563,7 @@ EOT;
         }
     }
     /* searchClauseFromString() */
+
 
 
     /**
@@ -545,4 +591,5 @@ EOT;
         return implode('/', $stubs);
     }
     /* stringToDencodedURIPath() */
+
 }
