@@ -4,41 +4,56 @@ final class CBUsers {
 
     /* -- CBInstall interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return void
      */
     static function CBInstall_install(): void {
         $SQL = <<<EOT
 
-            CREATE TABLE IF NOT EXISTS `ColbyUsers` (
-                `id`                            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-                `hash`                          BINARY(20) NOT NULL,
-                `facebookId`                    BIGINT UNSIGNED NOT NULL,
-                `facebookAccessToken`           VARCHAR(255),
-                `facebookAccessExpirationTime`  INT UNSIGNED,
-                `facebookName`                  VARCHAR(100) NOT NULL,
-                `facebookFirstName`             VARCHAR(50) NOT NULL,
-                `facebookLastName`              VARCHAR(50) NOT NULL,
-                `facebookTimeZone`              TINYINT NOT NULL DEFAULT '0',
-                `hasBeenVerified`               BIT(1) NOT NULL DEFAULT b'0',
+            CREATE TABLE IF NOT EXISTS ColbyUsers (
+                id                              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+                hash                            BINARY(20) NOT NULL,
+                facebookId                      BIGINT UNSIGNED NOT NULL,
+                facebookAccessToken             VARCHAR(255),
+                facebookAccessExpirationTime    INT UNSIGNED,
+                facebookName                    VARCHAR(100) NOT NULL,
+                facebookFirstName               VARCHAR(50) NOT NULL,
+                facebookLastName                VARCHAR(50) NOT NULL,
+                facebookTimeZone                TINYINT NOT NULL DEFAULT '0',
+                hasBeenVerified                 BIT(1) NOT NULL DEFAULT b'0',
 
-                PRIMARY KEY (`id`),
-                UNIQUE KEY `facebookId` (`facebookId`),
-                UNIQUE KEY `hash` (`hash`),
-                KEY `hasBeenVerified_facebookLastName` (`hasBeenVerified`, `facebookLastName`)
+                PRIMARY KEY (id),
+
+                UNIQUE KEY facebookId (
+                    facebookId
+                ),
+
+                UNIQUE KEY hash (
+                    hash
+                ),
+
+                KEY hasBeenVerified_facebookLastName (
+                    hasBeenVerified,
+                    facebookLastName
+                )
             )
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
             COLLATE=utf8mb4_unicode_520_ci
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
     }
     /* CBInstall_install() */
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @param string $name
@@ -60,25 +75,27 @@ EOT;
 
         $SQL = <<<EOT
 
-            CREATE TABLE IF NOT EXISTS `ColbyUsersWhoAre{$userGroupName}` (
-                `userId`    BIGINT UNSIGNED NOT NULL,
-                `added`     DATETIME NOT NULL,
+            CREATE TABLE IF NOT EXISTS ColbyUsersWhoAre{$userGroupName} (
+                userId    BIGINT UNSIGNED NOT NULL,
+                added     DATETIME NOT NULL,
 
-                PRIMARY KEY (`userId`),
-                CONSTRAINT `ColbyUsersWhoAre{$userGroupName}_userId`
-                    FOREIGN KEY (`userId`)
-                    REFERENCES `ColbyUsers` (`id`)
+                PRIMARY KEY (userId),
+
+                CONSTRAINT ColbyUsersWhoAre{$userGroupName}_userId
+                    FOREIGN KEY (userId)
+                    REFERENCES ColbyUsers (id)
                     ON DELETE CASCADE
             )
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
             COLLATE=utf8mb4_unicode_520_ci
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
     }
     /* installUserGroup() */
+
 
 
     /**
@@ -101,4 +118,5 @@ EOT;
         );
     }
     /* uninstallUserGroup() */
+
 }
