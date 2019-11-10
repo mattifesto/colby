@@ -60,7 +60,6 @@ class CBPages {
                 `thumbnailURL`          VARCHAR(200),
                 `searchText`            LONGTEXT,
                 `published`             BIGINT,
-                `publishedBy`           BIGINT UNSIGNED,
                 `publishedMonth`        MEDIUMINT,
 
                 PRIMARY KEY     (archiveID),
@@ -267,19 +266,11 @@ EOT;
                 'intval'
             );
 
-            $publishedByAsSQL = CBModel::value(
-                $model,
-                'publishedBy',
-                'NULL',
-                'intval'
-            );
-
             $publishedMonthAsSQL = ColbyConvert::timestampToYearMonth(
                 $publishedAsSQL
             );
         } else {
             $publishedAsSQL = 'NULL';
-            $publishedByAsSQL = 'NULL';
             $publishedMonthAsSQL = 'NULL';
         }
 
@@ -314,7 +305,6 @@ EOT;
             "$thumbnailURLAsSQL, " .
             "$searchTextAsSQL, " .
             "$publishedAsSQL, " .
-            "$publishedByAsSQL, " .
             "$publishedMonthAsSQL" .
             ")"
         );
@@ -343,7 +333,6 @@ EOT;
                 `thumbnailURL`,
                 `searchText`,
                 `published`,
-                `publishedBy`,
                 `publishedMonth`
             )
             SELECT  *
@@ -380,7 +369,6 @@ EOT;
                 `thumbnailURL`,
                 `searchText`,
                 `published`,
-                `publishedBy`,
                 `publishedMonth`
             )
             SELECT  *
@@ -447,7 +435,6 @@ EOT;
                     `thumbnailURL`,
                     `searchText`,
                     `published`,
-                    `publishedBy`,
                     `publishedMonth`
                 )
                 VALUES {$values}
@@ -473,7 +460,6 @@ EOT;
                         `p`.`thumbnailURL`      = `t`.`thumbnailURL`,
                         `p`.`searchText`        = `t`.`searchText`,
                         `p`.`published`         = `t`.`published`,
-                        `p`.`publishedBy`       = `t`.`publishedBy`,
                         `p`.`publishedMonth`    = `t`.`publishedMonth`
 
             EOT;
@@ -494,7 +480,6 @@ EOT;
                     `thumbnailURL`,
                     `searchText`,
                     `published`,
-                    `publishedBy`,
                     `publishedMonth`
                 )
 
@@ -510,7 +495,6 @@ EOT;
                     `t`.`thumbnailURL`,
                     `t`.`searchText`,
                     `t`.`published`,
-                    `t`.`publishedBy`,
                     `t`.`publishedMonth`
 
                 FROM        `CBPagesTemporary`  AS `t`
