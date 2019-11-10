@@ -6,10 +6,6 @@ define('CBUserCookieName', 'colby-user-encrypted-data');
 
 final class ColbyUser {
 
-    private $hash = null;
-    private $id = null;
-    private $groups = array();
-
     private static $currentUser = null;
 
     /**
@@ -32,30 +28,6 @@ final class ColbyUser {
     // even if the database row is altered
 
     private static $currentUserRow = null;
-
-
-
-    /**
-     * @return ColbyUser
-     */
-    private function __construct() {
-    }
-
-
-
-    /**
-     * @return ColbyUser
-     */
-    static function current() {
-        if (!ColbyUser::$currentUser) {
-            $user = new ColbyUser();
-            $user->hash = ColbyUser::$currentUserID;
-            $user->id = ColbyUser::$currentUserNumericID;
-            ColbyUser::$currentUser = $user;
-        }
-
-        return ColbyUser::$currentUser;
-    }
 
 
 
