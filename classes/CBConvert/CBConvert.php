@@ -4,6 +4,8 @@ final class CBConvert {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
@@ -13,7 +15,11 @@ final class CBConvert {
         ];
     }
 
+
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @param mixed cents
@@ -63,6 +69,9 @@ final class CBConvert {
             substr_replace($centsAsString, '.', -2, 0)
         );
     }
+    /* centsToDollars() */
+
+
 
     /**
      * @BUG 2019_01_31
@@ -98,6 +107,8 @@ final class CBConvert {
 
         return "\"{$message}\" in {$basename} at line {$line}";
     }
+    /* javaScriptErrorToMessage() */
+
 
 
     /**
@@ -121,6 +132,7 @@ final class CBConvert {
         }
     }
     /* JSONToValue() */
+
 
 
     /**
@@ -176,6 +188,8 @@ final class CBConvert {
         return CBConvert::stringToCSSValue($string);
     }
 
+
+
     /**
      * Determines whether a string is a CSS color. If it is then it is sanitized
      * and returned; if not then null is returned.
@@ -189,6 +203,8 @@ final class CBConvert {
         return CBConvert::stringToCSSValue($string);
     }
 
+
+
     /**
      * Sanitizes a string to be used as a CSS value. If the string is not a CSS
      * value null is returned.
@@ -199,6 +215,8 @@ final class CBConvert {
         $value = str_replace([';', '"', "'"], '', trim($string));
         return empty($value) ? null : $value;
     }
+
+
 
     /**
      * @NOTE needs testing
@@ -300,6 +318,7 @@ final class CBConvert {
             preg_replace($patterns, $replacements, $string)
         );
     }
+    /* stringToStub() */
 
 
 
@@ -321,6 +340,8 @@ final class CBConvert {
         return implode('/', $stubs);
     }
 
+
+
     /**
      * Returns the name of the function where the error occurred.
      *
@@ -338,6 +359,8 @@ final class CBConvert {
 
         return "{$class}{$type}{$function}()\n";
     }
+
+
 
     /**
      * Creates a string with the thrown message and reasonably helpful
@@ -359,6 +382,8 @@ final class CBConvert {
 
         return "\"{$message}\" in {$basename} line {$line}";
     }
+
+
 
     /**
      * @param Throwable $throwable
@@ -388,6 +413,9 @@ final class CBConvert {
                 $innerThrowable->getTraceAsString();
         }
     }
+    /* throwableToStackTrace() */
+
+
 
     /**
      * @param array $trace
@@ -396,10 +424,23 @@ final class CBConvert {
      */
     static function traceToString(array $trace) {
         foreach ($trace as $item) {
-            $file = empty($item['file']) ? '(unspecified)' : $item['file'];
+            $file =
+            empty($item['file']) ?
+            '(unspecified)' :
+            $item['file'];
+
             $basename = basename($file);
-            $function = empty($item['function']) ? '(unspecified)' : $item['function'];
-            $line = empty($item['line']) ? '(unspecified)' : $item['line'];
+
+            $function =
+            empty($item['function']) ?
+            '(unspecified)' :
+            $item['function'];
+
+            $line =
+            empty($item['line']) ?
+            '(unspecified)' :
+            $item['line'];
+
             $class = '';
             $type = '';
 
@@ -409,11 +450,22 @@ final class CBConvert {
                 $function = "{$function}()";
             }
 
-            $lines[] = "{$class}{$type}{$function}\nwas called from\n{$basename}\non line {$line}";
+            $lines[] = (
+                "{$class}{$type}{$function}\n" .
+                "was called from\n" .
+                "{$basename}\n" .
+                "on line {$line}"
+            );
         }
 
-        return implode("\n\n", $lines);
+        return implode(
+            "\n\n",
+            $lines
+        );
     }
+    /* traceToString() */
+
+
 
     /**
      * @param string $value
@@ -437,6 +489,7 @@ final class CBConvert {
         return $value;
     }
     /* truncate() */
+
 
 
     /**
@@ -475,6 +528,8 @@ final class CBConvert {
         }
     }
 
+
+
     /**
      * @deprecated use CBConvert::valueAsID()
      *
@@ -485,6 +540,8 @@ final class CBConvert {
     static function valueAsHex160($value): ?string {
         return CBConvert::valueAsID($value);
     }
+
+
 
     /**
      * This function returns an integer if the $value parameter can reasonably
@@ -523,6 +580,8 @@ final class CBConvert {
 
         return null;
     }
+
+
 
     /**
      * @param mixed $value
@@ -572,6 +631,8 @@ final class CBConvert {
         }
     }
 
+
+
     /**
      * @deprecated use CBConvert::valueAsName()
      *
@@ -591,6 +652,8 @@ final class CBConvert {
             return null;
         }
     }
+
+
 
     /**
      * A "name" is a simple string that can be used as an identifier in many
@@ -646,7 +709,10 @@ final class CBConvert {
         /**
          * this code will make preg_match() return false:
          *
-         * $pregMatchReturnValue = preg_match('/(?:\D+|<\d+>)*[!?]/', 'foobar foobar foobar');
+         * $pregMatchReturnValue = preg_match(
+         *      '/(?:\D+|<\d+>)*[!?]/',
+         *      'foobar foobar foobar'
+         *  );
          */
 
         $pregMatchReturnValue = preg_match(
@@ -688,7 +754,7 @@ final class CBConvert {
                     ---
                 ---
 
-EOT;
+            EOT;
 
             throw new CBException(
                 'CBConvert::valueAsName() failed',
@@ -696,6 +762,9 @@ EOT;
             );
         }
     }
+    /* valueAsName() */
+
+
 
     /**
      * This function parses a string of comma and/or white space separated set
@@ -774,6 +843,7 @@ EOT;
     /* valueAsNames() */
 
 
+
     /**
      * Determines whether the value parameter can reasonably be interpreted to
      * be a number. It always returns a float so that it can closely match the
@@ -839,6 +909,9 @@ EOT;
 
         return null;
     }
+    /* valueAsNumber() */
+
+
 
     /**
      * @param mixed $value
@@ -856,6 +929,8 @@ EOT;
         }
     }
 
+
+
     /**
      * @param mixed $value
      *
@@ -871,6 +946,8 @@ EOT;
 
         return [];
     }
+
+
 
     /**
      * @param mixed $value
@@ -893,6 +970,8 @@ EOT;
 
         return [];
     }
+
+
 
     /**
      * This function exists to simplify boolean conversions, especially with
@@ -941,6 +1020,9 @@ EOT;
             return true;
         }
     }
+    /* valueToBool() */
+
+
 
     /**
      * @NOTE 2018_12_06
@@ -990,6 +1072,8 @@ EOT;
         return str_getcsv($csv);
     }
 
+
+
     /**
      * @deprecated use CBConvert::valueAsNames()
      *
@@ -1025,6 +1109,8 @@ EOT;
         return $names;
     }
 
+
+
     /**
      * @param mixed $value
      *
@@ -1041,6 +1127,8 @@ EOT;
         }
     }
 
+
+
     /**
      * NOTE 2018.01.06
      *
@@ -1056,14 +1144,21 @@ EOT;
         return ($string === '') ? null : $string;
     }
 
+
+
     /**
      * @param mixed $value
      *
      * @return string
      */
     static function valueToPrettyJSON($value): string {
-        return json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+        return json_encode(
+            $value,
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+        );
     }
+
+
 
     /**
      * This function exists because PHP will complain at various levels when
@@ -1086,4 +1181,5 @@ EOT;
             return '';
         }
     }
+
 }
