@@ -1,8 +1,9 @@
 "use strict";
 /* jshint strict: global */
-/* jshint esversion: 6 */
+/* jshint esversion: 8 */
 /* exported CBCodeAdmin */
 /* global
+    CBErrorHandler,
     CBMessageMarkup,
     CBModel,
     CBUI,
@@ -13,12 +14,14 @@
     CBCodeAdmin_searches,
 */
 
+
+
 var CBCodeAdmin = {
 
     /**
      * @return undefined
      */
-    init: function () {
+    async init() {
         let elements = document.getElementsByClassName("CBCodeAdmin");
 
         if (elements.length === 0) {
@@ -31,72 +34,77 @@ var CBCodeAdmin = {
             init_createOptionsElement()
         );
 
-        let promise = Promise.resolve();
+        for (
+            let index = 0;
+            index < CBCodeAdmin_searches.length;
+            index += 1
+        ) {
+            let search = CBCodeAdmin_searches[index];
 
-        CBCodeAdmin_searches.forEach(
-            function (search, index) {
-                let expander = CBUIExpander.create();
-                expander.title = search.title;
+            let expander = CBUIExpander.create();
+            expander.title = search.title;
 
-                let searchMessage = CBModel.valueToString(
-                    search,
-                    "message"
+            let searchCBMessage = CBModel.valueToString(
+                search,
+                "cbmessage"
+            );
+
+            expander.message = searchCBMessage;
+
+            rootElement.appendChild(
+                expander.element
+            );
+
+            try {
+                let results = await Colby.callAjaxFunction(
+                    "CBCodeAdmin",
+                    "search",
+                    {
+                        index: index,
+                    }
                 );
 
-                expander.message = searchMessage;
+                if (results.length === 0) {
+                    expander.severity = 5;
 
-                rootElement.appendChild(expander.element);
+                    continue;
+                }
 
-                promise = promise.then(
-                    function () {
-                        return Colby.callAjaxFunction(
-                            "CBCodeAdmin",
-                            "search",
-                            {
-                                index: index,
-                            }
-                        ).then(
-                            function (results) {
-                                if (results.length === 0) {
-                                    expander.severity = 5;
-                                    return;
-                                } else {
-                                    expander.severity = search.severity || 3;
-                                }
+                expander.severity = search.severity || 3;
 
-                                results = results.map(
-                                    function (line) {
-                                        return CBMessageMarkup.stringToMessage(
-                                            line
-                                        );
-                                    }
-                                );
-
-                                results = results.join("\n");
-
-                                expander.message = `
-
-                                    ${searchMessage}
-
-                                    --- pre\n${results}
-                                    ---
-
-                                `;
-                            }
-                        ).catch(
-                            function (error) {
-                                Colby.displayError(error);
-                            }
+                results = results.map(
+                    function (line) {
+                        return CBMessageMarkup.stringToMessage(
+                            line
                         );
                     }
                 );
+
+                results = results.join("\n");
+
+                expander.message = `
+
+                    ${searchCBMessage}
+
+                    --- pre\n${results}
+                    ---
+
+                `;
+            } catch (error) {
+                CBErrorHandler.displayAndReport(error);
+
+                break;
             }
-        );
+        }
+        /* for */
 
         return;
 
 
+
         /* -- closures -- -- -- -- -- */
+
+
 
         /**
          * @return Element
@@ -159,10 +167,13 @@ var CBCodeAdmin = {
             return sectionContainerElement;
         }
         /* init_createOptionsElement() */
+
     },
     /* init() */
+
 };
 /* CBCodeAdmin */
+
 
 
 Colby.afterDOMContentLoaded(

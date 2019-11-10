@@ -76,7 +76,7 @@ final class CBCodeAdmin {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v518.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v545.js', cbsysurl()),
         ];
     }
 
@@ -101,6 +101,7 @@ final class CBCodeAdmin {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBErrorHandler',
             'CBMessageMarkup',
             'CBModel',
             'CBUI',
@@ -1178,24 +1179,20 @@ final class CBCodeAdmin {
                  * 2019_08_10
                  */
                 (object)[
-                    'args' => implode(
-                        ' ',
-                        [
-                            '--php',
-                            '--js',
-                            '--ignore-file=match:CBUpgradesForVersion380.php',
-                        ]
+                    'args' => (
+                        '--php --js ' .
+                        '--ignore-file=match:CBUpgradesForVersion545.php'
                     ),
-                    'regex' => (
-                        'publishedBy'
-                    ),
+                    'cbmessage' => <<<EOT
+
+                        The ColbyPages table "publishedBy" column and the
+                        CBViewPage model "publishedBy" property are deprecated
+                        and being replaced because they use numeric user IDs.
+
+                    EOT,
+                    'regex' => 'publishedBy',
                     'severity' => 4,
-                    'title' => (
-                        'The ColbyPages table "publishedBy" column and the ' .
-                        'CBViewPage model "publishedBy" property are ' .
-                        'deprecated and being replaced because they use ' .
-                        'numeric user IDs.'
-                    ),
+                    'title' => 'publishedBy',
                 ],
 
 
