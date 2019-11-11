@@ -999,6 +999,22 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_11_10 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use ColbyUser::facebookUserIDToCBUserIDs().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'facebookUserIDtoUserIdentity',
+                    'severity' => 3,
+                    'title' => 'ColbyUser::facebookUserIDtoUserIdentity()',
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
