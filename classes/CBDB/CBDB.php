@@ -4,6 +4,8 @@ final class CBDB {
 
     private static $transactionIsActive = false;
 
+
+
     /**
      * Converts a string to a SQL safe string.
      *
@@ -16,12 +18,16 @@ final class CBDB {
         return Colby::mysqli()->escape_string($value);
     }
 
+
+
     /**
      * @deprecated use `CBHex160::toSQL`
      */
     static function hex160ToSQL($values) {
         return CBHex160::toSQL($values);
     }
+
+
 
     /**
      * This function returns a new function that takes a single value as a
@@ -43,6 +49,8 @@ final class CBDB {
             }
         };
     }
+
+
 
     /**
      * @NOTE 2018_11_27
@@ -81,6 +89,8 @@ final class CBDB {
         return $values;
     }
 
+
+
     /**
      * @param string $SQL
      *
@@ -100,6 +110,8 @@ final class CBDB {
 
         return $values;
     }
+
+
 
     /**
      * @deprecated use SQLToValue2()
@@ -127,6 +139,8 @@ final class CBDB {
 
         return $value;
     }
+
+
 
     /**
      * @param string $SQL
@@ -163,22 +177,45 @@ final class CBDB {
         return $value;
     }
 
+
+
     /**
-     * Takes a SQL statement and returns an object for the first row.
-     * @return {stdClass}|false
+     * @deprecated use CBDB::SQLToObjectNullable()
+     *
+     * @return object|false
      */
-    static function SQLToObject($SQL) {
-        $result = Colby::query($SQL);
-        $row    = $result->fetch_object();
+    static function SQLToObject(string $SQL) {
+        $object = CBDB::SQLToObjectNullable($SQL);
 
-        $result->free();
-
-        if ($row) {
-            return $row;
+        if ($object !== null) {
+            return $object;
         } else {
             return false;
         }
     }
+
+
+
+    /**
+     * @param string $SQL
+     *
+     * @return object|null
+     *
+     *      If the result has at least one row then an object representing that
+     *      row will be returned.
+     */
+    static function SQLToObjectNullable(
+        string $SQL
+    ): ?stdClass {
+        $result = Colby::query($SQL);
+        $object = $result->fetch_object();
+
+        $result->free();
+
+        return $object;
+    }
+
+
 
     /**
      * Takes a SQL statement and returns an array of objects representing each
@@ -207,6 +244,8 @@ final class CBDB {
         return $objects;
     }
 
+
+
     /**
      * Converts a string to a SQL string in single quotes ready to be used as a
      * value in a query without any alteration.
@@ -222,6 +261,7 @@ final class CBDB {
         return "'{$value}'";
     }
     /* stringToSQL() */
+
 
 
     /**
@@ -256,6 +296,8 @@ final class CBDB {
         }
     }
 
+
+
     /**
      * Returns the trimmed string escaped for SQL in single quotes ready to be
      * used as a value in a query. If the trimmed string is empty 'NULL' will be
@@ -267,4 +309,5 @@ final class CBDB {
         $value = CBConvert::valueToOptionalTrimmedString($value);
         return ($value === null) ? 'NULL' : CBDB::stringToSQL($value);
     }
+
 }
