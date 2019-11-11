@@ -96,19 +96,29 @@ final class ColbyUser {
     /**
      * @param int $facebookUserID
      *
-     * @return {id: int, hash: hex160}|false
+     * @return object|null
+     *
+     *      {
+     *          userID: CBID
+     *
+     *          userNumericID: int (deprecated)
+     *      }
      */
-    private static function facebookUserIDtoUserIdentity($facebookUserID) {
-        $facebookUserID = intval($facebookUserID);
+    private static function facebookUserIDToCBUserIDs(
+        int $facebookUserID
+    ): ?stdClass {
         $SQL = <<<EOT
 
-            SELECT  `ID`, LOWER(HEX(`hash`)) AS `hash`
-            FROM    `ColbyUsers`
-            WHERE   `facebookId` = {$facebookUserID}
+            SELECT  LOWER(HEX(hash)) AS userID,
+                    id as userNumericID
+
+            FROM    ColbyUsers
+
+            WHERE   facebookId = {$facebookUserID}
 
         EOT;
 
-        return CBDB::SQLToObject($SQL);
+        return CBDB::SQLToObjectNullable($SQL);
     }
 
 
@@ -146,9 +156,10 @@ final class ColbyUser {
 
 
     /**
-     * @return ID|null
+     * @return string|null
      *
-     * Returns the current user ID if a user is logged in; otherwise null.
+     * Returns the current user's 160-bit hexadecimal ID if a user is logged in;
+     * otherwise null.
      */
     static function getCurrentUserID(): ?string {
         return ColbyUser::$currentUserID;
@@ -302,13 +313,22 @@ final class ColbyUser {
         $facebookProperties
     ): void {
         $mysqli = Colby::mysqli();
-        $facebookUserID = intval($facebookProperties->id);
 
-        if ($facebookUserID <= 0) {
-            throw new RuntimeException('The Facebook user ID is invalid.');
+        $facebookUserID = CBModel::valueAsInt(
+            $facebookProperties,
+            'id'
+        );
+
+        if (
+            $facebookUserID === null ||
+            $facebookUserID <= 0
+        ) {
+            throw new RuntimeException(
+                'The Facebook user ID is invalid.'
+            );
         }
 
-        $userIdentity = ColbyUser::facebookUserIDtoUserIdentity(
+        $userIDs = ColbyUser::facebookUserIDToCBUserIDs(
             $facebookUserID
         );
 
@@ -330,21 +350,22 @@ final class ColbyUser {
 
         Colby::query('START TRANSACTION');
 
-        if ($userIdentity) {
+        if ($userIDs) {
             $sql = <<<EOT
 
-                UPDATE
-                    `ColbyUsers`
-                SET
-                    `facebookAccessToken` = {$sqlFacebookAccessToken},
-                    `facebookAccessExpirationTime` =
-                    {$sqlFacebookAccessExpirationTime},
-                    `facebookName` = {$sqlFacebookName},
-                    `facebookFirstName` = '',
-                    `facebookLastName` = '',
-                    `facebookTimeZone` = 0
-                WHERE
-                    `id` = {$userIdentity->ID}
+                UPDATE  ColbyUsers
+
+                SET     facebookAccessToken = {$sqlFacebookAccessToken},
+
+                        facebookAccessExpirationTime =
+                        {$sqlFacebookAccessExpirationTime},
+
+                        facebookName = {$sqlFacebookName},
+                        facebookFirstName = '',
+                        facebookLastName = '',
+                        facebookTimeZone = 0
+
+                WHERE   id = {$userIDs->userNumericID}
 
             EOT;
 
@@ -353,23 +374,23 @@ final class ColbyUser {
         /* if */
 
         else {
-            $userIdentity = (object)[
-                'hash' => CBHex160::random(),
+            $userIDs = (object)[
+                'userID' => CBHex160::random(),
             ];
 
-            $userHashAsSQL = CBHex160::toSQL($userIdentity->hash);
+            $userHashAsSQL = CBHex160::toSQL($userIDs->userID);
 
             $sql = <<<EOT
 
-                INSERT INTO `ColbyUsers` (
-                    `hash`,
-                    `facebookId`,
-                    `facebookAccessToken`,
-                    `facebookAccessExpirationTime`,
-                    `facebookName`,
-                    `facebookFirstName`,
-                    `facebookLastName`,
-                    `facebookTimeZone`
+                INSERT INTO ColbyUsers (
+                    hash,
+                    facebookId,
+                    facebookAccessToken,
+                    facebookAccessExpirationTime,
+                    facebookName,
+                    facebookFirstName,
+                    facebookLastName,
+                    facebookTimeZone
                 ) VALUES (
                     {$userHashAsSQL},
                     {$facebookUserID},
@@ -385,23 +406,23 @@ final class ColbyUser {
 
             Colby::query($sql);
 
-            $userIdentity->ID = intval($mysqli->insert_id);
+            $userIDs->userNumericID = intval($mysqli->insert_id);
 
             /* Detect first user */
 
             $count = CBDB::SQLToValue(
-                'SELECT COUNT(*) FROM `ColbyUsers`'
+                'SELECT COUNT(*) FROM ColbyUsers'
             );
 
             if ($count === '1') {
                 Colby::query(
-                    "INSERT INTO `ColbyUsersWhoAreAdministrators` " .
-                    "VALUES ({$userIdentity->ID}, NOW())"
+                    "INSERT INTO ColbyUsersWhoAreAdministrators " .
+                    "VALUES ({$userIDs->userNumericID}, NOW())"
                 );
 
                 Colby::query(
-                    "INSERT INTO `ColbyUsersWhoAreDevelopers` " .
-                    "VALUES ({$userIdentity->ID}, NOW())"
+                    "INSERT INTO ColbyUsersWhoAreDevelopers " .
+                    "VALUES ({$userIDs->userNumericID}, NOW())"
                 );
             }
         }
@@ -417,11 +438,13 @@ final class ColbyUser {
 
         $spec = (object)[
             'className' => 'CBUser',
-            'ID' => $userIdentity->hash,
+            'ID' => $userIDs->userID,
             'facebook'=> $facebookProperties,
+            'facebookAccessToken' => $facebookAccessToken,
+            'facebookUserID' => $facebookUserID,
             'lastLoggedIn' => time(),
             'title' => CBModel::value($facebookProperties, 'name', '', 'trim'),
-            'userID' => $userIdentity->ID,
+            'userNumericID' => $userIDs->userNumericID,
         ];
 
         CBModels::save([$spec], /* force */ true);
@@ -441,10 +464,10 @@ final class ColbyUser {
          */
 
         $cookie = (object)[
-            'userID' => $userIdentity->hash,
+            'userID' => $userIDs->userID,
 
             /* deprecated */
-            'userNumericID' => $userIdentity->ID,
+            'userNumericID' => $userIDs->userNumericID,
 
             /* 24 hours from now */
             'expirationTimestamp' => time() + (60 * 60 * 24),
