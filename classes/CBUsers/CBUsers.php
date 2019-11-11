@@ -16,13 +16,7 @@ final class CBUsers {
                 id                              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
                 hash                            BINARY(20) NOT NULL,
                 facebookId                      BIGINT UNSIGNED NOT NULL,
-                facebookAccessToken             VARCHAR(255),
-                facebookAccessExpirationTime    INT UNSIGNED,
                 facebookName                    VARCHAR(100) NOT NULL,
-                facebookFirstName               VARCHAR(50) NOT NULL,
-                facebookLastName                VARCHAR(50) NOT NULL,
-                facebookTimeZone                TINYINT NOT NULL DEFAULT '0',
-                hasBeenVerified                 BIT(1) NOT NULL DEFAULT b'0',
 
                 PRIMARY KEY (id),
 
@@ -32,11 +26,6 @@ final class CBUsers {
 
                 UNIQUE KEY hash (
                     hash
-                ),
-
-                KEY hasBeenVerified_facebookLastName (
-                    hasBeenVerified,
-                    facebookLastName
                 )
             )
             ENGINE=InnoDB
