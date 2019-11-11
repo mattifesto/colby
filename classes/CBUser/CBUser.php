@@ -28,11 +28,14 @@ final class CBUser {
      * @return object
      */
     static function CBModel_build(stdClass $spec): stdClass {
-        $userNumericID = CBModel::valueAsInt($spec, 'userID');
+        $userNumericID = CBModel::valueAsInt(
+            $spec,
+            'userNumericID'
+        );
 
         if ($userNumericID === null) {
             throw CBException::createModelIssueException(
-                'The "userID" property must be an integer.',
+                'The "userNumericID" property must be an integer.',
                 $spec,
                 'd3cc11bb7ee84089207dc00fee71ecbb5f9679d4'
             );
@@ -47,13 +50,23 @@ final class CBUser {
                 CBModel::valueToObject($spec, 'facebook')
             ),
 
+            'facebookAccessToken' => CBModel::valueToString(
+                $spec,
+                'facebookAccessToken'
+            ),
+
+            'facebookUserID' => CBModel::valueAsInt(
+                $spec,
+                'facebookUserID'
+            ),
+
             'lastLoggedIn' => CBModel::valueAsInt($spec, 'lastLoggedIn') ?? 0,
 
             'title' => trim(
                 CBModel::valueToString($spec, 'title')
             ),
 
-            'userID' => $userNumericID,
+            'userNumericID' => $userNumericID,
         ];
     }
     /* CBModel_build() */
