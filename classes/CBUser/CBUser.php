@@ -71,4 +71,27 @@ final class CBUser {
     }
     /* CBModel_build() */
 
+
+
+    /**
+     * @param object $originalSpec
+     *
+     * @return object
+     */
+    static function CBModel_upgrade(stdClass $originalSpec): stdClass {
+        $upgradedSpec = CBModel::clone($originalSpec);
+
+        if (
+            !isset($upgradedSpec->userNumericID) &&
+            isset($upgradedSpec->userID)
+        ) {
+            $upgradedSpec->userNumericID = $upgradedSpec->userID;
+
+            unset($upgradedSpec->userID);
+        }
+
+        return $upgradedSpec;
+    }
+    /* CBModel_upgrade() */
+
 }
