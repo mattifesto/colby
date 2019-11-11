@@ -99,7 +99,7 @@ final class ColbyUser {
      * @return object|null
      *
      *      {
-     *          userID: CBID
+     *          userCBID: CBID
      *
      *          userNumericID: int (deprecated)
      *      }
@@ -109,7 +109,7 @@ final class ColbyUser {
     ): ?stdClass {
         $SQL = <<<EOT
 
-            SELECT  LOWER(HEX(hash)) AS userID,
+            SELECT  LOWER(HEX(hash)) AS userCBID,
                     id as userNumericID
 
             FROM    ColbyUsers
@@ -120,6 +120,7 @@ final class ColbyUser {
 
         return CBDB::SQLToObjectNullable($SQL);
     }
+    /* facebookUserIDToCBUserIDs() */
 
 
 
@@ -251,21 +252,21 @@ final class ColbyUser {
      * ColbyUser::currentUserIsMemberOfGroup() is a more efficient alternative
      * for the current user.
      *
-     * @param int $userID
+     * @param int $userNumericID
      * @param string $groupName
      *
      * @return bool
      */
-    static function isMemberOfGroup($userID, $groupName) {
+    static function isMemberOfGroup($userNumericID, $groupName) {
         if ($groupName === 'Public') {
             return true;
         }
 
-        if (empty($userID)) {
+        if (empty($userNumericID)) {
             return false;
         }
 
-        $userIDAsSQL = intval($userID);
+        $userNumericIDAsSQL = intval($userNumericID);
         $tableName = ColbyUser::groupNameToTableName($groupName);
 
         if ($tableName === false) {
@@ -274,9 +275,11 @@ final class ColbyUser {
 
         $SQL = <<<EOT
 
-            SELECT COUNT(*)
-            FROM `{$tableName}`
-            WHERE `userId` = {$userIDAsSQL}
+            SELECT  COUNT(*)
+
+            FROM    {$tableName}
+
+            WHERE   userID = {$userNumericIDAsSQL}
 
         EOT;
 
@@ -288,6 +291,7 @@ final class ColbyUser {
 
         return $isMember;
     }
+    /* isMemberOfGroup() */
 
 
 
