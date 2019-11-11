@@ -299,11 +299,14 @@ final class ColbyUser {
      *
      * Since it sets a cookie it must be called before any HTML is ouput.
      *
-     * @param int $facebookAccessExpirationTime
+     * @param string $facebookAccessToken
+     * @param int $facebookAccessExpirationTime (deprecated)
      *
-     *  This is a unix timestamp representing the time in the future that
-     *  the user's access expires. It's the current unix timestamp plus the
-     *  duration of the user's access.
+     *      This is a unix timestamp representing the time in the future that
+     *      the user's access expires. It's the current unix timestamp plus the
+     *      duration of the user's access.
+     *
+     * @param object $facebookProperties
      *
      * @return void
      */
@@ -335,18 +338,9 @@ final class ColbyUser {
         $sqlFacebookAccessToken = $mysqli->escape_string($facebookAccessToken);
         $sqlFacebookAccessToken = "'{$sqlFacebookAccessToken}'";
 
-        $sqlFacebookAccessExpirationTime = "'{$facebookAccessExpirationTime}'";
-
         $sqlFacebookName = cbhtml($facebookProperties->name);
         $sqlFacebookName = $mysqli->escape_string($sqlFacebookName);
         $sqlFacebookName = "'{$sqlFacebookName}'";
-
-        /**
-         * @TODO
-         *
-         *      The ColbyUsers table is deprecated and will be removed. First
-         *      name, last name, and time zone are deprecated.
-         */
 
         Colby::query('START TRANSACTION');
 
@@ -355,15 +349,7 @@ final class ColbyUser {
 
                 UPDATE  ColbyUsers
 
-                SET     facebookAccessToken = {$sqlFacebookAccessToken},
-
-                        facebookAccessExpirationTime =
-                        {$sqlFacebookAccessExpirationTime},
-
-                        facebookName = {$sqlFacebookName},
-                        facebookFirstName = '',
-                        facebookLastName = '',
-                        facebookTimeZone = 0
+                SET     facebookName = {$sqlFacebookName}
 
                 WHERE   id = {$userIDs->userNumericID}
 
@@ -385,21 +371,11 @@ final class ColbyUser {
                 INSERT INTO ColbyUsers (
                     hash,
                     facebookId,
-                    facebookAccessToken,
-                    facebookAccessExpirationTime,
                     facebookName,
-                    facebookFirstName,
-                    facebookLastName,
-                    facebookTimeZone
                 ) VALUES (
                     {$userHashAsSQL},
                     {$facebookUserID},
-                    {$sqlFacebookAccessToken},
-                    {$sqlFacebookAccessExpirationTime},
                     {$sqlFacebookName},
-                    '',
-                    '',
-                    0
                 )
 
             EOT;
