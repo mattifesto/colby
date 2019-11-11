@@ -2,6 +2,10 @@
 
 final class CBUsersAdmin {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
@@ -13,12 +17,18 @@ final class CBUsersAdmin {
     }
 
 
+
     /**
      * @return void
      */
     static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'Users Administration';
     }
+
+
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
 
 
     /**
@@ -29,6 +39,7 @@ final class CBUsersAdmin {
             Colby::flexpath(__CLASS__, 'v500.js', cbsysurl()),
         ];
     }
+
 
 
     /**
@@ -44,6 +55,7 @@ final class CBUsersAdmin {
     }
 
 
+
     /**
      * @return [string]
      */
@@ -57,6 +69,11 @@ final class CBUsersAdmin {
             'Colby',
         ];
     }
+
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
 
 
     /**
@@ -82,6 +99,7 @@ final class CBUsersAdmin {
     }
 
 
+
     /**
      * @return [string]
      */
@@ -92,18 +110,28 @@ final class CBUsersAdmin {
     }
 
 
+
+    /* -- functions -- -- -- -- -- */
+
+
+
     /**
      * @return [stdClass]
      */
     private static function fetchUsers() {
         $SQL = <<<EOT
 
-            SELECT      LOWER(HEX(`hash`)) as `hash`, `facebookName`
-            FROM        `ColbyUsers`
-            ORDER BY    `facebookName`
+            SELECT      LOWER(HEX(hash)) as hash,
+                        facebookName
 
-EOT;
+            FROM        ColbyUsers
+
+            ORDER BY    facebookName
+
+        EOT;
 
         return CBDB::SQLToObjects($SQL);
     }
+    /* fetchUsers() */
+
 }
