@@ -2,19 +2,36 @@
 
 final class CBAdministratorsUserGroupUserSettingsManager {
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return void
      */
     static function CBInstall_install(): void {
-        CBUserSettingsManagerCatalog::installUserSettingsManager(__CLASS__, 10);
+        CBUserSettingsManagerCatalog::installUserSettingsManager(
+            __CLASS__,
+            10
+        );
     }
+
+
 
     /**
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBUserSettingsManagerCatalog'];
+        return [
+            'CBUserSettingsManagerCatalog'
+        ];
     }
+
+
+
+    /* -- CBUserSettingsManager interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param string $targetUserID
@@ -24,11 +41,22 @@ final class CBAdministratorsUserGroupUserSettingsManager {
     static function CBUserSettingsManager_render(string $targetUserID): void {
         echo '<div class="CBAdministratorsUserGroupUserSettingsManager">';
 
-        $targetUserModel = CBModels::fetchModelByID($targetUserID);
-        $targetUserNumericID = CBModel::valueAsInt($targetUserModel, 'userID');
+        $targetUserModel = CBModelCache::fetchModelByID($targetUserID);
+
+        $targetUserNumericID = CBModel::valueAsInt(
+            $targetUserModel,
+            'userNumericID'
+        );
+
+        if ($targetUserNumericID === null) {
+            throw new CBException(
+                'The user numeric ID is not valid.',
+                '',
+                '95ef916ff7322d7d5cf441967bec15dae9324fe9'
+            );
+        }
 
         if (
-            $targetUserNumericID !== null &&
             ColbyUser::currentUserIsMemberOfGroup('Administrators')
         ) {
             $targetUserData = (object)[
@@ -44,4 +72,5 @@ final class CBAdministratorsUserGroupUserSettingsManager {
         echo '</div>';
     }
     /* CBUserSettingsManager_render() */
+
 }
