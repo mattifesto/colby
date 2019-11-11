@@ -11,7 +11,7 @@ final class CBViewPageInformationEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v546.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -28,7 +28,7 @@ final class CBViewPageInformationEditor {
                 CBPagesPreferences::classNamesForLayouts()
             ],
             [
-                'CBUsersWhoAreAdministrators',
+                'CBViewPageInformationEditor_administrators',
                 CBViewPageInformationEditor::usersWhoAreAdministrators()
             ],
             [
@@ -87,19 +87,28 @@ final class CBViewPageInformationEditor {
 
 
     /**
-     * @return [{stdClass}]
+     * @return [object]
+     *
+     *      {
+     *          userNumericID: int
+     *          name: string
+     *      }
      */
     private static function usersWhoAreAdministrators() {
         $SQL = <<<EOT
 
-            SELECT `user`.`ID`, `user`.`facebookName` as `name`
-            FROM `ColbyUsers` AS `user`
-            JOIN `ColbyUsersWhoAreAdministrators` AS `administrator`
-            ON `user`.`ID` = `administrator`.`userID`
+            SELECT      user.ID as userNumericID,
+                        user.facebookName as name
+
+            FROM        ColbyUsers AS user
+
+            JOIN        ColbyUsersWhoAreAdministrators AS administrator
+                ON      user.ID = administrator.userID
 
         EOT;
 
         return CBDB::SQLToObjects($SQL);
     }
+    /* usersWhoAreAdministrators() */
 
 }

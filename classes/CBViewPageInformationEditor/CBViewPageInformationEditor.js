@@ -21,7 +21,7 @@
     CBViewPageEditor,
 
     CBPageClassNamesForLayouts,
-    CBUsersWhoAreAdministrators,
+    CBViewPageInformationEditor_administrators,
     CBViewPageInformationEditor_currentUserNumericID,
     CBViewPageInformationEditor_frameClassNames,
     CBViewPageInformationEditor_kindClassNames,
@@ -416,11 +416,11 @@ var CBViewPageInformationEditor = {
                     CBViewPageInformationEditor_currentUserNumericID;
                 }
 
-                var users = CBUsersWhoAreAdministrators.map(
+                var users = CBViewPageInformationEditor_administrators.map(
                     function (user) {
                         return {
                             title: user.name,
-                            value: user.ID,
+                            value: user.userNumericID,
                         };
                     }
                 );
