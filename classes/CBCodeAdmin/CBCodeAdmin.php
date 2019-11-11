@@ -1329,6 +1329,22 @@ final class CBCodeAdmin {
                         'models.'
                     ),
                 ],
+
+
+                /**
+                 * 2019_11_10 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBDB::SQLToObjectNullable().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBDB::SQLToObject\(',
+                    'severity' => 4,
+                    'title' => 'CBDB::SQLToObject()',
+                ],
             ]
         );
     }
