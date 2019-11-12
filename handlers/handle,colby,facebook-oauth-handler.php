@@ -21,8 +21,22 @@ $accessTokenObject = CBFacebook::fetchAccessTokenObject(
     $_GET['code']
 );
 
-$userProperties = CBFacebook::fetchUserProperties(
-    $accessTokenObject->access_token
+$facebookAccessToken = $accessTokenObject->access_token;
+
+$facebookUserProperties = CBFacebook::fetchUserProperties(
+    $facebookAccessToken
+);
+
+$facebookUserID = CBModel::valueAsInt(
+    $facebookUserProperties,
+    'id'
+);
+
+$facebookName = trim(
+    CBModel::valueToString(
+        $facebookUserProperties,
+        'name'
+    )
 );
 
 /**
@@ -37,21 +51,28 @@ $userProperties = CBFacebook::fetchUserProperties(
  *      In the future give the user a more helpful message and log the current
  *      exception message for the admin to see.
  */
-
-if (!isset($userProperties->name)) {
-    throw new RuntimeException(
-        'The Facebook user properties do not contain a "name" property: ' .
-        json_encode($userProperties)
+if ($facebookName === '') {
+    throw CBException::createWithValue(
+        (
+            'The user properties provided by Facebook do not contain ' .
+            'a "name" property.'
+        ),
+        $facebookUserProperties,
+        'e1a1bd35ad3811df94ac1b3dbaa8c088552bc089'
     );
 }
 
-ColbyUser::loginCurrentUser(
-    $accessTokenObject->access_token,
-    time() + $accessTokenObject->expires_in - 60,
-    $userProperties
+ColbyUser::loginFacebookUser(
+    $facebookUserID,
+    $facebookAccessToken,
+    $facebookName
 );
 
+
+
 done:
+
+
 
 /**
  * Decode the state that we sent into the original login request. It contains
@@ -65,6 +86,7 @@ try {
 
     $location = $state->colby_redirect_uri;
 } catch (Throwable $throwable) {
+
     /**
      * @NOTE 2017_12_03
      *
