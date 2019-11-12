@@ -41,18 +41,41 @@ final class CBUser {
             );
         }
 
+        $facebook = CBModel::valueAsObject(
+            $spec,
+            'facebook'
+        );
+
+        if ($facebook !== null) {
+            $facebook = CBModel::clone($facebook);
+        }
+
         return (object)[
             'description' => trim(
                 CBModel::valueToString($spec, 'description')
             ),
 
-            'facebook' => CBModel::clone(
-                CBModel::valueToObject($spec, 'facebook')
-            ),
+            /**
+             * @deprecated 2019_11_12
+             *
+             *      This property has been replaced by the facebookName and
+             *      facebookUserID properties. When deprecated,
+             *      CBModel_upgrade() was changed to extract the values of this
+             *      object from the spec. Therefore this property can be
+             *      completely removed in a few months.
+             */
+            'facebook' => $facebook,
 
             'facebookAccessToken' => CBModel::valueToString(
                 $spec,
                 'facebookAccessToken'
+            ),
+
+            'facebookName' => trim(
+                CBModel::valueToString(
+                    $spec,
+                    'facebookName'
+                )
             ),
 
             'facebookUserID' => CBModel::valueAsInt(
@@ -60,7 +83,10 @@ final class CBUser {
                 'facebookUserID'
             ),
 
-            'lastLoggedIn' => CBModel::valueAsInt($spec, 'lastLoggedIn') ?? 0,
+            'lastLoggedIn' => CBModel::valueAsInt(
+                $spec,
+                'lastLoggedIn'
+            ) ?? 0,
 
             'title' => trim(
                 CBModel::valueToString($spec, 'title')
@@ -81,14 +107,54 @@ final class CBUser {
     static function CBModel_upgrade(stdClass $originalSpec): stdClass {
         $upgradedSpec = CBModel::clone($originalSpec);
 
-        if (
-            !isset($upgradedSpec->userNumericID) &&
-            isset($upgradedSpec->userID)
-        ) {
-            $upgradedSpec->userNumericID = $upgradedSpec->userID;
 
-            unset($upgradedSpec->userID);
+        /* userID -> userNumericID */
+
+        if (
+            !isset($upgradedSpec->userNumericID)
+        ) {
+            $upgradedSpec->userNumericID = CBModeL::valueAsInt(
+                $upgradedSpec,
+                'userID'
+            );
         }
+
+
+        /* remove userID property */
+
+        unset($upgradedSpec->userID);
+
+
+        /* facebook.id -> facebookUserID */
+
+        if (
+            !isset($upgradedSpec->facebookUserID)
+        ) {
+            $upgradedSpec->facebookUserID = CBModel::valueAsInt(
+                $upgradedSpec,
+                'facebook.id'
+            );
+        }
+
+
+        /* facebook.name -> facebookName */
+
+        if (
+            !isset($upgradedSpec->facebookName)
+        ) {
+            $upgradedSpec->facebookName = CBModel::valueToString(
+                $upgradedSpec,
+                'facebook.name'
+            );
+        }
+
+
+        /* remove facebook property */
+
+        unset($upgradedSpec->facebook);
+
+
+        /* done */
 
         return $upgradedSpec;
     }
