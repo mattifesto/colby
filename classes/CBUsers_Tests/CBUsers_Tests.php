@@ -81,32 +81,67 @@ final class CBUsers_Tests {
         $originalSpecs = [
             (object)[
                 'className' => 'CBUser',
-                'userID' => 5,
+                'userID' => 100,
             ],
             (object)[
                 'className' => 'CBUser',
-                'userNumericID' => 6,
-                'userID' => 5,
+                'userNumericID' => 101,
+                'userID' => 99,
             ],
             (object)[
                 'className' => 'CBUser',
-                'userNumericID' => 7,
+                'userNumericID' => 102,
+            ],
+            (object)[
+                'className' => 'CBUser',
+                'userNumericID' => 103,
+                'facebook' => (object)[
+                    'name' => 'Bob',
+                    'id' => '503',
+                ],
+            ],
+            (object)[
+                'className' => 'CBUser',
+                'userNumericID' => 104,
+                'facebook' => (object)[
+                    'name' => 'Bob',
+                    'id' => '99',
+                ],
+                'facebookUserID' => 504,
+                'facebookName' => 'Chet',
             ],
         ];
 
         $upgradedSpecs = [
             (object)[
                 'className' => 'CBUser',
-                'userNumericID' => 5,
+                'userNumericID' => 100,
+                'facebookUserID' => null,
+                'facebookName' => '',
             ],
             (object)[
                 'className' => 'CBUser',
-                'userNumericID' => 6,
-                'userID' => 5,
+                'userNumericID' => 101,
+                'facebookUserID' => null,
+                'facebookName' => '',
             ],
             (object)[
                 'className' => 'CBUser',
-                'userNumericID' => 7,
+                'userNumericID' => 102,
+                'facebookUserID' => null,
+                'facebookName' => '',
+            ],
+            (object)[
+                'className' => 'CBUser',
+                'userNumericID' => 103,
+                'facebookUserID' => 503,
+                'facebookName' => 'Bob',
+            ],
+            (object)[
+                'className' => 'CBUser',
+                'userNumericID' => 104,
+                'facebookUserID' => 504,
+                'facebookName' => 'Chet',
             ],
         ];
 
