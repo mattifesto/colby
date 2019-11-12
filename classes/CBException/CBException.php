@@ -100,20 +100,30 @@ final class CBException extends Exception {
 
 
     /**
-     * @NOTE 2019_10_19
+     * @deprecated use CBException::createWithValue()
      *
-     *      This function was created to make it easy to create exceptions
-     *      related to a model that would also display the model in JSON.
-     *      However, over time, it became a great function to create exceptions
-     *      related to any kind of value that needs to be displayed in JSON.
+     * @param string $title
+     * @param mixed $value
+     * @param CBID $sourceCBID
      *
-     *      Furthermore, passing an object with two or more properties can
-     *      create an exception related to multiple models or any other kinds of
-     *      values.
-     *
-     *      This function should be renamed, but as of now I'm not sure what the
-     *      new name should be.
-     *
+     * @return CBException
+     */
+    static function createModelIssueException(
+        string $title,
+        $value,
+        ?string $sourceCBID = null
+    ): CBException {
+        return CBException::createWithValue(
+            $title,
+            $value,
+            $sourceCBID
+        );
+    }
+    /* createModelIssueException() */
+
+
+
+    /**
      * @param $title
      *
      *      Text describing the issue with the model. The text should be
@@ -131,12 +141,18 @@ final class CBException extends Exception {
      *
      * @param mixed $value
      *
+     *      This value should be convertible to JSON. The value may be a value
+     *      that has an issue referred to by the title or a value that can
+     *      highlight or give evidence to the assertion made by the title.
+     *
+     * @param CBID $sourceCBID
+     *
      * @return CBException
      */
-    static function createModelIssueException(
+    static function createWithValue(
         string $title,
         $value,
-        ?string $sourceID = null
+        ?string $sourceCBID = null
     ): CBException {
         $titleAsCBMessage = CBMessageMarkup::stringToMessage(
             $title
@@ -155,15 +171,15 @@ final class CBException extends Exception {
             --- pre\n{$valueAsCBMessage}
             ---
 
-EOT;
+        EOT;
 
         return new CBException(
             $title,
             $cbmessage,
-            $sourceID
+            $sourceCBID
         );
     }
-    /* createModelIssueException() */
+    /* createWithValue() */
 
 
 
