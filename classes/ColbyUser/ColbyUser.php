@@ -521,16 +521,26 @@ final class ColbyUser {
 
 
     /**
+     * The expiration timestamp is set to
+     *
+     *      current time - 24 hours
+     *
+     * because this value is guaranteed to be in the past in all time zones.
+     *
      * This function must be called before any output is generated because it
      * sets a cookie.
      */
     private static function removeUserCookie() {
-        // time = now - 1 day
-        // sure to be in the past in all time zones
+        $value = '';
+        $expirationTimestamp = time() - (60 * 60 * 24);
+        $path = '/';
 
-        $time = time() - (60 * 60 * 24);
-
-        setcookie(CBUserCookieName, '', $time, '/');
+        setcookie(
+            CBUserCookieName,
+            $value,
+            $expirationTimestamp,
+            $path
+        );
     }
 
 
