@@ -303,35 +303,22 @@ final class ColbyUser {
      *
      * Since it sets a cookie it must be called before any HTML is ouput.
      *
+     * @param int $facebookUserID
      * @param string $facebookAccessToken
-     * @param int $facebookAccessExpirationTime (deprecated)
-     *
-     *      This is a unix timestamp representing the time in the future that
-     *      the user's access expires. It's the current unix timestamp plus the
-     *      duration of the user's access.
-     *
-     * @param object $facebookProperties
+     * @param object $facebookName
      *
      * @return void
      */
-    static function loginCurrentUser(
-        $facebookAccessToken,
-        $facebookAccessExpirationTime,
-        $facebookProperties
+    static function loginFacebookUser(
+        int $facebookUserID,
+        string $facebookAccessToken,
+        string $facebookName
     ): void {
-        $mysqli = Colby::mysqli();
-
-        $facebookUserID = CBModel::valueAsInt(
-            $facebookProperties,
-            'id'
-        );
-
-        if (
-            $facebookUserID === null ||
-            $facebookUserID <= 0
-        ) {
-            throw new RuntimeException(
-                'The Facebook user ID is invalid.'
+        if ($facebookUserID <= 0) {
+            throw CBException::createWithValue(
+                'The Facebook user ID is invalid.',
+                $facebookUserID,
+                '2417ee1efc46f05e3ae75cd6050ea4c52c719a65'
             );
         }
 
@@ -339,12 +326,7 @@ final class ColbyUser {
             $facebookUserID
         );
 
-        $sqlFacebookAccessToken = $mysqli->escape_string($facebookAccessToken);
-        $sqlFacebookAccessToken = "'{$sqlFacebookAccessToken}'";
-
-        $sqlFacebookName = cbhtml($facebookProperties->name);
-        $sqlFacebookName = $mysqli->escape_string($sqlFacebookName);
-        $sqlFacebookName = "'{$sqlFacebookName}'";
+        $facebookNameAsSQL = CBDB::stringToSQL($facebookName);
 
         Colby::query('START TRANSACTION');
 
@@ -353,85 +335,94 @@ final class ColbyUser {
 
                 UPDATE  ColbyUsers
 
-                SET     facebookName = {$sqlFacebookName}
+                SET     facebookName = {$facebookNameAsSQL}
 
                 WHERE   id = {$CBUserIDs->userNumericID}
 
             EOT;
 
             Colby::query($sql);
-        }
-        /* if */
-
-        else {
+        } else {
             $CBUserIDs = (object)[
                 'userCBID' => CBHex160::random(),
             ];
 
-            $userHashAsSQL = CBHex160::toSQL($CBUserIDs->userCBID);
+            $userCBIDAsSQL = CBHex160::toSQL($CBUserIDs->userCBID);
 
-            $sql = <<<EOT
+            $SQL = <<<EOT
 
                 INSERT INTO ColbyUsers (
                     hash,
                     facebookId,
                     facebookName,
                 ) VALUES (
-                    {$userHashAsSQL},
+                    {$userCBIDAsSQL},
                     {$facebookUserID},
-                    {$sqlFacebookName},
+                    {$facebookNameAsSQL},
                 )
 
             EOT;
 
-            Colby::query($sql);
+            Colby::query($SQL);
 
-            $CBUserIDs->userNumericID = intval($mysqli->insert_id);
+            $CBUserIDs->userNumericID = intval(Colby::mysqli()->insert_id);
 
             /* Detect first user */
 
-            $count = CBDB::SQLToValue(
-                'SELECT COUNT(*) FROM ColbyUsers'
-            );
+            $SQL = <<<EOT
+
+                SELECT  COUNT(*)
+                FROM    ColbyUsers
+
+            EOT;
+
+            $count = CBDB::SQLToValue($SQL);
 
             if ($count === '1') {
-                Colby::query(
-                    "INSERT INTO ColbyUsersWhoAreAdministrators " .
-                    "VALUES ({$CBUserIDs->userNumericID}, NOW())"
-                );
+                $SQL = <<<EOT
 
-                Colby::query(
-                    "INSERT INTO ColbyUsersWhoAreDevelopers " .
-                    "VALUES ({$CBUserIDs->userNumericID}, NOW())"
-                );
+                    INSERT INTO ColbyUsersWhoAreAdministrators
+                    VALUES (
+                        {$CBUserIDs->userNumericID},
+                        NOW()
+                    )
+
+                EOT;
+
+                Colby::query($SQL);
+
+
+                $SQL = <<<EOT
+
+                    INSERT INTO ColbyUsersWhoAreDevelopers
+                    VALUES (
+                        {$CBUserIDs->userNumericID},
+                        NOW()
+                    )
+
+                EOT;
+
+                Colby::query($SQL);
             }
         }
-        /* else */
 
-
-        /**
-         * Update the user model
-         *
-         * This update is forced because we update the full object each time so
-         * enforcing sequential updates is not important.
-         */
-
-        $spec = (object)[
-            'className' => 'CBUser',
-            'ID' => $CBUserIDs->userCBID,
-            'facebook'=> $facebookProperties,
-            'facebookAccessToken' => $facebookAccessToken,
-            'facebookUserID' => $facebookUserID,
-            'lastLoggedIn' => time(),
-            'title' => CBModel::value($facebookProperties, 'name', '', 'trim'),
-            'userNumericID' => $CBUserIDs->userNumericID,
-        ];
-
-        CBModels::save([$spec], /* force */ true);
 
         /* All database updates are complete */
 
         Colby::query('COMMIT');
+
+        CBModelUpdater::update(
+            (object)[
+                'className' => 'CBUser',
+                'ID' => $CBUserIDs->userCBID,
+                'facebookAccessToken' => $facebookAccessToken,
+                'facebookName' => $facebookName,
+                'facebookUserID' => $facebookUserID,
+                'lastLoggedIn' => time(),
+                'title' => $facebookName,
+                'userNumericID' => $CBUserIDs->userNumericID,
+            ]
+        );
 
         /**
          * Set the Colby user cookie data.
