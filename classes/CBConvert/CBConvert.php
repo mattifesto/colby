@@ -515,13 +515,13 @@ final class CBConvert {
      *      all callers.
      */
 
+
+
     /**
-     * @param mixed $value
-     *
-     * @return ?ID
+     * @deprecated use CBID::valueIsCBID()
      */
     static function valueAsID($value): ?string {
-        if (CBHex160::is($value)) {
+        if (CBID::valueIsCBID($value)) {
             return $value;
         } else {
             return null;
@@ -531,14 +531,10 @@ final class CBConvert {
 
 
     /**
-     * @deprecated use CBConvert::valueAsID()
-     *
-     * @param mixed $value
-     *
-     * @return ?ID
+     * @deprecated use CBID::valueIsCBID()
      */
     static function valueAsHex160($value): ?string {
-        return CBConvert::valueAsID($value);
+        return CBConvert::valueAsCBID($value);
     }
 
 
@@ -656,47 +652,19 @@ final class CBConvert {
 
 
     /**
-     * A "name" is a simple string that can be used as an identifier in many
-     * situations. As Colby matured, the importance and nature of the "name"
-     * concept has grown.
-     *
-     * Names can contain the following characters:
-     *
-     *      a-z
-     *      A-Z
-     *      0-9
-     *      _ (underscore)
-     *
-     *      Why not hyphens?
-     *
-     *          Technically hyphens are not word characters. This means that
-     *          double clicking on a word with a hyphen will not select the
-     *          entire word. Since names are intended to provide positive
-     *          benefits to speed development, hyphens are not allowed.
-     *
-     * Uses for names
-     *
-     *      Monikers
-     *
-     *          A moniker is a readable ID for a model that's usually provided
-     *          in a CSV file that will be used to import models.
-     *
-     *      CSS class names
-     *
-     *          Restricting your CSS class names to the characters allowed in
-     *          names will help speed your development process.
+     * This function converts a name potentially surrounded by whitespace into
+     * a valid name or null.
      *
      * When should this function be used?
      *
-     *      This function should be used when building specs into models. Then
+     *      This function may be used when building specs into models when extra
+     *      whitespace around the spec value for the name is acceptable. Then
      *      valueAsString() can be used to get the value from the model.
      *
-     *      There are many other use cases, but this function is generally
-     *      focused on preparing data, not accessing data.
+     *      This function may be used when converting user input to a valid
+     *      name.
      *
      * @param mixed $value
-     *
-     *      This value is usually a string value.
      *
      * @return string|null
      *
@@ -704,62 +672,14 @@ final class CBConvert {
      *      otherwise null is returned.
      */
     static function valueAsName($value): ?string {
-        $stringValue = CBConvert::valueToString($value);
-
-        /**
-         * this code will make preg_match() return false:
-         *
-         * $pregMatchReturnValue = preg_match(
-         *      '/(?:\D+|<\d+>)*[!?]/',
-         *      'foobar foobar foobar'
-         *  );
-         */
-
-        $pregMatchReturnValue = preg_match(
-            '/^\s*([a-zA-Z0-9_]+)\s*$/',
-            $stringValue,
-            $matches
+        $potentialName = trim(
+            CBConvert::valueToString($value)
         );
 
-        if ($pregMatchReturnValue === 0) {
-            return null;
-        } else if ($pregMatchReturnValue === 1) {
-            return $matches[1];
+        if (CBConvert::valueIsName($potentialName)) {
+            return $potentialName;
         } else {
-            $valueAsMessage = CBMessageMarkup::stringToMessage(
-                json_encode($value)
-            );
-            $pregMatchReturnValueAsMessage = CBMessageMarkup::stringToMessage(
-                json_encode($pregMatchReturnValue)
-            );
-
-            $errorCode = preg_last_error();
-            $message = <<<EOT
-
-                An unexpected value of ($pregMatchReturnValueAsMessage (code))
-                was returned from preg_match() in CBConvert::valueAsName().
-
-                --- dl
-                    --- dt
-                    $value
-                    ---
-                    --- dd
-                        {$valueAsMessage}
-                    ---
-                    --- dt
-                    preg_last_error()
-                    ---
-                    --- dd
-                        {$errorCode}
-                    ---
-                ---
-
-            EOT;
-
-            throw new CBException(
-                'CBConvert::valueAsName() failed',
-                $message
-            );
+            return null;
         }
     }
     /* valueAsName() */
@@ -767,12 +687,10 @@ final class CBConvert {
 
 
     /**
-     * This function parses a string of comma and/or white space separated set
-     * of names.
+     * This function converts a string containing comma and/or white space
+     * separated names  into an array of valid names.
      *
      * @param mixed $value
-     *
-     *      This value is usually a string value.
      *
      * @return [string]|null
      *
@@ -782,63 +700,26 @@ final class CBConvert {
      */
     static function valueAsNames($value): ?array {
         $stringValue = CBConvert::valueToString($value);
-        $pregSplitReturnValue = preg_split(
+
+        $potentialNames = preg_split(
             '/[\s,]+/',
             $stringValue,
             null,
             PREG_SPLIT_NO_EMPTY
         );
 
-        if (is_array($pregSplitReturnValue)) {
-            $names = [];
 
-            foreach ($pregSplitReturnValue as $potentialName) {
-                $name = CBConvert::valueAsName($potentialName);
-
-                if ($name === null) {
-                    return null;
-                } else {
-                    array_push($names, $name);
-                }
-            }
-
-            return $names;
-        } else {
-            $valueAsMessage = CBMessageMarkup::stringToMessage(
-                json_encode($value)
-            );
-            $pregSplitReturnValueAsMessage = CBMessageMarkup::stringToMessage(
-                json_encode($pregSplitReturnValue)
-            );
-
-            $errorCode = preg_last_error();
-            $message = <<<EOT
-
-                An unexpected value of ($pregSplitReturnValueAsMessage (code))
-                was returned from preg_match() in CBConvert::valueAsName().
-
-                --- dl
-                    --- dt
-                    $value
-                    ---
-                    --- dd
-                        {$valueAsMessage}
-                    ---
-                    --- dt
-                    preg_last_error()
-                    ---
-                    --- dd
-                        {$errorCode}
-                    ---
-                ---
-
-EOT;
-
-            throw new CBException(
-                'CBConvert::valueAsNames() failed',
-                $message
-            );
+        if (!is_array($potentialNames)) {
+            return null;
         }
+
+        foreach ($potentialNames as $potentialName) {
+            if (!CBConvert::valueIsName($potentialName)) {
+                return null;
+            }
+        }
+
+        return $potentialNames;
     }
     /* valueAsNames() */
 
@@ -927,6 +808,54 @@ EOT;
         } else {
             return null;
         }
+    }
+
+
+
+    /**
+     * A "name" is a simple string that can be used as an identifier in many
+     * situations. As Colby matured, the importance and nature of the "name"
+     * concept has grown.
+     *
+     * Names can contain the following characters:
+     *
+     *      a-z
+     *      A-Z
+     *      0-9
+     *      _ (underscore)
+     *
+     *      Why not hyphens?
+     *
+     *          Technically hyphens are not word characters. This means that
+     *          double clicking on a word with a hyphen will not select the
+     *          entire word. Since names are intended to provide positive
+     *          benefits to speed development, hyphens are not allowed.
+     *
+     * Uses for names
+     *
+     *      Monikers
+     *
+     *          A moniker is a readable ID for a model that's usually provided
+     *          in a CSV file that will be used to import models.
+     *
+     *      CSS class names
+     *
+     *          Restricting your CSS class names to the characters allowed in
+     *          names will help speed your development process.
+     *
+     * @param mixed $value
+     *
+     * @return bool
+     */
+    static function valueIsName($value): bool {
+        if (!is_string($value)) {
+            return false;
+        }
+
+        return (bool)preg_match(
+            '/^[a-zA-Z0-9_]+$/',
+            $value,
+        );
     }
 
 
