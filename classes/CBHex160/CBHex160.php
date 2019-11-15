@@ -1,43 +1,42 @@
 <?php
 
+/**
+ * @deprecated 2019_11_15
+ *
+ *      This class has been replaced by the CBID class.
+ */
 final class CBHex160 {
 
+    /* -- functions -- -- -- -- -- */
+
+
+
     /**
-     * Hex160 values are hexadecimal values that are 160-bits long (20 bytes,
-     * 40 hexadecimal characters). They are required to be lowercase so that
-     * they can be compared for equality.
-     *
-     * @param mixed $value
-     *
-     * @return bool
-     *      Returns true if the value is a hex160; otherwise false.
+     * @deprecated use CBID::valueIsCBID()
      */
-    static function is($value) {
-        if (is_string($value)) {
-            return (bool)preg_match('/^[a-f0-9]{40}$/', $value);
-        } else {
-            return false;
-        }
+    static function is($value): bool {
+        return CBID::valueIsCBID($value);
     }
 
 
+
     /**
-     * @return string
+     * @deprecated use CBID::generateRandomCBID()
      */
     static function random(): string {
-        $bytes = openssl_random_pseudo_bytes(20);
-        return bin2hex($bytes);
+        return CBID::generateRandomCBID();
     }
 
 
+
     /**
-     * @param hex160 | [hex160]
-     *
-     *      A single value or an array of 160-bit hexadecimal strings.
+     * @param CBID|[CBID]
      *
      * @return string
      *
-     *      "UNHEX('<hex160>')" | "UNHEX('<hex160>'),UNHEX('<hex160>'),..."
+     *      "UNHEX('<CBID>')"
+     *
+     *      "UNHEX('<CBID>'),UNHEX('<CBID>'),..."
      */
     static function toSQL($values) {
         if (!is_array($values)) {
@@ -77,4 +76,5 @@ final class CBHex160 {
         return implode(',', $values);
     }
     /* toSQL() */
+
 }
