@@ -45,45 +45,12 @@ final class CBUsers {
 
 
     /**
-     * @param string $name
-     *
-     *      The name of the group such as 'Administrators' or
-     *      'LEWholesaleCustomers'.
+     * @deprecated use CBUserGroup models
      *
      * @return void
      */
     static function installUserGroup(string $userGroupName): void {
-        if (CBConvert::valueAsName($userGroupName) === null) {
-            throw new CBException(
-                "The \$userGroupName parameter value \"{$userGroupName}\" " .
-                "is not valid.",
-                '',
-                'ed62068612672b934db76b46103f037a281cb252'
-            );
-        }
-
-        $SQL = <<<EOT
-
-            CREATE TABLE IF NOT EXISTS ColbyUsersWhoAre{$userGroupName} (
-                userId    BIGINT UNSIGNED NOT NULL,
-                added     DATETIME NOT NULL,
-
-                PRIMARY KEY (userId),
-
-                CONSTRAINT ColbyUsersWhoAre{$userGroupName}_userId
-                    FOREIGN KEY (userId)
-                    REFERENCES ColbyUsers (id)
-                    ON DELETE CASCADE
-            )
-            ENGINE=InnoDB
-            DEFAULT CHARSET=utf8mb4
-            COLLATE=utf8mb4_unicode_520_ci
-
-        EOT;
-
-        Colby::query($SQL);
     }
-    /* installUserGroup() */
 
 
 
