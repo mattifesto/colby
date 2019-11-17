@@ -108,7 +108,7 @@ final class CBAdminPageForUserSettings {
 
         $userFacebookID = CBModel::valueToString(
             $userModel,
-            'facebook.id'
+            'facebookUserID'
         );
 
         $userPhotoURL = CBFacebook::userImageURL($userFacebookID);
