@@ -4,6 +4,8 @@ final class CBHideByUserGroupView {
 
     /* -- CBInstall interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return void
      */
@@ -13,6 +15,7 @@ final class CBHideByUserGroupView {
         );
     }
     /* CBInstall_install() */
+
 
 
     /**
@@ -26,10 +29,13 @@ final class CBHideByUserGroupView {
     /* CBInstall_requiredClassNames() */
 
 
+
     /* -- CBModel interfaces -- -- -- -- -- */
 
+
+
     /**
-     * @param model $spec
+     * @param object $spec
      *
      *      {
      *          hideFromMembers: ?bool
@@ -38,22 +44,43 @@ final class CBHideByUserGroupView {
      *          subviews: ?[model]
      *      }
      *
-     * @return ?model
+     * @return object
      */
-    static function CBModel_build(stdClass $spec): ?stdClass {
+    static function CBModel_build(stdClass $spec): stdClass {
         return (object)[
-            'hideFromMembers' => CBModel::value($spec, 'hideFromMembers', false, 'boolval'),
-            'hideFromNonmembers' => CBModel::value($spec, 'hideFromNonmembers', false, 'boolval'),
-            'groupName' => trim(CBModel::valueToString($spec, 'groupName')),
-            'subviews' => array_values(array_filter(array_map(
-                'CBModel::build',
-                CBModel::valueToArray($spec, 'subviews')
-            ))),
+            'hideFromMembers' => CBModel::valueToBool(
+                $spec,
+                'hideFromMembers'
+            ),
+
+            'hideFromNonmembers' => CBModel::valueToBool(
+                $spec,
+                'hideFromNonmembers'
+            ),
+
+            'groupName' => trim(
+                CBModel::valueToString(
+                    $spec,
+                    'groupName'
+                )
+            ),
+
+            'subviews' => array_values(
+                array_filter(
+                    array_map(
+                        'CBModel::build',
+                        CBModel::valueToArray($spec, 'subviews')
+                    )
+                )
+            ),
         ];
     }
+    /* CBModel_build() */
+
+
 
     /**
-     * @param model $model
+     * @param object $model
      *
      * @return string
      */
@@ -67,30 +94,38 @@ final class CBHideByUserGroupView {
         );
     }
 
+
+
     /**
-     * @param model $spec
+     * @param object $spec
      *
-     * @return model
+     * @return object
      */
     static function CBModel_upgrade(stdClass $spec): stdClass {
-        $spec->subviews = array_values(array_filter(array_map(
-            'CBModel::upgrade',
-            CBModel::valueToArray($spec, 'subviews')
-        )));
+        $spec->subviews = array_values(
+            array_filter(
+                array_map(
+                    'CBModel::upgrade',
+                    CBModel::valueToArray($spec, 'subviews')
+                )
+            )
+        );
 
         return $spec;
     }
 
+
+
+    /* -- CBView interfaces -- -- -- -- -- */
+
+
+
     /**
-     * @param bool? $spec->hideFromMembers
-     * @param bool? $spec->hideFromNonmembers
-     * @param string? $model->groupName
-     *      An empty group name refers to all visitors.
-     * @param [stdClass]? $model->subviews
+     * @param object $model
      *
-     * @return null
+     * @return void
      */
-    static function CBView_render(stdClass $model) {
+    static function CBView_render(stdClass $model): void {
         if (empty($model->subviews)) {
             return;
         }
@@ -98,7 +133,9 @@ final class CBHideByUserGroupView {
         if (empty($model->groupName)) {
             $isMember = true;
         } else {
-            $isMember = ColbyUser::currentUserIsMemberOfGroup($model->groupName);
+            $isMember = ColbyUser::currentUserIsMemberOfGroup(
+                $model->groupName
+            );
         }
 
         if ($isMember) {
@@ -109,6 +146,11 @@ final class CBHideByUserGroupView {
             return;
         }
 
-        array_walk($model->subviews, 'CBView::render');
+        array_walk(
+            $model->subviews,
+            'CBView::render'
+        );
     }
+    /* CBView_render() */
+
 }
