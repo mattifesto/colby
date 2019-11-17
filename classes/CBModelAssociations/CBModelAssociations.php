@@ -32,39 +32,92 @@
  */
 final class CBModelAssociations {
 
+    /* -- functions -- -- -- -- -- */
+
+
+
     /**
-     * @param ID $ID
+     * @param CBID $CBID
      * @param string $associationKey
-     * @param ID $associatedID
+     * @param CBID $associatedCBID
      *
      * @return void
      */
     static function add(
-        string $ID,
+        string $CBID,
         string $associationKey,
-        string $associatedID
+        string $associatedCBID
     ): void {
-        $IDAsSQL = CBHex160::toSQL($ID);
-        $associationKeyAsSQL = CBDB::stringToSQL($associationKey);
-        $associatedIDAsSQL = CBHex160::toSQL($associatedID);
+        $association = [
+            $CBID,
+            $associationKey,
+            $associatedCBID,
+        ];
+
+        CBModelAssociations::addMultiple(
+            [
+                $association,
+            ]
+        );
+    }
+    /* add() */
+
+
+
+    /**
+     * @param [[<CBID>, <associationKey>, <associatedCBID>]]
+     */
+    static function addMultiple(array $associations): void {
+        if (count($associations) === 0) {
+            return;
+        }
+
+        $values = array_map(
+            function ($association) {
+                if (
+                    !is_array($association) ||
+                    count($association) !== 3
+                ) {
+                    throw CBException::createWithValue(
+                        "This is not a valid association.",
+                        $association,
+                        'c5e1fa8789f4b3217d12674ba6e19ccfe89dc639'
+                    );
+                }
+
+                return (
+                    '(' .
+                    CBID::toSQL($association[0]) .
+                    ',' .
+                    CBDB::stringToSQL($association[1]) .
+                    ',' .
+                    CBID::toSQL($association[2]) .
+                    ')'
+                );
+            },
+            $associations
+        );
+
+        $values = implode(
+            ',',
+            $values
+        );
 
         $SQL = <<<EOT
 
             INSERT INTO CBModelAssociations
-            VALUES
-            (
-                {$IDAsSQL},
-                {$associationKeyAsSQL},
-                {$associatedIDAsSQL}
-            )
+
+            VALUES {$values}
+
             ON DUPLICATE KEY UPDATE
                 associatedID = associatedID
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
     }
-    /* add() */
+    /* addMultiple() */
+
 
 
     /**
@@ -110,11 +163,58 @@ EOT;
             DELETE FROM CBModelAssociations
             WHERE {$clauses}
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
     }
     /* delete() */
+
+
+
+    /**
+     * This function is different that CBModelAssociations::delete() in that
+     * you must specify the CBID, associationKey, and associatedCBID for every
+     * row that you want deleted.
+     *
+     * @param [[<CBID>, <associationKey>, <associatedCBID>]]
+     */
+    static function deleteMultiple(array $associations): void {
+        if (count($associations) === 0) {
+            return;
+        }
+
+        $values = array_map(
+            function ($association) {
+                return (
+                    '(' .
+                    CBID::toSQL($association[0]) .
+                    ',' .
+                    CBDB::stringToSQL($association[1]) .
+                    ',' .
+                    CBID::toSQL($association[2]) .
+                    ')'
+                );
+            },
+            $associations
+        );
+
+        $values = implode(
+            ',',
+            $values
+        );
+
+        $SQL = <<<EOT
+
+            DELETE FROM CBModelAssociations
+
+            WHERE (ID, className, associatedID) IN ({$values})
+
+        EOT;
+
+        Colby::query($SQL);
+    }
+    /* deleteMultiple() */
+
 
 
     /**
@@ -173,11 +273,12 @@ EOT;
             FROM    CBModelAssociations
             WHERE   {$clauses}
 
-EOT;
+        EOT;
 
         return CBDB::SQLToObjects($SQL);
     }
     /* fetch() */
+
 
 
     /**
@@ -209,6 +310,7 @@ EOT;
     /* fetchAssociatedID() */
 
 
+
     /**
      * @param ID $modelID
      * @param string $associationKey
@@ -232,6 +334,7 @@ EOT;
         );
     }
     /* fetchAssociatedIDs() */
+
 
 
     /**
@@ -258,6 +361,7 @@ EOT;
     /* fetchAssociatedModel() */
 
 
+
     /**
      * @param ID $modelID
      * @param string $associationKey
@@ -280,6 +384,7 @@ EOT;
         }
     }
     /* fetchAssociatedModels() */
+
 
 
     /**
@@ -341,6 +446,7 @@ EOT;
     /* fetchOne() */
 
 
+
     /**
      * This function is useful in situations where you have a one-to-one
      * association and you want to add or replace the associated ID while making
@@ -369,4 +475,5 @@ EOT;
         );
     }
     /* replaceAssociatedID() */
+
 }
