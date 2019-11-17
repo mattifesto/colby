@@ -30,51 +30,10 @@ final class CBHex160 {
 
 
     /**
-     * @param CBID|[CBID]
-     *
-     * @return string
-     *
-     *      "UNHEX('<CBID>')"
-     *
-     *      "UNHEX('<CBID>'),UNHEX('<CBID>'),..."
+     * @deprecated use CBID::toSQL()
      */
     static function toSQL($values) {
-        if (!is_array($values)) {
-            $values = [$values];
-        }
-
-        $values = array_map(
-            function($value) {
-                if (!CBHex160::is($value)) {
-                    $valueAsJSON = json_encode($value);
-
-                    if (
-                        is_string($value) &&
-                        preg_match('/^[a-fA-F0-9]{40}$/', $value)
-                    ) {
-                        $message = (
-                            "The value {$valueAsJSON} is not a hex160 value " .
-                            "because it contains capital letters."
-                        );
-                    } else {
-                        $message = (
-                            "The value {$valueAsJSON} is not a 160-bit " .
-                            "hexadecimal value."
-                        );
-                    }
-
-                    throw new RuntimeException($message);
-                }
-
-                $value = CBDB::escapeString($value);
-
-                return "UNHEX('{$value}')";
-            },
-            $values
-        );
-
-        return implode(',', $values);
+        return CBID::toSQL($values);
     }
-    /* toSQL() */
 
 }
