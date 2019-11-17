@@ -88,6 +88,56 @@ final class CBUsers {
 
 
     /**
+     * @param [int]
+     *
+     * @return [CBID]
+     *
+     *      If a user numeric ID is not valid, this function will return a
+     *      smaller array than the array passed in. If you care, check the
+     *      length of the returned array.
+     */
+    static function userNumericIDsToUserCBIDs(array $userNumericIDs): array {
+        $values = array_map(
+            function ($userNumericID) {
+                $value = CBConvert::valueAsInt($userNumericID);
+
+                if ($value === null) {
+                    throw CBException::createWithValue(
+                        'This value is not a valid integer.',
+                        $userNumericID,
+                        'd733d6d67e5dcb5e65ef1acc2f5f0cec1d5b260f'
+                    );
+                }
+
+                return $value;
+            },
+            $userNumericIDs
+        );
+
+        $values = implode(
+            ',',
+            $values
+        );
+
+        $SQL = <<<EOT
+
+            SELECT      LOWER(HEX(hash))
+
+            FROM        ColbyUsers
+
+            WHERE       ID IN ({$values})
+
+        EOT;
+
+        $userCBIDs = CBDB::SQLToArrayOfNullableStrings($SQL);
+
+        return $userCBIDs;
+    }
+    /* userNumericIDsToUserCBIDs() */
+
+
+
+    /**
      * @param string $userGroupName
      *
      * @return void
