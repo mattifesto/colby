@@ -2,31 +2,44 @@
 
 final class CBHideByUserGroupViewEditor {
 
+    /* CBHTMLOutput intefaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v514.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v547.js', cbsysurl()),
         ];
     }
 
 
+
     /**
-     * @return [[string, mixed]]
+     * @return [[<name>, <value>]]
      */
     static function CBHTMLOutput_JavaScriptVariables(): array {
+        $userGroupClassNames = array_map(
+            function ($userGroupModel) {
+                return $userGroupModel->userGroupClassName;
+            },
+            CBUserGroup::fetchCBUserGroupModels()
+        );
+
         return [
             [
                 'CBHideByUserGroupViewEditor_addableClassNames',
                 CBPagesPreferences::classNamesForAddableViews(),
             ],
             [
-                'CBHideByUserGroupViewEditor_groupNames',
-                ColbyUser::fetchGroupNames(),
+                'CBHideByUserGroupViewEditor_userGroupClassNames',
+                $userGroupClassNames,
             ],
         ];
     }
+
 
 
     /**
@@ -40,4 +53,5 @@ final class CBHideByUserGroupViewEditor {
             'CBUISpecArrayEditor',
         ];
     }
+
 }

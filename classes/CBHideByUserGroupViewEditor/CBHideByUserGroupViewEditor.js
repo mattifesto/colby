@@ -9,8 +9,10 @@
     CBUISpecArrayEditor,
 
     CBHideByUserGroupViewEditor_addableClassNames,
-    CBHideByUserGroupViewEditor_groupNames,
+    CBHideByUserGroupViewEditor_userGroupClassNames,
 */
+
+
 
 var CBHideByUserGroupViewEditor = {
 
@@ -22,8 +24,10 @@ var CBHideByUserGroupViewEditor = {
      */
     createEditor: function (args) {
         var section, item;
+
         var element = document.createElement("div");
         element.className = "CBHideByUserGroupViewEditor";
+
         var groupOptions = [
             {
                 title: "All Visitors",
@@ -35,47 +39,73 @@ var CBHideByUserGroupViewEditor = {
             },
         ];
 
-        CBHideByUserGroupViewEditor_groupNames.forEach(function (groupName) {
-            groupOptions.push({
-                title: groupName,
-                value: groupName,
-            });
-        });
+        CBHideByUserGroupViewEditor_userGroupClassNames.forEach(
+            function (groupName) {
+                groupOptions.push(
+                    {
+                        title: groupName,
+                        value: groupName,
+                    }
+                );
+            }
+        );
 
-        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         section = CBUI.createSection();
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUISelector.create({
-            labelText: "User Group",
-            propertyName: "groupName",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-            options: groupOptions,
-        }).element);
+
+        item.appendChild(
+            CBUISelector.create(
+                {
+                    labelText: "User Group",
+                    propertyName: "groupName",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                    options: groupOptions,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText: "Hide from members of group",
-            propertyName: "hideFromMembers",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIBooleanEditor.create(
+                {
+                    labelText: "Hide from members of group",
+                    propertyName: "hideFromMembers",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText: "Hide from nonmembers of group",
-            propertyName: "hideFromNonmembers",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIBooleanEditor.create(
+                {
+                    labelText: "Hide from nonmembers of group",
+                    propertyName: "hideFromNonmembers",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
         element.appendChild(section);
 
-        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         /* subviews */
         {
@@ -83,23 +113,29 @@ var CBHideByUserGroupViewEditor = {
                 args.spec.subviews = [];
             }
 
-            let editor = CBUISpecArrayEditor.create({
-                addableClassNames: (
-                    CBHideByUserGroupViewEditor_addableClassNames
-                ),
-                specs: args.spec.subviews,
-                specsChangedCallback: args.specChangedCallback,
-            });
+            let editor = CBUISpecArrayEditor.create(
+                {
+                    addableClassNames: (
+                        CBHideByUserGroupViewEditor_addableClassNames
+                    ),
+                    specs: args.spec.subviews,
+                    specsChangedCallback: args.specChangedCallback,
+                }
+            );
 
             editor.title = "Views";
 
             element.appendChild(editor.element);
-            element.appendChild(CBUI.createHalfSpace());
+
+            element.appendChild(
+                CBUI.createHalfSpace()
+            );
         }
 
         return element;
     },
     /* createEditor() */
+
 
 
     /**
@@ -110,9 +146,15 @@ var CBHideByUserGroupViewEditor = {
      * @return string|undefined
      */
     CBUISpec_toDescription: function (spec) {
-        if (spec.hideFromMembers && spec.hideFromNonmembers) {
+        if (
+            spec.hideFromMembers &&
+            spec.hideFromNonmembers
+        ) {
             return "Hidden from everyone";
-        } else if (!spec.hideFromMembers && !spec.hideFromNonmembers) {
+        } else if (
+            !spec.hideFromMembers &&
+            !spec.hideFromNonmembers
+        ) {
             return "Shown to everyone";
         }
 
@@ -138,4 +180,5 @@ var CBHideByUserGroupViewEditor = {
         return undefined;
     },
     /* CBUISpec_toDescription() */
+
 };
