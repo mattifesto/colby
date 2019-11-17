@@ -75,6 +75,37 @@ final class CBID {
 
 
 
+    /**
+     * @param CBID|[CBID]
+     *
+     * @return string
+     */
+    static function toSQL($values): string {
+        if (!is_array($values)) {
+            $values = [$values];
+        }
+
+        $values = array_map(
+            function($value) {
+                if (!CBID::valueIsCBID($value)) {
+                    throw CBException::createWithValue(
+                        'This is not a valid CBID.',
+                        $value,
+                        '3f9d223d8acfce3ce3a94f631035faed491fc07e'
+                    );
+                }
+
+                return "UNHEX('{$value}')";
+            },
+            $values
+        );
+
+        return implode(',', $values);
+    }
+    /* toSQL() */
+
+
+
     /*
      * CBID values are hexadecimal values that are 160-bits long (20 bytes, 40
      * hexadecimal characters). They are required to be lowercase so that they
