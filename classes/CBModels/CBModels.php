@@ -377,6 +377,42 @@ EOT;
 
 
     /**
+     * @deprecated use CBModels::fetchModelsByClassName2()
+     *
+     * @param string $className
+     *
+     * @return [ID => model]
+     */
+    static function fetchModelsByClassName(string $className): array {
+        $classNameAsSQL = CBDB::stringToSQL($className);
+
+        $SQL = <<<EOT
+
+            SELECT  LOWER(HEX(m.ID)),
+                    v.modelAsJSON
+
+            FROM    CBModels as m
+
+            JOIN    CBModelVersions as v ON
+                    m.ID = v.ID AND
+                    m.version = v.version
+
+            WHERE   m.className = {$classNameAsSQL}
+
+        EOT;
+
+        return CBDB::SQLToArray(
+            $SQL,
+            [
+                'valueIsJSON' => true,
+            ]
+        );
+    }
+    /* fetchModelsByClassName() */
+
+
+
+    /**
      * This function will return all the models with a given class name. This
      * function should be used mindfully because there are some class names with
      * a high number of models. This function is intended to be used in cases
@@ -385,45 +421,24 @@ EOT;
      *
      * @param string $className
      *
-     * @return [ID => model]
-     */
-    static function fetchModelsByClassName(string $className): array {
-        $classNameAsSQL = CBDB::stringToSQL($className);
-        $SQL = <<<EOT
-
-            SELECT  LOWER(HEX(m.ID)),
-                    v.modelAsJSON
-            FROM    CBModels as m
-            JOIN    CBModelVersions as v ON
-                    m.ID = v.ID AND
-                    m.version = v.version
-            WHERE   m.className = {$classNameAsSQL}
-
-EOT;
-
-        return CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
-    }
-    /* fetchModelsByClassName() */
-
-
-
-    /**
-     * @param string $className
-     *
-     * @return [model]
+     * @return [object]
      */
     static function fetchModelsByClassName2(string $className): array {
         $classNameAsSQL = CBDB::stringToSQL($className);
+
         $SQL = <<<EOT
 
             SELECT  v.modelAsJSON
+
             FROM    CBModels as m
+
             JOIN    CBModelVersions as v ON
                     m.ID = v.ID AND
                     m.version = v.version
+
             WHERE   m.className = {$classNameAsSQL}
 
-EOT;
+        EOT;
 
         $valuesAsJSON = CBDB::SQLToArrayOfNullableStrings($SQL);
 
