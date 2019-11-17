@@ -94,20 +94,36 @@ final class CBViewPageInformationEditor {
      *          name: string
      *      }
      */
-    private static function usersWhoAreAdministrators() {
-        $SQL = <<<EOT
+    private static function usersWhoAreAdministrators(): array {
+        $userGroupCBID = CBUserGroup::userGroupClassNameToCBID(
+            'CBAdministratorsUserGroup'
+        );
 
-            SELECT      user.ID as userNumericID,
-                        user.facebookName as name
+        $associations = CBModelAssociations::fetch(
+            $userGroupCBID,
+            'CBUserGroup_CBUser'
+        );
 
-            FROM        ColbyUsers AS user
+        $userCBIDs = array_map(
+            function ($association): string {
+                return $association->associatedID;
+            },
+            $associations
+        );
 
-            JOIN        ColbyUsersWhoAreAdministrators AS administrator
-                ON      user.ID = administrator.userID
+        $userModels = CBModels::fetchModelsByID2($userCBIDs);
 
-        EOT;
+        $returnValues = array_map(
+            function ($userModel) {
+                return (object)[
+                    'userNumericID' => $userModel->userNumericID,
+                    'name' => $userModel->facebookName,
+                ];
+            },
+            $userModels
+        );
 
-        return CBDB::SQLToObjects($SQL);
+        return $returnValues;
     }
     /* usersWhoAreAdministrators() */
 
