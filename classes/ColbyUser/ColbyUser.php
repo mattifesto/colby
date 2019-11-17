@@ -253,12 +253,16 @@ final class ColbyUser {
      * for the current user.
      *
      * @param int $userNumericID
-     * @param string $groupName
+     * @param string $userGroupName
+     *
+     *      This can either be a user group class name, such as
+     *      "CBAdministratorsUserGroup", or a deprecated user group name, such
+     *      as "Administrators".
      *
      * @return bool
      */
-    static function isMemberOfGroup($userNumericID, $groupName) {
-        if ($groupName === 'Public') {
+    static function isMemberOfGroup($userNumericID, $userGroupName) {
+        if ($userGroupName === 'Public') {
             return true;
         }
 
@@ -267,7 +271,10 @@ final class ColbyUser {
         }
 
         $userNumericIDAsSQL = intval($userNumericID);
-        $tableName = ColbyUser::groupNameToTableName($groupName);
+
+        $tableName = ColbyUser::groupNameToTableName(
+            $userGroupName
+        );
 
         if ($tableName === false) {
             return false;
@@ -284,8 +291,53 @@ final class ColbyUser {
         EOT;
 
         try {
+
             $isMember = CBDB::SQLToValue($SQL) > 0;
+
         } catch (Throwable $exception) {
+
+            /**
+             * If the table has been removed check to see if a user is a member
+             * of the group the new way here.
+             */
+
+            $userGroupModels = CBUserGroup::fetchCBUserGroupModels();
+
+            $userGroupModel = cb_array_find(
+                $userGroupModels,
+                function ($userGroupModel) use ($userGroupName) {
+                    return (
+                        $userGroupModel->userGroupClassName === $userGroupName ||
+                        $userGroupModel->deprecatedGroupName === $userGroupName
+                    );
+                }
+            );
+
+            if ($userGroupModel !== null) {
+                $userCBIDs = CBUsers::userNumericIDsToUserCBIDs(
+                    [
+                        $userNumericID,
+                    ]
+                );
+
+                if (empty($userCBIDs)) {
+                    return false;
+                }
+
+                $userCBID = $userCBIDs[0];
+                $userModel = CBModelCache::fetchModelByID($userCBID);
+
+                $associations = CBModelAssociations::fetch(
+                    $userGroupModel->ID,
+                    'CBUserGroup_CBUser',
+                    $userModel->ID
+                );
+
+                if (count($associations) > 0) {
+                    return true;
+                }
+            }
+
             return false;
         }
 
@@ -314,114 +366,10 @@ final class ColbyUser {
         string $facebookAccessToken,
         string $facebookName
     ): void {
-        if ($facebookUserID <= 0) {
-            throw CBException::createWithValue(
-                'The Facebook user ID is invalid.',
-                $facebookUserID,
-                '2417ee1efc46f05e3ae75cd6050ea4c52c719a65'
-            );
-        }
-
-        $CBUserIDs = ColbyUser::facebookUserIDToCBUserIDs(
-            $facebookUserID
-        );
-
-        $facebookNameAsSQL = CBDB::stringToSQL($facebookName);
-
-        Colby::query('START TRANSACTION');
-
-        if ($CBUserIDs) {
-            $sql = <<<EOT
-
-                UPDATE  ColbyUsers
-
-                SET     facebookName = {$facebookNameAsSQL}
-
-                WHERE   id = {$CBUserIDs->userNumericID}
-
-            EOT;
-
-            Colby::query($sql);
-        } else {
-            $CBUserIDs = (object)[
-                'userCBID' => CBHex160::random(),
-            ];
-
-            $userCBIDAsSQL = CBHex160::toSQL($CBUserIDs->userCBID);
-
-            $SQL = <<<EOT
-
-                INSERT INTO ColbyUsers (
-                    hash,
-                    facebookId,
-                    facebookName,
-                ) VALUES (
-                    {$userCBIDAsSQL},
-                    {$facebookUserID},
-                    {$facebookNameAsSQL},
-                )
-
-            EOT;
-
-            Colby::query($SQL);
-
-            $CBUserIDs->userNumericID = intval(Colby::mysqli()->insert_id);
-
-            /* Detect first user */
-
-            $SQL = <<<EOT
-
-                SELECT  COUNT(*)
-                FROM    ColbyUsers
-
-            EOT;
-
-            $count = CBDB::SQLToValue($SQL);
-
-            if ($count === '1') {
-                $SQL = <<<EOT
-
-                    INSERT INTO ColbyUsersWhoAreAdministrators
-                    VALUES (
-                        {$CBUserIDs->userNumericID},
-                        NOW()
-                    )
-
-                EOT;
-
-                Colby::query($SQL);
-
-
-                $SQL = <<<EOT
-
-                    INSERT INTO ColbyUsersWhoAreDevelopers
-                    VALUES (
-                        {$CBUserIDs->userNumericID},
-                        NOW()
-                    )
-
-                EOT;
-
-                Colby::query($SQL);
-            }
-        }
-
-
-        /* All database updates are complete */
-
-        Colby::query('COMMIT');
-
-        CBModelUpdater::update(
-            (object)[
-                'className' => 'CBUser',
-                'ID' => $CBUserIDs->userCBID,
-                'facebookAccessToken' => $facebookAccessToken,
-                'facebookName' => $facebookName,
-                'facebookUserID' => $facebookUserID,
-                'lastLoggedIn' => time(),
-                'title' => $facebookName,
-                'userNumericID' => $CBUserIDs->userNumericID,
-            ]
+        $userSpec = ColbyUser::updateFacebookUser(
+            $facebookUserID,
+            $facebookAccessToken,
+            $facebookName
         );
 
         /**
@@ -435,10 +383,10 @@ final class ColbyUser {
          */
 
         $cookie = (object)[
-            'userCBID' => $CBUserIDs->userCBID,
+            'userCBID' => $userSpec->ID,
 
             /* deprecated */
-            'userNumericID' => $CBUserIDs->userNumericID,
+            'userNumericID' => $userSpec->userNumericID,
 
             /* 24 hours from now */
             'expirationTimestamp' => time() + (60 * 60 * 24),
@@ -537,42 +485,203 @@ final class ColbyUser {
 
 
     /**
+     * @param int $facebookUserID
+     * @param string $facebookAccessToken
+     * @param object $facebookName
+     *
+     * @return object
+     *
+     *      Returns the updated CBUser model for the user.
+     */
+    static function updateFacebookUser(
+        int $facebookUserID,
+        string $facebookAccessToken,
+        string $facebookName
+    ): stdClass {
+        $isFirstUser = false;
+
+        if ($facebookUserID <= 0) {
+            throw CBException::createWithValue(
+                'The Facebook user ID is invalid.',
+                $facebookUserID,
+                '2417ee1efc46f05e3ae75cd6050ea4c52c719a65'
+            );
+        }
+
+        $CBUserIDs = ColbyUser::facebookUserIDToCBUserIDs(
+            $facebookUserID
+        );
+
+        $facebookNameAsSQL = CBDB::stringToSQL($facebookName);
+
+        Colby::query('START TRANSACTION');
+
+        if ($CBUserIDs !== null) {
+            $SQL = <<<EOT
+
+                UPDATE  ColbyUsers
+
+                SET     facebookName = {$facebookNameAsSQL}
+
+                WHERE   id = {$CBUserIDs->userNumericID}
+
+            EOT;
+
+            Colby::query($SQL);
+        } else {
+            $CBUserIDs = (object)[
+                'userCBID' => CBHex160::random(),
+            ];
+
+            $userCBIDAsSQL = CBHex160::toSQL($CBUserIDs->userCBID);
+
+            $SQL = <<<EOT
+
+                INSERT INTO ColbyUsers (
+                    hash,
+                    facebookId,
+                    facebookName
+                ) VALUES (
+                    {$userCBIDAsSQL},
+                    {$facebookUserID},
+                    {$facebookNameAsSQL}
+                )
+
+            EOT;
+
+            Colby::query($SQL);
+
+            $CBUserIDs->userNumericID = intval(Colby::mysqli()->insert_id);
+
+            /* Detect first user */
+
+            $SQL = <<<EOT
+
+                SELECT  COUNT(*)
+                FROM    ColbyUsers
+
+            EOT;
+
+            $count = CBDB::SQLToValue($SQL);
+
+            if ($count === '1') {
+                $isFirstUser = true;
+            }
+        }
+
+        $updater = CBModelUpdater::fetch(
+            (object)[
+                'className' => 'CBUser',
+                'ID' => $CBUserIDs->userCBID,
+                'facebookAccessToken' => $facebookAccessToken,
+                'facebookName' => $facebookName,
+                'facebookUserID' => $facebookUserID,
+                'lastLoggedIn' => time(),
+                'title' => $facebookName,
+                'userNumericID' => $CBUserIDs->userNumericID,
+            ]
+        );
+
+        if ($updater->working != $updater->original) {
+            CBModels::save($updater->working);
+        }
+
+        if ($isFirstUser) {
+            CBUserGroup::addUsers(
+                'CBAdministratorsUserGroup',
+                $CBUserIDs->userCBID
+            );
+
+            CBUserGroup::addUsers(
+                'CBDevelopersUserGroup',
+                $CBUserIDs->userCBID
+            );
+        }
+
+        /* All database updates are complete */
+
+        Colby::query('COMMIT');
+
+        return $updater->working;
+    }
+    /* updateFacebookUser() */
+
+
+
+    /**
      * @param int $userNumericID
-     * @param string $group
+     * @param string $targetUserGroupName
+     *
+     *      This can either be a user group class names, such as
+     *      "CBAdministratorsUserGroup", or a deprecated user group name, such
+     *      as "Administrators".
+     *
      * @param bool $isMember
      *
      * @return void
      */
     static function updateGroupMembership(
-        int $userNumericID,
-        string $groupName,
+        int $targetUserNumericID,
+        string $targetUserGroupName,
         bool $isMember
     ): void {
-        $tableName = ColbyUser::groupNameToTableName($groupName);
+        $userGroupModels = CBUserGroup::fetchCBUserGroupModels();
 
-        if ($isMember) {
-            $SQL = <<<EOT
+        $userGroupModel = cb_array_find(
+            $userGroupModels,
+            function ($userGroupModel) use ($targetUserGroupName): bool {
+                return (
+                    $userGroupModel->userGroupClassName === $targetUserGroupName ||
+                    $userGroupModel->deprecatedGroupName === $targetUserGroupName
+                );
+            }
+        );
 
-                INSERT IGNORE INTO {$tableName}
-                VALUES (
-                    {$userNumericID},
-                    NOW()
-                )
-
-            EOT;
-        } else {
-            $SQL = <<<EOT
-
-                DELETE FROM {$tableName}
-                WHERE userId = {$userNumericID}
-
-            EOT;
+        if ($userGroupModel === null) {
+            throw CBException::createWithValue(
+                (
+                    'The target user group name is not associated ' .
+                    'with any user group.'
+                ),
+                $targetUserGroupName,
+                'c9dc8a6a0d805cfb70e9fb51b1739df2481ffe53'
+            );
         }
 
-        Colby::query($SQL);
+        $targetUserGroupClassName = $userGroupModel->userGroupClassName;
+
+        $userCBIDs = CBusers::userNumericIDsToUserCBIDs(
+            [
+                $targetUserNumericID,
+            ]
+        );
+
+        if (count($userCBIDs) === 0) {
+            throw CBException::createWithValue(
+                'The target user numeric ID is not associated with any user.',
+                $targetUserNumericID,
+                '59ca6ae5fda96e84d0fa94374ff37ee0b2b07004'
+            );
+        }
+
+        $targetUserCBID = $userCBIDs[0];
+
+        if ($isMember) {
+            CBUserGroup::addUsers(
+                $targetUserGroupClassName,
+                $targetUserCBID
+            );
+        } else {
+            CBUserGroup::removeUsers(
+                $targetUserGroupClassName,
+                $targetUserCBID
+            );
+        }
     }
     /* updateGroupMembership() */
 
 }
+
+
 
 ColbyUser::initialize();
