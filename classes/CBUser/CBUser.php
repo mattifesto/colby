@@ -160,4 +160,38 @@ final class CBUser {
     }
     /* CBModel_upgrade() */
 
+
+
+    /**
+     * @param [object] $models
+     */
+    static function CBModels_willDelete(array $userCBIDs) {
+        foreach ($userCBIDs as $userCBID) {
+            $userCBIDAsSQL = CBID::toSQL($userCBID);
+
+            $SQL = <<<EOT
+
+                DELETE FROM     ColbyUsers
+
+                WHERE           hash = {$userCBIDAsSQL}
+
+            EOT;
+
+            Colby::query($SQL);
+
+            CBModelAssociations::delete(
+                null,
+                'CBUserGroup_CBUser',
+                $userCBID
+            );
+
+            CBModelAssociations::delete(
+                $userCBID,
+                'CBUser_CBUserGroup',
+                null
+            );
+        }
+    }
+    /* CBModels_willDelete */
+
 }
