@@ -125,38 +125,6 @@ final class ColbyUser {
 
 
     /**
-     * @return [string]
-     */
-    static function fetchGroupNames() {
-        $SQL = <<<EOT
-
-            SELECT  `table_name`
-            FROM    `information_schema`.`tables`
-            WHERE   `table_schema` = DATABASE()
-
-        EOT;
-
-        $tableNames = CBDB::SQLToArray($SQL);
-        $groupNames = [];
-
-        foreach ($tableNames as $tableName) {
-            if (
-                preg_match(
-                    '/^ColbyUsersWhoAre(.+)$/',
-                    $tableName,
-                    $matches
-                )
-            ) {
-                $groupNames[] = $matches[1];
-            }
-        }
-
-        return $groupNames;
-    }
-
-
-
-    /**
      * @return string|null
      *
      * Returns the current user's 160-bit hexadecimal ID if a user is logged in;
