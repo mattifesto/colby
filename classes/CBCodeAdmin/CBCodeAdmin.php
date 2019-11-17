@@ -1015,6 +1015,22 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_11_17 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBUserGroup::fetchCBUserGroupModels().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'fetchGroupNames\(',
+                    'severity' => 3,
+                    'title' => 'ColbyUser::fetchGroupNames()',
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
