@@ -16,6 +16,11 @@ final class ColbyUser_Tests {
                 'title' => 'ColbyUser::isMemberOfGroup()',
                 'type' => 'server',
             ],
+            (object)[
+                'name' => 'updateFacebookUser',
+                'title' => 'ColbyUser::updateFacebookUser()',
+                'type' => 'server',
+            ],
         ];
     }
 
@@ -100,5 +105,82 @@ final class ColbyUser_Tests {
         ];
     }
     /* CBTest_isMemberOfGroup() */
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_updateFacebookUser(): stdClass {
+        $facebookUserID = 3000000000; // this is an invalid Facebook user ID
+        $facebookAccessToken = 'fake';
+        $facebookName = 'Test User for CBTest_updateFacebookUser()';
+
+        $userSpec = ColbyUser::updateFacebookUser(
+            $facebookUserID,
+            $facebookAccessToken,
+            $facebookName
+        );
+
+        $userCBID = $userSpec->ID;
+        $userCBIDAsSQL = CBID::toSQL($userCBID);
+
+
+        /* ColbyUsers row count 1 */
+
+        $SQL = <<<EOT
+
+            SELECT      COUNT(*)
+            FROM        ColbyUsers
+            WHERE       hash = {$userCBIDAsSQL}
+
+        EOT;
+
+        $actualResult = CBDB::SQLToValue($SQL);
+        $expectedResult = '1';
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure(
+                'ColbyUsers row count 1',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+
+        /* delete user */
+
+        CBModels::deleteByID($userSpec->ID);
+
+
+        /* ColbyUsers row count 2 */
+
+        $SQL = <<<EOT
+
+            SELECT      COUNT(*)
+            FROM        ColbyUsers
+            WHERE       hash = {$userCBIDAsSQL}
+
+        EOT;
+
+        $actualResult = CBDB::SQLToValue($SQL);
+        $expectedResult = '0';
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure(
+                'ColbyUsers row count 2',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+
+        /* done */
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_updateFacebookUser() */
 
 }
