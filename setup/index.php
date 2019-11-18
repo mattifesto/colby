@@ -14,7 +14,7 @@ function cbsysdir(): string {
 }
 
 include cbsysdir() . '/functions.php';
-include cbsysdir() . '/classes/CBHex160/CBHex160.php';
+include cbsysdir() . '/classes/CBID/CBID.php';
 
 ColbyInstaller::initialize();
 
@@ -338,7 +338,7 @@ class ColbyInstaller {
                 $content = preg_replace_callback(
                     '/RANDOMID/',
                     function () {
-                        $ID = CBHex160::random();
+                        $ID = CBID::generateRandomCBID();
                         return "'{$ID}'";
                     },
                     $content
