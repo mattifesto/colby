@@ -22,7 +22,7 @@ final class CBDataStores {
             $IDs = [$IDs];
         }
 
-        $values = CBHex160::toSQL($IDs);
+        $values = CBID::toSQL($IDs);
         $SQL = <<<EOT
 
             DELETE FROM `CBDataStores`
@@ -84,7 +84,7 @@ EOT;
         }
 
         $values = array_map(function ($ID) use ($timestamp) {
-            $IDAsSQL = CBHex160::toSQL($ID);
+            $IDAsSQL = CBID::toSQL($ID);
             return "({$IDAsSQL}, {$timestamp})";
         }, $IDs);
         $values = implode(',', $values);

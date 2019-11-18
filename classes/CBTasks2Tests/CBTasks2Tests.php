@@ -38,7 +38,7 @@ final class CBTasks2Tests {
      */
     static function CBTest_exceptionHandling(): stdClass {
         $ID = 'add1d0e46582644d3b3488206d85bd3c22fdc19b';
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
         $actualExceptionMessage = '';
         $expectedExceptionMessage = 'CBTasks2Tests_testException';
 
@@ -154,7 +154,7 @@ final class CBTasks2Tests_task {
      */
     static function addTestTask(int $state): void {
         $classNameAsSQL = CBDB::stringToSQL(__CLASS__);
-        $IDAsSQL = CBHex160::toSQL(CBTasks2Tests_task::testTaskID());
+        $IDAsSQL = CBID::toSQL(CBTasks2Tests_task::testTaskID());
         $timestamp = time();
         $SQL = <<<EOT
 
@@ -201,7 +201,7 @@ EOT;
      */
     static function deleteTestTask(): void {
         $classNameAsSQL = CBDB::stringToSQL(__CLASS__);
-        $IDAsSQL = CBHex160::toSQL(CBTasks2Tests_task::testTaskID());
+        $IDAsSQL = CBID::toSQL(CBTasks2Tests_task::testTaskID());
         $SQL = <<<EOT
 
             DELETE FROM CBTasks2

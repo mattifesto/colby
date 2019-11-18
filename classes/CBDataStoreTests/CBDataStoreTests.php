@@ -69,7 +69,7 @@ class CBDataStoreTests {
      * @return null
      */
     private static function confirmDeleted($ID) {
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
         $count = CBDB::SQLToValue("SELECT COUNT(*) FROM `CBDataStores` WHERE `ID` = {$IDAsSQL}");
 
         if ($count != 0) {
@@ -89,7 +89,7 @@ class CBDataStoreTests {
      * @return null
      */
     private static function confirmExists($ID) {
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
         $count = CBDB::SQLToValue("SELECT COUNT(*) FROM `CBDataStores` WHERE `ID` = {$IDAsSQL}");
 
         if ($count != 1) {

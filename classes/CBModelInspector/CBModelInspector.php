@@ -234,7 +234,7 @@ final class CBModelInspector {
      * @return [object]
      */
     private static function fetchModelVersions(string $ID): array {
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
 
         $SQL = <<<EOT
 
@@ -264,7 +264,7 @@ final class CBModelInspector {
      * @return ?stdClass
      */
     private static function fetchRowFromCBImages(string $ID): ?stdClass {
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
 
         $SQL = <<<EOT
 
@@ -292,7 +292,7 @@ final class CBModelInspector {
      * @return ?stdClass
      */
     private static function fetchRowFromColbyPages(string $ID): ?stdClass {
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
 
         $SQL = <<<EOT
 

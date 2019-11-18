@@ -148,7 +148,7 @@ EOT;
 
         /* delete log entry */
 
-        $sourceIDAsSQL = CBHex160::toSQL($sourceID);
+        $sourceIDAsSQL = CBID::toSQL($sourceID);
 
         Colby::query(
             "DELETE FROM CBLog WHERE sourceID = {$sourceIDAsSQL}"

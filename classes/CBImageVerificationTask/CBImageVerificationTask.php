@@ -48,7 +48,7 @@ final class CBImageVerificationTask {
             "(inspect > (a /admin/?c=CBModelInspector&ID={$ID}))",
         ];
 
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
         $SQL = <<<EOT
 
             SELECT  extension

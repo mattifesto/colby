@@ -30,7 +30,7 @@ final class CBTestPageTests {
      */
     static function CBTest_general(): stdClass {
         $ID = '1406f65b87c45a3927672cf3634a88d6daeca48b';
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
 
         $countSQL = <<<EOT
 

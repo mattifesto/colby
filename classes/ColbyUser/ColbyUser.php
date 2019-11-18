@@ -501,7 +501,7 @@ final class ColbyUser {
                 'userCBID' => CBHex160::random(),
             ];
 
-            $userCBIDAsSQL = CBHex160::toSQL($CBUserIDs->userCBID);
+            $userCBIDAsSQL = CBID::toSQL($CBUserIDs->userCBID);
 
             $SQL = <<<EOT
 

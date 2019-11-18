@@ -38,7 +38,7 @@ final class CBModelPruneVersionsTask {
      * @return ?object
      */
     static function CBTasks2_run(string $ID): ?stdClass {
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
         $SQL = <<<EOT
 
             SELECT      version,

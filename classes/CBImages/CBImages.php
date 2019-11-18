@@ -62,7 +62,7 @@ EOT;
      * @return void
      */
     static function deleteByID(string $ID): void {
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
         $SQL = "DELETE FROM `CBImages` WHERE `ID` = {$IDAsSQL}";
 
         Colby::query($SQL);
@@ -105,7 +105,7 @@ EOT;
             return false;
         }
 
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
         $SQL = <<<EOT
 
             SELECT COUNT(*)
@@ -198,7 +198,7 @@ EOT;
      *      CBImage model
      */
     static function makeModelForID(string $ID) {
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
         $extension = CBDB::SQLToValue(
             "SELECT `extension` FROM `CBImages` WHERE `ID` = {$IDAsSQL}"
         );

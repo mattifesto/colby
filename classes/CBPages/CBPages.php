@@ -123,7 +123,7 @@ class CBPages {
             return;
         }
 
-        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $IDsAsSQL = CBID::toSQL($IDs);
 
         Colby::query(
             "DELETE FROM `ColbyPages` WHERE `archiveID` IN ({$IDsAsSQL})"
@@ -147,7 +147,7 @@ class CBPages {
             return;
         }
 
-        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $IDsAsSQL = CBID::toSQL($IDs);
 
         Colby::query(
             "DELETE FROM `CBPagesInTheTrash` " .
@@ -168,7 +168,7 @@ class CBPages {
             return [];
         }
 
-        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $IDsAsSQL = CBID::toSQL($IDs);
 
         $SQL = (
             "SELECT `keyValueData` FROM `ColbyPages` " .
@@ -235,7 +235,7 @@ EOT;
      */
     static function modelToRowValues(stdClass $model): string {
         $now = time();
-        $IDAsSQL = CBHex160::toSQL(CBModel::value($model, 'ID'));
+        $IDAsSQL = CBID::toSQL(CBModel::value($model, 'ID'));
         $className = CBModel::value($model, 'className', '');
         $classNameAsSQL = CBDB::stringToSQL($className);
 
@@ -317,7 +317,7 @@ EOT;
      * @return void
      */
     static function moveRowWithDataStoreIDToTheTrash($dataStoreID): void {
-        $archiveIDForSQL = CBHex160::toSQL($dataStoreID);
+        $archiveIDForSQL = CBID::toSQL($dataStoreID);
 
         $sql = <<<EOT
 
@@ -353,7 +353,7 @@ EOT;
      * @return void
      */
     static function recoverRowWithDataStoreIDFromTheTrash($dataStoreID): void {
-        $archiveIDForSQL = CBHex160::toSQL($dataStoreID);
+        $archiveIDForSQL = CBID::toSQL($dataStoreID);
 
         $SQL = <<<EOT
 

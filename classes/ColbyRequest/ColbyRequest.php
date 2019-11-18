@@ -34,7 +34,7 @@ final class ColbyRequest {
      * @return int
      */
     static function currentIterationForPageID(string $ID) {
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
         $SQL = <<<EOT
 
             SELECT  `iteration`

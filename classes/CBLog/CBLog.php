@@ -298,7 +298,7 @@ EOT;
         $modelID = CBModel::valueAsID($args, 'modelID');
 
         if (!empty($modelID)) {
-            $modelIDAsSQL = CBHex160::toSQL($modelID);
+            $modelIDAsSQL = CBID::toSQL($modelID);
             array_push($whereAsSQL, "modelID = {$modelIDAsSQL}");
         }
 
@@ -320,7 +320,7 @@ EOT;
         $sourceID = CBModel::valueAsID($args, 'sourceID');
 
         if (!empty($sourceID)) {
-            $sourceIDAsSQL = CBHex160::toSQL($sourceID);
+            $sourceIDAsSQL = CBID::toSQL($sourceID);
             $whereAsSQL[] = "sourceID = {$sourceIDAsSQL}";
         }
 
@@ -333,7 +333,7 @@ EOT;
         $processID = CBModel::valueAsID($args, 'processID');
 
         if ($processID !== null) {
-            $processIDAsSQL = CBHex160::toSQL($processID);
+            $processIDAsSQL = CBID::toSQL($processID);
             $whereAsSQL[] = "`processID` = {$processIDAsSQL}";
         }
 
@@ -375,7 +375,7 @@ EOT;
         $where = '';
 
         if ($processID !== null) {
-            $processIDAsSQL = CBHex160::toSQL($processID);
+            $processIDAsSQL = CBID::toSQL($processID);
             $where = "WHERE processID = {$processIDAsSQL}";
         }
 
@@ -461,7 +461,7 @@ EOT;
         /* sourceID */
 
         $sourceID = CBModel::valueAsID($args, 'sourceID');
-        $sourceIDAsSQL = $sourceID ? CBHex160::toSQL($sourceID) : 'NULL';
+        $sourceIDAsSQL = $sourceID ? CBID::toSQL($sourceID) : 'NULL';
 
         /* severity */
 
@@ -485,7 +485,7 @@ EOT;
             }
         }
 
-        $modelIDAsSQL = $modelID ? CBHex160::toSQL($modelID) : 'NULL';
+        $modelIDAsSQL = $modelID ? CBID::toSQL($modelID) : 'NULL';
 
         /* message */
 
@@ -500,7 +500,7 @@ EOT;
         $processIDAsSQL =
         ($processID === null) ?
         'NULL' :
-        CBHex160::toSQL($processID);
+        CBID::toSQL($processID);
 
         /* timestamp */
 

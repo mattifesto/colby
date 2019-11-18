@@ -241,7 +241,7 @@ final class CBModels {
             $IDs = [$IDs];
         }
 
-        $IDsForSQL = CBHex160::toSQL($IDs);
+        $IDsForSQL = CBID::toSQL($IDs);
 
         $SQL = <<<EOT
 
@@ -312,7 +312,7 @@ EOT;
             return [];
         }
 
-        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $IDsAsSQL = CBID::toSQL($IDs);
         $SQL = <<<EOT
 
             SELECT  LOWER(HEX(`ID`)), `timestamp`
@@ -468,7 +468,7 @@ EOT;
             return [];
         }
 
-        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $IDsAsSQL = CBID::toSQL($IDs);
         $SQL = <<<EOT
 
             SELECT  LOWER(HEX(m.ID)),
@@ -497,7 +497,7 @@ EOT;
             return [];
         }
 
-        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $IDsAsSQL = CBID::toSQL($IDs);
         $SQL = <<<EOT
 
             SELECT  v.modelAsJSON
@@ -533,7 +533,7 @@ EOT;
      * Usage Frequency: Occasionally
      */
     static function fetchModelByIDWithVersion($ID, $version) {
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
         $versionAsSQL = (int)$version;
 
         $SQL = <<<EOT
@@ -569,7 +569,7 @@ EOT;
      *      }
      */
     static function fetchSpecAndModelByID($ID) {
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
 
         $SQL = <<<EOT
 
@@ -667,7 +667,7 @@ EOT;
         $createSpecForIDCallback = null;
         extract($args, EXTR_IF_EXISTS);
 
-        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $IDsAsSQL = CBID::toSQL($IDs);
         $SQL = <<<EOT
 
             SELECT  LOWER(HEX(`m`.`ID`)), `v`.`specAsJSON`
@@ -716,7 +716,7 @@ EOT;
         array $IDs,
         int $modified
     ) {
-        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $IDsAsSQL = CBID::toSQL($IDs);
 
         $SQL = <<<EOT
 
@@ -781,7 +781,7 @@ EOT;
      * @return null
      */
     static function revert($ID, $version) {
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
         $versionAsSQL = intval($version);
         $SQL = <<<EOT
 
@@ -1059,7 +1059,7 @@ EOT;
 
         $values = array_map(
             function ($tuple) {
-                $IDAsSQL = CBHex160::toSQL($tuple->model->ID);
+                $IDAsSQL = CBID::toSQL($tuple->model->ID);
 
                 $modelAsJSONAsSQL = CBDB::stringToSQL(
                     json_encode($tuple->model)
@@ -1104,7 +1104,7 @@ EOT;
 
         $values = array_map(
             function ($tuple) {
-                $IDAsSQL = CBHex160::toSQL($tuple->model->ID);
+                $IDAsSQL = CBID::toSQL($tuple->model->ID);
                 $classNameAsSQL = CBDB::stringToSQL($tuple->model->className);
                 $titleAsSQL = CBDB::stringToSQL(
                     CBModel::valueToString($tuple->model, 'title')

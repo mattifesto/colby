@@ -135,7 +135,7 @@ final class CBModelAssociations {
         $clauses = [];
 
         if ($ID !== null) {
-            $IDAsSQL = CBHex160::toSQL($ID);
+            $IDAsSQL = CBID::toSQL($ID);
             array_push($clauses, "ID = {$IDAsSQL}");
         }
 
@@ -145,7 +145,7 @@ final class CBModelAssociations {
         }
 
         if ($associatedID !== null) {
-            $associatedIDAsSQL = CBHex160::toSQL($associatedID);
+            $associatedIDAsSQL = CBID::toSQL($associatedID);
             array_push($clauses, "associatedID = {$associatedIDAsSQL}");
         }
 
@@ -242,7 +242,7 @@ final class CBModelAssociations {
                 $IDs = [$IDs];
             }
 
-            $IDsAsSQL = CBHex160::toSQL($IDs);
+            $IDsAsSQL = CBID::toSQL($IDs);
             array_push($clauses, "ID IN ({$IDsAsSQL})");
         }
 
@@ -252,7 +252,7 @@ final class CBModelAssociations {
         }
 
         if ($associatedID !== null) {
-            $associatedIDAsSQL = CBHex160::toSQL($associatedID);
+            $associatedIDAsSQL = CBID::toSQL($associatedID);
             array_push($clauses, "associatedID = {$associatedIDAsSQL}");
         }
 

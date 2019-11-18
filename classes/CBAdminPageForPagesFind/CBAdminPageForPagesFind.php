@@ -44,7 +44,7 @@ final class CBAdminPageForPagesFind {
                 if (empty($frontPageID)) {
                     $conditions[] = 'FALSE'; /* return no results */
                 } else {
-                    $frontPageIDForSQL = CBHex160::toSQL($frontPageID);
+                    $frontPageIDForSQL = CBID::toSQL($frontPageID);
                     $conditions[] = "`archiveID` = {$frontPageIDForSQL}";
                 }
             } else {

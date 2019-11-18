@@ -230,7 +230,7 @@ final class CBModelPruneVersionsTaskTests {
      */
     static function CBTest_runTask(): stdClass {
         $ID = '8ab4d33187e3016af99e9c2e97ecd1284d219917';
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
 
         $versionNumber = 0;
 

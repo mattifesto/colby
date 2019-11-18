@@ -21,10 +21,10 @@ final class CBDB {
 
 
     /**
-     * @deprecated use `CBHex160::toSQL`
+     * @deprecated use `CBID::toSQL`
      */
     static function hex160ToSQL($values) {
-        return CBHex160::toSQL($values);
+        return CBID::toSQL($values);
     }
 
 

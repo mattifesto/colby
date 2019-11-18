@@ -232,7 +232,7 @@ final class CBModelTests {
 
         /* remove log entry from CBLog */
 
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
 
         Colby::query("DELETE FROM CBLog WHERE modelID = {$IDAsSQL}");
 
