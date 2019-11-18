@@ -2,6 +2,10 @@
 
 final class CBViewPage {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
@@ -10,6 +14,11 @@ final class CBViewPage {
             Colby::flexpath(__CLASS__, 'v418.css', cbsysurl()),
         ];
     }
+
+
+
+    /* -- CBModel interfaces -- -- -- -- -- */
+
 
 
     /**
@@ -164,6 +173,7 @@ final class CBViewPage {
     /* CBModel_build() */
 
 
+
     /**
      * @param object $spec
      *
@@ -178,6 +188,7 @@ final class CBViewPage {
 
         return $spec;
     }
+
 
 
     /**
@@ -228,6 +239,7 @@ final class CBViewPage {
     /* CBModel_toSearchText() */
 
 
+
     /**
      * @param object $spec
      *
@@ -244,13 +256,17 @@ final class CBViewPage {
             unset($spec->layout);
         }
 
-        $spec->sections = array_values(array_filter(array_map(
-            'CBModel::upgrade',
-            CBModel::valueToArray($spec, 'sections')
-        )));
+        $spec->sections = array_values(
+            array_filter(
+                array_map(
+                    'CBModel::upgrade',
+                    CBModel::valueToArray($spec, 'sections')
+                )
+            )
+        );
 
         /**
-         * @NOTE 2018.04.13
+         * @NOTE 2018_04_13
          *
          *      This upgrade exists to help sites update all of the page specs
          *      because soon the classNameForSettings property will be required.
@@ -264,6 +280,7 @@ final class CBViewPage {
 
             if (empty($defaultPageSettingsClassName)) {
                 $severity = 4;
+
                 $message = <<<EOT
 
                     The (classNameForSettings (code)) property is not set on the
@@ -272,24 +289,27 @@ final class CBViewPage {
                     (CBPageSettings::defaultClassName\(\) (code)) returns
                     (null (code)) so the spec can't be upgraded.
 
-EOT;
+                EOT;
             } else {
                 $severity = 6;
                 $spec->classNameForSettings = $defaultPageSettingsClassName;
+
                 $message = <<<EOT
 
                     The (classNameForSettings (code)) property has been set to
                     "{$defaultPageSettingsClassName}" because is was not set on
                     the spec for the page with the title "{$title}".
 
-EOT;
+                EOT;
             }
 
-            CBLog::log((object)[
-                'className' => __CLASS__,
-                'severity' => $severity,
-                'message' => $message,
-            ]);
+            CBLog::log(
+                (object)[
+                    'className' => __CLASS__,
+                    'severity' => $severity,
+                    'message' => $message,
+                ]
+            );
         }
 
         return $spec;
@@ -297,94 +317,9 @@ EOT;
     /* CBModel_upgrade() */
 
 
-    /**
-     * @param object $model
-     *
-     * @return object
-     */
-    static function CBPage_toSummary(stdClass $model): stdClass {
-        return (object)[
-            'description' => CBModel::valueToString(
-                $model,
-                'description'
-            ),
 
-            'URI' => CBModel::valueToString(
-                $model,
-                'URI'
-            ),
+    /* -- CBModels interfaces -- -- -- -- */
 
-            'created' => CBModel::valueAsInt(
-                $model,
-                'created'
-            ),
-
-            'updated' => CBModel::valueAsInt(
-                $model,
-                'modified'
-            ),
-
-            'isPublished' => CBModel::valueToBool(
-                $model,
-                'isPublished'
-            ),
-
-            'publicationTimeStamp' => CBModel::valueAsInt(
-                $model,
-                'publicationTimeStamp'
-            ),
-
-            'image' => CBModel::valueAsModel(
-                $model,
-                'image',
-                [
-                    'CBImage',
-                ]
-            ),
-
-            'thumbnailURL' => CBModel::valueToString(
-                $model,
-                'thumbnailURL'
-            ),
-
-            /* deprecated? is an int, should be a hex160 */
-            'publishedBy' => CBModel::valueAsInt(
-                $model,
-                'publishedBy'
-            ),
-
-            /* deprecated */
-            'dataStoreID' => CBModel::valueAsID(
-                $model,
-                'ID'
-            ),
-        ];
-    }
-    /* CBPage_toSummary() */
-
-
-    /**
-     * @param model $model
-     *
-     * @return [object]
-     */
-    static function CBView_toSubviews(stdClass $model): array {
-        return CBModel::valueToArray($model, 'sections');
-    }
-
-
-    /**
-     * @param model $model
-     * @param [model] $subviews
-     *
-     * @return void
-     */
-    static function CBView_setSubviews(
-        stdClass $model,
-        array $subviews
-    ): void {
-        $model->sections = $subviews;
-    }
 
 
     /**
@@ -398,6 +333,7 @@ EOT;
     }
 
 
+
     /**
      * @param [object] $models
      *
@@ -406,6 +342,11 @@ EOT;
     static function CBModels_willSave(array $models) {
         CBPages::save($models);
     }
+
+
+
+    /* -- CBPage interfaces -- -- -- -- -- */
+
 
 
     /**
@@ -495,6 +436,108 @@ EOT;
     /* CBPage_render() */
 
 
+
+    /**
+     * @param object $model
+     *
+     * @return object
+     */
+    static function CBPage_toSummary(stdClass $model): stdClass {
+        return (object)[
+            'description' => CBModel::valueToString(
+                $model,
+                'description'
+            ),
+
+            'URI' => CBModel::valueToString(
+                $model,
+                'URI'
+            ),
+
+            'created' => CBModel::valueAsInt(
+                $model,
+                'created'
+            ),
+
+            'updated' => CBModel::valueAsInt(
+                $model,
+                'modified'
+            ),
+
+            'isPublished' => CBModel::valueToBool(
+                $model,
+                'isPublished'
+            ),
+
+            'publicationTimeStamp' => CBModel::valueAsInt(
+                $model,
+                'publicationTimeStamp'
+            ),
+
+            'image' => CBModel::valueAsModel(
+                $model,
+                'image',
+                [
+                    'CBImage',
+                ]
+            ),
+
+            'thumbnailURL' => CBModel::valueToString(
+                $model,
+                'thumbnailURL'
+            ),
+
+            /* deprecated? is an int, should be a hex160 */
+            'publishedBy' => CBModel::valueAsInt(
+                $model,
+                'publishedBy'
+            ),
+
+            /* deprecated */
+            'dataStoreID' => CBModel::valueAsID(
+                $model,
+                'ID'
+            ),
+        ];
+    }
+    /* CBPage_toSummary() */
+
+
+
+    /* -- CBView interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @param model $model
+     *
+     * @return [object]
+     */
+    static function CBView_toSubviews(stdClass $model): array {
+        return CBModel::valueToArray($model, 'sections');
+    }
+
+
+
+    /**
+     * @param model $model
+     * @param [model] $subviews
+     *
+     * @return void
+     */
+    static function CBView_setSubviews(
+        stdClass $model,
+        array $subviews
+    ): void {
+        $model->sections = $subviews;
+    }
+
+
+
+    /* -- functions -- -- -- -- -- */
+
+
+
     /**
      * This function copies the appropriate model information into the
      * CBHTMLOutput page information object.
@@ -562,6 +605,21 @@ EOT;
     /* initializePageInformation() */
 
 
+
+    /**
+     * @param string $moniker
+     *
+     *      This function will not trim or make any other modifications to the
+     *      moniker.
+     *
+     * @return ID
+     */
+    static function monikerToID(string $moniker): string {
+        return sha1("0e64b8a8110db365de4e49d6d890a7d9a2dd60fa {$moniker}");
+    }
+
+
+
     /**
      * Use this function to get the array of selected menu item names. The first
      * name is for the selected main menu item, the second name is for the
@@ -600,16 +658,4 @@ EOT;
     }
     /* selectedMenuItemNames() */
 
-
-    /**
-     * @param string $moniker
-     *
-     *      This function will not trim or make any other modifications to the
-     *      moniker.
-     *
-     * @return ID
-     */
-    static function monikerToID(string $moniker): string {
-        return sha1("0e64b8a8110db365de4e49d6d890a7d9a2dd60fa {$moniker}");
-    }
 }
