@@ -690,7 +690,7 @@ EOT;
      * @return void
      */
     static function setFrontPageID(string $ID): void {
-        if (!CBHex160::is($ID)) {
+        if (!CBID::valueIsCBID($ID)) {
             throw new InvalidArgumentException("'{$ID}' is not a valid ID");
         }
 

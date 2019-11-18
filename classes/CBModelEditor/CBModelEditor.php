@@ -102,7 +102,7 @@ class CBModelEditor {
         $copyID = cb_query_string_value('copyID');
         $templateClassName = cb_query_string_value('templateClassName');
 
-        if (!CBHex160::is($ID)) {
+        if (!CBID::valueIsCBID($ID)) {
             throw new CBException(
                 "No model ID was specified.",
                 '',
@@ -111,7 +111,7 @@ class CBModelEditor {
         } else {
             $originalSpec = CBModels::fetchSpecByID($ID);
 
-            if (empty($originalSpec) && CBHex160::is($copyID)) {
+            if (empty($originalSpec) && CBID::valueIsCBID($copyID)) {
                 $copiedSpec = CBModels::fetchSpecByIDNullable($copyID);
 
                 if ($copiedSpec === null) {

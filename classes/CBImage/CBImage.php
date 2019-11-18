@@ -299,7 +299,7 @@ final class CBImage {
     static function valueToFlexpath(stdClass $model, $keyPath, $operation = null, $flexdir = null) {
         $ID = CBModel::value($model, "{$keyPath}.ID");
 
-        if (!CBHex160::is($ID)) {
+        if (!CBID::valueIsCBID($ID)) {
             return false;
         }
 

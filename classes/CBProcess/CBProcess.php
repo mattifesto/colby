@@ -39,7 +39,7 @@ final class CBProcess {
             throw new RuntimeException('A process ID has already been set.');
         }
 
-        if (!CBHex160::is($processID)) {
+        if (!CBID::valueIsCBID($processID)) {
             $processIDAsJSON = json_encode($processID);
             throw new InvalidArgumentException("The provided value is not a valid process ID: {$processIDAsJSON}");
         }

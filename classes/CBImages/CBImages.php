@@ -101,7 +101,7 @@ EOT;
      * @return bool
      */
     static function isInstance($ID): bool {
-        if (!CBHex160::is($ID)) {
+        if (!CBID::valueIsCBID($ID)) {
             return false;
         }
 

@@ -60,7 +60,7 @@ final class CBDataStore {
      * @return null
      */
     static function deleteByID($ID) {
-        if (!CBHex160::is($ID)) {
+        if (!CBID::valueIsCBID($ID)) {
             throw new InvalidArgumentException("'{$ID}' is not a valid data store ID.");
         }
 
