@@ -1393,6 +1393,22 @@ final class CBCodeAdmin {
                     'severity' => 4,
                     'title' => 'CBDB::SQLToObject()',
                 ],
+
+
+                /**
+                 * 2019_11_18 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBUserGroup models.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBHex160',
+                    'severity' => 4,
+                    'title' => 'CBHex160',
+                ],
             ]
         );
     }
