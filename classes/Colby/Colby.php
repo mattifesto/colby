@@ -34,7 +34,10 @@ final class Colby {
     public static $libraryDirectories = [];
 
 
+
     /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -70,7 +73,10 @@ EOT
     /* CBAdmin_getIssueMessages() */
 
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -81,6 +87,7 @@ EOT
         ];
     }
     /* CBHTMLOutput_CSSURLs() */
+
 
 
     /**
@@ -94,7 +101,10 @@ EOT
     /* CBHTMLOutput_JavaScriptURLs() */
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @return bool
@@ -108,7 +118,10 @@ EOT
                 break;
             }
 
-            $filepath = cbsitedir() . "{$directory}/classes/{$className}/{$className}.php";
+            $filepath = (
+                cbsitedir() .
+                "{$directory}/classes/{$className}/{$className}.php"
+            );
 
             if (is_file($filepath)) {
                 break;
@@ -124,6 +137,8 @@ EOT
             return true;
         }
     }
+    /* autoload() */
+
 
 
     /**
@@ -141,10 +156,11 @@ EOT
      * @return void
      */
     static function debugLog($message) {
-        if (self::siteIsBeingDebugged()) {
+        if (Colby::siteIsBeingDebugged()) {
             error_log("Debug Log: {$message}");
         }
     }
+
 
 
     /**
@@ -184,6 +200,7 @@ EOT
     /* decrypt() */
 
 
+
     /**
      * Encryption is incredibly complex. This function and the `decrypt`
      * function appear simple but it took days of research before they were
@@ -220,15 +237,24 @@ EOT
          */
 
         $cipherData->version = 1;
-        $cipherData->initializationVector = openssl_random_pseudo_bytes(self::countOfInitializationVectorBytes);
-        $cipherData->ciphertext = openssl_encrypt($serializedData,
-                                                  self::encryptionMethod,
-                                                  CBEncryptionPassword,
-                                                  self::encryptionOptions,
-                                                  $cipherData->initializationVector);
+
+        $cipherData->initializationVector = openssl_random_pseudo_bytes(
+            Colby::countOfInitializationVectorBytes
+        );
+
+        $cipherData->ciphertext = openssl_encrypt(
+            $serializedData,
+            Colby::encryptionMethod,
+            CBEncryptionPassword,
+            Colby::encryptionOptions,
+            $cipherData->initializationVector
+        );
 
         return serialize($cipherData);
     }
+    /* encrypt() */
+
+
 
     /**
      * @deprecated This function returns more that just the stack trace and
@@ -246,6 +272,8 @@ EOT
         return ob_get_clean();
     }
 
+
+
     /**
      * This function searches the website, the Colby system, and the libraries
      * for a file, usually in that order. The behavior of this function is what
@@ -261,8 +289,11 @@ EOT
      *
      * @return string | null
      */
-    static function findFile($path, $returnFormat = Colby::returnAbsoluteFilename) {
-        foreach (self::$libraryDirectories as $libraryDirectory) {
+    static function findFile(
+        $path,
+        $returnFormat = Colby::returnAbsoluteFilename
+    ) {
+        foreach (Colby::$libraryDirectories as $libraryDirectory) {
             if ($libraryDirectory) {
                 $intraSiteFilename = "{$libraryDirectory}/{$path}";
             } else {
@@ -285,16 +316,24 @@ EOT
 
         return null;
     }
+    /* findFile() */
+
+
 
     /**
      * @deprecated use findFile
      *
      * @return string | null
      */
-    static function findHandler($filename, $returnFormat = Colby::returnAbsoluteFilename) {
+    static function findHandler(
+        $filename,
+        $returnFormat = Colby::returnAbsoluteFilename
+    ) {
         $path = "handlers/{$filename}";
-        return self::findFile($path, $returnFormat);
+        return Colby::findFile($path, $returnFormat);
     }
+
+
 
     /**
      * @deprecated use findFile
@@ -303,8 +342,9 @@ EOT
      */
     static function findSnippet($filename) {
         $path = "snippets/{$filename}";
-        return self::findFile($path);
+        return Colby::findFile($path);
     }
+
 
 
     /**
@@ -329,6 +369,8 @@ EOT
             return "{$flexdir}/{$flexpath}";
         }
     }
+
+
 
     /**
      * Find files in all libraries.
@@ -361,13 +403,24 @@ EOT
         return $filenames;
     }
 
+
+
     /**
      * @return void
      */
     static function handleError($errno, $errstr, $errfile, $errline) {
         $severity = 2;
-        throw new ErrorException($errstr, $errno, $severity, $errfile, $errline);
+
+        throw new ErrorException(
+            $errstr,
+            $errno,
+            $severity,
+            $errfile,
+            $errline
+        );
     }
+
+
 
     /**
      * @deprecated use CBErrorHandler::handle()
@@ -375,6 +428,7 @@ EOT
     static function handleException(Throwable $throwable) {
         CBErrorHandler::handle($throwable);
     }
+
 
 
     /**
@@ -409,6 +463,7 @@ EOT
         }
     }
     /* handleShutdown() */
+
 
 
     /**
@@ -558,6 +613,7 @@ EOT
     /* initialize() */
 
 
+
     /**
      * @param string $libraryPath
      *
@@ -610,6 +666,7 @@ EOT
     /* loadLibrary() */
 
 
+
     /**
      * @return mysqli
      */
@@ -626,7 +683,8 @@ EOT
                 throw new RuntimeException($mysqli->connect_error);
             }
 
-            // The default MySQL character set is "latin1" but the tables use "utf8mb4"
+            // The default MySQL character set is "latin1" but the tables
+            // use "utf8mb4"
 
             if (!$mysqli->set_charset('utf8mb4')) {
                 throw new RuntimeException(
@@ -638,11 +696,14 @@ EOT
 
         return Colby::$mysqli;
     }
+    /* mysqli() */
+
+
 
     /**
-     * This function is used to run multiple SQL statements with a single request
-     * which will help performance. The function does not allow the caller
-     * to get any results so it may not be useful for queries that return
+     * This function is used to run multiple SQL statements with a single
+     * request which will help performance. The function does not allow the
+     * caller to get any results so it may not be useful for queries that return
      * results. To get results use the `query` function or use the `mysqli`
      * function to the get the `mysqli` object to use it directly.
      *
@@ -678,9 +739,16 @@ EOT
         }
 
         if ($mysqli->error) {
-            throw new RuntimeException("Index of the SQL statement with an error: {$indexOfTheSQLStatementWithAnError}\n\nMySQL error: {$mysqli->error}");
+            throw new RuntimeException(
+                "Index of the SQL statement with an error: " .
+                "{$indexOfTheSQLStatementWithAnError}\n\n" .
+                "MySQL error: {$mysqli->error}"
+            );
         }
     }
+    /* queries() */
+
+
 
     /**
      * This function is used to run a single query and check for errors.
@@ -709,7 +777,10 @@ EOT
             }
 
             if ($mysqli->error) {
-                throw new RuntimeException("MySQL error: \"{$mysqli->error}\", MySQL error number: {$mysqli->errno}\n\n{$SQL}");
+                throw new RuntimeException(
+                    "MySQL error: \"{$mysqli->error}\", " .
+                    "MySQL error number: {$mysqli->errno}\n\n{$SQL}"
+                );
             }
 
             break;
@@ -717,15 +788,8 @@ EOT
 
         return $result;
     }
+    /* query() */
 
-    /**
-     * @deprecated use CBID::generateRandomCBID()
-     *
-     * @return {hex160}
-     */
-    static function random160() {
-        return CBID::generateRandomCBID();
-    }
 
 
     /**
@@ -737,6 +801,8 @@ EOT
         return CBSitePreferences::debug();
     }
 
+
+
     /**
      * @deprecated use URLForJavaScriptForClass
      *
@@ -747,7 +813,10 @@ EOT
     static function URLForJavaScriptForSiteClass($className) {
         return cbsiteurl() . "/classes/{$className}/{$className}.js";
     }
+
 }
+/* Colby */
+
 
 
 /**
@@ -774,7 +843,11 @@ function cbsiteurl() {
     } else if (defined('COLBY_SITE_URL')) { // @deprecated
         return COLBY_SITE_URL;
     } else {
-        return (empty($_SERVER['HTTPS']) ? 'http://' : 'https://') . $_SERVER['SERVER_NAME'];
+        return (
+            empty($_SERVER['HTTPS']) ?
+            'http://' :
+            'https://'
+        ) . $_SERVER['SERVER_NAME'];
     }
 }
 
