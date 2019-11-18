@@ -397,9 +397,11 @@ final class CBPageVerificationTaskTests {
 
         // clean up
 
-        CBDB::transaction(function () use ($pageID) {
-            CBModels::deleteByID([$pageID]);
-        });
+        CBDB::transaction(
+            function () use ($pageID) {
+                CBModels::deleteByID([$pageID]);
+            }
+        );
 
         CBModels::deleteByID($temporaryImageDataStoreID);
         CBModels::deleteByID(CBTestAdmin::testImageID());
@@ -430,13 +432,17 @@ final class CBPageVerificationTaskTests {
             ),
         ];
 
-        CBDB::transaction(function () use ($ID) {
-            CBModels::deleteByID($ID);
-        });
+        CBDB::transaction(
+            function () use ($ID) {
+                CBModels::deleteByID($ID);
+            }
+        );
 
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save($spec);
-        });
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save($spec);
+            }
+        );
 
         CBLog::bufferStart();
 
@@ -488,9 +494,11 @@ final class CBPageVerificationTaskTests {
             );
         }
 
-        CBDB::transaction(function () use ($ID) {
-            CBModels::deleteByID($ID);
-        });
+        CBDB::transaction(
+            function () use ($ID) {
+                CBModels::deleteByID($ID);
+            }
+        );
 
         return (object)[
             'succeeded' => true,
@@ -508,7 +516,7 @@ final class CBPageVerificationTaskTests {
             CBPageVerificationTaskTests::createPagesRowAndDataStoreWithoutModel()
         );
 
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
         $result = CBPageVerificationTask::run($ID);
 
         if (
@@ -550,9 +558,11 @@ final class CBPageVerificationTaskTests {
     static function CBTest_upgradeThumbnailURLToImage(): stdClass {
         $pageID = 'e87c8eef4953d3060faaa2e3597c730326adfc29';
 
-        CBDB::transaction(function () use ($pageID) {
-            CBModels::deleteByID([$pageID]);
-        });
+        CBDB::transaction(
+            function () use ($pageID) {
+                CBModels::deleteByID([$pageID]);
+            }
+        );
 
         CBModels::deleteByID(CBTestAdmin::testImageID());
 
@@ -579,9 +589,11 @@ final class CBPageVerificationTaskTests {
             ]
         );
 
-        CBDB::transaction(function () use ($initialPageSspec) {
-            CBModels::save($initialPageSspec);
-        });
+        CBDB::transaction(
+            function () use ($initialPageSspec) {
+                CBModels::save($initialPageSspec);
+            }
+        );
 
         CBLog::bufferStart();
 
@@ -617,7 +629,7 @@ final class CBPageVerificationTaskTests {
                 --- pre\n{$bufferAsMessage}
                 ---
 
-EOT;
+            EOT;
 
             return (object)[
                 'message' => $message,
@@ -672,13 +684,13 @@ EOT;
 
 
     /**
-     * @return ID
+     * @return CBID
      */
     private static function createPagesRowAndDataStoreWithoutModel(): string {
-        $ID = CBHex160::random();
+        $ID = CBID::generateRandomCBID();
         $now = time();
 
-        $archiveIDAsSQL= CBHex160::toSQL($ID);
+        $archiveIDAsSQL= CBID::toSQL($ID);
         $keyValueDataAsSQL = CBDB::stringToSQL('');
         $classNameAsSQL = 'NULL';
         $classNameForKindAsSQL = 'NULL';
@@ -749,7 +761,7 @@ EOT;
 
 
     /**
-     * @return model
+     * @return object
      */
     private static function specWithDeprecatedAndUnsupportedViews(): stdClass {
         return (object)[
