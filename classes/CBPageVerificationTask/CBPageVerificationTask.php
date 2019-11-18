@@ -15,27 +15,32 @@ final class CBPageVerificationTask {
 
     static $messageContext = [];
 
+
+
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+
+
     /**
-     * @return [string]
+     * @return void
      */
-    static function allowedViewClassNames() {
-        static $allowedViewClassNames;
-
-        if ($allowedViewClassNames === null) {
-            $function = 'CBPageHelpers::allowedViewClassNames';
-
-            if (is_callable($function)) {
-                $allowedViewClassNames =
-                call_user_func($function);
-            } else {
-                $allowedViewClassNames =
-                CBPagesPreferences::classNamesForSupportedViews();
-            }
-        }
-
-        return $allowedViewClassNames;
+    static function CBAjax_startForAllPages(): void {
+        CBPageVerificationTask::startForAllPages();
     }
-    /* allowedViewClassNames() */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_startForAllPages_group() {
+        return 'Administrators';
+    }
+
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
 
 
     /**
@@ -44,6 +49,7 @@ final class CBPageVerificationTask {
     static function CBInstall_install(): void {
         CBPageVerificationTask::startForAllPages();
     }
+
 
 
     /**
@@ -58,6 +64,11 @@ final class CBPageVerificationTask {
             'CBTasks2',
         ];
     }
+
+
+
+    /* -- CBTasks2 interfaces -- -- -- -- -- */
+
 
 
     /**
@@ -99,7 +110,7 @@ final class CBPageVerificationTask {
                 The page row and data store were deleted by this task because no
                 model exists for this ID
 
-EOT;
+            EOT;
 
             CBLog::log(
                 (object)[
@@ -158,7 +169,7 @@ EOT;
 
                             {$result->spec->image->ID}
 
-EOT;
+                        EOT;
 
                         CBLog::log(
                             (object)[
@@ -203,7 +214,7 @@ EOT;
                         the (CBImage::isInstance\(\) (code)) function, the
                         function returned false.
 
-EOT;
+                    EOT;
 
                     CBLog::log(
                         (object)[
@@ -236,6 +247,7 @@ EOT;
                 $uniqueCount = count($uniqueClassNames);
                 $uniqueCountPlural = $uniqueCount > 1 ? 'es' : '';
                 $uniqueClassNames = implode("\n\n", $uniqueClassNames);
+
                 $message = <<<EOT
 
                     The page "{$pageTitle}" has {$count} deprecated
@@ -246,7 +258,7 @@ EOT;
                     {$uniqueClassNames}
                     ---
 
-EOT;
+                EOT;
 
                 CBLog::log(
                     (object)[
@@ -288,7 +300,7 @@ EOT;
                     {$uniqueClassNames}
                     ---
 
-EOT;
+                EOT;
 
                 CBLog::log(
                     (object)[
@@ -319,29 +331,62 @@ EOT;
     /* CBTasks2_run() */
 
 
+
+    /* -- functions -- -- -- -- -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function allowedViewClassNames() {
+        static $allowedViewClassNames;
+
+        if ($allowedViewClassNames === null) {
+            $function = 'CBPageHelpers::allowedViewClassNames';
+
+            if (is_callable($function)) {
+                $allowedViewClassNames =
+                call_user_func($function);
+            } else {
+                $allowedViewClassNames =
+                CBPagesPreferences::classNamesForSupportedViews();
+            }
+        }
+
+        return $allowedViewClassNames;
+    }
+    /* allowedViewClassNames() */
+
+
+
     /**
      * This function counts versions older than 30 days because CBModels:save()
      * will remove those versions.
      *
-     * @param string $ID
+     * @param CBID $ID
      *
      * @return int
      */
     static function fetchCountOfOldVersions(string $ID) {
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
         $timestamp = time() - (60 * 60 * 24 * 30); // 30 days ago
+
         $SQL = <<<EOT
 
             SELECT  COUNT(*)
-            FROM    `CBModelVersions`
-            WHERE   `ID` = {$IDAsSQL} and
-                    `timestamp` < {$timestamp}
 
-EOT;
+            FROM    CBModelVersions
+
+            WHERE   ID = {$IDAsSQL} and
+                    timestamp < {$timestamp}
+
+        EOT;
 
         return CBDB::SQLToValue($SQL);
     }
     /* fetchCountOfOldVersions() */
+
 
 
     /**
@@ -359,9 +404,9 @@ EOT;
      *          spec: model?
      *      }
      */
-    static function run(string $ID) {
+    static function run(string $ID): stdClass {
         $result = (object)[];
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
 
         /* check for ColbyPages row */
 
@@ -416,41 +461,41 @@ EOT;
 
         return $result;
     }
+    /* run() */
+
 
 
     /**
      * Start or restart the page verification task for all existing pages.
+     *
+     * @return void
      */
-    static function startForAllPages() {
-        $IDs = CBDB::SQLToArray(
-            'SELECT LOWER(HEX(archiveID)) FROM ColbyPages'
+    static function startForAllPages(): void {
+        $SQL = <<<EOT
+
+            SELECT  LOWER(HEX(archiveID))
+
+            FROM    ColbyPages
+
+        EOT;
+
+        $IDs = CBDB::SQLToArray($SQL);
+
+        CBTasks2::restart(
+            __CLASS__,
+            $IDs,
+            /* priority: */ 101
         );
-
-        CBTasks2::restart(__CLASS__, $IDs, /* priority: */ 101);
     }
+    /* startForAllPages() */
 
-
-    /**
-     * @return null
-     */
-    static function CBAjax_startForAllPages() {
-        CBPageVerificationTask::startForAllPages();
-    }
-
-
-    /**
-     * @return string
-     */
-    static function CBAjax_startForAllPages_group() {
-        return 'Administrators';
-    }
 
 
     /**
      * This function walks the subview tree of the model provided and returns a
      * non-unique array of deprecated subview class names.
      *
-     * @param model $model
+     * @param object $model
      *
      * @return [string]
      */
@@ -477,6 +522,8 @@ EOT;
 
         return $data->classNames;
     }
+    /* findDeprecatedSubviewClassNames() */
+
 
 
     /**
@@ -510,4 +557,6 @@ EOT;
 
         return $data->classNames;
     }
+    /* findUnsupportedSubviewClassNames() */
+
 }
