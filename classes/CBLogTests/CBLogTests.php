@@ -104,7 +104,7 @@ EOT;
      * @return object
      */
     static function CBTest_bufferEndFlush(): stdClass {
-        $sourceID = CBHex160::random();
+        $sourceID = CBID::generateRandomCBID();
         $message = <<<EOT
 
             This is a temporary test log entry created by the function

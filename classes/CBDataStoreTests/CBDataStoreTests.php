@@ -177,7 +177,7 @@ class CBDataStoreTests {
      * @return null
      */
     static function URIToIDTest() {
-        $ID = CBHex160::random();
+        $ID = CBID::generateRandomCBID();
         $path = CBDataStore::directoryNameFromDocumentRoot($ID);
         $siteDomainName = CBSitePreferences::siteDomainName();
         $siteDirectory = CBSitePreferences::siteDirectory();

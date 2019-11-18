@@ -82,7 +82,7 @@ final class CBModelsTests {
 
         /* 2 */
 
-        $ID = CBHex160::random();
+        $ID = CBID::generateRandomCBID();
         $model = CBModels::fetchModelByID($ID);
 
         if ($model !== false) {
@@ -121,7 +121,12 @@ final class CBModelsTests {
 
         /* 2 */
 
-        $IDs = [CBHex160::random(), CBHex160::random(), CBHex160::random()];
+        $IDs = [
+            CBID::generateRandomCBID(),
+            CBID::generateRandomCBID(),
+            CBID::generateRandomCBID(),
+        ];
+
         $models = CBModels::fetchModelsByID($IDs);
 
         if ($models !== []) {
@@ -132,7 +137,12 @@ final class CBModelsTests {
 
         /* 3 */
 
-        $IDs = [CBHex160::random(), CBHex160::random(), CBHex160::random()];
+        $IDs = [
+            CBID::generateRandomCBID(),
+            CBID::generateRandomCBID(),
+            CBID::generateRandomCBID(),
+        ];
+
         $IDs = array_merge(CBModelsTests::testModelIDs, $IDs);
         $models = CBModels::fetchModelsByID($IDs);
 

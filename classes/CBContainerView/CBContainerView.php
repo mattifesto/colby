@@ -198,7 +198,7 @@ EOT;
 
             $classes[] = "T{$imageThemeID} useImageHeight";
         } else {
-            $CSSClassName = 'ID_' . CBHex160::random();
+            $CSSClassName = 'ID_' . CBID::generateRandomCBID();
 
             CBHTMLOutput::addCSS(
                 CBContainerView::modelToImageCSS($model, $CSSClassName)
@@ -369,7 +369,7 @@ EOT;
         $localCSSTemplate = CBModel::value($spec, 'stylesTemplate', '', 'trim');
 
         if (!empty($localCSSTemplate)) {
-            $localCSSClassName = 'ID_' . CBHex160::random();
+            $localCSSClassName = 'ID_' . CBID::generateRandomCBID();
             $model->CSSClassNames[] = $localCSSClassName;
 
             $model->stylesCSS = CBView::localCSSTemplateToLocalCSS(

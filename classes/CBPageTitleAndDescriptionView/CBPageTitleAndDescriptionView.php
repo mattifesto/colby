@@ -166,7 +166,7 @@ final class CBPageTitleAndDescriptionView {
         $localCSSTemplate = CBModel::value($spec, 'stylesTemplate', '', 'trim');
 
         if (!empty($localCSSTemplate)) {
-            $localCSSClassName = 'ID_' . CBHex160::random();
+            $localCSSClassName = 'ID_' . CBID::generateRandomCBID();
             $model->CSSClassNames[] = $localCSSClassName;
             $model->stylesCSS = CBView::localCSSTemplateToLocalCSS($localCSSTemplate, 'view', ".{$localCSSClassName}");
         }

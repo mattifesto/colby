@@ -116,7 +116,7 @@ final class CBArtworkElement {
             $aspectRatioHeight
         );
 
-        $ID = CBHex160::random();
+        $ID = CBID::generateRandomCBID();
 
         if ($calculatedMaxWidth !== null) {
             $CSSWidth = "{$calculatedMaxWidth}px";

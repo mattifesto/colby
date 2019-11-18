@@ -179,7 +179,7 @@ final class CBModelTests {
      * @return object
      */
     static function CBTest_upgradeSpecWithID(): stdClass {
-        $ID = CBHex160::random();
+        $ID = CBID::generateRandomCBID();
         $spec = (object)[
             'className' => 'CBModelTests_TestClass1',
             'ID' => $ID,

@@ -498,7 +498,7 @@ final class ColbyUser {
             Colby::query($SQL);
         } else {
             $CBUserIDs = (object)[
-                'userCBID' => CBHex160::random(),
+                'userCBID' => CBID::generateRandomCBID(),
             ];
 
             $userCBIDAsSQL = CBID::toSQL($CBUserIDs->userCBID);

@@ -29,7 +29,7 @@ final class CBMaintenanceTests {
      * @return object
      */
     static function CBTest_lock(): stdClass {
-        $holderID = CBHex160::random();
+        $holderID = CBID::generateRandomCBID();
         $title = __METHOD__ . '()';
 
         /* --- */
@@ -87,7 +87,7 @@ final class CBMaintenanceTests {
 
         $actual = CBMaintenance::lock(
             (object)[
-                'holderID' => CBHex160::random(),
+                'holderID' => CBID::generateRandomCBID(),
                 'title' => $title,
             ]
         );

@@ -117,7 +117,7 @@ final class CBModelCacheTests {
     static function CBTest_general(): stdClass {
         Colby::query('START TRANSACTION');
 
-        $ID = CBHex160::random();
+        $ID = CBID::generateRandomCBID();
         $model = CBModelCache::modelByID($ID);
 
         if (!empty($model)) {
@@ -159,7 +159,7 @@ final class CBModelCacheTests {
 
         CBModelCache::fetchModelLazilyByID($ID);
 
-        $model = CBModelCache::fetchModelByID(CBHex160::random());
+        $model = CBModelCache::fetchModelByID(CBID::generateRandomCBID());
 
         if (!empty($model)) {
             throw new Exception('The false model appears to exist.');

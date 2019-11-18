@@ -87,7 +87,7 @@ EOT;
         Colby::query($SQL);
 
         for ($i = 0; $i < 10; $i++) {
-            $original[] = CBHex160::random();
+            $original[] = CBID::generateRandomCBID();
         }
 
         $originalAsSQL = array_map(function($value) {
@@ -130,7 +130,7 @@ EOT;
         Colby::query($SQL);
 
         for ($i = 0; $i < 10; $i++) {
-            $original[CBHex160::random()] = rand();
+            $original[CBID::generateRandomCBID()] = rand();
         }
 
         $originalAsSQL = array_map(function($key) use ($original) {
@@ -191,7 +191,7 @@ EOT;
      * @return object
      */
     static function CBTest_SQLToValue2(): stdClass {
-        $tableName = 'CBTest_SQLToValue2_' . CBHex160::random();
+        $tableName = 'CBTest_SQLToValue2_' . CBID::generateRandomCBID();
         $SQL = <<<EOT
 
             CREATE TEMPORARY TABLE {$tableName}
@@ -230,8 +230,8 @@ EOT;
 
         /* insert test rows */
 
-        $binary1 = CBHex160::random();
-        $binary2 = CBHex160::random();
+        $binary1 = CBID::generateRandomCBID();
+        $binary2 = CBID::generateRandomCBID();
         $SQL = <<<EOT
 
             INSERT INTO {$tableName}

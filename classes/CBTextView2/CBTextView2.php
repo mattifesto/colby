@@ -166,7 +166,7 @@ final class CBTextView2 {
         );
 
         if (!empty($localCSSTemplate)) {
-            $localCSSClassName = 'ID_' . CBHex160::random();
+            $localCSSClassName = 'ID_' . CBID::generateRandomCBID();
             $model->CSSClassNames[] = $localCSSClassName;
             $model->localCSS = CBView::localCSSTemplateToLocalCSS(
                 $localCSSTemplate,

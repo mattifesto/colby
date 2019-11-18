@@ -41,7 +41,7 @@ final class CBView {
      *      );
      *
      *      if ($CSSTemplate !== '') {
-     *          $uniqueCSSClassName = 'ID_' . CBHex160::random();
+     *          $uniqueCSSClassName = 'ID_' . CBID::generateRandomCBID();
      *          $model->CSSClassNames[] = $uniqueCSSClassName;
      *          $model->CSS = CBView::CSSTemplateToCSS(
      *              $CSSTemplate,
@@ -161,7 +161,7 @@ final class CBView {
         $keyword,
         $selector
     ) {
-        $escapedKeywordPlaceholder = CBHex160::random();
+        $escapedKeywordPlaceholder = CBID::generateRandomCBID();
         $localCSS = $localCSSTemplate;
 
         // Replace escaped keywords with a temporary placeholder.

@@ -59,7 +59,7 @@ final class CBMessageView {
          *
          * Step 1: Create a globally unique CSS class name for the view.
          */
-        $uniqueCSSClassName = 'ID_' . CBHex160::random();
+        $uniqueCSSClassName = 'ID_' . CBID::generateRandomCBID();
 
         /**
          * Step 2: Add the unique class name to the view's CSS class names.

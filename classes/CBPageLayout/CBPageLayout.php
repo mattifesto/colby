@@ -185,7 +185,7 @@ final class CBPageLayout {
          $CSSTemplate = trim(CBModel::valueToString($spec, 'localCSSTemplate'));
 
          if ($CSSTemplate !== '') {
-             $uniqueCSSClassName = 'ID_' . CBHex160::random();
+             $uniqueCSSClassName = 'ID_' . CBID::generateRandomCBID();
              $model->CSSClassNames[] = $uniqueCSSClassName;
              $model->localCSS = CBView::CSSTemplateToCSS($CSSTemplate, $uniqueCSSClassName);
          }

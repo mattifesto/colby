@@ -719,12 +719,12 @@ EOT
     }
 
     /**
-     * @deprecated use CBHex160::random()
+     * @deprecated use CBID::generateRandomCBID()
      *
      * @return {hex160}
      */
     static function random160() {
-        return CBHex160::random();
+        return CBID::generateRandomCBID();
     }
 
 
