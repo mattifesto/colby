@@ -279,6 +279,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'js',
                     'regex' => 'CBModelUpdater',
+                    'severity' => 3,
                     'title' => (
                         'The CBModelUpdater JavaScript class has been removed'
                     ),
@@ -291,6 +292,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'js',
                     'regex' => 'Colby\\.centsToDollars\\(',
+                    'severity' => 3,
                     'title' => (
                         'Replace use of Colby.centsToDollars() with ' .
                         'CBConvert.centsToDollars()'
@@ -304,6 +306,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'js',
                     'regex' => 'Colby\\.imageToURL\\(',
+                    'severity' => 3,
                     'title' => (
                         'Replace use of Colby.imageToURL() with ' .
                         'CBImage.toURL()'
@@ -317,6 +320,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'Colby::reportException\\(',
+                    'severity' => 3,
                     'title' => (
                         'Replace use of Colby::reportException() with ' .
                         'CBErrorHandler::report()'
@@ -330,6 +334,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'js',
                     'regex' => 'dataStoreFlexpath',
+                    'severity' => 3,
                     'title' => (
                         'Replace use of Colby.dataStoreFlexpath() with ' .
                         'CBDataStore.flexpath()'
@@ -343,6 +348,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'js',
                     'regex' => 'dataStoreIDToURI',
+                    'severity' => 3,
                     'title' => (
                         'Replace use of Colby.dataStoreIDToURI() with ' .
                         'CBDataStore.flexpath()'
@@ -356,6 +362,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'js',
                     'regex' => 'setPanelContent\\(',
+                    'severity' => 3,
                     'title' => 'Colby.setPanelContent() has been removed',
                 ],
 
@@ -366,6 +373,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'js',
                     'regex' => 'warnOlderBrowsers\\(',
+                    'severity' => 3,
                     'title' => 'Colby.warnOlderBrowsers() has been removed',
                 ],
 
@@ -376,6 +384,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'ColbyRequest::isForFrontPage\\(',
+                    'severity' => 3,
                     'title' => (
                         'ColbyRequest::isForFrontPage() replaced with ' .
                         'ColbyRequest::currentRequestIsForTheFrontPage()'
@@ -389,9 +398,10 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'CBSitePreferences::siteURL\\(',
-
-                    'title' =>
-                    'Replace CBSitePreferences::siteURL() with cbsiteurl()',
+                    'severity' => 3,
+                    'title' => (
+                        'Replace CBSitePreferences::siteURL() with cbsiteurl()'
+                    ),
                 ],
 
 
@@ -401,6 +411,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'CBView::renderModelAsHTML',
+                    'severity' => 3,
                     'title' => 'Replace use of CBView::renderModelAsHTML()',
                 ],
 
@@ -412,6 +423,7 @@ final class CBCodeAdmin {
                     'args' => '--php --js --css',
                     'filetype' => 'args',
                     'regex' => 'CBUIImageUploader',
+                    'severity' => 3,
                     'title' => 'Replace use of CBUIImageUploader',
                 ],
 
@@ -422,6 +434,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'CBView::modelWithClassName',
+                    'severity' => 3,
                     'title' => 'Replace use of CBView::modelWithClassName()',
                 ],
 
@@ -432,6 +445,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => ' renderModelAsHTML',
+                    'severity' => 3,
                     'title' => (
                         'Replace renderModelAsHTML() with CBView_render()'
                     ),
@@ -444,6 +458,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'ColbyConvert::centsIntToDollarsString',
+                    'severity' => 3,
                     'title' => (
                         'Replace use of ' .
                         'ColbyConvert::centsIntToDollarsString() with ' .
@@ -458,6 +473,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'ColbyConvert::markaroundToHTML',
+                    'severity' => 3,
                     'title' => (
                         'Replace use of ColbyConvert::markaroundToHTML() ' .
                         'with CBMarkaround::markaroundToHTML()'
@@ -471,6 +487,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'ColbyConvert::textToFormattedContent',
+                    'severity' => 3,
                     'title' => (
                         'Replace use of ' .
                         'ColbyConvert::textToFormattedContent() with ' .
@@ -485,6 +502,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'ColbyConvert::textToHTML',
+                    'severity' => 3,
                     'title' => (
                         'Replace use of ColbyConvert::textToHTML() ' .
                         'with cbhtml()'
@@ -498,6 +516,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'ColbyConvert::textToLines',
+                    'severity' => 3,
                     'title' => (
                         'Replace use of ColbyConvert::textToLines() with ' .
                         'CBConvert::stringToLines()'
@@ -511,6 +530,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'ColbyConvert::textToSQL',
+                    'severity' => 3,
                     'title' => (
                         'Replace use of ColbyConvert::textToSQL() with ' .
                         'CBDB::escapeString()'
@@ -524,6 +544,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'ColbyConvert::textToStub',
+                    'severity' => 3,
                     'title' => (
                         'Replace use of ColbyConvert::textToStub() with ' .
                         'CBConvert::stringToStub()'
@@ -540,6 +561,7 @@ final class CBCodeAdmin {
                     'regex' => (
                         'handle-authorization-failed-ajax.php'
                     ),
+                    'severity' => 3,
                     'title' => (
                         'Replace use of handle-authorization-failed-ajax.php ' .
                         'with CBAjax interfaces.'
@@ -574,6 +596,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'CBAjaxResponse',
+                    'severity' => 3,
                     'title' => (
                         'Replace use of CBAjaxResponse with a CBAjax interface'
                     ),
@@ -587,6 +610,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'js',
                     'regex' => 'class=CBImages&function=upload',
+                    'severity' => 3,
                     'title' => (
                         'Replace deprecated CBImages ajax upload function'
                     ),
@@ -601,6 +625,7 @@ final class CBCodeAdmin {
                     'regex' => (
                         'ColbyUser::addUserToGroup\\('
                     ),
+                    'severity' => 3,
                     'title' => (
                         'Replace ColbyUser::addUserToGroup() with ' .
                         'Colby::updateGroupMembership()'
@@ -616,6 +641,7 @@ final class CBCodeAdmin {
                     'regex' => (
                         'COLBY_SYSTEM_URL'
                     ),
+                    'severity' => 3,
                     'title' => (
                         'Replace COLBY_SYSTEM_URL with cbsysurl()'
                     ),
@@ -629,6 +655,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'CBSystemURL',
+                    'severity' => 3,
                     'title' => 'Replace CBSystemURL with cbsysurl()',
                 ],
 
@@ -640,6 +667,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'ColbyUser::currentUserHash',
+                    'severity' => 3,
                     'title' => (
                         'Replace ColbyUser::currentUserHash() with ' .
                         'ColbyUser::getCurrentUserID()'
@@ -654,6 +682,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'function\s+requiredClassNames\\(\s*\\)',
+                    'severity' => 3,
                     'title' => (
                         'Replace requiredClassNames() with ' .
                         'CBHTMLOutput_requiredClassNames()'
@@ -668,6 +697,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'function\s+requiredJavaScriptURLs\\(',
+                    'severity' => 3,
                     'title' => (
                         'Replace requiredJavaScriptURLs() with ' .
                         'CBHTMLOutput_JavaScriptURLs()'
@@ -682,6 +712,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'Colby::flexnameForJavaScriptForClass\\(',
+                    'severity' => 3,
                     'title' => (
                         'Replace Colby::flexnameForJavaScriptForClass() ' .
                         'with Colby::flexpath()'
@@ -696,6 +727,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'Colby::flexnameForCSSForClass\\(',
+                    'severity' => 3,
                     'title' => (
                         'Replace Colby::flexnameForCSSForClass() with ' .
                         'Colby::flexpath()'
@@ -709,6 +741,7 @@ final class CBCodeAdmin {
                 (object)[
                     'filetype' => 'php',
                     'regex' => 'CBHTMLOutput::\$classNameForSettings',
+                    'severity' => 3,
                     'title' => (
                         'Replace use of CBHTMLOutput::$classNameForSettings ' .
                         'with CBHTMLOutput::pageInformation()'
@@ -727,6 +760,7 @@ final class CBCodeAdmin {
                         'adminPageMenuNamePath|' .
                         'adminPageRenderContent'
                     ),
+                    'severity' => 3,
                     'title' => (
                         'Replace /admin/page/ interfaces with CBAdmin ' .
                         'interfaces'
@@ -1081,6 +1115,22 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_11_18 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBUserGroup models.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBHex160',
+                    'severity' => 3,
+                    'title' => 'CBHex160',
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
@@ -1410,22 +1460,6 @@ final class CBCodeAdmin {
                     'regex' => 'CBDB::SQLToObject\(',
                     'severity' => 4,
                     'title' => 'CBDB::SQLToObject()',
-                ],
-
-
-                /**
-                 * 2019_11_18 (warning)
-                 */
-                (object)[
-                    'cbmessage' => <<<EOT
-
-                        Use CBUserGroup models.
-
-                    EOT,
-                    'filetype' => 'php',
-                    'regex' => 'CBHex160',
-                    'severity' => 4,
-                    'title' => 'CBHex160',
                 ],
 
 
