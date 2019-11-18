@@ -269,7 +269,9 @@ final class CBCodeAdmin {
         return array_merge(
             $searches,
             [
-                /* errors */
+                /* -- errors -- -- -- -- -- */
+
+
 
                 /**
                  * 2019_06_16
@@ -1060,6 +1062,22 @@ final class CBCodeAdmin {
                     'regex' => 'CBUsers::uninstallUserGroup\(',
                     'severity' => 3,
                     'title' => 'CBUsers::uninstallUserGroup()',
+                ],
+
+
+                /**
+                 * 2019_11_18 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBID::generateRandomCBID().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => '(?<!.)random160\(',
+                    'severity' => 3,
+                    'title' => 'Colby::random160()',
                 ],
 
 
