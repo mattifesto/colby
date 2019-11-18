@@ -8,30 +8,35 @@ final class CBTasks2 {
      */
     const defaultPriority = 100;
 
+
+
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+
+
     /**
      * @param object $args
      *
      *      {
-     *          processID: hex160?
+     *          processID: ?CBID
      *      }
      *
-     *  @return [int => object]
-     *
-     *      {
-     *          state: int
-     *          count: int
-     *      }
+     *  @return object
      */
-    static function CBAjax_fetchStatus($args) {
+    static function CBAjax_fetchStatus($args): stdClass {
         return CBTasks2::fetchStatus($args);
     }
+
+
 
     /**
      * @return string
      */
-    static function CBAjax_fetchStatus_group() {
+    static function CBAjax_fetchStatus_group(): string {
         return 'Administrators';
     }
+
+
 
     /**
      * This ajax function will run the next ready task if one exists. If one
@@ -40,7 +45,7 @@ final class CBTasks2 {
      * @param object $args
      *
      *      {
-     *          processID: hex160?
+     *          processID: ?CBID
      *      }
      *
      * @return object
@@ -50,7 +55,7 @@ final class CBTasks2 {
      *          taskWasRun: bool
      *      }
      */
-    static function CBAjax_runNextTask($args) {
+    static function CBAjax_runNextTask($args): stdClass {
         $processID = CBModel::valueAsID($args, 'processID');
         $tasksRunCount = 0;
         $expirationTimestamp = microtime(true) + 1;
@@ -93,19 +98,179 @@ final class CBTasks2 {
             'taskWasRun' => $tasksRunCount > 0,
         ];
     }
+    /* CBAjax_runNextTask() */
+
+
 
     /**
      * @return string
      */
-    static function CBAjax_runNextTask_group() {
+    static function CBAjax_runNextTask_group(): string {
         return 'Public';
     }
+
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * Table columns:
+     *
+     *      className
+     *
+     *          The class name of the class that runs the task. This class must
+     *          implement the CBTasks2_run() interface.
+     *
+     *      ID
+     *
+     *          This is the ID of the model that is the target of the task. For
+     *          instance and "upgrade model" task would be created for multiple
+     *          models.
+     *
+     *          For singleton tasks, the tasks should declare a unique ID that
+     *          it will always use. If the task needs to store data, it can
+     *          store it in a model with this ID. But a model does not need to
+     *          be created.
+     *
+     *          This ID will be passed to the CBTasks2_run() interface.
+     *
+     *      priority
+     *
+     *          0-255 with lower numbers representing higher priority.
+     *
+     *          default: 100
+     *
+     *      state
+     *
+     *          0: scheduled
+     *          1: ready
+     *          2: running
+     *          3: complete
+     *          4: failed
+     *
+     *      timestamp
+     *
+     *          state 0: time running scheduled to start
+     *          state 1: time made ready to start
+     *          state 2: time running started
+     *          state 3: time running finished
+     *          state 4: time failure occurred
+     *
+     *      processID
+     *
+     *          A process ID is used to group related tasks. This allows you to
+     *          track the status of a set of tasks or cancel all of the tasks if
+     *          necessary.
+     *
+     *          For instance, when performing a model import, the import process
+     *          sets a process ID using the CBProcess class. All of the tasks
+     *          created then become part of that process. When a task is run
+     *          that is part of a process, other tasks created during the run
+     *          will also be part of that process.
+     *
+     *          To create a process use the CBProcess class to set the process
+     *          ID to a unique random ID. Then create some tasks and nothing
+     *          needs to be done to maintain the process after that.
+     *
+     *      starterID
+     *
+     *          Used by the this class when running tasks.
+     *
+     * Table indexes:
+     *
+     *      className, ID
+     *
+     *          Primary key. Only one task can exist per className and ID. If
+     *          the task needs to be run again, restart it.
+     *
+     *      state, priority
+     *
+     *          Used to find the next of all tasks to run.
+     *
+     *      processID, state, priority
+     *
+     *          Used to find the next of the tasks in a process to run.
+     *
+     *      state, timestamp
+     *
+     *          Used to find scheduled tasks that can be moved to the ready
+     *          state.
+     *
+     *      starterID
+     *
+     *          Used by the class when running tasks.
+     *
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $defaultPriority = CBTasks2::defaultPriority;
+
+        $SQL = <<<EOT
+
+            CREATE TABLE IF NOT EXISTS CBTasks2 (
+                className
+                    VARCHAR(80) NOT NULL,
+                ID
+                    BINARY(20) NOT NULL,
+                priority
+                    TINYINT UNSIGNED NOT NULL DEFAULT {$defaultPriority},
+                state
+                    TINYINT UNSIGNED NOT NULL,
+                timestamp
+                    BIGINT NOT NULL,
+                processID
+                    BINARY(20),
+                starterID
+                    BINARY(20),
+
+                PRIMARY KEY (className, ID),
+
+                KEY state_priority
+                    (state, priority),
+                KEY processID_state_priority
+                    (processID, state, priority),
+                KEY state_timestamp
+                    (state, timestamp),
+                KEY starterID
+                    (starterID)
+            )
+            ENGINE=InnoDB
+            DEFAULT CHARSET=utf8mb4
+            COLLATE=utf8mb4_unicode_520_ci
+
+        EOT;
+
+        Colby::query($SQL);
+    }
+    /* CBInstall_install() */
+
+
+
+    /**
+     * When a task is run a log entry is made so CBLog is required for this
+     * class to be fully installed.
+     *
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBLog',
+        ];
+    }
+
+
+
+    /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @param object $args
      *
      *      {
-     *          processID: ?ID
+     *          processID: ?CBID
      *      }
      *
      *  @return object
@@ -120,24 +285,28 @@ final class CBTasks2 {
      *          total: int
      *      }
      */
-    static function fetchStatus($args) {
+    static function fetchStatus($args): stdClass {
         $processID = CBModel::valueAsID($args, 'processID');
 
         if ($processID !== null) {
-            $processIDAsSQL = CBHex160::toSQL($processID);
-            $where = "WHERE `processID` = {$processIDAsSQL}";
+            $processIDAsSQL = CBID::toSQL($processID);
+            $where = "WHERE processID = {$processIDAsSQL}";
         } else {
             $where = '';
         }
 
         $SQL = <<<EOT
 
-            SELECT      `state`, COUNT(*) AS `count`
-            FROM        `CBTasks2`
-            {$where}
-            GROUP BY    `state`
+            SELECT      state,
+                        COUNT(*) AS count
 
-EOT;
+            FROM        CBTasks2
+
+            {$where}
+
+            GROUP BY    state
+
+        EOT;
 
         $states = CBDB::SQLToObjects($SQL, ['keyField' => 'state']);
         $scheduled = isset($states[0]) ? intval($states[0]->count) : 0;
@@ -158,153 +327,11 @@ EOT;
     }
     /* fetchStatus() */
 
-    /**
-     * Table columns:
-     *
-     *      `className`
-     *
-     *          The class name of the class that runs the task. This class must
-     *          implement the CBTasks2_run() interface.
-     *
-     *      `ID`
-     *
-     *          This is the ID of the model that is the target of the task. For
-     *          instance and "upgrade model" task would be created for multiple
-     *          models.
-     *
-     *          For singleton tasks, the tasks should declare a unique ID that
-     *          it will always use. If the task needs to store data, it can
-     *          store it in a model with this ID. But a model does not need to
-     *          be created.
-     *
-     *          This ID will be passed to the CBTasks2_run() interface.
-     *
-     *      `priority`
-     *
-     *          0-255 with lower numbers representing higher priority.
-     *
-     *          default: 100
-     *
-     *      `state`
-     *
-     *          0: scheduled
-     *          1: ready
-     *          2: running
-     *          3: complete
-     *          4: failed
-     *
-     *      `timestamp`
-     *
-     *          state 0: time running scheduled to start
-     *          state 1: time made ready to start
-     *          state 2: time running started
-     *          state 3: time running finished
-     *          state 4: time failure occurred
-     *
-     *      `processID`
-     *
-     *          A process ID is used to group related tasks. This allows you to
-     *          track the status of a set of tasks or cancel all of the tasks if
-     *          necessary.
-     *
-     *          For instance, when performing a model import, the import process
-     *          sets a process ID using the CBProcess class. All of the tasks
-     *          created then become part of that process. When a task is run
-     *          that is part of a process, other tasks created during the run
-     *          will also be part of that process.
-     *
-     *          To create a process use the CBProcess class to set the process
-     *          ID to a unique random ID. Then create some tasks and nothing
-     *          needs to be done to maintain the process after that.
-     *
-     *      `starterID`
-     *
-     *          Used by the this class when running tasks.
-     *
-     * Table indexes:
-     *
-     *      `className`, `ID`
-     *
-     *          Primary key. Only one task can exist per className and ID. If
-     *          the task needs to be run again, restart it.
-     *
-     *      `state`, `priority`
-     *
-     *          Used to find the next of all tasks to run.
-     *
-     *      `processID`, `state`, `priority`
-     *
-     *          Used to find the next of the tasks in a process to run.
-     *
-     *      `state`, `timestamp`
-     *
-     *          Used to find scheduled tasks that can be moved to the ready
-     *          state.
-     *
-     *      `starterID`
-     *
-     *          Used by the class when running tasks.
-     *
-     * @return void
-     */
-    static function CBInstall_install(): void {
-        $defaultPriority = CBTasks2::defaultPriority;
-        $SQL = <<<EOT
-
-            CREATE TABLE IF NOT EXISTS `CBTasks2` (
-                `className`
-                    VARCHAR(80) NOT NULL,
-                `ID`
-                    BINARY(20) NOT NULL,
-                `priority`
-                    TINYINT UNSIGNED NOT NULL DEFAULT {$defaultPriority},
-                `state`
-                    TINYINT UNSIGNED NOT NULL,
-                `timestamp`
-                    BIGINT NOT NULL,
-                `processID`
-                    BINARY(20),
-                `starterID`
-                    BINARY(20),
-
-                PRIMARY KEY (`className`, `ID`),
-
-                KEY `state_priority`
-                    (`state`, `priority`),
-                KEY `processID_state_priority`
-                    (`processID`, `state`, `priority`),
-                KEY `state_timestamp`
-                    (`state`, `timestamp`),
-                KEY `starterID`
-                    (`starterID`)
-            )
-            ENGINE=InnoDB
-            DEFAULT CHARSET=utf8mb4
-            COLLATE=utf8mb4_unicode_520_ci
-
-EOT;
-
-        Colby::query($SQL);
-    }
-    /* CBInstall_install() */
-
-
-    /**
-     * When a task is run a log entry is made so CBLog is required for this
-     * class to be fully installed.
-     *
-     * @return [string]
-     */
-    static function CBInstall_requiredClassNames(): array {
-        return [
-            'CBLog',
-        ];
-    }
 
 
     /**
      * @param string $className
-     * @param [hex160]|hex160 $IDs
+     * @param [CBID]|CBID $IDs
      *
      * @return void
      */
@@ -314,7 +341,8 @@ EOT;
         }
 
         $classNameAsSQL = CBDB::stringToSQL($className);
-        $IDsAsSQL = CBHex160::toSQL($IDs);
+        $IDsAsSQL = CBID::toSQL($IDs);
+
         $SQL = <<<EOT
 
             DELETE
@@ -322,15 +350,16 @@ EOT;
             WHERE   className = {$classNameAsSQL} AND
                     ID IN ($IDsAsSQL)
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
     }
 
 
+
     /**
      * @param string $className
-     * @param [hex160]|hex160 $IDs
+     * @param [CBID]|CBID $IDs
      * @param ?int $priority
      * @param int $delayInSeconds
      *
@@ -364,11 +393,12 @@ EOT;
     /* restart() */
 
 
+
     /**
      * @param object $args
      *
      *      {
-     *          processID: hex160?
+     *          processID: ?CBID
      *      }
      *
      * @return bool
@@ -389,25 +419,30 @@ EOT;
 
             $andProcessID = '';
         } else {
-            $processIDAsSQL = CBHex160::toSQL($processID);
-            $andProcessID = "AND `processID` = {$processIDAsSQL}";
+            $processIDAsSQL = CBID::toSQL($processID);
+            $andProcessID = "AND processID = {$processIDAsSQL}";
         }
 
         $timestamp = time();
-        $starterID = CBHex160::random();
-        $starterIDAsSQL = CBHex160::toSQL($starterID);
+        $starterID = CBID::generateRandomCBID();
+        $starterIDAsSQL = CBID::toSQL($starterID);
+
         $SQL = <<<EOT
 
-            UPDATE      `CBTasks2`
-            SET         `state` = 2,
-                        `timestamp` = {$timestamp},
-                        `starterID` = {$starterIDAsSQL}
-            WHERE       `state` = 1
+            UPDATE      CBTasks2
+
+            SET         state = 2,
+                        timestamp = {$timestamp},
+                        starterID = {$starterIDAsSQL}
+
+            WHERE       state = 1
                         {$andProcessID}
-            ORDER BY    `priority`
+
+            ORDER BY    priority
+
             LIMIT       1
 
-EOT;
+        EOT;
 
         Colby::query($SQL, /* retryOnDeadlock */ true);
 
@@ -420,11 +455,12 @@ EOT;
     /* runNextTask() */
 
 
+
     /**
      * This function will run the specified task before the function returns.
      *
      * @param string $className
-     * @param ID $ID
+     * @param CBID $ID
      *
      * @return bool
      *
@@ -447,11 +483,11 @@ EOT;
      */
     static function runSpecificTask(string $className, string $ID): bool {
         $classNameAsSQL = CBDB::stringToSQL($className);
-        $IDAsSQL = CBHex160::toSQL($ID);
+        $IDAsSQL = CBID::toSQL($ID);
         $timestamp = time();
         $state_running = 2;
-        $starterID = CBHex160::random();
-        $starterIDAsSQL = CBHex160::toSQL($starterID);
+        $starterID = CBID::generateRandomCBID();
+        $starterIDAsSQL = CBID::toSQL($starterID);
 
         /**
          * If the task is in the CBTasks2 table in a non-running state, place it
@@ -468,7 +504,7 @@ EOT;
                     ID = {$IDAsSQL} AND
                     state != {$state_running}
 
-EOT;
+        EOT;
 
         Colby::query($SQL, /* retryOnDeadlock */ true);
 
@@ -498,7 +534,7 @@ EOT;
                     {$timestamp}
                 )
 
-EOT;
+            EOT;
 
             try {
                 Colby::query($SQL, /* retryOnDeadlock */ true);
@@ -526,6 +562,7 @@ EOT;
         return CBTasks2::runTaskForStarter($starterID);
     }
     /* runSpecificTask() */
+
 
 
     /**
@@ -558,19 +595,21 @@ EOT;
      *
      *      Returns true if the task is run; otherwise false.
      */
-    private static function runTaskForStarter($starterID) {
-        $starterIDAsSQL = CBHex160::toSQL($starterID);
+    private static function runTaskForStarter($starterID): bool {
+        $starterIDAsSQL = CBID::toSQL($starterID);
 
         try {
             $SQL = <<<EOT
 
-                SELECT  `className`,
-                        LOWER(HEX(`ID`)) AS `ID`,
-                        LOWER(HEX(`processID`)) as `processID`
-                FROM    `CBTasks2`
-                WHERE   `starterID` = {$starterIDAsSQL}
+                SELECT  className,
+                        LOWER(HEX(ID)) AS ID,
+                        LOWER(HEX(processID)) as processID
 
-EOT;
+                FROM    CBTasks2
+
+                WHERE   starterID = {$starterIDAsSQL}
+
+            EOT;
 
             $task = CBDB::SQLToObject($SQL, /* retryOnDeadlock */ true);
 
@@ -707,7 +746,7 @@ EOT;
             }
 
             $classNameAsSQL = CBDB::stringToSQL($task->className);
-            $IDAsSQL = CBHex160::toSQL($task->ID);
+            $IDAsSQL = CBID::toSQL($task->ID);
 
             /**
              * @NOTE 2018.08.09
@@ -725,14 +764,16 @@ EOT;
             $SQL = <<<EOT
 
                 UPDATE  CBTasks2
+
                 SET     priority = {$newPriority},
                         state = {$newState},
                         timestamp = {$newTimestamp}
+
                 WHERE   className = {$classNameAsSQL} AND
                         ID = {$IDAsSQL} AND
                         starterID = {$starterIDAsSQL}
 
-EOT;
+            EOT;
 
             Colby::query($SQL, /* retryOnDeadlock */ true);
 
@@ -762,8 +803,9 @@ EOT;
     /* runTaskForStarter() */
 
 
+
     /**
-     * See updateTasks
+     * @return void
      */
     static function updateTask(
         $className,
@@ -771,8 +813,8 @@ EOT;
         $processID = null,
         $priority = null,
         $scheduled = null
-    ) {
-        return CBTasks2::updateTasks(
+    ): void {
+        CBTasks2::updateTasks(
             $className,
             [$ID],
             $processID,
@@ -783,12 +825,13 @@ EOT;
     /* updateTask() */
 
 
+
     /**
      * This function is use to both create and update a task.
      *
      * @param string $className
-     * @param hex160 $ID
-     * @param hex160 $processID (@deprecated use setID() on CBProcess)
+     * @param CBID $ID
+     * @param CBID $processID (@deprecated use setID() on CBProcess)
      * @param int $priority
      *
      *      See CBInstall_install() on this class for documentation on these
@@ -818,18 +861,18 @@ EOT;
 
         $now = time();
         $classNameAsSQL = CBDB::stringToSQL($className);
-        $IDsAsSQL = array_map('CBHex160::toSQL', $IDs);
+        $IDsAsSQL = array_map('CBID::toSQL', $IDs);
         $updates = [];
 
         if (($value = $processID) || ($value = CBProcess::ID())) {
-            $processIDAsSQL = CBHex160::toSQL($value);
-            $updates[] = "`processID` = {$processIDAsSQL}";
+            $processIDAsSQL = CBID::toSQL($value);
+            $updates[] = "processID = {$processIDAsSQL}";
         } else {
             $processIDAsSQL = 'NULL';
         }
 
         if ($priority !== null) {
-            $updates[] = "`priority` = {$priority}";
+            $updates[] = "priority = {$priority}";
         } else {
             $priority = CBTasks2::defaultPriority;
         }
@@ -837,17 +880,17 @@ EOT;
         if ($scheduled !== null) {
             if ($scheduled <= time()) {
                 $state = 1; /* ready */
-                $updates[] = "`timestamp` = {$now}";
+                $updates[] = "timestamp = {$now}";
             } else {
                 $state = 0; /* scheduled */
-                $updates[] = "`timestamp` = {$scheduled}";
+                $updates[] = "timestamp = {$scheduled}";
             }
-            $updates[] = "`state` = {$state}";
+            $updates[] = "state = {$state}";
         }
 
         if (empty($updates)) {
             /* placeholder update for INSERT ON DUPLICATE KEY UPDATE */
-            $updates[] = '`priority` = `priority`';
+            $updates[] = 'priority = priority';
         }
 
         $updates = implode(', ', $updates);
@@ -869,47 +912,56 @@ EOT;
         $values = implode(', ', $values);
 
         /**
-         * INSERT ON DUPLICATE KEY UPDATE can be used here because `CBTasks2`
+         * INSERT ON DUPLICATE KEY UPDATE can be used here because CBTasks2
          * has only one unique key. If this changes a temporary table must be
          * used.
          */
 
         $SQL = <<<EOT
 
-            INSERT INTO `CBTasks2` (
-                `className`,
-                `ID`,
-                `priority`,
-                `state`,
-                `timestamp`,
-                `processID`
-            ) VALUES
-                {$values}
-            ON DUPLICATE KEY UPDATE
-                {$updates}
+            INSERT INTO CBTasks2
 
-EOT;
+            (
+                className,
+                ID,
+                priority,
+                state,
+                timestamp,
+                processID
+            )
+
+            VALUES {$values}
+
+            ON DUPLICATE KEY UPDATE {$updates}
+
+        EOT;
 
         Colby::query($SQL, /* retryOnDeadlock */ true);
     }
     /* updateTasks() */
 
 
+
     /**
-     * @return null
+     * @return void
      */
-    static function wakeScheduledTasks() {
+    static function wakeScheduledTasks(): void {
         $now = time();
+
         $SQL = <<<EOT
 
-            UPDATE  `CBTasks2`
-            SET     `state` = 1,
-                    `timestamp` = {$now}
-            WHERE   `state` = 0 AND
-                    `timestamp` < {$now}
+            UPDATE  CBTasks2
 
-EOT;
+            SET     state = 1,
+                    timestamp = {$now}
+
+            WHERE   state = 0 AND
+                    timestamp < {$now}
+
+        EOT;
 
         Colby::query($SQL, /* retryOnDeadlock */ true);
     }
+    /* wakeScheduledTasks() */
+
 }
