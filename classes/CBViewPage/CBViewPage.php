@@ -323,7 +323,7 @@ final class CBViewPage {
 
 
     /**
-     * @param [hex160] $IDs
+     * @param [CBID] $IDs
      *
      * @return null
      */
@@ -487,7 +487,7 @@ final class CBViewPage {
                 'thumbnailURL'
             ),
 
-            /* deprecated? is an int, should be a hex160 */
+            /* deprecated? is an int, should be a CBID */
             'publishedBy' => CBModel::valueAsInt(
                 $model,
                 'publishedBy'
