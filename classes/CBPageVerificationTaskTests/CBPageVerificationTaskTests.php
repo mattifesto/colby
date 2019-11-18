@@ -285,9 +285,11 @@ final class CBPageVerificationTaskTests {
         $pageID = '4a7bc517a928056f9518d839881cc9f49ea10c0a';
         $temporaryImageDataStoreID = 'a66a45225d071a4f6e65c475ece1810ac4dec45a';
 
-        CBDB::transaction(function () use ($pageID) {
-            CBModels::deleteByID([$pageID]);
-        });
+        CBDB::transaction(
+            function () use ($pageID) {
+                CBModels::deleteByID([$pageID]);
+            }
+        );
 
         CBModels::deleteByID($temporaryImageDataStoreID);
         CBModels::deleteByID(CBTestAdmin::testImageID());
@@ -309,21 +311,27 @@ final class CBPageVerificationTaskTests {
         CBDataStore::create($temporaryImageDataStoreID);
         copy($testImageFilepath, $temporaryImageFilepath);
 
-        $initialPageSspec = (object)[
-            'isTest' => true,
-            'className' => 'CBViewPage',
-            'ID' => $pageID,
-            'title' => 'Test Page for ' . __METHOD__ . '()',
-            'thumbnailURL' => $temporaryImageURL,
-        ];
+        $initialPageSspec = CBModelTemplateCatalog::fetchLivePageTemplate(
+            (object)[
+                'isTest' => true,
+                'ID' => $pageID,
+                'title' => 'Test Page for ' . __METHOD__ . '()',
+                'thumbnailURL' => $temporaryImageURL,
+            ]
+        );
 
-        CBDB::transaction(function () use ($initialPageSspec) {
-            CBModels::save($initialPageSspec);
-        });
+        CBDB::transaction(
+            function () use ($initialPageSspec) {
+                CBModels::save($initialPageSspec);
+            }
+        );
 
         CBLog::bufferStart();
 
-        CBTasks2::runSpecificTask('CBPageVerificationTask', $pageID);
+        CBTasks2::runSpecificTask(
+            'CBPageVerificationTask',
+            $pageID
+        );
 
         $entries = CBLog::bufferContents();
 
@@ -562,13 +570,14 @@ final class CBPageVerificationTaskTests {
             cbsiteurl()
         );
 
-        $initialPageSspec = (object)[
-            'isTest' => true,
-            'className' => 'CBViewPage',
-            'ID' => $pageID,
-            'title' => 'Test Page for ' . __METHOD__ . '()',
-            'thumbnailURL' => $testImageURL,
-        ];
+        $initialPageSspec = CBModelTemplateCatalog::fetchLivePageTemplate(
+            (object)[
+                'isTest' => true,
+                'ID' => $pageID,
+                'title' => 'Test Page for ' . __METHOD__ . '()',
+                'thumbnailURL' => $testImageURL,
+            ]
+        );
 
         CBDB::transaction(function () use ($initialPageSspec) {
             CBModels::save($initialPageSspec);
