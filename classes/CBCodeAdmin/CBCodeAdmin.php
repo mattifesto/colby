@@ -1031,6 +1031,38 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_11_17 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBUserGroup models.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBUsers::installUserGroup\(',
+                    'severity' => 3,
+                    'title' => 'CBUsers::installUserGroup()',
+                ],
+
+
+                /**
+                 * 2019_11_17 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBUserGroup models.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBUsers::uninstallUserGroup\(',
+                    'severity' => 3,
+                    'title' => 'CBUsers::uninstallUserGroup()',
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
