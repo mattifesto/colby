@@ -12,20 +12,6 @@ final class CBUsers_Tests {
     static function CBTest_getTests(): array {
         return [
             (object)[
-                'name' => 'installUserGroup_CBUsersTestUsers',
-                'title' => (
-                    'CBUsers: Install the "CBUsersTestUsers" user group.'
-                ),
-                'type' => 'interactive_server',
-            ],
-            (object)[
-                'name' => 'uninstallUserGroup_CBUsersTestUsers',
-                'title' => (
-                    'CBUsers: Uninstall the "CBUsersTestUsers" user group.'
-                ),
-                'type' => 'interactive_server',
-            ],
-            (object)[
                 'name' => 'upgrade',
                 'title' => 'CBUser upgrade',
                 'type' => 'server',
@@ -37,40 +23,6 @@ final class CBUsers_Tests {
 
 
     /* -- tests -- -- -- -- -- */
-
-
-
-
-    /**
-     * @return object
-     */
-    static function CBTest_installUserGroup_CBUsersTestUsers(): stdClass {
-        CBUsers::installUserGroup('CBUsersTestUsers');
-
-        CBUserSettingsManagerCatalog::installUserSettingsManager(
-            'CBUsersTestUsers_UserSettingsManager',
-            0
-        );
-
-        return (object)[
-            'succeeded' => 'true',
-        ];
-    }
-    /* CBTest_installUserGroup_CBUsersTestUsers() */
-
-
-
-    /**
-     * @return object
-     */
-    static function CBTest_uninstallUserGroup_CBUsersTestUsers(): stdClass {
-        CBUsers::uninstallUserGroup('CBUsersTestUsers');
-
-        return (object)[
-            'succeeded' => 'true',
-        ];
-    }
-    /* CBTest_uninstallUserGroup_CBUsersTestUsers() */
 
 
 
