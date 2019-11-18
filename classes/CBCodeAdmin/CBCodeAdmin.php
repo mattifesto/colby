@@ -1409,6 +1409,23 @@ final class CBCodeAdmin {
                     'severity' => 4,
                     'title' => 'CBHex160',
                 ],
+
+
+                /**
+                 * 2019_11_18 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Page models should have a page settings class name set
+                        on a property.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBPageSettings::defaultClassName',
+                    'severity' => 4,
+                    'title' => 'CBPageSettings::defaultClassName()',
+                ],
             ]
         );
     }
