@@ -215,21 +215,25 @@ EOT;
 
 
     /**
-     * @NOTE 2016_03_15 This function is somewhat messed up and it's very
-     * important. It makes a ton of assumptions many of which may be wrong. It
-     * needs to be reviewed, have its parameters well documented, and fixed to
-     * either be private or work for any caller. This function is the gatekeeper
-     * to the ColbyPages table and any flaws it has are therefore large flaws.
+     * @NOTE 2016_03_15
+     *
+     *      This function is somewhat messed up and it's very important. It
+     *      makes a ton of assumptions many of which may be wrong. It needs to
+     *      be reviewed, have its parameters well documented, and fixed to
+     *      either be private or work for any caller. This function is the
+     *      gatekeeper to the ColbyPages table and any flaws it has are
+     *      therefore large flaws.
      *
      * @NOTE The comments below may make incorrect assumptions:
-     * To avoid duplicating property validation this function assumes the model
-     * parameter has been generated with the `CBModel::toModel()` function or
-     * another function that properly validates and sets the reserved page model
-     * properties. It is a the responsibility of the caller to make sure this is
-     * true.
      *
-     * For instance, the $model->titleAsHTML value is assumed to have already
-     * been escaped for use in HTML.
+     *      To avoid duplicating property validation this function assumes the
+     *      model parameter has been generated with the CBModel::build()
+     *      function or another function that properly validates and sets the
+     *      reserved page model properties. It is a the responsibility of the
+     *      caller to make sure this is true.
+     *
+     *      For instance, the $model->titleAsHTML value is assumed to have
+     *      already been escaped for use in HTML.
      *
      * @return string
      */
@@ -245,7 +249,8 @@ EOT;
             'NULL',
             function ($value) {
                 if (empty($value)) {
-                    return 'NULL'; /* falsy value (empty string) should be treated as null */
+                    /* falsy value (empty string) should be treated as null */
+                    return 'NULL';
                 } else {
                     return CBDB::stringToSQL($value);
                 }
