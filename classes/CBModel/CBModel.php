@@ -479,15 +479,6 @@ final class CBModel {
 
 
     /**
-     * @deprecated use CBModel::build()
-     */
-    static function toModel(stdClass $spec) {
-        return CBModel::build($spec);
-    }
-
-
-
-    /**
      * @param mixed $model
      *
      *      This function takes a mixed parameter to make it "array function
