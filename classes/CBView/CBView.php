@@ -4,6 +4,8 @@ final class CBView {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
@@ -12,6 +14,8 @@ final class CBView {
             Colby::flexpath(__CLASS__, 'v470.js', cbsysurl()),
         ];
     }
+
+
 
     /**
      * @return [string]
@@ -22,7 +26,11 @@ final class CBView {
         ];
     }
 
+
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * CSS Template Documentation
@@ -65,6 +73,8 @@ final class CBView {
         );
     }
 
+
+
     /**
      * Filters the subviews of a view using a callback function. This function
      * will recurse into deeper subviews.
@@ -95,6 +105,8 @@ final class CBView {
             CBView::setSubviews($view, $subviews);
         }
     }
+
+
 
     /**
      * Finds a subview in an object that may have subviews.
@@ -136,6 +148,8 @@ final class CBView {
 
         return null;
     }
+
+
 
     /**
      * @deprecated use CBView::CSSTemplateToCSS()
@@ -197,6 +211,7 @@ final class CBView {
     }
 
 
+
     /**
      * @param model $model
      * @param callable $callback
@@ -208,10 +223,17 @@ final class CBView {
      * @return void
      */
     static function modifySubviews(stdClass $model, callable $callback): void {
-        $clonedSubviews = CBModel::clone(CBView::getSubviews($model));
+        $clonedSubviews = CBModel::clone(
+            CBView::getSubviews($model)
+        );
 
-        CBView::setSubviews($model, call_user_func($callback, $clonedSubviews));
+        CBView::setSubviews(
+            $model,
+            call_user_func($callback, $clonedSubviews)
+        );
     }
+
+
 
     /**
      * Always use this function to render a view instead of calling the render
@@ -223,7 +245,10 @@ final class CBView {
      * @return void
      */
     static function render(stdClass $model): void {
-        $className = CBModel::valueToString($model, 'className');
+        $className = CBModel::valueToString(
+            $model,
+            'className'
+        );
 
         if (empty($className)) {
             return;
@@ -253,23 +278,17 @@ final class CBView {
      * even call the view's functions directly, but allowing rendering a spec
      * with a single function call saves many lines of code over an entire site.
      *
-     * @param model $spec
+     * @param object $spec
      *
      * @return void
      */
-    static function renderSpec(stdClass $spec): void {
-        if ($model = CBModel::toModel($spec)) {
-            CBView::render($model);
-        } else {
-            $className = CBModel::value($spec, 'className', '');
-            $className = str_replace('--', ' - - ', $className);
+    static function renderSpec(stdClass $viewSpec): void {
+        $viewModel = CBModel::build($viewSpec);
 
-            echo (
-                "<!-- CBView::renderSpec() could not convert a " .
-                "'{$className}' spec into a model. -->"
-            );
-        }
+        CBView::render($viewModel);
     }
+
+
 
     /**
      * @deprecated use CBView::renderSpec()
@@ -277,6 +296,8 @@ final class CBView {
     static function renderSpecAsHTML(stdClass $spec) {
         CBView::renderSpec($spec);
     }
+
+
 
     /**
      * @param model $model
@@ -294,6 +315,8 @@ final class CBView {
             return CBModel::valueToArray($model, 'subviews');
         }
     }
+
+
 
     /**
      * @param model $model
@@ -314,12 +337,16 @@ final class CBView {
         }
     }
 
+
+
     /**
      * @deprecated use CBView::getSubviews()
      */
     static function toSubviews($model): array {
         return CBView::getSubviews($model);
     }
+
+
 
     /**
      * The function performs a view tree walk. The callback is not called for
@@ -345,4 +372,5 @@ final class CBView {
             CBView::walkSubviews($subview, $callback);
         }
     }
+
 }
