@@ -534,7 +534,7 @@ final class CBConvert {
      * @deprecated use CBID::valueIsCBID()
      */
     static function valueAsHex160($value): ?string {
-        return CBConvert::valueAsCBID($value);
+        return CBConvert::valueAsID($value);
     }
 
 
