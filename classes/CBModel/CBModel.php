@@ -668,19 +668,28 @@ final class CBModel {
 
 
     /**
-     * This is a convenience function for:
-     *
-     *      CBConvert::valueAsID(CBModel::value(...))
-     *
      * @param mixed $model
      * @param string $keyPath
      *
-     * @return string|null
+     * @return CBID|null
+     */
+    static function valueAsCBID($model, string $keyPath): ?string {
+        $value = CBModel::value($model, $keyPath);
+
+        if (CBID::valueIsCBID($value)) {
+            return $value;
+        } else {
+            return null;
+        }
+    }
+
+
+
+    /**
+     * @deprecated use CBModel::valueAsCBID()
      */
     static function valueAsID($model, string $keyPath): ?string {
-        return CBConvert::valueAsID(
-            CBModel::value($model, $keyPath)
-        );
+        return CBModel::valueAsCBID($model, $keyPath);
     }
 
 
