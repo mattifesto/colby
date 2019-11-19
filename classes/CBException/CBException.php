@@ -22,10 +22,10 @@
  *
  *          Otherwise, use the text exception message.
  */
-final class CBException extends Exception {
+ class CBException extends Exception {
 
     private $cbmessage;
-    private $sourceID;
+    private $sourceCBID;
 
 
     /* -- constructor -- -- -- -- -- */
@@ -39,7 +39,7 @@ final class CBException extends Exception {
      *
      *      A message formatted with message markup.
      *
-     * @param string $sourceID
+     * @param string $sourceCBID
      *
      *      An ID (160-bit hexadecimal number) indicating the source of the
      *      exception.
@@ -52,14 +52,14 @@ final class CBException extends Exception {
     public function __construct(
         string $message,
         string $cbmessage,
-        ?string $sourceID = null,
+        ?string $sourceCBID = null,
         int $code = 0,
         Throwable $previous = null
     ) {
         parent::__construct($message, $code, $previous);
 
         $this->cbmessage = $cbmessage;
-        $this->sourceID = $sourceID;
+        $this->sourceCBID = $sourceCBID;
     }
 
 
@@ -100,7 +100,7 @@ final class CBException extends Exception {
 
 
     /**
-     * @deprecated use CBException::createWithValue()
+     * @deprecated use CBExceptionWithValue
      *
      * @param string $title
      * @param mixed $value
@@ -124,30 +124,7 @@ final class CBException extends Exception {
 
 
     /**
-     * @param $title
-     *
-     *      Text describing the issue with the model. The text should be
-     *      understandable in situations where the developer can't yet see the
-     *      model JSON.
-     *
-     *      Examples:
-     *
-     *          The "className" property on a cart item model is not set.
-     *
-     *          The "priceInCents" property on an SCProduct model should be set
-     *          to an integer >= 0
-     *
-     *          CBModel::build() returned null for a cart item spec.
-     *
-     * @param mixed $value
-     *
-     *      This value should be convertible to JSON. The value may be a value
-     *      that has an issue referred to by the title or a value that can
-     *      highlight or give evidence to the assertion made by the title.
-     *
-     * @param CBID $sourceCBID
-     *
-     * @return CBException
+     * @deprecated use CBExceptionWithValue
      */
     static function createWithValue(
         string $title,
@@ -199,9 +176,7 @@ final class CBException extends Exception {
 
 
     /**
-     * @deprecated use getCBMessage()
-     *
-     * @return string
+     * @deprecated use cbexception->getCBMessage()
      */
     function getExtendedMessage(): string {
         return $this->getCBMessage();
@@ -209,11 +184,22 @@ final class CBException extends Exception {
 
 
 
+
     /**
-     * @return string
+     * @return CBID|null
+     */
+    function getSourceCBID(): ?string {
+        return $this->sourceCBID;
+    }
+    /* getSourceID() */
+
+
+
+    /**
+     * @deprecated use cbexception->getSourceCBID()
      */
     function getSourceID(): ?string {
-        return $this->sourceID;
+        return $this->getSourceCBID();
     }
     /* getSourceID() */
 
@@ -238,14 +224,26 @@ final class CBException extends Exception {
     /**
      * @param Throwable $throwable
      *
-     * @returh string|null
+     * @returh CBID|null
      */
-    static function throwableToSourceID(Throwable $throwable): ?string {
+    static function throwableToSourceCBID(
+        Throwable $throwable
+    ): ?string {
         if ($throwable instanceof CBException) {
-            return $throwable->getSourceID();
+            return $throwable->getSourceCBID();
         } else {
             return null;
         }
+    }
+    /* throwableToSourceID() */
+
+
+
+    /**
+     * @deprecated use CBException::throwableToSourceCBID()
+     */
+    static function throwableToSourceID(Throwable $throwable): ?string {
+        return CBException::throwableToSourceCBID($throwable);
     }
     /* throwableToSourceID() */
 
