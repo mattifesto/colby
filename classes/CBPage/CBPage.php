@@ -2,6 +2,10 @@
 
 final class CBPage {
 
+    /* -- functions -- -- -- -- -- */
+
+
+
     /**
      * @TODO 2019_07_05
      *
@@ -32,33 +36,48 @@ final class CBPage {
      *
      * @return void
      */
-    static function render(stdClass $model): void {
-        $className = CBModel::valueToString($model, 'className');
+    static function render(stdClass $pageModel): void {
+        $className = CBModel::valueToString(
+            $pageModel,
+            'className'
+        );
 
-        if (is_callable($function = "{$className}::CBPage_render")) {
+        $function = "{$className}::CBPage_render";
+
+        if (is_callable($function)) {
             CBHTMLOutput::requireClassName($className);
 
-            call_user_func($function, $model);
+            call_user_func(
+                $function,
+                $pageModel
+            );
         } else {
-            $ID = CBModel::valueAsID($model, 'ID');
-            $title = CBModel::valueToString($model, 'title');
-
-            throw new Exception(
-                "The page, {$title} ({$ID}), was unable to render."
+            throw new CBExceptionWithValue(
+                (
+                    "The class ({$className}) for this page " .
+                    "model has not implemented CBPage_render()"
+                ),
+                $pageModel,
+                '5b1831c54024accfe5ed6a4c4eb2d724a5d19845'
             );
         }
     }
     /* render() */
 
 
+
     /**
      * @param object $spec
      *
-     * @return null
+     * @return void
      */
-    static function renderSpec(stdClass $spec) {
-        CBPage::render(CBModel::toModel($spec));
+    static function renderSpec(stdClass $spec): void {
+        CBPage::render(
+            CBModel::build($spec)
+        );
     }
+
+
 
     /**
      * A summary object is a summary of a page model. Summaries are use to
@@ -140,25 +159,41 @@ final class CBPage {
      *
      * @return object
      */
-    static function toSummary(stdClass $model): stdClass {
-        $className = CBModel::valueToString($model, 'className');
+    static function toSummary(stdClass $pageModel): stdClass {
+        $className = CBModel::valueToString(
+            $pageModel,
+            'className'
+        );
 
-        if (is_callable($function = "{$className}::CBPage_toSummary")) {
-            $summary = call_user_func($function, $model);
+        $function = "{$className}::CBPage_toSummary";
+
+        if (is_callable($function)) {
+            $summary = call_user_func(
+                $function,
+                $pageModel
+            );
         } else {
             $summary = (object)[];
         }
 
-        if ($ID = CBModel::valueAsID($model, 'ID')) {
-            $summary->ID = $ID;
+        $CBID = CBModel::valueAsCBID(
+            $pageModel,
+            'ID'
+        );
+
+        if ($CBID !== null) {
+            $summary->ID = $CBID;
         }
 
-        if (!isset($summary->title)) {
-            $summary->title = CBModel::valueToString($model, 'title');
-        }
+        $summary->title = CBModel::valueToString(
+            $pageModel,
+            'title'
+        );
 
         unset($summary->className);
 
         return $summary;
     }
+    /* toSummary() */
+
 }
