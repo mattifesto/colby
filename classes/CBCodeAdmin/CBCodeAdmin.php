@@ -1116,7 +1116,7 @@ final class CBCodeAdmin {
 
 
                 /**
-                 * 2019_11_18 (warning)
+                 * 2019_11_18 (error)
                  */
                 (object)[
                     'cbmessage' => <<<EOT
@@ -1128,6 +1128,22 @@ final class CBCodeAdmin {
                     'regex' => 'CBHex160',
                     'severity' => 3,
                     'title' => 'CBHex160',
+                ],
+
+
+                /**
+                 * 2019_11_18 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBModel::build().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => '(?<!_)toModel',
+                    'severity' => 3,
+                    'title' => 'CBModel::toModel()',
                 ],
 
 
