@@ -9,7 +9,7 @@ final class ColbyUser {
     private static $currentUser = null;
 
     /**
-     * currentUserID, currentUserNumericID
+     * currentUserCBID, currentUserNumericID
      *
      * If we can authenticate the current logged in user we just store their
      * hash and ID, not the table row or anything else. The table row may be
@@ -17,7 +17,7 @@ final class ColbyUser {
      * bugs.
      */
 
-    private static $currentUserID = null;
+    private static $currentUserCBID = null;
     private static $currentUserNumericID = null;
     private static $currentUserGroups = [];
 
@@ -53,7 +53,7 @@ final class ColbyUser {
      * @return bool
      */
     static function currentUserIsLoggedIn(): bool {
-        return !empty(ColbyUser::$currentUserID);
+        return !empty(ColbyUser::$currentUserCBID);
     }
 
 
@@ -131,13 +131,23 @@ final class ColbyUser {
 
 
     /**
-     * @return string|null
+     * @return CBID|null
      *
-     * Returns the current user's 160-bit hexadecimal ID if a user is logged in;
-     * otherwise null.
+     *      Returns the current user's CBID if a user is logged in; otherwise
+     *      null.
+     */
+    static function getCurrentUserCBID(): ?string {
+        return ColbyUser::$currentUserCBID;
+    }
+    /* getCurrentUserCBID() */
+
+
+
+    /**
+     * @deprecated use ColbyUser::getCurrentUserCBID()
      */
     static function getCurrentUserID(): ?string {
-        return ColbyUser::$currentUserID;
+        return ColbyUser::getCurrentUserCBID();
     }
     /* getCurrentUserID() */
 
@@ -211,7 +221,7 @@ final class ColbyUser {
             }
 
             /* Success, the user is now logged in. */
-            ColbyUser::$currentUserID = $userCBID;
+            ColbyUser::$currentUserCBID = $userCBID;
             ColbyUser::$currentUserNumericID = $userNumericID;
         } catch (Throwable $exception) {
             CBErrorHandler::report($exception);
