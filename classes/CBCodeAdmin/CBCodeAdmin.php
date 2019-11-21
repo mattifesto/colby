@@ -1494,6 +1494,22 @@ final class CBCodeAdmin {
                     'severity' => 4,
                     'title' => 'CBPageSettings::defaultClassName()',
                 ],
+
+
+                /**
+                 * 2019_11_21 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use ColbyUser::getCurrentUserCBID().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'ColbyUser::getCurrentUserID',
+                    'severity' => 4,
+                    'title' => 'ColbyUser::getCurrentUserID()',
+                ],
             ]
         );
     }
