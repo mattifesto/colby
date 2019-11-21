@@ -34,14 +34,32 @@ final class CBAdministratorsUserGroupUserSettingsManager {
 
 
     /**
-     * @param string $targetUserID
+     * @param CBID $targetUserCBID
      *
      * @return void
      */
-    static function CBUserSettingsManager_render(string $targetUserID): void {
-        echo '<div class="CBAdministratorsUserGroupUserSettingsManager">';
+    static function CBUserSettingsManager_render(
+        string $targetUserCBID
+    ): void {
+        echo '<div class="', __CLASS__, '">';
 
-        $targetUserModel = CBModelCache::fetchModelByID($targetUserID);
+        $targetUserModel = CBModelCache::fetchModelByID(
+            $targetUserCBID
+        );
+
+        if (
+            $targetUserModel === null ||
+            $targetUserModel->className !== 'CBUser'
+        ) {
+            throw new CBExceptionWithValue(
+                'There is no CBUser model for this user CBID',
+                (object)[
+                    'user CBID' => $targetUserCBID,
+                    'model' => $targetUserModel,
+                ],
+                '778f9adfef1891c4a9229a384d6f077a3bcf7001'
+            );
+        }
 
         $targetUserNumericID = CBModel::valueAsInt(
             $targetUserModel,
@@ -49,9 +67,9 @@ final class CBAdministratorsUserGroupUserSettingsManager {
         );
 
         if ($targetUserNumericID === null) {
-            throw new CBException(
-                'The user numeric ID is not valid.',
-                '',
+            throw new CBExceptionWithValue(
+                'The "userNumericID" property of this user model is invalid.',
+                $targetUserModel,
                 '95ef916ff7322d7d5cf441967bec15dae9324fe9'
             );
         }
