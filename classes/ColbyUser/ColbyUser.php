@@ -64,9 +64,15 @@ final class ColbyUser {
      *
      * @param string $groupName
      *
+     *      This can either be a user group class name, such as
+     *      "CBAdministratorsUserGroup", or a deprecated user group name, such
+     *      as "Administrators".
+     *
      * @return bool
      */
-    static function currentUserIsMemberOfGroup($groupName) {
+    static function currentUserIsMemberOfGroup(
+        string $groupName
+    ): bool {
         if (isset(ColbyUser::$currentUserGroups[$groupName])) {
             return ColbyUser::$currentUserGroups[$groupName];
         } else {
@@ -229,7 +235,10 @@ final class ColbyUser {
      *
      * @return bool
      */
-    static function isMemberOfGroup($userNumericID, $userGroupName) {
+    static function isMemberOfGroup(
+        $userNumericID,
+        string $userGroupName
+    ): bool {
         if ($userGroupName === 'Public') {
             return true;
         }
