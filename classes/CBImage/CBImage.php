@@ -2,48 +2,9 @@
 
 final class CBImage {
 
-    /**
-     * @param model $image
-     * @param string $filename
-     *
-     *      If not specified, the filename from the $image model will be used.
-     *
-     *      Examples: 'original', 'rw320', 'rw1280'
-     *
-     * @param string $flexdir
-     *
-     * @return ?string
-     *
-     *      This function will return null if the required properties are not
-     *      available.
-     */
-    static function asFlexpath(stdClass $image, string $filename = '', string $flexdir = ''): ?string {
-        $ID = CBModel::valueAsID($image, 'ID');
-
-        if (empty($ID)) {
-            return null;
-        }
-
-        $extension = CBModel::valueToString($image, 'extension');
-
-        if (empty($extension)) {
-            return null;
-        }
-
-        if (empty($filename)) {
-            $filename = CBModel::valueToString($image, 'filename');
-
-            if (empty($filename)) {
-                return null;
-            }
-        }
-
-        return CBDataStore::flexpath($ID, "{$filename}.{$extension}", $flexdir);
-    }
-    /* asFlexpath() */
-
-
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -53,6 +14,7 @@ final class CBImage {
             Colby::flexpath(__CLASS__, 'v480.js', cbsysurl()),
         ];
     }
+
 
 
     /**
@@ -66,7 +28,10 @@ final class CBImage {
     }
 
 
+
     /* -- CBModel interfaces -- -- -- -- -- */
+
+
 
     /**
      * This model is validated more than most models because all of the
@@ -181,6 +146,7 @@ final class CBImage {
     /* CBModel_build() */
 
 
+
     /**
      * @param model $spec
      *
@@ -194,6 +160,8 @@ final class CBImage {
 
         return $spec;
     }
+
+
 
     /**
      * Deleting images is a process that should rarely happen. Images should be
@@ -210,6 +178,8 @@ final class CBImage {
         }
     }
 
+
+
     /**
      * @param [object] $models
      *
@@ -220,6 +190,68 @@ final class CBImage {
             CBImages::updateRow($model->ID, time(), $model->extension);
         }
     }
+
+
+
+    /* -- functions -- -- -- -- -- */
+
+
+
+    /**
+     * @param model $image
+     * @param string $filename
+     *
+     *      If not specified, the filename from the $image model will be used.
+     *
+     *      Examples: 'original', 'rw320', 'rw1280'
+     *
+     * @param string $flexdir
+     *
+     * @return ?string
+     *
+     *      This function will return null if the required properties are not
+     *      available.
+     */
+    static function asFlexpath(
+        stdClass $image,
+        string $filename = '',
+        string $flexdir = ''
+    ): ?string {
+        $ID = CBModel::valueAsID($image, 'ID');
+
+        if (empty($ID)) {
+            return null;
+        }
+
+        $extension = CBModel::valueToString(
+            $image,
+            'extension'
+        );
+
+        if (empty($extension)) {
+            return null;
+        }
+
+        if (empty($filename)) {
+            $filename = CBModel::valueToString(
+                $image,
+                'filename'
+            );
+
+            if (empty($filename)) {
+                return null;
+            }
+        }
+
+        return CBDataStore::flexpath(
+            $ID,
+            "{$filename}.{$extension}",
+            $flexdir
+        );
+    }
+    /* asFlexpath() */
+
+
 
     /**
      * Use the function instead of exif_read_data() because exif_read_data()
@@ -236,6 +268,8 @@ final class CBImage {
             return false;
         }
     }
+
+
 
     /**
      * Early CBImage specs did not have a className so this special function is
@@ -255,6 +289,8 @@ final class CBImage {
         return CBModel::upgrade($spec);
     }
 
+
+
     /**
      * Use this function instead of getimagesize() because it properly returns
      * width and height for images that are rotated via the Orientation EXIF
@@ -267,7 +303,11 @@ final class CBImage {
 
         if ($data[2] == IMG_JPEG) {
             $exif = CBImage::exif_read_data($filepath);
-            $orientation = empty($exif['Orientation']) ? 1 : $exif['Orientation'];
+
+            $orientation =
+            empty($exif['Orientation']) ?
+            1 :
+            $exif['Orientation'];
 
             if ($orientation == 6 || $orientation == 9) {
                 $width = $data[0];      // store width
@@ -279,11 +319,14 @@ final class CBImage {
 
         return $data;
     }
+    /* getimagesize() */
+
+
 
     /**
      * This function is similar to the CBModel::value... functions.
      *
-     * @TODO 2018.03.01
+     * @TODO 2018_03_01
      *
      *      1. Rename to valueAsFlexpath and return ?string instead of false
      *      2. Rename $operation parameter to $filename
@@ -296,7 +339,12 @@ final class CBImage {
      *
      * @return string|false
      */
-    static function valueToFlexpath(stdClass $model, $keyPath, $operation = null, $flexdir = null) {
+    static function valueToFlexpath(
+        stdClass $model,
+        $keyPath,
+        $operation = null,
+        $flexdir = null
+    ) {
         $ID = CBModel::value($model, "{$keyPath}.ID");
 
         if (!CBID::valueIsCBID($ID)) {
@@ -323,6 +371,12 @@ final class CBImage {
             }
         }
 
-        return CBDataStore::flexpath($ID, "{$filename}.{$extension}", $flexdir);
+        return CBDataStore::flexpath(
+            $ID,
+            "{$filename}.{$extension}",
+            $flexdir
+        );
     }
+    /* valueToFlexpath() */
+
 }
