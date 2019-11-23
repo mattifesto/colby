@@ -1156,7 +1156,8 @@ final class CBCodeAdmin {
                         '--php ' .
                         '--js ' .
                         '--ignore-file=match:CBUpgradesForVersion545.php ' .
-                        '--ignore-file=match:CBViewPage.php '
+                        '--ignore-file=match:CBViewPage.php ' .
+                        '--ignore-file=match:CBViewPageTests.php '
                     ),
                     'cbmessage' => <<<EOT
 
