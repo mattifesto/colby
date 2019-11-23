@@ -70,9 +70,9 @@ final class CBViewPage {
                 'publicationTimeStamp'
             ),
 
-            'publishedBy' => CBModel::valueAsInt(
+            'publishedByUserCBID' => CBModel::valueAsCBID(
                 $spec,
-                'publishedBy'
+                'publishedByUserCBID'
             ),
 
             'title' => trim(
@@ -182,7 +182,7 @@ final class CBViewPage {
     static function CBModel_prepareCopy(stdClass $spec): stdClass {
         unset($spec->isPublished);
         unset($spec->publicationTimeStamp);
-        unset($spec->publishedBy);
+        unset($spec->publishedByUserCBID);
         unset($spec->URI);
         unset($spec->URIIsStatic);
 
@@ -311,6 +311,45 @@ final class CBViewPage {
                 ]
             );
         }
+
+
+        /**
+         * Upgrade publishedBy -> publishedByUserCBID to move away from user
+         * numeric IDs.
+         */
+
+        $publishedBy = CBModel::valueAsInt(
+            $spec,
+            'publishedBy'
+        );
+
+        if (isset($spec->publishedBy)) {
+            unset($spec->publishedBy);
+        }
+
+        if ($publishedBy !== null) {
+            $publishedByUserCBID = CBModel::valueAsCBID(
+                $spec,
+                'publishedByUserCBID'
+            );
+
+            if ($publishedByUserCBID === null) {
+                $userCBIDs = CBUsers::userNumericIDsToUserCBIDs(
+                    [
+                        $publishedBy,
+                    ]
+                );
+
+                if (count($userCBIDs) > 0) {
+                    $publishedByUserCBID = $userCBIDs[0];
+                }
+
+                $spec->publishedByUserCBID = $publishedByUserCBID;
+            }
+        }
+
+
+        /* done */
 
         return $spec;
     }
@@ -487,10 +526,9 @@ final class CBViewPage {
                 'thumbnailURL'
             ),
 
-            /* deprecated? is an int, should be a CBID */
-            'publishedBy' => CBModel::valueAsInt(
+            'publishedByUserCBID' => CBModel::valueAsInt(
                 $model,
-                'publishedBy'
+                'publishedByUserCBID'
             ),
 
             /* deprecated */
