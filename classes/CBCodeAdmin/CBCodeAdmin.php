@@ -1147,6 +1147,30 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_08_10 (warning)
+                 * 2019_11_23 (error)
+                 */
+                (object)[
+                    'args' => (
+                        '--php ' .
+                        '--js ' .
+                        '--ignore-file=match:CBUpgradesForVersion545.php ' .
+                        '--ignore-file=match:CBViewPage.php '
+                    ),
+                    'cbmessage' => <<<EOT
+
+                        The ColbyPages table "publishedBy" column and the
+                        CBViewPage model "publishedBy" property are deprecated
+                        and being replaced because they use numeric user IDs.
+
+                    EOT,
+                    'regex' => 'publishedBy(?!U)',
+                    'severity' => 3,
+                    'title' => 'publishedBy',
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
@@ -1352,27 +1376,6 @@ final class CBCodeAdmin {
                         'CBUIImageChooser.createThumbnailSizedChooser() ' .
                         'with CBUIImageChooser.create().'
                     ),
-                ],
-
-
-                /**
-                 * 2019_08_10
-                 */
-                (object)[
-                    'args' => (
-                        '--php --js ' .
-                        '--ignore-file=match:CBUpgradesForVersion545.php'
-                    ),
-                    'cbmessage' => <<<EOT
-
-                        The ColbyPages table "publishedBy" column and the
-                        CBViewPage model "publishedBy" property are deprecated
-                        and being replaced because they use numeric user IDs.
-
-                    EOT,
-                    'regex' => 'publishedBy',
-                    'severity' => 4,
-                    'title' => 'publishedBy',
                 ],
 
 
