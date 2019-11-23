@@ -22,7 +22,7 @@
 
     CBPageClassNamesForLayouts,
     CBViewPageInformationEditor_administrators,
-    CBViewPageInformationEditor_currentUserNumericID,
+    CBViewPageInformationEditor_currentUserCBID,
     CBViewPageInformationEditor_frameClassNames,
     CBViewPageInformationEditor_kindClassNames,
     CBViewPageInformationEditor_pagesAdminURL,
@@ -411,16 +411,16 @@ var CBViewPageInformationEditor = {
 
             /* published by */
             {
-                if (!args.spec.publishedBy) {
-                    args.spec.publishedBy =
-                    CBViewPageInformationEditor_currentUserNumericID;
+                if (!args.spec.publishedByUserCBID) {
+                    args.spec.publishedByUserCBID =
+                    CBViewPageInformationEditor_currentUserCBID;
                 }
 
                 var users = CBViewPageInformationEditor_administrators.map(
                     function (user) {
                         return {
                             title: user.name,
-                            value: user.userNumericID,
+                            value: user.userCBID,
                         };
                     }
                 );
@@ -431,7 +431,7 @@ var CBViewPageInformationEditor = {
                     CBUISelector.create(
                         {
                             labelText: "Published By",
-                            propertyName: "publishedBy",
+                            propertyName: "publishedByUserCBID",
                             spec: args.spec,
                             specChangedCallback: args.specChangedCallback,
                             options: users,

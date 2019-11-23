@@ -11,7 +11,7 @@ final class CBViewPageInformationEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v546.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v551.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -32,8 +32,8 @@ final class CBViewPageInformationEditor {
                 CBViewPageInformationEditor::usersWhoAreAdministrators()
             ],
             [
-                'CBViewPageInformationEditor_currentUserNumericID',
-                ColbyUser::currentUserId()
+                'CBViewPageInformationEditor_currentUserCBID',
+                ColbyUser::getCurrentUserCBID()
             ],
             [
                 'CBViewPageInformationEditor_frameClassNames',
@@ -90,8 +90,8 @@ final class CBViewPageInformationEditor {
      * @return [object]
      *
      *      {
-     *          userNumericID: int
      *          name: string
+     *          userCBID: CBID
      *      }
      */
     private static function usersWhoAreAdministrators(): array {
@@ -116,8 +116,8 @@ final class CBViewPageInformationEditor {
         $returnValues = array_map(
             function ($userModel) {
                 return (object)[
-                    'userNumericID' => $userModel->userNumericID,
                     'name' => $userModel->facebookName,
+                    'userCBID' => $userModel->ID,
                 ];
             },
             $userModels
