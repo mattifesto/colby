@@ -34,104 +34,89 @@ final class CBImage {
 
 
     /**
-     * This model is validated more than most models because all of the
-     * properties are required for the model to be valid.
-     *
      * @param object $spec
      *
-     *      {
-     *          extension: string
-     *          filename: string
-     *          height: int
-     *          ID: string
-     *          width: int
-     *      }
-     *
      * @return object
-     *
-     *      @NOTE 2019_08_14
-     *
-     *          This function is coded properly to throw exceptions when
-     *          necessary. However, this will break many existing scenarios that
-     *          rely on the old, incorrect behavior.
-     *
-     *          For now, we log the exceptions and return null instead of
-     *          throwing them.
      */
-    static function CBModel_build(stdClass $spec): ?stdClass {
-        $extension = CBModel::value($spec, 'extension');
+    static function CBModel_build(stdClass $spec): stdClass {
+        $extension = CBModel::valueToString(
+            $spec,
+            'extension'
+        );
 
-        if (empty($extension)) {
-            CBErrorHandler::report(
-                CBException::createModelIssueException(
+        if ($extension === '') {
+            throw new CBExceptionWithValue(
+                (
                     'This spec can\'t be built because it has an invalid ' .
-                    '"extension" property value.',
-                    $spec,
-                    'c2bcc7c228c1433577f9b4b3c7ea4e2702c7b1d5'
-                )
+                    '"extension" property value.'
+                ),
+                $spec,
+                'c2bcc7c228c1433577f9b4b3c7ea4e2702c7b1d5'
             );
-
-            return null;
         }
 
-        $filename = CBModel::value($spec, 'filename');
+        $filename = CBModel::valueToString(
+            $spec,
+            'filename'
+        );
 
-        if (empty($filename)) {
-            CBErrorHandler::report(
-                CBException::createModelIssueException(
+        if ($filename === '') {
+            throw new CBExceptionWithValue(
+                (
                     'This spec can\'t be built because it has an invalid ' .
-                    '"filename" property value.',
-                    $spec,
-                    '2bc70fc87dd47cb4707395b4af6225b5cf2f0acd'
-                )
+                    '"filename" property value.'
+                ),
+                $spec,
+                '2bc70fc87dd47cb4707395b4af6225b5cf2f0acd'
             );
-
-            return null;
         }
 
-        $height = CBModel::valueAsInt($spec, 'height') ?? 0;
+        $height = CBModel::valueAsInt(
+            $spec,
+            'height'
+        );
 
-        if ($height < 1) {
-            CBErrorHandler::report(
-                CBException::createModelIssueException(
+        if ($height === null || $height < 1) {
+            throw new CBExceptionWithValue(
+                (
                     'This spec can\'t be built because it has an invalid ' .
-                    '"height" property value.',
-                    $spec,
-                    'c6b95f62d68542095335ef2175689dc1cb4f2b90'
-                )
+                    '"height" property value.'
+                ),
+                $spec,
+                'c6b95f62d68542095335ef2175689dc1cb4f2b90'
             );
-
-            return null;
         }
 
-        $ID = CBModel::valueAsID($spec, 'ID');
+        $imageCBID = CBModel::valueAsCBID(
+            $spec,
+            'ID'
+        );
 
-        if (empty($ID)) {
-            CBErrorHandler::report(
-                CBException::createModelIssueException(
+        if ($imageCBID === null) {
+            throw new CBExceptionWithValue(
+                (
                     'This spec can\'t be built because it has an invalid ' .
-                    '"ID" property value.',
-                    $spec,
-                    'ed759d15d41064ae2a3659639298383e6c429b9c'
-                )
+                    '"ID" property value.'
+                ),
+                $spec,
+                'ed759d15d41064ae2a3659639298383e6c429b9c'
             );
-
-            return null;
         }
 
-        $width = CBModel::valueAsInt($spec, 'width') ?? 0;
+        $width = CBModel::valueAsInt(
+            $spec,
+            'width'
+        );
 
-        if ($width < 1) {
-            CBErrorHandler::report(
-                CBException::createModelIssueException(
+        if ($width === null || $width < 1) {
+            throw new CBExceptionWithValue(
+                (
                     'This spec can\'t be built because it has an invalid ' .
-                    '"width" property value.',
-                    $spec,
-                    'c2bedac1eb80124931939a28d82b60e570658c5d'
-                )
+                    '"width" property value.'
+                ),
+                $spec,
+                'c2bedac1eb80124931939a28d82b60e570658c5d'
             );
-
-            return null;
         }
 
         return (object)[
@@ -139,7 +124,7 @@ final class CBImage {
             'extension' => $extension,
             'filename' => $filename,
             'height' => $height,
-            'ID' => $ID,
+            'ID' => $imageCBID,
             'width' => $width,
         ];
     }
@@ -148,9 +133,9 @@ final class CBImage {
 
 
     /**
-     * @param model $spec
+     * @param object $spec
      *
-     * @return model
+     * @return object
      */
     static function CBModel_upgrade(stdClass $spec): stdClass {
         if (empty($spec->filename) && !empty($spec->base)) {
@@ -168,11 +153,11 @@ final class CBImage {
      * kept forever even if they are no longer used. However there are various
      * development and administrative reasons to delete images.
      *
-     * @param [hex160] $IDs
+     * @param [CBID] $IDs
      *
-     * @return null
+     * @return void
      */
-    static function CBModels_willDelete(array $IDs) {
+    static function CBModels_willDelete(array $IDs): void {
         foreach ($IDs as $ID) {
             CBImages::deleteByID($ID);
         }
@@ -187,7 +172,11 @@ final class CBImage {
      */
     static function CBModels_willSave(array $models) {
         foreach ($models as $model) {
-            CBImages::updateRow($model->ID, time(), $model->extension);
+            CBImages::updateRow(
+                $model->ID,
+                time(),
+                $model->extension
+            );
         }
     }
 
