@@ -4,6 +4,8 @@ final class CBViewPageTests {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [object]
      */
@@ -19,12 +21,20 @@ final class CBViewPageTests {
                 'title' => 'CBViewPage Save',
                 'type' => 'server',
             ],
+            (object)[
+                'name' => 'upgrade',
+                'title' => 'CBViewPage Upgrade',
+                'type' => 'server',
+            ],
         ];
     }
     /* CBTest_getTests() */
 
 
+
     /* -- tests -- -- -- -- -- */
+
+
 
     /**
      * @return object
@@ -44,6 +54,7 @@ final class CBViewPageTests {
                 'height' => 700,
                 'width' => 900,
             ],
+            'publishedByUserCBID' => '2c40491a848286f63af308b78660227d025bed1b',
             'sections' => CBViewTests::testSubviewSpecs(),
         ];
 
@@ -55,11 +66,11 @@ final class CBViewPageTests {
             'frameClassName' => '',
             'isPublished' => false,
             'iteration' => 0,
-            'publishedBy' => null,
             'selectedMenuItemNames' => [],
             'title' => '',
             'URI' => '',
             'publicationTimeStamp' => null,
+            'publishedByUserCBID' => '2c40491a848286f63af308b78660227d025bed1b',
             'thumbnailURL' => '',
             'sections' => CBViewTests::testSubviewModels(),
             'thumbnailURLAsHTML' => '',
@@ -79,7 +90,10 @@ final class CBViewPageTests {
         /* Test 2 */
 
         $searchText = CBModel::toSearchText($model);
-        $expectedSearchText = CBViewTests::testSubviewSearchText() . ' CBViewPage';
+        $expectedSearchText = (
+            CBViewTests::testSubviewSearchText() .
+            ' CBViewPage'
+        );
 
         if ($searchText !== $expectedSearchText) {
             return CBTest::resultMismatchFailure(
@@ -89,36 +103,15 @@ final class CBViewPageTests {
             );
         }
 
-        /* Test 3 */
 
-        $upgradedSpec = CBModel::upgrade($spec);
-        $expectedUpgradedSpec = (object)[
-            'className' => 'CBViewPage',
-            'classNameForSettings' => 'CBViewPageTests_PageSettings',
-            'image' => (object)[
-                'className' => 'CBImage',
-                'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
-                'filename' => 'original',
-                'extension' => 'jpeg',
-                'height' => 700,
-                'width' => 900,
-            ],
-            'sections' => CBViewTests::testSubviewUpgradedSpecs(),
-        ];
-
-        if ($upgradedSpec != $expectedUpgradedSpec) {
-            return CBTest::resultMismatchFailure(
-                'upgrade',
-                $upgradedSpec,
-                $expectedUpgradedSpec
-            );
-        }
+        /* done */
 
         return (object)[
             'succeeded' => true,
         ];
     }
     /* CBTest_general() */
+
 
 
     /**
@@ -150,31 +143,198 @@ final class CBViewPageTests {
 
         CBModels::save($spec);
 
-        $count = CBDB::SQLToValue("SELECT COUNT(*) FROM `ColbyPages` WHERE `archiveID` = UNHEX('{$ID}')");
 
-        if ($count != 1) {
-            throw new Exception('The page was not found when searching by `ID`.');
+        /* test 1 */
+
+        $SQL = <<<EOT
+
+            SELECT  COUNT(*)
+            FROM    ColbyPages
+            WHERE   archiveID = UNHEX('{$ID}')
+
+        EOT;
+
+        $actualResult = CBDB::SQLToValue($SQL);
+        $expectedResult = '1';
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure(
+                'test 1',
+                $actualResult,
+                $expectedResult
+            );
         }
 
-        $count = CBDB::SQLToValue("SELECT COUNT(*) FROM `ColbyPages` WHERE `classNameForKind` = '{$kind}'");
 
-        if ($count != 1) {
-            throw new Exception('The page was not found when searching by `classNameForKind`.');
+        /* test 2 */
+
+        $SQL = <<<EOT
+
+            SELECT  COUNT(*)
+            FROM    ColbyPages
+            WHERE   classNameForKind = '{$kind}'
+
+        EOT;
+
+        $actualResult = CBDB::SQLToValue($SQL);
+        $expectedResult = '1';
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure(
+                'test 2',
+                $actualResult,
+                $expectedResult
+            );
         }
 
-        $URI = CBDB::SQLToValue("SELECT `URI` FROM `ColbyPages` WHERE `archiveID` = UNHEX('{$ID}')");
 
-        if ($URI != $modelURI) {
-            $pu = json_encode($URI);
-            $su = json_encode($spec->URI);
-            throw new Exception("The page URI: {$pu} does not match the spec URI: {$su}.");
+        /* test 3 */
+
+        $SQL = <<<EOT
+
+            SELECT  URI
+            FROM    ColbyPages
+            WHERE   archiveID = UNHEX('{$ID}')
+
+        EOT;
+
+        $actualResult = CBDB::SQLToValue($SQL);
+
+        if ($actualResult !== $modelURI) {
+            return CBTest::resultMismatchFailure(
+                'test 3',
+                $actualResult,
+                $modelURI
+            );
         }
+
+
+        /* delete test model */
 
         CBModels::deleteByID([$ID]);
+
+
+        /* done */
 
         return (object)[
             'succeeded' => true,
         ];
     }
     /* CBTest_save() */
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_upgrade(): stdClass {
+
+        /* test 1 */
+
+        $originalSpec = (object)[
+            'className' => 'CBViewPage',
+            'classNameForSettings' => 'CBViewPageTests_PageSettings',
+            'image' => (object)[
+                /* testing deprecated missing class name */
+                'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
+                'base' => 'original',
+                'extension' => 'jpeg',
+                'height' => 700,
+                'width' => 900,
+            ],
+            'publishedBy' => ColbyUser::currentUserID(),
+            'sections' => CBViewTests::testSubviewSpecs(),
+        ];
+
+        /* test 1 */
+
+        $actualUpgradedSpec = CBModel::upgrade($originalSpec);
+
+        $expectedUpgradedSpec = (object)[
+            'className' => 'CBViewPage',
+            'classNameForSettings' => 'CBViewPageTests_PageSettings',
+            'image' => (object)[
+                'className' => 'CBImage',
+                'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
+                'filename' => 'original',
+                'extension' => 'jpeg',
+                'height' => 700,
+                'width' => 900,
+            ],
+            'publishedByUserCBID' => ColbyUser::getCurrentUserCBID(),
+            'sections' => CBViewTests::testSubviewUpgradedSpecs(),
+        ];
+
+        if ($actualUpgradedSpec != $expectedUpgradedSpec) {
+            return CBTest::resultMismatchFailure(
+                'test 1',
+                $actualUpgradedSpec,
+                $expectedUpgradedSpec
+            );
+        }
+
+
+        /* test 2 */
+
+        $originalSpec = (object)[
+            'className' => 'CBViewPage',
+            'classNameForSettings' => 'CBViewPageTests_PageSettings',
+            'publishedBy' => PHP_INT_MAX,
+        ];
+
+        $actualUpgradedSpec = CBModel::upgrade($originalSpec);
+
+        $expectedUpgradedSpec = (object)[
+            'className' => 'CBViewPage',
+            'classNameForSettings' => 'CBViewPageTests_PageSettings',
+            'publishedByUserCBID' => null,
+            'sections' => [],
+        ];
+
+        if ($actualUpgradedSpec != $expectedUpgradedSpec) {
+            return CBTest::resultMismatchFailure(
+                'test 2',
+                $actualUpgradedSpec,
+                $expectedUpgradedSpec
+            );
+        }
+
+
+        /* test 3 */
+
+        $publishedByUserCBID = CBID::generateRandomCBID();
+
+        $originalSpec = (object)[
+            'className' => 'CBViewPage',
+            'classNameForSettings' => 'CBViewPageTests_PageSettings',
+            'publishedBy' => PHP_INT_MAX,
+            'publishedByUserCBID' => $publishedByUserCBID,
+        ];
+
+        $actualUpgradedSpec = CBModel::upgrade($originalSpec);
+
+        $expectedUpgradedSpec = (object)[
+            'className' => 'CBViewPage',
+            'classNameForSettings' => 'CBViewPageTests_PageSettings',
+            'publishedByUserCBID' => $publishedByUserCBID,
+            'sections' => [],
+        ];
+
+        if ($actualUpgradedSpec != $expectedUpgradedSpec) {
+            return CBTest::resultMismatchFailure(
+                'test 3',
+                $actualUpgradedSpec,
+                $expectedUpgradedSpec
+            );
+        }
+
+
+        /* done */
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_upgrade() */
+
 }
