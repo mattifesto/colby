@@ -1172,6 +1172,25 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_11_21 (warning)
+                 * 2019_11_24 (error)
+                 *
+                 * Function should be removed after all sites are updated.
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use ColbyUser::getCurrentUserCBID().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'ColbyUser::getCurrentUserID',
+                    'severity' => 3,
+                    'title' => 'ColbyUser::getCurrentUserID()',
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
@@ -1497,22 +1516,6 @@ final class CBCodeAdmin {
                     'regex' => 'CBPageSettings::defaultClassName',
                     'severity' => 4,
                     'title' => 'CBPageSettings::defaultClassName()',
-                ],
-
-
-                /**
-                 * 2019_11_21 (warning)
-                 */
-                (object)[
-                    'cbmessage' => <<<EOT
-
-                        Use ColbyUser::getCurrentUserCBID().
-
-                    EOT,
-                    'filetype' => 'php',
-                    'regex' => 'ColbyUser::getCurrentUserID',
-                    'severity' => 4,
-                    'title' => 'ColbyUser::getCurrentUserID()',
                 ],
             ]
         );
