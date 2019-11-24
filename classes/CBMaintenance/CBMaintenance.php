@@ -159,7 +159,7 @@ final class CBMaintenance {
                 'holderID' => $holderID,
                 'timestamp' => time(),
                 'title' => $title,
-                'userID' => ColbyUser::getCurrentUserID(),
+                'userID' => ColbyUser::getCurrentUserCBID(),
             ]
         );
 

@@ -16,7 +16,7 @@ final class CBAdminPageFooterView {
      * @return void
      */
     static function CBView_render(stdClass $model): void {
-        $currentUserID = ColbyUser::getCurrentUserID();
+        $currentUserID = ColbyUser::getCurrentUserCBID();
 
         ?>
 

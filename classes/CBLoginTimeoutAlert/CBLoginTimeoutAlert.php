@@ -23,7 +23,7 @@ final class CBLoginTimeoutAlert {
         return [
             [
                 'CBLoginTimeoutAlert_userIsLoggedIn',
-                ColbyUser::getCurrentUserID() !== null,
+                ColbyUser::getCurrentUserCBID() !== null,
             ],
         ];
     }

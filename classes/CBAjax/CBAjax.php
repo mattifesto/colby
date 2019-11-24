@@ -148,7 +148,7 @@ EOT;
                     );
 
                     $response->wasSuccessful = true;
-                } else if (ColbyUser::getCurrentUserID() === null) {
+                } else if (ColbyUser::getCurrentUserCBID() === null) {
                     $response->message = (
                         'The requested Ajax function cannot be called ' .
                         'because you are not currently logged in, possibly ' .

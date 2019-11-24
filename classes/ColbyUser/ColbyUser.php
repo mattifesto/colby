@@ -36,7 +36,7 @@ final class ColbyUser {
      *
      *      Use the hexadecimal user ID instead of the numeric user ID. The
      *      hexadecimal user ID is returned by the function
-     *      ColbyUser::getCurrentUserID()
+     *      ColbyUser::getCurrentUserCBID()
      *
      * @return int|null
      *

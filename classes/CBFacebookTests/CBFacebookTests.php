@@ -29,7 +29,7 @@ final class CBFacebookTests {
      * @return object
      */
     static function CBTest_fetchUserProperties(): stdClass {
-        $currentUserID = ColbyUser::getCurrentUserID();
+        $currentUserID = ColbyUser::getCurrentUserCBID();
 
         $currentUserModel = CBModelCache::fetchModelByID(
             $currentUserID
