@@ -6,6 +6,100 @@
  */
 final class CBDBA {
 
+    /* -- functions -- -- -- -- -- */
+
+
+
+    /**
+     * @param string $tableName
+     * @param string $columnName
+     *
+     * @return void
+     */
+    static function dropTableColumn(
+        string $tableName,
+        string $columnName
+    ): void {
+        $tableNameAsSQL = CBDB::escapeString($tableName);
+        $columnNameAsSQL = CBDB::escapeString($columnName);
+
+        $SQL = <<<EOT
+
+            SELECT  COUNT(*)
+
+            FROM    information_schema.COLUMNS
+
+            WHERE   TABLE_SCHEMA = DATABASE() AND
+                    TABLE_NAME = '{$tableNameAsSQL}' AND
+                    COLUMN_NAME = '{$columnNameAsSQL}'
+
+        EOT;
+
+        $columnExists = CBConvert::valueAsInt(
+            CBDB::SQLToValue($SQL)
+        );
+
+        if ($columnExists) {
+            $SQL = <<<EOT
+
+                ALTER TABLE {$tableNameAsSQL}
+
+                DROP COLUMN {$columnNameAsSQL}
+
+            EOT;
+
+            Colby::query($SQL);
+        }
+    }
+    /* dropTableColumn() */
+
+
+
+    /**
+     * @param string $tableName
+     * @param string $keyName
+     *
+     * @return void
+     */
+    static function dropTableKey(
+        string $tableName,
+        string $keyName
+    ): void {
+        $tableNameAsSQL = CBDB::escapeString($tableName);
+        $keyNameAsSQL = CBDB::escapeString($keyName);
+
+        $SQL = <<<EOT
+
+            SELECT  COUNT(*)
+
+            FROM    information_schema.STATISTICS
+
+            WHERE   TABLE_SCHEMA = DATABASE() AND
+                    TABLE_NAME = '{$tableNameAsSQL}' AND
+                    INDEX_NAME = '{$keyNameAsSQL}'
+
+        EOT;
+
+        $keyExists = CBConvert::valueAsInt(
+            CBDB::SQLToValue($SQL)
+        );
+
+        if ($keyExists) {
+            $SQL = <<<EOT
+
+                ALTER TABLE {$tableNameAsSQL}
+
+                DROP KEY {$keyNameAsSQL}
+
+            EOT;
+
+            Colby::query($SQL);
+        }
+    }
+    /* dropTableKey() */
+
+
+
     /**
      * @param string $tableName
      * @param string $columnName
@@ -19,13 +113,17 @@ final class CBDBA {
         $SQL = <<<EOT
 
             SELECT  COUNT(*)
+
             FROM    information_schema.COLUMNS
+
             WHERE   TABLE_SCHEMA = DATABASE() AND
                     TABLE_NAME = {$tableNameAsSQL} AND
                     COLUMN_NAME = {$columnNameAsSQL}
 
-EOT;
+        EOT;
 
         return boolval(CBDB::SQLToValue($SQL));
     }
+    /* tableHasColumnNamed() */
+
 }
