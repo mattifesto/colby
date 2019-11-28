@@ -69,6 +69,8 @@ final class ColbyUser {
      *      as "Administrators".
      *
      * @return bool
+     *
+     * @see ColbyUser::clearCachedUserGroupsForCurrentUser()
      */
     static function currentUserIsMemberOfGroup(
         string $groupName
@@ -96,6 +98,7 @@ final class ColbyUser {
             return $isMember;
         }
     }
+    /* currentUserIsMemberOfGroup() */
 
 
 
@@ -254,6 +257,15 @@ final class ColbyUser {
         }
 
         if (empty($userNumericID)) {
+
+            /**
+             * @NOTE 2019_11_28
+             *
+             *      This situation should actually throw an exception. I'm not
+             *      making that change today because so much work is already
+             *      being done in this area.
+             */
+
             return false;
         }
 
@@ -263,72 +275,68 @@ final class ColbyUser {
             $userGroupName
         );
 
-        if ($tableName === false) {
-            return false;
+        if ($tableName !== false) {
+            $SQL = <<<EOT
+
+                SELECT  COUNT(*)
+
+                FROM    {$tableName}
+
+                WHERE   userID = {$userNumericIDAsSQL}
+
+            EOT;
+
+            try {
+                $isMember = CBDB::SQLToValue($SQL) > 0;
+
+                return $isMember;
+            } catch (Throwable $throwable) {
+                // CBErrorHandler::report($throwable);
+            }
         }
 
-        $SQL = <<<EOT
+        /**
+         * If the table has been removed check to see if a user is a member
+         * of the group the new way here.
+         */
 
-            SELECT  COUNT(*)
+        $userGroupModels = CBUserGroup::fetchCBUserGroupModels();
 
-            FROM    {$tableName}
+        $userGroupModel = cb_array_find(
+            $userGroupModels,
+            function ($userGroupModel) use ($userGroupName) {
+                return (
+                    $userGroupModel->userGroupClassName === $userGroupName ||
+                    $userGroupModel->deprecatedGroupName === $userGroupName
+                );
+            }
+        );
 
-            WHERE   userID = {$userNumericIDAsSQL}
-
-        EOT;
-
-        try {
-
-            $isMember = CBDB::SQLToValue($SQL) > 0;
-
-        } catch (Throwable $exception) {
-
-            /**
-             * If the table has been removed check to see if a user is a member
-             * of the group the new way here.
-             */
-
-            $userGroupModels = CBUserGroup::fetchCBUserGroupModels();
-
-            $userGroupModel = cb_array_find(
-                $userGroupModels,
-                function ($userGroupModel) use ($userGroupName) {
-                    return (
-                        $userGroupModel->userGroupClassName === $userGroupName ||
-                        $userGroupModel->deprecatedGroupName === $userGroupName
-                    );
-                }
+        if ($userGroupModel !== null) {
+            $userCBIDs = CBUsers::userNumericIDsToUserCBIDs(
+                [
+                    $userNumericID,
+                ]
             );
 
-            if ($userGroupModel !== null) {
-                $userCBIDs = CBUsers::userNumericIDsToUserCBIDs(
-                    [
-                        $userNumericID,
-                    ]
-                );
-
-                if (empty($userCBIDs)) {
-                    return false;
-                }
-
-                $userCBID = $userCBIDs[0];
-                $userModel = CBModelCache::fetchModelByID($userCBID);
-
-                $associations = CBModelAssociations::fetch(
-                    $userGroupModel->ID,
-                    'CBUserGroup_CBUser',
-                    $userModel->ID
-                );
-
-                if (count($associations) > 0) {
-                    return true;
-                }
+            if (empty($userCBIDs)) {
+                return false;
             }
 
-            return false;
+            $userCBID = $userCBIDs[0];
+
+            $associations = CBModelAssociations::fetch(
+                $userGroupModel->ID,
+                'CBUserGroup_CBUser',
+                $userCBID
+            );
+
+            if (count($associations) > 0) {
+                return true;
+            }
         }
 
-        return $isMember;
+        return false;
     }
     /* isMemberOfGroup() */
 
@@ -442,6 +450,15 @@ final class ColbyUser {
         );
 
         return $URL;
+    }
+
+
+
+    /**
+     * @return void
+     */
+    static function clearCachedUserGroupsForCurrentUser(): void {
+        ColbyUser::$currentUserGroups = [];
     }
 
 
@@ -625,7 +642,7 @@ final class ColbyUser {
         );
 
         if ($userGroupModel === null) {
-            throw CBException::createWithValue(
+            throw new CBExceptionWithValue(
                 (
                     'The target user group name is not associated ' .
                     'with any user group.'
