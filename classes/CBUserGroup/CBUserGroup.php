@@ -2,6 +2,10 @@
 
 final class CBUserGroup {
 
+    private static $cacheOfAllCBUserGroupModels = null;
+
+
+
     /* -- CBModel interfaces -- -- -- -- -- */
 
 
@@ -44,6 +48,58 @@ final class CBUserGroup {
         ];
     }
     /* CBModel_build() */
+
+
+
+    /* -- CBModels interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * When any CBUserGroup models are deleted, the cache of all user group
+     * models is cleared. This prevents bugs in the same request when a user
+     * group is deleted.
+     *
+     * @return void
+     */
+    static function CBModels_willDelete(array $userGroupModelCBIDs): void {
+        ColbyUser::clearCachedUserGroupsForCurrentUser();
+        CBUserGroup::clearCachedUserGroupModels();
+
+        $userGroupModels = CBModels::fetchModelsByID2(
+            $userGroupModelCBIDs
+        );
+
+        foreach ($userGroupModels as $userGroupModel) {
+            $userGroupModelCBID = $userGroupModel->ID;
+
+            CBModelAssociations::delete(
+                $userGroupModelCBID,
+                'CBUserGroup_CBUser'
+            );
+
+            CBModelAssociations::delete(
+                null,
+                'CBUser_CBUserGroup',
+                $userGroupModelCBID
+            );
+        }
+    }
+    /* CBModels_willDelete() */
+
+
+
+    /**
+     * When any CBUserGroup models are saved the cache of all user group models
+     * is cleared. This prevents bugs in the same request when a new user group
+     * is added.
+     *
+     * @return void
+     */
+    static function CBModels_willSave(array $userGroupModels): void {
+        ColbyUser::clearCachedUserGroupsForCurrentUser();
+        CBUserGroup::clearCachedUserGroupModels();
+    }
 
 
 
@@ -115,25 +171,56 @@ final class CBUserGroup {
                 CBModelAssociations::addMultiple($associations);
             }
         );
+
+
+        $currentUserWasChanged = in_array(
+            ColbyUser::getCurrentUserCBID(),
+            $userCBIDs
+        );
+
+        if ($currentUserWasChanged) {
+            ColbyUser::clearCachedUserGroupsForCurrentUser();
+        }
     }
     /* addUsers() */
 
 
 
     /**
-     * @return [object]
+     * @return void
+     */
+    static function clearCachedUserGroupModels(): void {
+        CBUserGroup::$cacheOfAllCBUserGroupModels = null;
+    }
+
+
+
+    /**
+     * @deprecated use CBUserGroup::fetchAllUserGroupModels()
      */
     static function fetchCBUserGroupModels(): array {
-        static $models = null;
+        return CBUserGroup::fetchAllUserGroupModels();
+    }
 
-        if ($models === null) {
-            $models = CBModels::fetchModelsByClassName2(
+
+
+    /**
+     * @return [object]
+     */
+    static function fetchAllUserGroupModels(): array {
+        if (
+            CBUserGroup::$cacheOfAllCBUserGroupModels === null
+        ) {
+            $userGroupModels = CBModels::fetchModelsByClassName2(
                 'CBUserGroup'
             );
+
+            CBUserGroup::$cacheOfAllCBUserGroupModels = $userGroupModels;
         }
 
-        return $models;
+        return CBUserGroup::$cacheOfAllCBUserGroupModels;
     }
+    /* fetchAllUserGroupModels() */
 
 
 
@@ -201,6 +288,15 @@ final class CBUserGroup {
                 CBModelAssociations::deleteMultiple($associations);
             }
         );
+
+        $currentUserWasChanged = in_array(
+            ColbyUser::getCurrentUserCBID(),
+            $userCBIDs
+        );
+
+        if ($currentUserWasChanged) {
+            ColbyUser::clearCachedUserGroupsForCurrentUser();
+        }
     }
     /* removeUsers() */
 
