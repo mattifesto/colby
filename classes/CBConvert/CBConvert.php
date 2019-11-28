@@ -162,6 +162,11 @@ final class CBConvert {
 
 
     /**
+     * This function removes extra whitespace from what should be a single line
+     * of text. It is used to be able to write long lines of text across
+     * multiple lines of code so that the code is easy to read, but the line can
+     * still have the correct white space.
+     *
      * @param string $value
      *
      * @return string
