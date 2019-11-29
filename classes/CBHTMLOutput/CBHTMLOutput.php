@@ -74,6 +74,8 @@ final class CBHTMLOutput {
         }
     }
 
+
+
     /**
      * @param string $styleSheet
      *
@@ -84,6 +86,8 @@ final class CBHTMLOutput {
             CBHTMLOutput::$styleSheets[] = $styleSheet;
         }
     }
+
+
 
     /**
      * @return null
@@ -100,12 +104,16 @@ final class CBHTMLOutput {
         }
     }
 
+
+
     /**
      * @return null
      */
     static function addJavaScriptSnippetString($snippetString) {
         CBHTMLOutput::$javaScriptSnippetStrings[] = $snippetString;
     }
+
+
 
     /**
      * @return null
@@ -132,12 +140,16 @@ final class CBHTMLOutput {
         CBHTMLOutput::$javaScriptURLs[$javaScriptURL] = $options;
     }
 
+
+
     /**
      * @return null
      */
     private static function addJavaScriptURLForRequiredClass($javaScriptURL) {
         CBHTMLOutput::$javaScriptURLsForRequiredClasses[$javaScriptURL] = 0;
     }
+
+
 
     /**
      * @return null
@@ -149,6 +161,7 @@ final class CBHTMLOutput {
         );
     }
     /* addPinterest() */
+
 
 
     /**
@@ -193,7 +206,7 @@ final class CBHTMLOutput {
                 --- pre\n{$backtraceAsJSONAsMessage}
                 ---
 
-EOT;
+            EOT;
 
             throw new CBException(
                 $message,
@@ -213,6 +226,7 @@ EOT;
         CBHTMLOutput::$isActive = true;
     }
     /* begin() */
+
 
 
     /**
@@ -242,12 +256,15 @@ EOT;
     /* classNameForPageSettings() */
 
 
+
     /**
      * @return null
      */
     static function exportConstant($name) {
         CBHTMLOutput::exportVariable($name, constant($name));
     }
+
+
 
     /**
      * @return null
@@ -263,6 +280,8 @@ EOT;
         $listObject->offsetSet($itemKey, $itemValue);
     }
 
+
+
     /**
      * @return null
      */
@@ -274,6 +293,7 @@ EOT;
     /* exportVariable() */
 
 
+
     /**
      * @return bool
      */
@@ -281,6 +301,7 @@ EOT;
         return CBHTMLOutput::$isActive;
     }
     /* getIsActive() */
+
 
 
     /**
@@ -317,6 +338,8 @@ EOT;
         }
     }
 
+
+
     /**
      * Set properties on this object to be shared by render participants of a
      * page.
@@ -326,6 +349,8 @@ EOT;
     static function pageInformation() {
         return CBHTMLOutput::$pageInformation;
     }
+
+
 
     /**
      * @return null
@@ -397,7 +422,7 @@ EOT;
                                 --- pre\n{$valueAsJSONAsMessage}
                                 ---
 
-EOT;
+                            EOT;
 
                             throw new CBException(
                                 'A CBHTMLOutput_JavaScriptVariables() ' .
@@ -413,6 +438,7 @@ EOT;
         /* foreach */
     }
     /* processRequiredClassNames() */
+
 
 
     /**
@@ -513,6 +539,7 @@ EOT;
     /* render() */
 
 
+
     /**
      * @NOTE 2019_08_04
      *
@@ -526,7 +553,11 @@ EOT;
     static function render2(
         callable $renderCallback
     ): void {
-        if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
+        if (
+            CBUserGroup::currentUserIsMemberOfUserGroup(
+                'CBDevelopersUserGroup'
+            )
+        ) {
             return;
         }
 
@@ -548,6 +579,8 @@ EOT;
         }
     }
     /* render2() */
+
+
 
     /**
      * This function can be called at almost any time, even by a view in the
@@ -573,6 +606,8 @@ EOT;
         exit;
     }
 
+
+
     /**
      * @return null
      */
@@ -581,6 +616,8 @@ EOT;
             echo '<link rel="stylesheet" href="' . $URL . '">';
         }
     }
+
+
 
     /**
      * @return null
@@ -642,6 +679,7 @@ EOT;
     }
 
 
+
     /**
      * @return void
      */
@@ -657,6 +695,7 @@ EOT;
     }
 
 
+
     /**
      * @return void
      */
@@ -667,6 +706,7 @@ EOT;
     }
 
 
+
     /**
      * @return void
      */
@@ -675,6 +715,7 @@ EOT;
             CBHTMLOutput::$requiredClassNames[$className] = true;
         }
     }
+
 
 
     /**
@@ -711,6 +752,7 @@ EOT;
         CBHTMLOutput::requireClassName('Colby');
     }
     /* reset() */
+
 }
 /* CBHTMLOutput */
 
