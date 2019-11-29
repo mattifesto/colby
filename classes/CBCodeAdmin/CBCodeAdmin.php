@@ -1299,14 +1299,16 @@ final class CBCodeAdmin {
                  * 2019_07_16
                  */
                 (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use ColbyUser::getCurrentUserCBID() and user CBIDs
+                        instead of user numeric user IDs.
+
+                    EOT,
                     'filetype' => 'php',
                     'regex' => 'ColbyUser::currentUserId',
                     'severity' => 4,
-                    'title' => (
-                        'Use hexadecimal user IDs instead of numeric ' .
-                        'user IDs and use the function ' .
-                        'ColbyUser::getCurrentUserID()'
-                    ),
+                    'title' => 'ColbyUser::currentUserId()',
                 ],
 
 
@@ -1403,13 +1405,15 @@ final class CBCodeAdmin {
                  * 2019_08_10
                  */
                 (object)[
+                    'cbmessage' => <<<EOT
+
+                        Replace use of user numeric IDs with user CBIDs.
+
+                    EOT,
                     'filetype' => 'php',
                     'regex' => 'currentUserNumericID',
                     'severity' => 4,
-                    'title' => (
-                        'Replace use of currentUserNumericID with ' .
-                        'the hex user ID'
-                    ),
+                    'title' => '$currentUserNumericID',
                 ],
 
 
