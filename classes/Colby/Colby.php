@@ -62,7 +62,7 @@ final class Colby {
                         library and the current version of the SCShoppingCart
                         library is {$actualLibraryVersionNumber}
 
-EOT
+                    EOT
                 );
             }
         }
