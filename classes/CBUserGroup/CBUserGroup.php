@@ -26,7 +26,9 @@ final class CBUserGroup {
             'userGroupClassName'
         );
 
-        $expectedCBID = CBUserGroup::userGroupClassNameToCBID($userGroupClassName);
+        $expectedCBID = CBUserGroup::userGroupClassNameToCBID(
+            $userGroupClassName
+        );
 
         if ($CBID !== $expectedCBID) {
             throw CBException::createWithValue(
