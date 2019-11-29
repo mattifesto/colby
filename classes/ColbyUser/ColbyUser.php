@@ -662,7 +662,7 @@ final class ColbyUser {
 
         $targetUserGroupClassName = $userGroupModel->userGroupClassName;
 
-        $userCBIDs = CBusers::userNumericIDsToUserCBIDs(
+        $userCBIDs = CBUsers::userNumericIDsToUserCBIDs(
             [
                 $targetUserNumericID,
             ]
