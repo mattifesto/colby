@@ -67,7 +67,6 @@ final class CBModelInspector {
             'modelID' => $ID,
         ];
 
-        $object->archive = CBModelInspector::fetchArchive($ID);
         $object->dataStoreFiles = CBModelInspector::fetchDataStoreFiles($ID);
         $object->modelVersions = CBModelInspector::fetchModelVersions($ID);
         $object->rowFromCBImages = CBModelInspector::fetchRowFromCBImages($ID);
@@ -97,7 +96,7 @@ final class CBModelInspector {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v544.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v555.js', cbsysurl()),
         ];
     }
 
@@ -160,29 +159,6 @@ final class CBModelInspector {
 
 
     /* -- functions -- -- -- -- -- */
-
-
-
-    /**
-     * @param hex160 $ID
-     *
-     * @return string
-     */
-    private static function fetchArchive(string $ID): string {
-        if (!class_exists('ColbyArchive')) {
-            return '';
-        }
-
-        $filepath = CBDataStore::flexpath($ID, 'archive.data', cbsitedir());
-
-        if (!is_file($filepath)) {
-            return '';
-        }
-
-        $archive = ColbyArchive::open($ID);
-
-        return var_export($archive->data(), true);
-    }
 
 
 

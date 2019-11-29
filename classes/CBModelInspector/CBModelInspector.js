@@ -764,22 +764,6 @@
                     );
                 }
 
-                if (modelData.archive.length > 0) {
-                    containerElement.appendChild(
-                        CBUIExpander.create(
-                            {
-                                message: (
-                                    "Archive\n\n--- pre\n" +
-                                    CBMessageMarkup.stringToMarkup(
-                                        modelData.archive
-                                    ) +
-                                    "\n---"
-                                ),
-                            }
-                        ).element
-                    );
-                }
-
                 Colby.updateTimes();
             }
             /* IDDidChange_render() */
