@@ -198,6 +198,29 @@ final class CBUserGroup {
 
 
     /**
+     * @TODO 2019_11_28
+     *
+     *      This function may eventually support caching.
+     *
+     * @param string $userGroupClassName
+     *
+     *      Deprecated group names are not and will never be supported by this
+     *      function.
+     *
+     * @return bool
+     */
+    static function currentUserIsMemberOfUserGroup(
+        string $userGroupClassName
+    ): bool {
+        return CBUserGroup::userIsMemberOfUserGroup(
+            ColbyUser::getCurrentUserCBID(),
+            $userGroupClassName
+        );
+    }
+
+
+
+    /**
      * @deprecated use CBUserGroup::fetchAllUserGroupModels()
      */
     static function fetchCBUserGroupModels(): array {
@@ -325,5 +348,38 @@ final class CBUserGroup {
         );
     }
     /* userGroupClassNameToCBID() */
+
+
+
+    /**
+     * @param CBID $userCBID
+     * @param string $userGroupClassName
+     *
+     *      Deprecated group names are not and will never be supported by this
+     *      function.
+     *
+     * @return bool
+     */
+    static function userIsMemberOfUserGroup(
+        string $userCBID,
+        string $userGroupClassName
+    ): bool {
+        $userGroupCBID = CBUserGroup::userGroupClassNameToCBID(
+            $userGroupClassName
+        );
+
+        $associations = CBModelAssociations::fetch(
+            $userGroupCBID,
+            'CBUserGroup_CBUser',
+            $userCBID
+        );
+
+        if (count($associations) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /* userIsMemberOfUserGroup() */
 
 }
