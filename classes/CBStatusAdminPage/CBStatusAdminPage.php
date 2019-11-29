@@ -136,7 +136,11 @@ EOT;
         $issues = [];
         $duplicateURIMessages = CBStatusAdminPage::fetchDuplicateURIMessages();
 
-        if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
+        if (
+            CBUserGroup::currentUserIsMemberOfUserGroup(
+                'CBDevelopersUserGroup'
+            )
+        ) {
             $deprecatedConstants = [
                 ['CBSiteIsBeingDebugged', 'Use site preferences.'],
                 ['CBSiteIsBeingDubugged', 'Use site preferences.'],
@@ -386,13 +390,18 @@ EOT;
 
         $SQL = <<<EOT
 
-            SELECT      LOWER(HEX(`CBModels`.`ID`)) AS ID,
-                        `title`
-            FROM        `CBModels`
-            JOIN        `ColbyPages` ON `CBModels`.`ID` = `ColbyPages`.`archiveID`
-            WHERE       `URI` = {$URIAsSQL} AND
-                        `published` IS NOT NULL
-            ORDER BY    `published` ASC
+            SELECT      LOWER(HEX(CBModels.ID)) AS ID,
+                        title
+
+            FROM        CBModels
+
+            JOIN        ColbyPages
+                ON      CBModels.ID = ColbyPages.archiveID
+
+            WHERE       URI = {$URIAsSQL} AND
+                        published IS NOT NULL
+
+            ORDER BY    published ASC
 
         EOT;
 
