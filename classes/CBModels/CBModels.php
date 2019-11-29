@@ -206,7 +206,9 @@ final class CBModels {
         ) {
             return call_user_func($function, $model);
         } else {
-            return ColbyUser::currentUserIsMemberOfGroup('Administrators');
+            return CBUserGroup::currentUserIsMemberOfUserGroup(
+                'CBAdministratorsUserGroup'
+            );
         }
     }
     /* currentUserCanWrite() */
@@ -246,10 +248,12 @@ final class CBModels {
         $SQL = <<<EOT
 
             SELECT DISTINCT `className`
+
             FROM            `CBModels`
+
             WHERE           `ID` IN ({$IDsForSQL})
 
-EOT;
+        EOT;
 
         $classNames = CBDB::SQLtoArray($SQL);
 
@@ -277,13 +281,17 @@ EOT;
 
         $SQL = <<<EOT
 
-            DELETE  `CBModels`, `CBModelVersions`
+            DELETE  `CBModels`,
+                    `CBModelVersions`
+
             FROM    `CBModels`
+
             JOIN    `CBModelVersions`
             ON      `CBModelVersions`.`ID` = `CBModels`.`ID`
+
             WHERE   `CBModels`.`ID` IN ($IDsForSQL)
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
 
@@ -313,13 +321,18 @@ EOT;
         }
 
         $IDsAsSQL = CBID::toSQL($IDs);
+
         $SQL = <<<EOT
 
-            SELECT  LOWER(HEX(`ID`)), `timestamp`
-            FROM    `CBModelVersions`
-            WHERE   `ID` in ({$IDsAsSQL}) AND `version` = 0
+            SELECT  LOWER(HEX(`ID`)),
+                    `timestamp`
 
-EOT;
+            FROM    `CBModelVersions`
+
+            WHERE   `ID` in ({$IDsAsSQL}) AND
+                    `version` = 0
+
+        EOT;
 
         return CBDB::SQLtoArray($SQL);
     }
@@ -469,19 +482,28 @@ EOT;
         }
 
         $IDsAsSQL = CBID::toSQL($IDs);
+
         $SQL = <<<EOT
 
             SELECT  LOWER(HEX(m.ID)),
                     v.modelAsJSON
+
             FROM    CBModels AS m
-            JOIN    CBModelVersions AS v ON
-                    m.ID = v.ID AND
+
+            JOIN    CBModelVersions AS v
+                ON  m.ID = v.ID AND
                     m.version = v.version
+
             WHERE   m.ID IN ($IDsAsSQL)
 
-EOT;
+        EOT;
 
-        return CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+        return CBDB::SQLToArray(
+            $SQL,
+            [
+                'valueIsJSON' => true,
+            ]
+        );
     }
     /* fetchModelsByID() */
 
@@ -498,16 +520,20 @@ EOT;
         }
 
         $IDsAsSQL = CBID::toSQL($IDs);
+
         $SQL = <<<EOT
 
             SELECT  v.modelAsJSON
+
             FROM    CBModels as m
-            JOIN    CBModelVersions as v ON
-                    m.ID = v.ID AND
+
+            JOIN    CBModelVersions as v
+                ON  m.ID = v.ID AND
                     m.version = v.version
+
             WHERE   m.ID IN ($IDsAsSQL)
 
-EOT;
+        EOT;
 
         $valuesAsJSON = CBDB::SQLToArrayOfNullableStrings($SQL);
 
@@ -539,11 +565,13 @@ EOT;
         $SQL = <<<EOT
 
             SELECT  `modelAsJSON`
+
             FROM    `CBModelVersions`
+
             WHERE   `ID` = {$IDAsSQL} AND
                     `version` = {$versionAsSQL}
 
-EOT;
+        EOT;
 
         return CBDB::SQLToValue(
             $SQL,
@@ -573,14 +601,18 @@ EOT;
 
         $SQL = <<<EOT
 
-            SELECT  `v`.`specAsJSON` AS `spec`, `v`.`modelAsJSON` AS `model`
+            SELECT  `v`.`specAsJSON` AS `spec`,
+                    `v`.`modelAsJSON` AS `model`
+
             FROM    `CBModels` AS `m`
+
             JOIN    `CBModelVersions` AS `v`
               ON    `m`.`ID` = `v`.`ID` AND
                     `m`.`version` = `v`.`version`
+
             WHERE   `m`.`ID` = {$IDAsSQL}
 
-EOT;
+        EOT;
 
         $value = CBDB::SQLToObject($SQL);
 
@@ -668,16 +700,22 @@ EOT;
         extract($args, EXTR_IF_EXISTS);
 
         $IDsAsSQL = CBID::toSQL($IDs);
+
         $SQL = <<<EOT
 
-            SELECT  LOWER(HEX(`m`.`ID`)), `v`.`specAsJSON`
+            SELECT  LOWER(HEX(`m`.`ID`)),
+                    `v`.`specAsJSON`
+
             FROM    `CBModels` AS `m`
+
             JOIN    `CBModelVersions` AS `v`
             ON      `m`.`ID` = `v`.`ID` AND
                     `m`.`version` = `v`.`version`
+
             WHERE   `m`.`ID` IN ($IDsAsSQL)
 
-EOT;
+        EOT;
+
         $specs = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
 
         if (is_callable($createSpecForIDCallback)) {
@@ -720,12 +758,17 @@ EOT;
 
         $SQL = <<<EOT
 
-            SELECT  LOWER(HEX(`ID`)) AS `ID`, `created`, `version`
+            SELECT  LOWER(HEX(`ID`)) AS `ID`,
+                    `created`,
+                    `version`
+
             FROM    `CBModels`
+
             WHERE   `ID` IN ({$IDsAsSQL})
+
             FOR UPDATE
 
-EOT;
+        EOT;
 
         $metaByID = CBDB::SQLToObjects($SQL, ['keyField' => 'ID']);
 
@@ -783,14 +826,17 @@ EOT;
     static function revert($ID, $version) {
         $IDAsSQL = CBID::toSQL($ID);
         $versionAsSQL = intval($version);
+
         $SQL = <<<EOT
 
             SELECT  `specAsJSON`
+
             FROM    `CBModelVersions`
+
             WHERE   `ID` = $IDAsSQL AND
                     `version` = $versionAsSQL
 
-EOT;
+        EOT;
 
         $spec = CBDB::SQLToValue($SQL, ['valueIsJSON' => true]);
 
@@ -1096,7 +1142,7 @@ EOT;
             )
             VALUES {$values}
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
 
@@ -1146,14 +1192,16 @@ EOT;
         $SQL = <<<EOT
 
             UPDATE  CBModels      AS m
+
             JOIN    CBModelsTemp  AS t
                     ON m.ID = t.ID
+
             SET     m.className = t.className,
                     m.modified = t.modified,
                     m.title = t.title,
                     m.version = t.version
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
 
@@ -1165,11 +1213,19 @@ EOT;
         $SQL = <<<EOT
 
             INSERT INTO CBModels
-            SELECT      ID, className, created, modified, title, version
+
+            SELECT      ID,
+                        className,
+                        created,
+                        modified,
+                        title,
+                        version
+
             FROM        CBModelsTemp
+
             WHERE       version = 1
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
 
