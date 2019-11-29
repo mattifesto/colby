@@ -59,6 +59,10 @@ final class ColbyUser {
 
 
     /**
+     * @deprecated 2019_11_28
+     *
+     *      Use CBUserGroup::currentUserIsMemberOfUserGroup().
+     *
      * This function is more efficient than ColbyUser::isMemberOfGroup() because
      * it memoizes the results for the current user.
      *
@@ -236,6 +240,10 @@ final class ColbyUser {
 
 
     /**
+     * @deprecated 2019_11_28
+     *
+     *      Use CBUserGroup::userIsMemberOfUserGroup().
+     *
      * ColbyUser::currentUserIsMemberOfGroup() is a more efficient alternative
      * for the current user.
      *
