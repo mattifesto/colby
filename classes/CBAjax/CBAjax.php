@@ -85,7 +85,7 @@ final class CBAjax {
                     --- pre\n{$information}
                     ---
 
-EOT;
+                EOT;
 
                 CBLog::log(
                     (object)[
@@ -95,7 +95,11 @@ EOT;
                     ]
                 );
 
-                if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
+                if (
+                    CBUserGroup::currentUserIsMemberOfUserGroup(
+                        'CBDevelopersUserGroup'
+                    )
+                ) {
                     $response->message = $simpleMessage;
                 } else {
                     $response->message = (
@@ -120,7 +124,7 @@ EOT;
                     --- pre\n{$information}
                     ---
 
-EOT;
+                EOT;
 
                 CBLog::log(
                     (object)[
@@ -130,7 +134,11 @@ EOT;
                     ]
                 );
 
-                if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
+                if (
+                    CBUserGroup::currentUserIsMemberOfUserGroup(
+                        'CBDevelopersUserGroup'
+                    )
+                ) {
                     $response->message = $simpleMessage;
                 } else {
                     $response->message = (
@@ -172,7 +180,11 @@ EOT;
             $response->wasSuccessful = false;
             $response->message = $throwable->getMessage();
 
-            if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
+            if (
+                CBUserGroup::currentUserIsMemberOfUserGroup(
+                    'CBDevelopersUserGroup'
+                )
+            ) {
                 $response->classNameForException = get_class($throwable);
                 $response->stackTrace = Colby::exceptionStackTrace($throwable);
             }
@@ -181,6 +193,7 @@ EOT;
         echo json_encode($response);
     }
     /* call() */
+
 
 
     /**
@@ -194,5 +207,6 @@ EOT;
         return !empty($ajaxArgumentsAsJSON);
     }
     /* requestIsToCallAnAjaxFunction() */
+
 }
 /* CBAjax */
