@@ -1537,6 +1537,38 @@ final class CBCodeAdmin {
                     'severity' => 4,
                     'title' => 'userNumericID',
                 ],
+
+
+                /**
+                 * 2019_11_28 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBUserGroup::userIsMemberOfUserGroup().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'isMemberOfGroup',
+                    'severity' => 4,
+                    'title' => 'ColbyUser::isMemberOfGroup()',
+                ],
+
+
+                /**
+                 * 2019_11_28 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBUserGroup::currentUserIsMemberOfUserGroup().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'currentUserIsMemberOfGroup',
+                    'severity' => 4,
+                    'title' => 'ColbyUser::currentUserIsMemberOfGroup()',
+                ],
             ]
         );
     }
