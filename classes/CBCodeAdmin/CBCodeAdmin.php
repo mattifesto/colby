@@ -1517,6 +1517,26 @@ final class CBCodeAdmin {
                     'severity' => 4,
                     'title' => 'CBPageSettings::defaultClassName()',
                 ],
+
+
+                /**
+                 * 2019_11_28 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        The userNumericID property in the CBUser spec is
+                        deprecated and should not be used.
+
+                        You can use the "id" column of the ColbyUsers table
+                        directly as a transitional step.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'userNumericID',
+                    'severity' => 4,
+                    'title' => 'userNumericID',
+                ],
             ]
         );
     }
