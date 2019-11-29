@@ -82,6 +82,28 @@ final class ColbyUser_Tests {
 
 
         $testName = CBConvert::stringToCleanLine(<<<EOT
+            Make sure the current user is not a member of the test group
+            according to CBUserGroup::currentUserIsMemberOfUserGroup().
+        EOT);
+
+        {
+            $actualResult = CBUserGroup::currentUserIsMemberOfUserGroup(
+                $userGroupClassName
+            );
+
+            $expectedResult = false;
+
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    $testName,
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+
+        $testName = CBConvert::stringToCleanLine(<<<EOT
             Fetch all group models and make sure the test group model is not
             included.
         EOT);
@@ -172,6 +194,29 @@ final class ColbyUser_Tests {
 
 
         $testName = CBConvert::stringToCleanLine(<<<EOT
+            After adding the current user to the test group make sure the
+            current user is a member of the test group according to
+            CBUserGroup::currentUserIsMemberOfUserGroup().
+        EOT);
+
+        {
+            $actualResult = CBUserGroup::currentUserIsMemberOfUserGroup(
+                $userGroupClassName
+            );
+
+            $expectedResult = true;
+
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    $testName,
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+
+        $testName = CBConvert::stringToCleanLine(<<<EOT
             Remove the current user from the test group and then make sure the
             current user is not a member of the test group.
         EOT);
@@ -184,6 +229,29 @@ final class ColbyUser_Tests {
             );
 
             $actualResult = ColbyUser::currentUserIsMemberOfGroup(
+                $userGroupClassName
+            );
+
+            $expectedResult = false;
+
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    $testName,
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+
+        $testName = CBConvert::stringToCleanLine(<<<EOT
+            After removing the current user from the test group and make sure
+            the current user is not a member of the test group according to
+            CBUserGroup::currentUserIsMemberOfUserGroup().
+        EOT);
+
+        {
+            $actualResult = CBUserGroup::currentUserIsMemberOfUserGroup(
                 $userGroupClassName
             );
 
@@ -228,6 +296,35 @@ final class ColbyUser_Tests {
 
 
         $testName = CBConvert::stringToCleanLine(<<<EOT
+            After adding the current user to the test group after having been
+            removed make sure the current user is a member of the test group
+            according to CBUserGroup::currentUserIsMemberOfUserGroup().
+        EOT);
+
+        {
+            ColbyUser::updateGroupMembership(
+                ColbyUser::currentUserID(),
+                $userGroupClassName,
+                true
+            );
+
+            $actualResult = CBUserGroup::currentUserIsMemberOfUserGroup(
+                $userGroupClassName
+            );
+
+            $expectedResult = true;
+
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    $testName,
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+
+        $testName = CBConvert::stringToCleanLine(<<<EOT
             Delete the test group and make sure the current user is no longer a
             member of the test group.
         EOT);
@@ -236,6 +333,31 @@ final class ColbyUser_Tests {
             CBModels::deleteByID($userGroupSpec->ID);
 
             $actualResult = ColbyUser::currentUserIsMemberOfGroup(
+                $userGroupClassName
+            );
+
+            $expectedResult = false;
+
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    $testName,
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+
+        $testName = CBConvert::stringToCleanLine(<<<EOT
+            After deleting the test group make sure the current user is no
+            longer a member of the test group according to
+            CBUserGroup::currentUserIsMemberOfUserGroup().
+        EOT);
+
+        {
+            CBModels::deleteByID($userGroupSpec->ID);
+
+            $actualResult = CBUserGroup::currentUserIsMemberOfUserGroup(
                 $userGroupClassName
             );
 
