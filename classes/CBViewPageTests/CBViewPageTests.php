@@ -233,7 +233,9 @@ final class CBViewPageTests {
 
         $originalSpec = (object)[
             'className' => 'CBViewPage',
+
             'classNameForSettings' => 'CBViewPageTests_PageSettings',
+
             'image' => (object)[
                 /* testing deprecated missing class name */
                 'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
@@ -242,7 +244,11 @@ final class CBViewPageTests {
                 'height' => 700,
                 'width' => 900,
             ],
-            'publishedBy' => ColbyUser::currentUserID(),
+
+            'publishedBy' => CBUsers::forTesting_userCBIDtoUserNumericID(
+                ColbyUser::getCurrentUserCBID()
+            ),
+
             'sections' => CBViewTests::testSubviewSpecs(),
         ];
 
