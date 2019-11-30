@@ -44,6 +44,10 @@ final class ColbyUser_Tests {
      * @return object
      */
     static function CBTest_general(): stdClass {
+        $currentUserNumericID = CBUsers::forTesting_userCBIDtoUserNumericID(
+            ColbyUser::getCurrentUserCBID()
+        );
+
         $userGroupClassName = 'CBTest_updateGroupMembership_group';
 
         $userGroupSpec = (object)[
@@ -172,7 +176,7 @@ final class ColbyUser_Tests {
 
         {
             ColbyUser::updateGroupMembership(
-                ColbyUser::currentUserID(),
+                $currentUserNumericID,
                 $userGroupClassName,
                 true
             );
@@ -223,7 +227,7 @@ final class ColbyUser_Tests {
 
         {
             ColbyUser::updateGroupMembership(
-                ColbyUser::currentUserID(),
+                $currentUserNumericID,
                 $userGroupClassName,
                 false
             );
@@ -274,7 +278,7 @@ final class ColbyUser_Tests {
 
         {
             ColbyUser::updateGroupMembership(
-                ColbyUser::currentUserID(),
+                $currentUserNumericID,
                 $userGroupClassName,
                 true
             );
@@ -303,7 +307,7 @@ final class ColbyUser_Tests {
 
         {
             ColbyUser::updateGroupMembership(
-                ColbyUser::currentUserID(),
+                $currentUserNumericID,
                 $userGroupClassName,
                 true
             );
@@ -385,24 +389,28 @@ final class ColbyUser_Tests {
      * @return object
      */
     static function CBTest_isMemberOfGroup(): stdClass {
+        $currentUserNumericID = CBUsers::forTesting_userCBIDtoUserNumericID(
+            ColbyUser::getCurrentUserCBID()
+        );
+
         $tests = [
             (object)[
-                'userNumericID' => ColbyUser::currentUserID(),
+                'userNumericID' => $currentUserNumericID,
                 'groupName' => 'Developers',
                 'expectedResult' => true,
             ],
             (object)[
-                'userNumericID' => ColbyUser::currentUserID(),
+                'userNumericID' => $currentUserNumericID,
                 'groupName' => 'Administrators',
                 'expectedResult' => true,
             ],
             (object)[
-                'userNumericID' => ColbyUser::currentUserID(),
+                'userNumericID' => $currentUserNumericID,
                 'groupName' => 'Public',
                 'expectedResult' => true,
             ],
             (object)[
-                'userNumericID' => ColbyUser::currentUserID(),
+                'userNumericID' => $currentUserNumericID,
                 'groupName' => 'NO_EXIST',
                 'expectedResult' => false,
             ],
