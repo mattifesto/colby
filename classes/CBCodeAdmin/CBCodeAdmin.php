@@ -1196,6 +1196,7 @@ final class CBCodeAdmin {
                  * 2019_11_29 (error)
                  */
                 (object)[
+                    'args' => '-i',
                     'cbmessage' => <<<EOT
 
                         Use ColbyUser::getCurrentUserCBID() and user CBIDs
@@ -1203,7 +1204,7 @@ final class CBCodeAdmin {
 
                     EOT,
                     'filetype' => 'php',
-                    'regex' => 'currentUserId',
+                    'regex' => '::currentUserId\(',
                     'severity' => 3,
                     'title' => 'ColbyUser::currentUserId()',
                 ],
