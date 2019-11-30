@@ -1191,6 +1191,24 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_07_16 (warning)
+                 * 2019_11_29 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use ColbyUser::getCurrentUserCBID() and user CBIDs
+                        instead of user numeric user IDs.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'currentUserId',
+                    'severity' => 3,
+                    'title' => 'ColbyUser::currentUserId()',
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
@@ -1292,23 +1310,6 @@ final class CBCodeAdmin {
                     'title' => (
                         'Replace use of CBModels::modelWithClassName()'
                     ),
-                ],
-
-
-                /**
-                 * 2019_07_16
-                 */
-                (object)[
-                    'cbmessage' => <<<EOT
-
-                        Use ColbyUser::getCurrentUserCBID() and user CBIDs
-                        instead of user numeric user IDs.
-
-                    EOT,
-                    'filetype' => 'php',
-                    'regex' => 'ColbyUser::currentUserId',
-                    'severity' => 4,
-                    'title' => 'ColbyUser::currentUserId()',
                 ],
 
 
