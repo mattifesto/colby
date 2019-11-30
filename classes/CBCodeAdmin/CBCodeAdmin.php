@@ -1407,6 +1407,7 @@ final class CBCodeAdmin {
                  * 2019_08_10
                  */
                 (object)[
+                    'args' => '--ignore-file=match:ColbyUser_Tests.php',
                     'cbmessage' => <<<EOT
 
                         Replace use of user numeric IDs with user CBIDs.
