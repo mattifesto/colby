@@ -217,6 +217,7 @@ final class CBUserGroup {
             $userGroupClassName
         );
     }
+    /* currentUserIsMemberOfUserGroup() */
 
 
 
@@ -352,7 +353,12 @@ final class CBUserGroup {
 
 
     /**
-     * @param CBID $userCBID
+     * @param CBID|null $userCBID
+     *
+     *      Pass null if a user is not currently logged in. Often callers will
+     *      use the result of ColbyUser::getCurrentUserCBID() as the paramter
+     *      value.
+     *
      * @param string $userGroupClassName
      *
      *      Deprecated group names are not and will never be supported by this
@@ -361,9 +367,17 @@ final class CBUserGroup {
      * @return bool
      */
     static function userIsMemberOfUserGroup(
-        string $userCBID,
+        ?string $userCBID,
         string $userGroupClassName
     ): bool {
+        if ($userGroupClassName === 'CBPublicUserGroup') {
+            return true;
+        }
+
+        if ($userCBID === null) {
+            return false;
+        }
+
         $userGroupCBID = CBUserGroup::userGroupClassNameToCBID(
             $userGroupClassName
         );
