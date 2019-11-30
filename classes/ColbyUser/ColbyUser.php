@@ -32,24 +32,6 @@ final class ColbyUser {
 
 
     /**
-     * @deprecated 2019_07_16
-     *
-     *      Use the hexadecimal user ID instead of the numeric user ID. The
-     *      hexadecimal user ID is returned by the function
-     *      ColbyUser::getCurrentUserCBID()
-     *
-     * @return int|null
-     *
-     *      Returns the current user numeric ID if a user is logged in;
-     *      otherwise null.
-     */
-    static function currentUserId(): ?int {
-        return ColbyUser::$currentUserNumericID;
-    }
-
-
-
-    /**
      * @return bool
      */
     static function currentUserIsLoggedIn(): bool {
