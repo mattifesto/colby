@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @deprecated 2019_12_02 use CBUserGroupMembershipToggleView
+ */
 final class CBGroupUserSettings {
 
     /**
