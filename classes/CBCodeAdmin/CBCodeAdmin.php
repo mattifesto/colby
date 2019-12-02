@@ -1530,6 +1530,11 @@ final class CBCodeAdmin {
                  * 2019_11_28 (warning)
                  */
                 (object)[
+                    'args' => (
+                        '--ignore-file=match:CBUsers_Tests.php ' .
+                        '--ignore-file=match:ColbyUser_Tests.php ' .
+                        '--ignore-file=match:SCOrder_Tests.php '
+                    ),
                     'cbmessage' => <<<EOT
 
                         The userNumericID property in the CBUser spec is
@@ -1540,7 +1545,7 @@ final class CBCodeAdmin {
 
                     EOT,
                     'filetype' => 'php',
-                    'regex' => 'userNumericID',
+                    'regex' => 'userNumericID(?!sTo)',
                     'severity' => 4,
                     'title' => 'userNumericID',
                 ],
@@ -1575,6 +1580,22 @@ final class CBCodeAdmin {
                     'regex' => 'currentUserIsMemberOfGroup',
                     'severity' => 4,
                     'title' => 'ColbyUser::currentUserIsMemberOfGroup()',
+                ],
+
+
+                /**
+                 * 2019_12_02 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBUserGroupMembershipToggleView.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBGroupUserSettings',
+                    'severity' => 4,
+                    'title' => 'CBGroupUserSettings',
                 ],
             ]
         );
