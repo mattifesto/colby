@@ -2,6 +2,11 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* exported CBUIBooleanSwitchPart */
+/* global
+    CBUI,
+*/
+
+
 
 var CBUIBooleanSwitchPart = {
 
@@ -17,19 +22,34 @@ var CBUIBooleanSwitchPart = {
     create: function () {
         let changed;
         let value = false;
-        let element = document.createElement("div");
-        element.className = "CBUIBooleanSwitchPart";
-        let sliderElement = document.createElement("div");
-        sliderElement.className = "slider";
-        let buttonElement = document.createElement("div");
-        buttonElement.className = "button";
 
-        sliderElement.appendChild(buttonElement);
+
+        /* element */
+
+        let element = CBUI.createElement(
+            "CBUIBooleanSwitchPart CBUI_userSelectNone"
+        );
+
+
+        /* slider */
+
+        let sliderElement = CBUI.createElement("slider");
+
         element.appendChild(sliderElement);
 
-        element.addEventListener("click", function () {
-            api.value = !value;
-        });
+
+        /* button */
+
+        let buttonElement = CBUI.createElement("button");
+
+        sliderElement.appendChild(buttonElement);
+
+        element.addEventListener(
+            "click",
+            function () {
+                api.value = !value;
+            }
+        );
 
         let api = {
             get changed() {
@@ -71,4 +91,6 @@ var CBUIBooleanSwitchPart = {
 
         return api;
     },
+    /* create() */
+
 };

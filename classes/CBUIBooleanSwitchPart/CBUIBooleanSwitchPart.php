@@ -2,6 +2,10 @@
 
 final class CBUIBooleanSwitchPart {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
@@ -11,12 +15,27 @@ final class CBUIBooleanSwitchPart {
         ];
     }
 
+
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v400.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v555.js', cbsysurl()),
         ];
     }
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBUI',
+        ];
+    }
+
 }
