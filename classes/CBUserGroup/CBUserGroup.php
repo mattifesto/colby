@@ -6,6 +6,171 @@ final class CBUserGroup {
 
 
 
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @param object $args
+     *
+     * @return void
+     */
+    static function CBAjax_addUser(
+        stdClass $args
+    ): void {
+        $userCBID = CBModel::valueAsCBID(
+            $args,
+            'userCBID'
+        );
+
+        if ($userCBID === null) {
+            throw new CBExceptionWithValue(
+                'The "userCBID" property of args is not valid.',
+                $args,
+                'ddc570db55949127f08ff40b67fae5aa6df630b8'
+            );
+        }
+
+        $userGroupClassName = CBModel::valueAsName(
+            $args,
+            'userGroupClassName'
+        );
+
+        if ($userGroupClassName === null) {
+            throw new CBExceptionWithValue(
+                'The "userGroupClassName" value of args is not valid.',
+                $args,
+                '7147b2ea55994fde889a92b2364eabf4c83664e2'
+            );
+        }
+
+        CBUserGroup::addUsers(
+            $userGroupClassName,
+            [
+                $userCBID
+            ]
+        );
+    }
+    /* CBAjax_addUser() */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_addUser_group(): string {
+        return 'CBAdministratorsUserGroup';
+    }
+
+
+
+    /**
+     * @param object $args
+     *
+     * @return void
+     */
+    static function CBAjax_removeUser(
+        stdClass $args
+    ): void {
+        $userCBID = CBModel::valueAsCBID(
+            $args,
+            'userCBID'
+        );
+
+        if ($userCBID === null) {
+            throw new CBExceptionWithValue(
+                'The "userCBID" property of args is not valid.',
+                $args,
+                '3d073c37dafada1191cb8d2a59da5c5d3c217238'
+            );
+        }
+
+        $userGroupClassName = CBModel::valueAsName(
+            $args,
+            'userGroupClassName'
+        );
+
+        if ($userGroupClassName === null) {
+            throw new CBExceptionWithValue(
+                'The "userGroupClassName" value of args is not valid.',
+                $args,
+                'ce42ce842f63b51dec0c39af29c42c11c4462df3'
+            );
+        }
+
+        CBUserGroup::removeUsers(
+            $userGroupClassName,
+            [
+                $userCBID
+            ]
+        );
+    }
+    /* CBAjax_removeUser() */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_removeUser_group(): string {
+        return 'CBAdministratorsUserGroup';
+    }
+
+
+
+    /**
+     * @param object $args
+     *
+     * @return bool
+     */
+    static function CBAjax_userIsMemberOfUserGroup(
+        stdClass $args
+    ): bool {
+        $userCBID = CBModel::valueAsCBID(
+            $args,
+            'userCBID'
+        );
+
+        if ($userCBID === null) {
+            throw new CBExceptionWithValue(
+                'The "userCBID" property of args is not valid.',
+                $args,
+                '2f23a23a512bc0e0067bb0e2c5f03aa077df01ec'
+            );
+        }
+
+        $userGroupClassName = CBModel::valueAsName(
+            $args,
+            'userGroupClassName'
+        );
+
+        if ($userGroupClassName === null) {
+            throw new CBExceptionWithValue(
+                'The "userGroupClassName" value of args is not valid.',
+                $args,
+                '96fdde8f16bc4b95c59ada9c7a834c2cd7ec934d'
+            );
+        }
+
+        return CBUserGroup::userIsMemberOfUserGroup(
+            $userCBID,
+            $userGroupClassName
+        );
+    }
+    /* CBAjax_userIsMemberOfUserGroup() */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_userIsMemberOfUserGroup_group(): string {
+        return 'CBAdministratorsUserGroup';
+    }
+
+
+
+
     /* -- CBModel interfaces -- -- -- -- -- */
 
 
@@ -15,7 +180,9 @@ final class CBUserGroup {
      *
      * @return object
      */
-    static function CBModel_build(stdClass $spec): stdClass {
+    static function CBModel_build(
+        stdClass $spec
+    ): stdClass {
         $CBID = CBModel::valueToString(
             $spec,
             'ID'
@@ -64,7 +231,9 @@ final class CBUserGroup {
      *
      * @return void
      */
-    static function CBModels_willDelete(array $userGroupModelCBIDs): void {
+    static function CBModels_willDelete(
+        array $userGroupModelCBIDs
+    ): void {
         ColbyUser::clearCachedUserGroupsForCurrentUser();
         CBUserGroup::clearCachedUserGroupModels();
 
@@ -98,7 +267,9 @@ final class CBUserGroup {
      *
      * @return void
      */
-    static function CBModels_willSave(array $userGroupModels): void {
+    static function CBModels_willSave(
+        array $userGroupModels
+    ): void {
         ColbyUser::clearCachedUserGroupsForCurrentUser();
         CBUserGroup::clearCachedUserGroupModels();
     }
