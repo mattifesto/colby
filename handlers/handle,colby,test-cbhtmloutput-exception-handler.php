@@ -7,7 +7,12 @@
  * We only throw an exception when an Administrator views the page.
  */
 
-if (ColbyUser::currentUserIsMemberOfGroup('Administrators')) {
+ $isAdministrator = CBUserGroup::userIsMemberOfUserGroup(
+     ColbyUser::getCurrentUserCBID(),
+     'CBAdministratorsUserGroup'
+ );
+
+ if ($isAdministrator) {
     CBHTMLOutput::begin();
 
     ?>
@@ -17,7 +22,10 @@ if (ColbyUser::currentUserIsMemberOfGroup('Administrators')) {
 
     <?php
 
-    throw new Exception("The /colby/test-cbhtmloutput-exception-handler/ page was viewed. This is a test of the CBHTMLOutput custom exception handler.");
+    throw new Exception(
+        "The /colby/test-cbhtmloutput-exception-handler/ page was " .
+        "viewed. This is a test of the CBHTMLOutput custom exception handler."
+    );
 
     CBHTMLOutput::render();
 }
