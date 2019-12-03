@@ -1587,6 +1587,9 @@ final class CBCodeAdmin {
                  * 2019_11_28 (warning)
                  */
                 (object)[
+                    'args' => (
+                        '--ignore-file=match:ColbyUser_Tests.php '
+                    ),
                     'cbmessage' => <<<EOT
 
                         Use CBUserGroup::currentUserIsMemberOfUserGroup().
