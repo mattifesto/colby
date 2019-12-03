@@ -4,12 +4,12 @@ if (CBAdminPageForUpdate::installationIsRequired()) {
     CBAdminPageForUpdate::update();
 }
 
-if (
-    !CBUserGroup::userIsMemberOfUserGroup(
-        ColbyUser::getCurrentUserCBID(),
-        'CBAdministratorsUserGroup'
-    )
-) {
+$isAdministrator = CBUserGroup::userIsMemberOfUserGroup(
+    ColbyUser::getCurrentUserCBID(),
+    'CBAdministratorsUserGroup'
+);
+
+if (!$isAdministrator) {
     return include cbsysdir() . '/handlers/handle-authorization-failed.php';
 }
 
