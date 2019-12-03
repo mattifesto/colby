@@ -43,47 +43,18 @@ final class CBAdministratorsUserGroupUserSettingsManager {
     ): void {
         echo '<div class="', __CLASS__, '">';
 
-        $targetUserModel = CBModelCache::fetchModelByID(
-            $targetUserCBID
+        $userHasAuthority = CBUserGroup::userIsMemberOfUserGroup(
+            ColbyUser::getCurrentUserCBID(),
+            'CBAdministratorsUserGroup'
         );
 
-        if (
-            $targetUserModel === null ||
-            $targetUserModel->className !== 'CBUser'
-        ) {
-            throw new CBExceptionWithValue(
-                'There is no CBUser model for this user CBID',
+        if ($userHasAuthority) {
+            CBView::render(
                 (object)[
-                    'user CBID' => $targetUserCBID,
-                    'model' => $targetUserModel,
-                ],
-                '778f9adfef1891c4a9229a384d6f077a3bcf7001'
-            );
-        }
-
-        $targetUserNumericID = CBModel::valueAsInt(
-            $targetUserModel,
-            'userNumericID'
-        );
-
-        if ($targetUserNumericID === null) {
-            throw new CBExceptionWithValue(
-                'The "userNumericID" property of this user model is invalid.',
-                $targetUserModel,
-                '95ef916ff7322d7d5cf441967bec15dae9324fe9'
-            );
-        }
-
-        if (
-            ColbyUser::currentUserIsMemberOfGroup('Administrators')
-        ) {
-            $targetUserData = (object)[
-                'id' => $targetUserNumericID,
-            ];
-
-            CBGroupUserSettings::renderUserSettings(
-                $targetUserData,
-                'Administrators'
+                    'className' => 'CBUserGroupMembershipToggleView',
+                    'userCBID' => $targetUserCBID,
+                    'userGroupClassName' => 'CBAdministratorsUserGroup',
+                ]
             );
         }
 
