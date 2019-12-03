@@ -20,7 +20,12 @@
  * We only throw an exception when an Administrator views the page.
  */
 
-if (ColbyUser::currentUserIsMemberOfGroup('Administrators')) {
+ $isAdministrator = CBUserGroup::userIsMemberOfUserGroup(
+     ColbyUser::getCurrentUserCBID(),
+     'CBAdministratorsUserGroup'
+ );
+
+ if ($isAdministrator) {
     throw new Exception(
         'The /colby/test-default-exception-handler/ page was viewed. ' .
         'This is a test of the Colby default exception handler.'
