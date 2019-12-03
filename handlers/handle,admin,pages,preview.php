@@ -1,6 +1,11 @@
 <?php
 
-if (!ColbyUser::currentUserIsMemberOfGroup('Administrators')) {
+if (
+    !CBUserGroup::userIsMemberOfUserGroup(
+        ColbyUser::getCurrentUserCBID(),
+        'CBAdministratorsUserGroup'
+    )
+) {
     return include cbsysdir() . '/handlers/handle-authorization-failed.php';
 }
 
