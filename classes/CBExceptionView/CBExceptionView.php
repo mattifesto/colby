@@ -42,7 +42,10 @@ final class CBExceptionView {
             <?php
 
             if (
-                CBUserGroup::userIsMemberOfUserGroup('CBDevelopersUserGroup')
+                CBUserGroup::userIsMemberOfUserGroup(
+                    ColbyUser::getCurrentUserCBID(),
+                    'CBDevelopersUserGroup'
+                )
             ) {
                 $cbmessage = CBException::throwableToCBMessage($throwable);
 
