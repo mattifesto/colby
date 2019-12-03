@@ -139,15 +139,4 @@ final class CBAdminPageForUserSettings {
         ];
     }
 
-
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_requiredClassNames(): array {
-        return [
-            'CBGroupUserSettings',
-        ];
-    }
-
 }
