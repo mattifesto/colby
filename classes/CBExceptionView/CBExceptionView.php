@@ -41,7 +41,9 @@ final class CBExceptionView {
 
             <?php
 
-            if (ColbyUser::currentUserIsMemberOfGroup('Developers')) {
+            if (
+                CBUserGroup::userIsMemberOfUserGroup('CBDevelopersUserGroup')
+            ) {
                 $cbmessage = CBException::throwableToCBMessage($throwable);
 
                 $stackTraceAsCBMessage = CBMessageMarkup::stringToMessage(
