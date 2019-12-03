@@ -1210,6 +1210,22 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_12_02 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBUserGroupMembershipToggleView.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBGroupUserSettings',
+                    'severity' => 3,
+                    'title' => 'CBGroupUserSettings',
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
@@ -1580,22 +1596,6 @@ final class CBCodeAdmin {
                     'regex' => 'currentUserIsMemberOfGroup',
                     'severity' => 4,
                     'title' => 'ColbyUser::currentUserIsMemberOfGroup()',
-                ],
-
-
-                /**
-                 * 2019_12_02 (warning)
-                 */
-                (object)[
-                    'cbmessage' => <<<EOT
-
-                        Use CBUserGroupMembershipToggleView.
-
-                    EOT,
-                    'filetype' => 'php',
-                    'regex' => 'CBGroupUserSettings',
-                    'severity' => 4,
-                    'title' => 'CBGroupUserSettings',
                 ],
             ]
         );
