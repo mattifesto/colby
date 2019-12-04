@@ -4,6 +4,8 @@ final class CBLogAdminPage {
 
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
@@ -15,6 +17,7 @@ final class CBLogAdminPage {
     }
 
 
+
     /**
      * @return void
      */
@@ -23,7 +26,10 @@ final class CBLogAdminPage {
     }
 
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -35,6 +41,7 @@ final class CBLogAdminPage {
     }
 
 
+
     /**
      * @return [[<name>, <value>]]
      */
@@ -44,16 +51,23 @@ final class CBLogAdminPage {
             SELECT DISTINCT sourceClassName
             FROM CBLog
 
-EOT;
+        EOT;
 
-        $classNames = array_values(array_filter(
-            CBDB::SQLToArray($SQL)
-        ));
+        $classNames = array_values(
+            array_filter(
+                CBDB::SQLToArray($SQL)
+            )
+        );
 
         return [
-            ['CBLogAdminPage_classNames', $classNames],
+            [
+                'CBLogAdminPage_classNames',
+                $classNames,
+            ],
         ];
     }
+    /* CBHTMLOutput_JavaScriptVariables() */
+
 
 
     /**
@@ -70,9 +84,13 @@ EOT;
             'Colby',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
+
 
 
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
@@ -103,6 +121,8 @@ EOT;
 
         CBModelUpdater::save($updater);
     }
+    /* CBInstall_install() */
+
 
 
     /**
@@ -113,4 +133,5 @@ EOT;
             'CBGeneralAdminMenu',
         ];
     }
+
 }
