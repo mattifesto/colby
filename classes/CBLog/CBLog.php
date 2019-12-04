@@ -52,8 +52,9 @@ final class CBLog {
     /**
      * @return string
      */
-    static function CBAjax_fetchEntries_group(): string {
-        return 'Administrators';
+    static function CBAjax_fetchEntries_getUserGroupClassName(
+    ): string {
+        return 'CBAdministratorsUserGroup';
     }
 
 
@@ -83,8 +84,9 @@ final class CBLog {
     /**
      * @return string
      */
-    static function CBAjax_fetchMostRecentSerial_group(): string {
-        return 'Administrators';
+    static function CBAjax_fetchMostRecentSerial_getUserGroupClassName(
+    ): string {
+        return 'CBAdministratorsUserGroup';
     }
 
 
