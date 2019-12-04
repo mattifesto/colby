@@ -25,8 +25,8 @@ final class CBCodeAdmin {
     /**
      * @return string
      */
-    static function CBAjax_search_group(): string {
-        return 'Administrators';
+    static function CBAjax_search_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
 
 
