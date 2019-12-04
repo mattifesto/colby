@@ -17,11 +17,26 @@ final class CBAjax {
                 'wasSuccessful' => false,
             ];
 
+
+            /**
+             * The ajax arguments in include the function class name, function
+             * name, and function arguments.
+             *
+             *      {
+             *          functionClassName: string
+             *          functionName: string
+             *          functionArguments: object
+             *      }
+             */
+
             $ajaxArgumentsAsJSON = trim(
                 cb_post_value('ajaxArgumentsAsJSON')
             );
 
             $ajaxArguments = json_decode($ajaxArgumentsAsJSON);
+
+
+            /* function class name */
 
             $functionClassName = CBModel::valueAsName(
                 $ajaxArguments,
@@ -37,6 +52,9 @@ final class CBAjax {
                 );
             }
 
+
+            /* function name */
+
             $functionName = CBModel::valueAsName(
                 $ajaxArguments,
                 'functionName'
@@ -51,6 +69,9 @@ final class CBAjax {
                 );
             }
 
+
+            /* function arguments */
+
             $functionArguments = CBModel::valueAsObject(
                 $ajaxArguments,
                 'functionArguments'
@@ -64,6 +85,7 @@ final class CBAjax {
                     '102a3f06edc442ff265a29d463da8b725db73416'
                 );
             }
+
 
             $function = "{$functionClassName}::CBAjax_{$functionName}";
             $getGroupFunction = "{$function}_group";
