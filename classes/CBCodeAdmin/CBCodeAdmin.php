@@ -1600,6 +1600,22 @@ final class CBCodeAdmin {
                     'severity' => 4,
                     'title' => 'ColbyUser::currentUserIsMemberOfGroup()',
                 ],
+
+
+                /**
+                 * 2019_12_04 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBAjax_<name>_userGroupClassName().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBAjax_[^_]+_group',
+                    'severity' => 4,
+                    'title' => 'CBAjax_<name>_group',
+                ],
             ]
         );
     }
