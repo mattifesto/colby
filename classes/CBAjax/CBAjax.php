@@ -2,6 +2,7 @@
 
 final class CBAjax {
 
+
     /**
      * This function should only be called by the ColbyRequest class.
      *
@@ -17,75 +18,17 @@ final class CBAjax {
                 'wasSuccessful' => false,
             ];
 
-
-            /**
-             * The ajax arguments in include the function class name, function
-             * name, and function arguments.
-             *
-             *      {
-             *          functionClassName: string
-             *          functionName: string
-             *          functionArguments: object
-             *      }
-             */
-
             $ajaxArgumentsAsJSON = trim(
                 cb_post_value('ajaxArgumentsAsJSON')
             );
 
             $ajaxArguments = json_decode($ajaxArgumentsAsJSON);
 
+            CBAjax::validateAjaxArguments($ajaxArguments);
 
-            /* function class name */
-
-            $functionClassName = CBModel::valueAsName(
-                $ajaxArguments,
-                'functionClassName'
-            );
-
-            if ($functionClassName === null) {
-                throw CBException::createModelIssueException(
-                    'A request to call an Ajax function has an invalid' .
-                    ' functionClassName.',
-                    $ajaxArguments,
-                    '09e390eef9781c3a42a0c030547ff75ee48f1240'
-                );
-            }
-
-
-            /* function name */
-
-            $functionName = CBModel::valueAsName(
-                $ajaxArguments,
-                'functionName'
-            );
-
-            if ($functionName === null) {
-                throw CBException::createModelIssueException(
-                    'A request to call an Ajax function has an invalid' .
-                    ' functionName.',
-                    $ajaxArguments,
-                    '5b220e8410fe7e3a68176a860724b65892be0847'
-                );
-            }
-
-
-            /* function arguments */
-
-            $functionArguments = CBModel::valueAsObject(
-                $ajaxArguments,
-                'functionArguments'
-            );
-
-            if ($functionArguments === null) {
-                throw CBException::createModelIssueException(
-                    'A request to call an Ajax function has functionArguments' .
-                    ' that are not an object.',
-                    $ajaxArguments,
-                    '102a3f06edc442ff265a29d463da8b725db73416'
-                );
-            }
-
+            $functionClassName = $ajaxArguments->functionClassName;
+            $functionName = $ajaxArguments->functionName;
+            $functionArguments = $ajaxArguments->functionArguments;
 
             $function = "{$functionClassName}::CBAjax_{$functionName}";
             $getGroupFunction = "{$function}_group";
@@ -214,7 +157,7 @@ final class CBAjax {
 
         echo json_encode($response);
     }
-    /* call() */
+    /* handleCallAjaxFunctionRequest() */
 
 
 
@@ -229,6 +172,82 @@ final class CBAjax {
         return !empty($ajaxArgumentsAsJSON);
     }
     /* requestIsToCallAnAjaxFunction() */
+
+
+
+    /**
+     * This function validates Ajax arguments.
+     *
+     * @param object $ajaxArguments
+     *
+     *      {
+     *          functionClassName: string
+     *          functionName: string
+     *          functionArguments: object
+     *      }
+     *
+     * @return void
+     */
+    static function validateAjaxArguments(
+        stdClass $ajaxArguments
+    ): void {
+        /* function class name */
+
+        $functionClassName = CBModel::valueAsName(
+            $ajaxArguments,
+            'functionClassName'
+        );
+
+        if ($functionClassName === null) {
+            throw CBExceptionWithValue(
+                (
+                    'A request to call an Ajax function has an invalid ' .
+                    'functionClassName.'
+                ),
+                $ajaxArguments,
+                '09e390eef9781c3a42a0c030547ff75ee48f1240'
+            );
+        }
+
+
+        /* function name */
+
+        $functionName = CBModel::valueAsName(
+            $ajaxArguments,
+            'functionName'
+        );
+
+        if ($functionName === null) {
+            throw CBExceptionWithValue(
+                (
+                    'A request to call an Ajax function has an invalid ' .
+                    'functionName.'
+                ),
+                $ajaxArguments,
+                '5b220e8410fe7e3a68176a860724b65892be0847'
+            );
+        }
+
+
+        /* function arguments */
+
+        $functionArguments = CBModel::valueAsObject(
+            $ajaxArguments,
+            'functionArguments'
+        );
+
+        if ($functionArguments === null) {
+            throw CBExceptionWithValue(
+                (
+                    'A request to call an Ajax function has ' .
+                    'functionArguments that are not an object.'
+                ),
+                $ajaxArguments,
+                '102a3f06edc442ff265a29d463da8b725db73416'
+            );
+        }
+    }
+    /* validateAjaxArguments() */
 
 }
 /* CBAjax */
