@@ -14,6 +14,8 @@ final class CBLog {
         'Debug',            // 7
     ];
 
+
+
     /**
      * This is a stack of log entry buffers. A log entry buffer is an array of
      * log entry objects.
@@ -28,6 +30,69 @@ final class CBLog {
      */
     private static $bufferStack = [];
 
+
+
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @param object $args
+     *
+     *      See CBLog::entries()
+     *
+     * @return [object]
+     */
+    static function CBAjax_fetchEntries($args): array {
+        return CBLog::entries($args);
+    }
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_fetchEntries_group(): string {
+        return 'Administrators';
+    }
+
+
+
+    /**
+     * @param object $args
+     *
+     *      {
+     *          processID: ?ID
+     *      }
+     *
+     * @return int
+     */
+    static function CBAjax_fetchMostRecentSerial(
+        stdClass $args
+    ): int {
+        return CBLog::fetchMostRecentSerial(
+            CBModel::valueAsID(
+                $args,
+                'processID'
+            )
+        );
+    }
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_fetchMostRecentSerial_group(): string {
+        return 'Administrators';
+    }
+
+
+
+    /* -- functions -- -- -- -- -- */
+
+
+
     /**
      * @deprecated use CBLog::log()
      */
@@ -38,6 +103,8 @@ final class CBLog {
             'severity' => $severity,
         ]);
     }
+
+
 
     /**
      * @param string $message
@@ -79,11 +146,12 @@ final class CBLog {
                 ---
             ---
 
-EOT;
+        EOT;
 
         return $message;
     }
     /* appendBacktrace() */
+
 
 
     /**
@@ -115,6 +183,9 @@ EOT;
 
         return $entries;
     }
+    /* buffer() */
+
+
 
     /**
      * @return ?[object]
@@ -131,6 +202,9 @@ EOT;
             return json_decode(json_encode(CBLog::$bufferStack[$count - 1]));
         }
     }
+    /* bufferContents() */
+
+
 
     /**
      * @return void
@@ -142,6 +216,9 @@ EOT;
             array_pop(CBLog::$bufferStack);
         }
     }
+    /* bufferEndClean() */
+
+
 
     /**
      * @return void
@@ -164,6 +241,9 @@ EOT;
             }
         }
     }
+    /* bufferEndFlush() */
+
+
 
     /**
      * @return void
@@ -172,45 +252,7 @@ EOT;
         array_push(CBLog::$bufferStack, []);
     }
 
-    /**
-     * @param object $args
-     *
-     *      See CBLog::entries()
-     *
-     * @return [object]
-     */
-    static function CBAjax_fetchEntries($args) {
-        return CBLog::entries($args);
-    }
 
-    /**
-     * @return string
-     */
-    static function CBAjax_fetchEntries_group() {
-        return 'Administrators';
-    }
-
-    /**
-     * @param object $args
-     *
-     *      {
-     *          processID: ?ID
-     *      }
-     *
-     * @return int
-     */
-    static function CBAjax_fetchMostRecentSerial(stdClass $args): int {
-        return CBLog::fetchMostRecentSerial(
-            CBModel::valueAsID($args, 'processID')
-        );
-    }
-
-    /**
-     * @return string
-     */
-    static function CBAjax_fetchMostRecentSerial_group(): string {
-        return 'Administrators';
-    }
 
     /**
      * @return [string]
@@ -221,6 +263,8 @@ EOT;
         ];
     }
 
+
+
     /**
      * @return [string]
      */
@@ -229,6 +273,8 @@ EOT;
             'CBLogTable'
         ];
     }
+
+
 
     /**
      * @param object $args
@@ -281,13 +327,19 @@ EOT;
     static function entries($args = null) {
         $whereAsSQL = [];
 
-        $afterSerial = CBModel::value($args, 'afterSerial', null, 'CBConvert::valueAsInt');
+        $afterSerial = CBModel::valueAsInt(
+            $args,
+            'afterSerial'
+        );
 
         if ($afterSerial !== null) {
             $whereAsSQL[] = "`serial` > {$afterSerial}";
         }
 
-        $afterTimestamp = CBModel::value($args, 'afterTimestamp', null, 'CBConvert::valueAsInt');
+        $afterTimestamp = CBModel::valueAsInt(
+            $args,
+            'afterTimestamp',
+        );
 
         if ($afterTimestamp !== null) {
             $whereAsSQL[] = "`timestamp` > {$afterTimestamp}";
@@ -304,10 +356,16 @@ EOT;
 
         /* sourceClassName */
 
-        $sourceClassName = CBModel::valueToString($args, 'sourceClassName');
+        $sourceClassName = CBModel::valueToString(
+            $args,
+            'sourceClassName'
+        );
 
         if (empty($sourceClassName)) {
-            $sourceClassName = CBModel::valueToString($args, 'className');
+            $sourceClassName = CBModel::valueToString(
+                $args,
+                'className'
+            );
         }
 
         if (!empty($sourceClassName)) {
@@ -324,13 +382,19 @@ EOT;
             $whereAsSQL[] = "sourceID = {$sourceIDAsSQL}";
         }
 
-        $lowestSeverity = CBModel::value($args, 'lowestSeverity', null, 'CBConvert::valueAsInt');
+        $lowestSeverity = CBModel::valueAsInt(
+            $args,
+            'lowestSeverity'
+        );
 
         if ($lowestSeverity !== null) {
             $whereAsSQL[] = "`severity` <= {$lowestSeverity}";
         }
 
-        $processID = CBModel::valueAsID($args, 'processID');
+        $processID = CBModel::valueAsID(
+            $args,
+            'processID'
+        );
 
         if ($processID !== null) {
             $processIDAsSQL = CBID::toSQL($processID);
@@ -343,7 +407,11 @@ EOT;
             $whereAsSQL = 'WHERE ' . implode(' AND ', $whereAsSQL);
         }
 
-        $mostRecentDescending = CBModel::value($args, 'mostRecentDescending', false, 'boolval');
+        $mostRecentDescending = CBModel::valueToBool(
+            $args,
+            'mostRecentDescending'
+        );
+
         $descAsSQL = $mostRecentDescending ? 'DESC' : '';
 
         $SQL = <<<EOT
@@ -356,15 +424,22 @@ EOT;
                     sourceClassName,
                     LOWER(HEX(sourceID)) as sourceID,
                     timestamp
+
             FROM    CBLog
+
             {$whereAsSQL}
+
             ORDER BY serial {$descAsSQL}
+
             LIMIT 500
 
-EOT;
+        EOT;
 
         return CBDB::SQLToObjects($SQL);
     }
+    /* entries() */
+
+
 
     /**
      * @param ?ID $processID
@@ -382,17 +457,24 @@ EOT;
         $SQL = <<<EOT
 
             SELECT      serial
+
             FROM        CBLog
+
             {$where}
+
             ORDER BY    serial DESC
+
             LIMIT       1
 
-EOT;
+        EOT;
 
         return CBConvert::valueAsInt(
             CBDB::SQLToValue2($SQL)
         ) ?? -1;
     }
+    /* fetchMostRecentSerial() */
+
+
 
     /**
      * Create a log entry.
@@ -443,6 +525,9 @@ EOT;
             array_push(CBLog::$bufferStack[$count - 1], $args);
         }
     }
+    /* log() */
+
+
 
     /**
      * @return void
@@ -450,18 +535,27 @@ EOT;
     private static function logForReals(stdClass $args): void {
         /* sourceClassName */
 
-        $sourceClassName = CBModel::valueToString($args, 'sourceClassName');
+        $sourceClassName = CBModel::valueToString(
+            $args,
+            'sourceClassName'
+        );
 
         if (empty($sourceClassName)) {
-            $sourceClassName = CBModel::valueToString($args, 'className'); /* deprecated */
+            /* deprecated */
+            $sourceClassName = CBModel::valueToString(
+                $args,
+                'className'
+            );
         }
 
         $sourceClassNameAsSQL = CBDB::stringToSQL($sourceClassName);
+
 
         /* sourceID */
 
         $sourceID = CBModel::valueAsID($args, 'sourceID');
         $sourceIDAsSQL = $sourceID ? CBID::toSQL($sourceID) : 'NULL';
+
 
         /* severity */
 
@@ -472,6 +566,7 @@ EOT;
         }
 
         $severityAsSQL = (int)$severity;
+
 
         /* modelID */
 
@@ -487,11 +582,13 @@ EOT;
 
         $modelIDAsSQL = $modelID ? CBID::toSQL($modelID) : 'NULL';
 
+
         /* message */
 
         $message = CBModel::valueToString($args, 'message');
         $message = CBLog::appendBacktrace($message);
         $messageAsSQL = CBDB::stringToSQL($message);
+
 
         /* process ID */
 
@@ -502,9 +599,13 @@ EOT;
         'NULL' :
         CBID::toSQL($processID);
 
+
         /* timestamp */
 
         $timestampAsSQL = time();
+
+
+        /* SQL */
 
         $SQL = <<<EOT
 
@@ -526,10 +627,13 @@ EOT;
                 {$timestampAsSQL}
             )
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
     }
+    /* logForReals() */
+
+
 
     /**
      * 10 days of log entries are kept in the CBLog table. If a situation arises
@@ -541,30 +645,37 @@ EOT;
     static function removeExpiredEntries(): void {
         $tenDays = 60 * 60 * 24 * 10;
         $timestamp = time() - $tenDays;
+
         $SQL = <<<EOT
 
             DELETE FROM CBLog
             WHERE timestamp < {$timestamp}
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
 
         $count = Colby::mysqli()->affected_rows;
+
         $message = <<<EOT
 
             CBLog::removeExpiredEntries() removed {$count} expired entries from
             the CBLog table.
 
-EOT;
+        EOT;
 
-        CBLog::log((object)[
-            'message' => $message,
-            'severity' => 7,
-            'sourceClassName' => __CLASS__,
-            'sourceID' => '0206ded5aab567162f0e2651b492091181d5a377',
-        ]);
+        CBLog::log(
+            (object)[
+                'message' => $message,
+                'severity' => 7,
+                'sourceClassName' => __CLASS__,
+                'sourceID' => '0206ded5aab567162f0e2651b492091181d5a377',
+            ]
+        );
     }
+    /* removeExpiredEntries() */
+
+
 
     /**
      * @param int $severity
@@ -578,6 +689,9 @@ EOT;
             return "Unknown severity code: {$severity}";
         }
     }
+    /* severityToDescription() */
+
+
 
     /**
      * This function will make additional log entries to point out issues with a
@@ -621,7 +735,7 @@ EOT;
                     --- pre\n{$stackTraceAsMessage}
                     ---
 
-EOT;
+                EOT;
 
                 CBLog::log(
                     (object)[
@@ -644,14 +758,18 @@ EOT;
                     --- pre\n{$stackTraceAsMessage}
                     ---
 
-EOT;
+                EOT;
 
-                CBLog::log((object)[
-                    'sourceClassName' => __CLASS__,
-                    'message' => $message,
-                    'severity' => 4,
-                ]);
+                CBLog::log(
+                    (object)[
+                        'sourceClassName' => __CLASS__,
+                        'message' => $message,
+                        'severity' => 4,
+                    ]
+                );
             }
         }
     }
+    /* verifyEntry() */
+
 }
