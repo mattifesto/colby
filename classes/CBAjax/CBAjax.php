@@ -46,48 +46,80 @@ final class CBAjax {
                 );
             }
 
-            $getGroupFunction = (
+            $userIsMemberOfUserGroup = false;
+
+            $getUserGroupClassNameFunctionName = (
                 $functionClassName .
-                "::CBAjax_{$functionName}_group"
+                "::CBAjax_{$functionName}_getUserGroupClassName"
             );
 
-            if (!is_callable($getGroupFunction)) {
-                throw new CBExceptionWithValue(
-                    (
-                        'The Ajax group interface was not implemented ' .
-                        'for this Ajax function call.'
-                    ),
-                    $ajaxArguments,
-                    'bc0310f24170ebee3dfc6bf4d47ce284a5408646'
-                );
-            }
-
-            $group = call_user_func($getGroupFunction);
-
-            if (ColbyUser::currentUserIsMemberOfGroup($group)) {
-                $response->value = call_user_func(
-                    $function,
-                    $functionArguments
+            if (is_callable($getUserGroupClassNameFunctionName)) {
+                $userGroupClassName = call_user_func(
+                    $getUserGroupClassNameFunctionName
                 );
 
-                $response->wasSuccessful = true;
-            } else if (ColbyUser::getCurrentUserCBID() === null) {
-                $response->message = (
-                    'The requested Ajax function cannot be called ' .
-                    'because you are not currently logged in, possibly ' .
-                    'because your session has timed out. Reloading ' .
-                    'the current page will usually remedy this.'
+                $userIsMemberOfUserGroup = CBUserGroup::userIsMemberOfUserGroup(
+                    ColbyUser::getCurrentUserCBID(),
+                    $userGroupClassName
                 );
-
-                $response->userMustLogIn = true;
             } else {
-                $response->message = (
-                    'You do not have permission to call a requested ' .
-                    'Ajax function.'
+                /* deprecated */
+
+                $getGroupFunction = (
+                    $functionClassName .
+                    "::CBAjax_{$functionName}_group"
                 );
 
-                $response->userMustLogIn = false;
+                if (!is_callable($getGroupFunction)) {
+                    throw new CBExceptionWithValue(
+                        (
+                            'The Ajax group interface was not implemented ' .
+                            'for this Ajax function call.'
+                        ),
+                        $ajaxArguments,
+                        'bc0310f24170ebee3dfc6bf4d47ce284a5408646'
+                    );
+                }
+
+                $userGroupName = call_user_func($getGroupFunction);
+
+                $userIsMemberOfUserGroup = ColbyUser::currentUserIsMemberOfGroup(
+                    $userGroupName
+                );
             }
+
+            if (!$userIsMemberOfUserGroup) {
+                if (ColbyUser::getCurrentUserCBID() === null) {
+                    $response->message = (
+                        'The requested Ajax function cannot be called ' .
+                        'because you are not currently logged in, possibly ' .
+                        'because your session has timed out. Reloading ' .
+                        'the current page will usually remedy this.'
+                    );
+
+                    $response->userMustLogIn = true;
+
+                    echo json_encode($response);
+
+                    return;
+                } else {
+                    $response->message = (
+                        'You do not have permission to call a requested ' .
+                        'Ajax function.'
+                    );
+
+                    echo json_encode($response);
+
+                    return;
+                }
+            }
+
+            $response->value = call_user_func(
+                $function,
+                $functionArguments
+            );
+
+            $response->wasSuccessful = true;
         } catch (Throwable $throwable) {
             CBErrorHandler::report($throwable);
 
