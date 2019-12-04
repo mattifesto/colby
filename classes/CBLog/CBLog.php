@@ -89,6 +89,41 @@ final class CBLog {
 
 
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v462.js', cbsysurl()),
+        ];
+    }
+
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * This interface is implemented so that other classes can say they require
+     * the CBLog class because they use CBLog during install. This class does
+     * not do any of its own installation, but does require that CBLogTable do
+     * its installation before it can be used.
+     *
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBLogTable'
+        ];
+    }
+
+
+
     /* -- functions -- -- -- -- -- */
 
 
@@ -97,12 +132,15 @@ final class CBLog {
      * @deprecated use CBLog::log()
      */
     static function addMessage($category, $severity, $message) {
-        CBLog::log((object)[
-            'sourceClassName' => $category,
-            'message' => $message,
-            'severity' => $severity,
-        ]);
+        CBLog::log(
+            (object)[
+                'sourceClassName' => $category,
+                'message' => $message,
+                'severity' => $severity,
+            ]
+        );
     }
+    /* addMessage() */
 
 
 
@@ -250,28 +288,6 @@ final class CBLog {
      */
     static function bufferStart(): void {
         array_push(CBLog::$bufferStack, []);
-    }
-
-
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [
-            Colby::flexpath(__CLASS__, 'v462.js', cbsysurl()),
-        ];
-    }
-
-
-
-    /**
-     * @return [string]
-     */
-    static function CBInstall_requiredClassNames(): array {
-        return [
-            'CBLogTable'
-        ];
     }
 
 
