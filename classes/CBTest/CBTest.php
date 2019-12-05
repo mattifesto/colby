@@ -341,8 +341,6 @@ EOT;
             ['CBMarkaround',            'paragraphToHTML'],
             ['CBPageLayout',            'build'],
             ['CBPages',                 'stringToDencodedURIPath'],
-            ['CBView',                  'render'],
-            ['CBView',                  'toSubviews'],
             ['ColbyMarkaroundParser',   'orderedList'],
             ['ColbyMarkaroundParser',   'paragraph'],
             ['ColbyMarkaroundParser',   'unorderedList'],
