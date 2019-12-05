@@ -1226,6 +1226,22 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_12_05 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBView::renderSpec().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'renderSpecAsHTML',
+                    'severity' => 3,
+                    'title' => 'CBView::renderSpecAsHTML()',
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
