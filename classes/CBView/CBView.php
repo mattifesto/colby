@@ -397,15 +397,6 @@ final class CBView {
 
 
     /**
-     * @deprecated use CBView::renderSpec()
-     */
-    static function renderSpecAsHTML(stdClass $spec) {
-        CBView::renderSpec($spec);
-    }
-
-
-
-    /**
      * When a view throws an exception during rendering this function is called
      * to render a proxy element so that page rendering is not cancelled.
      *
