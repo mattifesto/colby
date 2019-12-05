@@ -2,6 +2,14 @@
 
 final class CBView {
 
+    /**
+     * Tests can set this variable to true which will make view rendering rethrow
+     * exceptions rather than rendering and reporting them.
+     */
+    static $testModeIsActive = false;
+
+
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
 
@@ -240,36 +248,105 @@ final class CBView {
      * interfaces directly on the view class. This function will also make sure
      * that all of the view class's dependencies are included.
      *
-     * @param object? $model
+     * @NOTE 2019_12_05
+     *
+     *      Topic: throwing exceptions during view rendering.
+     *
+     *      Today I was forced to face the fact that my theories regarding
+     *      exceptions during view rendering were not sturdy, because some
+     *      issues rose.
+     *
+     *      There was a test that used every class name in the system, created
+     *      an empty model with it, and then rendered it as a view. I have long
+     *      had doubts about the exact purpose of this test, but I supposed it
+     *      was to assert that rendering any model should not throw an
+     *      exception, even though that is a bizarre way of asserting that fact.
+     *      This test has been removed.
+     *
+     *      So I did some deep thinking, and did come to the conclusion that an
+     *      exception during view rendering should not stop the entire page from
+     *      rendering. However, I felt just as strongly that we needed to be
+     *      sure to not hide that exception, because such an exception is an
+     *      indication to developers that a bug exists.
+     *
+     *      The view that brought up this issue is the
+     *      CBUserGroupMembershipToggleView. If this view's model does not have
+     *      certain properties set correctly it is a sign the something has
+     *      truly gone wrong that a developer would need to know about. It's
+     *      really and truly time for an exception.
+     *
+     *      If view classes are allowed to throw exceptions during
+     *      CBView_render() and views aren't supposed to stop render, that means
+     *      we nees a try/catch block.
+     *
+     *      For the moment, that is the approach we're taking and both
+     *      CBView::render() and CBView::renderSpec() implement it.
+     *
+     *      As further information is gained, update this comment.
+     *
+     * @param object $viewModel
      *
      * @return void
      */
-    static function render(stdClass $model): void {
-        $className = CBModel::valueToString(
-            $model,
-            'className'
-        );
+    static function render(
+        stdClass $viewModel
+    ): void {
+        try {
+            $viewClassName = CBModel::valueAsName(
+                $viewModel,
+                'className'
+            );
 
-        if (empty($className)) {
-            return;
-        }
+            if (empty($viewClassName)) {
+                throw new CBExceptionWithValue(
+                    'This view model has an invalid class name.',
+                    $viewModel,
+                    'd96bf5026de5b05eb1a721da95ea8decf11dcd04'
+                );
+            }
 
-        CBHTMLOutput::requireClassName($className);
+            CBHTMLOutput::requireClassName($viewClassName);
 
-        if (is_callable($function = "{$className}::CBView_render")) {
-            call_user_func($function, $model);
-        }
+            $function = "{$viewClassName}::CBView_render";
 
-        else if (CBSitePreferences::debug()) {
-            $classNameAsComment = ': ' . str_replace('--', ' - - ', $className);
+            if (!is_callable($function)) {
+                throw new CBExceptionWithValue(
+                    'The class for this view model has not implemented CBView_render().',
+                    $viewModel,
+                    'c69e407d30d625f060cf0589a4991531f59c6561'
+                );
+            }
 
-            echo (
-                "<!-- CBView::render() found no CBView_render() function " .
-                "for the class: \"{$classNameAsComment}\" -->"
+            call_user_func(
+                $function,
+                $viewModel
+            );
+        } catch (Throwable $throwable) {
+            if (CBView::$testModeIsActive) {
+                throw $throwable;
+            }
+
+            CBErrorHandler::report($throwable);
+
+            CBErrorHandler::report(
+                new CBExceptionWithValue(
+                    (
+                        'An exception was thrown when rendering ' .
+                        'a view with this model.'
+                    ),
+                    $viewModel,
+                    'e5feaef4c2a106287e8982bb6a7e70b276555fe8'
+                )
+            );
+
+            CBView::renderViewElementForException(
+                $throwable,
+                $viewModel
             );
         }
     }
     /* render() */
+
 
 
     /**
@@ -278,15 +355,44 @@ final class CBView {
      * even call the view's functions directly, but allowing rendering a spec
      * with a single function call saves many lines of code over an entire site.
      *
-     * @param object $spec
+     * @see CBView::render() for more details about view rendering.
+     *
+     * @param object $viewSpec
      *
      * @return void
      */
-    static function renderSpec(stdClass $viewSpec): void {
-        $viewModel = CBModel::build($viewSpec);
+    static function renderSpec(
+        stdClass $viewSpec
+    ): void {
+        try {
+            $viewModel = CBModel::build($viewSpec);
 
-        CBView::render($viewModel);
+            CBView::render($viewModel);
+        } catch (Throwable $throwable) {
+            if (CBView::$testModeIsActive) {
+                throw $throwable;
+            }
+
+            CBErrorHandler::report($throwable);
+
+            CBErrorHandler::report(
+                new CBExceptionWithValue(
+                    (
+                        'An exception was thrown when rendering ' .
+                        'a view with this spec.'
+                    ),
+                    $viewModel,
+                    'da871db8b36e6fb4f1ec74f5abaf24f8ccf8aac4'
+                )
+            );
+
+            CBView::renderViewElementForException(
+                $throwable,
+                $viewSpec
+            );
+        }
     }
+    /* renderSpec() */
 
 
 
@@ -296,6 +402,59 @@ final class CBView {
     static function renderSpecAsHTML(stdClass $spec) {
         CBView::renderSpec($spec);
     }
+
+
+
+    /**
+     * When a view throws an exception during rendering this function is called
+     * to render a proxy element so that page rendering is not cancelled.
+     *
+     * @param Throwable $throwable
+     * @param object $viewModel
+     *
+     *      This value will be a view model if the exception was thrown in
+     *      CBView::render(). It will be a view spec if the exception was thrown
+     *      in CBView::renderSpec() while building the spec. If this parameter
+     *      is an object with a valid className property, the class name
+     *      "<className>_error" will be added to the element.
+     *
+     * @return void
+     */
+    private static function renderViewElementForException(
+        Throwable $throwable,
+        stdClass $viewModel
+    ): void {
+        $className = CBModel::valueAsName(
+            $viewModel,
+            'className'
+        ) ?? '';
+
+        $isDeveloper = CBUserGroup::userIsMemberOfUserGroup(
+            ColbyUser::getCurrentUserCBID(),
+            'CBDevelopersUserGroup'
+        );
+
+        ?>
+
+        <div class="CBView_error <?= $className ?>_error">
+
+            <?php
+
+            if ($isDeveloper) {
+                $messageAsHTML = cbhtml(
+                    $throwable->getMessage()
+                );
+
+                echo "<!-- {$messageAsHTML} (see log for details) -->";
+            }
+
+            ?>
+
+        </div>
+
+        <?php
+    }
+    /* renderViewElementForException() */
 
 
 
@@ -315,6 +474,7 @@ final class CBView {
             return CBModel::valueToArray($model, 'subviews');
         }
     }
+    /* getSubviews() */
 
 
 
@@ -336,6 +496,7 @@ final class CBView {
             $model->subviews = $subviews;
         }
     }
+    /* setSubviews() */
 
 
 
