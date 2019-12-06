@@ -1242,6 +1242,23 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_07_09 (warning)
+                 * 2019_12_05 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Implement CBModel_build() instead of CBModel_toModel().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBModel_toModel',
+                    'severity' => 3,
+                    'title' => 'CBModel_toModel()',
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
@@ -1304,18 +1321,6 @@ final class CBCodeAdmin {
                     'regex' => 'CBThemedMenuView',
                     'severity' => 4,
                     'title' => 'Replace use of CBThemedMenuView',
-                ],
-
-
-                /**
-                 * 2019_07_09
-                 */
-                (object)[
-                    'args' => '--ignore-file=match:CBModel\.php',
-                    'filetype' => 'php',
-                    'regex' => 'CBModel_toModel',
-                    'severity' => 4,
-                    'title' => 'Rename CBModel_toModel() to CBModel_build()',
                 ],
 
 
