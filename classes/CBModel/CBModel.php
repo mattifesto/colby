@@ -365,14 +365,11 @@ final class CBModel {
             );
         }
 
-        if (is_callable($function = "{$className}::CBModel_build")) {
+        $buildInterfaceFunctionName = "{$className}::CBModel_build";
+
+        if (is_callable($buildInterfaceFunctionName)) {
             $model = call_user_func(
-                $function,
-                $spec
-            );
-        } else if (is_callable($function = "{$className}::CBModel_toModel")) {
-            $model = call_user_func(
-                $function,
+                $buildInterfaceFunctionName,
                 $spec
             );
         } else {
