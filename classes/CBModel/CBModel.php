@@ -292,20 +292,21 @@ final class CBModel {
      *      should not occur during CBModel::build().
      *
      *      @NOTE
-     *      If a model needs an ID, for example because it's going to be saved,
-     *      that ID must be set on the spec. If a spec ID property is set it
-     *      must be a valid hex160 and will always be copied to the model.
+     *      If a model needs an "ID" property value, for example because it's
+     *      going to be saved, the "ID" property must be set on the spec. If a
+     *      spec "ID" property value is set it must be a valid CBID and will
+     *      always be copied to the model.
      *
-     *      Generated IDs:
+     *      Generated CBIDs:
      *
      *      Sometimes specs are imported from CSV files created from
      *      spreadsheets edited by website administrators. Those users may
      *      specify human readable unique identifiers like product codes instead
-     *      of IDs. The import process will notice that a spec doesn't have an
-     *      ID and will call CBModel::toID() to generate an ID which it will
-     *      then set on the spec.
+     *      of CBIDs. The import process will notice that a spec doesn't have an
+     *      "ID" property value and will call CBModel::toID() to generate a CBID
+     *      which it will then set as the "ID" property value on the spec.
      *
-     *      Any ID generation must be done for a spec before it is used with
+     *      Any CBID generation must be done for a spec before it is used with
      *      this function.
      *
      *      @NOTE
@@ -333,75 +334,69 @@ final class CBModel {
      *
      *      The build process is allowed to have requirements and allowed to
      *      throw exceptions if those requirements are not met.
-     *
-     *      @NOTE 2019_08_14
-     *
-     *          This function is coded properly to throw exceptions when
-     *          necessary. However, this will break many existing scenarios that
-     *          rely on the old, incorrect behavior.
-     *
-     *          For now, we log the exceptions and return null instead of
-     *          throwing them.
      */
-    static function build($spec): ?stdClass {
-        $className = CBModel::valueAsName($spec, 'className');
+    static function build(
+        /* stdClass */ $spec
+    ): stdClass {
+        $className = CBModel::valueAsName(
+            $spec,
+            'className'
+        );
 
         if ($className === null) {
-            CBErrorHandler::report(
-                CBException::createModelIssueException(
+            throw new CBExceptionWithValue(
+                (
                     'This spec can\'t be built because it has an invalid ' .
-                    '"className" property value.',
-                    $spec,
-                    'd24a83a81c914e1a5b66eeede05a577c0c44bd57'
-                )
+                    '"className" property value.'
+                ),
+                $spec,
+                'd24a83a81c914e1a5b66eeede05a577c0c44bd57'
             );
-
-            return null;
         }
 
         if (!class_exists($className)) {
-            CBErrorHandler::report(
-                CBException::createModelIssueException(
+            throw new CBExceptionWithValue(
+                (
                     'This spec can\'t be built because a class ' .
-                    "with the name \"{$className}\" doesn't exist.",
-                    $spec,
-                    '0f170c152f54ebb97ecd2fb0a27055a096276d37'
-                )
+                    "with the name \"{$className}\" doesn't exist."
+                ),
+                $spec,
+                '0f170c152f54ebb97ecd2fb0a27055a096276d37'
             );
-
-            return null;
         }
 
         if (is_callable($function = "{$className}::CBModel_build")) {
-            $model = call_user_func($function, $spec);
+            $model = call_user_func(
+                $function,
+                $spec
+            );
         } else if (is_callable($function = "{$className}::CBModel_toModel")) {
-            $model = call_user_func($function, $spec);
+            $model = call_user_func(
+                $function,
+                $spec
+            );
         } else {
-            CBErrorHandler::report(
-                CBException::createModelIssueException(
+            throw new CBExceptionWithValue(
+                (
                     'This spec can\'t be built because ' .
                     "the CBModel_build() interface has not been implemented " .
-                    "on the {$className} class.",
-                    $spec,
-                    'a92922e1bcf4fe374b54a2b45bd59403f2214faa'
-                )
+                    "on the {$className} class."
+                ),
+                $spec,
+                'a92922e1bcf4fe374b54a2b45bd59403f2214faa'
             );
-
-            return null;
         }
 
         if (!is_object($model)) {
-            CBErrorHandler::report(
-                CBException::createModelIssueException(
+            throw new CBExceptionWithValue(
+                (
                     "This spec can't be built because " .
                     "the CBModel_build() interface returned a value that is " .
-                    "not an object.",
-                    $spec,
-                    '2a8ad1dd8a2d47a80d41609b98056f0e8775a47a'
-                )
+                    "not an object."
+                ),
+                $spec,
+                '2a8ad1dd8a2d47a80d41609b98056f0e8775a47a'
             );
-
-            return null;
         }
 
         /**
@@ -419,16 +414,14 @@ final class CBModel {
         $ID = CBModel::valueAsID($spec, 'ID');
 
         if (isset($spec->ID) && $ID === null) {
-            CBErrorHandler::report(
-                CBException::createModelIssueException(
+            throw new CBExceptionWithValue(
+                (
                     'This spec can\'t be built because it has an invalid ' .
-                    '"ID" property value.',
-                    $spec,
-                    '11759b8ba7d8ae54039371942c9b09e29cda59d6'
-                )
+                    '"ID" property value.'
+                ),
+                $spec,
+                '11759b8ba7d8ae54039371942c9b09e29cda59d6'
             );
-
-            return null;
         }
 
         if ($ID !== null) {
