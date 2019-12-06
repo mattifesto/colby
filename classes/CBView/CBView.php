@@ -311,7 +311,10 @@ final class CBView {
 
             if (!is_callable($function)) {
                 throw new CBExceptionWithValue(
-                    'The class for this view model has not implemented CBView_render().',
+                    (
+                        'The class for this view model has not ' .
+                        'implemented CBView_render().'
+                    ),
                     $viewModel,
                     'c69e407d30d625f060cf0589a4991531f59c6561'
                 );
