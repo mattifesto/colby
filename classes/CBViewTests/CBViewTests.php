@@ -22,6 +22,16 @@ final class CBViewTests {
                 'type' => 'server',
             ],
             (object)[
+                'name' => 'render',
+                'title' => 'CBView::render()',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'renderSpec',
+                'title' => 'CBView::renderSpec()',
+                'type' => 'server',
+            ],
+            (object)[
                 'name' => 'toSubviews',
                 'title' => 'CBView::toSubviews()',
                 'type' => 'server',
@@ -140,10 +150,184 @@ final class CBViewTests {
         }
 
         return (object)[
-            'succeeded' => 'true',
+            'succeeded' => true,
         ];
     }
     /* CBTest_getAndSetSubviews() */
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_render(): stdClass {
+        $testName = 'model has invalid class name';
+        $actualSourceCBID = 'no exception';
+        $expectedSourceCBID = 'd96bf5026de5b05eb1a721da95ea8decf11dcd04';
+
+        try {
+            CBView::$testModeIsActive = true;
+
+            $viewModel = (object)[
+                'className' => 'CBViewTests_a.b.c'
+            ];
+
+            CBView::render($viewModel);
+        } catch (Throwable $throwable) {
+            $actualSourceCBID = CBException::throwableToSourceCBID(
+                $throwable
+            );
+        } finally {
+            CBView::$testModeIsActive = false;
+        }
+
+        if ($actualSourceCBID !== $expectedSourceCBID) {
+            return CBTest::resultMismatchFailure(
+                $testName,
+                $actualSourceCBID,
+                $expectedSourceCBID
+            );
+        }
+
+
+
+        $testName = 'class has not implemented render';
+        $actualSourceCBID = 'no exception';
+        $expectedSourceCBID = 'c69e407d30d625f060cf0589a4991531f59c6561';
+
+        try {
+            CBView::$testModeIsActive = true;
+
+            $viewModel = (object)[
+                'className' => 'CBViewTests_renderNotImplemented'
+            ];
+
+            CBView::render($viewModel);
+        } catch (Throwable $throwable) {
+            $actualSourceCBID = CBException::throwableToSourceCBID(
+                $throwable
+            );
+        } finally {
+            CBView::$testModeIsActive = false;
+        }
+
+        if ($actualSourceCBID !== $expectedSourceCBID) {
+            return CBTest::resultMismatchFailure(
+                $testName,
+                $actualSourceCBID,
+                $expectedSourceCBID
+            );
+        }
+
+
+
+        $testName = 'success';
+        $actualSourceCBID = 'no exception';
+        $expectedSourceCBID = 'no exception';
+
+        try {
+            CBView::$testModeIsActive = true;
+
+            $viewModel = (object)[
+                'className' => 'CBViewTests_workingView'
+            ];
+
+            CBView::render($viewModel);
+        } catch (Throwable $throwable) {
+            $actualSourceCBID = CBException::throwableToSourceCBID(
+                $throwable
+            );
+        } finally {
+            CBView::$testModeIsActive = false;
+        }
+
+        if ($actualSourceCBID !== $expectedSourceCBID) {
+            return CBTest::resultMismatchFailure(
+                $testName,
+                $actualSourceCBID,
+                $expectedSourceCBID
+            );
+        }
+
+
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_render() */
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_renderSpec(): stdClass {
+        $testName = 'class does not exist';
+        $actualSourceCBID = 'no exception';
+        $expectedSourceCBID = '0f170c152f54ebb97ecd2fb0a27055a096276d37';
+
+        try {
+            CBView::$testModeIsActive = true;
+
+            $viewSpec = (object)[
+                'className' => 'CBViewTests_classDoesNotExist'
+            ];
+
+            CBView::renderSpec($viewSpec);
+        } catch (Throwable $throwable) {
+            $actualSourceCBID = CBException::throwableToSourceCBID(
+                $throwable
+            );
+        } finally {
+            CBView::$testModeIsActive = false;
+        }
+
+        if ($actualSourceCBID !== $expectedSourceCBID) {
+            return CBTest::resultMismatchFailure(
+                $testName,
+                $actualSourceCBID,
+                $expectedSourceCBID
+            );
+        }
+
+
+
+        $testName = 'success';
+        $actualSourceCBID = 'no exception';
+        $expectedSourceCBID = 'no exception';
+
+        try {
+            CBView::$testModeIsActive = true;
+
+            $viewSpec = (object)[
+                'className' => 'CBViewTests_workingView'
+            ];
+
+            CBView::renderSpec($viewSpec);
+        } catch (Throwable $throwable) {
+            $actualSourceCBID = CBException::throwableToSourceCBID(
+                $throwable
+            );
+        } finally {
+            CBView::$testModeIsActive = false;
+        }
+
+        if ($actualSourceCBID !== $expectedSourceCBID) {
+            return CBTest::resultMismatchFailure(
+                $testName,
+                $actualSourceCBID,
+                $expectedSourceCBID
+            );
+        }
+
+
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_renderSpec() */
 
 
 
@@ -220,6 +404,21 @@ final class CBViewTests {
                 'value' => 42,
             ],
         ];
+    }
+
+}
+/* CBViewTests */
+
+
+
+final class CBViewTests_workingView {
+
+    static function CBModel_build(stdClass $spec): stdClass {
+        return (object)[];
+    }
+
+    static function CBView_render(stdClass $viewModel): void {
+        // no output testing is happening at this time
     }
 
 }
