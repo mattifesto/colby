@@ -267,10 +267,14 @@ final class CBHTMLOutput {
 
 
     /**
-     * @return null
+     * @return void
      */
-    static function exportListItem($listName, $itemKey, $itemValue) {
-        $itemValue = json_encode($itemValue);
+    static function exportListItem(
+        $listName,
+        $itemKey,
+        $itemValue
+    ): void {
+        $itemValue = json_encode($itemValue, JSON_THROW_ON_ERROR);
 
         if (!isset(CBHTMLOutput::$exportedLists[$listName])) {
             CBHTMLOutput::$exportedLists[$listName] = new ArrayObject();
@@ -279,14 +283,18 @@ final class CBHTMLOutput {
         $listObject = CBHTMLOutput::$exportedLists[$listName];
         $listObject->offsetSet($itemKey, $itemValue);
     }
+    /* exportListItem() */
 
 
 
     /**
-     * @return null
+     * @return void
      */
-    static function exportVariable($name, $value) {
-        $value = json_encode($value);
+    static function exportVariable(
+        $name,
+        $value
+    ): void {
+        $value = json_encode($value, JSON_THROW_ON_ERROR);
 
         CBHTMLOutput::$exportedVariables[$name] = $value;
     }
