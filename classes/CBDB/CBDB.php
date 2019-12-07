@@ -223,7 +223,7 @@ final class CBDB {
      *
      * @return [stdClass] | [key => stdClass]
      */
-    static function SQLToObjects($SQL, $args = []) {
+    static function SQLToObjects($SQL, $args = []): array {
         $keyField = null;
         extract($args, EXTR_IF_EXISTS);
 
@@ -243,6 +243,7 @@ final class CBDB {
 
         return $objects;
     }
+    /* SQLToObjects() */
 
 
 
