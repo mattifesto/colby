@@ -2,6 +2,10 @@
 
 final class CBTasks2Admin {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
@@ -12,6 +16,8 @@ final class CBTasks2Admin {
         ];
     }
 
+
+
     /**
      * @return void
      */
@@ -21,12 +27,16 @@ final class CBTasks2Admin {
 
 
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v555.js', cbsysurl()),
         ];
     }
 
@@ -49,6 +59,10 @@ final class CBTasks2Admin {
 
 
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return void
      */
@@ -64,10 +78,15 @@ final class CBTasks2Admin {
             'URL' => '/admin/?c=CBTasks2Admin',
         ];
 
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save($spec);
-        });
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save($spec);
+            }
+        );
     }
+    /* CBInstall_install() */
+
+
 
     /**
      * @return [string]
@@ -77,4 +96,5 @@ final class CBTasks2Admin {
             'CBGeneralAdminMenu',
         ];
     }
+
 }

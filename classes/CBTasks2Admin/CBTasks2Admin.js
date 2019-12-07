@@ -43,6 +43,12 @@ var CBTasks2Admin = {
 
         return;
 
+
+
+        /* -- closures -- -- -- -- -- */
+
+
+
         /**
          * @return undefined
          */
@@ -66,6 +72,9 @@ var CBTasks2Admin = {
             mainElement.appendChild(section.element);
             mainElement.appendChild(CBUI.createHalfSpace());
         }
+        /* appendControlSection() */
+
+
 
         /**
          * CBTasks2Admin.init() closure
@@ -85,6 +94,9 @@ var CBTasks2Admin = {
 
             parentElement.appendChild(CBUI.createHalfSpace());
         }
+        /* appendHeader() */
+
+
 
         /**
          * CBTasks2Admin.init() closure
@@ -120,6 +132,9 @@ var CBTasks2Admin = {
                 messagePart: messagePart,
             };
         }
+        /* appendMaintenanceSection() */
+
+
 
         /**
          * CBTasks2Admin.init() closure
@@ -145,6 +160,7 @@ var CBTasks2Admin = {
                 sectionElement: section.element,
             };
         }
+        /* appendStatusSection() */
 
 
 
@@ -173,8 +189,10 @@ var CBTasks2Admin = {
                 }
             );
         }
-    },
+        /* fetchStatus() */
 
+    },
+    /* init() */
 
 
     /**
@@ -186,16 +204,54 @@ var CBTasks2Admin = {
         let sectionElement = CBTasks2Admin.sectionElement;
         sectionElement.textContent = "";
 
-        sectionElement.appendChild(create("Scheduled Tasks", status.scheduled));
-        sectionElement.appendChild(create("Ready Tasks", status.ready));
-        sectionElement.appendChild(create("Running Tasks", status.running));
-        sectionElement.appendChild(create("Complete Tasks", status.complete));
-        sectionElement.appendChild(create("Failed Tasks", status.failed));
-        sectionElement.appendChild(create("CBTasks2_delay", Colby.CBTasks2_delay));
-        sectionElement.appendChild(create("Tasks Requested", Colby.CBTasks2_countOfTasksRequested));
-        sectionElement.appendChild(create("Tasks Run", Colby.CBTasks2_countOfTasksRun));
+        sectionElement.appendChild(create(
+            "Scheduled Tasks",
+            status.scheduled
+        ));
 
-        /* closure */
+        sectionElement.appendChild(create(
+            "Ready Tasks",
+            status.ready
+        ));
+
+        sectionElement.appendChild(create(
+            "Running Tasks",
+            status.running
+        ));
+        sectionElement.appendChild(create(
+            "Complete Tasks",
+            status.complete
+        ));
+
+        sectionElement.appendChild(create(
+            "Failed Tasks",
+            status.failed
+        ));
+
+        sectionElement.appendChild(create(
+            "CBTasks2_delay",
+            Colby.CBTasks2_delay
+        ));
+
+        sectionElement.appendChild(create(
+            "Tasks Requested",
+            Colby.CBTasks2_countOfTasksRequested
+        ));
+
+        sectionElement.appendChild(create(
+            "Tasks Run",
+            Colby.CBTasks2_countOfTasksRun
+        ));
+
+
+
+        /* -- closures -- -- -- -- -- */
+
+
+
+        /**
+         *
+         */
         function create(text, value) {
             let sectionItem = CBUISectionItem4.create();
             let stringsPart = CBUIStringsPart.create();
@@ -209,7 +265,10 @@ var CBTasks2Admin = {
 
             return sectionItem.element;
         }
+        /* create() */
     },
+    /* updateStatus() */
+
 };
 
 /**
