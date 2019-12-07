@@ -43,11 +43,28 @@ final class CBTasks2Admin {
 
 
     /**
+     * @return [[<name>, <value>]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables(): array {
+        $failedTasks = CBTasks2::fetchFailedTasks();
+
+        return [
+            [
+                'CBTasks2Admin_failedTasks',
+                $failedTasks,
+            ],
+        ];
+    }
+
+
+
+    /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBErrorHandler',
+            'CBModel',
             'CBUI',
             'CBUIBooleanSwitchPart',
             'CBUIMessagePart',

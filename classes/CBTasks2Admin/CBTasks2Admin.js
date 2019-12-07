@@ -4,6 +4,7 @@
 /* exported CBTasks2Admin */
 /* global
     CBErrorHandler,
+    CBModel,
     CBUI,
     CBUIBooleanSwitchPart,
     CBUIMessagePart,
@@ -11,11 +12,21 @@
     CBUISectionItem4,
     CBUIStringsPart,
     Colby,
+
+    CBTasks2Admin_failedTasks,
 */
+
+
 
 var CBTasks2Admin = {
 
     sectionElement: undefined,
+
+
+
+    /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @return Element
@@ -36,6 +47,10 @@ var CBTasks2Admin = {
             let result = appendMaintenanceSection(mainElement);
             maintenanceMessagePart = result.messagePart;
         }
+
+        mainElement.appendChild(
+            createFailedTasksElement()
+        );
 
         Colby.CBTasks2_delay = 0;
 
@@ -161,6 +176,147 @@ var CBTasks2Admin = {
             };
         }
         /* appendStatusSection() */
+
+
+
+        /**
+         * @return Element
+         */
+        function createFailedTaskSectionItemElement(
+            failedTask
+        ) {
+            let taskIsCurrentlyRunning = false;
+
+            let taskCBID = CBModel.valueAsID(
+                failedTask,
+                "CBID"
+            );
+
+            let taskClassName = CBModel.valueToString(
+                failedTask,
+                "className"
+            );
+
+
+            /* element */
+
+            let element = CBUI.createElement(
+                "CBUI_container_topAndBottom"
+            );
+
+            element.addEventListener(
+                "click",
+                function () {
+                    if (taskIsCurrentlyRunning) {
+                        return;
+                    }
+
+                    taskIsCurrentlyRunning = true;
+
+                    Colby.callAjaxFunction(
+                        "CBTasks2",
+                        "runSpecificTask",
+                        {
+                            className: taskClassName,
+                            CBID: taskCBID,
+                        }
+                    ).catch(
+                        function (error) {
+                            CBErrorHandler.displayAndReport(error);
+                        }
+                    ).finally(
+                        function () {
+                            taskIsCurrentlyRunning = false;
+                        }
+                    );
+                }
+            );
+
+
+            /* title */
+
+            let titleElement = CBUI.createElement();
+
+            element.appendChild(titleElement);
+
+            titleElement.textContent = taskClassName;
+
+
+            /* description */
+
+            let descriptionElement = CBUI.createElement(
+                "CBUI_textColor2 CBUI_textSize_small"
+            );
+
+            element.appendChild(descriptionElement);
+
+            descriptionElement.textContent = taskCBID;
+
+
+            /* done */
+
+            return element;
+        }
+        /* createFailedTaskSectionItemElement() */
+
+
+
+        /**
+         * @return Element
+         */
+        function createFailedTasksElement() {
+            let element = CBUI.createElement(
+                "CBTasks2Admin_failedTasks"
+            );
+
+
+            /* title */
+
+            let titleElement = CBUI.createElement(
+                "CBUI_title1"
+            );
+
+            element.appendChild(titleElement);
+
+            titleElement.textContent = "Failed Tasks";
+
+
+            /* section container */
+
+            let sectionContainerElement = CBUI.createElement(
+                "CBUI_sectionContainer"
+            );
+
+            element.appendChild(sectionContainerElement);
+
+
+            /* section */
+
+            let sectionElement = CBUI.createElement(
+                "CBUI_section"
+            );
+
+            sectionContainerElement.appendChild(sectionElement);
+
+
+            /* failed tasks */
+
+            CBTasks2Admin_failedTasks.forEach(
+                function (failedTask) {
+                    sectionElement.appendChild(
+                        createFailedTaskSectionItemElement(
+                            failedTask
+                        )
+                    );
+                }
+            );
+
+
+            /* done */
+
+            return element;
+        }
+        /* createFailedTasksSectionElement() */
 
 
 
