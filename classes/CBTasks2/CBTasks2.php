@@ -111,6 +111,55 @@ final class CBTasks2 {
 
 
 
+    /**
+     * @param object $args
+     *
+     *      {
+     *          CBID: CBID
+     *          className: string
+     *      }
+     *
+     * @return bool
+     */
+    static function CBAjax_runSpecificTask(
+        stdClass $args
+    ): bool {
+        $className = CBModel::valueToString(
+            $args,
+            'className'
+        );
+
+        $CBID = CBModel::valueAsCBID(
+            $args,
+            'CBID'
+        );
+
+        if ($CBID === null) {
+            throw new CBExceptionWithValue(
+                'The CBID property value of args is not valid.',
+                $args,
+                '8e479aa2e3164322207dca881a8508e046ed8c2a'
+            );
+        }
+
+        return CBTasks2::runSpecificTask(
+            $className,
+            $CBID
+        );
+    }
+    /* CBAjax_runSpecificTask() */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_runSpecificTask_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
+    }
+
+
+
     /* -- CBInstall interfaces -- -- -- -- -- */
 
 
@@ -263,6 +312,45 @@ final class CBTasks2 {
 
 
     /* -- functions -- -- -- -- -- */
+
+
+
+    /**
+     * This function may be deprecated in the future for a more generic function
+     * that can fetch various lists of tasks.
+     *
+     * @return [object]
+     *
+     *      {
+     *          CBID: string
+     *          className: string
+     *          priority: int
+     *          timestamp: int
+     *      }
+     */
+    static function fetchFailedTasks(): array {
+        $failedState = 4;
+
+        $SQL = <<<EOT
+
+            SELECT      LOWER(HEX(ID)) AS CBID,
+                        className,
+                        priority,
+                        timestamp
+
+            FROM        CBTasks2
+
+            WHERE       state = {$failedState}
+
+            ORDER BY    timestamp DESC
+
+        EOT;
+
+        $failedTasks = CBDB::SQLToObjects($SQL);
+
+        return $failedTasks;
+    }
+    /* fetchFailedTasks() */
 
 
 
@@ -481,7 +569,10 @@ final class CBTasks2 {
      *      its abilities. Tasks in Colby are not meant meet such a high level
      *      of requirements at this time.
      */
-    static function runSpecificTask(string $className, string $ID): bool {
+    static function runSpecificTask(
+        string $className,
+        string $ID
+    ): bool {
         $classNameAsSQL = CBDB::stringToSQL($className);
         $IDAsSQL = CBID::toSQL($ID);
         $timestamp = time();
