@@ -230,24 +230,23 @@ final class CBErrorHandler {
         Throwable $throwable
     ): void {
         try {
-            $firstLine = (
-                'Error ' .
-                CBConvert::throwableToMessage($throwable)
+            $oneLineErrorReport = CBException::throwableToOneLineErrorReport(
+                $throwable
             );
 
-            $firstLineAsMarkup = CBMessageMarkup::stringToMarkup(
-                $firstLine
+            $oneLineErrorReportAsCBMessage = CBMessageMarkup::stringToMessage(
+                $oneLineErrorReport
             );
 
-            $stackTraceAsMarkup = CBMessageMarkup::stringToMarkup(
+            $stackTraceAsCBMessage = CBMessageMarkup::stringToMessage(
                 Colby::exceptionStackTrace($throwable)
             );
 
             if ($throwable instanceof CBException) {
                 $extendedMessage = $throwable->getExtendedMessage();
-                $messageAsMarkup = <<<EOT
+                $errorReportAsCBMessage = <<<EOT
 
-                    {$firstLineAsMarkup}
+                    {$oneLineErrorReportAsCBMessage}
 
                     --- dl
                         --- dt
@@ -261,23 +260,23 @@ final class CBErrorHandler {
                             stack trace
                         ---
                         --- dd
-                            --- pre\n{$stackTraceAsMarkup}
+                            --- pre\n{$stackTraceAsCBMessage}
                             ---
                         ---
                     ---
 
                 EOT;
             } else {
-                $messageAsMarkup = <<<EOT
+                $errorReportAsCBMessage = <<<EOT
 
-                    {$firstLineAsMarkup}
+                    {$oneLineErrorReportAsCBMessage}
 
                     --- dl
                         --- dt
                             stack trace
                         ---
                         --- dd
-                            --- pre\n{$stackTraceAsMarkup}
+                            --- pre\n{$stackTraceAsCBMessage}
                             ---
                         ---
                     ---
@@ -298,7 +297,7 @@ final class CBErrorHandler {
             CBLog::log(
                 (object)[
                     'sourceClassName' => __CLASS__,
-                    'message' => $messageAsMarkup,
+                    'message' => $errorReportAsCBMessage,
                     'severity' => 3,
                 ]
             );
