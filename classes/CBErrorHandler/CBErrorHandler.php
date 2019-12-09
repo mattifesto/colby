@@ -313,11 +313,17 @@ final class CBErrorHandler {
         /* slack */
 
         try {
-            $link = cbsiteurl() . "/admin/?c=CBLogAdminPage";
+            $oneLineErrorReport = CBException::throwableToOneLineErrorReport(
+                $throwable
+            );
+
+            $logAdminPageURL = cbsiteurl() . "/admin/?c=CBLogAdminPage";
 
             CBSlack::sendMessage(
                 (object)[
-                    'message' => "{$firstLine} <{$link}|link>",
+                    'message' => (
+                        "{$oneLineErrorReport} <{$logAdminPageURL}|link>"
+                    ),
                 ]
             );
         } catch (Throwable $ignoredError) {
