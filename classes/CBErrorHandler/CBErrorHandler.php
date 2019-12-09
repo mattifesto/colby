@@ -226,138 +226,104 @@ final class CBErrorHandler {
      *
      * @return void
      */
-    static function report(Throwable $throwable): void {
+    static function report(
+        Throwable $throwable
+    ): void {
         try {
-            try {
-                $firstLine = (
-                    'Error ' .
-                    CBConvert::throwableToMessage($throwable)
-                );
+            $firstLine = (
+                'Error ' .
+                CBConvert::throwableToMessage($throwable)
+            );
 
-                $firstLineAsMarkup = CBMessageMarkup::stringToMarkup(
-                    $firstLine
-                );
+            $firstLineAsMarkup = CBMessageMarkup::stringToMarkup(
+                $firstLine
+            );
 
-                $stackTraceAsMarkup = CBMessageMarkup::stringToMarkup(
-                    Colby::exceptionStackTrace($throwable)
-                );
+            $stackTraceAsMarkup = CBMessageMarkup::stringToMarkup(
+                Colby::exceptionStackTrace($throwable)
+            );
 
-                if ($throwable instanceof CBException) {
-                    $extendedMessage = $throwable->getExtendedMessage();
-                    $messageAsMarkup = <<<EOT
+            if ($throwable instanceof CBException) {
+                $extendedMessage = $throwable->getExtendedMessage();
+                $messageAsMarkup = <<<EOT
 
-                        {$firstLineAsMarkup}
+                    {$firstLineAsMarkup}
 
-                        --- dl
-                            --- dt
-                                extended message
-                            ---
-                            --- dd
-                                {$extendedMessage}
-                            ---
-
-                            --- dt
-                                stack trace
-                            ---
-                            --- dd
-                                --- pre\n{$stackTraceAsMarkup}
-                                ---
-                            ---
+                    --- dl
+                        --- dt
+                            extended message
+                        ---
+                        --- dd
+                            {$extendedMessage}
                         ---
 
-                    EOT;
-                } else {
-                    $messageAsMarkup = <<<EOT
-
-                        {$firstLineAsMarkup}
-
-                        --- dl
-                            --- dt
-                                stack trace
-                            ---
-                            --- dd
-                                --- pre\n{$stackTraceAsMarkup}
-                                ---
+                        --- dt
+                            stack trace
+                        ---
+                        --- dd
+                            --- pre\n{$stackTraceAsMarkup}
                             ---
                         ---
+                    ---
 
-                    EOT;
-                }
-            } catch (Throwable $innerThrowable) {
-                $message = $innerThrowable->getMessage();
+                EOT;
+            } else {
+                $messageAsMarkup = <<<EOT
 
-                $firstLine =
-                "INNER ERROR \"{$message}\" occurred when"
-                . " CBErrorHandler::report() attempted to generate a message";
+                    {$firstLineAsMarkup}
 
-                $messageAsMarkup = $firstLine;
+                    --- dl
+                        --- dt
+                            stack trace
+                        ---
+                        --- dd
+                            --- pre\n{$stackTraceAsMarkup}
+                            ---
+                        ---
+                    ---
+
+                EOT;
             }
+        } catch (Throwable $ignoredError) {
+            error_log(
+                CBConvert::throwableToMessage($ignoredError)
+            );
+        }
 
 
 
-            /* log */
+        /* log */
 
-            try {
-                CBLog::log(
-                    (object)[
-                        'sourceClassName' => __CLASS__,
-                        'message' => $messageAsMarkup,
-                        'severity' => 3,
-                    ]
-                );
-            } catch (Throwable $innerThrowable) {
-                $message = $innerThrowable->getMessage();
-
-                error_log(
-                    "INNER ERROR \"{$message}\" occurred when " .
-                    "CBErrorHandler::report() attempted to create a log " .
-                    "entry AFTER {$firstLine} " .
-                    '(Source ID: c25603f39b103992980a5f7643c14b5839a3ebf8)'
-                );
-            }
+        try {
+            CBLog::log(
+                (object)[
+                    'sourceClassName' => __CLASS__,
+                    'message' => $messageAsMarkup,
+                    'severity' => 3,
+                ]
+            );
+        } catch (Throwable $ignoredError) {
+            error_log(
+                CBConvert::throwableToMessage($ignoredError)
+            );
+        }
 
 
 
-            /* slack */
+        /* slack */
 
-            try {
-                $link = (
-                    cbsiteurl() .
-                    "/admin/?" .
-                    "c=CBLogAdminPage"
-                );
+        try {
+            $link = cbsiteurl() . "/admin/?c=CBLogAdminPage";
 
-                CBSlack::sendMessage(
-                    (object)[
-                        'message' => "{$firstLine} <{$link}|link>",
-                    ]
-                );
-            } catch (Throwable $innerThrowable) {
-                $message = $innerThrowable->getMessage();
-
-                error_log(
-                    "INNER ERROR \"{$message}\" occurred when " .
-                    "CBErrorHandler::report() attempted to send a Slack " .
-                    "message AFTER {$firstLine} " .
-                    '(Source ID: 86a1652a3438f6d5f61068c732ae62275acb46c4)'
-                );
-            }
-        } catch (Throwable $innerThrowable) {
-            try {
-                $message = $innerThrowable->getMessage();
-
-                error_log(
-                    "INNER ERROR \"{$message}\" occurred inside " .
-                    "CBErrorHandler::report() " .
-                    '(Source ID: 4e4e71a29377d1709613e45b8d4c343616fc532f)'
-                );
-            } catch (Throwable $secondInnerThrowable) {
-                /**
-                 * Things are really bad if this point is reached. This catch is
-                 * just a guarantee that this function will not throw another
-                 * exception.
-                 */
-            }
+            CBSlack::sendMessage(
+                (object)[
+                    'message' => "{$firstLine} <{$link}|link>",
+                ]
+            );
+        } catch (Throwable $ignoredError) {
+            error_log(
+                CBConvert::throwableToMessage($ignoredError)
+            );
         }
     }
     /* report() */
