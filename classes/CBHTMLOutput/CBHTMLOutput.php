@@ -165,21 +165,13 @@ final class CBHTMLOutput {
 
 
     /**
-     * @NOTE 2019_07_06
-     *
-     *      CBHTMLOutput may move away from begin(), reset(), and render() to a
-     *      method where the caller passes a callback to a new function in this
-     *      class. The new function would start the output buffer and then call
-     *      the callback in a try block. If the callback throws an exception,
-     *      the function would catch it and then reset the rendering state and
-     *      rethrow the exception.
-     *
-     *      For now, callers of this function should always start a try block
-     *      immediately after the call to catch any exceptions and reset or
-     *      handle appropriately if one occurs.
-     *
      * Call this function before you start rendering the content of the body
      * element. When you are finished, call CBHTMLOutput::render().
+     *
+     * @NOTE 2019_07_06, 2019_12_09
+     *
+     *      CBHTMLOutput may move away from begin(), reset(), and render() to a
+     *      function where the caller passes a render callback as a parameter.
      *
      * @return void
      */
