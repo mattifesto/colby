@@ -69,6 +69,7 @@ EOT;
     /* currentRequestIsForTheFrontPage() */
 
 
+
     /**
      * @return [string]
      */
@@ -76,6 +77,7 @@ EOT;
         return ColbyRequest::$decodedStubs;
     }
     /* decodedStubs() */
+
 
 
     /**
@@ -95,159 +97,161 @@ EOT;
      * @return void
      */
     static function handleRequest(): void {
-        try {
-            $canonicalEncodedPath = '';
-            $countOfStubs = count(ColbyRequest::$decodedStubs);
-            $function = null;
+        $canonicalEncodedPath = '';
+        $countOfStubs = count(ColbyRequest::$decodedStubs);
+        $function = null;
+
+        $isAjaxRequest = (
+            $countOfStubs === 0 &&
+            CBAjax::requestIsToCallAnAjaxFunction()
+        );
+
+        if ($isAjaxRequest) {
+
+            /**
+             * CBAjax::handleCallAjaxFunctionRequest() will set the exception
+             * hander to a function that will respond with an Ajax response.
+             */
+            CBAjax::handleCallAjaxFunctionRequest();
+
+            return;
+        }
+
+        /**
+         * @NOTE 2019_12_09
+         *
+         *      At this point we can't quite assume that the request is expecting an
+         *      HTML response, but should probably set an exception handler that
+         *      will respond with HTML anyway.
+         */
+
+        if (ColbyRequest::currentRequestIsForTheFrontPage()) {
+            $canonicalEncodedPath = '/';
+            $function = function() {
+                $frontPageID = CBSitePreferences::frontPageID();
+
+                if (isset($frontPageID)) {
+                    $model = CBModels::fetchModelByID($frontPageID);
+
+                    if (!empty($model)) {
+                        $model->title = CBSitePreferences::siteName();
+
+                        CBPage::render($model);
+
+                        return 1;
+                    }
+                }
+
+                return include Colby::findFile(
+                    'handlers/handle-front-page.php'
+                );
+            };
+        }
+
+        else if (
+            1 === $countOfStubs &&
+            'robots.txt' === ColbyRequest::$decodedStubs[0]
+        ) {
+            $canonicalEncodedPath = '/robots.txt';
+            $function = function() {
+                return include cbsysdir() .
+                '/handlers/handle-robots.php';
+            };
+        }
+
+        else if (
+            1 === $countOfStubs &&
+            'sitemap.xml' === ColbyRequest::$decodedStubs[0]
+        ) {
+            $canonicalEncodedPath = '/sitemap.xml';
+            $function = function() {
+                return include cbsysdir() .
+                '/handlers/handle-sitemap.php';
+            };
+        }
+
+        else {
+            $canonicalEncodedPath = implode('/', ColbyRequest::$encodedStubs);
+            $canonicalEncodedPath = "/{$canonicalEncodedPath}/";
+            $allStubs = implode(',', ColbyRequest::$encodedStubs);
+            $firstStub = ColbyRequest::$encodedStubs[0];
 
             if (
-                0 === $countOfStubs &&
-                CBAjax::requestIsToCallAnAjaxFunction()
+                $allStubsHandlerFilepath = Colby::findFile(
+                    "handlers/handle,{$allStubs}.php"
+                )
             ) {
-                CBAjax::handleCallAjaxFunctionRequest();
-                return;
-            }
-
-            if (ColbyRequest::currentRequestIsForTheFrontPage()) {
-                $canonicalEncodedPath = '/';
-                $function = function() {
-                    $frontPageID = CBSitePreferences::frontPageID();
-
-                    if (isset($frontPageID)) {
-                        $model = CBModels::fetchModelByID($frontPageID);
-
-                        if (!empty($model)) {
-                            $model->title = CBSitePreferences::siteName();
-
-                            CBPage::render($model);
-
-                            return 1;
-                        }
-                    }
-
-                    return include Colby::findFile(
-                        'handlers/handle-front-page.php'
-                    );
+                $function = function() use ($allStubsHandlerFilepath) {
+                    return include $allStubsHandlerFilepath;
                 };
             }
 
             else if (
-                1 === $countOfStubs &&
-                'robots.txt' === ColbyRequest::$decodedStubs[0]
+                $firstStubHandlerFilepath = Colby::findFile(
+                    "handlers/handle,{$firstStub},.php"
+                )
             ) {
-                $canonicalEncodedPath = '/robots.txt';
-                $function = function() {
-                    return include cbsysdir() .
-                    '/handlers/handle-robots.php';
-                };
-            }
-
-            else if (
-                1 === $countOfStubs &&
-                'sitemap.xml' === ColbyRequest::$decodedStubs[0]
-            ) {
-                $canonicalEncodedPath = '/sitemap.xml';
-                $function = function() {
-                    return include cbsysdir() .
-                    '/handlers/handle-sitemap.php';
+                $function = function() use ($firstStubHandlerFilepath) {
+                    return include $firstStubHandlerFilepath;
                 };
             }
 
             else {
-                $canonicalEncodedPath = implode('/', ColbyRequest::$encodedStubs);
-                $canonicalEncodedPath = "/{$canonicalEncodedPath}/";
-                $allStubs = implode(',', ColbyRequest::$encodedStubs);
-                $firstStub = ColbyRequest::$encodedStubs[0];
-
-                if (
-                    $allStubsHandlerFilepath = Colby::findFile(
-                        "handlers/handle,{$allStubs}.php"
+                $row = ColbyRequest::pageRenderingDataForURI(
+                    implode(
+                        '/',
+                        ColbyRequest::$decodedStubs
                     )
-                ) {
-                    $function = function() use ($allStubsHandlerFilepath) {
-                        return include $allStubsHandlerFilepath;
-                    };
-                }
+                );
 
-                else if (
-                    $firstStubHandlerFilepath = Colby::findFile(
-                        "handlers/handle,{$firstStub},.php"
-                    )
-                ) {
-                    $function = function() use ($firstStubHandlerFilepath) {
-                        return include $firstStubHandlerFilepath;
-                    };
-                }
+                if ($row) {
+                    $canonicalEncodedPath =
+                    CBRequest::decodedPathToCanonicalEncodedPath($row->URI);
 
-                else {
-                    $row = ColbyRequest::pageRenderingDataForURI(
-                        implode(
-                            '/',
-                            ColbyRequest::$decodedStubs
-                        )
-                    );
-
-                    if ($row) {
-                        $canonicalEncodedPath =
-                        CBRequest::decodedPathToCanonicalEncodedPath($row->URI);
-
-                        if ($row->model) {
-                            $function = function() use ($row) {
-                                CBPage::render($row->model);
-                                return 1;
-                            };
-                        }
+                    if ($row->model) {
+                        $function = function() use ($row) {
+                            CBPage::render($row->model);
+                            return 1;
+                        };
                     }
                 }
             }
-
-            if ($function) {
-                if (ColbyRequest::$originalEncodedPath !== $canonicalEncodedPath) {
-                    $redirectURI =
-                    $canonicalEncodedPath .
-                    CBRequest::requestURIToOriginalEncodedQueryString();
-
-                    header('Location: ' . $redirectURI, true, 301);
-
-                    exit;
-                } else {
-                    if (call_user_func($function) === 1) {
-                        return;
-                    }
-                }
-            }
-
-            /**
-             * If the path provided is for an image that exists already and for an
-             * approved automatic resize, then resize the image and send it back.
-             */
-
-            if (CBImages::makeAndSendImageForPath(ColbyRequest::$decodedPath)) {
-                return;
-            }
-
-            /**
-             * Either no page was found or the function returned a value other than
-             * 1 which indicates that the page doesn't exist.
-             */
-
-            include Colby::findFile('handlers/handle-default.php');
-        } catch (Throwable $throwable) {
-            CBErrorHandler::report($throwable);
-
-            $message = $throwable->getMessage();
-            $filename = $throwable->getFile();
-            $line = $throwable->getLine();
-
-            error_log(
-                "An error was caught in " .
-                __METHOD__ .
-                "(): \"{$message}\" in {$filename} line {$line} " .
-                '(Source ID: 49ce51c7ce77c31c44ce5ce471e656a096de7a84)'
-            );
         }
+
+        if ($function) {
+            if (ColbyRequest::$originalEncodedPath !== $canonicalEncodedPath) {
+                $redirectURI =
+                $canonicalEncodedPath .
+                CBRequest::requestURIToOriginalEncodedQueryString();
+
+                header('Location: ' . $redirectURI, true, 301);
+
+                exit;
+            } else {
+                if (call_user_func($function) === 1) {
+                    return;
+                }
+            }
+        }
+
+        /**
+         * If the path provided is for an image that exists already and for an
+         * approved automatic resize, then resize the image and send it back.
+         */
+
+        if (CBImages::makeAndSendImageForPath(ColbyRequest::$decodedPath)) {
+            return;
+        }
+
+        /**
+         * Either no page was found or the function returned a value other than
+         * 1 which indicates that the page doesn't exist.
+         */
+
+        include Colby::findFile('handlers/handle-default.php');
     }
     /* handleRequest() */
+
 
 
     /**
