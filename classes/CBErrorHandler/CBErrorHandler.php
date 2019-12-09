@@ -230,58 +230,30 @@ final class CBErrorHandler {
         Throwable $throwable
     ): void {
         try {
-            $oneLineErrorReport = CBException::throwableToOneLineErrorReport(
-                $throwable
-            );
+            $errorCount = 0;
+            $errorReportAsCBMessage = '';
+            $currentError = $throwable;
 
-            $oneLineErrorReportAsCBMessage = CBMessageMarkup::stringToMessage(
-                $oneLineErrorReport
-            );
+            while ($currentError) {
+                $errorCount += 1;
 
-            $stackTraceAsCBMessage = CBMessageMarkup::stringToMessage(
-                Colby::exceptionStackTrace($throwable)
-            );
+                if ($errorCount > 1) {
+                    $errorReportAsCBMessage .= <<<EOT
 
-            if ($throwable instanceof CBException) {
-                $extendedMessage = $throwable->getExtendedMessage();
-                $errorReportAsCBMessage = <<<EOT
-
-                    {$oneLineErrorReportAsCBMessage}
-
-                    --- dl
-                        --- dt
-                            extended message
-                        ---
-                        --- dd
-                            {$extendedMessage}
+                        --- CBUI_title1
+                        Error {$errorCount}
                         ---
 
-                        --- dt
-                            stack trace
-                        ---
-                        --- dd
-                            --- pre\n{$stackTraceAsCBMessage}
-                            ---
-                        ---
-                    ---
+                    EOT;
+                }
 
-                EOT;
-            } else {
-                $errorReportAsCBMessage = <<<EOT
+                $errorReportAsCBMessage .= (
+                    CBException::throwableToErrorReportAsCBMessage(
+                        $currentError
+                    )
+                );
 
-                    {$oneLineErrorReportAsCBMessage}
-
-                    --- dl
-                        --- dt
-                            stack trace
-                        ---
-                        --- dd
-                            --- pre\n{$stackTraceAsCBMessage}
-                            ---
-                        ---
-                    ---
-
-                EOT;
+                $currentError = $currentError->getPrevious();
             }
         } catch (Throwable $ignoredError) {
             error_log(
