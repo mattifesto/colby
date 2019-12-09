@@ -58,150 +58,172 @@ final class CBAjax {
     static function handleCallAjaxFunctionRequest(): void {
         header('Content-type: application/json');
 
-        try {
-            $response = (object)[
-                'className' => 'CBAjax',
-                'message' => '',
-                'wasSuccessful' => false,
-            ];
+        set_exception_handler(
+            'CBAjax::handleCallAjaxFunctionRequest_handleError'
+        );
 
-            $ajaxArgumentsAsJSON = trim(
-                cb_post_value('ajaxArgumentsAsJSON')
+        $response = (object)[
+            'className' => 'CBAjax',
+            'message' => '',
+            'wasSuccessful' => false,
+        ];
+
+        $ajaxArgumentsAsJSON = trim(
+            cb_post_value('ajaxArgumentsAsJSON')
+        );
+
+        $ajaxArguments = json_decode($ajaxArgumentsAsJSON);
+
+        CBAjax::validateAjaxArguments($ajaxArguments);
+
+        $functionClassName = $ajaxArguments->functionClassName;
+        $functionName = $ajaxArguments->functionName;
+        $functionArguments = $ajaxArguments->functionArguments;
+
+        $function = (
+            $functionClassName .
+            "::CBAjax_{$functionName}"
+        );
+
+        if (!is_callable($function)) {
+            throw new CBExceptionWithValue(
+                (
+                    'The Ajax interface was not implemented ' .
+                    'for this Ajax function call.'
+                ),
+                $ajaxArguments,
+                '35ea28899f1335170ec7ec9b42a134c875037a5f'
+            );
+        }
+
+        $userIsMemberOfUserGroup = false;
+
+        $getUserGroupClassNameFunctionName = (
+            $functionClassName .
+            "::CBAjax_{$functionName}_getUserGroupClassName"
+        );
+
+        if (is_callable($getUserGroupClassNameFunctionName)) {
+            $userGroupClassName = call_user_func(
+                $getUserGroupClassNameFunctionName
             );
 
-            $ajaxArguments = json_decode($ajaxArgumentsAsJSON);
+            $userIsMemberOfUserGroup = CBUserGroup::userIsMemberOfUserGroup(
+                ColbyUser::getCurrentUserCBID(),
+                $userGroupClassName
+            );
+        } else {
+            /* deprecated */
 
-            CBAjax::validateAjaxArguments($ajaxArguments);
-
-            $functionClassName = $ajaxArguments->functionClassName;
-            $functionName = $ajaxArguments->functionName;
-            $functionArguments = $ajaxArguments->functionArguments;
-
-            $function = (
+            $getGroupFunction = (
                 $functionClassName .
-                "::CBAjax_{$functionName}"
+                "::CBAjax_{$functionName}_group"
             );
 
-            if (!is_callable($function)) {
+            if (!is_callable($getGroupFunction)) {
                 throw new CBExceptionWithValue(
                     (
-                        'The Ajax interface was not implemented ' .
+                        'The Ajax group interface was not implemented ' .
                         'for this Ajax function call.'
                     ),
                     $ajaxArguments,
-                    '35ea28899f1335170ec7ec9b42a134c875037a5f'
+                    'bc0310f24170ebee3dfc6bf4d47ce284a5408646'
                 );
             }
 
-            $userIsMemberOfUserGroup = false;
+            $userGroupName = call_user_func($getGroupFunction);
 
-            $getUserGroupClassNameFunctionName = (
-                $functionClassName .
-                "::CBAjax_{$functionName}_getUserGroupClassName"
+            $userIsMemberOfUserGroup = ColbyUser::currentUserIsMemberOfGroup(
+                $userGroupName
             );
+        }
 
-            if (is_callable($getUserGroupClassNameFunctionName)) {
-                $userGroupClassName = call_user_func(
-                    $getUserGroupClassNameFunctionName
+        if (!$userIsMemberOfUserGroup) {
+            if (ColbyUser::getCurrentUserCBID() === null) {
+                $response->message = (
+                    'The requested Ajax function cannot be called ' .
+                    'because you are not currently logged in, possibly ' .
+                    'because your session has timed out. Reloading ' .
+                    'the current page will usually remedy this.'
                 );
 
-                $userIsMemberOfUserGroup = CBUserGroup::userIsMemberOfUserGroup(
-                    ColbyUser::getCurrentUserCBID(),
-                    $userGroupClassName
-                );
+                $response->userMustLogIn = true;
+
+                echo json_encode($response);
+
+                return;
             } else {
-                /* deprecated */
-
-                $getGroupFunction = (
-                    $functionClassName .
-                    "::CBAjax_{$functionName}_group"
+                $response->message = (
+                    'You do not have permission to call a requested ' .
+                    'Ajax function.'
                 );
 
-                if (!is_callable($getGroupFunction)) {
-                    throw new CBExceptionWithValue(
-                        (
-                            'The Ajax group interface was not implemented ' .
-                            'for this Ajax function call.'
-                        ),
-                        $ajaxArguments,
-                        'bc0310f24170ebee3dfc6bf4d47ce284a5408646'
-                    );
-                }
+                echo json_encode($response);
 
-                $userGroupName = call_user_func($getGroupFunction);
-
-                $userIsMemberOfUserGroup = ColbyUser::currentUserIsMemberOfGroup(
-                    $userGroupName
-                );
-            }
-
-            if (!$userIsMemberOfUserGroup) {
-                if (ColbyUser::getCurrentUserCBID() === null) {
-                    $response->message = (
-                        'The requested Ajax function cannot be called ' .
-                        'because you are not currently logged in, possibly ' .
-                        'because your session has timed out. Reloading ' .
-                        'the current page will usually remedy this.'
-                    );
-
-                    $response->userMustLogIn = true;
-
-                    echo json_encode($response);
-
-                    return;
-                } else {
-                    $response->message = (
-                        'You do not have permission to call a requested ' .
-                        'Ajax function.'
-                    );
-
-                    echo json_encode($response);
-
-                    return;
-                }
-            }
-
-            $response->value = call_user_func(
-                $function,
-                $functionArguments
-            );
-
-            $response->wasSuccessful = true;
-        } catch (Throwable $throwable) {
-            CBErrorHandler::report($throwable);
-
-            $response->wasSuccessful = false;
-
-            /**
-             * @TODO 2019_12_04
-             *
-             * It is absolutely wrong to set the message to the exception
-             * message here because non-developer users should not be able to
-             * see the exception message.
-             *
-             * To fix this, the shopping cart library needs to be updated so
-             * that it doesn't throw exceptions with credit card messages.
-             * (declined, bad card number, ...)
-             *
-             * We could also potentially implement a public/private exception
-             * that has one message for developers and one for users.
-             */
-
-            $response->message = $throwable->getMessage();
-
-            if (
-                CBUserGroup::currentUserIsMemberOfUserGroup(
-                    'CBDevelopersUserGroup'
-                )
-            ) {
-                $response->classNameForException = get_class($throwable);
-                $response->stackTrace = Colby::exceptionStackTrace($throwable);
+                return;
             }
         }
+
+        $response->value = call_user_func(
+            $function,
+            $functionArguments
+        );
+
+        $response->wasSuccessful = true;
 
         echo json_encode($response);
     }
     /* handleCallAjaxFunctionRequest() */
+
+
+
+    /**
+     * This function is set as the exception handler in
+     * CBAjax::handleCallAjaxFunctionRequest().
+     *
+     * @param Throwable $error
+     *
+     * @return void
+     */
+    static function handleCallAjaxFunctionRequest_handleError(
+        Throwable $error
+    ): void {
+        CBErrorHandler::report($error);
+
+        $response = (object)[
+            'className' => 'CBAjax',
+            'wasSuccessful' => false,
+        ];
+
+        /**
+         * @TODO 2019_12_04
+         *
+         * It is absolutely wrong to set the message to the exception
+         * message here because non-developer users should not be able to
+         * see the exception message.
+         *
+         * To fix this, the shopping cart library needs to be updated so
+         * that it doesn't throw exceptions with credit card messages.
+         * (declined, bad card number, ...)
+         *
+         * We could also potentially implement a public/private exception
+         * that has one message for developers and one for users.
+         */
+
+        $response->message = $throwable->getMessage();
+
+        $isDeveloper = CBUserGroup::currentUserIsMemberOfUserGroup(
+            'CBDevelopersUserGroup'
+        );
+
+        if ($isDeveloper) {
+            $response->classNameForException = get_class($error);
+            $response->stackTrace = Colby::exceptionStackTrace($error);
+        }
+
+        echo json_encode($response);
+    }
+    /* handleCallAjaxFunctionRequest_handleError() */
 
 
 
