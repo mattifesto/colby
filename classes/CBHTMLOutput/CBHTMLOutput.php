@@ -313,21 +313,20 @@ final class CBHTMLOutput {
 
 
     /**
-     * @NOTE 2017_12_03
+     * This function is set as the exception handler in CBHTMLOutput::begin().
+     * The previous exception handler is restored in CBHTMLOutput::reset().
      *
-     *      This function was updated to comply with the custom exception
-     *      handler documentation in the CBErrorHandler::handle() comments.
-     *
-     * @param Throwable $exception
+     * @param Throwable $error
      *
      * @return void
      */
-    static function handleException(Throwable $throwable): void {
-        CBErrorHandler::report($throwable);
-
+    static function handleException(Throwable $error): void {
         try {
-            $classNameForPageSettings =
-            CBHTMLOutput::classNameForPageSettings();
+            CBErrorHandler::report($error);
+
+            $classNameForPageSettings = (
+                CBHTMLOutput::classNameForPageSettings()
+            );
 
             /**
              * A page may have already been partially rendered so reset
@@ -335,16 +334,22 @@ final class CBHTMLOutput {
              */
             CBHTMLOutput::reset();
 
+            /**
+             * @NOTE 2019_12_09
+             *
+             *      CBPageSettings is an odd place to call to render an error
+             *      page. In the future investigate this and either change or
+             *      document why it is okay.
+             */
             CBPageSettings::renderErrorPage(
                 $classNameForPageSettings,
-                $throwable
+                $error
             );
         } catch (Throwable $innerThrowable) {
-            /* this is a severe situation, just try to report and exit */
             CBErrorHandler::report($innerThrowable);
-            exit;
         }
     }
+    /* handleException() */
 
 
 
