@@ -322,14 +322,6 @@ final class CBModel {
      *      For this function to successfully build a model, the spec's class
      *      must exist and have the CBModel_build() interface implemented.
      *
-     *      The $spec parameter is not typed so that you can do somthing like:
-     *
-     *          $model = CBModel::build(CBModel::value($spec, 'image'));
-     *
-     *      If the value returned by CBModel::value() is not an object
-     *      CBModel::build() will return null for now, but will throw an
-     *      exception in the future.
-     *
      * @return object
      *
      *      The build process is allowed to have requirements and allowed to
@@ -338,105 +330,129 @@ final class CBModel {
     static function build(
         /* stdClass */ $spec
     ): stdClass {
-        $className = CBModel::valueAsName(
-            $spec,
-            'className'
-        );
+        static $staticRootSpec = null;
 
-        if ($className === null) {
-            throw new CBExceptionWithValue(
-                (
-                    'This spec can\'t be built because it has an invalid ' .
-                    '"className" property value.'
-                ),
+        try {
+            if ($staticRootSpec === null) {
+                $staticRootSpec = $spec;
+            }
+
+            $className = CBModel::valueAsName(
                 $spec,
-                'd24a83a81c914e1a5b66eeede05a577c0c44bd57'
+                'className'
             );
-        }
 
-        if (!class_exists($className)) {
-            throw new CBExceptionWithValue(
-                (
-                    'This spec can\'t be built because a class ' .
-                    "with the name \"{$className}\" doesn't exist."
-                ),
-                $spec,
-                '0f170c152f54ebb97ecd2fb0a27055a096276d37'
-            );
-        }
+            if ($className === null) {
+                throw new CBExceptionWithValue(
+                    (
+                        'This spec can\'t be built because it has an invalid ' .
+                        '"className" property value.'
+                    ),
+                    $spec,
+                    'd24a83a81c914e1a5b66eeede05a577c0c44bd57'
+                );
+            }
 
-        $buildInterfaceFunctionName = "{$className}::CBModel_build";
+            if (!class_exists($className)) {
+                throw new CBExceptionWithValue(
+                    (
+                        'This spec can\'t be built because a class ' .
+                        "with the name \"{$className}\" doesn't exist."
+                    ),
+                    $spec,
+                    '0f170c152f54ebb97ecd2fb0a27055a096276d37'
+                );
+            }
 
-        if (is_callable($buildInterfaceFunctionName)) {
-            $model = call_user_func(
-                $buildInterfaceFunctionName,
-                $spec
-            );
-        } else {
-            throw new CBExceptionWithValue(
-                (
-                    'This spec can\'t be built because ' .
-                    "the CBModel_build() interface has not been implemented " .
-                    "on the {$className} class."
-                ),
-                $spec,
-                'a92922e1bcf4fe374b54a2b45bd59403f2214faa'
-            );
-        }
+            $buildInterfaceFunctionName = "{$className}::CBModel_build";
 
-        if (!is_object($model)) {
-            throw new CBExceptionWithValue(
-                (
-                    "This spec can't be built because " .
-                    "the CBModel_build() interface returned a value that is " .
-                    "not an object."
-                ),
-                $spec,
-                '2a8ad1dd8a2d47a80d41609b98056f0e8775a47a'
-            );
-        }
+            if (is_callable($buildInterfaceFunctionName)) {
+                $model = call_user_func(
+                    $buildInterfaceFunctionName,
+                    $spec
+                );
+            } else {
+                throw new CBExceptionWithValue(
+                    (
+                        'This spec can\'t be built because ' .
+                        "the CBModel_build() interface has not been " .
+                        "implementedon the {$className} class."
+                    ),
+                    $spec,
+                    'a92922e1bcf4fe374b54a2b45bd59403f2214faa'
+                );
+            }
 
-        /**
-         * Since "className" is the one required property for a model and should
-         * always be transferred by the build process, this function is allowed
-         * to transfer the property for all models.
-         */
-        $model->className = $className;
+            if (!is_object($model)) {
+                throw new CBExceptionWithValue(
+                    (
+                        "This spec can't be built because " .
+                        "the CBModel_build() interface returned a value that " .
+                        "is not an object."
+                    ),
+                    $spec,
+                    '2a8ad1dd8a2d47a80d41609b98056f0e8775a47a'
+                );
+            }
+
+            /**
+             * Since "className" is the one required property for a model and
+             * should always be transferred by the build process, this function
+             * is allowed to transfer the property for all models.
+             */
+            $model->className = $className;
 
 
-        /**
-         * A model will always have the same ID as its spec. A malformed ID on
-         * the spec will cause an exception to be thrown.
-         */
-        $ID = CBModel::valueAsID($spec, 'ID');
+            /**
+             * A model will always have the same CBID as its spec. A malformed
+             * CBID on the spec will cause an exception to be thrown.
+             */
+            $ID = CBModel::valueAsID($spec, 'ID');
 
-        if (isset($spec->ID) && $ID === null) {
-            throw new CBExceptionWithValue(
-                (
-                    'This spec can\'t be built because it has an invalid ' .
-                    '"ID" property value.'
-                ),
-                $spec,
-                '11759b8ba7d8ae54039371942c9b09e29cda59d6'
-            );
-        }
+            if (isset($spec->ID) && $ID === null) {
+                throw new CBExceptionWithValue(
+                    (
+                        'This spec can\'t be built because it has an invalid ' .
+                        '"ID" property value.'
+                    ),
+                    $spec,
+                    '11759b8ba7d8ae54039371942c9b09e29cda59d6'
+                );
+            }
 
-        if ($ID !== null) {
-            $model->ID = $ID;
-        }
+            if ($ID !== null) {
+                $model->ID = $ID;
+            }
 
-        /**
-         * @NOTE 2018_12_21
-         *
-         *      This code is deprecated. It infers that if the spec has its
-         *      "title" property set that the "title" property is a valid string
-         *      property for this particular model. In the future the class will
-         *      be responsible for building all model properties.
-         */
-        if (!isset($model->title) && isset($spec->title)) {
-            $model->title = trim(
-                CBModel::valueToString($spec, 'title')
-            );
+            /**
+             * @NOTE 2018_12_21
+             *
+             *      This code is deprecated. It infers that if the spec has its
+             *      "title" property set that the "title" property is a valid string
+             *      property for this particular model. In the future the class will
+             *      be responsible for building all model properties.
+             */
+            if (!isset($model->title) && isset($spec->title)) {
+                $model->title = trim(
+                    CBModel::valueToString($spec, 'title')
+                );
+            }
+        } catch (Throwable $throwable) {
+            if ($staticRootSpec !== $spec) {
+                throw new CBExceptionWithValue(
+                    'An exception was thrown while building this root spec.',
+                    $staticRootSpec,
+                    'f917e127c1f972ce7c7b7b589997366403ec0ce9',
+                    0,
+                    $throwable
+                );
+            } else {
+                throw $throwable;
+            }
+        } finally {
+            if ($staticRootSpec === $spec) {
+                $staticRootSpec = null;
+            }
         }
 
 
