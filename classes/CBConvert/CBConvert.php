@@ -368,24 +368,12 @@ final class CBConvert {
 
 
     /**
-     * Creates a string with the thrown message and reasonably helpful
-     * information for finding the source of the problem. This function should
-     * be used for creating all "short" descriptions of an error.
-     *
-     * This function needs to be very stable because it will be called from
-     * error handlers.
-     *
-     * The caller should prepend this message with "Error", "INNER ERROR", or
-     * "SECOND INNER ERROR" as appropriate for the situation.
-     *
-     * @return string
+     * @deprecated use CBException::throwableToOneLineErrorReport()
      */
     static function throwableToMessage(Throwable $throwable) {
-        $message = $throwable->getMessage();
-        $basename = basename($throwable->getFile());
-        $line = $throwable->getLine();
-
-        return "\"{$message}\" in {$basename} line {$line}";
+        return CBException::throwableToOneLineErrorReport(
+            $throwable
+        );
     }
 
 
