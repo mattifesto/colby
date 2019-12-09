@@ -265,7 +265,7 @@ final class CBErrorHandler {
                             ---
                         ---
 
-EOT;
+                    EOT;
                 } else {
                     $messageAsMarkup = <<<EOT
 
@@ -281,7 +281,7 @@ EOT;
                             ---
                         ---
 
-EOT;
+                    EOT;
                 }
             } catch (Throwable $innerThrowable) {
                 $message = $innerThrowable->getMessage();
@@ -293,14 +293,19 @@ EOT;
                 $messageAsMarkup = $firstLine;
             }
 
+
+
+            /* log */
+
             try {
-                $serialNumber = CBLog::log((object)[
-                    'className' => __CLASS__,
-                    'message' => $messageAsMarkup,
-                    'severity' => 3,
-                ]);
+                CBLog::log(
+                    (object)[
+                        'sourceClassName' => __CLASS__,
+                        'message' => $messageAsMarkup,
+                        'severity' => 3,
+                    ]
+                );
             } catch (Throwable $innerThrowable) {
-                $serialNumber = '';
                 $message = $innerThrowable->getMessage();
 
                 error_log(
@@ -311,12 +316,15 @@ EOT;
                 );
             }
 
+
+
+            /* slack */
+
             try {
                 $link = (
                     cbsiteurl() .
                     "/admin/?" .
-                    "c=CBLogAdminPage&" .
-                    "serialNumber={$serialNumber}"
+                    "c=CBLogAdminPage"
                 );
 
                 CBSlack::sendMessage(
