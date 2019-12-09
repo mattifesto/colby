@@ -34,32 +34,24 @@ final class CBErrorHandler {
 
 
     /**
-     * This is the default exception handler.
+     * This function is set as the exception handler in Colby::initialize().
      *
-     * This function used as the parameter when set_exception_handler() is
-     * called from Colby::initialize().
+     * This is a generic exception handler and does not send a response. When
+     * the desired response type is known another exception handler should be
+     * set that will respond appropriately.
      *
-     * As of 2019_08_04, CBHTMLOutput uses a custom exception handler that
-     * follows the guidelines specified here. However, it will move to a render
-     * function with a callback that uses a try block to catch exceptions which
-     * is the current recommended way of handling exceptions.
+     * CBHTMLOutput and CBAjax set different exception handlers.
      *
-     * Custom exception handlers are no longer recommended because they can
-     * easily be overridden by other custom exception handlers or try blocks
-     * making it difficult at times to find out why the custom exception handler
-     * was not used.
-     *
-     * Having said that, custom exception handlers should:
+     * Having said that, exception handlers should:
      *
      *      1. Call CBErrorHandler::report() passing the error or exception that
      *      occurred.
      *
-     *      2. Within a try block perform a short attempt at completing the
-     *      request with an error notification instead of the original requested
-     *      content.
+     *      2. Perform a short attempt at completing the request with an error
+     *      notification instead of the original requested content.
      *
-     *      3. The catch of the try block should only call
-     *      CBErrorHandler::report() with the inner error or exception.
+     *       3. If another exception is thrown it will be treated as a fatal
+     *       error.
      *
      * @TODO 2019_08_04
      *
@@ -67,18 +59,14 @@ final class CBErrorHandler {
      *      documentation page that will be available in the documentation admin
      *      area.
      *
-     * @param Throwable $throwable
+     * @param Throwable $error
      *
      * @return void
      */
-    static function handle(Throwable $throwable): void {
-        CBErrorHandler::report($throwable);
-
-        try {
-            CBErrorHandler::renderErrorReportPage($throwable);
-        } catch (Throwable $innerThrowable) {
-            CBErrorHandler::report($innerThrowable);
-        }
+    static function handle(
+        Throwable $error
+    ): void {
+        CBErrorHandler::report($error);
     }
     /* handle() */
 
