@@ -224,6 +224,80 @@
 
 
     /**
+     * This function returns an error report as a CBMessage for the $throwable
+     * parameter. It does not in include the previous exception, if there is
+     * one, in the report.
+     *
+     * Callers can call again to create more reports for previous errors.
+     *
+     * @param Throwable $throwable
+     *
+     * @return string
+     */
+    static function throwableToErrorReportAsCBMessage(
+        Throwable $throwable
+    ): string {
+        $oneLineErrorReport = CBException::throwableToOneLineErrorReport(
+            $throwable
+        );
+
+        $oneLineErrorReportAsCBMessage = CBMessageMarkup::stringToMessage(
+            $oneLineErrorReport
+        );
+
+        $stackTraceAsCBMessage = CBMessageMarkup::stringToMessage(
+            Colby::exceptionStackTrace($throwable)
+        );
+
+        if ($throwable instanceof CBException) {
+            $extendedMessage = $throwable->getExtendedMessage();
+            $errorReportAsCBMessage = <<<EOT
+
+                {$oneLineErrorReportAsCBMessage}
+
+                --- dl
+                    --- dt
+                        extended message
+                    ---
+                    --- dd
+                        {$extendedMessage}
+                    ---
+
+                    --- dt
+                        stack trace
+                    ---
+                    --- dd
+                        --- pre\n{$stackTraceAsCBMessage}
+                        ---
+                    ---
+                ---
+
+            EOT;
+        } else {
+            $errorReportAsCBMessage = <<<EOT
+
+                {$oneLineErrorReportAsCBMessage}
+
+                --- dl
+                    --- dt
+                        stack trace
+                    ---
+                    --- dd
+                        --- pre\n{$stackTraceAsCBMessage}
+                        ---
+                    ---
+                ---
+
+            EOT;
+        }
+
+        return $errorReportAsCBMessage;
+    }
+    /* throwableToErrorReportAsCBMessage() */
+
+
+
+    /**
      * @param Throwable $throwable
      *
      * @return string
