@@ -248,6 +248,22 @@ final class CBErrorHandler {
         Throwable $throwable
     ): void {
         try {
+            error_log(
+                CBConvert::throwableToMessage($throwable) .
+                ' | error log entry made in ' .
+                __METHOD__ .
+                '()'
+            );
+        } catch (Throwable $ignoredError) {
+            error_log(
+                'writing to the error log failed' .
+                ' | error log entry made in ' .
+                __METHOD__ .
+                '()'
+            );
+        }
+
+        try {
             $errorCount = 0;
             $errorReportAsCBMessage = '';
             $currentError = $throwable;
@@ -275,7 +291,10 @@ final class CBErrorHandler {
             }
         } catch (Throwable $ignoredError) {
             error_log(
-                CBConvert::throwableToMessage($ignoredError)
+                CBConvert::throwableToMessage($ignoredError) .
+                ' | error log entry made in ' .
+                __METHOD__ .
+                '()'
             );
         }
 
@@ -293,7 +312,10 @@ final class CBErrorHandler {
             );
         } catch (Throwable $ignoredError) {
             error_log(
-                CBConvert::throwableToMessage($ignoredError)
+                CBConvert::throwableToMessage($ignoredError) .
+                ' | error log entry made in ' .
+                __METHOD__ .
+                '()'
             );
         }
 
@@ -317,7 +339,10 @@ final class CBErrorHandler {
             );
         } catch (Throwable $ignoredError) {
             error_log(
-                CBConvert::throwableToMessage($ignoredError)
+                CBConvert::throwableToMessage($ignoredError) .
+                ' | error log entry made in ' .
+                __METHOD__ .
+                '()'
             );
         }
     }
