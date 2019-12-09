@@ -208,9 +208,11 @@
     /**
      * @param Throwable $throwable
      *
-     * @returh string
+     * @return string
      */
-    static function throwableToCBMessage(Throwable $throwable): string {
+    static function throwableToCBMessage(
+        Throwable $throwable
+    ): string {
         if ($throwable instanceof CBException) {
             return $throwable->getCBMessage();
         } else {
@@ -218,6 +220,24 @@
         }
     }
     /* throwableToCBMessage() */
+
+
+
+    /**
+     * @param Throwable $throwable
+     *
+     * @return string
+     */
+    static function throwableToOneLineErrorReport(
+        Throwable $throwable
+    ): string {
+        $message = $throwable->getMessage();
+        $basename = basename($throwable->getFile());
+        $line = $throwable->getLine();
+
+        return "\"{$message}\" in {$basename} line {$line}";
+    }
+    /* throwableToOneLineErrorReport() */
 
 
 
