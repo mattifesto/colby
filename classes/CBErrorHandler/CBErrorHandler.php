@@ -90,12 +90,15 @@ final class CBErrorHandler {
      *
      * @return void
      */
-    static function renderErrorReportPage(Throwable $throwable): void {
+    static function renderErrorReportPage(
+        Throwable $throwable
+    ): void {
         try {
             CBExceptionView::pushThrowable($throwable);
 
             $spec = CBModelTemplateCatalog::fetchLivePageTemplate();
             $spec->title = 'Error';
+
             $spec->sections = [
                 (object)[
                     'className' => 'CBExceptionView',
@@ -123,59 +126,86 @@ final class CBErrorHandler {
      * exception occurred and during the process of trying to render an error
      * page another exception occurred.
      *
+     * @NOTE 2019_12_09
      *
-     * @param Throwable $originalThrowable
-     * @param Throwable $innerThrowable
+     *      This function no longer exits. If it throws an exception the current
+     *      exception handler will handle it which is fine.
+     *
+     *
+     * @param Throwable $firstError
+     * @param Throwable $secondError
      *
      * @return void
      */
     static function renderErrorReportPageForInnerErrorAndExit(
-        Throwable $originalThrowable,
-        Throwable $innerThrowable
+        Throwable $firstError,
+        Throwable $secondError
     ): void {
-        try {
-            while (ob_get_level() > 0) {
-                ob_end_clean();
-            }
-
-            ?>
-
-            <!doctype html>
-            <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Error</title>
-                    <meta name="description" content="">
-                    <meta
-                        name="viewport"
-                        content="width=device-width, initial-scale=1"
-                    >
-                    <style>
-                        * {
-                            margin: 0;
-                        }
-                        html {
-                            -webkit-text-size-adjust: 100%;
-                            -ms-text-size-adjust: 100%;
-                        }
-                        body {
-                            padding: 40px 20px;
-                            text-align: center;
-                        }
-                    </style>
-                </head>
-                <body>
-                    An error has occurred.
-                </body>
-            </html>
-
-            <?php
-        } catch (Throwable $innerInnerException) {
-            /* this is a severe situation */
-            CBErrorHandler::report($innerInnerException);
-        } finally {
-            exit;
+        while (ob_get_level() > 0) {
+            ob_end_clean();
         }
+
+        $isDeveloper = CBUserGroup::userIsMemberOfUserGroup(
+            ColbyUser::getCurrentUserCBID(),
+            'CBDevelopersUserGroup'
+        );
+
+        if ($isDeveloper) {
+            $oneLineErrorReport1 = CBException::throwableToOneLineErrorReport(
+                $firstError
+            );
+
+            $oneLineErrorReport2 = CBException::throwableToOneLineErrorReport(
+                $secondError
+            );
+
+            $messageAsHTML = (
+                '<p>first error<br>' .
+                cbhtml($oneLineErrorReport1) .
+                '<p>second error<br>' .
+                cbhtml($oneLineErrorReport2)
+            );
+        } else {
+            $messageAsHTML = cbhtml(
+                'An error has occurred.'
+            );
+        }
+
+        ?>
+
+        <!doctype html>
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <title>Error</title>
+                <meta name="description" content="">
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1"
+                >
+                <style>
+                    * {
+                        margin: 0;
+                    }
+                    html {
+                        -webkit-text-size-adjust: 100%;
+                        -ms-text-size-adjust: 100%;
+                    }
+                    body {
+                        padding: 40px 20px;
+                        text-align: center;
+                    }
+                    p {
+                        margin: 0.5em;
+                    }
+                </style>
+            </head>
+            <body>
+                <?= $messageAsHTML ?>
+            </body>
+        </html>
+
+        <?php
     }
     /* renderErrorReportPageForInnerError() */
 
