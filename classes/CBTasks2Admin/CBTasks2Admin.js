@@ -269,6 +269,10 @@ var CBTasks2Admin = {
                 "CBTasks2Admin_failedTasks"
             );
 
+            if (CBTasks2Admin_failedTasks.length === 0) {
+                return element;
+            }
+
 
             /* title */
 
