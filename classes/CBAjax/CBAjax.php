@@ -210,7 +210,7 @@ final class CBAjax {
          * that has one message for developers and one for users.
          */
 
-        $response->message = $throwable->getMessage();
+        $response->message = $error->getMessage();
 
         $isDeveloper = CBUserGroup::currentUserIsMemberOfUserGroup(
             'CBDevelopersUserGroup'
