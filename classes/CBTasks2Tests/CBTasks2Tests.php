@@ -4,6 +4,8 @@ final class CBTasks2Tests {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [object]
      */
@@ -24,7 +26,10 @@ final class CBTasks2Tests {
     /* CBTest_getTests() */
 
 
+
     /* -- tests -- -- -- -- -- */
+
+
 
     /**
      * This test verifies two behaviors:
@@ -37,28 +42,31 @@ final class CBTasks2Tests {
      * @return object
      */
     static function CBTest_exceptionHandling(): stdClass {
-        $ID = 'add1d0e46582644d3b3488206d85bd3c22fdc19b';
-        $IDAsSQL = CBID::toSQL($ID);
+        $CBID = 'add1d0e46582644d3b3488206d85bd3c22fdc19b';
+        $CBIDAsSQL = CBID::toSQL($CBID);
         $actualExceptionMessage = '';
         $expectedExceptionMessage = 'CBTasks2Tests_testException';
 
-        CBModels::deleteByID($ID);
+        CBModels::deleteByID($CBID);
 
         CBModels::save(
             (object)[
                 'className' => 'CBMessageView',
-                'ID' => $ID,
+                'ID' => $CBID,
                 'markup' => 'throw an exception',
             ]
         );
 
         try {
-            CBTasks2::runSpecificTask('CBTasks2Tests_task', $ID);
+            CBTasks2::runSpecificTask(
+                'CBTasks2Tests_task',
+                $CBID
+            );
         } catch (Throwable $throwable) {
             $actualExceptionMessage = $throwable->getMessage();
         }
 
-        CBModels::deleteByID($ID);
+        CBModels::deleteByID($CBID);
 
         if ($actualExceptionMessage != $expectedExceptionMessage) {
             return CBTest::resultMismatchFailure(
@@ -73,9 +81,9 @@ final class CBTasks2Tests {
             SELECT  state
             FROM    CBTasks2
             WHERE   className = 'CBTasks2Tests_task' AND
-                    ID = {$IDAsSQL}
+                    ID = {$CBIDAsSQL}
 
-EOT;
+        EOT;
 
         $actualState = intval(CBDB::SQLToValue($SQL));
         $expectedState = 4; /* state value for error */
@@ -88,10 +96,17 @@ EOT;
             );
         }
 
+        CBTasks2::remove(
+            'CBTasks2Tests_task',
+            $CBID
+        );
+
         return (object)[
             'succeeded' => true,
         ];
     }
+    /* CBTest_exceptionHandling() */
+
 
 
     /**
@@ -138,8 +153,11 @@ EOT;
             'succeeded' => true,
         ];
     }
+    /* CBTest_runSpecificTask() */
+
 }
 /* CBTasks2Tests */
+
 
 
 /**
@@ -173,10 +191,12 @@ final class CBTasks2Tests_task {
                 {$timestamp}
             )
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
     }
+    /* addTestTask() */
+
 
 
     /**
@@ -192,6 +212,8 @@ EOT;
             throw new Exception('CBTasks2Tests_testException');
         }
     }
+    /* CBTasks2_run() */
+
 
 
     /**
@@ -201,24 +223,32 @@ EOT;
      */
     static function deleteTestTask(): void {
         $classNameAsSQL = CBDB::stringToSQL(__CLASS__);
-        $IDAsSQL = CBID::toSQL(CBTasks2Tests_task::testTaskID());
+
+        $IDAsSQL = CBID::toSQL(
+            CBTasks2Tests_task::testTaskID()
+        );
+
         $SQL = <<<EOT
 
             DELETE FROM CBTasks2
+
             WHERE   className = {$classNameAsSQL} AND
                     ID = {$IDAsSQL}
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
     }
+    /* deleteTestTask() */
+
 
 
     /**
-     * @return ID
+     * @return CBID
      */
     static function testTaskID(): string {
         return '7e7909a13bb52cdcd3ecb531206a4acec50cd089';
     }
+
 }
 /* CBTasks2Tests_task */
