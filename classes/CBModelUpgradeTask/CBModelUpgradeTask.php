@@ -40,17 +40,26 @@ final class CBModelUpgradeTask {
 
 
 
-    /* -- CBTasks2 intrfaces -- -- -- -- -- */
+    /* -- CBTasks2 interfaces -- -- -- -- -- */
 
 
 
     /**
-     * @param string $ID
+     * @param string $modelCBID
      *
      * @return ?object
      */
-    static function CBTasks2_run(string $ID): ?stdClass {
-        $originalSpec = CBModels::fetchSpecByID($ID);
+    static function CBTasks2_run(
+        string $modelCBID
+    ): ?stdClass {
+        $originalSpec = CBModels::fetchSpecByIDNullable($modelCBID);
+
+        if ($originalSpec === null) {
+            CBTasks2::remove(__CLASS__, $modelCBID);
+
+            return null;
+        }
+
         $upgradedSpec = CBModel::upgrade($originalSpec);
 
         if ($upgradedSpec != $originalSpec) {
