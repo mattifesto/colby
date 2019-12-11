@@ -2,16 +2,36 @@
 
 final class CBModelCacheTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
     /**
-     * @return [[<className>, <testName>]]
+     * @return [object]
      */
-    static function CBTest_PHPTests(): array {
+    static function CBTest_getTests(): array {
         return [
-            ['CBModelCache', 'fetchModelsByID'],
-            ['CBModelCache', 'general'],
-            ['CBModelCache', 'save'],
+            (object)[
+                'name' => 'fetchModelsByID',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'general',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'save',
+                'type' => 'server',
+            ],
         ];
     }
+    /* CBTest_getTests() */
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
 
     /**
      * @return object
