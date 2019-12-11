@@ -53,7 +53,7 @@ final class CBTest {
                             --- pre\n{$resultAsJSON}
                             ---
 
-EOT
+                        EOT
                     ];
                 }
             } else if (
@@ -92,7 +92,7 @@ EOT
                         class name: "{$className}"((br))
                         test name: "{$testName}"
 
-EOT
+                    EOT
                 ];
             }
         } catch (Throwable $throwable) {
@@ -111,7 +111,7 @@ EOT
                 --- pre\n{$stack}
                 ---
 
-EOT;
+            EOT;
 
             $result = (object)[
                 'succeeded' => false,
@@ -283,10 +283,12 @@ EOT;
             $tests = call_user_func($functionName);
 
             if (!is_array($tests)) {
-                throw CBException::createModelIssueException(
-                    'The function '
-                    . $functionName
-                    . '() should return an array.',
+                throw new CBExceptionWithValue(
+                    (
+                        'The function ' .
+                        $functionName .
+                        '() should return an array.'
+                    ),
                     $tests,
                     '2f124f63ff0a25662415c894d2eb9f742a74f5c3'
                 );
@@ -296,18 +298,47 @@ EOT;
                 $test = $tests[$index];
 
                 if (!is_object($test)) {
-                    throw CBException::createModelIssueException(
-                        'The array of tests returned by '
-                        . $functionName
-                        . '() has a non-object value at index '
-                        . $index,
+                    throw new CBExceptionWithValue(
+                        (
+                            'The array of tests returned by ' .
+                            $functionName .
+                            '() has a non-object value at index ' .
+                            $index
+                        ),
                         $tests,
                         'a955214c24c7cb1edbb1dfae513220fb63382f1a'
                     );
                 }
 
-                if (CBModel::valueToString($test, 'testClassName') === '') {
+                $testClassName = CBModel::valueToString(
+                    $test,
+                    'testClassName'
+                );
+
+                if ($testClassName === '') {
                     $test->testClassName = $className;
+                }
+
+                $name = CBModel::valueAsName(
+                    $test,
+                    'name'
+                );
+
+                if ($name === '') {
+                    throw new CBExceptionWithValue(
+                        'The "name" property value for this test is invalid.',
+                        $test,
+                        'b328b5deb67a04e2cef7c1a3aa3ef96cadf57dc3'
+                    );
+                }
+
+                $title = CBModel::valueToString(
+                    $test,
+                    'title'
+                );
+
+                if ($title === '') {
+                    $test->title = "{$test->testClassName} | {$name}";
                 }
             }
             /* for */
@@ -436,7 +467,7 @@ EOT;
             --- pre\n{$expectedResultAsJSONAsMessage}
             ---
 
-EOT;
+        EOT;
 
         return (object)[
             'succeeded' => false,
@@ -476,7 +507,7 @@ EOT;
 
                     ({$actualLine} (code))
 
-EOT;
+                EOT;
 
                 return (object)[
                     'message' => $message,
@@ -508,7 +539,7 @@ EOT;
 
                     ({$expectedLineAsMessage} (code))
 
-EOT;
+                EOT;
 
                 return (object)[
                     'message' => $message,
@@ -524,7 +555,7 @@ EOT;
 
                 The expected result has more lines than the actual result.
 
-EOT;
+            EOT;
 
             return (object)[
                 'message' => $message,
@@ -539,7 +570,7 @@ EOT;
             No difference was found between the actual and expected result. This
             function should only be called if there is a difference.
 
-EOT;
+        EOT;
 
         return (object)[
             'message' => $message,
@@ -594,7 +625,7 @@ EOT;
                 ---
             ---
 
-EOT;
+        EOT;
 
         return (object)[
             'succeeded' => false,
