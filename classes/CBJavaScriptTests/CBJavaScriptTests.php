@@ -4,16 +4,26 @@ final class CBJavaScriptTests {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
+
+
     /**
-     * @return [[<className>, <testName>]]
+     * @return [object]
      */
-    static function CBTest_PHPTests(): array {
+    static function CBTest_getTests(): array {
         return [
-            ['CBJavaScript', 'stackToMessage'],
+            (object)[
+                'name' => 'stackToMessage',
+                'type' => 'server',
+            ],
         ];
     }
+    /* CBTest_getTests() */
+
+
 
     /* -- tests -- -- -- -- -- */
+
+
 
     /**
      * @return object
