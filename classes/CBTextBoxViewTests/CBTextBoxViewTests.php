@@ -13,12 +13,10 @@ final class CBTextBoxViewTests {
         return [
             (object)[
                 'name' => 'upgrade',
-                'title' => 'CBTextBoxView::upgrade()',
                 'type' => 'server',
             ],
         ];
     }
-
 
 
 
@@ -35,30 +33,30 @@ final class CBTextBoxViewTests {
             'titleAsMarkaround' => 'This is the Title',
             'contentAsMarkaround' => <<<EOT
 
-This is the (first) paragraph.
+            This is the (first) paragraph.
 
-This is the second paragraph - that talks about {The Wind
-and the Willows}.
+            This is the second paragraph - that talks about {The Wind
+            and the Willows}.
 
-EOT
+            EOT
         ];
 
         $expected = (object)[
             'className' => 'CBMessageView',
             'markup' => <<<EOT
 
---- h1
-This is the Title
----
+            --- h1
+            This is the Title
+            ---
 
 
-This is the \\(first\\) paragraph.
+            This is the \\(first\\) paragraph.
 
-This is the second paragraph \\- that talks about {The Wind
-and the Willows}.
+            This is the second paragraph \\- that talks about {The Wind
+            and the Willows}.
 
 
-EOT
+            EOT
         ];
 
         CBLog::bufferStart();
