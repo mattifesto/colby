@@ -714,61 +714,71 @@ var Colby = {
                 return promise;
             }
 
-            promise = new Promise(function (resolve, reject) {
-                return go();
+            promise = new Promise(
+                function (resolve) {
+                    return go();
 
-                /**
-                 * @return undefined
-                 */
-                function go() {
+
+                    /* -- closures -- -- -- -- -- */
+
+
 
                     /**
-                     * Errors occuring during this process are likely to be server
-                     * side errors and will be reported on the server. If the
-                     * promise is rejected further requests will be stopped. This
-                     * process does not communicate with the end user.
+                     * @return undefined
                      */
+                    function go() {
 
-                    let args = {
-                        processID: Colby.CBTasks2_processID,
-                    };
+                        /**
+                         * Errors occuring during this process are likely to be server
+                         * side errors and will be reported on the server. If the
+                         * promise is rejected further requests will be stopped. This
+                         * process does not communicate with the end user.
+                         */
 
-                    Colby.callAjaxFunction("CBTasks2", "runNextTask", args)
-                        .then(goAgainOrResolve)
-                        .catch(report);
+                        let args = {
+                            processID: Colby.CBTasks2_processID,
+                        };
 
-                    Colby.CBTasks2_countOfTasksRequested += 1;
-                }
+                        Colby.callAjaxFunction(
+                            "CBTasks2",
+                            "runNextTask",
+                            args
+                        ).then(
+                            goAgainOrResolve
+                        ).catch(
+                            function (error) {
+                                promise = undefined;
 
-                /**
-                 * This function will determine if there is any reason to continue
-                 * to attempt to run tasks. If there is, it will go again; if not,
-                 * it will resolve the promise.
-                 *
-                 * @return undefined
-                 */
-                function goAgainOrResolve(value) {
-                    Colby.CBTasks2_countOfTasksRun += value.tasksRunCount;
+                                Colby.reportError(error);
+                            }
+                        );
 
-                    if (isStopped || value.tasksRunCount === 0) {
-                        promise = undefined;
-                        resolve();
-                    } else {
-                        setTimeout(go, Colby.CBTasks2_delay);
+                        Colby.CBTasks2_countOfTasksRequested += 1;
                     }
+                    /* go() */
+
+
+
+                    /**
+                     * This function will determine if there is any reason to continue
+                     * to attempt to run tasks. If there is, it will go again; if not,
+                     * it will resolve the promise.
+                     *
+                     * @return undefined
+                     */
+                    function goAgainOrResolve(value) {
+                        Colby.CBTasks2_countOfTasksRun += value.tasksRunCount;
+
+                        if (isStopped || value.tasksRunCount === 0) {
+                            promise = undefined;
+                            resolve();
+                        } else {
+                            setTimeout(go, Colby.CBTasks2_delay);
+                        }
+                    }
+                    /* goAgainOrResolve() */
                 }
-
-                /**
-                 * @return undefined
-                 */
-                function report(error) {
-                    promise = undefined;
-
-                    Colby.report(error);
-
-                    reject(error);
-                }
-            });
+            );
 
             return promise;
         }
