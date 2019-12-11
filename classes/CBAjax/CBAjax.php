@@ -28,6 +28,10 @@ final class CBAjax {
      *              This property will only be set if there is an issue with the
      *              Ajax function call.
      *
+     *          sourceCBID: CBID|null
+     *
+     *              developers only
+     *
      *          stackTrace: string
      *
      *              developers only
@@ -147,6 +151,10 @@ final class CBAjax {
                     'the current page will usually remedy this.'
                 );
 
+                $response->sourceCBID = (
+                    'e7041967a2b8b1643aff0009c961265fcf1a5453'
+                );
+
                 $response->userMustLogIn = true;
 
                 echo json_encode($response);
@@ -156,6 +164,10 @@ final class CBAjax {
                 $response->message = (
                     'You do not have permission to call a requested ' .
                     'Ajax function.'
+                );
+
+                $response->sourceCBID = (
+                    '596da90f52ad2590f67d65e885d6d5e85ca590dd'
                 );
 
                 echo json_encode($response);
@@ -218,6 +230,7 @@ final class CBAjax {
 
         if ($isDeveloper) {
             $response->classNameForException = get_class($error);
+            $response->sourceCBID = CBException::throwableToSourceCBID($error);
             $response->stackTrace = Colby::exceptionStackTrace($error);
         }
 
