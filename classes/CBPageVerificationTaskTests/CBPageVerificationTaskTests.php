@@ -228,10 +228,13 @@ final class CBPageVerificationTaskTests {
      * @return object
      */
     static function CBTest_hasColbyPagesRow(): stdClass {
+        CBLog::bufferStart();
+
         $ID = '722880dadcef3874157d086b4eceeae83194173f';
 
         $spec = (object)[
             'className' => 'CBViewPage',
+            'classNameForSettings' => 'CBPageSettingsForResponsivePages',
             'ID' => $ID,
             'title' => 'Test Page For ' . __METHOD__ . '()',
         ];
@@ -277,6 +280,27 @@ final class CBPageVerificationTaskTests {
                 CBModels::deleteByID($ID);
             }
         );
+
+
+        /* test */
+
+        $testName = 'log entries';
+        $actualLogEntries = CBLog::bufferContents();
+
+        CBLog::bufferEndClean();
+
+        $expectedLogEntries = [];
+
+        if ($actualLogEntries != $expectedLogEntries) {
+            return CBTest::resultMismatchFailure(
+                $testName,
+                $actualLogEntries,
+                $expectedLogEntries
+            );
+        }
+
+
+        /* done */
 
         return (object)[
             'succeeded' => true,
