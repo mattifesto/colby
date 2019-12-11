@@ -408,7 +408,6 @@ final class CBTest {
             ['CBImage',                 'upgrade'],
             ['CBMarkaround',            'paragraphToHTML'],
             ['CBPageLayout',            'build'],
-            ['CBPages',                 'stringToDencodedURIPath'],
         ];
 
         $classNames = CBAdmin::fetchClassNames();

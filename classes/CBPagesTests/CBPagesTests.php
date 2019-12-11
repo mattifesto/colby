@@ -2,10 +2,29 @@
 
 final class CBPagesTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'stringToDencodedURIPath',
+                'type' => 'server',
+            ],
+        ];
+    }
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
     /**
-     * @return null
+     * @return object
      */
-    static function stringToDencodedURIPathTest() {
+    static function CBTest_stringToDencodedURIPath(): stdClass {
         $tests = [
             ['',                                    ''],
             ['///////',                             ''],
@@ -23,5 +42,11 @@ final class CBPagesTests {
                 "path \"{$test[1]}\"");
             }
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_stringToDencodedURIPath() */
+
 }
