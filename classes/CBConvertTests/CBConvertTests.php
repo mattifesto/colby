@@ -50,84 +50,95 @@ final class CBConvertTests {
 
 
     /**
-     * @return [[<className>, <testName>]]
-     */
-    static function CBTest_JavaScriptTests(): array {
-        return [
-            ['CBConvert', 'dollarsAsCents'],
-            ['CBConvert', 'stringToLines'],
-            ['CBConvert', 'valueAsInt'],
-            ['CBConvert', 'valueAsModel'],
-            ['CBConvert', 'valueAsMoniker'],
-            ['CBConvert', 'valueAsNumber'],
-            ['CBConvert', 'valueAsObject'],
-            ['CBConvert', 'valueToBool'],
-            ['CBConvert', 'valueToObject'],
-        ];
-    }
-
-
-
-    /**
-     * @return [[<className>, <testName>]]
-     */
-    static function CBTest_PHPTests(): array {
-        return [
-            ['CBConvert', 'stringToStub'],
-            ['CBConvert', 'stringToURI'],
-            ['CBConvert', 'valueAsMoniker'],
-            ['CBConvert', 'valueAsName'],
-            ['CBConvert', 'valueAsNames'],
-            ['CBConvert', 'valueAsNumber'],
-            ['CBConvert', 'valueToBool'],
-        ];
-    }
-    /* CBTest_PHPTests() */
-
-
-
-    /**
      * @return [object]
      */
     static function CBTest_getTests(): array {
         return [
             (object)[
                 'name' => 'centsToDollars',
-                'title' => 'CBConvert.centsToDollars()',
-            ],
-            (object)[
-                'name' => 'centsToDollars',
-                'title' => 'CBConvert::centsToDollars()',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'linesToParagraphs',
-                'title' => 'ColbyConvert::linesToParagraphs()',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'stringToCleanLine',
-                'title' => 'CBConvert.stringToCleanLine()',
-            ],
-            (object)[
-                'name' => 'stringToCleanLine',
-                'title' => 'CBConvert::stringToCleanLine()',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'stringToLines',
-                'title' => 'CBConvert::stringToLines()',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'stringToStub',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'stringToURI',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'valueAsInt',
-                'title' => 'CBConvert::valueAsInt()',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'valueAsModel',
-                'title' => 'CBConvert::valueAsModel',
                 'type' => 'server',
+            ],
+            (object)[
+                'name' => 'valueAsMoniker',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'valueAsName',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'valueAsNames',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'valueAsNumber',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'valueToBool',
+                'type' => 'server',
+            ],
+
+            (object)[
+                'name' => 'centsToDollars',
+            ],
+            (object)[
+                'name' => 'dollarsAsCents',
+            ],
+            (object)[
+                'name' => 'stringToCleanLine',
+            ],
+            (object)[
+                'name' => 'stringToLines',
+            ],
+            (object)[
+                'name' => 'valueAsInt',
+            ],
+            (object)[
+                'name' => 'valueAsModel',
+            ],
+            (object)[
+                'name' => 'valueAsMoniker',
+            ],
+            (object)[
+                'name' => 'valueAsNumber',
+            ],
+            (object)[
+                'name' => 'valueAsObject',
+            ],
+            (object)[
+                'name' => 'valueToBool',
+            ],
+            (object)[
+                'name' => 'valueToObject',
             ],
         ];
     }
