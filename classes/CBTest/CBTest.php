@@ -409,9 +409,6 @@ final class CBTest {
             ['CBMarkaround',            'paragraphToHTML'],
             ['CBPageLayout',            'build'],
             ['CBPages',                 'stringToDencodedURIPath'],
-            ['ColbyMarkaroundParser',   'orderedList'],
-            ['ColbyMarkaroundParser',   'paragraph'],
-            ['ColbyMarkaroundParser',   'unorderedList'],
         ];
 
         $classNames = CBAdmin::fetchClassNames();
