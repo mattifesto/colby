@@ -395,12 +395,7 @@ final class CBTest {
      * @return [object]
      */
     static function PHPTests(): array {
-        $tests = [
-            ['CBDataStore',             'createAndDelete'],
-            ['CBDataStore',             'directoryNameFromDocumentRoot'],
-            ['CBDataStore',             'toURL'],
-            ['CBDataStore',             'URIToID'],
-        ];
+        $tests = [];
 
         $classNames = CBAdmin::fetchClassNames();
 
