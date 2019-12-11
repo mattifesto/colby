@@ -400,11 +400,6 @@ final class CBTest {
             ['CBDataStore',             'directoryNameFromDocumentRoot'],
             ['CBDataStore',             'toURL'],
             ['CBDataStore',             'URIToID'],
-            ['CBDB',                    'hex160ToSQL'],
-            ['CBDB',                    'optional'],
-            ['CBDB',                    'SQLToArray'],
-            ['CBDB',                    'SQLToAssociativeArray'],
-            ['CBDB',                    'SQLToValue'],
         ];
 
         $classNames = CBAdmin::fetchClassNames();

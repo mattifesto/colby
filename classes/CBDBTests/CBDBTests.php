@@ -12,6 +12,26 @@ final class CBDBTests {
     static function CBTest_getTests(): array {
         return [
             (object)[
+                'name' => 'hex160ToSQL',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'optional',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'SQLToArray',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'SQLToAssociativeArray',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'SQLToValue',
+                'type' => 'server',
+            ],
+            (object)[
                 'name' => 'SQLToValue2',
                 'type' => 'server',
             ],
@@ -26,15 +46,18 @@ final class CBDBTests {
 
 
     /**
-     * @return null
+     * @return object
      */
-    static function hex160ToSQLTest() {
+    static function CBTest_hex160ToSQL(): stdClass {
         $hex160     = '88ae5c11bcb70f15a3ec446cc9144ada7e6e2838';
         $expected   = "UNHEX('{$hex160}')";
         $actual     = CBDB::hex160ToSQL($hex160);
 
         if ($actual != $expected) {
-            throw new Exception("The actual result `{$actual}` does not match the expected result `$expected`.");
+            throw new Exception(
+                "The actual result `{$actual}` does not match " .
+                "the expected result `$expected`."
+            );
         }
 
         $passed = false;
@@ -46,7 +69,9 @@ final class CBDBTests {
         }
 
         if (!$passed) {
-            throw new Exception('A non 160-bit hexadecimal number was allowed.');
+            throw new Exception(
+                'A non 160-bit hexadecimal number was allowed.'
+            );
         }
 
         $passed = false;
@@ -60,14 +85,21 @@ final class CBDBTests {
         if (!$passed) {
             throw new Exception('A non hexadecimal character was allowed.');
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_hex160ToSQL() */
+
+
 
     /**
      * This also tests `CBDB::stringToSQL`.
      *
-     * @return null
+     * @return object
      */
-    static function optionalTest() {
+    static function CBTest_optional(): stdClass {
         $func       = CBDB::optional('CBDB::stringToSQL');
         $input      = ['Fred', '"Hello"', null];
         $expected   = ["'Fred'", "'\\\"Hello\\\"'", 'NULL'];
@@ -77,14 +109,24 @@ final class CBDBTests {
             $actual     = json_encode($actual);
             $expected   = json_encode($expected);
 
-            throw new Exception("The actual results: {$actual} do no match the expected results: {$expected}");
+            throw new Exception(
+                "The actual results: {$actual} do no match " .
+                "the expected results: {$expected}"
+            );
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_optional() */
+
+
 
     /**
-     * @return null
+     * @return object
      */
-    static function SQLToArrayTest() {
+    static function CBTest_SQLToArray(): stdClass {
         $SQL = <<<EOT
 
             CREATE TEMPORARY TABLE `SQLToArrayTest`
@@ -96,7 +138,7 @@ final class CBDBTests {
             DEFAULT CHARSET=utf8mb4
             COLLATE=utf8mb4_unicode_520_ci
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
 
@@ -112,21 +154,33 @@ EOT;
 
         Colby::query("INSERT INTO `SQLToArrayTest` VALUES {$originalAsSQL}");
 
-        $retrieved      = CBDB::SQLToArray('SELECT LOWER(HEX(`ID`)) FROM `SQLToArrayTest`');
+        $retrieved      = CBDB::SQLToArray(
+            'SELECT LOWER(HEX(`ID`)) FROM `SQLToArrayTest`'
+        );
+
         $originalOnly   = implode(',', array_diff($original, $retrieved));
         $retrievedOnly  = implode(',', array_diff($retrieved, $original));
 
         if ($originalOnly || $retrievedOnly) {
             throw new Exception(
                 "The original array and the retrieve array don't match. " .
-                "Items only in original: {$originalOnly} Items only in retrieved: {$retrievedOnly}");
+                "Items only in original: {$originalOnly} Items only in " .
+                "retrieved: {$retrievedOnly}"
+            );
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_SQLToArray() */
+
+
 
     /**
-     * @return null
+     * @return object
      */
-    static function SQLToAssociativeArrayTest() {
+    static function CBTest_SQLToAssociativeArray(): stdClass {
         $SQL = <<<EOT
 
             CREATE TEMPORARY TABLE `SQLToAssociativeArrayTest`
@@ -139,7 +193,7 @@ EOT;
             DEFAULT CHARSET=utf8mb4
             COLLATE=utf8mb4_unicode_520_ci
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
 
@@ -154,25 +208,40 @@ EOT;
 
         $originalAsSQL = implode(',', $originalAsSQL);
 
-        Colby::query("INSERT INTO `SQLToAssociativeArrayTest` VALUES {$originalAsSQL}");
+        Colby::query(
+            "INSERT INTO `SQLToAssociativeArrayTest` VALUES {$originalAsSQL}"
+        );
 
-        $retrieved      = CBDB::SQLToArray('SELECT LOWER(HEX(`ID`)), `value` FROM `SQLToAssociativeArrayTest`');
+        $retrieved = CBDB::SQLToArray(
+            'SELECT LOWER(HEX(`ID`)), `value` FROM `SQLToAssociativeArrayTest`'
+        );
+
         $originalOnly   = array_diff_assoc($original, $retrieved);
         $retrievedOnly  = array_diff_assoc($retrieved, $original);
 
         if ($originalOnly || $retrievedOnly) {
             $originalOnly   = json_encode($originalOnly);
             $retrievedOnly  = json_encode($retrievedOnly);
+
             throw new Exception(
                 "The original array and the retrieve array don't match. " .
-                "Items only in original: {$originalOnly} Items only in retrieved: {$retrievedOnly}");
+                "Items only in original: {$originalOnly} Items only " .
+                "in retrieved: {$retrievedOnly}"
+            );
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_SQLToAssociativeArray() */
+
+
 
     /**
-     * @return null
+     * @return object
      */
-    static function SQLToValueTest() {
+    static function CBTest_SQLToValue(): stdClass {
         $SQL = <<<EOT
 
             CREATE TEMPORARY TABLE `SQLToValueTest`
@@ -184,22 +253,33 @@ EOT;
             DEFAULT CHARSET=utf8mb4
             COLLATE=utf8mb4_unicode_520_ci
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
 
         $original = '505b00de474d510d5075a06a94016ed0ce320475';
 
-        Colby::query("INSERT INTO `SQLToValueTest` VALUES (UNHEX('{$original}'))");
+        Colby::query(
+            "INSERT INTO `SQLToValueTest` VALUES (UNHEX('{$original}'))"
+        );
 
-        $retrieved = CBDB::SQLToValue('SELECT LOWER(HEX(`ID`)) FROM `SQLToValueTest`');
+        $retrieved = CBDB::SQLToValue(
+            'SELECT LOWER(HEX(`ID`)) FROM `SQLToValueTest`'
+        );
 
         if ($original != $retrieved) {
             throw new Exception(
                 "The original value and the retrieve value don't match. " .
                 "Original: '{$original}' Retrieved: '{$retrieved}'");
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_SQLToValue() */
+
+
 
     /**
      * @return object
@@ -219,7 +299,7 @@ EOT;
             DEFAULT CHARSET=utf8mb4
             COLLATE=utf8mb4_unicode_520_ci
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
 
@@ -232,13 +312,17 @@ EOT;
             FROM        {$tableName}
             ORDER BY    numcol
 
-EOT;
+        EOT;
 
         $expectedResult = null;
         $actualResult = CBDB::SQLToValue2($SQL);
 
         if ($actualResult !== $expectedResult) {
-            return CBTest::resultMismatchFailure('no rows', $actualResult, $expectedResult);
+            return CBTest::resultMismatchFailure(
+                'no rows',
+                $actualResult,
+                $expectedResult
+            );
         }
 
 
@@ -253,7 +337,7 @@ EOT;
             (UNHEX('{$binary1}'), NULL, 1, 'one'),
             (UNHEX('{$binary2}'), NULL, 2, 'two')
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
 
@@ -273,13 +357,17 @@ EOT;
             FROM        {$tableName}
             ORDER BY    numcol
 
-EOT;
+        EOT;
 
         $expectedResult = $binary1;
         $actualResult = bin2hex(CBDB::SQLToValue2($SQL));
 
         if ($actualResult !== $expectedResult) {
-            return CBTest::resultMismatchFailure('fetch binarycol', $actualResult, $expectedResult);
+            return CBTest::resultMismatchFailure(
+                'fetch binarycol',
+                $actualResult,
+                $expectedResult
+            );
         }
 
 
@@ -291,13 +379,17 @@ EOT;
             FROM        {$tableName}
             ORDER BY    numcol
 
-EOT;
+        EOT;
 
         $expectedResult = null;
         $actualResult = CBDB::SQLToValue2($SQL);
 
         if ($actualResult !== $expectedResult) {
-            return CBTest::resultMismatchFailure('fetch nullcol', $actualResult, $expectedResult);
+            return CBTest::resultMismatchFailure(
+                'fetch nullcol',
+                $actualResult,
+                $expectedResult
+            );
         }
 
 
@@ -309,13 +401,17 @@ EOT;
             FROM        {$tableName}
             ORDER BY    numcol
 
-EOT;
+        EOT;
 
         $expectedResult = '1';
         $actualResult = CBDB::SQLToValue2($SQL);
 
         if ($actualResult !== $expectedResult) {
-            return CBTest::resultMismatchFailure('fetch numcol', $actualResult, $expectedResult);
+            return CBTest::resultMismatchFailure(
+                'fetch numcol',
+                $actualResult,
+                $expectedResult
+            );
         }
 
 
@@ -327,17 +423,23 @@ EOT;
             FROM        {$tableName}
             ORDER BY    numcol
 
-EOT;
+        EOT;
 
         $expectedResult = 'one';
         $actualResult = CBDB::SQLToValue2($SQL);
 
         if ($actualResult !== $expectedResult) {
-            return CBTest::resultMismatchFailure('fetch stringcol', $actualResult, $expectedResult);
+            return CBTest::resultMismatchFailure(
+                'fetch stringcol',
+                $actualResult,
+                $expectedResult
+            );
         }
 
         return (object)[
             'succeeded' => true,
         ];
     }
+    /* CBTest_SQLToValue2() */
+
 }
