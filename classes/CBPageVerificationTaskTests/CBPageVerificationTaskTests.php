@@ -85,11 +85,24 @@ final class CBPageVerificationTaskTests {
             }
         );
 
-        CBDB::transaction(
-            function () use ($spec) {
-                CBModels::save($spec);
-            }
-        );
+        /**
+         * Save the test model. Saving performs an upgrade which will produce
+         * log entries which we don't want saved in the log so buffer and
+         * dispose of them.
+         */
+
+        {
+            CBLog::bufferStart();
+
+            CBDB::transaction(
+                function () use ($spec) {
+                    CBModels::save($spec);
+                }
+            );
+
+            CBLog::bufferEndClean();
+        }
+
 
         CBLog::bufferStart();
 
