@@ -13,17 +13,14 @@ final class CBViewPageTests {
         return [
             (object)[
                 'name' => 'general',
-                'title' => 'CBViewPage',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'save',
-                'title' => 'CBViewPage Save',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'upgrade',
-                'title' => 'CBViewPage Upgrade',
                 'type' => 'server',
             ],
         ];
@@ -134,6 +131,7 @@ final class CBViewPageTests {
 
         $spec = (object)[
             'className' => 'CBViewPage',
+            'classNameForSettings' => 'CBPageSettingsForResponsivePages',
             'ID' => $ID,
             'title' => $title,
             'classNameForKind' => $kind,
