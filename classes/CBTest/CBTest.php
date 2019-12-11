@@ -18,19 +18,24 @@ final class CBTest {
      */
     static function CBAjax_run($args): stdClass {
         try {
-            $className = CBModel::valueToString($args, 'className');
-            $testName = CBModel::valueToString($args, 'testName');
+            $className = CBModel::valueToString(
+                $args,
+                'className'
+            );
+
+            $testName = CBModel::valueToString(
+                $args,
+                'testName'
+            );
+
+            CBTest::checkForUnsupportedTestImplementation(
+                $className,
+                $testName
+            );
 
             if (
                 is_callable(
                     $function = "{$className}::CBTest_{$testName}"
-                )
-
-                ||
-
-                /* deprecated */
-                is_callable(
-                    $function = "{$className}Tests::CBTest_{$testName}"
                 )
             ) {
                 $result = call_user_func($function);
@@ -169,6 +174,30 @@ final class CBTest {
 
 
     /* -- functions -- -- -- -- -- */
+
+
+
+    /**
+     * @param $className
+     * @param $testName
+     *
+     * @return void
+     */
+    static function checkForUnsupportedTestImplementation(
+        string $className,
+        string $testName
+    ): void {
+        $functionName = "{$className}Tests::CBTest_{$testName}";
+
+        if (is_callable($functionName)) {
+            throw new CBExceptionWithValue(
+                'This test interface implementation is no longer supported.',
+                $functionName . '()',
+                '1b9c4378e95cba772465e2295379ce6a83b2ebdb'
+            );
+        }
+    }
+    /* checkForUnsupportedTestImplementation() */
 
 
 
