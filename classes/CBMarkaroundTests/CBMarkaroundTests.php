@@ -2,10 +2,33 @@
 
 class CBMarkaroundTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
     /**
-     * @return null
+     * @return [object]
      */
-    static function paragraphToHTMLTest() {
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'paragraphToHTML',
+                'type' => 'server',
+            ],
+        ];
+    }
+    /* CBTest_getTests() */
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_paragraphToHTML(): stdClass {
         $tests[]    = array('Hello \\\\ world!',
                             'Hello \\ world!',
                             'Hello \\ world!');
@@ -94,5 +117,11 @@ class CBMarkaroundTests {
                 throw new RuntimeException($s);
             }
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_paragraphToHTML() */
+
 }

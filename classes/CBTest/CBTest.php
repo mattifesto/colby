@@ -406,7 +406,6 @@ final class CBTest {
             ['CBDB',                    'SQLToAssociativeArray'],
             ['CBDB',                    'SQLToValue'],
             ['CBImage',                 'upgrade'],
-            ['CBMarkaround',            'paragraphToHTML'],
         ];
 
         $classNames = CBAdmin::fetchClassNames();
