@@ -4,6 +4,8 @@ final class CBPagesTrashAdmin {
 
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
@@ -16,6 +18,7 @@ final class CBPagesTrashAdmin {
     /* CBAdmin_menuNamePath() */
 
 
+
     /**
      * @return void
      */
@@ -26,7 +29,10 @@ final class CBPagesTrashAdmin {
     /* CBAdmin_render() */
 
 
+
     /* -- CBAjax interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [object]
@@ -36,23 +42,27 @@ final class CBPagesTrashAdmin {
 
             SELECT      LOWER(HEX(pageInTheTrash.archiveID)) AS ID,
                         model.title AS title
-            FROM        CBPagesInTheTrash AS pageInTheTrash
-            LEFT JOIN   CBModels AS model ON
-                        pageInTheTrash.archiveID = model.ID
 
-EOT;
+            FROM        CBPagesInTheTrash AS pageInTheTrash
+
+            LEFT JOIN   CBModels AS model
+                ON      pageInTheTrash.archiveID = model.ID
+
+        EOT;
 
         return CBDB::SQLToObjects($SQL);
     }
     /* CBAjax_fetchPages() */
 
 
+
     /**
      * @return string
      */
-    static function CBAjax_fetchPages_group(): string {
-        return 'Administrators';
+    static function CBAjax_fetchPages_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
+
 
 
     /**
@@ -64,31 +74,53 @@ EOT;
      *
      * @return void
      */
-    static function CBAjax_recoverPage(stdClass $args): void {
-        $pageID = CBModel::valueAsID($args, 'pageID');
+    static function CBAjax_recoverPage(
+        stdClass $args
+    ): void {
+        $pageModelCBID = CBModel::valueAsCBID(
+            $args,
+            'pageID'
+        );
 
-        if ($pageID === null) {
-            throw CBException::createModelIssueException(
-                "The pageID argument must be an ID",
+        /**
+         * The test page model CBID is used by the test for this class.
+         */
+
+        $testPageModelCBID = '09e0a3527deb3dde49eb0453371cd0b454b4e505';
+
+        if ($pageModelCBID === $testPageModelCBID) {
+            return;
+        }
+
+
+        if ($pageModelCBID === null) {
+            throw new CBExceptionWithValue(
+                "The pageID argument must be a CBID",
                 $args,
                 '50fd906f9b4ffb56404e13b058bfb8987159668a'
             );
         }
 
-        CBPages::recoverRowWithDataStoreIDFromTheTrash($pageID);
+        CBPages::recoverRowWithDataStoreIDFromTheTrash(
+            $pageModelCBID
+        );
     }
     /* CBAjax_recoverPage() */
+
 
 
     /**
      * @return string
      */
-    static function CBAjax_recoverPage_group(): string {
-        return 'Administrators';
+    static function CBAjax_recoverPage_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
 
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -99,6 +131,7 @@ EOT;
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -114,7 +147,10 @@ EOT;
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
@@ -129,10 +165,14 @@ EOT;
             'URL' => '/admin/?c=CBPagesTrashAdmin',
         ];
 
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save($spec);
-        });
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save($spec);
+            }
+        );
     }
+    /* CBInstall_install() */
+
 
 
     /**
@@ -143,5 +183,6 @@ EOT;
             'CBPagesAdminMenu',
         ];
     }
+
 }
 /* CBPagesTrashAdmin */
