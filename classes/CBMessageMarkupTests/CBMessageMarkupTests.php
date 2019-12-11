@@ -4,6 +4,8 @@ final class CBMessageMarkupTests {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
@@ -13,6 +15,7 @@ final class CBMessageMarkupTests {
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -34,6 +37,8 @@ final class CBMessageMarkupTests {
         ];
     }
 
+
+
     /**
      * @return [string]
      */
@@ -44,35 +49,62 @@ final class CBMessageMarkupTests {
         ];
     }
 
+
+
     /* -- CBTest interfaces -- -- -- -- -- */
 
-    /**
-     * @return [[<className>, <testName>]]
-     */
-    static function CBTest_JavaScriptTests(): array {
-        return [
-            ['CBMessageMarkup', 'messageToHTML'],
-            ['CBMessageMarkup', 'messageToText'],
-            ['CBMessageMarkup', 'paragraphToText'],
-            ['CBMessageMarkup', 'singleLineMarkupToText'],
-            ['CBMessageMarkup', 'stringToMarkup'],
-        ];
-    }
+
 
     /**
-     * @return [[<class>, <test>]]
+     * @return [object]
      */
-    static function CBTest_PHPTests(): array {
+    static function CBTest_getTests(): array {
         return [
-            ['CBMessageMarkup', 'messageToHTML'],
-            ['CBMessageMarkup', 'messageToText'],
-            ['CBMessageMarkup', 'paragraphToText'],
-            ['CBMessageMarkup', 'singleLineMarkupToText'],
-            ['CBMessageMarkup', 'stringToMarkup'],
+            (object)[
+                'name' => 'messageToHTML',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'messageToText',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'paragraphToText',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'singleLineMarkupToText',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'stringToMarkup',
+                'type' => 'server',
+            ],
+
+            (object)[
+                'name' => 'messageToHTML',
+            ],
+            (object)[
+                'name' => 'messageToText',
+            ],
+            (object)[
+                'name' => 'paragraphToText',
+            ],
+            (object)[
+                'name' => 'singleLineMarkupToText',
+            ],
+            (object)[
+                'name' => 'stringToMarkup',
+            ],
         ];
     }
+    /* CBTest_getTests() */
+
+
 
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @param string $string 1
