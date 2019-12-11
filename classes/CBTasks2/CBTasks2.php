@@ -32,8 +32,8 @@ final class CBTasks2 {
     /**
      * @return string
      */
-    static function CBAjax_fetchStatus_group(): string {
-        return 'Administrators';
+    static function CBAjax_fetchStatus_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
 
 
@@ -105,8 +105,8 @@ final class CBTasks2 {
     /**
      * @return string
      */
-    static function CBAjax_runNextTask_group(): string {
-        return 'Public';
+    static function CBAjax_runNextTask_getUserGroupClassName(): string {
+        return 'CBPublicUserGroup';
     }
 
 
