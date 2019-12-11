@@ -101,14 +101,17 @@ final class CBSitePreferences {
             'message' => 'The front page was changed successfully.',
         ];
     }
+    /* CBAjax_setFrontPageID() */
+
 
 
     /**
      * @return string
      */
-    static function CBAjax_setFrontPageID_group(): string {
-        return 'Administrators';
+    static function CBAjax_setFrontPageID_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
+
 
 
     /**
