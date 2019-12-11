@@ -2,10 +2,33 @@
 
 final class CBPageLayoutTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
     /**
-     * @return null
+     * @return [object]
      */
-    static function buildTest() {
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'build',
+                'type' => 'server',
+            ],
+        ];
+    }
+    /* CBTest_getTests() */
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_build(): stdClass {
         $spec1 = (object)[
             'className' => 'CBPageLayout',
         ];
@@ -48,16 +71,23 @@ final class CBPageLayoutTests {
                 --- pre\n{$actualModel1AsJSON}
                 ---
 
-EOT;
+            EOT;
 
-            CBLog::log((object)[
-                'className' => __CLASS__,
-                'message' => $message,
-                'severity' => 3,
-            ]);
+            CBLog::log(
+                (object)[
+                    'className' => __CLASS__,
+                    'message' => $message,
+                    'severity' => 3,
+                ]
+            );
 
             throw new Exception($firstLine);
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
-    /* buildTest() */
+    /* CBTest_build() */
+
 }
