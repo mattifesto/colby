@@ -8,7 +8,11 @@ final class CBModelsTests {
         '95397735c2fd6d7e75a2d059fededae693665f50'
     ];
 
+
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -19,6 +23,7 @@ final class CBModelsTests {
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -35,41 +40,49 @@ final class CBModelsTests {
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- CBTest interfaces -- -- -- -- -- */
 
-    /**
-     * @return [[<className>, <testName>]]
-     */
-    static function CBTest_PHPTests(): array {
-        return [
-            ['CBModels', 'fetchModelByID'],
-            ['CBModels', 'fetchModelsByID'],
-            ['CBModels', 'saveSpecWithoutID'],
-        ];
-    }
+
 
     /**
-     * @return [[<className>, <testName>]]
+     * @return [object]
      */
     static function CBTest_getTests(): array {
         return [
             (object)[
-                'title' => 'CBModels general tests',
+                'name' => 'fetchModelByID',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'fetchModelsByID',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'saveSpecWithoutID',
+                'type' => 'server',
+            ],
+
+            (object)[
                 'name' => 'general',
             ],
             (object)[
-                'title' => 'CBModels save after save',
                 'name' => 'saveAfterSave',
             ],
         ];
     }
+    /* CBTest_getTests() */
+
+
 
     /* -- tests -- -- -- -- -- */
 
+
+
     /**
-     * @return null
+     * @return object
      */
-    static function fetchModelByIDTest() {
+    static function CBTest_fetchModelByID(): stdClass {
         Colby::query('START TRANSACTION');
         CBModelsTests::createTestEnvironment();
 
@@ -94,13 +107,19 @@ final class CBModelsTests {
         }
 
         Colby::query('ROLLBACK');
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_fetchModelByID() */
+
 
 
     /**
-     * @return null
+     * @return object
      */
-    static function fetchModelsByIDTest() {
+    static function CBTest_fetchModelsByID(): stdClass {
         Colby::query('START TRANSACTION');
         CBModelsTests::createTestEnvironment();
 
@@ -153,14 +172,20 @@ final class CBModelsTests {
         }
 
         Colby::query('ROLLBACK');
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_fetchModelsByID() */
+
 
 
     /**
      * CBModel::buildel() is allowed to return a model without an ID, however
      * these models cannot be saved.
      */
-    static function saveSpecWithoutIDTest() {
+    static function CBTest_saveSpecWithoutID(): stdClass {
         $exceptionWasThrown = false;
 
         try {
@@ -198,9 +223,18 @@ final class CBModelsTests {
                 'This test expects an exception to be thrown.'
             );
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_saveSpecWithoutID() */
+
+
 
     /* -- functions  -- -- -- -- -- */
+
+
 
     /**
      * This function assumes that the CBModels functionality is working. The
@@ -231,6 +265,7 @@ final class CBModelsTests {
         CBModels::save(array_values($specs));
     }
 }
+
 
 
 final class CBModelsTests_TestClass {
@@ -303,6 +338,7 @@ final class CBModelsTests_TestClass {
     /* checkModelWithID() */
 
 
+
     /**
      * @param object $spec
      *
@@ -318,4 +354,5 @@ final class CBModelsTests_TestClass {
         return $model;
     }
     /* CBModel_build() */
+
 }
