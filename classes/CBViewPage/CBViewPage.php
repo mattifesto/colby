@@ -280,6 +280,7 @@ final class CBViewPage {
 
             if (empty($defaultPageSettingsClassName)) {
                 $severity = 4;
+                $sourceCBID = 'b2eb6c71db6f1f6c0520de62f44dbff06df9295d';
 
                 $message = <<<EOT
 
@@ -291,8 +292,10 @@ final class CBViewPage {
 
                 EOT;
             } else {
-                $severity = 6;
                 $spec->classNameForSettings = $defaultPageSettingsClassName;
+
+                $severity = 4;
+                $sourceCBID = 'c63254dafb46aaf3bd689553c9d699c5a9e62062';
 
                 $message = <<<EOT
 
@@ -305,9 +308,10 @@ final class CBViewPage {
 
             CBLog::log(
                 (object)[
-                    'className' => __CLASS__,
-                    'severity' => $severity,
                     'message' => $message,
+                    'severity' => $severity,
+                    'sourceClassName' => __CLASS__,
+                    'sourceID' => $sourceCBID,
                 ]
             );
         }
