@@ -255,6 +255,23 @@ var CBConvert = {
     /**
      * @param mixed value
      *
+     * @return CBID|undefined
+     */
+    valueAsCBID: function (value) {
+        if (typeof value === "string") {
+            if (value.match(/^[a-f0-9]{40}$/)) {
+                return value;
+            }
+        }
+
+        return undefined;
+    },
+
+
+
+    /**
+     * @param mixed value
+     *
      * @return function|undefined
      */
     valueAsFunction: function (value) {
@@ -265,20 +282,16 @@ var CBConvert = {
         }
     },
 
+
+
     /**
-     * @param mixed value
-     *
-     * @return ID|undefined
+     * @deprecated use CBConvert.valueAsCBID()
      */
     valueAsID: function (value) {
-        if (typeof value === "string") {
-            if (value.match(/^[a-f0-9]{40}$/)) {
-                return value;
-            }
-        }
-
-        return undefined;
+        return CBConvert.valueAsCBID(value);
     },
+
+
 
     /**
      * @param mixed value
