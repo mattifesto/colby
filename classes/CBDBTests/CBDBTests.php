@@ -2,6 +2,29 @@
 
 final class CBDBTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [object]
+     */
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'SQLToValue2',
+                'type' => 'server',
+            ],
+        ];
+    }
+    /* CBTest_getTests() */
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
     /**
      * @return null
      */
@@ -56,15 +79,6 @@ final class CBDBTests {
 
             throw new Exception("The actual results: {$actual} do no match the expected results: {$expected}");
         }
-    }
-
-    /**
-     * @return [[<class name>, <test name>]]
-     */
-    static function CBTest_phpTests(): array {
-        return [
-            ['CBDB', 'SQLToValue2'],
-        ];
     }
 
     /**
