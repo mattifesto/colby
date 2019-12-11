@@ -2,10 +2,33 @@
 
 final class CBImageTests {
 
+    /* -- CBTest interfaces -- -- -- -- -- */
+
+
+
     /**
-     * @return void
+     * @return [object]
      */
-    static function upgradeTest(): void {
+    static function CBTest_getTests(): array {
+        return [
+            (object)[
+                'name' => 'upgrade',
+                'type' => 'server',
+            ],
+        ];
+    }
+    /* CBTest_getTests() */
+
+
+
+    /* -- tests -- -- -- -- -- */
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_upgrade(): stdClass {
         $originalSpec = (object)[
             'ID' => 'bf0c7e133bf1a4bd05a3490a6c05d8fa34f5833f',
             'base' => 'original',
@@ -42,15 +65,26 @@ final class CBImageTests {
                 --- pre\n{$expectedJSON}
                 ---
 
-EOT;
+            EOT;
 
-            CBLog::log((object)[
-                'className' => __CLASS__,
-                'message' => $message,
-                'severity' => 3,
-            ]);
+            CBLog::log(
+                (object)[
+                    'className' => __CLASS__,
+                    'message' => $message,
+                    'severity' => 3,
+                ]
+            );
 
-            throw new Exception("The upgraded CBImage spec does not match what was expected. See log entry for details.");
+            throw new Exception(
+                "The upgraded CBImage spec does not match what " .
+                "was expected. See log entry for details."
+            );
         }
+
+        return (object)[
+            'succeeded' => true,
+        ];
     }
+    /* CBTest_upgrade() */
+
 }
