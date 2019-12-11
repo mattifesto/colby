@@ -62,17 +62,6 @@ final class CBTest {
                     ];
                 }
             } else if (
-                is_callable(
-                    $function = "{$className}Tests::{$testName}Test"
-                )
-            ) {
-                /* deprecated */
-                $result = call_user_func($function);
-                $result = (object)[
-                    'succeeded' => empty($result->failed),
-                    'message' => CBModel::valueToString($result, 'message'),
-                ];
-            } else if (
                 $testName === ''
 
                 &&
@@ -194,6 +183,16 @@ final class CBTest {
                 'This test interface implementation is no longer supported.',
                 $functionName . '()',
                 '1b9c4378e95cba772465e2295379ce6a83b2ebdb'
+            );
+        }
+
+        $functionName = "{$className}Tests::{$testName}Test";
+
+        if (is_callable($functionName)) {
+            throw new CBExceptionWithValue(
+                'This test interface implementation is no longer supported.',
+                $functionName . '()',
+                '259d228d6326f55d67e8848d5b88c0d46ee3fb25'
             );
         }
     }
