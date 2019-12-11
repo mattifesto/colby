@@ -367,7 +367,16 @@ final class CBTest {
                 );
 
                 if ($title === '') {
-                    $test->title = "{$test->testClassName} | {$name}";
+                    $type = CBModel::valueToString(
+                        $test,
+                        'type'
+                    );
+
+                    if (empty($type)) {
+                        $type = 'client';
+                    }
+
+                    $test->title = "{$test->testClassName} | {$name} | {$type}";
                 }
             }
             /* for */
