@@ -23,6 +23,8 @@ var CBModel = {
         );
     },
 
+
+
     /**
      * This function performs a deep clone of a model by serializing it to JSON
      * and then unserializing it. Since models are always serialized to JSON
@@ -65,6 +67,8 @@ var CBModel = {
 
         return definedKeys;
     },
+
+
 
     /**
      * This function determines if two models or model-like values are equal.
@@ -151,6 +155,8 @@ var CBModel = {
         }
     },
 
+
+
     /**
      * @param object model1
      * @param object model2
@@ -199,6 +205,7 @@ var CBModel = {
     /* value() */
 
 
+
     /**
      * @return function|undefined
      */
@@ -210,15 +217,15 @@ var CBModel = {
     /* valueAsFunction() */
 
 
+
     /**
-     * @param mixed model
-     * @param string keyPath
-     *
-     * @return ID|undefined
+     * @deprecated use CBMode.valueAsCBID()
      */
     valueAsID: function (model, keyPath) {
-        return CBConvert.valueAsID(CBModel.value(model, keyPath));
+        return CBModel.valueAsCBID(model, keyPath);
     },
+
+
 
     /**
      * @param mixed model
@@ -230,6 +237,8 @@ var CBModel = {
         return CBConvert.valueAsInt(CBModel.value(model, keyPath));
     },
 
+
+
     /**
      * @param mixed model
      * @param string keyPath
@@ -239,6 +248,8 @@ var CBModel = {
     valueAsModel: function (model, keyPath) {
         return CBConvert.valueAsModel(CBModel.value(model, keyPath));
     },
+
+
 
     /**
      * @param mixed model
@@ -250,6 +261,8 @@ var CBModel = {
         return CBConvert.valueAsMoniker(CBModel.value(model, keyPath));
     },
 
+
+
     /**
      * @param mixed model
      * @param string keyPath
@@ -259,6 +272,8 @@ var CBModel = {
     valueAsNumber: function (model, keyPath) {
         return CBConvert.valueAsNumber(CBModel.value(model, keyPath));
     },
+
+
 
     /**
      * @param mixed model
@@ -270,6 +285,22 @@ var CBModel = {
         return CBConvert.valueAsObject(CBModel.value(model, keyPath));
     },
 
+
+
+    /**
+     * @param mixed model
+     * @param string keyPath
+     *
+     * @return CBID|undefined
+     */
+    valueAsCBID: function (model, keyPath) {
+        return CBConvert.valueAsCBID(
+            CBModel.value(model, keyPath)
+        );
+    },
+
+
+
     /**
      * @param mixed model
      * @param string keyPath
@@ -279,6 +310,8 @@ var CBModel = {
     valueToArray: function (model, keyPath) {
         return CBConvert.valueToArray(CBModel.value(model, keyPath));
     },
+
+
 
     /**
      * @param mixed model
