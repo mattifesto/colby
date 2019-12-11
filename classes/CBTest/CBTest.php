@@ -33,12 +33,10 @@ final class CBTest {
                 $testName
             );
 
-            if (
-                is_callable(
-                    $function = "{$className}::CBTest_{$testName}"
-                )
-            ) {
-                $result = call_user_func($function);
+            $functionName = "{$className}::CBTest_{$testName}";
+
+            if (is_callable($functionName)) {
+                $result = call_user_func($functionName);
 
                 if (!is_object($result)) {
                     $resultAsJSON = CBConvert::valueToPrettyJSON($result);
@@ -61,21 +59,6 @@ final class CBTest {
                         EOT
                     ];
                 }
-            } else if (
-                $testName === ''
-
-                &&
-
-                is_callable(
-                    $function = "{$className}Tests::test"
-                )
-            ) {
-                /* deprecated */
-                $result = call_user_func($function);
-                $result = (object)[
-                    'succeeded' => empty($result->failed),
-                    'message' => CBModel::valueToString($result, 'message'),
-                ];
             } else {
                 $result = (object)[
                     'succeeded' => false,
@@ -193,6 +176,16 @@ final class CBTest {
                 'This test interface implementation is no longer supported.',
                 $functionName . '()',
                 '259d228d6326f55d67e8848d5b88c0d46ee3fb25'
+            );
+        }
+
+        $functionName = "{$className}Tests::test";
+
+        if ($testName === '' && is_callable($functionName)) {
+            throw new CBExceptionWithValue(
+                'This test interface implementation is no longer supported.',
+                $functionName . '()',
+                'cbcf95a2e510f3684a73f8e32f9e918bd4ac4436'
             );
         }
     }
