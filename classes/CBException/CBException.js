@@ -34,6 +34,21 @@ var CBException = {
     /* errorToExtendedMessage() */
 
 
+
+    /**
+     * @param Error error
+     *
+     * @return CBID|undefined
+     */
+    errorToSourceCBID: function (error) {
+        return CBModel.valueAsCBID(
+            error,
+            "ajaxResponse.sourceCBID"
+        );
+    },
+
+
+
     /**
      * This function adds a CBException pod to an Error object. It can be used
      * in the following manner:
