@@ -584,50 +584,80 @@ final class CBLog {
     ): void {
         /* sourceClassName */
 
+        $sourceClassName = CBModel::valueToString(
+            $args,
+            'sourceClassName'
+        );
+
         $sourceClassNameAsSQL = CBDB::stringToSQL(
-            $args->sourceClassName
+            $sourceClassName
         );
 
 
         /* sourceID */
 
+        $sourceID = CBModel::valueAsCBID(
+            $args,
+            'sourceID'
+        );
+
         $sourceIDAsSQL =
-        CBID::valueIsCBID($args->sourceID) ?
-        CBID::toSQL($args->sourceID) :
+        CBID::valueIsCBID($sourceID) ?
+        CBID::toSQL($sourceID) :
         'NULL';
 
 
         /* severity */
 
-        $severityAsSQL = (int)$args->severity;
+        $severityAsSQL = CBModel::valueAsInt(
+            $args,
+            'severity'
+        ) ?? 0;
 
 
         /* modelID */
 
+        $modelID = CBModel::valueAsCBID(
+            $args,
+            'modelID'
+        );
 
         $modelIDAsSQL =
-        CBID::valueIsCBID($args->modelID) ?
-        CBID::toSQL($args->modelID) :
+        CBID::valueIsCBID($modelID) ?
+        CBID::toSQL($modelID) :
         'NULL';
 
 
         /* message */
 
-        $message = CBLog::appendBacktrace($args->message);
+        $message = CBModel::valueToString(
+            $args,
+            'message'
+        );
+
+        $message = CBLog::appendBacktrace($message);
         $messageAsSQL = CBDB::stringToSQL($message);
 
 
         /* process ID */
 
+        $processID = CBModel::valueAsCBID(
+            $args,
+            'processID'
+        );
+
         $processIDAsSQL =
-        CBID::valueIsCBID($args->processID) ?
+        CBID::valueIsCBID($processID) ?
         CBID::toSQL($processID) :
         'NULL';
 
 
         /* timestamp */
 
-        $timestampAsSQL = (int)$args->timestamp;
+        $timestampAsSQL = CBModel::valueAsInt(
+            $args,
+            'timestamp'
+        );
 
 
         /* SQL */
