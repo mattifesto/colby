@@ -4,25 +4,49 @@ final class CBTextView2 {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
+
+
     /**
      * @param object $spec
      *
      * @return object
      */
-    static function CBAjax_convertToCBMessageView(stdClass $spec): stdClass {
+    static function CBAjax_convertToCBMessageView(
+        stdClass $spec
+    ): stdClass {
         return CBTextView2::convertToCBMessageView($spec);
     }
+
 
 
     /**
      * @return string
      */
-    static function CBAjax_convertToCBMessageView_group(): string {
-        return 'Administrators';
+    static function CBAjax_convertToCBMessageView_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
 
 
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs() {
+        return [
+            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+        ];
+    }
+    /* CBHTMLOutput_CSSURLs() */
+
+
+
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
@@ -38,6 +62,7 @@ final class CBTextView2 {
     /* CBInstall_install() */
 
 
+
     /**
      * @return [string]
      */
@@ -49,7 +74,55 @@ final class CBTextView2 {
     /* CBInstall_requiredClassNames() */
 
 
+
     /* -- CBModel interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @param object $spec
+     *
+     * @return object
+     */
+    static function CBModel_build(stdClass $spec): stdClass {
+        $model = (object)[
+            'contentAsCommonMark' => CBModel::valueToString(
+                $spec,
+                'contentAsCommonMark'
+            ),
+            'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
+            'isCustom' => CBModel::value($spec, 'isCustom', false, 'boolval'),
+        ];
+
+        // Views with no content will not render, contentAsHTML is left empty
+        if (empty(trim($model->contentAsCommonMark))) {
+            return $model;
+        }
+
+        // contentAsHTML
+        $parsedown = new Parsedown();
+        $model->contentAsHTML = $parsedown->text($model->contentAsCommonMark);
+
+        // localCSS
+        $localCSSTemplate = trim(
+            CBModel::valueToString($spec, 'localCSSTemplate')
+        );
+
+        if (!empty($localCSSTemplate)) {
+            $localCSSClassName = 'ID_' . CBID::generateRandomCBID();
+            $model->CSSClassNames[] = $localCSSClassName;
+            $model->localCSS = CBView::localCSSTemplateToLocalCSS(
+                $localCSSTemplate,
+                'view',
+                ".{$localCSSClassName}"
+            );
+        }
+
+        return $model;
+    }
+    /* CBModel_build() */
+
+
 
     /**
      * @return string
@@ -57,6 +130,12 @@ final class CBTextView2 {
     static function CBModel_toSearchText(stdClass $model) {
         return CBModel::value($model, 'contentAsCommonMark', '', 'trim');
     }
+
+
+
+    /* -- CBView interfaces -- -- -- -- -- */
+
+
 
     /**
      * This method can be used outside of the view context to render any HTML
@@ -123,64 +202,13 @@ final class CBTextView2 {
 
         <?php
     }
+    /* CBView_render() */
 
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
-        ];
-    }
-    /* CBHTMLOutput_CSSURLs() */
-
-
-    /**
-     * @param object $spec
-     *
-     * @return object
-     */
-    static function CBModel_build(stdClass $spec): stdClass {
-        $model = (object)[
-            'contentAsCommonMark' => CBModel::valueToString(
-                $spec,
-                'contentAsCommonMark'
-            ),
-            'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
-            'isCustom' => CBModel::value($spec, 'isCustom', false, 'boolval'),
-        ];
-
-        // Views with no content will not render, contentAsHTML is left empty
-        if (empty(trim($model->contentAsCommonMark))) {
-            return $model;
-        }
-
-        // contentAsHTML
-        $parsedown = new Parsedown();
-        $model->contentAsHTML = $parsedown->text($model->contentAsCommonMark);
-
-        // localCSS
-        $localCSSTemplate = trim(
-            CBModel::valueToString($spec, 'localCSSTemplate')
-        );
-
-        if (!empty($localCSSTemplate)) {
-            $localCSSClassName = 'ID_' . CBID::generateRandomCBID();
-            $model->CSSClassNames[] = $localCSSClassName;
-            $model->localCSS = CBView::localCSSTemplateToLocalCSS(
-                $localCSSTemplate,
-                'view',
-                ".{$localCSSClassName}"
-            );
-        }
-
-        return $model;
-    }
-    /* CBModel_build() */
 
 
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @param object $originalSpec
@@ -211,4 +239,5 @@ final class CBTextView2 {
         return $messageViewSpec;
     }
     /* convertToCBMessageView() */
+
 }
