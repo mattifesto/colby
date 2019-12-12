@@ -46,21 +46,21 @@ final class Colby {
         $messages = [];
 
         if (defined('SCLibraryVersionNumber')) {
-            $actualLibraryVersionNumber = SCLibraryVersionNumber;
-            $expectedLibraryVersionNumber = '131';
+            $actualSCLibraryVersionNumber = SCLibraryVersionNumber;
+            $expectedSCLibraryVersionNumber = '132';
 
             if (
-                $actualLibraryVersionNumber !==
-                $expectedLibraryVersionNumber
+                $actualSCLibraryVersionNumber !==
+                $expectedSCLibraryVersionNumber
             ) {
                 array_push(
                     $messages,
                     <<<EOT
 
                         This version of Colby is meant to be paired with version
-                        {$expectedLibraryVersionNumber} of the SCShoppingCart
+                        {$expectedSCLibraryVersionNumber} of the SCShoppingCart
                         library and the current version of the SCShoppingCart
-                        library is {$actualLibraryVersionNumber}
+                        library is {$actualSCLibraryVersionNumber}
 
                     EOT
                 );
