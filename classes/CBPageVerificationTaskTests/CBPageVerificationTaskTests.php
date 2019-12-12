@@ -456,8 +456,10 @@ final class CBPageVerificationTaskTests {
      */
     static function CBTest_invalidImageProperty(): stdClass {
         $ID = '5cf7dc1d21b1c70d62eeede0b9558d63f91781a3';
+
         $spec = (object)[
             'className' => 'CBViewPage',
+            'classNameForSettings' => 'CBPageSettingsForResponsivePages',
             'ID' => $ID,
             'image' => (
                 'This test image property value is a string. A valid ' .
