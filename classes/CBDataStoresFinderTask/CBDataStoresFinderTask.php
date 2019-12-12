@@ -10,13 +10,19 @@
  */
 final class CBDataStoresFinderTask {
 
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+
+
     /**
      * Calling this function restarts the data store finder tasks.
      *
-     * @return null
+     * @return void
      */
-    static function CBAjax_restart() {
-        $spec = CBModels::fetchSpecByID(CBDataStoresFinderTask::ID());
+    static function CBAjax_restart(): void {
+        $spec = CBModels::fetchSpecByID(
+            CBDataStoresFinderTask::ID()
+        );
 
         if ($spec === false) {
             $spec = (object)[
@@ -27,35 +33,87 @@ final class CBDataStoresFinderTask {
         $spec->className = __CLASS__;
         $spec->nextPartIndex = 0;
 
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save([$spec]);
-        });
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save($spec);
+            }
+        );
 
-        CBTasks2::restart(__CLASS__, CBDataStoresFinderTask::ID(), /* priority: */ 200);
+        CBTasks2::restart(
+            __CLASS__,
+            CBDataStoresFinderTask::ID(),
+            /* priority: */ 200
+        );
     }
+    /* CBAjax_restart() */
+
+
 
     /**
      * @return string
      */
-    static function CBAjax_restart_group() {
-        return 'Developers';
+    static function CBAjax_restart_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
     }
 
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
     /**
-     * @param model $spec
-     *
-     * @return ?model
+     * @return void
      */
-    static function CBModel_build(stdClass $spec): ?stdClass {
-        return (object)[];
+    static function CBInstall_install(): void {
+        CBTasks2::restart(
+            __CLASS__,
+            CBDataStoresFinderTask::ID(),
+            /* priority: */ 200
+        );
     }
 
+
+
     /**
-     * @param hex160 $ID
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBLog',
+            'CBTasks2'
+        ];
+    }
+
+
+
+    /* -- CBModel interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @param object $spec
      *
      * @return object
      */
-    static function CBTasks2_run($ID) {
+    static function CBModel_build(stdClass $spec): stdClass {
+        return (object)[];
+    }
+
+
+
+    /* -- CBTasks2 interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @param CBID $ID
+     *
+     * @return object
+     */
+    static function CBTasks2_run(
+        string $ID
+    ): stdClass {
         if ($ID !== CBDataStoresFinderTask::ID()) {
             throw new InvalidArgumentException('ID');
         }
@@ -83,37 +141,70 @@ final class CBDataStoresFinderTask {
             $scheduled = time() + (60 * 60 * 24); /* execute again one day later */
         }
 
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save([$spec]);
-        });
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save($spec);
+            }
+        );
 
-        CBLog::log((object)[
-            'className' => __CLASS__,
-            'ID' => $ID,
-            'message' => "CBDataStoresFinderTask searched the directory data/{$partIndexHex} for data stores. ($partIndex/255)",
-            'severity' => 7,
-        ]);
+        CBLog::log(
+            (object)[
+                'message' => (
+                    "CBDataStoresFinderTask searched the " .
+                    "directory data/{$partIndexHex} for data " .
+                    "stores. ($partIndex/255)"
+                ),
+                'modelID' => $ID,
+                'severity' => 7,
+                'sourceClassName' => __CLASS__,
+            ]
+        );
 
         return (object)[
             'scheduled' => $scheduled,
         ];
     }
 
+
+
+    /* -- functions -- -- -- -- -- */
+
+
+
     /**
      * @param int $index
      *
-     * @return null
+     * @return void
      */
-    static function findDataStoresForPartIndex($index) {
-        $hexIndex = sprintf('%02x', $index);
+    static function findDataStoresForPartIndex($index): void {
+        $hexIndex = sprintf(
+            '%02x',
+            $index
+        );
+
         $IDs = [];
-        $dataStoreDirectories = glob(cbsitedir() . "/data/{$hexIndex}/*/*");
+
+        $dataStoreDirectories = glob(
+            cbsitedir() . "/data/{$hexIndex}/*/*"
+        );
 
         foreach ($dataStoreDirectories as $directory) {
-            if (!preg_match('/([0-9a-f]{2})\/([0-9a-f]{2})\/([0-9a-f]{36})/', $directory, $matches)) {
-                CBLog::addMessage(__CLASS__, 3,
-                    "The data store directory `{$directory}` is incorrectly " .
-                    "named. Investigate and remove the directory manually");
+            if (
+                !preg_match(
+                    '/([0-9a-f]{2})\/([0-9a-f]{2})\/([0-9a-f]{36})/',
+                    $directory,
+                    $matches
+                )
+            ) {
+                CBLog::addMessage(
+                    __CLASS__,
+                    3,
+                    (
+                        "The data store directory \"{$directory}\" is " .
+                        "incorrectly named. Investigate and remove " .
+                        "the directory manually"
+                    )
+                );
             } else {
                 $IDs[] = $matches[1] . $matches[2] . $matches[3];
             }
@@ -151,29 +242,19 @@ final class CBDataStoresFinderTask {
             WHERE       `ID` LIKE CONCAT('\\\\', UNHEX('{$hexIndex}'), '%') and
                         `timestamp` != {$timestamp}
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
     }
+    /* CBTasks2_run() */
+
+
 
     /**
-     * @return hex160
+     * @return CBID
      */
-    static function ID() {
+    static function ID(): string {
         return '3d952455c87a497d0f666851a2ba920340741917';
     }
 
-    /**
-     * @return void
-     */
-    static function CBInstall_install(): void {
-        CBTasks2::restart(__CLASS__, CBDataStoresFinderTask::ID(), /* priority: */ 200);
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBInstall_requiredClassNames(): array {
-        return ['CBLog', 'CBTasks2'];
-    }
 }
