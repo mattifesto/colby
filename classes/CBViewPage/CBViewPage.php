@@ -402,75 +402,106 @@ final class CBViewPage {
      * @return void
      */
     static function CBPage_render($model): void {
+
+        /**
+         * @NOTE 2019_12_12
+         *
+         *      This exception handler should probably be moved into
+         *      CBPage::render() to handle all page rendering errors.
+         */
+
         set_exception_handler('CBViewPage::CBPage_render_handleError');
 
-        $publicationTimeStamp = CBModel::value(
-            $model,
-            'publicationTimeStamp'
-        );
-
-        $title = CBModel::valueToString(
-            $model,
-            'title'
-        );
-
-        $description = CBModel::valueToString(
-            $model,
-            'description'
-        );
-
-        CBViewPage::initializePageInformation($model);
-        CBHTMLOutput::begin();
-
-        if (empty($model->layout->className)) {
-
-            /**
-             * @TODO 2018_04_07
-             *
-             *      The main element is the container of the CBViewPage
-             *      class. The CBViewPage class should allow you to add
-             *      classes and styles to this element. It does not
-             *      currently allow that, so for now the CBViewPage_default
-             *      class name is added which eventually can be removed by
-             *      specifying the "custom" class name manually.
-             */
-
-            $renderContent = function () use ($model) {
-                echo '<main class="CBViewPage CBViewPage_default">';
-
-                $sections = CBModel::valueToArray($model, 'sections');
-                array_walk($sections, 'CBView::render');
-
-                echo '</main>';
-            };
-
-            $frameClassName = CBModel::valueToString(
+        try {
+            $publicationTimeStamp = CBModel::value(
                 $model,
-                'frameClassName'
+                'publicationTimeStamp'
             );
 
-            CBPageFrame::render($frameClassName, $renderContent);
-        } else {
-            $renderContentCallback = function () use ($model) {
-                $sections = CBModel::valueToArray($model, 'sections');
-                array_walk($sections, 'CBView::render');
-            };
+            $title = CBModel::valueToString(
+                $model,
+                'title'
+            );
 
-            CBHTMLOutput::requireClassName($model->layout->className);
+            $description = CBModel::valueToString(
+                $model,
+                'description'
+            );
 
-            $renderLayoutFunctionName =
-            "{$model->layout->className}::render";
+            CBViewPage::initializePageInformation($model);
+            CBHTMLOutput::begin();
 
-            if (is_callable($renderLayoutFunctionName)) {
-                call_user_func(
-                    $renderLayoutFunctionName,
-                    $model->layout,
-                    $renderContentCallback
+            if (empty($model->layout->className)) {
+
+                /**
+                 * @TODO 2018_04_07
+                 *
+                 *      The main element is the container of the CBViewPage
+                 *      class. The CBViewPage class should allow you to add
+                 *      classes and styles to this element. It does not
+                 *      currently allow that, so for now the CBViewPage_default
+                 *      class name is added which eventually can be removed by
+                 *      specifying the "custom" class name manually.
+                 */
+
+                $renderContent = function () use ($model) {
+                    echo '<main class="CBViewPage CBViewPage_default">';
+
+                    $sections = CBModel::valueToArray($model, 'sections');
+
+                    array_walk(
+                        $sections,
+                        function ($viewModel) {
+                            CBView::render($viewModel);
+                        }
+                    );
+
+                    echo '</main>';
+                };
+
+                $frameClassName = CBModel::valueToString(
+                    $model,
+                    'frameClassName'
                 );
-            }
-        }
 
-        CBHTMLOutput::render();
+                CBPageFrame::render($frameClassName, $renderContent);
+            } else {
+                $renderContentCallback = function () use ($model) {
+                    $sections = CBModel::valueToArray($model, 'sections');
+                    array_walk($sections, 'CBView::render');
+                };
+
+                CBHTMLOutput::requireClassName($model->layout->className);
+
+                $renderLayoutFunctionName =
+                "{$model->layout->className}::render";
+
+                if (is_callable($renderLayoutFunctionName)) {
+                    call_user_func(
+                        $renderLayoutFunctionName,
+                        $model->layout,
+                        $renderContentCallback
+                    );
+                }
+            }
+
+            CBHTMLOutput::render();
+        } catch (Throwable $renderError) {
+            CBHTMLOutput::reset();
+
+            $pageError = new CBExceptionWithValue(
+                (
+                    'This page model generate an error ' .
+                    'while it was rendering.'
+                ),
+                $model,
+                '1c9e0e1c0e89467c9e1c061a3e6e3f735e0cc92e',
+                0,
+                $renderError
+            );
+
+            throw $pageError;
+        }
 
         restore_exception_handler();
     }
@@ -491,7 +522,6 @@ final class CBViewPage {
         Throwable $error
     ): void {
         CBErrorHandler::report($error);
-        CBHTMLOutput::reset();
         CBErrorHandler::renderErrorReportPage($error);
     }
     /* CBPage_render_handleError() */
