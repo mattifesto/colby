@@ -13,22 +13,18 @@ final class CBLogTests {
         return [
             (object)[
                 'name' => 'bufferEndClean',
-                'title' => 'CBLog bufferEndClean',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'bufferEndFlush',
-                'title' => 'CBLog bufferEndFlush',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'noClassName',
-                'title' => 'CBLog noClassName',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'noMessage',
-                'title' => 'CBLog noMessage',
                 'type' => 'server',
             ],
         ];
@@ -84,7 +80,7 @@ final class CBLogTests {
                 --- pre\n{$bufferAsMessage}
                 ---
 
-EOT;
+            EOT;
 
             return (object)[
                 'message' => $message,
@@ -105,6 +101,7 @@ EOT;
      */
     static function CBTest_bufferEndFlush(): stdClass {
         $sourceID = CBID::generateRandomCBID();
+
         $message = <<<EOT
 
             This is a temporary test log entry created by the function
@@ -129,10 +126,13 @@ EOT;
 
         /* log entry count */
 
-        $entries = CBLog::entries(
-            (object)[
-                'sourceID' => $sourceID,
-            ]
+        $entries = CBLog::bufferContents();
+
+        $entries = array_filter(
+            $entries,
+            function ($entry) use ($sourceID) {
+                return $entry->sourceID === $sourceID;
+            }
         );
 
         $actual = count($entries);
