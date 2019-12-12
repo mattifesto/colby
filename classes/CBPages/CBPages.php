@@ -8,6 +8,34 @@
  */
 class CBPages {
 
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @param object $args
+     *
+     *      {
+     *          ID: CBID
+     *      }
+     *
+     * @return void
+     */
+    static function CBAjax_moveToTrash(stdClass $args): void {
+        CBPages::moveRowWithDataStoreIDToTheTrash($args->ID);
+    }
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_moveToTrash_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
+    }
+
+
+
     /* -- CBInstall interfaces -- -- -- -- -- */
 
 
@@ -203,11 +231,13 @@ class CBPages {
         $SQL = <<<EOT
 
             SELECT  LOWER(HEX(archiveID))
+
             FROM    ColbyPages
+
             WHERE   URI = {$URIAsSQL} AND
                     published IS NOT NULL
 
-EOT;
+        EOT;
 
         return CBDB::SQLToArray($SQL);
     }
@@ -344,7 +374,7 @@ EOT;
             FROM    `ColbyPages`
             WHERE   `archiveID` = {$archiveIDForSQL}
 
-EOT;
+        EOT;
 
         Colby::query($sql);
 
@@ -387,26 +417,6 @@ EOT;
         CBPages::deletePagesFromTrashByID([$dataStoreID]);
     }
     /* recoverRowWithDataStoreIDFromTheTrash() */
-
-
-
-    /**
-     * @param hex160 $args->ID
-     *
-     * @return void
-     */
-    static function CBAjax_moveToTrash(stdClass $args): void {
-        CBPages::moveRowWithDataStoreIDToTheTrash($args->ID);
-    }
-
-
-
-    /**
-     * @return string
-     */
-    static function CBAjax_moveToTrash_group(): string {
-        return 'Administrators';
-    }
 
 
 
