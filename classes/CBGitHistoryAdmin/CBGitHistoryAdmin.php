@@ -2,12 +2,22 @@
 
 final class CBGitHistoryAdmin {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['develop', 'git', 'history'];
+        return [
+            'develop',
+            'git',
+            'history'
+        ];
     }
+
+
 
     /**
      * @return void
@@ -15,6 +25,12 @@ final class CBGitHistoryAdmin {
     static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'Git History';
     }
+
+
+
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param mixed $args
@@ -41,23 +57,36 @@ final class CBGitHistoryAdmin {
         chdir(cbsitedir() . "/{$submodule}");
         exec($command, $output);
 
-        $output = CBMessageMarkup::stringToMarkup(implode("\n", $output));
+        $output = CBMessageMarkup::stringToMarkup(
+            implode(
+                "\n",
+                $output
+            )
+        );
+
         $output = <<<EOT
 
             --- pre\n{$output}
             ---
 
-EOT;
+        EOT;
 
         return $output;
     }
+    /* CBAjax_fetch() */
+
+
 
     /**
      * @return string
      */
-    static function CBAjax_fetch_group(): string {
-        return 'Developers';
+    static function CBAjax_fetch_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
+
+
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
 
 
@@ -69,7 +98,6 @@ EOT;
             Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
         ];
     }
-
 
 
 
@@ -103,6 +131,10 @@ EOT;
 
 
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return void
      */
@@ -116,15 +148,23 @@ EOT;
             'URL' => '/admin/?c=CBGitHistoryAdmin',
         ];
 
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save($spec);
-        });
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save($spec);
+            }
+        );
     }
+    /* CBInstall_install() */
+
+
 
     /**
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBGitAdminMenu'];
+        return [
+            'CBGitAdminMenu'
+        ];
     }
+
 }
