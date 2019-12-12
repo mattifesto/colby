@@ -450,12 +450,16 @@ final class CBPageVerificationTask {
                 ob_start();
 
                 try {
-                    CBPage::render($result->model);
-                } catch (Throwable $throwable) {
-                    $result->renderError = $throwable;
-                }
+                    CBView::$testModeIsActive = true;
 
-                ob_end_clean();
+                    CBPage::render(
+                        $result->model
+                    );
+                } finally {
+                    CBView::$testModeIsActive = false;
+
+                    ob_end_clean();
+                }
             }
         }
 
