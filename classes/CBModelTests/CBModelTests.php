@@ -41,26 +41,23 @@ final class CBModelTests {
         return [
             (object)[
                 'name' => 'build_minimalImplementation',
-                'title' => 'CBModel::build() minimal implementation',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'toSearchText',
-                'title' => 'CBModel::toSearchText()',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'upgrade',
-                'title' => 'CBModel::upgrade()',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'upgradeSpecWithID',
-                'title' => 'CBModel::upgrade() spec with ID',
                 'type' => 'server',
             ],
         ];
     }
+    /* CBTest_getTests() */
 
 
 
@@ -185,11 +182,14 @@ final class CBModelTests {
             'ID' => $ID,
         ];
 
+        CBLog::bufferStart();
+
         CBModel::upgrade($spec);
 
-        $entries = CBLog::entries((object)[
-            'modelID' => $ID,
-        ]);
+        $entries = CBLog::bufferContents();
+
+        CBLog::bufferEndClean();
+
 
         /* log entry count */
 
@@ -204,6 +204,7 @@ final class CBModelTests {
             );
         }
 
+
         /* log entry source ID */
 
         $actual = CBModel::valueAsID($entries[0], 'sourceID');
@@ -217,9 +218,14 @@ final class CBModelTests {
             );
         }
 
+
         /* log entry model ID */
 
-        $actual = CBModel::valueAsID($entries[0], 'modelID');
+        $actual = CBModel::valueAsID(
+            $entries[0],
+            'modelID'
+        );
+
         $expected = $ID;
 
         if ($actual !== $expected) {
@@ -230,11 +236,6 @@ final class CBModelTests {
             );
         }
 
-        /* remove log entry from CBLog */
-
-        $IDAsSQL = CBID::toSQL($ID);
-
-        Colby::query("DELETE FROM CBLog WHERE modelID = {$IDAsSQL}");
 
         /* done */
 
