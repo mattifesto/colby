@@ -58,7 +58,7 @@ final class CBUserGroup {
     /**
      * @return string
      */
-    static function CBAjax_addUser_group(): string {
+    static function CBAjax_addUser_getUserGroupClassName(): string {
         return 'CBAdministratorsUserGroup';
     }
 
@@ -112,7 +112,7 @@ final class CBUserGroup {
     /**
      * @return string
      */
-    static function CBAjax_removeUser_group(): string {
+    static function CBAjax_removeUser_getUserGroupClassName(): string {
         return 'CBAdministratorsUserGroup';
     }
 
@@ -164,7 +164,7 @@ final class CBUserGroup {
     /**
      * @return string
      */
-    static function CBAjax_userIsMemberOfUserGroup_group(): string {
+    static function CBAjax_userIsMemberOfUserGroup_getUserGroupClassName(): string {
         return 'CBAdministratorsUserGroup';
     }
 
