@@ -9,8 +9,8 @@ final class CBTestAdmin {
     /**
      * @return string
      */
-    static function CBAdmin_group() {
-        return 'Developers';
+    static function CBAdmin_getUserGroupClassName() {
+        return 'CBDevelopersUserGroup';
     }
 
 
