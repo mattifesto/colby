@@ -33,8 +33,8 @@ final class CBPageVerificationTask {
     /**
      * @return string
      */
-    static function CBAjax_startForAllPages_group() {
-        return 'Administrators';
+    static function CBAjax_startForAllPages_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
 
 
