@@ -4,10 +4,16 @@
 /* exported CBPageListView2 */
 /* global
     CBArtworkElement,
+    CBErrorHandler,
     CBImage,
     CBUIButton,
+    CBUIPanel,
     Colby,
+
+    CBPageListView2_currentUserIsDeveloper,
 */
+
+
 
 var CBPageListView2 = {
 
@@ -33,9 +39,28 @@ var CBPageListView2 = {
                 classNameForKind: classNameForKind,
                 publishedBeforeTimestamp: state.published,
             }
-        ).then(display).catch(Colby.report);
+        ).then(
+            display
+        ).catch(
+            function (error) {
+                if (CBPageListView2_currentUserIsDeveloper) {
+                    CBErrorHandler.displayAndReport(error);
+                } else {
+                    CBUIPanel.displayText(
+                        "The site is currently unable to " +
+                        "fetch the list of pages."
+                    );
+                }
+            }
+        );
 
         return;
+
+
+
+        /* -- closures -- -- -- -- -- */
+
+
 
         /**
          * CBPageListView2.fetchPages() closure
@@ -51,80 +76,96 @@ var CBPageListView2 = {
         function display(result) {
             var count = 0;
 
-            result.pages.forEach(function (page) {
-                if (state.renderStyleIsRecent && count >= 2) {
-                    return;
+            result.pages.forEach(
+                function (page) {
+                    if (state.renderStyleIsRecent && count >= 2) {
+                        return;
+                    }
+
+                    var element = document.createElement("article");
+                    var anchorElement = document.createElement("a");
+                    anchorElement.href = "/" + page.URI + "/";
+
+                    anchorElement.classList.add("content");
+
+                    /* image */
+
+                    var imageElement = document.createElement("div");
+                    imageElement.className = "image";
+
+                    let URL = CBImage.toURL(page.image, "rw1280");
+
+                    if (URL === "") {
+                        URL = page.thumbnailURL;
+                    }
+
+                    let artworkElement = CBArtworkElement.create(
+                        {
+                            URL: URL,
+                            aspectRatioWidth: 16,
+                            aspectRatioHeight: 9,
+                        }
+                    );
+
+                    imageElement.appendChild(artworkElement);
+                    anchorElement.appendChild(imageElement);
+
+                    /* text */
+
+                    {
+                        let textElement = document.createElement("div");
+                        textElement.className = "text";
+
+                        let titleElement = document.createElement("h2");
+                        titleElement.className = "title";
+                        titleElement.textContent = page.title;
+
+                        textElement.appendChild(titleElement);
+
+                        let descriptionElement = document.createElement("div");
+                        descriptionElement.className = "description";
+                        descriptionElement.textContent = page.description;
+
+                        textElement.appendChild(descriptionElement);
+
+                        var dateElement = document.createElement("div");
+                        dateElement.className = "published";
+
+                        dateElement.appendChild(
+                            Colby.unixTimestampToElement(
+                                page.publicationTimeStamp
+                            )
+                        );
+
+                        textElement.appendChild(dateElement);
+
+                        let readModeElement = document.createElement("div");
+                        readModeElement.className = "readmore";
+                        readModeElement.textContent = "read more >";
+
+                        textElement.appendChild(readModeElement);
+                        anchorElement.appendChild(textElement);
+                    }
+
+                    element.appendChild(anchorElement);
+
+                    state.element.insertBefore(
+                        element,
+                        state.buttonContainerElement
+                    );
+
+                    state.published = page.publicationTimeStamp;
+
+                    count += 1;
                 }
-
-                var element = document.createElement("article");
-                var anchorElement = document.createElement("a");
-                anchorElement.href = "/" + page.URI + "/";
-
-                anchorElement.classList.add("content");
-
-                /* image */
-
-                var imageElement = document.createElement("div");
-                imageElement.className = "image";
-
-                let URL = CBImage.toURL(page.image, "rw1280");
-
-                if (URL === "") {
-                    URL = page.thumbnailURL;
-                }
-
-                let artworkElement = CBArtworkElement.create({
-                    URL: URL,
-                    aspectRatioWidth: 16,
-                    aspectRatioHeight: 9,
-                });
-
-                imageElement.appendChild(artworkElement);
-                anchorElement.appendChild(imageElement);
-
-                /* text */
-
-                {
-                    let textElement = document.createElement("div");
-                    textElement.className = "text";
-
-                    let titleElement = document.createElement("h2");
-                    titleElement.className = "title";
-                    titleElement.textContent = page.title;
-
-                    textElement.appendChild(titleElement);
-
-                    let descriptionElement = document.createElement("div");
-                    descriptionElement.className = "description";
-                    descriptionElement.textContent = page.description;
-
-                    textElement.appendChild(descriptionElement);
-
-                    var dateElement = document.createElement("div");
-                    dateElement.className = "published";
-                    dateElement.appendChild(Colby.unixTimestampToElement(page.publicationTimeStamp));
-
-                    textElement.appendChild(dateElement);
-
-                    let readModeElement = document.createElement("div");
-                    readModeElement.className = "readmore";
-                    readModeElement.textContent = "read more >";
-
-                    textElement.appendChild(readModeElement);
-                    anchorElement.appendChild(textElement);
-                }
-
-                element.appendChild(anchorElement);
-
-                state.element.insertBefore(element, state.buttonContainerElement);
-                state.published = page.publicationTimeStamp;
-
-                count += 1;
-            });
+            );
 
             Colby.updateTimes();
 
-            if (!state.renderStyleIsRecent && state.buttonContainerElement === undefined) {
+            if (
+                !state.renderStyleIsRecent &&
+                state.buttonContainerElement === undefined
+            ) {
                 state.buttonContainerElement = document.createElement("div");
                 state.buttonContainerElement.className = "buttonContainer";
 
@@ -146,15 +187,26 @@ var CBPageListView2 = {
             }
         }
     },
+    /* fetchPages() */
+
 };
+/* CBPageListView2 */
 
-Colby.afterDOMContentLoaded(function () {
-    var elements = document.getElementsByClassName("CBPageListView2");
 
-    for (var i = 0; i < elements.length; i++) {
-        CBPageListView2.fetchPages({
-            element: elements[i],
-            renderStyleIsRecent: elements[i].classList.contains("recent"),
-        });
+
+Colby.afterDOMContentLoaded(
+    function () {
+        let elements = document.getElementsByClassName("CBPageListView2");
+
+        for (let index = 0; index < elements.length; index++) {
+            let element = elements[index];
+
+            CBPageListView2.fetchPages(
+                {
+                    element: element,
+                    renderStyleIsRecent: element.classList.contains("recent"),
+                }
+            );
+        }
     }
-});
+);

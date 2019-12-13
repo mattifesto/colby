@@ -2,6 +2,10 @@
 
 final class CBPageListView2 {
 
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+
+
     /**
      * @param object $args
      *
@@ -30,26 +34,158 @@ final class CBPageListView2 {
         $SQL = <<<EOT
 
             SELECT      keyValueData
+
             FROM        ColbyPages
+
             WHERE       classNameForKind = {$classNameForKindAsSQL} AND
                         published IS NOT NULL
                         {$publishedBeforeClause}
+
             ORDER BY    published DESC
+
             LIMIT       10
 
-EOT;
+        EOT;
 
         return (object)[
             'pages' => CBDB::SQLToArray($SQL, ['valueIsJSON' => true]),
         ];
     }
+    /* CBAjax_fetchPages() */
+
+
 
     /**
      * @return string
      */
-    static function CBAjax_fetchPages_group() {
-        return 'Public';
+    static function CBAjax_fetchPages_getUserGroupClassName(): string {
+        return 'CBPublicUserGroup';
     }
+
+
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v453.css', cbsysurl()),
+        ];
+    }
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v558.js', cbsysurl()),
+        ];
+    }
+
+
+
+    /**
+     * @return [[<name>, <value>]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables(): array {
+        return [
+            [
+                'CBPageListView2_currentUserIsDeveloper',
+                CBUserGroup::userIsMemberOfUserGroup(
+                    ColbyUser::getCurrentUserCBID(),
+                    'CBDevelopersUserGroup'
+                ),
+            ],
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptVariables() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBArtworkElement',
+            'CBErrorHandler',
+            'CBImage',
+            'CBUIButton',
+            'CBUIPanel',
+            'Colby',
+        ];
+    }
+
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        CBViewCatalog::installView(
+            __CLASS__
+        );
+    }
+    /* CBInstall_install() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBViewCatalog',
+        ];
+    }
+    /* CBInstall_requiredClassNames() */
+
+
+
+    /* -- CBModel interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @param object $spec
+     *
+     * @return object
+     */
+    static function CBModel_build(
+        stdClass $spec
+    ): stdClass {
+        return (object)[
+            'classNameForKind' => trim(
+                CBModel::valueToString(
+                    $spec,
+                    'classNameForKind'
+                )
+            ),
+
+            'CSSClassNames' => CBModel::valueToNames(
+                $spec,
+                'CSSClassNames'
+            ),
+        ];
+    }
+    /* CBModel_build() */
+
+
+
+
+    /* -- CBView interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param string $model->classNameForKind
@@ -66,7 +202,7 @@ EOT;
         $CSSClassNames = CBModel::valueToArray($model, 'CSSClassNames');
 
         if (!in_array('custom', $CSSClassNames)) {
-                $CSSClassNames[] = 'CBPageListView2_default';
+            $CSSClassNames[] = 'CBPageListView2_default';
         }
 
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
@@ -75,77 +211,14 @@ EOT;
 
         ?>
 
-        <div class="CBPageListView2 <?= $CSSClassNames ?>" data-classnameforkind="<?= $model->classNameForKind ?>">
+        <div
+            class="CBPageListView2 <?= $CSSClassNames ?>"
+            data-classnameforkind="<?= $model->classNameForKind ?>"
+        >
         </div>
 
         <?php
     }
+    /* CBView_render() */
 
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_requiredClassNames(): array {
-        return [
-            'CBArtworkElement',
-            'CBImage',
-            'CBUIButton',
-        ];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs(): array {
-        return [
-            Colby::flexpath(__CLASS__, 'v453.css', cbsysurl()),
-        ];
-    }
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [
-            Colby::flexpath(__CLASS__, 'v468.js', cbsysurl()),
-        ];
-    }
-
-
-    /* -- CBInstall interfaces -- -- -- -- -- */
-
-    /**
-     * @return void
-     */
-    static function CBInstall_install(): void {
-        CBViewCatalog::installView(
-            __CLASS__
-        );
-    }
-    /* CBInstall_install() */
-
-
-    /**
-     * @return [string]
-     */
-    static function CBInstall_requiredClassNames(): array {
-        return [
-            'CBViewCatalog',
-        ];
-    }
-    /* CBInstall_requiredClassNames() */
-
-
-    /* -- CBModel interfaces -- -- -- -- -- */
-
-    /**
-     * @param model $spec
-     *
-     * @return ?object
-     */
-    static function CBModel_build(stdClass $spec): ?stdClass {
-        return (object)[
-            'classNameForKind' => CBModel::value($spec, 'classNameForKind', '', 'trim'),
-            'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
-        ];
-    }
 }
