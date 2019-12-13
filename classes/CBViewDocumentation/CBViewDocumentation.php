@@ -5,9 +5,11 @@ final class CBViewDocumentation {
     /**
      * @return string
      */
-    static function CBAdmin_group(): string {
-        return 'Developers';
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
     }
+
+
 
     /**
      * @return [string]
@@ -17,6 +19,8 @@ final class CBViewDocumentation {
             'help',
         ];
     }
+
+
 
     /**
      * @return void
@@ -30,7 +34,7 @@ final class CBViewDocumentation {
                 background-color: var(--CBBackgroundColor);
             }
 
-EOT;
+        EOT;
 
         CBHTMLOutput::addCSS($CSS);
 
@@ -43,6 +47,8 @@ EOT;
             'markup' => file_get_contents(__DIR__ . '/CBViewDocumentation.mmk'),
         ]);
     }
+
+
 
     /**
      * @return void
