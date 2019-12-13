@@ -3,6 +3,15 @@
 final class CBPagesDevelopmentAdmin {
 
     /**
+     * @return string
+     */
+    static function CBAdmin_getUserGroupClassName() {
+        return 'CBDevelopersUserGroup';
+    }
+
+
+
+    /**
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
@@ -13,13 +22,6 @@ final class CBPagesDevelopmentAdmin {
     }
 
 
-    /**
-     * @return string
-     */
-    static function CBAdmin_group() {
-        return 'Developers';
-    }
-
 
     /**
      * @return void
@@ -27,6 +29,7 @@ final class CBPagesDevelopmentAdmin {
     static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'Pages Development Admimistration';
     }
+
 
 
     /**
