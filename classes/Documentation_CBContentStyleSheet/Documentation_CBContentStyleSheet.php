@@ -5,9 +5,11 @@ final class Documentation_CBContentStyleSheet {
     /**
      * @return string
      */
-    static function CBAdmin_group(): string {
-        return 'Administrators';
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
+
+
 
     /**
      * @return [string]
@@ -17,6 +19,8 @@ final class Documentation_CBContentStyleSheet {
             'help',
         ];
     }
+
+
 
     /**
      * @return void
