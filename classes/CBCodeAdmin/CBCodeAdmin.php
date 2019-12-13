@@ -1268,6 +1268,22 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_12_13 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Replace with CBAdmin_getUserGroupClassName().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBAdmin_group',
+                    'severity' => 3,
+                    'title' => 'CBAdmin_group()',
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
@@ -1645,22 +1661,6 @@ final class CBCodeAdmin {
                     'regex' => 'CBAjax_[^_]+_group',
                     'severity' => 4,
                     'title' => 'CBAjax_<name>_group',
-                ],
-
-
-                /**
-                 * 2019_12_13 (warning)
-                 */
-                (object)[
-                    'cbmessage' => <<<EOT
-
-                        Replace with CBAdmin_getUserGroupClassName().
-
-                    EOT,
-                    'filetype' => 'php',
-                    'regex' => 'CBAdmin_group',
-                    'severity' => 4,
-                    'title' => 'CBAdmin_group()',
                 ],
             ]
         );
