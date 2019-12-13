@@ -133,10 +133,9 @@ final class CBTest {
     /**
      * @return string
      */
-    static function CBAjax_run_group(): string {
-        return 'Developers';
+    static function CBAjax_run_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
     }
-    /* CBAjax_run_group() */
 
 
 
