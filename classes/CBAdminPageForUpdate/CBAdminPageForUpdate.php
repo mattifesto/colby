@@ -6,6 +6,10 @@ final class CBAdminPageForUpdate {
 
 
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
@@ -53,10 +57,9 @@ final class CBAdminPageForUpdate {
     /**
      * @return string
      */
-    static function CBAjax_backupDatabase_group(): string {
-        return 'Developers';
+    static function CBAjax_backupDatabase_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
     }
-    /* CBAjax_backupDatabase_group() */
 
 
 
@@ -89,8 +92,8 @@ final class CBAdminPageForUpdate {
     /**
      * @return string
      */
-    static function CBAjax_pull_group(): string {
-        return 'Developers';
+    static function CBAjax_pull_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
     }
 
 
@@ -160,8 +163,8 @@ final class CBAdminPageForUpdate {
     /**
      * @return string
      */
-    static function CBAjax_pullColby_group(): string {
-        return 'Developers';
+    static function CBAjax_pullColby_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
     }
 
 
@@ -179,10 +182,9 @@ final class CBAdminPageForUpdate {
     /**
      * @return string
      */
-    static function CBAjax_update_group(): string {
-        return 'Developers';
+    static function CBAjax_update_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
     }
-    /* CBAjax_update_group() */
 
 
 
