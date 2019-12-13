@@ -36,32 +36,6 @@ final class CBTestAdmin {
 
 
 
-    /* -- CBAjax interfaces -- -- -- -- -- */
-
-
-
-    /**
-     * @return ID
-     */
-    static function CBAjax_testPagesRowAndDataStoreWithoutModel(): string {
-        $ID = CBPageVerificationTaskTests::createPagesRowAndDataStoreWithoutModel();
-
-        CBTasks2::restart('CBPageVerificationTask', $ID, 1);
-
-        return $ID;
-    }
-
-
-
-    /**
-     * @return string
-     */
-    static function CBAjax_testPagesRowAndDataStoreWithoutModel_group(): string {
-        return 'Developers';
-    }
-
-
-
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
 
@@ -83,7 +57,7 @@ final class CBTestAdmin {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v544.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v558.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -119,7 +93,6 @@ final class CBTestAdmin {
             'CBUI',
             'CBUIExpander',
             'CBUINavigationView',
-            'CBUIPanel',
             'CBUISectionItem4',
             'CBUISelector',
             'CBUIStringsPart',
