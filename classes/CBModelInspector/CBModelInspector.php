@@ -81,8 +81,8 @@ final class CBModelInspector {
     /**
      * @return string
      */
-    static function CBAjax_fetchModelData_group() {
-        return 'Administrators';
+    static function CBAjax_fetchModelData_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
 
 
