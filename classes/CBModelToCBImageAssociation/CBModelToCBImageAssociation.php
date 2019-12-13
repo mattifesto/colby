@@ -4,6 +4,8 @@ final class CBModelToCBImageAssociation {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
+
+
     /**
      * @param object $args
      *
@@ -23,11 +25,15 @@ final class CBModelToCBImageAssociation {
             $args->imageID
         );
     }
+    /* CBAjax_replaceImageID() */
+
+
 
     /**
      * @return string
      */
-    static function CBAjax_replaceImageID_group(): string {
-        return 'Administrators';
+    static function CBAjax_replaceImageID_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
+
 }
