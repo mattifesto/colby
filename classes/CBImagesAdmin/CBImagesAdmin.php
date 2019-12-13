@@ -2,12 +2,17 @@
 
 class CBImagesAdmin {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return string
      */
     static function CBAdmin_group() {
         return 'Developers';
     }
+
 
 
     /**
@@ -21,12 +26,18 @@ class CBImagesAdmin {
     }
 
 
+
     /**
      * @return void
      */
     static function CBAdmin_render() {
         CBHTMLOutput::pageInformation()->title = 'Images Administration';
     }
+
+
+
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
 
 
     /**
@@ -39,12 +50,11 @@ class CBImagesAdmin {
      *          modified: int
      *          thumbnailURL: string
      *      }
-     *
      */
     static function CBAjax_fetchImages() {
 
         /**
-         * @NOTE 2018.01.28
+         * @NOTE 2018_01_28
          *
          * This SQL was copied from the CBModels class and customized. A query
          * like this belongs in the CBModels class but it is unclear how to
@@ -55,31 +65,42 @@ class CBImagesAdmin {
         $SQL = <<<EOT
 
             SELECT      v.modelAsJSON
+
             FROM        CBModels AS m
+
             JOIN        CBModelVersions AS v ON
                         m.ID = v.ID AND
                         m.version = v.version
+
             WHERE       m.className = 'CBImage'
+
             ORDER BY    m.modified DESC
+
             LIMIT       500
 
-EOT;
+        EOT;
 
         return CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
 
         return $images;
     }
+    /* CBAjax_fetchImages() */
+
 
 
     /**
      * @return string
      */
-    static function CBAjax_fetchImages_group() {
-        return 'Administrators';
+    static function CBAjax_fetchImages_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
 
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
 
     /**
      * @return [string]
@@ -92,6 +113,7 @@ EOT;
     /* CBHTMLOutput_CSSURLs() */
 
 
+
     /**
      * @return [string]
      */
@@ -101,6 +123,7 @@ EOT;
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -119,7 +142,10 @@ EOT;
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
@@ -145,6 +171,7 @@ EOT;
     /* CBInstall_install() */
 
 
+
     /**
      * @return [string]
      */
@@ -154,5 +181,6 @@ EOT;
         ];
     }
     /* CBInstall_requiredClassNames() */
+
 }
 /* CBImagesAdmin */
