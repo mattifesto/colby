@@ -4,10 +4,12 @@ final class ColbyTests {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
+
+
     /**
-     * @return null
+     * @return void
      */
-    static function CBAjax_requestWithPHPError() {
+    static function CBAjax_requestWithPHPError(): void {
         $useLongMessage = false;
 
         if ($useLongMessage) {
@@ -26,16 +28,19 @@ final class ColbyTests {
     /* CBAjax_requestWithPHPError() */
 
 
+
     /**
      * @return string
      */
-    static function CBAjax_requestWithPHPError_group() {
-        return 'Developers';
+    static function CBAjax_requestWithPHPError_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
     }
-    /* CBAjax_requestWithPHPError_group() */
+
 
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -46,6 +51,7 @@ final class ColbyTests {
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -60,7 +66,10 @@ final class ColbyTests {
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- CBTest interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [object]
@@ -90,6 +99,11 @@ final class ColbyTests {
     /* CBTest_getTests() */
 
 
+
+    /* -- tests -- -- -- -- -- */
+
+
+
     /**
      * @return object
      */
@@ -113,5 +127,6 @@ final class ColbyTests {
         ];
     }
     /* CBTest_encrypt() */
+
 }
 /* ColbyTests */
