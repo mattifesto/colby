@@ -2,12 +2,30 @@
 
 final class CBPHPAdmin {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
+    }
+
+
+
     /**
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['develop', 'php'];
+        return [
+            'develop',
+            'php',
+        ];
     }
+
+
 
     /**
      * @return void
@@ -15,6 +33,8 @@ final class CBPHPAdmin {
     static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'PHP Administration';
     }
+
+
 
     /**
      * @return [string]
