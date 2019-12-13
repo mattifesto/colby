@@ -2,6 +2,10 @@
 
 final class CBDataStoresAdminPage {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
@@ -13,6 +17,7 @@ final class CBDataStoresAdminPage {
     }
 
 
+
     /**
      * @return string
      */
@@ -21,12 +26,18 @@ final class CBDataStoresAdminPage {
     }
 
 
+
     /**
      * @return void
      */
     static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'Data Stores Administration';
     }
+
+
+
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
 
 
     /**
@@ -41,21 +52,26 @@ final class CBDataStoresAdminPage {
             ON          `ds`.`ID` = `m`.`ID`
             ORDER BY    `className`, `ID`
 
-EOT;
+    EOT;
 
         return CBDB::SQLToObjects($SQL);
     }
+    /* CBAjax_fetchData() */
+
 
 
     /**
      * @return string
      */
-    static function CBAjax_fetchData_group(): string {
-        return 'Developers';
+    static function CBAjax_fetchData_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
     }
 
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
