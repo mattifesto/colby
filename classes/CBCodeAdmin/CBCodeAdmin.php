@@ -2,6 +2,40 @@
 
 final class CBCodeAdmin {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
+    }
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBAdmin_menuNamePath(): array {
+        return [
+            'develop',
+            'code',
+        ];
+    }
+
+
+
+    /**
+     * @return void
+     */
+    static function CBAdmin_render(): void {
+        CBHTMLOutput::pageInformation()->title = 'Code Administration';
+    }
+
+
+
     /* -- CBAjax interfaces -- -- -- -- -- */
 
 
@@ -27,31 +61,6 @@ final class CBCodeAdmin {
      */
     static function CBAjax_search_getUserGroupClassName(): string {
         return 'CBAdministratorsUserGroup';
-    }
-
-
-
-    /* -- CBAdmin interfaces -- -- -- -- -- */
-
-
-
-    /**
-     * @return [string]
-     */
-    static function CBAdmin_menuNamePath(): array {
-        return [
-            'develop',
-            'code',
-        ];
-    }
-
-
-
-    /**
-     * @return void
-     */
-    static function CBAdmin_render(): void {
-        CBHTMLOutput::pageInformation()->title = 'Code Administration';
     }
 
 
