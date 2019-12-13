@@ -2,6 +2,10 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* exported Colby */
+/* global
+    console,
+*/
+
 
 
 var Colby = {
@@ -499,10 +503,17 @@ var Colby = {
     },
 
 
+
     /**
      * Use this function to report an error to the server.
      *
-     *      callAjaxFunction().catch(Colby.reportError)
+     *      callAjaxFunction(
+     *          ...
+     *      ).catch(
+     *          function (error) {
+     *              Colby.reportError(error);
+     *          }
+     *      );
      *
      * This function will filter out errors created in reponse to a failed Ajax
      * request because the server generated and previously logged those errors
@@ -530,8 +541,15 @@ var Colby = {
             {
                 errorModel: Colby.errorToCBJavaScriptErrorModel(error),
             }
+        ).catch(
+            function (error) {
+                console.log("Colby.reportError() Ajax request failed.");
+                console.log(error.message);
+            }
         );
     },
+    /* reportError() */
+
 
 
     /**
