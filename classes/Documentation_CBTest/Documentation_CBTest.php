@@ -5,8 +5,8 @@ final class Documentation_CBTest {
     /**
      * @return string
      */
-    static function CBAdmin_group(): string {
-        return 'Developers';
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
     }
 
     /**
