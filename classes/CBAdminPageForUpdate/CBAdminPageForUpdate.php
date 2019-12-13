@@ -11,6 +11,15 @@ final class CBAdminPageForUpdate {
 
 
     /**
+     * @return string
+     */
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
+    }
+
+
+
+    /**
      * @return [string]
      */
     static function CBAdmin_menuNamePath() {
@@ -18,15 +27,6 @@ final class CBAdminPageForUpdate {
             'develop',
             'update',
         ];
-    }
-
-
-
-    /**
-     * @return string
-     */
-    static function CBAdmin_group(): string {
-        return 'Developers';
     }
 
 
