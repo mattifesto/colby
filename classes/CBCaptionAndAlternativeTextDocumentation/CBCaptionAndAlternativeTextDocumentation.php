@@ -2,12 +2,30 @@
 
 final class CBCaptionAndAlternativeTextDocumentation {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
+    }
+
+
+
     /**
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['help', 'caption_alternativetext'];
+        return [
+            'help',
+            'caption_alternativetext',
+        ];
     }
+
+
 
     /**
      * @return void
