@@ -2,6 +2,7 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBErrorHandler,
     CBUI,
     CBUIBooleanSwitchPart,
     Colby,
@@ -71,23 +72,6 @@
 
         let booleanSwitchPart = CBUIBooleanSwitchPart.create();
 
-        booleanSwitchPart.changed = function() {
-            let ajaxFunctionName = "removeUser";
-
-            if (booleanSwitchPart.value) {
-                ajaxFunctionName = "addUser";
-            }
-
-            Colby.callAjaxFunction(
-                "CBUserGroup",
-                ajaxFunctionName,
-                {
-                    userCBID: userCBID,
-                    userGroupClassName: userGroupClassName,
-                }
-            );
-        };
-
 
         /* get initial membership status */
 
@@ -105,6 +89,36 @@
                 sectionItemElement.appendChild(booleanSwitchPart.element);
 
                 booleanSwitchPart.value = isMember;
+
+                /**
+                 * After setting initial membership statue, react to value
+                 * changes made by the user.
+                 */
+
+                booleanSwitchPart.changed = function() {
+                    let ajaxFunctionName = "removeUser";
+
+                    if (booleanSwitchPart.value) {
+                        ajaxFunctionName = "addUser";
+                    }
+
+                    Colby.callAjaxFunction(
+                        "CBUserGroup",
+                        ajaxFunctionName,
+                        {
+                            userCBID: userCBID,
+                            userGroupClassName: userGroupClassName,
+                        }
+                    ).catch(
+                        function (error) {
+                            CBErrorHandler.displayAndReport(error);
+                        }
+                    );
+                };
+            }
+        ).catch(
+            function (error) {
+                CBErrorHandler.displayAndReport(error);
             }
         );
     }

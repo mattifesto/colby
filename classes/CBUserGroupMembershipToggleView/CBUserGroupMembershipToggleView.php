@@ -15,7 +15,7 @@ final class CBUserGroupMembershipToggleView {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v555.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v558.js', cbsysurl()),
         ];
     }
 
@@ -26,6 +26,7 @@ final class CBUserGroupMembershipToggleView {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBErrorHandler',
             'CBUI',
             'CBUIBooleanSwitchPart',
             'Colby',
