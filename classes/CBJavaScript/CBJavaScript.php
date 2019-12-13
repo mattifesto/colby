@@ -2,10 +2,16 @@
 
 class CBJavaScript {
 
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+
+
     /**
-     * @return null
+     * @return void
      */
-    static function CBAjax_reportError(stdClass $args) {
+    static function CBAjax_reportError(
+        stdClass $args
+    ): void {
         $errorModel = CBModel::valueToObject($args, 'errorModel');
         $pMessage = CBModel::value($errorModel, 'message');
         $pPageURL = CBModel::value($errorModel, 'pageURL');
@@ -99,7 +105,7 @@ class CBJavaScript {
                     ---
                 ---
 
-EOT;
+            EOT;
         } else {
             $stackAsMessage = '';
         }
@@ -112,7 +118,7 @@ EOT;
 
             {$stackAsMessage}
 
-EOT;
+        EOT;
 
         CBLog::log(
             (object)[
@@ -123,18 +129,30 @@ EOT;
             ]
         );
     }
+    /* CBAjax_reportError() */
+
+
 
     /**
      * @return object
      */
-    static function CBAjax_reportError_group() {
-        return 'Public';
+    static function CBAjax_reportError_getUserGroupClassName(): string {
+        return 'CBPublicUserGroup';
     }
+
+
+
+    /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @return bool
      */
-    static function shouldReportToDeveloper(stdClass $errorModel, array $hashes) {
+    static function shouldReportToDeveloper(
+        stdClass $errorModel,
+        array $hashes
+    ): bool {
         if (empty($errorModel->message) && empty($errorModel->sourceURL) && empty($errorModel->line)) {
             return false;
         }
@@ -160,6 +178,9 @@ EOT;
 
         return true;
     }
+    /* shouldReportToDeveloper() */
+
+
 
     /**
      * @param string $stack
@@ -168,7 +189,9 @@ EOT;
      *
      * @return string
      */
-    static function stackToMessage(string $stack): string {
+    static function stackToMessage(
+        string $stack
+    ): string {
         $lines = CBConvert::stringToLines($stack);
         $lineMessages = [];
 
@@ -213,4 +236,6 @@ EOT;
             $lineMessages
         );
     }
+    /* stackToMessage() */
+
 }
