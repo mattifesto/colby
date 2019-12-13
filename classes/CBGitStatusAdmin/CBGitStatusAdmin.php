@@ -2,12 +2,18 @@
 
 final class CBGitStatusAdmin {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return string
      */
     static function CBAdmin_group(): string {
         return 'Developers';
     }
+
+
 
     /**
      * @return [string]
@@ -20,12 +26,20 @@ final class CBGitStatusAdmin {
         ];
     }
 
+
+
     /**
      * @return void
      */
     static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'Git Status';
     }
+
+
+
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param mixed $args
@@ -45,12 +59,18 @@ final class CBGitStatusAdmin {
         return $results;
     }
 
+
+
     /**
      * @return string
      */
-    static function CBAjax_fetchStatus_group(): string {
-        return 'Developers';
+    static function CBAjax_fetchStatus_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
     }
+
+
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
 
 
@@ -92,6 +112,10 @@ final class CBGitStatusAdmin {
 
 
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return void
      */
@@ -105,17 +129,30 @@ final class CBGitStatusAdmin {
             'URL' => '/admin/?c=CBGitStatusAdmin',
         ];
 
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save($spec);
-        });
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save($spec);
+            }
+        );
     }
+
+
 
     /**
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBGitAdminMenu', 'CBGitHistoryAdmin'];
+        return [
+            'CBGitAdminMenu',
+            'CBGitHistoryAdmin',
+        ];
     }
+
+
+
+    /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @param string $command
@@ -150,12 +187,14 @@ final class CBGitStatusAdmin {
                 --- pre CBGitStatusAdmin_pre\n{$lines}
                 ---
 
-EOT;
+            EOT;
         }
     }
 
+
+
     /**
-     * @return stdClass
+     * @return object
      */
     static function fetchStatus(string $directory): stdClass {
         $location = empty($directory) ? 'website' : $directory;
@@ -165,7 +204,7 @@ EOT;
 
             {$locationAsMessage}
 
-EOT;
+        EOT;
 
         chdir(cbsitedir() . "/{$directory}");
 
@@ -181,11 +220,15 @@ EOT;
             $range = 'origin/master..HEAD';
         }
 
-        $message .= CBGitStatusAdmin::exec("git log {$range} --oneline --no-decorate --reverse");
+        $message .= CBGitStatusAdmin::exec(
+            "git log {$range} --oneline --no-decorate --reverse"
+        );
 
         return (object)[
             'location' => $location,
             'message' => $message,
         ];
     }
+    /* fetchStatus() */
+
 }
