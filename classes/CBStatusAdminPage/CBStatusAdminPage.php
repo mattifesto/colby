@@ -10,6 +10,15 @@ final class CBStatusAdminPage {
 
 
     /**
+     * @return string
+     */
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
+    }
+
+
+
+    /**
      * @param string $pageStub
      *
      * @return [string]
