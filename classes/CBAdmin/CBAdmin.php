@@ -67,11 +67,23 @@ final class CBAdmin {
     ): void {
 
         /**
-         * @NOTE 2019_08_06
+         * @NOTE 2019_12_13
          *
-         *      handle,admin.php ensures that all users are in the
-         *      Administrators group before calling this function. The
-         *      separation of that check from this function is not great.
+         *      Before today, the fact that handle,admin.php checked that all
+         *      users were members of CBAdministratorsUserGroup was used as
+         *      validation that any admin user could view any admin page without
+         *      the class for that page implementing
+         *      CBAdmin_getUserGroupClassName().
+         *
+         *      That changed today. An admin page is now required to implement
+         *      CBAdmin_getUserGroupClassName() or no user will be allowed to
+         *      view it.
+         *
+         * @TODO
+         *
+         *      Does handle,admin.php still need to check that users are members
+         *      of the CBAdministratorsUserGroup? Probably not, then non-admin
+         *      users could still use admin pages where appropriate.
          */
 
         $currentUserIsAuthorized = false;
