@@ -2,15 +2,30 @@
 
 final class CBTitleAndDescriptionDocumentation {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
+    }
+
+
+
     /**
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
         return [
             'help',
-            'title_description'
+            'title_description',
         ];
     }
+
+
 
     /**
      * @return void
