@@ -5,9 +5,11 @@ final class CBArtworkElementDocumentation {
     /**
      * @return string
      */
-    static function CBAdmin_group(): string {
-        return 'Developers';
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
     }
+
+
 
     /**
      * @return [string]
@@ -17,6 +19,8 @@ final class CBArtworkElementDocumentation {
             'help',
         ];
     }
+
+
 
     /**
      * @return void
@@ -35,15 +39,18 @@ final class CBArtworkElementDocumentation {
                 margin-bottom: 50px;
             }
 
-EOT;
+        EOT;
 
         CBHTMLOutput::addCSS($CSS);
 
-        CBView::renderSpec((object)[
-            'className' => 'CBPageTitleAndDescriptionView',
-        ]);
+        CBView::renderSpec(
+            (object)[
+                'className' => 'CBPageTitleAndDescriptionView',
+            ]
+        );
 
         $URL = CBTestAdmin::testImageURL();
+
         $message = <<<EOT
 
             A CBArtworkElement uses a set of 3 elements to display an image with
@@ -175,12 +182,15 @@ EOT;
                 element's bounds.
                 ---
             ---
-EOT;
 
-        CBView::renderSpec((object)[
-            'className' => 'CBMessageView',
-            'markup' => $message,
-        ]);
+        EOT;
+
+        CBView::renderSpec(
+            (object)[
+                'className' => 'CBMessageView',
+                'markup' => $message,
+            ]
+        );
 
         $message = <<<EOT
 
@@ -200,89 +210,104 @@ EOT;
             aspectRatioHeight: 9
             ---
 
-            No maximum width or maximum height is specified so the image will always
-            fill the entire available width regardles of the intrinsic image size.
+            No maximum width or maximum height is specified so the image will
+            always fill the entire available width regardles of the intrinsic
+            image size.
 
-EOT;
+        EOT;
 
-        CBView::renderSpec((object)[
-            'className' => 'CBMessageView',
-            'markup' => $message,
-        ]);
+        CBView::renderSpec(
+            (object)[
+                'className' => 'CBMessageView',
+                'markup' => $message,
+            ]
+        );
 
-        CBArtworkElement::render([
-            'height' => 9,
-            'width' => 16,
-            'URL' => $URL,
-        ]);
-
-        $message = <<<EOT
-
-        Below an artwork element rendered using the following parameters:
-
-        --- ul
-        aspectRatioWidth: 32
-
-        aspectRatioHeight: 9
-
-        maxWidth: 640
-        ---
-
-        The intrinsic image aspect ratio is not 32 by 9 and since the image is
-        contained within the CBArtworkElement aspect ratio the CBArtworkElement
-        has whitespace areas to the right and left.
-
-        Note: The CBArtworkElement whitespace areas are displayed with a red
-        background in these examples.
-
-        Note: CBArtworkElements are meant to be contained in views or other HTML
-        that will display them in a layout context so they have no default
-        layout behavior, such as centering.
-
-EOT;
-
-        CBView::renderSpec((object)[
-            'className' => 'CBMessageView',
-            'markup' => $message,
-        ]);
-
-        CBArtworkElement::render([
-            'height' => 9,
-            'width' => 32,
-            'maxWidth' => 640,
-            'URL' => $URL,
-        ]);
+        CBArtworkElement::render(
+            [
+                'height' => 9,
+                'width' => 16,
+                'URL' => $URL,
+            ]
+        );
 
         $message = <<<EOT
 
-        Below an artwork element rendered using the following parameters:
+            Below an artwork element rendered using the following parameters:
 
-        --- ul
-        aspectRatioWidth: 1
+            --- ul
+            aspectRatioWidth: 32
 
-        aspectRatioHeight: 1
+            aspectRatioHeight: 9
 
-        maxWidth: 640
-        ---
+            maxWidth: 640
+            ---
 
-        The intrinsic image aspect ratio is not 1 by 1 and since the image is
-        contained within the CBArtworkElement aspect ratio the CBArtworkElement
-        has whitespace areas on the top and bottom.
+            The intrinsic image aspect ratio is not 32 by 9 and since the image
+            is contained within the CBArtworkElement aspect ratio the
+            CBArtworkElement has whitespace areas to the right and left.
 
-EOT;
+            Note: The CBArtworkElement whitespace areas are displayed with a red
+            background in these examples.
 
-        CBView::renderSpec((object)[
-            'className' => 'CBMessageView',
-            'markup' => $message,
-        ]);
+            Note: CBArtworkElements are meant to be contained in views or other
+            HTML that will display them in a layout context so they have no
+            default layout behavior, such as centering.
 
-        CBArtworkElement::render([
-            'height' => 1,
-            'width' => 1,
-            'maxWidth' => 640,
-            'URL' => $URL,
-        ]);
+        EOT;
+
+        CBView::renderSpec(
+            (object)[
+                'className' => 'CBMessageView',
+                'markup' => $message,
+            ]
+        );
+
+        CBArtworkElement::render(
+            [
+                'height' => 9,
+                'width' => 32,
+                'maxWidth' => 640,
+                'URL' => $URL,
+            ]
+        );
+
+        $message = <<<EOT
+
+            Below an artwork element rendered using the following parameters:
+
+            --- ul
+            aspectRatioWidth: 1
+
+            aspectRatioHeight: 1
+
+            maxWidth: 640
+            ---
+
+            The intrinsic image aspect ratio is not 1 by 1 and since the image
+            is contained within the CBArtworkElement aspect ratio the
+            CBArtworkElement has whitespace areas on the top and bottom.
+
+        EOT;
+
+        CBView::renderSpec(
+            (object)[
+                'className' => 'CBMessageView',
+                'markup' => $message,
+            ]
+        );
+
+        CBArtworkElement::render(
+            [
+                'height' => 1,
+                'width' => 1,
+                'maxWidth' => 640,
+                'URL' => $URL,
+            ]
+        );
     }
+
+
 
     /**
      * @return void
@@ -297,15 +322,22 @@ EOT;
             'URL' => '/admin/?c=CBArtworkElementDocumentation',
         ];
 
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save($spec);
-        });
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save($spec);
+            }
+        );
     }
+
+
 
     /**
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
-        return ['CBHelpAdminMenu'];
+        return [
+            'CBHelpAdminMenu',
+        ];
     }
+
 }
