@@ -21,8 +21,8 @@ final class CBDataStoresAdminPage {
     /**
      * @return string
      */
-    static function CBAdmin_group(): string {
-        return 'Developers';
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
     }
 
 
