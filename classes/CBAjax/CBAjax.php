@@ -161,10 +161,24 @@ final class CBAjax {
 
                 return;
             } else {
-                $response->message = (
-                    'You do not have permission to call a requested ' .
-                    'Ajax function.'
+                $isDeveloper = CBUserGroup::currentUserIsMemberOfUserGroup(
+                    'CBDevelopersUserGroup'
                 );
+
+                if ($isDeveloper) {
+                    $response->message = CBConvert::stringToCleanLine(<<<EOT
+
+                        You do not have permission to call the Ajax function
+                        with the class "{$functionClassName}" and the name
+                        "{$functionName}".
+
+                    EOT);
+                } else {
+                    $response->message = (
+                        'You do not have permission to call a requested ' .
+                        'Ajax function.'
+                    );
+                }
 
                 $response->sourceCBID = (
                     '596da90f52ad2590f67d65e885d6d5e85ca590dd'
