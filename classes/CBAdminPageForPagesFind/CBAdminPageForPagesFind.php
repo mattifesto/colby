@@ -4,6 +4,8 @@ final class CBAdminPageForPagesFind {
 
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
@@ -15,6 +17,7 @@ final class CBAdminPageForPagesFind {
     }
 
 
+
     /**
      * @return null
      */
@@ -23,7 +26,10 @@ final class CBAdminPageForPagesFind {
     }
 
 
+
     /* -- CBAjax interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param object args
@@ -96,7 +102,7 @@ final class CBAdminPageForPagesFind {
             ORDER BY {$order}
             LIMIT 20
 
-EOT;
+        EOT;
 
         $pages = CBDB::SQLToObjects($SQL);
 
@@ -125,16 +131,19 @@ EOT;
     /* CBAjax_fetchPages() */
 
 
+
     /**
-     * @return {stdClass}
+     * @return string
      */
-    static function CBAjax_fetchPages_group(): string {
-        return 'Administrators';
+    static function CBAjax_fetchPages_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
-    /* CBAjax_fetchPages_group() */
+
 
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
