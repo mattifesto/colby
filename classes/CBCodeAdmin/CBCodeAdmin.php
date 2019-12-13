@@ -1629,13 +1629,29 @@ final class CBCodeAdmin {
                 (object)[
                     'cbmessage' => <<<EOT
 
-                        Use CBAjax_<name>_userGroupClassName().
+                        Use CBAjax_<name>_getUserGroupClassName().
 
                     EOT,
                     'filetype' => 'php',
                     'regex' => 'CBAjax_[^_]+_group',
                     'severity' => 4,
                     'title' => 'CBAjax_<name>_group',
+                ],
+
+
+                /**
+                 * 2019_12_13 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Replace with CBAdmin_getUserGroupClassName().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBAdmin_group',
+                    'severity' => 4,
+                    'title' => 'CBAdmin_group()',
                 ],
             ]
         );
