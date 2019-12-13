@@ -4,6 +4,21 @@ final class CBModelsAdminTemplateSelector {
 
     static $modelClassName = '';
 
+
+
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
+    }
+
+
+
     /**
      * @return void
      */
@@ -11,12 +26,18 @@ final class CBModelsAdminTemplateSelector {
         CBModelsAdminTemplateSelector::$modelClassName = cb_query_string_value('modelClassName');
     }
 
+
+
     /**
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['models'];
+        return [
+            'models'
+        ];
     }
+
+
 
     /**
      * @return void
@@ -27,20 +48,37 @@ final class CBModelsAdminTemplateSelector {
             ' Template Selector';
     }
 
+
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
-        return ['CBUI', 'CBUISectionItem4', 'CBUIMessagePart',
-                'CBUINavigationArrowPart', 'CBUIStringsPart'];
+        return [
+            'CBUI',
+            'CBUISectionItem4',
+            'CBUIMessagePart',
+            'CBUINavigationArrowPart',
+            'CBUIStringsPart',
+        ];
     }
+
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [Colby::flexpath(__CLASS__, 'js', cbsysurl())];
+        return [
+            Colby::flexpath(__CLASS__, 'js', cbsysurl()),
+        ];
     }
+
+
 
     /**
      * @return [[<name>, <value>]]
@@ -68,4 +106,6 @@ final class CBModelsAdminTemplateSelector {
             ['CBModelsAdminTemplateSelector_templates', $templates],
         ];
     }
+    /* CBHTMLOutput_JavaScriptVariables() */
+
 }
