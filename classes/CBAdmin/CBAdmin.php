@@ -36,6 +36,8 @@ final class CBAdmin {
 
     /* -- functions -- -- -- -- -- */
 
+
+
     /**
      * @param string $className
      *
@@ -49,6 +51,7 @@ final class CBAdmin {
     /* getAdminPageURL() */
 
 
+
     /**
      * @param string $className
      * @param string $pageStub (deprecated)
@@ -58,7 +61,10 @@ final class CBAdmin {
      *
      * @return void
      */
-    static function render(string $className, string $pageStub): void {
+    static function render(
+        string $className,
+        string $pageStub
+    ): void {
 
         /**
          * @NOTE 2019_08_06
@@ -68,19 +74,40 @@ final class CBAdmin {
          *      separation of that check from this function is not great.
          */
 
-        $functionName = "{$className}::CBAdmin_group";
+        $currentUserIsAuthorized = false;
+
+        $functionName = "{$className}::CBAdmin_getUserGroupClassName";
 
         if (is_callable($functionName)) {
-            $group = call_user_func($functionName);
+            $userGroupClassName = call_user_func($functionName);
 
-            if (!ColbyUser::currentUserIsMemberOfGroup($group)) {
-                include (
-                    cbsysdir() .
-                    '/handlers/handle-authorization-failed.php'
+            $currentUserIsAuthorized = CBUserGroup::userIsMemberOfUserGroup(
+                ColbyUser::getCurrentUserCBID(),
+                $userGroupClassName
+            );
+        } else {
+            /* deprecated */
+
+            $functionName = "{$className}::CBAdmin_group";
+
+            if (is_callable($functionName)) {
+                $groupName = call_user_func($functionName);
+
+                $currentUserIsAuthorized = (
+                    ColbyUser::currentUserIsMemberOfGroup(
+                        $groupName
+                    )
                 );
-
-                return;
             }
+        }
+
+        if (!$currentUserIsAuthorized) {
+            include (
+                cbsysdir() .
+                '/handlers/handle-authorization-failed.php'
+            );
+
+            return;
         }
 
         CBHTMLOutput::begin();
@@ -145,6 +172,7 @@ final class CBAdmin {
     /* render() */
 
 
+
     /**
      * @return [string]
      *
@@ -186,6 +214,7 @@ final class CBAdmin {
         );
     }
     /* fetchClassNames() */
+
 
 
     /**
