@@ -97,20 +97,6 @@ final class CBAdmin {
                 ColbyUser::getCurrentUserCBID(),
                 $userGroupClassName
             );
-        } else {
-            /* deprecated */
-
-            $functionName = "{$className}::CBAdmin_group";
-
-            if (is_callable($functionName)) {
-                $groupName = call_user_func($functionName);
-
-                $currentUserIsAuthorized = (
-                    ColbyUser::currentUserIsMemberOfGroup(
-                        $groupName
-                    )
-                );
-            }
         }
 
         if (!$currentUserIsAuthorized) {
