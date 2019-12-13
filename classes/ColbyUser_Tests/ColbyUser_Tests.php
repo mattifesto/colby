@@ -12,6 +12,10 @@ final class ColbyUser_Tests {
     static function CBTest_getTests(): array {
         return [
             (object)[
+                'name' => 'createNewTestUser',
+                'type' => 'interactive_server',
+            ],
+            (object)[
                 'name' => 'general',
                 'title' => 'ColbyUser',
                 'type' => 'server',
@@ -33,6 +37,37 @@ final class ColbyUser_Tests {
 
 
     /* -- tests -- -- -- -- -- */
+
+
+
+    /**
+     * This test creates a new user to be used for testing.
+     *
+     * For now, this user has a random Facebook ID since that is currently
+     * required and is not great, but let's face it, there aren't likely to be
+     * conflicts.
+     *
+     * Eventually users will be easy to create with just an email address and
+     * this test can be removed.
+     *
+     * @return object
+     */
+    static function CBTest_createNewTestUser(): stdClass {
+        $facebookUserID = 29384398;
+        $facebookAccessToken = 'invalid_test';
+        $facebookName = 'Clay Cartwright (Test User)';
+
+        ColbyUser::updateFacebookUser(
+            $facebookUserID,
+            $facebookAccessToken,
+            $facebookName
+        );
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_createNewTestUser() */
 
 
 
