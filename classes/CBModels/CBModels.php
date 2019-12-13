@@ -44,10 +44,48 @@ final class CBModels {
     /**
      * @return string
      */
-    static function CBAjax_deleteByID_group() {
-        return 'Administrators';
+    static function CBAjax_deleteByID_getUserGroupClassName() {
+        return 'CBAdministratorsUserGroup';
     }
-    /* CBAjax_deleteByID_group() */
+
+
+
+    /**
+     * @return void
+     */
+    static function CBAjax_revert(stdClass $args): void {
+        $ID = CBModel::valueAsID($args, 'ID');
+
+        if ($ID === null) {
+            throw CBException::createModelIssueException(
+                'The "ID" property is not a valid ID.',
+                $args,
+                '4fa9a03d08fe03aaac74891718fb02f247ede2ca'
+            );
+        }
+
+        $version = CBModel::valueAsInt($args, 'version');
+
+        if ($version === null) {
+            throw CBException::createModelIssueException(
+                'The "version" property is not a valid integer.',
+                $args,
+                'f37d2fdd918adcedce86682d0499b7001f65f6b2'
+            );
+        }
+
+        CBModels::revert($ID, $version);
+    }
+    /* CBAjax_revert() */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_revert_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
+    }
 
 
 
@@ -119,14 +157,15 @@ final class CBModels {
     /**
      * @return string
      */
-    static function CBAjax_save_group(): string {
-        return 'Public';
+    static function CBAjax_save_getUserGroupClassName(): string {
+        return 'CBPublicUserGroup';
     }
-    /* CBAjax_save_group() */
 
 
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -173,6 +212,7 @@ final class CBModels {
         ];
     }
     /* CBInstall_requiredClassNames() */
+
 
 
     /* -- functions -- -- -- -- -- */
@@ -843,46 +883,6 @@ final class CBModels {
         CBModels::save([$spec], /* force: */ true);
     }
     /* revert() */
-
-
-
-    /**
-     * @return void
-     */
-    static function CBAjax_revert(stdClass $args): void {
-        $ID = CBModel::valueAsID($args, 'ID');
-
-        if ($ID === null) {
-            throw CBException::createModelIssueException(
-                'The "ID" property is not a valid ID.',
-                $args,
-                '4fa9a03d08fe03aaac74891718fb02f247ede2ca'
-            );
-        }
-
-        $version = CBModel::valueAsInt($args, 'version');
-
-        if ($version === null) {
-            throw CBException::createModelIssueException(
-                'The "version" property is not a valid integer.',
-                $args,
-                'f37d2fdd918adcedce86682d0499b7001f65f6b2'
-            );
-        }
-
-        CBModels::revert($ID, $version);
-    }
-    /* CBAjax_revert() */
-
-
-
-    /**
-     * @return string
-     */
-    static function CBAjax_revert_group(): string {
-        return 'Administrators';
-    }
-    /* CBAjax_revert_group() */
 
 
 
