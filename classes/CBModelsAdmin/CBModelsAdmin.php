@@ -12,6 +12,15 @@ final class CBModelsAdmin {
 
 
     /**
+     * @return string
+     */
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
+    }
+
+
+
+    /**
      * @return void
      */
     static function CBAdmin_initialize(): void {
