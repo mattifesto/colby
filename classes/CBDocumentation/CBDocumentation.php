@@ -2,6 +2,19 @@
 
 final class CBDocumentation {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
+    }
+
+
+
     /**
      * @return [string]
      */
@@ -10,6 +23,8 @@ final class CBDocumentation {
             'help'
         ];
     }
+
+
 
     /**
      * @return void
@@ -31,7 +46,8 @@ final class CBDocumentation {
                 justify-content: center;
                 height: 44px;
             }
-EOT;
+
+        EOT;
 
         CBHTMLOutput::addCSS($CSS);
 
@@ -75,4 +91,6 @@ EOT;
 
         ?></div><?php
     }
+    /* CBAdmin_render() */
+
 }
