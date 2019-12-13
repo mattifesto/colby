@@ -9,8 +9,8 @@ final class Documentation_CBModel_LifeCycle {
     /**
      * @return string
      */
-    static function CBAdmin_group(): string {
-        return 'Developers';
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
     }
 
 
