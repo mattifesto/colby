@@ -4,6 +4,8 @@ class CBImages {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return object
      *
@@ -14,15 +16,19 @@ class CBImages {
     }
 
 
+
     /**
      * @return string
      */
-    static function CBAjax_upload_group(): string {
-        return 'Administrators';
+    static function CBAjax_upload_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
 
 
+
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
@@ -42,14 +48,17 @@ class CBImages {
             DEFAULT CHARSET=utf8mb4
             COLLATE=utf8mb4_unicode_520_ci
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
     }
     /* CBInstall_install() */
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * This function is called by CBImage::CBModels_willDelete() and shouldn't
@@ -67,6 +76,7 @@ EOT;
 
         Colby::query($SQL);
     }
+
 
 
     /**
@@ -93,6 +103,7 @@ EOT;
     }
 
 
+
     /**
      * This function determines in an ID is a valid CBImage ID.
      *
@@ -112,12 +123,13 @@ EOT;
             FROM `CBImages`
             WHERE `ID` = {$IDAsSQL}
 
-EOT;
+        EOT;
 
         return boolval(
             CBDB::SQLToValue($SQL)
         );
     }
+
 
 
     /**
@@ -190,6 +202,7 @@ EOT;
     /* makeAndSendImageForPath() */
 
 
+
     /**
      * @param string $ID
      *
@@ -229,6 +242,7 @@ EOT;
         ];
     }
     /* makeModelForID() */
+
 
 
     /**
@@ -283,6 +297,7 @@ EOT;
         ];
     }
     /* reduceImage() */
+
 
 
     /**
@@ -402,6 +417,7 @@ EOT;
     /* reduceImageFile() */
 
 
+
     /**
      * This function is called by CBImage::CBModels_willSave() and shouldn't
      * be called otherwise. Saving an image model will call this function.
@@ -430,11 +446,12 @@ EOT;
             ON DUPLICATE KEY UPDATE
                 `modified` = {$timestampAsSQL}
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
     }
     /* updateRow() */
+
 
 
     /**
@@ -523,6 +540,7 @@ EOT;
     /* uploadImageWithName() */
 
 
+
     /**
      * This function will return a CBImage spec for an image URI. If the URI is
      * a local image file that is not a CBImage, the image will be imported.
@@ -609,6 +627,7 @@ EOT;
     /* URIToCBImage() */
 
 
+
     /**
      * @param string $name
      *
@@ -652,4 +671,5 @@ EOT;
         }
     }
     /* verifyUploadedFile() */
+
 }
