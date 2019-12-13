@@ -5,9 +5,11 @@ final class CBCSSVariablesHelp {
     /**
      * @return string
      */
-    static function CBAdmin_group() {
-        return 'Developers';
+    static function CBAdmin_getUserGroupClassName() {
+        return 'CBDevelopersUserGroup';
     }
+
+
 
     /**
      * @return [string]
@@ -15,6 +17,8 @@ final class CBCSSVariablesHelp {
     static function CBAdmin_menuNamePath(): array {
         return ['help', 'cssvariables'];
     }
+
+
 
     /**
      * @return void
