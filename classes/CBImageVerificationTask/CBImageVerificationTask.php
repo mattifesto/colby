@@ -18,8 +18,8 @@ final class CBImageVerificationTask {
     /**
      * @return string
      */
-    static function CBAjax_startForAllImages_group(): string {
-        return 'Developers';
+    static function CBAjax_startForAllImages_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
     }
 
 
