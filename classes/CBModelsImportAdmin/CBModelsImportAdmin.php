@@ -220,8 +220,8 @@ final class CBModelsImportAdmin {
     /**
      * @return string
      */
-    static function CBAjax_uploadDataFile_group(): string {
-        return 'Administrators';
+    static function CBAjax_uploadDataFile_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
 
 
