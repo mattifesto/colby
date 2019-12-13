@@ -2,14 +2,29 @@
 
 final class CBMarkaroundDocumentation {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
+    }
+
+
+
     /**
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
         return [
-            'help'
+            'help',
         ];
     }
+
+
 
     /**
      * @return void
