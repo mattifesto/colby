@@ -4,6 +4,17 @@ final class CBModelsImportAdmin {
 
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
+
+
+    /**
+     * @return string
+     */
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
+    }
+
+
+
     /**
      * @return [string]
      */
