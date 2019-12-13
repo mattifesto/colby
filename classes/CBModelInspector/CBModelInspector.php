@@ -7,6 +7,15 @@ final class CBModelInspector {
 
 
     /**
+     * @return string
+     */
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
+    }
+
+
+
+    /**
      * @return [string]
      */
     static function CBAdmin_menuNamePath() {
