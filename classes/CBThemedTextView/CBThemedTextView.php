@@ -2,6 +2,10 @@
 
 final class CBThemedTextView {
 
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+
+
     /**
      * @param object $spec
      *
@@ -11,12 +15,34 @@ final class CBThemedTextView {
         return CBThemedTextView::convertToCBMessageView($spec);
     }
 
+
+
     /**
      * @return string
      */
-    static function CBAjax_convertToCBMessageView_group(): string {
-        return 'Administrators';
+    static function CBAjax_convertToCBMessageView_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
+
+
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v458.css', cbsysurl()),
+        ];
+    }
+
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
 
 
     /**
@@ -32,6 +58,7 @@ final class CBThemedTextView {
     }
 
 
+
     /**
      * @return [string]
      */
@@ -42,91 +69,9 @@ final class CBThemedTextView {
     }
 
 
-    /**
-     * @param model $model
-     *
-     * @return string
-     */
-    static function CBModel_toSearchText(stdClass $model): string {
-        return implode(
-            ' ',
-            [
-                CBModel::valueToString($model, 'title'),
-                CBModel::valueToString($model, 'contentAsMarkaround'),
-            ]
-        );
-    }
 
-    /**
-     * @param bool? $model->center;
-     * @param string? $model->contentAsHTML
-     * @param string? $model->titleAsHTML
-     * @param string? $model->URLAsHTML
-     * @param bool? $model->useLightTextColors
-     *
-     * @return null
-     */
-    static function CBView_render(stdClass $model) {
-        if (empty($model->titleAsHTML) && empty($model->contentAsHTML)) {
-            return;
-        }
+    /* -- CBModel interfaces -- -- -- -- -- */
 
-        $class = "CBThemedTextView CBThemedTextView_default";
-
-        if (!empty($model->stylesID)) {
-            $stylesClass = "T{$model->stylesID}";
-            $class = "{$class} {$stylesClass}";
-        }
-
-        if (!empty($model->useLightTextColors)) {
-            $class = "{$class} light";
-        }
-
-        CBHTMLOutput::addCSS(CBModel::value($model, 'stylesCSS'));
-
-        $style = empty($model->center) ? '' : ' style="text-align: center"';
-
-        if (empty($model->URLAsHTML)) {
-            $open = "<section class=\"{$class}\"{$style}>";
-            $close = '</section>';
-        } else {
-            $open = (
-                "<a href=\"{$model->URLAsHTML}\" class=\"{$class}\"{$style}>"
-            );
-            $close = '</a>';
-        }
-
-        if (empty($model->titleAsHTML)) {
-            $title = '';
-        } else {
-            $style =
-            empty($model->titleColor) ?
-            '' :
-            " style=\"color: {$model->titleColor}\"";
-
-            $title = (
-                "<div class=\"title\">" .
-                "<h1{$style}>{$model->titleAsHTML}</h1>" .
-                "</div>"
-            );
-        }
-
-        if (empty($model->contentAsHTML)) {
-            $content = '';
-        } else {
-            $style =
-            empty($model->contentColor) ?
-            '' :
-            " style=\"color: {$model->contentColor}\"";
-
-            $content = (
-                "<div class=\"content\" {$style}>{$model->contentAsHTML}</div>"
-            );
-        }
-
-        echo $open, $title, $content, $close;
-    }
-    /* CBView_render() */
 
 
     /**
@@ -203,23 +148,115 @@ final class CBThemedTextView {
     /* CBModel_build() */
 
 
+
     /**
-     * @return [string]
+     * @param model $model
+     *
+     * @return string
      */
-    static function CBHTMLOutput_CSSURLs(): array {
-        return [
-            Colby::flexpath(__CLASS__, 'v458.css', cbsysurl()),
-        ];
+    static function CBModel_toSearchText(stdClass $model): string {
+        return implode(
+            ' ',
+            [
+                CBModel::valueToString($model, 'title'),
+                CBModel::valueToString($model, 'contentAsMarkaround'),
+            ]
+        );
     }
+
+
+
+    /* -- CBView interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @param bool? $model->center;
+     * @param string? $model->contentAsHTML
+     * @param string? $model->titleAsHTML
+     * @param string? $model->URLAsHTML
+     * @param bool? $model->useLightTextColors
+     *
+     * @return null
+     */
+    static function CBView_render(stdClass $model) {
+        if (empty($model->titleAsHTML) && empty($model->contentAsHTML)) {
+            return;
+        }
+
+        $class = "CBThemedTextView CBThemedTextView_default";
+
+        if (!empty($model->stylesID)) {
+            $stylesClass = "T{$model->stylesID}";
+            $class = "{$class} {$stylesClass}";
+        }
+
+        if (!empty($model->useLightTextColors)) {
+            $class = "{$class} light";
+        }
+
+        CBHTMLOutput::addCSS(CBModel::value($model, 'stylesCSS'));
+
+        $style = empty($model->center) ? '' : ' style="text-align: center"';
+
+        if (empty($model->URLAsHTML)) {
+            $open = "<section class=\"{$class}\"{$style}>";
+            $close = '</section>';
+        } else {
+            $open = (
+                "<a href=\"{$model->URLAsHTML}\" class=\"{$class}\"{$style}>"
+            );
+            $close = '</a>';
+        }
+
+        if (empty($model->titleAsHTML)) {
+            $title = '';
+        } else {
+            $style =
+            empty($model->titleColor) ?
+            '' :
+            " style=\"color: {$model->titleColor}\"";
+
+            $title = (
+                "<div class=\"title\">" .
+                "<h1{$style}>{$model->titleAsHTML}</h1>" .
+                "</div>"
+            );
+        }
+
+        if (empty($model->contentAsHTML)) {
+            $content = '';
+        } else {
+            $style =
+            empty($model->contentColor) ?
+            '' :
+            " style=\"color: {$model->contentColor}\"";
+
+            $content = (
+                "<div class=\"content\" {$style}>{$model->contentAsHTML}</div>"
+            );
+        }
+
+        echo $open, $title, $content, $close;
+    }
+    /* CBView_render() */
+
+
+
+    /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * This function converts a CBThemedTextView spec into a CBMessageView spec.
      *
      * @param object $spec
      *
-     * @return model
+     * @return object
      */
-    static function convertToCBMessageView(stdClass $specIn): stdClass {
+    static function convertToCBMessageView(
+        stdClass $specIn
+    ): stdClass {
         $message = '';
         $CSSClassNames = [];
         $CSSTemplate = [];
@@ -313,4 +350,6 @@ final class CBThemedTextView {
 
         return $specOut;
     }
+    /* convertToCBMessageView() */
+
 }
