@@ -2,6 +2,10 @@
 
 final class CBMaintenance {
 
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+
+
     /**
      * @param object $args
      *
@@ -13,22 +17,31 @@ final class CBMaintenance {
      * @return void
      */
     static function CBAjax_lock(stdClass $args): void {
-        $didLock = CBMaintenance::lock((object)[
-            'holderID' => CBModel::valueAsID($args, 'holderID'),
-            'title' => CBModel::valueToString($args, 'title'),
-        ]);
+        $didLock = CBMaintenance::lock(
+            (object)[
+                'holderID' => CBModel::valueAsID($args, 'holderID'),
+                'title' => CBModel::valueToString($args, 'title'),
+            ]
+        );
 
         if (!$didLock) {
-            throw new Exception('Unable to lock. The lock is held by another process.');
+            throw new Exception(
+                'Unable to lock. The lock is held by another process.'
+            );
         }
     }
+    /* CBAjax_lock() */
+
+
 
     /**
      * @return string
      */
-    static function CBAjax_lock_group(): string {
-        return 'Administrators';
+    static function CBAjax_lock_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
+
+
 
     /**
      * @param object $args
@@ -40,15 +53,25 @@ final class CBMaintenance {
      * @return void
      */
     static function CBAjax_unlock(stdClass $args): void {
-        CBMaintenance::unlock(CBModel::valueAsID($args, 'holderID'));
+        CBMaintenance::unlock(
+            CBModel::valueAsID($args, 'holderID')
+        );
     }
+
+
 
     /**
      * @return string
      */
-    static function CBAjax_unlock_group(): string {
-        return 'Administrators';
+    static function CBAjax_unlock_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
     }
+
+
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
