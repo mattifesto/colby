@@ -2,12 +2,30 @@
 
 final class CBUIExpanderDocumentation {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBAdministratorsUserGroup';
+    }
+
+
+
     /**
      * @return [string]
      */
     static function CBAdmin_menuNamePath(): array {
-        return ['help', 'CBUIExpander'];
+        return [
+            'help',
+            'CBUIExpander',
+        ];
     }
+
+
 
     /**
      * @return void
@@ -15,6 +33,8 @@ final class CBUIExpanderDocumentation {
     static function CBAdmin_render(): void {
         CBHTMLOutput::pageInformation()->title = 'CBUIExpander Documentation';
     }
+
+
 
     /**
      * @return [string]
