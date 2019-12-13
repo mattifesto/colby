@@ -9,8 +9,8 @@ class CBImagesAdmin {
     /**
      * @return string
      */
-    static function CBAdmin_group() {
-        return 'Developers';
+    static function CBAdmin_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
     }
 
 
