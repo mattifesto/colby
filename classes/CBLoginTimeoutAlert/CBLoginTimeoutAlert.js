@@ -10,11 +10,22 @@
 
 Colby.afterDOMContentLoaded(
     function () {
-        let userWasLoggedIn = (
-            localStorage.getItem(
-                "CBLoginTimeoutAlert_userWasLogggedIn"
-            ) === "yes"
-        );
+        let userWasLoggedIn = false;
+
+        /**
+         * If localStorage is disabled in the browser an error will be thrown
+         * which also means they are not logged in and cannot be.
+         */
+
+        try {
+            userWasLoggedIn = (
+                localStorage.getItem(
+                    "CBLoginTimeoutAlert_userWasLogggedIn"
+                ) === "yes"
+            );
+        } catch (error) {
+            return;
+        }
 
         if (userWasLoggedIn) {
             if (!CBLoginTimeoutAlert_userIsLoggedIn) {
