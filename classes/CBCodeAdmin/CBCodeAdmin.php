@@ -281,7 +281,6 @@ final class CBCodeAdmin {
                 /* -- errors -- -- -- -- -- */
 
 
-
                 /**
                  * 2019_06_16
                  */
@@ -1661,6 +1660,24 @@ final class CBCodeAdmin {
                     'regex' => 'CBAjax_[^_]+_group',
                     'severity' => 4,
                     'title' => 'CBAjax_<name>_group',
+                ],
+
+
+                /**
+                 * 2019_12_14 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use user group class names.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => (
+                        '[^\w\s](Public|Developers|Administrators)[^\w\s]'
+                    ),
+                    'severity' => 4,
+                    'title' => 'deprecated user group names',
                 ],
             ]
         );
