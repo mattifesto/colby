@@ -117,30 +117,17 @@ final class CBAjax {
                 $userGroupClassName
             );
         } else {
-            /* deprecated */
-
-            $getGroupFunction = (
-                $functionClassName .
-                "::CBAjax_{$functionName}_group"
-            );
-
-            if (!is_callable($getGroupFunction)) {
-                throw new CBExceptionWithValue(
-                    (
-                        'The Ajax group interface was not implemented ' .
-                        'for this Ajax function call.'
-                    ),
-                    $ajaxArguments,
-                    'bc0310f24170ebee3dfc6bf4d47ce284a5408646'
-                );
-            }
-
-            $userGroupName = call_user_func($getGroupFunction);
-
-            $userIsMemberOfUserGroup = ColbyUser::currentUserIsMemberOfGroup(
-                $userGroupName
+            throw new CBExceptionWithValue(
+                (
+                    'The CBAjax_function_getUserGroupClassName() ' .
+                    'interface was not implemented for this Ajax ' .
+                    'function call.'
+                ),
+                $ajaxArguments,
+                'bc0310f24170ebee3dfc6bf4d47ce284a5408646'
             );
         }
+
 
         if (!$userIsMemberOfUserGroup) {
             if (ColbyUser::getCurrentUserCBID() === null) {
