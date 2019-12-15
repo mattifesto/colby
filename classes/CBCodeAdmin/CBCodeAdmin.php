@@ -1283,6 +1283,23 @@ final class CBCodeAdmin {
                 ],
 
 
+                /**
+                 * 2019_12_04 (warning)
+                 * 2019_12_14 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBAjax_<name>_getUserGroupClassName().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBAjax_[^_]+_group',
+                    'severity' => 3,
+                    'title' => 'CBAjax_<name>_group',
+                ],
+
+
 
                 /* -- warnings -- -- -- -- -- */
 
@@ -1644,22 +1661,6 @@ final class CBCodeAdmin {
                     'regex' => 'currentUserIsMemberOfGroup',
                     'severity' => 4,
                     'title' => 'ColbyUser::currentUserIsMemberOfGroup()',
-                ],
-
-
-                /**
-                 * 2019_12_04 (warning)
-                 */
-                (object)[
-                    'cbmessage' => <<<EOT
-
-                        Use CBAjax_<name>_getUserGroupClassName().
-
-                    EOT,
-                    'filetype' => 'php',
-                    'regex' => 'CBAjax_[^_]+_group',
-                    'severity' => 4,
-                    'title' => 'CBAjax_<name>_group',
                 ],
 
 
