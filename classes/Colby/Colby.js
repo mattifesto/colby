@@ -268,8 +268,17 @@ var Colby = {
     },
 
 
+
     /**
      * Converts an error object to a CBJavaScriptError model.
+     *
+     * Properties:
+     *
+     *      Safari          Firefox
+     *      ------          -------
+     *      column          columnNumber
+     *      line            lineNumber
+     *      sourceURL       filename
      *
      * History:
      *
@@ -285,16 +294,36 @@ var Colby = {
      * @return object (CBJavaScriptError)
      */
     errorToCBJavaScriptErrorModel: function (error) {
+        let lineNumber = (
+            error.line === undefined ?
+            error.lineNumber :
+            error.line
+        );
+
+        let columnNumber = (
+            error.column === undefined ?
+            error.columnNumber :
+            error.column
+        );
+
+        let sourceURL = (
+            error.sourceURL === undefined ?
+            error.filename :
+            error.sourceURL
+        );
+
         return {
             className: 'CBJavaScriptError',
-            column: error.column,
-            line: error.line,
+            column: columnNumber,
+            line: lineNumber,
             message: error.message,
             pageURL: location.href,
-            sourceURL: error.sourceURL,
+            sourceURL: sourceURL,
             stack: error.stack,
         };
     },
+    /* errorToCBJavaScriptErrorModel() */
+
 
 
     /**
@@ -314,6 +343,8 @@ var Colby = {
 
         return "\"" + message + "\" in " + basename + " line " + line;
     },
+    /* errorToMessage() */
+
 
 
     /**
