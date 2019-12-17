@@ -11,7 +11,7 @@ final class CBConvertTests {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v533.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v560.js', cbsysurl()),
         ];
     }
 
@@ -25,6 +25,10 @@ final class CBConvertTests {
             [
                 'CBConvertTests_valueAsMonikerTestCases',
                 CBConvertTests::valueAsMonikerTestCases(),
+            ],
+            [
+                'CBConvertTests_valueAsNameTestCases',
+                CBConvertTests::valueAsNameTestCases(),
             ],
         ];
     }
@@ -127,6 +131,9 @@ final class CBConvertTests {
             ],
             (object)[
                 'name' => 'valueAsMoniker',
+            ],
+            (object)[
+                'name' => 'valueAsName',
             ],
             (object)[
                 'name' => 'valueAsNumber',
@@ -865,6 +872,36 @@ EOT;
             ],
             (object)[
                 'originalValue' => 'dögs',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => '   ',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => [],
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => (object)[
+                    'foo' => 'bar',
+                ],
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => 0,
+                'expectedResult' => '0',
+            ],
+            (object)[
+                'originalValue' => 123,
+                'expectedResult' => '123',
+            ],
+            (object)[
+                'originalValue' => -1,
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => 3.14,
                 'expectedResult' => null,
             ],
         ];

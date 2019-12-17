@@ -4,13 +4,21 @@
 /* exported CBConvertTests */
 /* global
     CBConvert,
-    CBConvertTests_valueAsMonikerTestCases,
     CBModel,
     CBMessageMarkup,
     CBTest,
+
+    CBConvertTests_valueAsMonikerTestCases,
+    CBConvertTests_valueAsNameTestCases,
 */
 
+
+
 var CBConvertTests = {
+
+    /* -- tests -- -- -- -- -- */
+
+
 
     /**
      * @return object|Promise
@@ -268,6 +276,9 @@ var CBConvertTests = {
             succeeded: true,
         };
     },
+    /* CBTest_valueAsInt() */
+
+
 
     /**
      * @return object|Promise
@@ -330,6 +341,9 @@ var CBConvertTests = {
             succeeded: true,
         };
     },
+    /* CBTest_valueAsModel() */
+
+
 
     /**
      * @return object|Promise
@@ -359,6 +373,45 @@ var CBConvertTests = {
             succeeded: true,
         };
     },
+    /* CBTest_valueAsMoniker() */
+
+
+
+    /**
+     * @return object
+     */
+    CBTest_valueAsName: function () {
+        let testCaseCount = CBConvertTests_valueAsNameTestCases.length;
+
+        for (let index = 0; index < testCaseCount; index += 1) {
+            let testCase = CBConvertTests_valueAsNameTestCases[index];
+
+            let actualResult = CBConvert.valueAsName(
+                testCase.originalValue
+            );
+
+            let expectedResult = (
+                testCase.expectedResult === null ?
+                undefined :
+                testCase.expectedResult
+            );
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    JSON.stringify(testCase.originalValue),
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_valueAsName() */
+
+
 
     /**
      * @return object|Promise
