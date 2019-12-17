@@ -267,6 +267,20 @@ var CBModel = {
      * @param mixed model
      * @param string keyPath
      *
+     * @return string|undefined
+     */
+    valueAsName: function (model, keyPath) {
+        return CBConvert.valueAsName(
+            CBModel.value(model, keyPath)
+        );
+    },
+
+
+
+    /**
+     * @param mixed model
+     * @param string keyPath
+     *
      * @return Number|undefined
      */
     valueAsNumber: function (model, keyPath) {
