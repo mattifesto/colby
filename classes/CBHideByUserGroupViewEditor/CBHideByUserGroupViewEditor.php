@@ -11,7 +11,7 @@ final class CBHideByUserGroupViewEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v547.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v560.js', cbsysurl()),
         ];
     }
 
@@ -47,6 +47,7 @@ final class CBHideByUserGroupViewEditor {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBModel',
             'CBUI',
             'CBUIBooleanEditor',
             'CBUISelector',

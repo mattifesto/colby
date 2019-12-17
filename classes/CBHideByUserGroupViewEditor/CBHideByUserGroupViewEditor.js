@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBHideByUserGroupViewEditor */
 /* global
+    CBModel,
     CBUI,
     CBUIBooleanEditor,
     CBUISelector,
@@ -17,8 +18,12 @@
 var CBHideByUserGroupViewEditor = {
 
     /**
-     * @param object args.spec
-     * @param function args.specChangedCallback
+     * @param object args
+     *
+     *      {
+     *          spec: object
+     *          specChangedCallback: function
+     *      }
      *
      * @return Element
      */
@@ -30,10 +35,9 @@ var CBHideByUserGroupViewEditor = {
 
         var groupOptions = [
             {
-                title: "All Visitors",
+                title: "None",
                 description: (
-                    "Every visitor, logged in or out, is a member of this " +
-                    "group."
+                    "Subviews are always hidden."
                 ),
                 value: undefined
             },
@@ -62,7 +66,7 @@ var CBHideByUserGroupViewEditor = {
             CBUISelector.create(
                 {
                     labelText: "User Group",
-                    propertyName: "groupName",
+                    propertyName: "userGroupClassName",
                     spec: args.spec,
                     specChangedCallback: args.specChangedCallback,
                     options: groupOptions,
@@ -139,44 +143,61 @@ var CBHideByUserGroupViewEditor = {
 
 
     /**
-     * @param string? spec.groupName
-     * @param bool? spec.hideFromMembers
-     * @param bool? spec.hideFromNonmembers
+     * @param object spec
+     *
+     *      {
+     *          userGroupClassName: string
+     *          hideFromMembers: bool
+     *          hideFromNonmembers: bool
+     *      }
      *
      * @return string|undefined
      */
     CBUISpec_toDescription: function (spec) {
+        let userGroupClassName = CBModel.valueAsName(
+            spec,
+            "userGroupClassName"
+        );
+
+
+        /* no user group class name is selected */
+
+        if (userGroupClassName === undefined) {
+            return "Subviews are always hidden.";
+        }
+
+
+        /* hidden from all or shown to all */
+
         if (
             spec.hideFromMembers &&
             spec.hideFromNonmembers
         ) {
-            return "Hidden from everyone";
+            return "Subviews are hidden from everyone";
         } else if (
             !spec.hideFromMembers &&
             !spec.hideFromNonmembers
         ) {
-            return "Shown to everyone";
+            return "Subviews are shown to everyone";
         }
 
-        if (!spec.groupName) {
-            if (spec.hideFromMembers) {
-                return "Hidden from all visitors";
-            }
-
-            if (spec.hideFromNonmembers) {
-                return "Shown to all visitors";
-            }
-        }
 
         if (spec.hideFromMembers) {
-            return "Hidden from members of " + spec.groupName;
+            return (
+                "Subviews are hidden from members of " + userGroupClassName
+            );
         }
+
 
         if (spec.hideFromNonmembers) {
-            return "Hidden from nonmembers of " + spec.groupName;
+            return (
+                "Subviews are hidden from nonmembers of " + userGroupClassName
+            );
         }
 
-        // Unreachable
+
+        /* unreachable */
+
         return undefined;
     },
     /* CBUISpec_toDescription() */
