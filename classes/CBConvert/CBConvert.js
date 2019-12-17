@@ -325,7 +325,11 @@ var CBConvert = {
         }
     },
 
+
+
     /**
+     * @deprecated user CBConvert.valueAsName()
+     *
      * @param mixed value
      *
      * @return string|undefined
@@ -339,6 +343,27 @@ var CBConvert = {
             return undefined;
         }
     },
+
+
+
+    /**
+     * @param mixed value
+     *
+     * @return string|undefined
+     */
+    valueAsName: function (value) {
+        let potentialName = CBConvert.valueToString(
+            value
+        ).trim();
+
+        if (CBConvert.valueIsName(potentialName)) {
+            return potentialName;
+        } else {
+            return undefined;
+        }
+    },
+
+
 
     /**
      * Determines whether the value parameter can reasonably be interpreted to
@@ -393,6 +418,8 @@ var CBConvert = {
         return undefined;
     },
 
+
+
     /**
      * This function does not consider null values or arrays to be objects.
      *
@@ -412,6 +439,23 @@ var CBConvert = {
         }
     },
 
+
+
+    /**
+     * @param mixed value
+     *
+     * @return bool
+     */
+    valueIsName: function (value) {
+        if (typeof value !== "string") {
+            return false;
+        }
+
+        return /^[a-zA-Z0-9_]+$/.test(value);
+    },
+
+
+
     /**
      * @param mixed value
      *
@@ -427,6 +471,8 @@ var CBConvert = {
             return [];
         }
     },
+
+
 
     /**
      * This function exists to simplify boolean conversions, especially with
