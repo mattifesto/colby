@@ -40,13 +40,25 @@ final class CBHideByUserGroupView {
      *      {
      *          hideFromMembers: ?bool
      *          hideFromNonmembers: ?bool
-     *          groupName: ?string
      *          subviews: ?[model]
+     *
+     *          userGroupClassName: ?string
+     *
+     *              A value that returns null from CBConvert::valueAsName()
+     *              means that the subviews will not be shown to any users. This
+     *              is the default.
+     *
+     *          groupName: ?string
+     *
+     *              @deprecated This property is upgraded to a
+     *              "userGroupClassName" property value in CBModel_upgrade().
      *      }
      *
      * @return object
      */
-    static function CBModel_build(stdClass $spec): stdClass {
+    static function CBModel_build(
+        stdClass $spec
+    ): stdClass {
         return (object)[
             'hideFromMembers' => CBModel::valueToBool(
                 $spec,
@@ -58,13 +70,6 @@ final class CBHideByUserGroupView {
                 'hideFromNonmembers'
             ),
 
-            'groupName' => trim(
-                CBModel::valueToString(
-                    $spec,
-                    'groupName'
-                )
-            ),
-
             'subviews' => array_values(
                 array_filter(
                     array_map(
@@ -72,6 +77,19 @@ final class CBHideByUserGroupView {
                         CBModel::valueToArray($spec, 'subviews')
                     )
                 )
+            ),
+
+            'userGroupClassName' => CBModel::valueAsName(
+                $spec,
+                'userGroupClassName'
+            ),
+
+
+            /* deprecated */
+
+            'groupName' => CBModel::valueAsName(
+                $spec,
+                'groupName'
             ),
         ];
     }
@@ -111,8 +129,41 @@ final class CBHideByUserGroupView {
             )
         );
 
+        if (isset($spec->groupName)) {
+            if (!isset($spec->userGroupClassName)) {
+                $deprecatedGroupName = CBModel::valueAsName(
+                    $spec,
+                    'groupName'
+                );
+
+                if ($deprecatedGroupName !== null) {
+
+                    /**
+                     * If the deprecated group name does not convert to a user
+                     * group class name, then use the deprecated group name as
+                     * the user group class name. This covers two scenarios:
+                     *
+                     *  1) The spec already had a user group class name set as
+                     *  the "groupName" property value.
+                     *
+                     *  2) This is the best idea of a group that we have, so we
+                     *  may as well not lose it.
+                     */
+
+                    $spec->userGroupClassName = (
+                        CBUserGroup::deprecatedGroupNameToUserGroupClassName(
+                            $deprecatedGroupName
+                        ) ?? $deprecatedGroupName
+                    );
+                }
+            }
+
+            unset($spec->groupName);
+        }
+
         return $spec;
     }
+    /* CBModel_upgrade() */
 
 
 
@@ -126,17 +177,42 @@ final class CBHideByUserGroupView {
      * @return void
      */
     static function CBView_render(stdClass $model): void {
-        if (empty($model->subviews)) {
+
+        /**
+         * @NOTE 2019_12_16
+         *
+         *      CBModel_upgrade() upgrades the "groupName" property to the
+         *      "userGroupClassName" property. Until that upgrade happens these
+         *      views with show no subviews. In the context of the actual use of
+         *      this view, this should not be an issue.
+         */
+
+        $userGroupClassName = CBModel::valueAsName(
+            $model,
+            'userGroupClassName'
+        );
+
+        /**
+         * If no user group class name has been set, the subviews are not
+         * rendered.
+         */
+        if ($userGroupClassName === null) {
             return;
         }
 
-        if (empty($model->groupName)) {
-            $isMember = true;
-        } else {
-            $isMember = ColbyUser::currentUserIsMemberOfGroup(
-                $model->groupName
-            );
+        $subviews = CBModel::valueToArray(
+            $model,
+            'subviews'
+        );
+
+        if (empty($subviews)) {
+            return;
         }
+
+        $isMember = CBUserGroup::userIsMemberOfUserGroup(
+            ColbyUser::getCurrentUserCBID(),
+            $userGroupClassName
+        );
 
         if ($isMember) {
             if (!empty($model->hideFromMembers)) {
@@ -148,7 +224,9 @@ final class CBHideByUserGroupView {
 
         array_walk(
             $model->subviews,
-            'CBView::render'
+            function ($subviewModel) {
+                CBView::render($subviewModel);
+            }
         );
     }
     /* CBView_render() */
