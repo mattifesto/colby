@@ -2,6 +2,10 @@
 
 final class CBArtworkElement {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
@@ -10,6 +14,8 @@ final class CBArtworkElement {
             Colby::flexpath(__CLASS__, 'v383.css', cbsysurl()),
         ];
     }
+
+
 
     /**
      * @return [string]
@@ -20,6 +26,8 @@ final class CBArtworkElement {
         ];
     }
 
+
+
     /**
      * @return [string]
      */
@@ -28,6 +36,12 @@ final class CBArtworkElement {
             'CBModel',
         ];
     }
+
+
+
+    /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @param ?float $maxWidth
@@ -57,6 +71,9 @@ final class CBArtworkElement {
 
         return $result;
     }
+    /* calculateMaxWidth() */
+
+
 
     /**
      * @param object|array $args
@@ -99,12 +116,19 @@ final class CBArtworkElement {
         }
 
         $URL = CBModel::valueToString($args, 'URL');
-        $aspectRatioWidth = CBModel::valueAsNumber($args, 'aspectRatioWidth') ??
-                            CBModel::valueAsNumber($args, 'width') ?? /* deprecated */
-                            1;
-        $aspectRatioHeight = CBModel::valueAsNumber($args, 'aspectRatioHeight') ??
-                             CBModel::valueAsNumber($args, 'height') ?? /* deprecated */
-                             1;
+
+        $aspectRatioWidth = (
+            CBModel::valueAsNumber($args, 'aspectRatioWidth') ??
+            CBModel::valueAsNumber($args, 'width') ?? /* deprecated */
+            1
+        );
+
+        $aspectRatioHeight = (
+            CBModel::valueAsNumber($args, 'aspectRatioHeight') ??
+            CBModel::valueAsNumber($args, 'height') ?? /* deprecated */
+            1
+        );
+
         $maxWidth = CBModel::valueAsNumber($args, 'maxWidth');
         $maxHeight = CBModel::valueAsNumber($args, 'maxHeight');
         $alternativeText = CBModel::valueToString($args, 'alternativeText');
@@ -132,17 +156,17 @@ final class CBArtworkElement {
 
         $styleSheet = <<<EOT
 
-/* CBArtworkElement */
+            /* CBArtworkElement */
 
-.ID_{$ID} {
-    width: {$CSSWidth};
-}
+            .ID_{$ID} {
+                width: {$CSSWidth};
+            }
 
-.ID_{$ID} > div {
-    padding-bottom: {$CSSPaddingBottom};
-}
+            .ID_{$ID} > div {
+                padding-bottom: {$CSSPaddingBottom};
+            }
 
-EOT;
+        EOT;
 
         CBHTMLOutput::addCSS($styleSheet);
 
@@ -150,10 +174,15 @@ EOT;
 
         <div class="CBArtworkElement ID_<?= $ID ?>">
             <div>
-                <img src="<?= cbhtml($URL) ?>" alt="<?= cbhtml($alternativeText) ?>">
+                <img
+                    src="<?= cbhtml($URL) ?>"
+                    alt="<?= cbhtml($alternativeText) ?>"
+                >
             </div>
         </div>
 
         <?php
     }
+    /* render() */
+
 }
