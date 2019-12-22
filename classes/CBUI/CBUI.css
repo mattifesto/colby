@@ -572,12 +572,22 @@ a.CBUI_sectionItem {
     text-align: center;
 }
 
+
 /**
  * 2019_06_25
  */
 .CBUI_textColor2 {
     color: var(--CBTextColor2);
 }
+
+
+/**
+ * 2019_12_20
+ */
+.CBUI_textColor_link {
+    color: var(--CBTextColorForLinks);
+}
+
 
 .CBUI_textSize_small {
     font-size: 80%;
