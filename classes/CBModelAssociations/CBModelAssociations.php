@@ -312,17 +312,17 @@ final class CBModelAssociations {
 
 
     /**
-     * @param ID $modelID
+     * @param CBID $CBID
      * @param string $associationKey
      *
-     * @return [ID]
+     * @return [CBID]
      */
     static function fetchAssociatedIDs(
-        $primaryID,
+        $CBID,
         $associationKey
     ): array {
         $associations = CBModelAssociations::fetch(
-            $primaryID,
+            $CBID,
             $associationKey
         );
 
