@@ -943,6 +943,12 @@ final class CBModels {
             $originalSpecs = [$originalSpecs];
         }
 
+        /**
+         * If the user has passed in an associative array, this function wants
+         * a numeric array with the first item at index 0.
+         */
+        $originalSpecs = array_values($originalSpecs);
+
         CBModels::save_checkSpecs($originalSpecs);
 
         $sharedClassName = $originalSpecs[0]->className;
