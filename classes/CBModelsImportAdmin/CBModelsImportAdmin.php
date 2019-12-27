@@ -83,7 +83,11 @@ final class CBModelsImportAdmin {
                 );
             }
 
-            if ($handle = fopen($_FILES['file']['tmp_name'], 'r')) {
+
+            /* if file can be opened */
+            if (
+                $handle = fopen($_FILES['file']['tmp_name'], 'r')
+            ) {
                 $keys = fgetcsv($handle);
 
                 if ($keys === false) {
@@ -102,7 +106,11 @@ final class CBModelsImportAdmin {
                 $countOfSpecsInDataFile = 0;
                 $countOfSpecsSaved = 0;
 
-                while (($values = fgetcsv($handle)) !== false) {
+
+                /* while file lines */
+                while (
+                    ($values = fgetcsv($handle)) !== false
+                ) {
                     /**
                      * @NOTE 2019_08_16
                      *
@@ -129,46 +137,19 @@ final class CBModelsImportAdmin {
                         $rowSpec->ID = $ID;
                     }
 
-                    /**
-                     * @NOTE 2019_08_16
-                     *
-                     *      All imported specs are upgraded before they are
-                     *      saved for two reasons:
-                     *
-                     *          1) If there are necessary changes that haven't
-                     *          been reflected in the comma separated values.
-                     *
-                     *          2) If there is a process version number that
-                     *          needs to be set on imported specs.
-                     */
-
-                    $rowSpecs[$ID] = CBModel::upgrade($rowSpec);
+                    $rowSpecs[$ID] = $rowSpec;
                 }
+                /* while file lines */
+
 
                 fclose($handle);
 
-                $originalSpecs = CBModels::fetchSpecsByID(
-                    array_keys($rowSpecs)
+                $alteredSpecs = CBModelsImportAdmin::rowSpecsToAlteredSpecs(
+                    $rowSpecs
                 );
 
-                $updatedSpecs = [];
-
-                foreach ($rowSpecs as $ID => $rowSpec) {
-                    if (empty($originalSpecs[$ID])) {
-                        $updatedSpecs[$ID] = $rowSpec;
-                    } else {
-                        $originalSpec = $originalSpecs[$ID];
-                        $updatedSpec = $rowSpec;
-                        $updatedSpec->version = $originalSpec->version;
-
-                        if ($updatedSpec != $originalSpec) {
-                            $updatedSpecs[$ID] = $updatedSpec;
-                        }
-                    }
-                }
-
                 $specsByClass = array_reduce(
-                    $updatedSpecs,
+                    $alteredSpecs,
                     function (&$specsByClass, $spec) {
                         if (empty($specsByClass[$spec->className])) {
                             $specsByClass[$spec->className] = [];
@@ -190,8 +171,9 @@ final class CBModelsImportAdmin {
 
                     $countOfSpecsSaved += count($specs);
                 }
-
             }
+            /* if file can be opened */
+
 
             CBLog::log(
                 (object)[
@@ -320,6 +302,58 @@ final class CBModelsImportAdmin {
 
 
     /* -- functions -- -- -- -- -- */
+
+
+
+    /**
+     * @param [object] $rowSpecs
+     *
+     * @return [object]
+     *
+     *      Returns an array row specs that are different from the currently
+     *      saved specs for each ID.
+     */
+    static function rowSpecsToAlteredSpecs(
+        array $rowSpecs
+    ): array {
+        $originalSpecs = CBModels::fetchSpecsByID(
+            array_keys($rowSpecs)
+        );
+
+        $alteredSpecs = [];
+
+        foreach ($rowSpecs as $CBID => $rowSpec) {
+
+            /**
+             * @NOTE 2019_08_16
+             *
+             *      All imported specs are upgraded before they are saved for
+             *      two reasons:
+             *
+             *          1) If there are necessary changes that haven't been
+             *          reflected in the comma separated values.
+             *
+             *          2) If there is a process version number that needs to be
+             *          set on imported specs.
+             */
+            $rowSpec = CBModel::upgrade($rowSpec);
+
+            if (empty($originalSpecs[$CBID])) {
+                $alteredSpecs[$CBID] = $rowSpec;
+            } else {
+                $originalSpec = $originalSpecs[$CBID];
+                $rowSpec->version = $originalSpec->version;
+
+                if ($rowSpec != $originalSpec) {
+                    $alteredSpecs[$CBID] = $rowSpec;
+                }
+            }
+        }
+        /* foreach */
+
+        return $alteredSpecs;
+    }
+    /* rowSpecsToChangedSpecs() */
 
 
 
