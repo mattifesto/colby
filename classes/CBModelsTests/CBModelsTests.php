@@ -186,7 +186,8 @@ final class CBModelsTests {
      * these models cannot be saved.
      */
     static function CBTest_saveSpecWithoutID(): stdClass {
-        $exceptionWasThrown = false;
+        $actualSourceCBID = null;
+        $expectedSourceCBID = '3754cbe6a23732edfaed0d357946840a1bf66bb6';
 
         try {
             Colby::query('START TRANSACTION');
@@ -201,26 +202,16 @@ final class CBModelsTests {
         } catch (Throwable $throwable) {
             Colby::query('ROLLBACK');
 
-            $exceptionWasThrown = true;
-
-            $expectedMessage = (
-                'A CBViewPage spec being saved does not have an ID.'
+            $actualSourceCBID = CBException::throwableToSourceCBID(
+                $throwable
             );
-
-            $actualMessage = $throwable->getMessage();
-
-            if ($actualMessage !== $expectedMessage) {
-                throw new Exception(
-                    "The exception thrown had the message: " .
-                    "\"{$actualMessage}\", but the following message " .
-                    "was expected: \"{$expectedMessage}\""
-                );
-            }
         }
 
-        if (!$exceptionWasThrown) {
-            throw new Exception(
-                'This test expects an exception to be thrown.'
+        if ($actualSourceCBID !== $expectedSourceCBID) {
+            return CBTest::resultMismatchFailure(
+                'sourceCBID',
+                $actualSourceCBID,
+                $expectedSourceCBID
             );
         }
 
