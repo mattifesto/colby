@@ -946,8 +946,10 @@ final class CBModels {
         $firstSpec = reset($originalSpecs);
 
         if (empty($firstSpec->className)) {
-            throw new Exception(
-                'The first spec does not have its `className` propery set.'
+            throw new CBExceptionWithValue(
+                'The first spec does not have its `className` propery set.',
+                $firstSpec,
+                '60088ed7f15d745cf2f7f920db47cd215e9869f9'
             );
         } else {
             $sharedClassName = $firstSpec->className;
