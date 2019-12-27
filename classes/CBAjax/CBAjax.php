@@ -19,10 +19,6 @@ final class CBAjax {
      *              function call response. Think about it and update this
      *              comment.
      *
-     *          classNameForException: string
-     *
-     *              developers only
-     *
      *          message: string
      *
      *              This property will only be set if there is an issue with the
@@ -205,7 +201,12 @@ final class CBAjax {
 
         $response = (object)[
             'className' => 'CBAjax',
+
             'wasSuccessful' => false,
+
+            'sourceCBID' => CBException::throwableToSourceCBID(
+                $error
+            ),
         ];
 
         /**
@@ -230,8 +231,6 @@ final class CBAjax {
         );
 
         if ($isDeveloper) {
-            $response->classNameForException = get_class($error);
-            $response->sourceCBID = CBException::throwableToSourceCBID($error);
             $response->stackTrace = Colby::exceptionStackTrace($error);
         }
 
