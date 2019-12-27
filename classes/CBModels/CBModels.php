@@ -1026,7 +1026,22 @@ final class CBModels {
                     ) ?? 0;
 
                     if ($specVersion !== $mostRecentVersion) {
-                        throw new CBModelVersionMismatchException();
+                        throw new CBExceptionWithValue(
+                            CBConvert::stringToCleanLine(<<<EOT
+
+                                This model has been saved by another session
+                                since you started editing it, saving your most
+                                recent changes would overwrite the changes made
+                                in that session. Reloading your editing page
+                                will fetch the changes made by the other session
+                                and allow you to save again. If someone else is
+                                currently editing this model coordinate your
+                                editing with them.
+
+                            EOT),
+                            $tuple->spec,
+                            'a567dc90ccb59fb918ced4ae7f82e6d1b556f932'
+                        );
                     }
                 }
 
