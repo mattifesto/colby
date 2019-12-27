@@ -445,10 +445,12 @@ Colby.afterDOMContentLoaded(
             /* button */
             {
                 let buttonElement;
+                let versionMismatchSourceCBID = (
+                    "a567dc90ccb59fb918ced4ae7f82e6d1b556f932"
+                );
 
                 if (
-                    ajaxResponse.classNameForException ===
-                    "CBModelVersionMismatchException" ||
+                    ajaxResponse.sourceCBID === versionMismatchSourceCBID ||
                     ajaxResponse.userMustLogIn
                 ) {
                     buttonElement = init_createButtonElement(
