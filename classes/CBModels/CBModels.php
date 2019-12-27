@@ -943,50 +943,19 @@ final class CBModels {
             $originalSpecs = [$originalSpecs];
         }
 
-        $firstSpec = reset($originalSpecs);
+        CBModels::save_checkSpecs($originalSpecs);
 
-        if (empty($firstSpec->className)) {
-            throw new CBExceptionWithValue(
-                'The first spec does not have its `className` propery set.',
-                $firstSpec,
-                '60088ed7f15d745cf2f7f920db47cd215e9869f9'
-            );
-        } else {
-            $sharedClassName = $firstSpec->className;
-        }
-
+        $sharedClassName = $originalSpecs[0]->className;
         $modified = time();
 
         $tuples = array_map(
-            function ($originalSpec) use ($sharedClassName) {
-                $ID = CBModel::valueAsID(
-                    $originalSpec,
-                    'ID'
-                );
+            function ($originalSpec) {
 
-                if ($ID === null) {
-                    throw new Exception(
-                        "A {$originalSpec->className} spec being saved does " .
-                        "not have an ID."
-                    );
-                }
+                /* we've already verified all specs have valid IDs */
+                $ID = $originalSpec->ID;
 
                 $upgradedSpec = CBModel::upgrade($originalSpec);
-
                 $model = CBModel::build($upgradedSpec);
-
-                if ($model === null) {
-                    throw new Exception(
-                        "A {$originalSpec->className} spec being saved " .
-                        "generated a null model."
-                    );
-                }
-
-                if ($model->className !== $sharedClassName) {
-                    throw new Exception(
-                        'All specs being saved must have the same className.'
-                    );
-                }
 
                 return (object)[
                     'spec' => $upgradedSpec,
@@ -1097,6 +1066,107 @@ final class CBModels {
         );
     }
     /* save() */
+
+
+
+    /**
+     * This function will throw an exception if there are multiple specs with
+     * the same CBID.
+     *
+     * @param [object] $specs
+     *
+     * @return void
+     */
+    private static function save_checkSpecs(
+        array $specs
+    ): void {
+        $duplicatedCBID = null;
+        $previousCBIDs = [];
+        $sharedClassName = null;
+
+        foreach ($specs as $spec) {
+            $className = CBModel::valueAsName(
+                $spec,
+                'className'
+            );
+
+            if ($className === null) {
+                throw new CBExceptionWithValue(
+                    'This spec has an invalid "className" property value.',
+                    $spec,
+                    'bc8c59476802e41b55f169764f9adb3cdacfb456'
+                );
+            }
+
+            if ($sharedClassName === null) {
+                $sharedClassName = $className;
+            } else if ($className !== $sharedClassName) {
+                throw new CBExceptionWithValue(
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        This spec does not have the same class name,
+                        "{$sharedClassName}", as the previous specs in the
+                        array of specs being saved.
+
+                    EOT),
+                    $spec,
+                    '2a35f16d0b91fbc300ce7b4cbfab9858384e3466',
+                );
+            }
+
+            $CBID = CBModel::valueAsCBID(
+                $spec,
+                'ID'
+            );
+
+            if ($CBID === null) {
+                throw new CBExceptionWithValue(
+                    'This spec does not have a valid "ID" property value.',
+                    $spec,
+                    '3754cbe6a23732edfaed0d357946840a1bf66bb6'
+                );
+            }
+
+            $CBIDIsDuplicated = in_array(
+                $CBID,
+                $previousCBIDs
+            );
+
+            if ($CBIDIsDuplicated) {
+                $duplicatedCBID = $CBID;
+                break;
+            }
+
+            array_push(
+                $previousCBIDs,
+                $CBID
+            );
+        }
+        /* foreach */
+
+        if ($duplicatedCBID !== null) {
+            $specsWithDuplicatedCBID = array_values(
+                array_filter(
+                    $specs,
+                    function ($spec) use ($duplicatedCBID) {
+                        $currentCBID = CBModel::valueAsCBID(
+                            $spec,
+                            'ID'
+                        );
+
+                        return $currentCBID === $duplicatedCBID;
+                    }
+                )
+            );
+
+            throw new CBExceptionWithValue(
+                'Multiple saved specs have the same "ID" property value.',
+                $specsWithDuplicatedCBID,
+                '3640ae9ab3459c0995e4bd210cfc38c0fd4e79d7'
+            );
+        }
+    }
+    /* save_checkSpecs() */
 
 
 
