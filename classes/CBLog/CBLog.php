@@ -516,9 +516,13 @@ final class CBLog {
      * @param object $args
      *
      *      {
-     *          message: string
+     *          message: string (CBMessage)
      *
      *              The message must have a length greater than 0.
+     *
+     *              @TODO 2019_12_29
+     *
+     *                  change this to 'cbmessage'
      *
      *          modelID: ?ID
      *
