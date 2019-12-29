@@ -2,25 +2,43 @@
 
 final class CBDevelopAdminMenu {
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return void
      */
     static function CBInstall_install(): void {
-        $adminMenuSpec = CBModels::fetchSpecByID(CBAdminMenu::ID());
+        $adminMenuSpec = CBModels::fetchSpecByID(
+            CBAdminMenu::ID()
+        );
 
         $adminMenuSpec->items[] = (object)[
             'className' => 'CBMenuItem',
+
             'name' => 'develop',
+
             'submenuID' => CBDevelopAdminMenu::ID(),
+
             'text' => 'Develop',
-            'URL' => CBAdmin::getAdminPageURL('CBAdminPageForUpdate'),
+
+            'URL' => CBAdmin::getAdminPageURL(
+                'CBGitHistoryAdmin'
+            ),
         ];
 
         $spec = (object)[
             'className' => 'CBMenu',
+
             'ID' => CBDevelopAdminMenu::ID(),
+
             'title' => 'Develop',
-            'titleURI' => CBAdmin::getAdminPageURL('CBAdminPageForUpdate'),
+
+            'titleURI' => CBAdmin::getAdminPageURL(
+                'CBGitHistoryAdmin'
+            ),
+
             'items' => [
                 (object)[
                     'className' => 'CBMenuItem',
@@ -45,6 +63,8 @@ final class CBDevelopAdminMenu {
             }
         );
     }
+    /* CBInstall_install() */
+
 
 
     /**
@@ -57,10 +77,17 @@ final class CBDevelopAdminMenu {
         ];
     }
 
+
+
+    /* -- functions -- -- -- -- -- */
+
+
+
     /**
-     * @return hex160
+     * @return CBID
      */
     static function ID(): string {
         return '8ba9210a82d3ab8f181dd7ac9619e06be65f930d';
     }
+
 }
