@@ -234,7 +234,6 @@ final class CBUserGroup {
     static function CBModels_willDelete(
         array $userGroupModelCBIDs
     ): void {
-        ColbyUser::clearCachedUserGroupsForCurrentUser();
         CBUserGroup::clearCachedUserGroupModels();
 
         $userGroupModels = CBModels::fetchModelsByID2(
@@ -270,7 +269,6 @@ final class CBUserGroup {
     static function CBModels_willSave(
         array $userGroupModels
     ): void {
-        ColbyUser::clearCachedUserGroupsForCurrentUser();
         CBUserGroup::clearCachedUserGroupModels();
     }
 
@@ -350,10 +348,6 @@ final class CBUserGroup {
             ColbyUser::getCurrentUserCBID(),
             $userCBIDs
         );
-
-        if ($currentUserWasChanged) {
-            ColbyUser::clearCachedUserGroupsForCurrentUser();
-        }
     }
     /* addUsers() */
 
@@ -528,10 +522,6 @@ final class CBUserGroup {
             ColbyUser::getCurrentUserCBID(),
             $userCBIDs
         );
-
-        if ($currentUserWasChanged) {
-            ColbyUser::clearCachedUserGroupsForCurrentUser();
-        }
     }
     /* removeUsers() */
 
