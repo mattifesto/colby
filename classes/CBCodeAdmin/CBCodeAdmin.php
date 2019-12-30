@@ -282,6 +282,41 @@ final class CBCodeAdmin {
 
 
                 /**
+                 * 2019_12_29 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        There is no replacement for this function.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'clearCachedUserGroupsForCurrentUser',
+                    'severity' => 3,
+                    'title' => (
+                        'ColbyUser::clearCachedUserGroupsForCurrentUser()'
+                    ),
+                ],
+
+
+                /**
+                 * 2019_11_28 (warning)
+                 * 2019_12_29 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBUserGroup::currentUserIsMemberOfUserGroup().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'currentUserIsMemberOfGroup',
+                    'severity' => 3,
+                    'title' => 'ColbyUser::currentUserIsMemberOfGroup()',
+                ],
+
+
+                /**
                  * 2019_06_16
                  */
                 (object)[
@@ -1642,25 +1677,6 @@ final class CBCodeAdmin {
                     'regex' => 'isMemberOfGroup',
                     'severity' => 4,
                     'title' => 'ColbyUser::isMemberOfGroup()',
-                ],
-
-
-                /**
-                 * 2019_11_28 (warning)
-                 */
-                (object)[
-                    'args' => (
-                        '--ignore-file=match:ColbyUser_Tests.php '
-                    ),
-                    'cbmessage' => <<<EOT
-
-                        Use CBUserGroup::currentUserIsMemberOfUserGroup().
-
-                    EOT,
-                    'filetype' => 'php',
-                    'regex' => 'currentUserIsMemberOfGroup',
-                    'severity' => 4,
-                    'title' => 'ColbyUser::currentUserIsMemberOfGroup()',
                 ],
 
 
