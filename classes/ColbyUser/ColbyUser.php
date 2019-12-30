@@ -19,7 +19,6 @@ final class ColbyUser {
 
     private static $currentUserCBID = null;
     private static $currentUserNumericID = null;
-    private static $currentUserGroups = [];
 
     // currentUserRow
     // this is cached, see the following document for discussion
@@ -37,54 +36,6 @@ final class ColbyUser {
     static function currentUserIsLoggedIn(): bool {
         return !empty(ColbyUser::$currentUserCBID);
     }
-
-
-
-    /**
-     * @deprecated 2019_11_28
-     *
-     *      Use CBUserGroup::currentUserIsMemberOfUserGroup().
-     *
-     * This function is more efficient than ColbyUser::isMemberOfGroup() because
-     * it memoizes the results for the current user.
-     *
-     * @param string $groupName
-     *
-     *      This can either be a user group class name, such as
-     *      "CBAdministratorsUserGroup", or a deprecated user group name, such
-     *      as "Administrators".
-     *
-     * @return bool
-     *
-     * @see ColbyUser::clearCachedUserGroupsForCurrentUser()
-     */
-    static function currentUserIsMemberOfGroup(
-        string $groupName
-    ): bool {
-        if (isset(ColbyUser::$currentUserGroups[$groupName])) {
-            return ColbyUser::$currentUserGroups[$groupName];
-        } else {
-            if (CBAdminPageForUpdate::installationIsRequired()) {
-                error_log(
-                    'Permissions granted from '
-                    . __METHOD__
-                    . '() because of first installation.'
-                );
-
-                $isMember = true;
-            } else {
-                $isMember = ColbyUser::isMemberOfGroup(
-                    ColbyUser::$currentUserNumericID,
-                    $groupName
-                );
-            }
-
-            ColbyUser::$currentUserGroups[$groupName] = $isMember;
-
-            return $isMember;
-        }
-    }
-    /* currentUserIsMemberOfGroup() */
 
 
 
@@ -225,9 +176,6 @@ final class ColbyUser {
      * @deprecated 2019_11_28
      *
      *      Use CBUserGroup::userIsMemberOfUserGroup().
-     *
-     * ColbyUser::currentUserIsMemberOfGroup() is a more efficient alternative
-     * for the current user.
      *
      * @param int $userNumericID
      * @param string $userGroupName
@@ -440,15 +388,6 @@ final class ColbyUser {
         );
 
         return $URL;
-    }
-
-
-
-    /**
-     * @return void
-     */
-    static function clearCachedUserGroupsForCurrentUser(): void {
-        ColbyUser::$currentUserGroups = [];
     }
 
 
