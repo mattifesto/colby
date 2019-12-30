@@ -282,6 +282,23 @@ final class CBCodeAdmin {
 
 
                 /**
+                 * 2019_11_28 (warning)
+                 * 2019_12_29 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBUserGroup::userIsMemberOfUserGroup().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'isMemberOfGroup',
+                    'severity' => 3,
+                    'title' => 'ColbyUser::isMemberOfGroup()',
+                ],
+
+
+                /**
                  * 2019_12_29 (error)
                  */
                 (object)[
@@ -1661,22 +1678,6 @@ final class CBCodeAdmin {
                     'regex' => 'userNumericID(?!sTo)',
                     'severity' => 4,
                     'title' => 'userNumericID',
-                ],
-
-
-                /**
-                 * 2019_11_28 (warning)
-                 */
-                (object)[
-                    'cbmessage' => <<<EOT
-
-                        Use CBUserGroup::userIsMemberOfUserGroup().
-
-                    EOT,
-                    'filetype' => 'php',
-                    'regex' => 'isMemberOfGroup',
-                    'severity' => 4,
-                    'title' => 'ColbyUser::isMemberOfGroup()',
                 ],
 
 
