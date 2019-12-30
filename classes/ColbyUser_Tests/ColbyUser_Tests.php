@@ -21,11 +21,6 @@ final class ColbyUser_Tests {
                 'type' => 'server',
             ],
             (object)[
-                'name' => 'isMemberOfGroup',
-                'title' => 'ColbyUser::isMemberOfGroup()',
-                'type' => 'server',
-            ],
-            (object)[
                 'name' => 'updateFacebookUser',
                 'title' => 'ColbyUser::updateFacebookUser()',
                 'type' => 'server',
@@ -79,8 +74,10 @@ final class ColbyUser_Tests {
      * @return object
      */
     static function CBTest_general(): stdClass {
+        $currentUserCBID = ColbyUser::getCurrentUserCBID();
+
         $currentUserNumericID = CBUsers::forTesting_userCBIDtoUserNumericID(
-            ColbyUser::getCurrentUserCBID()
+            $currentUserCBID
         );
 
         $userGroupClassName = 'CBTest_updateGroupMembership_group';
@@ -104,7 +101,8 @@ final class ColbyUser_Tests {
         {
             CBModels::deleteByID($userGroupSpec->ID);
 
-            $actualResult = ColbyUser::currentUserIsMemberOfGroup(
+            $actualResult = CBUserGroup::userIsMemberOfUserGroup(
+                $currentUserCBID,
                 $userGroupClassName
             );
 
@@ -216,7 +214,8 @@ final class ColbyUser_Tests {
                 true
             );
 
-            $actualResult = ColbyUser::currentUserIsMemberOfGroup(
+            $actualResult = CBUserGroup::userIsMemberOfUserGroup(
+                $currentUserCBID,
                 $userGroupClassName
             );
 
@@ -267,7 +266,8 @@ final class ColbyUser_Tests {
                 false
             );
 
-            $actualResult = ColbyUser::currentUserIsMemberOfGroup(
+            $actualResult = CBUserGroup::userIsMemberOfUserGroup(
+                $currentUserCBID,
                 $userGroupClassName
             );
 
@@ -318,7 +318,8 @@ final class ColbyUser_Tests {
                 true
             );
 
-            $actualResult = ColbyUser::currentUserIsMemberOfGroup(
+            $actualResult = CBUserGroup::userIsMemberOfUserGroup(
+                $currentUserCBID,
                 $userGroupClassName
             );
 
@@ -371,7 +372,8 @@ final class ColbyUser_Tests {
         {
             CBModels::deleteByID($userGroupSpec->ID);
 
-            $actualResult = ColbyUser::currentUserIsMemberOfGroup(
+            $actualResult = CBUserGroup::userIsMemberOfUserGroup(
+                $currentUserCBID,
                 $userGroupClassName
             );
 
@@ -417,88 +419,6 @@ final class ColbyUser_Tests {
         ];
     }
     /* CBTest_general() */
-
-
-
-    /**
-     * @return object
-     */
-    static function CBTest_isMemberOfGroup(): stdClass {
-        $currentUserNumericID = CBUsers::forTesting_userCBIDtoUserNumericID(
-            ColbyUser::getCurrentUserCBID()
-        );
-
-        $tests = [
-            (object)[
-                'userNumericID' => $currentUserNumericID,
-                'groupName' => 'Developers',
-                'expectedResult' => true,
-            ],
-            (object)[
-                'userNumericID' => $currentUserNumericID,
-                'groupName' => 'Administrators',
-                'expectedResult' => true,
-            ],
-            (object)[
-                'userNumericID' => $currentUserNumericID,
-                'groupName' => 'Public',
-                'expectedResult' => true,
-            ],
-            (object)[
-                'userNumericID' => $currentUserNumericID,
-                'groupName' => 'NO_EXIST',
-                'expectedResult' => false,
-            ],
-            (object)[
-                'userNumericID' => PHP_INT_MAX,
-                'groupName' => 'Developers',
-                'expectedResult' => false,
-            ],
-            (object)[
-                'userNumericID' => PHP_INT_MAX,
-                'groupName' => 'Administrators',
-                'expectedResult' => false,
-            ],
-            (object)[
-                'userNumericID' => PHP_INT_MAX,
-                'groupName' => 'Public',
-                'expectedResult' => true,
-            ],
-            (object)[
-                'userNumericID' => PHP_INT_MAX,
-                'groupName' => 'NO_EXIST',
-                'expectedResult' => false,
-            ],
-        ];
-
-        for (
-            $index = 0;
-            $index < count($tests);
-            $index += 1
-        ) {
-            $test = $tests[$index];
-
-            $actualResult = ColbyUser::isMemberOfGroup(
-                $test->userNumericID,
-                $test->groupName
-            );
-
-            $expectedResult = $test->expectedResult;
-
-            if ($actualResult !== $expectedResult) {
-                return CBTest::resultMismatchFailure(
-                    "test index {$index}",
-                    $actualResult,
-                    $expectedResult
-                );
-            }
-        }
-
-        return (object)[
-            'succeeded' => true,
-        ];
-    }
-    /* CBTest_isMemberOfGroup() */
 
 
 
