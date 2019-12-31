@@ -1,32 +1,26 @@
 <?php
 
-define('CBUserCookieName', 'colby-user-encrypted-data');
+define(
+    'CBUserCookieName',
+    'colby-user-encrypted-data'
+);
 
 
 
 final class ColbyUser {
 
-    private static $currentUser = null;
+    /* -- private static variables -- -- -- -- -- */
+
+
 
     /**
-     * currentUserCBID, currentUserNumericID
-     *
-     * If we can authenticate the current logged in user we just store their
-     * hash and ID, not the table row or anything else. The table row may be
-     * changed by the site so caching it will only lead to possible stale data
-     * bugs.
+     * If a user is logged in we store their user CBID.
      */
-
     private static $currentUserCBID = null;
-    private static $currentUserNumericID = null;
 
-    // currentUserRow
-    // this is cached, see the following document for discussion
-    // "Colby User Data and Permissions Caching"
-    // this information will not change during a request
-    // even if the database row is altered
 
-    private static $currentUserRow = null;
+
+    /* -- functions -- -- -- -- -- */
 
 
 
@@ -34,7 +28,9 @@ final class ColbyUser {
      * @return bool
      */
     static function currentUserIsLoggedIn(): bool {
-        return !empty(ColbyUser::$currentUserCBID);
+        return !empty(
+            ColbyUser::$currentUserCBID
+        );
     }
 
 
@@ -146,23 +142,18 @@ final class ColbyUser {
                 return;
             }
 
-            $userCBID = CBModel::valueAsID($cookie, 'userCBID');
+            $userCBID = CBModel::valueAsCBID(
+                $cookie,
+                'userCBID'
+            );
 
             if ($userCBID === null) {
                 ColbyUser::removeUserCookie();
                 return;
             }
 
-            $userNumericID = CBModel::valueAsInt($cookie, 'userNumericID');
-
-            if ($userNumericID === null) {
-                ColbyUser::removeUserCookie();
-                return;
-            }
-
             /* Success, the user is now logged in. */
             ColbyUser::$currentUserCBID = $userCBID;
-            ColbyUser::$currentUserNumericID = $userNumericID;
         } catch (Throwable $exception) {
             CBErrorHandler::report($exception);
             ColbyUser::removeUserCookie();
@@ -430,80 +421,6 @@ final class ColbyUser {
         return $updater->working;
     }
     /* updateFacebookUser() */
-
-
-
-    /**
-     * @param int $userNumericID
-     * @param string $targetUserGroupName
-     *
-     *      This can either be a user group class names, such as
-     *      "CBAdministratorsUserGroup", or a deprecated user group name, such
-     *      as "Administrators".
-     *
-     * @param bool $isMember
-     *
-     * @return void
-     */
-    static function updateGroupMembership(
-        int $targetUserNumericID,
-        string $targetUserGroupName,
-        bool $isMember
-    ): void {
-        $userGroupModels = CBUserGroup::fetchCBUserGroupModels();
-
-        $userGroupModel = cb_array_find(
-            $userGroupModels,
-            function ($userGroupModel) use ($targetUserGroupName): bool {
-                return (
-                    $userGroupModel->userGroupClassName === $targetUserGroupName ||
-                    $userGroupModel->deprecatedGroupName === $targetUserGroupName
-                );
-            }
-        );
-
-        if ($userGroupModel === null) {
-            throw new CBExceptionWithValue(
-                (
-                    'The target user group name is not associated ' .
-                    'with any user group.'
-                ),
-                $targetUserGroupName,
-                'c9dc8a6a0d805cfb70e9fb51b1739df2481ffe53'
-            );
-        }
-
-        $targetUserGroupClassName = $userGroupModel->userGroupClassName;
-
-        $userCBIDs = CBUsers::userNumericIDsToUserCBIDs(
-            [
-                $targetUserNumericID,
-            ]
-        );
-
-        if (count($userCBIDs) === 0) {
-            throw CBException::createWithValue(
-                'The target user numeric ID is not associated with any user.',
-                $targetUserNumericID,
-                '59ca6ae5fda96e84d0fa94374ff37ee0b2b07004'
-            );
-        }
-
-        $targetUserCBID = $userCBIDs[0];
-
-        if ($isMember) {
-            CBUserGroup::addUsers(
-                $targetUserGroupClassName,
-                $targetUserCBID
-            );
-        } else {
-            CBUserGroup::removeUsers(
-                $targetUserGroupClassName,
-                $targetUserCBID
-            );
-        }
-    }
-    /* updateGroupMembership() */
 
 }
 
