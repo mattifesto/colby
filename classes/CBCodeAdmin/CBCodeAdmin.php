@@ -281,6 +281,41 @@ final class CBCodeAdmin {
                 /* -- errors -- -- -- -- -- */
 
 
+
+                /**
+                 * 2019_12_31 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Replace use of user numeric IDs with user CBIDs.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'updateGroupMembership',
+                    'severity' => 3,
+                    'title' => 'ColbyUser::updateGroupMembership()',
+                ],
+
+
+                /**
+                 * 2019_08_10 (warning)
+                 * 2019_12_31 (error)
+                 */
+                (object)[
+                    'args' => '--ignore-file=match:ColbyUser_Tests.php',
+                    'cbmessage' => <<<EOT
+
+                        Replace use of user numeric IDs with user CBIDs.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'currentUserNumericID',
+                    'severity' => 3,
+                    'title' => '$currentUserNumericID',
+                ],
+
+
                 /**
                  * 2019_11_28 (warning)
                  * 2019_12_29 (error)
@@ -1530,23 +1565,6 @@ final class CBCodeAdmin {
                         'CBUIImageChooser.createThumbnailSizedChooser() ' .
                         'with CBUIImageChooser.create().'
                     ),
-                ],
-
-
-                /**
-                 * 2019_08_10
-                 */
-                (object)[
-                    'args' => '--ignore-file=match:ColbyUser_Tests.php',
-                    'cbmessage' => <<<EOT
-
-                        Replace use of user numeric IDs with user CBIDs.
-
-                    EOT,
-                    'filetype' => 'php',
-                    'regex' => 'currentUserNumericID',
-                    'severity' => 4,
-                    'title' => '$currentUserNumericID',
                 ],
 
 
