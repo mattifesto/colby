@@ -4,14 +4,13 @@
 /* exported CBUsersAdmin */
 /* global
     CBUI,
-    CBUINavigationArrowPart,
-    CBUISectionItem4,
-    CBUIStringsPart,
     CBUser,
     Colby,
 
     CBUsersAdmin_users,
 */
+
+
 
 var CBUsersAdmin = {
 
@@ -34,30 +33,76 @@ var CBUsersAdmin = {
         );
 
         if (CBUsersAdmin_users.length > 0) {
-            let sectionElement = CBUI.createSection();
+            let sectionContainerElement = CBUI.createElement(
+                "CBUI_sectionContainer"
+            );
+
+            mainElement.appendChild(
+                sectionContainerElement
+            );
+
+            let sectionElement = CBUI.createElement(
+                "CBUI_section"
+            );
+
+            sectionContainerElement.appendChild(
+                sectionElement
+            );
 
             CBUsersAdmin_users.forEach(
                 function (user) {
-                    let sectionItem = CBUISectionItem4.create();
+                    let sectionItemElement = CBUI.createElement(
+                        "CBUI_sectionItem"
+                    );
 
-                    sectionItem.callback = function () {
-                        window.location = CBUser.userIDToUserAdminPageURL(
-                            user.hash
-                        );
-                    };
+                    sectionElement.appendChild(
+                        sectionItemElement
+                    );
 
-                    let stringsPart = CBUIStringsPart.create();
-                    stringsPart.string1 = user.facebookName;
+                    sectionItemElement.addEventListener(
+                        "click",
+                        function () {
+                            window.location = CBUser.userIDToUserAdminPageURL(
+                                user.hash
+                            );
+                        }
+                    );
 
-                    sectionItem.appendPart(stringsPart);
-                    sectionItem.appendPart(CBUINavigationArrowPart.create());
-                    sectionElement.appendChild(sectionItem.element);
+                    let textContainerElement = CBUI.createElement(
+                        "CBUI_container_topAndBottom CBUI_flexGrow"
+                    );
+
+                    sectionItemElement.appendChild(
+                        textContainerElement
+                    );
+
+                    let titleElement = CBUI.createElement();
+
+                    textContainerElement.appendChild(
+                        titleElement
+                    );
+
+                    titleElement.textContent = user.facebookName;
+
+                    let descriptionElement = CBUI.createElement(
+                        "CBUI_ellipsis CBUI_textSize_small CBUI_textColor2"
+                    );
+
+                    descriptionElement.textContent = user.email;
+
+                    textContainerElement.appendChild(
+                        descriptionElement
+                    );
+
+                    let navigationArrowElement = CBUI.createElement(
+                        "CBUI_navigationArrow"
+                    );
+
+                    sectionItemElement.appendChild(
+                        navigationArrowElement
+                    );
                 }
             );
-
-            mainElement.appendChild(CBUI.createHalfSpace());
-            mainElement.appendChild(sectionElement);
-            mainElement.appendChild(CBUI.createHalfSpace());
         }
     }
     /* init() */

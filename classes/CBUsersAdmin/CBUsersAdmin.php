@@ -71,9 +71,6 @@ final class CBUsersAdmin {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBUI',
-            'CBUINavigationArrowPart',
-            'CBUISectionItem4',
-            'CBUIStringsPart',
             'CBUser',
             'Colby',
         ];
@@ -131,6 +128,7 @@ final class CBUsersAdmin {
         $SQL = <<<EOT
 
             SELECT      LOWER(HEX(hash)) as hash,
+                        email,
                         facebookName
 
             FROM        ColbyUsers
