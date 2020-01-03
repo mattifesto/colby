@@ -2,6 +2,260 @@
 
 final class CBUser {
 
+    /* -- CBAjax interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @param object $args
+     *
+     * @return object
+     *
+     *      {
+     *          succeeded: bool
+     *
+     *          cbmessage: string
+     *
+     *              This will only be returned if succeeded is false.
+     *      }
+     */
+    static function CBAjax_createAccount(
+        stdClass $args
+    ): stdClass {
+        if (ColbyUser::getCurrentUserCBID() !== null) {
+            return (object)[
+                'cbmessage' => 'You are already signed in.',
+            ];
+        }
+
+        $userEmail = CBModel::valueAsEmail(
+            $args,
+            'email'
+        );
+
+        if ($userEmail === null) {
+            throw new CBExceptionWithValue(
+                'The "email" argument is not valid.',
+                $args,
+                '1e0aa3c561175db1e58f22b70e4ee7630e6ebc3b'
+            );
+        }
+
+        if (CBUser::emailToUserCBID($userEmail) !== null) {
+            return (object)[
+                'cbmessage' => <<<EOT
+
+                    An account already exists using this email address.
+
+                EOT,
+            ];
+        }
+
+        $userFullName = trim(
+            CBModel::valueToString(
+                $args,
+                'fullName'
+            )
+        );
+
+        /**
+         * @TODO 2020_01_03
+         *
+         *      Verify password strength.
+         */
+
+        $userPassword = CBModel::valueToString(
+            $args,
+            'password'
+        );
+
+        $userPasswordIssues = CBUser::passwordIssues($userPassword);
+
+        if (
+            $userPasswordIssues !== null
+        ) {
+            return (object)[
+                'cbmessage' => CBMessageMarkup::stringToMessage(
+                    $userPasswordIssues
+                ),
+            ];
+        }
+
+        $userPasswordHash = password_hash(
+            $userPassword,
+            PASSWORD_DEFAULT
+        );
+
+        $userSpec = (object)[
+            'className' => 'CBUser',
+            'ID' => CBID::generateRandomCBID(),
+            'title' => $userFullName,
+            'email' => $userEmail,
+            'passwordHash' => $userPasswordHash,
+        ];
+
+        CBModels::save($userSpec);
+
+        ColbyUser::loginCBUser(
+            $userSpec
+        );
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBAjax_createUser() */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_createAccount_getUserGroupClassName(): string {
+        return 'CBPublicUserGroup';
+    }
+
+
+
+    /**
+     * @param object $args
+     *
+     * @return object
+     *
+     *      {
+     *          succeeded: bool
+     *
+     *          cbmessage: string
+     *
+     *              This will only be returned if succeeded is false.
+     *      }
+     */
+    static function CBAjax_signIn(
+        stdClass $args
+    ): stdClass {
+        $email = CBModel::valueAsEmail(
+            $args,
+            'email'
+        );
+
+        if (
+            $email === null
+        ) {
+            return (object)[
+                'cbmessage' => 'Your email address is not valid.'
+            ];
+        }
+
+        $password = CBModel::valueToString(
+            $args,
+            'password'
+        );
+
+        $userCBID = CBUser::emailToUserCBID($email);
+
+        if ($userCBID === null) {
+            return (object)[
+                'cbmessage' => <<<EOT
+
+                    No user exists with this email address.
+
+                EOT,
+            ];
+        }
+
+        $userModel = CBModels::fetchModelByIDNullable(
+            $userCBID
+        );
+
+        $passwordHash = CBModel::valueToString(
+            $userModel,
+            'passwordHash'
+        );
+
+        $passwordIsVerified = password_verify(
+            $password,
+            $passwordHash
+        );
+
+        if ($passwordIsVerified !== true) {
+            return (object)[
+                'cbmessage' => <<<EOT
+
+                    Your password is not correct.
+
+                EOT,
+            ];
+        }
+
+        ColbyUser::loginCBUser(
+            $userModel
+        );
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBAjax_signIn() */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_signIn_getUserGroupClassName(): string {
+        return 'CBPublicUserGroup';
+    }
+
+
+
+    /**
+     * @param object $args
+     *
+     *      {
+     *          userCBID: CBID
+     *      }
+     */
+    static function CBAjax_switchToUser(
+        stdClass $args
+    ): void {
+        $userCBID = CBModel::valueAsCBID(
+            $args,
+            'userCBID'
+        );
+
+        if ($userCBID === null) {
+            throw new CBExceptionWithValue(
+                'The "userCBID" property is not valid.',
+                $args,
+                'f2bcfdc1b2911d797c4177d538ab8b3bfaccc0aa'
+            );
+        }
+
+        $userModel = CBModels::fetchModelByIDNullable(
+            $userCBID
+        );
+
+        if ($userModel->className !== 'CBUser') {
+            throw new Exception('foo');
+        }
+
+        ColbyUser::loginCBUser(
+            $userModel
+        );
+    }
+    /* CBAjax_switchToUser() */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_switchToUser_getUserGroupClassName(): string {
+        return 'CBDevelopersUserGroup';
+    }
+
+
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
 
@@ -27,19 +281,24 @@ final class CBUser {
      *
      * @return object
      */
-    static function CBModel_build(stdClass $spec): stdClass {
+    static function CBModel_build(
+        stdClass $spec
+    ): stdClass {
         $userNumericID = CBModel::valueAsInt(
             $spec,
             'userNumericID'
         );
 
-        if ($userNumericID === null) {
-            throw CBException::createModelIssueException(
-                'The "userNumericID" property must be an integer.',
-                $spec,
-                'd3cc11bb7ee84089207dc00fee71ecbb5f9679d4'
-            );
-        }
+
+        /* email */
+
+        $email = CBModel::valueAsEmail(
+            $spec,
+            'email'
+        );
+
+
+        /* deprecated */
 
         $facebook = CBModel::valueAsObject(
             $spec,
@@ -50,10 +309,80 @@ final class CBUser {
             $facebook = CBModel::clone($facebook);
         }
 
+
+        /* Facebook name */
+
+        $facebookName = trim(
+            CBModel::valueToString(
+                $spec,
+                'facebookName'
+            )
+        );
+
+
+        /* Facebook user ID */
+
+        $facebookUserID = CBModel::valueAsInt(
+            $spec,
+            'facebookUserID'
+        );
+
+        if (
+            $facebookUserID !== null &&
+            $facebookUserID <= 0
+        ) {
+            throw CBException::createWithValue(
+                'The Facebook user ID is invalid.',
+                $facebookUserID,
+                '2417ee1efc46f05e3ae75cd6050ea4c52c719a65'
+            );
+        }
+
+
+        /* password hash */
+
+        $passwordHash = CBModel::valueToString(
+            $spec,
+            'passwordHash'
+        );
+
+
+        /* title */
+
+        $title = trim(
+            CBModel::valueToString(
+                $spec,
+                'title'
+            )
+        );
+
+        if ($title === '') {
+            $title = $facebookName;
+        }
+
+
+        /* validation */
+
+        if ($email === null && $facebookUserID === null) {
+            throw new CBExceptionWithValue(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    This spec must have at least a valid "email" or
+                    "facebookUserID" property.
+
+                EOT),
+                $spec,
+                '44f5f16eb31531b6f6caf00ca23fd6472f5f623c'
+            );
+        }
+
+
         return (object)[
             'description' => trim(
                 CBModel::valueToString($spec, 'description')
             ),
+
+            'email' => $email,
 
             /**
              * @deprecated 2019_11_12
@@ -71,26 +400,21 @@ final class CBUser {
                 'facebookAccessToken'
             ),
 
-            'facebookName' => trim(
-                CBModel::valueToString(
-                    $spec,
-                    'facebookName'
-                )
-            ),
+            'facebookName' => $facebookName,
 
-            'facebookUserID' => CBModel::valueAsInt(
-                $spec,
-                'facebookUserID'
-            ),
+            'facebookUserID' => $facebookUserID,
+
+
+            /* @TODO I don't think this is always updated */
 
             'lastLoggedIn' => CBModel::valueAsInt(
                 $spec,
                 'lastLoggedIn'
             ) ?? 0,
 
-            'title' => trim(
-                CBModel::valueToString($spec, 'title')
-            ),
+            'passwordHash' => $passwordHash,
+
+            'title' => $title,
 
             'userNumericID' => $userNumericID,
         ];
@@ -104,7 +428,9 @@ final class CBUser {
      *
      * @return object
      */
-    static function CBModel_upgrade(stdClass $originalSpec): stdClass {
+    static function CBModel_upgrade(
+        stdClass $originalSpec
+    ): stdClass {
         $upgradedSpec = CBModel::clone($originalSpec);
 
 
@@ -113,7 +439,7 @@ final class CBUser {
         if (
             !isset($upgradedSpec->userNumericID)
         ) {
-            $upgradedSpec->userNumericID = CBModeL::valueAsInt(
+            $upgradedSpec->userNumericID = CBModel::valueAsInt(
                 $upgradedSpec,
                 'userID'
             );
@@ -193,5 +519,162 @@ final class CBUser {
         }
     }
     /* CBModels_willDelete */
+
+
+
+    /**
+     * @return void
+     */
+    static function CBModels_willSave(
+        array $userModels
+    ): void {
+        foreach ($userModels as $userModel) {
+            $userCBIDAsSQL = CBID::toSQL(
+                CBModel::valueAsCBID(
+                    $userModel,
+                    'ID'
+                )
+            );
+
+
+            /* email */
+
+            $userEmail = CBModel::valueAsEmail(
+                $userModel,
+                'email'
+            );
+
+            if ($userEmail === null) {
+                $userEmailAsSQL = 'NULL';
+            } else {
+                $userEmailAsSQL = CBDB::stringToSQL($userEmail);
+            }
+
+
+            /**
+             * The facebookName column holds the users preferred name. It will
+             * eventually be either renamed or removed. For now, it holds the
+             * value of the "title" property which is set to the Facebook name
+             * if it has not been set on the spec.
+             */
+
+            $userFullName = CBModel::valueToString(
+                $userModel,
+                'title'
+            );
+
+            $userFullNameAsSQL = CBDB::stringToSQL($userFullName);
+
+
+            /* update row */
+
+            $SQL = <<<EOT
+
+                UPDATE      ColbyUsers
+
+                SET         email = {$userEmailAsSQL},
+                            facebookName = {$userFullNameAsSQL}
+
+                WHERE       hash = {$userCBIDAsSQL}
+
+            EOT;
+
+            Colby::query($SQL);
+
+            if (CBDB::countOfRowsMatched() === 1) {
+                return;
+            }
+
+            $SQL = <<<EOT
+
+                INSERT INTO ColbyUsers
+                (
+                    hash,
+                    email,
+                    facebookName
+                )
+                VALUES
+                (
+                    {$userCBIDAsSQL},
+                    {$userEmailAsSQL},
+                    {$userFullNameAsSQL}
+                )
+
+            EOT;
+
+            Colby::query($SQL);
+        }
+    }
+    /* CBModels_willSave() */
+
+
+
+    /* -- functions -- -- -- -- -- */
+
+
+
+    /**
+     * @param string $email
+     *
+     * @return CBID|null
+     */
+    static function emailToUserCBID(
+        string $email
+    ): ?string {
+        $emailAsSQL = CBDB::stringToSQL($email);
+
+        $SQL = <<<EOT
+
+            SELECT      LOWER(HEX(hash))
+
+            FROM        ColbyUsers
+
+            WHERE       email = {$emailAsSQL}
+
+        EOT;
+
+        $result = CBDB::SQLToValue($SQL);
+
+        if (CBID::valueIsCBID($result)) {
+            return $result;
+        } else {
+            return null;
+        }
+    }
+    /* emailToUserCBID() */
+
+
+
+    /**
+     * @param string $password
+     *
+     * @return string|null
+     *
+     *      If the password has no issues, null is returned.
+     */
+    static function passwordIssues(
+        string $password
+    ): ?string {
+        $issues = [];
+
+        if (
+            trim($password) !== $password
+        ) {
+            $issues[] = 'Your password begins or ends with white space.';
+        }
+
+        if (
+            strlen($password) < 8
+        ) {
+            $issues[] = 'Your password has less than 8 characters.';
+        }
+
+        if (count($issues) > 0) {
+            return implode(' ', $issues);
+        } else {
+            return null;
+        }
+    }
+    /* passwordIssues() */
 
 }
