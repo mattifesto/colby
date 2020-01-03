@@ -142,10 +142,56 @@ final class CBAdminPageForUserSettings {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
+    static function CBHTMLOutput_CSSURLs(): array {
         return [
             Colby::flexpath(__CLASS__, 'v545.css', cbsysurl()),
         ];
     }
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v563.js', cbsysurl()),
+        ];
+    }
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptVariables(): array {
+        return [
+            [
+                'CBAdminPageForUserSettings_currentUserIsDeveloper',
+                CBUserGroup::userIsMemberOfUserGroup(
+                    ColbyUser::getCurrentUserCBID(),
+                    'CBDevelopersUserGroup'
+                ),
+            ],
+            [
+                'CBAdminPageForUserSettings_userCBID',
+                cb_query_string_value('hash'),
+            ],
+        ];
+    }
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBErrorHandler',
+            'CBUI',
+            'Colby',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
 
 }
