@@ -50,10 +50,9 @@ final class CBModel {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v560.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v563.js', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -65,7 +64,6 @@ final class CBModel {
             'CBConvert',
         ];
     }
-    /* CBHTMLOutput_requiredClassNames() */
 
 
 
@@ -678,6 +676,23 @@ final class CBModel {
         } else {
             return null;
         }
+    }
+
+
+
+    /**
+     * @param mixed $model
+     * @param string $keyPath
+     *
+     * @return string|null
+     */
+    static function valueAsEmail(
+        /* mixed */ $model,
+        string $keyPath
+    ): ?string {
+        return CBConvert::valueAsEmail(
+            CBModel::value($model, $keyPath)
+        );
     }
 
 
