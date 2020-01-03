@@ -13,10 +13,11 @@ final class CBUsers {
         $SQL = <<<EOT
 
             CREATE TABLE IF NOT EXISTS ColbyUsers (
-                id                              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-                hash                            BINARY(20) NOT NULL,
-                facebookId                      BIGINT UNSIGNED NOT NULL,
-                facebookName                    VARCHAR(100) NOT NULL,
+                id                  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+                hash                BINARY(20) NOT NULL,
+                email               VARCHAR(254),
+                facebookId          BIGINT UNSIGNED,
+                facebookName        VARCHAR(100) NOT NULL,
 
                 PRIMARY KEY (id),
 
@@ -26,6 +27,10 @@ final class CBUsers {
 
                 UNIQUE KEY hash (
                     hash
+                ),
+
+                UNIQUE KEY email (
+                    email
                 )
             )
             ENGINE=InnoDB
