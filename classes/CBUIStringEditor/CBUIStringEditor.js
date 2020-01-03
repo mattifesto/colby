@@ -3,8 +3,11 @@
 /* jshint esversion: 6 */
 /* exported CBUIStringEditor */
 /* global
+    CBUI,
     Colby,
 */
+
+
 
 var CBUIStringEditor = {
 
@@ -20,8 +23,11 @@ var CBUIStringEditor = {
      */
     create: function () {
         let changed;
-        var element = document.createElement("div");
-        element.className = "CBUIStringEditor";
+
+        let element = CBUI.createElement(
+            "CBUIStringEditor"
+        );
+
         var ID = Colby.random160();
         var label = document.createElement("label");
         label.htmlFor = ID;
@@ -80,12 +86,24 @@ var CBUIStringEditor = {
 
         return api;
 
-        /* closure */
+
+
+
+        /* -- closures -- -- -- -- -- */
+
+
+
+        /**
+         * @return undefined
+         */
         function resize() {
             input.style.height = "0";
             input.style.height = input.scrollHeight + "px";
         }
     },
+    /* create() */
+
+
 
     /**
      * @deprecated use CBUIStringEditor.create()
@@ -195,6 +213,9 @@ var CBUIStringEditor = {
             input.value = args.spec[args.propertyName] || "";
         }
     },
+    /* createEditor() */
+
+
 
     /**
      * @param string args.type
@@ -222,15 +243,18 @@ var CBUIStringEditor = {
 
         return element;
     },
+    /* createInputElement() */
+
+
 
     /**
-    * @param Element args.inputElement
+     * @param Element args.inputElement
      * @param string args.propertyName
      * @param function args.resizeTextAreaCallback
      * @param object args.spec
      * @param function args.specChangedCallback
      *
-     * @return  undefined
+     * @return undefined
      */
     handleInput: function (args) {
         args.spec[args.propertyName] = args.inputElement.value;
@@ -238,11 +262,17 @@ var CBUIStringEditor = {
         args.resizeTextAreaCallback.call();
         args.specChangedCallback.call();
     },
+    /* handleInput() */
+
+
 
     /**
      * @return undefined
      */
-    noop: function () { },
+    noop: function () {
+    },
+
+
 
     /**
      * @param Element args.inputElement
@@ -254,6 +284,8 @@ var CBUIStringEditor = {
         args.inputElement.style.height = args.inputElement.scrollHeight + "px";
     },
 
+
+
     /**
      * @param Element args.labelElement
      * @param string labelText
@@ -263,6 +295,8 @@ var CBUIStringEditor = {
     updateLabel: function (args, labelText) {
         args.labelElement.textContent = labelText;
     },
+
+
 
     /**
      * @param Element args.inputElement
@@ -286,4 +320,6 @@ var CBUIStringEditor = {
         args.specChangedCallback.call();
         args.resizeTextAreaCallback.call();
     },
+    /* updateValue() */
+
 };

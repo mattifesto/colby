@@ -2,6 +2,10 @@
 
 final class CBUIStringEditor {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
@@ -12,14 +16,16 @@ final class CBUIStringEditor {
     }
 
 
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v487.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v563.js', cbsysurl()),
         ];
     }
+
 
 
     /**
@@ -27,7 +33,9 @@ final class CBUIStringEditor {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBUI',
             'Colby',
         ];
     }
+
 }
