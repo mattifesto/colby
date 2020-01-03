@@ -7,6 +7,41 @@ final class CBDB {
 
 
     /**
+     * This function solves a problem with the mysqli property affected_rows
+     * which will be zero after an update that doesn't acutally change anything.
+     *
+     * If you want to see if a row existed zero will make it seem like it did
+     * not and you may incorrectly try to perform an insert.
+     *
+     * This function returns the number of rows found, which in this scenario
+     * will let the developer know not to attempt an insert.
+     *
+     * @return int
+     */
+    static function countOfRowsMatched(): int {
+        $info = Colby::mysqli()->info;
+
+        preg_match('/^\D+(\d+)/', $info, $matches);
+
+        $countOfRowsMatched = CBConvert::valueAsInt(
+            $matches[1]
+        );
+
+        if ($countOfRowsMatched === null) {
+            throw new CBExceptionWithValue(
+                'The info was not parseable.',
+                $info,
+                'db3a3455630d1dae8c78111c206e0a1099afa8f2'
+            );
+        }
+
+        return $countOfRowsMatched;
+    }
+    /* countOfRowsMatched() */
+
+
+
+    /**
      * Converts a string to a SQL safe string.
      *
      * @param string $value
