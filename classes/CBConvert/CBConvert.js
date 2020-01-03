@@ -3,6 +3,8 @@
 /* jshint esversion: 6 */
 /* exported CBConvert */
 
+
+
 var CBConvert = {
 
     /**
@@ -266,6 +268,27 @@ var CBConvert = {
 
         return undefined;
     },
+    /* valueAsCBID() */
+
+
+
+    /**
+     * @param mixed value
+     *
+     * @return string|undefined
+     */
+    valueAsEmail: function (value) {
+        let email = CBConvert.valueToString(
+            value
+        ).trim();
+
+        if (/^\S+@\S+\.\S+$/.test(email)) {
+            return email;
+        } else {
+            return undefined;
+        }
+    },
+    /* valueAsEmail() */
 
 
 

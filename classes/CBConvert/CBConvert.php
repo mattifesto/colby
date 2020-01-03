@@ -11,7 +11,7 @@ final class CBConvert {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v560.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v563.js', cbsysurl()),
         ];
     }
 
@@ -507,6 +507,28 @@ final class CBConvert {
      *      determine the value of an "empty" integer that would be useful to
      *      all callers.
      */
+
+
+
+    /**
+     * @param mixed $value
+     *
+     * @return string|null
+     */
+    static function valueAsEmail(
+        /* mixed */ $value
+    ): ?string {
+        $email = CBConvert::valueToString(
+            $value
+        );
+
+        if (preg_match('/^\S+@\S+\.\S+$/', $email)) {
+            return $email;
+        } else {
+            return null;
+        }
+    }
+    /* valueAsEmail() */
 
 
 
