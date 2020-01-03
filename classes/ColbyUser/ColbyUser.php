@@ -32,37 +32,7 @@ final class ColbyUser {
             ColbyUser::$currentUserCBID
         );
     }
-
-
-
-    /**
-     * @param int $facebookUserID
-     *
-     * @return object|null
-     *
-     *      {
-     *          userCBID: CBID
-     *
-     *          userNumericID: int (deprecated)
-     *      }
-     */
-    private static function facebookUserIDToCBUserIDs(
-        int $facebookUserID
-    ): ?stdClass {
-        $SQL = <<<EOT
-
-            SELECT  LOWER(HEX(hash)) AS userCBID,
-                    id as userNumericID
-
-            FROM    ColbyUsers
-
-            WHERE   facebookId = {$facebookUserID}
-
-        EOT;
-
-        return CBDB::SQLToObjectNullable($SQL);
-    }
-    /* facebookUserIDToCBUserIDs() */
+    /* currentUserIsLoggedIn() */
 
 
 
@@ -164,29 +134,27 @@ final class ColbyUser {
 
 
     /**
-     * This function is called at after Facebook authenticates a user that wants
-     * to log in. It updates the database and sets a cookie in the user's
-     * browser confirms their identity and that they are logged in for future
-     * page requests.
+     * This is a very powerful function. It logs in the user whose model has the
+     * CBID passed to this function. It does no verification whatsoever. This
+     * should always be the last step of the login process and should be
+     * prededed by verifications.
      *
-     * Since it sets a cookie it must be called before any HTML is ouput.
-     *
-     * @param int $facebookUserID
-     * @param string $facebookAccessToken
-     * @param object $facebookName
+     * @param CBID $userCBID
      *
      * @return void
      */
-    static function loginFacebookUser(
-        int $facebookUserID,
-        string $facebookAccessToken,
-        string $facebookName
+    static function loginUser(
+        string $userCBID
     ): void {
-        $userSpec = ColbyUser::updateFacebookUser(
-            $facebookUserID,
-            $facebookAccessToken,
-            $facebookName
-        );
+        if (
+            !CBID::valueIsCBID($userCBID)
+        ) {
+            throw new CBExceptionWithValue(
+                'The $userCBID parameter is not a valid CBID.',
+                $userCBID,
+                'ca9e310f0892223959716455b88e1b16a446d61d'
+            );
+        }
 
         /**
          * Set the Colby user cookie data.
@@ -199,10 +167,7 @@ final class ColbyUser {
          */
 
         $cookie = (object)[
-            'userCBID' => $userSpec->ID,
-
-            /* deprecated */
-            'userNumericID' => $userSpec->userNumericID,
+            'userCBID' => $userCBID,
 
             /* 24 hours from now */
             'expirationTimestamp' => time() + (60 * 60 * 24),
@@ -222,7 +187,62 @@ final class ColbyUser {
             '/'
         );
     }
-    /* loginCurrentUser() */
+    /* loginUser() */
+
+
+
+    /**
+     * This function is called at after Facebook authenticates a user that wants
+     * to log in. It updates the database and sets a cookie in the user's
+     * browser confirms their identity and that they are logged in for future
+     * page requests.
+     *
+     * Since it sets a cookie it must be called before any HTML is ouput.
+     *
+     * @param int $facebookUserID
+     * @param string $facebookAccessToken
+     * @param object $facebookName
+     *
+     * @return void
+     */
+    static function loginFacebookUser(
+        int $facebookUserID,
+        string $facebookAccessToken,
+        string $facebookName
+    ): void {
+        $countOfUsers = 1;
+
+        $userCBID = CBUser::facebookUserIDToUserCBID(
+            $facebookUserID
+        );
+
+        if ($userCBID === null) {
+            $userCBID = CBID::generateRandomCBID();
+            $countOfUsers = CBUsers::countOfUsers();
+        }
+
+        $userSpecUpdates = (object)[
+            'className' => 'CBUser',
+            'ID' => $userCBID,
+            'facebookAccessToken' => $facebookAccessToken,
+            'facebookName' => $facebookName,
+            'facebookUserID' => $facebookUserID,
+            'lastLoggedIn' => time(),
+        ];
+
+        CBModelUpdater::update(
+            $userSpecUpdates
+        );
+
+        if ($countOfUsers === 0) {
+            CBUser::initializeFirstUser($userCBID);
+        }
+
+        ColbyUser::loginUser(
+            $userCBID
+        );
+    }
+    /* loginFacebookUser() */
 
 
 
@@ -238,22 +258,20 @@ final class ColbyUser {
 
     /**
      * @param string $redirect
-     *  The URL to go to after logging out.
      *
-     *  This URL should not be escaped for use in HTML.
+     *      The URL to go to after logging out.
      *
-     *  The URL can be URL encoded or not.
-     *      (If a case is found where it needs to be one or the other,
-     *       update this documentation.)
+     *      This URL should not be escaped for use in HTML.
      *
-     *  If no URL is provided, $_SERVER['REQUEST_URI'] will be used.
+     *      The URL can be URL encoded or not. (If a case is found where it
+     *      needs to be one or the other, update this documentation.)
+     *
+     *      If no URL is provided, $_SERVER['REQUEST_URI'] will be used.
      *
      * @return string
-     *  The URL to visit to log out.
      *
-     *  This URL will be properly URL encoded.
-     *
-     *  This URL will not be escaped for use in HTML.
+     *      The URL to visit to log out. This URL will be properly URL encoded.
+     *      This URL will not be escaped for use in HTML.
      */
     static function logoutURL($redirectURL = null) {
         if (!$redirectURL) {
@@ -272,6 +290,7 @@ final class ColbyUser {
 
         return $URL;
     }
+    /* logoutURL() */
 
 
 
@@ -297,130 +316,7 @@ final class ColbyUser {
             $path
         );
     }
-
-
-
-    /**
-     * @param int $facebookUserID
-     * @param string $facebookAccessToken
-     * @param object $facebookName
-     *
-     * @return object
-     *
-     *      Returns the updated CBUser model for the user.
-     */
-    static function updateFacebookUser(
-        int $facebookUserID,
-        string $facebookAccessToken,
-        string $facebookName
-    ): stdClass {
-        $isFirstUser = false;
-
-        if ($facebookUserID <= 0) {
-            throw CBException::createWithValue(
-                'The Facebook user ID is invalid.',
-                $facebookUserID,
-                '2417ee1efc46f05e3ae75cd6050ea4c52c719a65'
-            );
-        }
-
-        $CBUserIDs = ColbyUser::facebookUserIDToCBUserIDs(
-            $facebookUserID
-        );
-
-        $facebookNameAsSQL = CBDB::stringToSQL($facebookName);
-
-        Colby::query('START TRANSACTION');
-
-        if ($CBUserIDs !== null) {
-            $SQL = <<<EOT
-
-                UPDATE  ColbyUsers
-
-                SET     facebookName = {$facebookNameAsSQL}
-
-                WHERE   id = {$CBUserIDs->userNumericID}
-
-            EOT;
-
-            Colby::query($SQL);
-        } else {
-            $CBUserIDs = (object)[
-                'userCBID' => CBID::generateRandomCBID(),
-            ];
-
-            $userCBIDAsSQL = CBID::toSQL($CBUserIDs->userCBID);
-
-            $SQL = <<<EOT
-
-                INSERT INTO ColbyUsers (
-                    hash,
-                    facebookId,
-                    facebookName
-                ) VALUES (
-                    {$userCBIDAsSQL},
-                    {$facebookUserID},
-                    {$facebookNameAsSQL}
-                )
-
-            EOT;
-
-            Colby::query($SQL);
-
-            $CBUserIDs->userNumericID = intval(Colby::mysqli()->insert_id);
-
-            /* Detect first user */
-
-            $SQL = <<<EOT
-
-                SELECT  COUNT(*)
-                FROM    ColbyUsers
-
-            EOT;
-
-            $count = CBDB::SQLToValue($SQL);
-
-            if ($count === '1') {
-                $isFirstUser = true;
-            }
-        }
-
-        $updater = CBModelUpdater::fetch(
-            (object)[
-                'className' => 'CBUser',
-                'ID' => $CBUserIDs->userCBID,
-                'facebookAccessToken' => $facebookAccessToken,
-                'facebookName' => $facebookName,
-                'facebookUserID' => $facebookUserID,
-                'lastLoggedIn' => time(),
-                'title' => $facebookName,
-                'userNumericID' => $CBUserIDs->userNumericID,
-            ]
-        );
-
-        if ($updater->working != $updater->original) {
-            CBModels::save($updater->working);
-        }
-
-        if ($isFirstUser) {
-            CBUserGroup::addUsers(
-                'CBAdministratorsUserGroup',
-                $CBUserIDs->userCBID
-            );
-
-            CBUserGroup::addUsers(
-                'CBDevelopersUserGroup',
-                $CBUserIDs->userCBID
-            );
-        }
-
-        /* All database updates are complete */
-
-        Colby::query('COMMIT');
-
-        return $updater->working;
-    }
-    /* updateFacebookUser() */
+    /* removeUserCookie() */
 
 }
 

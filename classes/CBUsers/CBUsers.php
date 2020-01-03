@@ -50,6 +50,30 @@ final class CBUsers {
 
 
     /**
+     * Returns the number of user accounts for the website. This function mainly
+     * exists to return zero before the first user is logged in to detect that
+     * they are the first user and add them to CBAdministratorsUserGroup and
+     * CBDevelopersUserGroup.
+     *
+     * @return int
+     */
+    static function countOfUsers(): int {
+        $SQL = <<<EOT
+
+            SELECT  COUNT(*)
+            FROM    ColbyUsers
+
+        EOT;
+
+        return CBConvert::valueAsInt(
+            CBDB::SQLToValue($SQL)
+        );
+    }
+    /* countOfUsers() */
+
+
+
+    /**
      * @deprecated 2019_08_29
      *
      *      This function was created as deprecated. It exists to support

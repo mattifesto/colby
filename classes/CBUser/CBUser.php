@@ -91,13 +91,20 @@ final class CBUser {
             'ID' => CBID::generateRandomCBID(),
             'title' => $userFullName,
             'email' => $userEmail,
+            'lastLoggedIn' => time(),
             'passwordHash' => $userPasswordHash,
         ];
 
+        $countOfUsers = CBUsers::countOfUsers();
+
         CBModels::save($userSpec);
 
-        ColbyUser::loginCBUser(
-            $userSpec
+        if ($countOfUsers === 0) {
+            CBUser::initializeFirstUser($userCBID);
+        }
+
+        ColbyUser::loginUser(
+            $userSpec->ID
         );
 
         return (object)[
@@ -187,8 +194,17 @@ final class CBUser {
             ];
         }
 
-        ColbyUser::loginCBUser(
-            $userModel
+        $userSpecUpdates = (object)[
+            'ID' => $userCBID,
+            'lastLoggedIn' => time(),
+        ];
+
+        CBModelUpdater::update(
+            $userSpecUpdates
+        );
+
+        ColbyUser::loginUser(
+            $userCBID
         );
 
         return (object)[
@@ -239,8 +255,8 @@ final class CBUser {
             throw new Exception('foo');
         }
 
-        ColbyUser::loginCBUser(
-            $userModel
+        ColbyUser::loginUser(
+            $userModel->ID
         );
     }
     /* CBAjax_switchToUser() */
@@ -642,6 +658,62 @@ final class CBUser {
         }
     }
     /* emailToUserCBID() */
+
+
+
+    /**
+     * @param string $email
+     *
+     * @return CBID|null
+     */
+    static function facebookUserIDToUserCBID(
+        int $facebookUserID
+    ): ?string {
+        $SQL = <<<EOT
+
+            SELECT      LOWER(HEX(hash))
+
+            FROM        ColbyUsers
+
+            WHERE       facebookId = {$facebookUserID}
+
+        EOT;
+
+        $result = CBDB::SQLToValue($SQL);
+
+        if (CBID::valueIsCBID($result)) {
+            return $result;
+        } else {
+            return null;
+        }
+    }
+    /* facebookUserIDToUserCBID() */
+
+
+
+    /**
+     * This function is called once per website. After the first user has signed
+     * in they are assumed to belong to the groups CBAdministratorsUserGroup and
+     * CBDevelopersUserGroup.
+     *
+     * @param CBID $userCBID
+     *
+     * @return void
+     */
+    static function initializeFirstUser(
+        string $userCBID
+    ): void {
+        CBUserGroup::addUsers(
+            'CBAdministratorsUserGroup',
+            $userCBID
+        );
+
+        CBUserGroup::addUsers(
+            'CBDevelopersUserGroup',
+            $userCBID
+        );
+    }
+    /* initializeFirstUser() */
 
 
 

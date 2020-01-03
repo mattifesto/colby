@@ -1136,7 +1136,7 @@ final class CBCodeAdmin {
                 (object)[
                     'cbmessage' => <<<EOT
 
-                        Use ColbyUser::facebookUserIDToCBUserIDs().
+                        Use CBUser::facebookUserIDToUserCBID().
 
                     EOT,
                     'filetype' => 'php',
