@@ -312,10 +312,7 @@ final class CBModel {
      *      perform a basic transfer of title from the spec to the model if the
      *      model produced doesn't have a title set.
      *
-     * @param mixed $spec
-     *
-     *      This function takes a mixed parameter to make it "array function
-     *      safe".
+     * @param object $spec
      *
      *      For this function to successfully build a model, the spec's class
      *      must exist and have the CBModel_build() interface implemented.
@@ -326,7 +323,7 @@ final class CBModel {
      *      throw exceptions if those requirements are not met.
      */
     static function build(
-        /* stdClass */ $spec
+        stdClass $spec
     ): stdClass {
         static $staticRootSpec = null;
 
