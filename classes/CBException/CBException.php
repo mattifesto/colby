@@ -51,7 +51,7 @@
      */
     public function __construct(
         string $message,
-        string $cbmessage,
+        string $cbmessage = '',
         ?string $sourceCBID = null,
         int $code = 0,
         Throwable $previous = null
