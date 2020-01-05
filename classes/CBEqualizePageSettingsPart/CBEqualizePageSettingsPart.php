@@ -10,7 +10,7 @@ final class CBEqualizePageSettingsPart {
      * @return void
      */
     static function CBPageSettings_renderHeadElementHTML(): void {
-        $CSSURL = Colby::flexpath(__CLASS__, 'v468.css', cbsysurl());
+        $CSSURL = Colby::flexpath(__CLASS__, 'v564.css', cbsysurl());
 
         ?>
         <link rel="stylesheet" href="<?= $CSSURL ?>">

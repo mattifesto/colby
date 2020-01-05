@@ -55,12 +55,15 @@ html {
     --CBLineColor: hsla(0, 0%, 100%, 0.3); /* @deprecated use CBTextColors */
     --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 
+    /* @deprecated use CBUIBackgroundColor */
+    --CBBackgroundColor2: hsl(0, 0%, 15%);
+
+    --CBUIBackgroundColor: hsl(0, 0%, 15%);
+
     /**
      * CBUIBorderColor is not translucent because it needs to be the same color
      * over any background color
      */
-    --CBBackgroundColor2: hsl(0, 0%, 15%); /* @deprecated use CBUIBackgroundColor */
-    --CBUIBackgroundColor: hsl(0, 0%, 15%);
     --CBUIBorderColor: hsl(0, 0%, 25%);
 
     background-color: hsl(0, 0%, 10%); /* IE11s */
@@ -79,12 +82,15 @@ html {
     --CBLineColor: hsla(0, 0%, 0%, 0.3); /* @deprecated use CBTextColors */
     --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
 
+    /* @deprecated use CBUIBackgroundColor */
+    --CBBackgroundColor2: hsl(0, 0%, 95%);
+
+    --CBUIBackgroundColor: hsl(0, 0%, 95%);
+
     /**
      * CBUIBorderColor is not translucent because it needs to be the same color
      * over any background color
      */
-    --CBBackgroundColor2: hsl(0, 0%, 95%); /* @deprecated use CBUIBackgroundColor */
-    --CBUIBackgroundColor: hsl(0, 0%, 95%);
     --CBUIBorderColor: hsl(0, 0%, 85%);
 
     background-color: hsl(0, 0%, 100%); /* IE11 */
