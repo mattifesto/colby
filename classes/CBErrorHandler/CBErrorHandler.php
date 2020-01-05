@@ -248,12 +248,20 @@ final class CBErrorHandler {
         Throwable $throwable
     ): void {
         try {
-            error_log(
-                CBConvert::throwableToMessage($throwable) .
-                ' | error log entry made in ' .
-                __METHOD__ .
-                '()'
-            );
+            $currentThrowable = $throwable;
+            $index = 0;
+
+            while ($currentThrowable && $index < 10) {
+                error_log(
+                    CBConvert::throwableToMessage($currentThrowable) .
+                    " | index {$index} | error log entry made in " .
+                    __METHOD__ .
+                    '()'
+                );
+
+                $currentThrowable = $currentThrowable->getPrevious();
+                $index += 1;
+            }
         } catch (Throwable $ignoredError) {
             error_log(
                 'writing to the error log failed' .
