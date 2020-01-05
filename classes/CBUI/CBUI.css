@@ -590,6 +590,8 @@ a.CBUI_sectionItem {
     }
 }
 
+
+
 /**
  * 2019_02_23
  *
@@ -723,6 +725,37 @@ a.CBUI_sectionItem {
     white-space: pre-wrap;
 }
 
+
+
+/**
+ * 2020_01_04
+ *
+ *      This class gives an element styles that meet the general definition of
+ *      what an outer view element should be.
+ */
+.CBUI_view_outer {
+    display: flex;
+    justify-content: center;
+
+    box-sizing: border-box;
+    max-width: 100%;
+    padding: 20px;
+}
+
+
+
+/**
+ * 2020_01_04
+ *
+ *      This class is used to display text content. It may be used in
+ *      conjunction with CBContentStyleSheet. An element using this class should
+ *      be placed inside a element using the class CBUI_view_outer.
+ */
+.CBUI_view_inner_text {
+    line-height: 1.5;
+    max-width: 100%;
+    width: 36em;
+}
 
 /* old style classes */
 

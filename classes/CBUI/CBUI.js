@@ -10,6 +10,38 @@
 
 var CBUI = {
 
+    /* -- functions -- -- -- -- -- */
+
+
+
+    /**
+     * This function creates something similar to a simple CBMessageView from
+     * a cbmessage.
+     *
+     * @param string cbmessage
+     *
+     * @return Element
+     */
+    cbmessageToElement(
+        cbmessage
+    ) {
+        let elements = CBUI.createElementTree(
+            [
+                "CBUI_view_outer",
+                "CBUI_view_inner_text"
+            ]
+        );
+
+        elements[1].innerHTML = CBMessageMarkup.messageToHTML(
+            cbmessage
+        );
+
+        return elements[0];
+    },
+    /* cbmessageToElement() */
+
+
+
     /**
      * Create a new <div> element and assign it a class name. This function is
      * often more convenient than document.createElement() because most of the
@@ -34,6 +66,48 @@ var CBUI = {
 
         return element;
     },
+    /* createElement() */
+
+
+
+    /**
+     * @param [mixed] definitions
+     *
+     *  [
+     *      <className> || [<className>, <tagName>]
+     *  ]
+     *
+     * return [Element]
+     */
+    createElementTree(
+        definitions
+    ) {
+        let elements = definitions.map(
+            function (definition) {
+                if (
+                    Array.isArray(definition) !== true
+                ) {
+                    definition = [definition];
+                }
+
+                let element = CBUI.createElement.apply(
+                    undefined,
+                    definition
+                );
+
+                return element;
+            }
+        );
+
+        for (let index = 1; index < elements.length; index += 1) {
+            elements[index - 1].appendChild(elements[index]);
+        }
+
+        return elements;
+    },
+    /* createElementTree() */
+
+
 
     /**
      * @return Element
@@ -44,6 +118,9 @@ var CBUI = {
 
         return element;
     },
+    /* createHalfSpace() */
+
+
 
     /**
      * @param object args
@@ -111,6 +188,8 @@ var CBUI = {
         return element;
     },
 
+
+
     /**
      * @deprecated use createHeaderItem()
      *
@@ -131,6 +210,8 @@ var CBUI = {
         return item.element;
     },
 
+
+
     /**
     * @deprecated use createHeaderItem()
     *
@@ -148,6 +229,8 @@ var CBUI = {
 
         return item.element;
     },
+
+
 
     /**
      * @return object
@@ -221,6 +304,8 @@ var CBUI = {
         };
     },
 
+
+
     /**
      * @param object args
      *
@@ -255,6 +340,8 @@ var CBUI = {
         };
     },
 
+
+
     /**
      * @param object args
      *
@@ -278,6 +365,8 @@ var CBUI = {
         };
     },
 
+
+
     /**
      * @deprecated use CBUISection.create()
      *
@@ -288,6 +377,8 @@ var CBUI = {
 
         return section.element;
     },
+
+
 
     /**
      * Creates a section header with an optional title and description. This is
@@ -335,6 +426,8 @@ var CBUI = {
         return element;
     },
 
+
+
     /**
      * @return Element
      */
@@ -344,6 +437,8 @@ var CBUI = {
 
         return element;
     },
+
+
 
     /**
      * @return object
