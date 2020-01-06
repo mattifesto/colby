@@ -21,13 +21,17 @@ var CBStatusAdminPage = {
         let mainElement = document.getElementsByTagName("main")[0];
 
         if (CBStatusAdminPage_issues.length > 0) {
-            mainElement.appendChild(
-                CBUI.createSectionHeader(
-                    {
-                        text: "Issues",
-                    }
-                )
-            );
+            {
+                let issuesTitleElement = CBUI.createElement(
+                    "CBUI_title1"
+                );
+
+                issuesTitleElement.textContent = "Issues";
+
+                mainElement.appendChild(
+                    issuesTitleElement
+                );
+            }
 
             let sectionElement = CBUI.createSection();
 

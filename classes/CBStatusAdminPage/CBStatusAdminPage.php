@@ -43,6 +43,12 @@ final class CBStatusAdminPage {
             CBSitePreferences::siteName()
         );
 
+        $siteTypeAsMessage = (
+            CBSitePreferences::getIsDevelopmentWebsite() ?
+            'Development' :
+            'Production'
+        );
+
         $message = <<<EOT
 
             --- CBUI_sectionContainer
@@ -51,8 +57,13 @@ final class CBStatusAdminPage {
                         --- p CBUI_textColor2
                         Site Name
                         ---
-
                         {$siteNameAsMessage}
+                    ---
+                    --- CBUI_container_leftAndRight
+                        --- p CBUI_textColor2
+                        Site Type
+                        ---
+                        {$siteTypeAsMessage}
                     ---
                 ---
             ---
@@ -100,7 +111,7 @@ final class CBStatusAdminPage {
                         {$valueAsMessage}
                     ---
 
-EOT;
+                EOT;
             }
         }
 
@@ -113,7 +124,7 @@ EOT;
                     ---
                 ---
 
-EOT;
+            EOT;
 
             echo CBMessageMarkup::messageToHTML($statusWidgetMessage);
         }
@@ -131,10 +142,9 @@ EOT;
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v486.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v565.js', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
