@@ -1,31 +1,46 @@
 <?php
 
-$spec = CBModelTemplateCatalog::fetchLivePageTemplate();
 $currentUserIsLoggedIn = ColbyUser::currentUserIsLoggedIn();
-$spec->title = $currentUserIsLoggedIn ? 'Authorization Failed' : 'Please Log In';
-$spec->description = 'You are not authorized to view this page.';
+
+$pageTitle = (
+    $currentUserIsLoggedIn ?
+    'Authorization Failed' :
+    'Please Log In'
+);
+
+$viewSpecs = [];
 
 if ($currentUserIsLoggedIn) {
-    $message = <<<EOT
-
-        --- p center
-        You are not authorized to view this page.
-        ---
-
-EOT;
-
-    $spec->sections = [
-        (object)[
-            'className' => 'CBMessageView',
-            'markup' => $message,
-        ],
+    $viewSpecs[] = (object)[
+        'className' => 'CBMessageView',
+        'markup' => <<<EOT
+            --- p center
+            You are not authorized to view this page.
+            ---
+        EOT,
     ];
 } else {
-    $spec->sections = [
+    array_push(
+        $viewSpecs,
         (object)[
             'className' => 'CBFacebookSignInView',
         ],
-    ];
+        (object)[
+            'className' => 'CBSignInView',
+        ]
+    );
 }
 
-CBPage::renderSpec($spec);
+$pageSpec = CBModelTemplateCatalog::fetchLivePageTemplate(
+    (object)[
+        'title' => $pageTitle,
+        'description' => 'You are not authorized to view this page.',
+        'sections' => $viewSpecs,
+    ]
+);
+
+CBPage::renderSpec(
+    CBModel::build(
+        $pageSpec
+    )
+);
