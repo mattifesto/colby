@@ -4,7 +4,40 @@
 
 final class CBEmail {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
+    static function CBAdmin_getIssueMessages(): array {
+        if (!file_exists(
+            CBEmail::getSwiftmailerIncludeFilename()
+        )) {
+            return [
+                <<<EOT
+
+                    Swiftmailer is not installed in the correct location for
+                    this website.
+
+                EOT,
+            ];
+        }
+
+        return [];
+    }
+    /* CBAdmin_getIssueMessages() */
+
+
+
     /* -- functions -- -- -- -- -- */
+
+
+
+    /**
+     * @return string
+     */
+    static function getSwiftmailerIncludeFilename(): string {
+        return cbsitedir() . '/swiftmailer/lib/swift_required.php';
+    }
 
 
 
@@ -153,4 +186,8 @@ final class CBEmail {
 
 
 
-include_once cbsitedir() . '/swiftmailer/lib/swift_required.php';
+$filename = CBEmail::getSwiftmailerIncludeFilename();
+
+if (file_exists($filename)) {
+    include_once($filename);
+}
