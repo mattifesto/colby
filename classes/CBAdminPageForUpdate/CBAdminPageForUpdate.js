@@ -12,6 +12,8 @@
     CBUISectionItem4,
     CBUIStringsPart,
     Colby,
+
+    CBAdminPageForUpdate_isDevelopmentWebsite,
 */
 
 
@@ -161,9 +163,11 @@ var CBAdminPageForUpdate = {
             main.appendChild(CBUI.createHalfSpace());
         }
 
-        main.appendChild(
-            createPullColbySectionElement()
-        );
+        if (CBAdminPageForUpdate_isDevelopmentWebsite) {
+            main.appendChild(
+                createPullColbySectionElement()
+            );
+        }
 
         /* output */
 

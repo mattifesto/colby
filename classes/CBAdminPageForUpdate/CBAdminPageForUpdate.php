@@ -197,9 +197,24 @@ final class CBAdminPageForUpdate {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v543.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v565.js', cbsysurl()),
         ];
     }
+
+
+
+    /**
+     * @return [[<name>, <value>]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables(): array {
+        return [
+            [
+                'CBAdminPageForUpdate_isDevelopmentWebsite',
+                CBSitePreferences::getIsDevelopmentWebsite(),
+            ],
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptVariables() */
 
 
 
