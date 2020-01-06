@@ -233,12 +233,16 @@ final class CBSitePreferences {
     /* CBModel_build() */
 
 
+
     /**
      * @param object $spec
      *
      * @return object
      */
-    static function CBModel_upgrade(stdClass $spec): stdClass {
+    static function CBModel_upgrade(
+        stdClass $spec
+    ): stdClass {
+
         /**
          * 2018.04.11 Remove unused property
          * Can be removed after run on every site
@@ -246,21 +250,25 @@ final class CBSitePreferences {
         if (isset($spec->defaultClassNameForPageSettings)) {
             unset($spec->defaultClassNameForPageSettings);
 
-            CBLog::log((object)[
-                'className' => __CLASS__,
-                'severity' => 5,
-                'message' => <<<EOT
+            CBLog::log(
+                (object)[
+                    'className' => __CLASS__,
+                    'severity' => 5,
+                    'message' => <<<EOT
 
-                    Removed the "defaultClassNameForPageSettings" property from
-                    the CBSitePreferences spec because it is no longer used.
+                        Removed the "defaultClassNameForPageSettings" property
+                        from the CBSitePreferences spec because it is no longer
+                        used.
 
-EOT
-            ]);
+                    EOT,
+                ]
+            );
         }
 
         return $spec;
     }
     /* CBModel_upgrade() */
+
 
 
     /**
@@ -275,14 +283,53 @@ EOT
     }
 
 
+
     /**
-     * Returns true if the site is in "debug" mode. Development and test sites
-     * should generally have this property set to true and production sites
-     * should not unless they are actively being investigated.
+     * @deprecated use CBSitePreferences::getIsDevelopmentWebsite()
+     */
+    static function debug() {
+        return CBSitePreferences::getIsDevelopmentWebsite();
+    }
+
+
+
+    /**
+     * @return bool
+     */
+    static function disallowRobots() {
+        return CBModel::valueToBool(
+            CBSitePreferences::model(),
+            'disallowRobots'
+        );
+    }
+    /* disallowRobots() */
+
+
+
+    /**
+     * @return CBID|null
+     */
+    static function frontPageID(): ?string {
+        return CBModel::valueAsCBID(
+            CBSitePreferences::model(),
+            'frontPageID'
+        );
+    }
+    /* frontPageID() */
+
+
+
+    /**
+     * Returns a boolean value indicating whether the site is a development site
+     * (not a production site). This property is used to determine whether to
+     * show development site only options such a "pull Colby".
+     *
+     * It is also used to show development only features and notifications.
+     * That aren't applicable to even developers on production sites.
      *
      * A site should not be less secure because this property returns true. For
      * instance, a site shouldn't send passwords to debug log or reveal user
-     * data to public pages in debug mode.
+     * data to public pages.
      *
      * @NOTE 2018.05.20
      *
@@ -293,38 +340,16 @@ EOT
      *      understand and use the information rather than if the site is in
      *      debug mode.
      *
-     * @NOTE 2018.05.20
-     *
-     *      The ability to set debug mode on a website is very old. The actual
-     *      number of practical purposes for it is low and may be zero. This
-     *      property may be a candidate for deprecation. Its purpose should be
-     *      more clearly determined.
-     *
      * @return bool
      */
-    static function debug() {
-        $model = CBSitePreferences::model();
-
-        return (bool)CBModel::value($model, 'debug');
+    static function getIsDevelopmentWebsite(): bool {
+        return CBModel::valueToBool(
+            CBSitePreferences::model(),
+            'debug'
+        );
     }
+    /* getIsDevelopmentWebsite() */
 
-
-    /**
-     * @return bool
-     */
-    static function disallowRobots() {
-        $model = CBSitePreferences::model();
-
-        return (bool)CBModel::value($model, 'disallowRobots');
-    }
-
-
-    /**
-     * @return hex160?
-     */
-    static function frontPageID(): ?string {
-        return CBModel::valueAsID(CBSitePreferences::model(), 'frontPageID');
-    }
 
 
     /**
@@ -350,7 +375,7 @@ EOT
             of ({$returnStatus} (code)). Update the path in (site preferences (a
             {$editSitePreferencesLink})).
 
-EOT;
+        EOT;
 
         return $message;
     }
@@ -380,7 +405,7 @@ EOT;
             code of ({$returnStatus} (code)). Update the path in (site
             preferences (a {$editSitePreferencesLink})).
 
-EOT;
+        EOT;
 
         return $message;
     }
@@ -410,7 +435,7 @@ EOT;
             This site has no name. Set one in (site preferences (a
             {$editSitePreferencesLink})).
 
-EOT;
+        EOT;
 
         return $message;
     }
@@ -439,7 +464,7 @@ EOT;
             This site has no Slack webhook URL. Set one in (site preferences (a
             {$editSitePreferencesLink})).
 
-EOT;
+        EOT;
 
         return $message;
     }
