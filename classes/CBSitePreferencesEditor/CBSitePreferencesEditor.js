@@ -13,6 +13,8 @@
     Colby,
 */
 
+
+
 var CBSitePreferencesEditor = {
 
     /**
@@ -97,12 +99,18 @@ var CBSitePreferencesEditor = {
         element.appendChild(section);
 
         item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText: "Debug",
-            propertyName: "debug",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }).element);
+
+        item.appendChild(
+            CBUIBooleanEditor.create(
+                {
+                    labelText: "This is a Development Website",
+                    propertyName: "debug",
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                }
+            ).element
+        );
+
         section.appendChild(item);
 
         item = CBUI.createSectionItem();
