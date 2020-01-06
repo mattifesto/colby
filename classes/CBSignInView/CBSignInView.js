@@ -152,7 +152,7 @@ Colby.afterDOMContentLoaded(
                     ).then(
                         function (response) {
                             if (response.succeeded === true) {
-                                //window.location.reload();
+                                window.location.reload();
                             } else {
                                 CBUIPanel.displayCBMessage(
                                     response.cbmessage
