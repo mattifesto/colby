@@ -9,6 +9,265 @@ final class CBUser {
     /**
      * @param object $args
      *
+     *      {
+     *          email: string
+     *          email2: string
+     *          password: string
+     *          password2: string
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          succeeded: bool
+     *
+     *          cbmessage: string
+     *
+     *              This will only be returned if succeeded is false.
+     *      }
+     */
+    static function CBAjax_addEmailAddress(
+        stdClass $args
+    ): stdClass {
+        $currentUserCBID = ColbyUser::getCurrentUserCBID();
+
+        if ($currentUserCBID === null) {
+            return (object)[
+                'cbmessage' => (
+                    'You must be signed in to add an email address.'
+                ),
+            ];
+        }
+
+        $email = CBModel::valueAsEmail(
+            $args,
+            'email'
+        );
+
+        if ($email === null) {
+            return (object)[
+                'cbmessage' => 'The email address you entered is not valid.',
+            ];
+        }
+
+        $emailUserCBID = CBUser::emailToUserCBID(
+            $email
+        );
+
+        if ($emailUserCBID !== null) {
+            return (object)[
+                'cbmessage' => 'This email is used by another account.',
+            ];
+        }
+
+        $email2 = CBModel::valueAsEmail(
+            $args,
+            'email2'
+        );
+
+        if ($email2 !== $email) {
+            return (object)[
+                'cbmessage' => 'Your email addresses do not match.',
+            ];
+        }
+
+        $password = CBModel::valueToString(
+            $args,
+            'password'
+        );
+
+        $passwordIssues = CBuser::passwordIssues($password);
+
+        if ($passwordIssues !== null) {
+            return (object)[
+                'cbmessage' => CBMessageMarkup::stringToMessage(
+                    $passwordIssues
+                ),
+            ];
+        }
+
+        $password2 = CBModel::valueToString(
+            $args,
+            'password2'
+        );
+
+        if ($password2 !== $password) {
+            return (object)[
+                'cbmessage' => 'Your passwords do not match.',
+            ];
+        }
+
+        $currentUserSpec = CBModels::fetchSpecByIDNullable(
+            $currentUserCBID
+        );
+
+        $currentUserEmail = trim(
+            CBModel::valueToString(
+                $currentUserSpec,
+                'email'
+            )
+        );
+
+        if ($currentUserEmail !== '') {
+            return (object)[
+                'cbmessage' => 'This account already has an email addresss.',
+            ];
+        }
+
+        $passwordHash = password_hash(
+            $password,
+            PASSWORD_DEFAULT
+        );
+
+        if ($passwordHash === false) {
+            return (object)[
+                'cbmessage' => 'An error occured while hashing your password.',
+            ];
+        }
+
+        $currentUserSpec->email = $email;
+        $currentUserSpec->passwordHash = $passwordHash;
+
+        CBDB::transaction(
+            function () use ($currentUserSpec) {
+                CBModels::save($currentUserSpec);
+            }
+        );
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBAjax_addEmailAddress() */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_addEmailAddress_getUserGroupClassName(): string {
+        return 'CBPublicUserGroup';
+    }
+
+
+
+    /**
+     * @param object $args
+     *
+     *      {
+     *          email: string
+     *          email2: string
+     *          password: string
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          succeeded: bool
+     *
+     *          cbmessage: string
+     *
+     *              This will only be returned if succeeded is false.
+     *      }
+     */
+    static function CBAjax_changeEmailAddress(
+        stdClass $args
+    ): stdClass {
+        $currentUserCBID = ColbyUser::getCurrentUserCBID();
+
+        if ($currentUserCBID === null) {
+            return (object)[
+                'cbmessage' => (
+                    'You must be signed in to change your email address.'
+                ),
+            ];
+        }
+
+        $email = CBModel::valueAsEmail(
+            $args,
+            'email'
+        );
+
+        if ($email === null) {
+            return (object)[
+                'cbmessage' => 'The email address you entered is not valid.',
+            ];
+        }
+
+        $emailUserCBID = CBUser::emailToUserCBID(
+            $email
+        );
+
+        if ($emailUserCBID !== null) {
+            return (object)[
+                'cbmessage' => 'This email is used by another account.',
+            ];
+        }
+
+        $email2 = CBModel::valueAsEmail(
+            $args,
+            'email2'
+        );
+
+        if ($email2 !== $email) {
+            return (object)[
+                'cbmessage' => 'Your email addresses do not match.',
+            ];
+        }
+
+        $password = CBModel::valueToString(
+            $args,
+            'password'
+        );
+
+        $currentUserSpec = CBModels::fetchSpecByIDNullable(
+            $currentUserCBID
+        );
+
+        $passwordHash = CBModel::valueToString(
+            $currentUserSpec,
+            'passwordHash'
+        );
+
+        $passwordIsVerified = password_verify(
+            $password,
+            $passwordHash
+        );
+
+        if ($passwordIsVerified !== true) {
+            return (object)[
+                'cbmessage' => 'Your password is not correct.',
+            ];
+        }
+
+        $currentUserSpec->email = $email;
+
+        CBDB::transaction(
+            function () use ($currentUserSpec) {
+                CBModels::save($currentUserSpec);
+            }
+        );
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBAjax_changeEmailAddress() */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_changeEmailAddress_getUserGroupClassName(): string {
+        return 'CBPublicUserGroup';
+    }
+
+
+
+    /**
+     * @param object $args
+     *
      * @return object
      *
      *      {
@@ -85,6 +344,12 @@ final class CBUser {
             $userPassword,
             PASSWORD_DEFAULT
         );
+
+        if ($userPasswordHash === false) {
+            return (object)[
+                'cbmessage' => 'An error occured while hashing your password.',
+            ];
+        }
 
         $userSpec = (object)[
             'className' => 'CBUser',
@@ -268,6 +533,59 @@ final class CBUser {
      */
     static function CBAjax_switchToUser_getUserGroupClassName(): string {
         return 'CBDevelopersUserGroup';
+    }
+
+
+
+    /**
+     * @NOTE 2020_01_04
+     *
+     *      This is the only way that a user can update their name.
+     *
+     * @param object $args
+     *
+     *      {
+     *          fullName: string
+     *      }
+     *
+     * @return void
+     */
+    static function CBAjax_updateFullName(
+        stdClass $args
+    ): void {
+        $currentUserCBID = ColbyUser::getCurrentUserCBID();
+
+        if ($currentUserCBID === null) {
+            throw new CBExceptionWithValue(
+                'You are not currently signed in.',
+                $args,
+                '06498193dfefff590fe3bdc87ae994a67b285ee3'
+            );
+        }
+
+        $fullName = CBConvert::stringToCleanLine(
+            CBModel::valueToString(
+                $args,
+                'fullName'
+            )
+        );
+
+        CBModelUpdater::update(
+            (object)[
+                'ID' => $currentUserCBID,
+                'title' => $fullName
+            ]
+        );
+    }
+    /* CBAjax_updateFullName() */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_updateFullName_getUserGroupClassName(): string {
+        return 'CBPublicUserGroup';
     }
 
 
