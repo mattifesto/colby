@@ -106,6 +106,14 @@ final class CBEmail {
 
 
     /**
+     * @param string $toEmail
+     * @param string $toFullName
+     * @param string $subject
+     * @param string $cbmessage
+     * @param object|null $cbemailsender
+     *
+     *      If not null, this should be a CBEmailSender model.
+     *
      * @return void
      */
     static function sendCBMessage(
@@ -113,8 +121,29 @@ final class CBEmail {
         string $toFullName,
         string $subject,
         string $cbmessage,
-        ?object $cbemailsender = null
+        ?stdClass $cbemailsender = null
     ): void {
+        if ($cbemailsender === null) {
+            $cbemailsender = CBModelCache::fetchModelByID(
+                CBEmailSender::websiteEmailSenderCBID()
+            );
+
+            /**
+             * @TODO 2020_01_06
+             *
+             *      Better determine whether this is a functional model.
+             */
+
+            $SMTPServerHostname = CBModel::valueToString(
+                $cbemailsender,
+                'SMTPServerHostname'
+            );
+
+            if ($SMTPServerHostname === '') {
+                $cbemailsender = null;
+            }
+        }
+
         if ($cbemailsender === null) {
             if (!defined('COLBY_EMAIL_SMTP_SERVER')) {
                 throw new CBException(
