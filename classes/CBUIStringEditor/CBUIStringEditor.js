@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBUIStringEditor */
 /* global
+    CBModel,
     CBUI,
     Colby,
 */
@@ -106,7 +107,43 @@ var CBUIStringEditor = {
 
 
     /**
-     * @deprecated use CBUIStringEditor.create()
+     * @param string title
+     * @param object spec
+     * @param string propertyName
+     * @param function specChangedCallback
+     *
+     * @return Element
+     */
+    createSpecPropertyEditorElement(
+        title,
+        spec,
+        propertyName,
+        specChangedCallback
+    ) {
+        let editor = CBUIStringEditor.create();
+        editor.title = title;
+        editor.value = CBModel.valueToString(
+            spec,
+            propertyName
+        );
+
+        editor.changed = function () {
+            spec[propertyName] = editor.value;
+
+            specChangedCallback();
+        };
+
+        return editor.element;
+    },
+    /* createSpecPropertyEditorElement() */
+
+
+
+    /**
+     * @deprecated
+     *
+     *      Use CBUIStringEditor.createSpecPropertyEditorElement() or
+     *      CBUIStringEditor.create().
      *
      * @param object args
      *
