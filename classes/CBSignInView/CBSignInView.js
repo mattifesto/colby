@@ -244,8 +244,15 @@ Colby.afterDOMContentLoaded(
          */
         function createSignInElement() {
             let element = CBUI.createElement(
-                "CBSignInView_signIn"
+                "CBSignInView_signIn",
+                "form"
             );
+
+            element.onsubmit = function (event) {
+                event.preventDefault();
+
+                signIn();
+            };
 
             let signInTitleElement = CBUI.createElement(
                 "CBUI_title1"
@@ -257,21 +264,18 @@ Colby.afterDOMContentLoaded(
 
             signInTitleElement.textContent = "Sign In";
 
-            let sectionContainerElement = CBUI.createElement(
-                "CBUI_sectionContainer"
+            let elements = CBUI.createElementTree(
+                [
+                    "CBUI_sectionContainer",
+                    "CBUI_section",
+                ]
             );
 
             element.appendChild(
-                sectionContainerElement
+                elements[0]
             );
 
-            let sectionElement = CBUI.createElement(
-                "CBUI_section"
-            );
-
-            sectionContainerElement.appendChild(
-                sectionElement
-            );
+            let sectionElement = elements[1];
 
             let emailEditor = CBUIStringEditor.create();
             emailEditor.title = "email";
@@ -306,36 +310,63 @@ Colby.afterDOMContentLoaded(
             );
 
             signInButtonElement.textContent = "Sign In";
+            signInButtonElement.tabIndex = 0;
+
+            signInButtonElement.addEventListener(
+                "keydown",
+                function (event) {
+                    if (event.key === "Enter") {
+                        signInButtonElement.blur();
+
+                        signIn();
+                    }
+                }
+            );
 
             signInButtonElement.addEventListener(
                 "click",
                 function () {
-                    Colby.callAjaxFunction(
-                        "CBUser",
-                        "signIn",
-                        {
-                            email: emailEditor.value.trim(),
-                            password: passwordEditor.value,
-                        }
-                    ).then(
-                        function (response) {
-                            if (response.succeeded === true) {
-                                window.location.reload();
-                            } else {
-                                CBUIPanel.displayCBMessage(
-                                    response.cbmessage
-                                );
-                            }
-                        }
-                    ).catch(
-                        function (error) {
-                            CBErrorHandler.displayAndReport(error);
-                        }
-                    );
+                    signIn();
                 }
             );
 
             return element;
+
+
+
+            /* -- closures -- -- -- -- -- */
+
+
+
+            /**
+             * @return undefined
+             */
+            function signIn() {
+                Colby.callAjaxFunction(
+                    "CBUser",
+                    "signIn",
+                    {
+                        email: emailEditor.value.trim(),
+                        password: passwordEditor.value,
+                    }
+                ).then(
+                    function (response) {
+                        if (response.succeeded === true) {
+                            window.location.reload();
+                        } else {
+                            CBUIPanel.displayCBMessage(
+                                response.cbmessage
+                            );
+                        }
+                    }
+                ).catch(
+                    function (error) {
+                        CBErrorHandler.displayAndReport(error);
+                    }
+                );
+            }
+            /* signIn() */
+
         }
         /* createSignInElement() */
     }

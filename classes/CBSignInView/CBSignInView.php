@@ -11,7 +11,7 @@ final class CBSignInView {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v564.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v565.js', cbsysurl()),
         ];
     }
 
