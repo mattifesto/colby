@@ -885,6 +885,15 @@ final class CBUser {
             }
 
 
+            /* facebookUserID */
+
+            $userFacebookUserID = CBModel::valueAsInt(
+                $userModel,
+                'facebookUserID'
+            );
+
+            $userFacebookUserIDAsSQL = $userFacebookUserID ?? 'NULL';
+
             /**
              * The facebookName column holds the users preferred name. It will
              * eventually be either renamed or removed. For now, it holds the
@@ -907,6 +916,7 @@ final class CBUser {
                 UPDATE      ColbyUsers
 
                 SET         email = {$userEmailAsSQL},
+                            facebookId = {$userFacebookUserIDAsSQL},
                             facebookName = {$userFullNameAsSQL}
 
                 WHERE       hash = {$userCBIDAsSQL}
@@ -925,12 +935,14 @@ final class CBUser {
                 (
                     hash,
                     email,
+                    facebookId,
                     facebookName
                 )
                 VALUES
                 (
                     {$userCBIDAsSQL},
                     {$userEmailAsSQL},
+                    {$userFacebookUserIDAsSQL},
                     {$userFullNameAsSQL}
                 )
 
