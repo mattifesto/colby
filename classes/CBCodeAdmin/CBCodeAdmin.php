@@ -1393,6 +1393,23 @@ final class CBCodeAdmin {
 
 
                 /**
+                 * 2020_01_06 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBUIStringEditor.createSpecPropertyEditorElement()
+                        or CBUIStringEditor.create().
+
+                    EOT,
+                    'filetype' => 'js',
+                    'regex' => 'CBUIStringEditor.createEditor',
+                    'severity' => 4,
+                    'title' => 'CBUIStringEditor.createEditor()',
+                ],
+
+
+                /**
                  * 2019_06_26
                  */
                 (object)[
