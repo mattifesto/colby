@@ -5,7 +5,6 @@
     CBErrorHandler,
     CBUI,
     CBUIPanel,
-    CBUIPasswordEditor,
     CBUIStringEditor,
     Colby,
 
@@ -67,10 +66,8 @@ Colby.afterDOMContentLoaded(
             );
 
             let elements = CBUI.createElementTree(
-                [
-                    "CBUI_sectionContainer",
-                    "CBUI_section",
-                ]
+                "CBUI_sectionContainer",
+                "CBUI_section"
             );
 
             element.appendChild(
@@ -91,14 +88,24 @@ Colby.afterDOMContentLoaded(
                 emailEditor2.element
             );
 
-            let passwordEditor = CBUIPasswordEditor.create();
+            let passwordEditor = CBUIStringEditor.create(
+                {
+                    inputType: "password",
+                }
+            );
+
             passwordEditor.title = "Password";
 
             elements[1].appendChild(
                 passwordEditor.element
             );
 
-            let passwordEditor2 = CBUIPasswordEditor.create();
+            let passwordEditor2 = CBUIStringEditor.create(
+                {
+                    inputType: "password",
+                }
+            );
+
             passwordEditor2.title = "Re-enter Password";
 
             elements[1].appendChild(
@@ -106,10 +113,8 @@ Colby.afterDOMContentLoaded(
             );
 
             elements = CBUI.createElementTree(
-                [
-                    "CBUI_container1",
-                    "CBUI_button1"
-                ]
+                "CBUI_container1",
+                "CBUI_button1"
             );
 
             element.appendChild(
@@ -187,12 +192,10 @@ Colby.afterDOMContentLoaded(
             );
 
             let elements = CBUI.createElementTree(
-                [
-                    "CBUI_sectionContainer",
-                    "CBUI_section",
-                    "CBUI_container_topAndBottom",
-                    "CBUI_textColor2"
-                ]
+                "CBUI_sectionContainer",
+                "CBUI_section",
+                "CBUI_container_topAndBottom",
+                "CBUI_textColor2"
             );
 
             element.appendChild(
@@ -227,7 +230,12 @@ Colby.afterDOMContentLoaded(
                 newEmailEditor2.element
             );
 
-            let passwordEditor = CBUIPasswordEditor.create();
+            let passwordEditor = CBUIStringEditor.create(
+                {
+                    inputType: "password",
+                }
+            );
+
             passwordEditor.title = "Password";
 
             elements[1].appendChild(
@@ -235,10 +243,8 @@ Colby.afterDOMContentLoaded(
             );
 
             elements = CBUI.createElementTree(
-                [
-                    "CBUI_container1",
-                    "CBUI_button1"
-                ]
+                "CBUI_container1",
+                "CBUI_button1"
             );
 
             element.appendChild(
@@ -313,10 +319,8 @@ Colby.afterDOMContentLoaded(
             );
 
             let elements = CBUI.createElementTree(
-                [
-                    "CBUI_sectionContainer",
-                    "CBUI_section",
-                ]
+                "CBUI_sectionContainer",
+                "CBUI_section"
             );
 
             element.appendChild(
