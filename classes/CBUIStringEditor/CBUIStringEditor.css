@@ -6,8 +6,12 @@
     padding: 3px 10px;
 }
 
+.CBUIStringEditor:focus-within {
+    border-top: 3px solid Highlight;
+    padding-top: 0px;
+}
+
 .CBUIStringEditor label {
-    color: hsla(0, 0%, 0%, 0.6); /* IE11 */
     color: var(--CBTextColor2);
 }
 
@@ -22,17 +26,18 @@
     outline: none;
     padding: 0;
     resize: none;
-
-    -ms-overflow-style: none; /* hide scrollbars on IE11 */
 }
 
-/* 1: Setting the line height and min-height is important because of an odd edge
-      case. If a CBUIStringEditor is added as display: none, and then is set to
-      display: block the textarea will have no height if min-height isn't set.
-      By setting the line-height and min-height we can guarantee the heights are
-      the same.
+/*  Note 1:
 
-      There is still uncertainty regarding fractional pixels. The `font-size`
-      property seems to truncate calculated values but height does not. However
-      it's undercertain and unlikely that height would not truncte the value.
+    Setting the line height and min-height is important because of an odd edge
+    case. If a CBUIStringEditor is added as display: none, and then is set to
+    display: block the textarea will have no height if min-height isn't set. By
+    setting the line-height and min-height we can guarantee the heights are the
+    same.
+
+    There is still uncertainty regarding fractional pixels. The `font-size`
+    property seems to truncate calculated values but height does not. However
+    it's undercertain and unlikely that height would not truncte the value.
+
  */

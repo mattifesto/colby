@@ -11,7 +11,7 @@ final class CBUIStringEditor {
      */
     static function CBHTMLOutput_CSSURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v469.css', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v565.css', cbsysurl()),
         ];
     }
 
