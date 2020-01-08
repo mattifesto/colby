@@ -31,11 +31,9 @@ var CBEmailSenderEditor = {
         let specChangedCallback = args.specChangedCallback;
 
         let elements = CBUI.createElementTree(
-            [
-                "CBEmailSenderEditor",
-                "CBUI_sectionContainer",
-                "CBUI_section",
-            ]
+            "CBEmailSenderEditor",
+            "CBUI_sectionContainer",
+            "CBUI_section"
         );
 
         let editorElement = elements[0];
@@ -51,10 +49,8 @@ var CBEmailSenderEditor = {
         );
 
         elements = CBUI.createElementTree(
-            [
-                "CBUI_sectionContainer",
-                "CBUI_section",
-            ]
+            "CBUI_sectionContainer",
+            "CBUI_section"
         );
 
         sectionElement = elements[1];
@@ -104,7 +100,10 @@ var CBEmailSenderEditor = {
                 "SMTP Server Password",
                 spec,
                 "SMTPServerPassword",
-                specChangedCallback
+                specChangedCallback,
+                {
+                    inputType: "password",
+                }
             )
         );
 
