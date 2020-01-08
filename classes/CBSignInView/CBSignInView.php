@@ -25,7 +25,6 @@ final class CBSignInView {
             'CBErrorHandler',
             'CBUI',
             'CBUIPanel',
-            'CBUIPasswordEditor',
             'CBUIStringEditor',
             'Colby',
         ];

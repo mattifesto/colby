@@ -5,7 +5,6 @@
     CBErrorHandler,
     CBUI,
     CBUIPanel,
-    CBUIPasswordEditor,
     CBUIStringEditor,
     Colby,
 */
@@ -83,7 +82,12 @@ Colby.afterDOMContentLoaded(
                 emailEditor.element
             );
 
-            let password1Editor = CBUIPasswordEditor.create();
+            let password1Editor = CBUIStringEditor.create(
+                {
+                    inputType: "password",
+                }
+            );
+
             password1Editor.title = "password";
             password1Editor.changed = function () { verify(); };
 
@@ -91,7 +95,12 @@ Colby.afterDOMContentLoaded(
                 password1Editor.element
             );
 
-            let password2Editor = CBUIPasswordEditor.create();
+            let password2Editor = CBUIStringEditor.create(
+                {
+                    inputType: "password",
+                }
+            );
+
             password2Editor.title = "confirm password";
             password2Editor.changed = function () { verify(); };
 
@@ -265,10 +274,8 @@ Colby.afterDOMContentLoaded(
             signInTitleElement.textContent = "Sign In";
 
             let elements = CBUI.createElementTree(
-                [
-                    "CBUI_sectionContainer",
-                    "CBUI_section",
-                ]
+                "CBUI_sectionContainer",
+                "CBUI_section"
             );
 
             element.appendChild(
@@ -284,7 +291,12 @@ Colby.afterDOMContentLoaded(
                 emailEditor.element
             );
 
-            let passwordEditor = CBUIPasswordEditor.create();
+            let passwordEditor = CBUIStringEditor.create(
+                {
+                    inputType: "password",
+                }
+            );
+
             passwordEditor.title = "password";
 
             sectionElement.appendChild(
