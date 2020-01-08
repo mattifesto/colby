@@ -13,6 +13,17 @@
 var CBUIStringEditor = {
 
     /**
+     * @param object|undefined args
+     *
+     *      This functions is meant to be called with no parameter most of the
+     *      time. This parameter is only necessary in very specific cases.
+     *
+     *      {
+     *          inputType: string
+     *
+     *              "password" - The returned editor will be a password editor.
+     *      }
+     *
      * @return object
      *
      *      {
@@ -22,17 +33,49 @@ var CBUIStringEditor = {
      *          value: string (get, set)
      *      }
      */
-    create: function () {
+    create: function (
+        args
+    ) {
         let changed;
 
-        let element = CBUI.createElement(
-            "CBUIStringEditor"
+        let elements = CBUI.createElementTree(
+            "CBUIStringEditor",
+            "CBUIStringEditor_container",
+            ["CBUIStringEditor_label", "label"]
         );
 
+        let element = elements[0];
+        let containerElement = elements[1];
+        let label = elements[2];
+
         var ID = Colby.random160();
-        var label = document.createElement("label");
         label.htmlFor = ID;
-        var input = document.createElement("textarea");
+
+        let input;
+
+        {
+            let inputType = CBModel.valueToString(
+                args,
+                "inputType"
+            );
+
+            if (inputType === "password") {
+                input = CBUI.createElement(
+                    "CBUIStringEditor_input",
+                    "input"
+                );
+
+                input.type = "password";
+            } else {
+                input = CBUI.createElement(
+                    "CBUIStringEditor_input",
+                    "textarea"
+                );
+            }
+        }
+
+        containerElement.appendChild(input);
+
         input.id = ID;
 
         input.addEventListener(
@@ -45,9 +88,6 @@ var CBUIStringEditor = {
                 }
             }
         );
-
-        element.appendChild(label);
-        element.appendChild(input);
 
         /**
          * @NOTE 2015_09_24
@@ -111,6 +151,7 @@ var CBUIStringEditor = {
      * @param object spec
      * @param string propertyName
      * @param function specChangedCallback
+     * @param object\undefined args
      *
      * @return Element
      */
@@ -118,9 +159,13 @@ var CBUIStringEditor = {
         title,
         spec,
         propertyName,
-        specChangedCallback
+        specChangedCallback,
+        args
     ) {
-        let editor = CBUIStringEditor.create();
+        let editor = CBUIStringEditor.create(
+            args
+        );
+
         editor.title = title;
         editor.value = CBModel.valueToString(
             spec,

@@ -1,4 +1,13 @@
-.CBUIStringEditor {
+/**
+ * @NOTE 2020_01_08
+ *
+ *      The control uses a container element to render focus borders so that the
+ *      root element can have separate borders applied by situation. This allows
+ *      CBUIStringEditor elements to be used as direct children of CBUI_section
+ *      elements.
+ */
+
+.CBUIStringEditor_container {
     box-sizing: border-box;
     display: flex;
     flex: 1 1 auto;
@@ -6,9 +15,10 @@
     padding: 3px 10px;
 }
 
-.CBUIStringEditor:focus-within {
+.CBUIStringEditor:focus-within .CBUIStringEditor_container {
+    border-bottom: 3px solid Highlight;
     border-top: 3px solid Highlight;
-    padding-top: 0px;
+    padding: 0 10px;
 }
 
 .CBUIStringEditor label {
