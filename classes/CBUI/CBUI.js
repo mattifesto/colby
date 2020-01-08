@@ -26,10 +26,8 @@ var CBUI = {
         cbmessage
     ) {
         let elements = CBUI.createElementTree(
-            [
                 "CBUI_view_outer",
                 "CBUI_view_inner_text"
-            ]
         );
 
         elements[1].innerHTML = CBMessageMarkup.messageToHTML(
@@ -80,7 +78,7 @@ var CBUI = {
      * return [Element]
      */
     createElementTree(
-        definitions
+        ...definitions
     ) {
         let elements = definitions.map(
             function (definition) {
