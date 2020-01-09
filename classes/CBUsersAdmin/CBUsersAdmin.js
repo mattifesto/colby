@@ -82,13 +82,19 @@ var CBUsersAdmin = {
                         titleElement
                     );
 
-                    titleElement.textContent = user.facebookName;
+                    titleElement.textContent = (
+                        user.facebookName ||
+                        "(no full name)"
+                    );
 
                     let descriptionElement = CBUI.createElement(
                         "CBUI_ellipsis CBUI_textSize_small CBUI_textColor2"
                     );
 
-                    descriptionElement.textContent = user.email;
+                    descriptionElement.textContent = (
+                        user.email ||
+                        "(no email address)"
+                    );
 
                     textContainerElement.appendChild(
                         descriptionElement
