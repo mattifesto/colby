@@ -13,27 +13,21 @@
 
 
 Colby.afterDOMContentLoaded(
-    function () {
+    function afterDOMContentLoaded() {
         let mainElement = document.getElementsByTagName("main").item(0);
 
         if (CBAdminPageForUserSettings_currentUserIsDeveloper) {
-            let containerElement = CBUI.createElement(
-                "CBUI_container1"
-            );
-
-            mainElement.appendChild(
-                containerElement
-            );
-
-
-            let buttonElement = CBUI.createElement(
+            let elements = CBUI.createElementTree(
+                "CBUI_container1",
                 "CBUI_button1"
             );
 
-            containerElement.appendChild(
-                buttonElement
+            mainElement.appendChild(
+                elements[0]
             );
 
+
+            let buttonElement = elements[1];
             buttonElement.textContent = "Login as this User";
 
             buttonElement.addEventListener(
@@ -56,6 +50,44 @@ Colby.afterDOMContentLoaded(
                     );
                 }
             );
+
+            elements = CBUI.createElementTree(
+                "CBUI_container1",
+                "CBUI_button1"
+            );
+
+            mainElement.appendChild(
+                elements[0]
+            );
+
+            elements[1].textContent = "Inspect CBUser Model";
+            elements[1].addEventListener(
+                "click",
+                function () {
+                    inspectCBUserModel();
+                }
+            );
         }
+
+        return;
+
+
+
+        /* -- closures -- -- -- -- -- */
+
+
+
+        /**
+         * @return undefined
+         */
+        function inspectCBUserModel() {
+            window.location = (
+                "/admin/?c=CBModelInspector&ID=" +
+                CBAdminPageForUserSettings_userCBID
+            );
+        }
+        /* inspectCBUserModel() */
+
     }
+    /* afterDOMContentLoaded() */
 );
