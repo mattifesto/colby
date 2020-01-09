@@ -216,15 +216,31 @@ var CBUIStringEditor = {
      *      }
      */
     createEditor: function (args) {
-        var element = document.createElement("div");
-        element.className = "CBUIStringEditor";
+        let elements = CBUI.createElementTree(
+            "CBUIStringEditor",
+            "CBUIStringEditor_container",
+            ["CBUIStringEditor_label", "label"]
+        );
+
+        let element = elements[0];
+        let containerElement = elements[1];
+        let label = elements[2];
+
         var ID = Colby.random160();
-        var label = document.createElement("label");
         label.htmlFor = ID;
         label.textContent = args.labelText || "";
-        var input = CBUIStringEditor.createInputElement({ type: args.type });
+
+        var input = CBUIStringEditor.createInputElement(
+            {
+                type: args.type
+            }
+        );
+
+        containerElement.appendChild(input);
+
         input.id = ID;
         input.placeholder = args.placeholderText || "";
+
         var resizeTextAreaCallback;
 
         if (input.tagName === "TEXTAREA") {
@@ -268,9 +284,6 @@ var CBUIStringEditor = {
         );
 
         input.addEventListener("input", inputCallback);
-
-        element.appendChild(label);
-        element.appendChild(input);
 
         /**
          * @NOTE 2015.09.24
