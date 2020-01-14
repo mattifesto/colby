@@ -160,10 +160,17 @@ final class CBErrorHandler {
             );
 
             $messageAsHTML = (
-                '<p>first error<br>' .
+                '<p><i>This page was rendered by ' .
+                __METHOD__ .
+                '()</i>' .
+                '<p><b>First Error</b>' .
+                '<p><code>' .
                 cbhtml($oneLineErrorReport1) .
-                '<p>second error<br>' .
-                cbhtml($oneLineErrorReport2)
+                '</code>' .
+                '<p><b>Second Error</b>' .
+                '<p><code>' .
+                cbhtml($oneLineErrorReport2) .
+                '</code>'
             );
         } else {
             $messageAsHTML = cbhtml(
@@ -184,9 +191,6 @@ final class CBErrorHandler {
                     content="width=device-width, initial-scale=1"
                 >
                 <style>
-                    * {
-                        margin: 0;
-                    }
                     html {
                         -webkit-text-size-adjust: 100%;
                         -ms-text-size-adjust: 100%;
@@ -194,9 +198,6 @@ final class CBErrorHandler {
                     body {
                         padding: 40px 20px;
                         text-align: center;
-                    }
-                    p {
-                        margin: 0.5em;
                     }
                 </style>
             </head>
