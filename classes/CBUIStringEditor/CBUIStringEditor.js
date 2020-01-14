@@ -15,8 +15,9 @@ var CBUIStringEditor = {
     /**
      * @param object|undefined args
      *
-     *      This functions is meant to be called with no parameter most of the
-     *      time. This parameter is only necessary in very specific cases.
+     *      This function is meant to be called with no parameter most of the
+     *      time. This parameter is only used to specify information about the
+     *      string editor that can't be changed once it has been created.
      *
      *      {
      *          inputType: string
