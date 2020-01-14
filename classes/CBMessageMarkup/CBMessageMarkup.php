@@ -130,7 +130,9 @@ final class CBMessageMarkup {
                 $html .= $child->html;
             } else {
                 if (!is_string($child)) {
-                    throw new RuntimeException('This element child should be a string.');
+                    throw new RuntimeException(
+                        'This element child should be a string.'
+                    );
                 }
 
                 $paragraphAsHTML = CBMessageMarkup::paragraphToHTML($child);
@@ -163,10 +165,16 @@ final class CBMessageMarkup {
 
             switch ($element->tagName) {
                 case 'p':
-                    $element->html = "<{$element->tagName}{$classAttribute}>{$html}";
+                    $element->html = (
+                        "<{$element->tagName}{$classAttribute}>{$html}"
+                    );
                     break;
                 default:
-                    $element->html = "<{$element->tagName}{$classAttribute}>\n{$html}</{$element->tagName}>\n";
+                    $element->html = (
+                        "<{$element->tagName}{$classAttribute}>\n" .
+                        "{$html}" .
+                        "</{$element->tagName}>\n"
+                    );
                     break;
             }
         }
@@ -186,10 +194,17 @@ final class CBMessageMarkup {
      * @return string
      */
     static function encodeEscapedCharacters(string $markup): string {
-        $escapedBackslashExpression = '/\\\\\\\\/' ;    /* double backslash */
-        $escapedOpenBracketExpression = '/\\\\\\(/';    /* backslash, open bracket */
-        $escapedCloseBracketExpression = '/\\\\\\)/';   /* backslash, close bracket */
-        $escapedCommandExpression = '/\\\\-/';          /* backslash, hyphen */
+        /* double backslash */
+        $escapedBackslashExpression = '/\\\\\\\\/' ;
+
+        /* backslash, open bracket */
+        $escapedOpenBracketExpression = '/\\\\\\(/';
+
+        /* backslash, close bracket */
+        $escapedCloseBracketExpression = '/\\\\\\)/';
+
+        /* backslash, hyphen */
+        $escapedCommandExpression = '/\\\\-/';
 
         $patterns = [
             $escapedBackslashExpression,
@@ -233,9 +248,21 @@ final class CBMessageMarkup {
      */
     static function inlineElementToHTML(array $matches): string {
         $inlineContent = trim($matches[1]);
-        $inlineTagData = preg_split('/\s+/', $matches[2], 2, PREG_SPLIT_NO_EMPTY);
+
+        $inlineTagData = preg_split(
+            '/\s+/',
+            $matches[2],
+            2,
+            PREG_SPLIT_NO_EMPTY
+        );
+
         $inlineTagName = $inlineTagData[0];
-        $inlineTagAttributeValue = isset($inlineTagData[1]) ? trim($inlineTagData[1]) : '';
+
+        $inlineTagAttributeValue = (
+            isset($inlineTagData[1]) ?
+            trim($inlineTagData[1]) :
+            ''
+        );
 
         switch ($inlineTagName) {
             case 'br':
@@ -243,19 +270,39 @@ final class CBMessageMarkup {
                 return "<{$inlineTagName}>";
                 break;
             case 'a':
-                return "<a href=\"{$inlineTagAttributeValue}\">{$inlineContent}</a>";
+                return (
+                    "<a href=\"{$inlineTagAttributeValue}\">" .
+                    "{$inlineContent}" .
+                    "</a>"
+                );
                 break;
             case 'abbr':
-                return "<abbr title=\"{$inlineTagAttributeValue}\">{$inlineContent}</abbr>";
+                return (
+                    "<abbr title=\"{$inlineTagAttributeValue}\">" .
+                    "{$inlineContent}" .
+                    "</abbr>"
+                );
                 break;
             case 'bdo':
-                return "<bdo dir=\"{$inlineTagAttributeValue}\">{$inlineContent}</bdo>";
+                return (
+                    "<bdo dir=\"{$inlineTagAttributeValue}\">" .
+                    "{$inlineContent}" .
+                    "</bdo>"
+                );
                 break;
             case 'data':
-                return "<data value=\"{$inlineTagAttributeValue}\">{$inlineContent}</data>";
+                return (
+                    "<data value=\"{$inlineTagAttributeValue}\">" .
+                    "{$inlineContent}" .
+                    "</data>"
+                );
                 break;
             case 'time':
-                return "<time datetime=\"{$inlineTagAttributeValue}\">{$inlineContent}</time>";
+                return (
+                    "<time datetime=\"{$inlineTagAttributeValue}\">" .
+                    "{$inlineContent}" .
+                    "</time>"
+                );
                 break;
             case 'b':
             case 'bdi':
@@ -280,10 +327,18 @@ final class CBMessageMarkup {
             case 'sup':
             case 'u':
             case 'var':
-                return "<{$inlineTagName}>{$inlineContent}</{$inlineTagName}>";
+                return (
+                    "<{$inlineTagName}>" .
+                    "{$inlineContent}" .
+                    "</{$inlineTagName}>"
+                );
                 break;
             default:
-                return "<span class=\"{$inlineTagName}\">{$inlineContent}</span>";
+                return (
+                    "<span class=\"{$inlineTagName}\">" .
+                    "{$inlineContent}" .
+                    "</span>"
+                );
                 break;
         }
     }
@@ -323,9 +378,21 @@ final class CBMessageMarkup {
      */
     static function inlineElementToText(array $matches): string {
         $inlineContent = trim($matches[1]);
-        $inlineTagData = preg_split('/\s+/', $matches[2], 2, PREG_SPLIT_NO_EMPTY);
+
+        $inlineTagData = preg_split(
+            '/\s+/',
+            $matches[2],
+            2,
+            PREG_SPLIT_NO_EMPTY
+        );
+
         $inlineTagName = $inlineTagData[0];
-        $inlineTagAttributeValue = isset($inlineTagData[1]) ? trim($inlineTagData[1]) : '';
+
+        $inlineTagAttributeValue = (
+            isset($inlineTagData[1]) ?
+            trim($inlineTagData[1]) :
+            ''
+        );
 
         switch ($inlineTagName) {
             case 'br':
@@ -429,7 +496,9 @@ final class CBMessageMarkup {
             // Command lines
 
             if ($command !== null) {
-                $parentAllows = CBMessageMarkup::tagNameAllowsBlockChildren($currentElement->tagName);
+                $parentAllows = CBMessageMarkup::tagNameAllowsBlockChildren(
+                    $currentElement->tagName
+                );
 
                 if ($parentAllows && $command->tagName !== '') {
                     if ($content !== null) {
@@ -438,7 +507,14 @@ final class CBMessageMarkup {
                     }
 
                     $currentElement = CBMessageMarkup::createElement($stack);
-                    $currentElement->classNamesAsHTML = cbhtml(implode(' ', $command->classNames));
+
+                    $currentElement->classNamesAsHTML = cbhtml(
+                        implode(
+                            ' ',
+                            $command->classNames
+                        )
+                    );
+
                     $currentElement->tagName = $command->tagName;
 
                     switch ($command->tagName) {
@@ -466,7 +542,10 @@ final class CBMessageMarkup {
                     }
                 }
 
-                if ($command->tagName === '' && $currentElement !== $rootElement) {
+                if (
+                    $command->tagName === '' &&
+                    $currentElement !== $rootElement
+                ) {
                     if ($content !== null) {
                         $currentElement->children[] = $content;
                         $content = null;
@@ -575,7 +654,10 @@ final class CBMessageMarkup {
             $paragraphs
         );
 
-        return implode("\n\n", $paragraphs);
+        return implode(
+            "\n\n",
+            $paragraphs
+        );
     }
     /* messageToText() */
 
@@ -723,6 +805,7 @@ final class CBMessageMarkup {
             '/\(/',     /* open bracket */
             '/\)/',     /* close bracket */
         ];
+
         $replacements = [
             '\\\\\\\\', /* double backslash */
             '\\\\-',    /* backslash hyphen */
@@ -730,7 +813,11 @@ final class CBMessageMarkup {
             '\\\\)',    /* backslash close bracket */
         ];
 
-        return preg_replace($patterns, $replacements, $value);
+        return preg_replace(
+            $patterns,
+            $replacements,
+            $value
+        );
     }
     /* stringToMessage() */
 
@@ -742,17 +829,20 @@ final class CBMessageMarkup {
      * @return bool
      */
     static function tagNameAllowsBlockChildren(string $tagName): bool {
-        return in_array($tagName, [
-            'blockquote',
-            'dd',
-            'div',
-            'dl',
-            'dt',
-            'li',
-            'ol',
-            'root', // custom
-            'ul',
-        ]);
+        return in_array(
+            $tagName,
+            [
+                'blockquote',
+                'dd',
+                'div',
+                'dl',
+                'dt',
+                'li',
+                'ol',
+                'root', // custom
+                'ul',
+            ]
+        );
     }
     /* tagNameAllowsBlockChildren() */
 
@@ -764,25 +854,28 @@ final class CBMessageMarkup {
      * @return bool
      */
     static function tagNameIsAllowedBlockElement(string $tagName): bool {
-        return in_array($tagName, [
-            'blockquote',
-            'dd',
-            'div',
-            'dl',
-            'dt',
-            'h1',
-            'h2',
-            'h3',
-            'h4',
-            'h5',
-            'h6',
-            'hr',
-            'li',
-            'p',
-            'pre',
-            'ol',
-            'ul',
-        ]);
+        return in_array(
+            $tagName,
+            [
+                'blockquote',
+                'dd',
+                'div',
+                'dl',
+                'dt',
+                'h1',
+                'h2',
+                'h3',
+                'h4',
+                'h5',
+                'h6',
+                'hr',
+                'li',
+                'p',
+                'pre',
+                'ol',
+                'ul',
+            ]
+        );
     }
     /* tagNameIsAllowedBlockElement() */
 
