@@ -7,14 +7,22 @@ final class CBMessageMarkup {
     const encodedCloseBracket = 'edc679d4ac06a45884a23160030c4cb2d4b2ebf1';
     const encodedHyphen = '4605702366f1f3d132e1a76a25165e2c0b6b352c';
 
+
+
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v469.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v565.js', cbsysurl()),
         ];
     }
+
+
 
     /**
      * @return [string]
@@ -25,12 +33,20 @@ final class CBMessageMarkup {
         ];
     }
 
+
+
+    /* -- functions -- -- -- -- -- */
+
+
+
     /**
      * @deprecated use CBMessageMarkup::messageToHTML()
      */
     static function convert(string $markup): string {
         return CBMessageMarkup::messageToHTML($markup);
     }
+
+
 
     /**
      * @param [object] $stack
@@ -63,6 +79,9 @@ final class CBMessageMarkup {
 
         return $element;
     }
+    /* createElement() */
+
+
 
     /**
      * Once a paragraph has been converted this will decode encoded markup
@@ -93,6 +112,8 @@ final class CBMessageMarkup {
 
         return preg_replace($patterns, $replacements, $markup);
     }
+    /* decodeEncodedCharacters() */
+
 
 
     /**
@@ -152,6 +173,9 @@ final class CBMessageMarkup {
 
         return end($stack);
     }
+    /* elementFinish() */
+
+
 
     /**
      * Encodes escaped markup characters in preparation for the paragraph to be
@@ -182,6 +206,9 @@ final class CBMessageMarkup {
 
         return preg_replace($patterns, $replacements, $markup);
     }
+    /* encodeEscapedCharacters() */
+
+
 
     /**
      * @param string $matches[0]
@@ -260,6 +287,9 @@ final class CBMessageMarkup {
                 break;
         }
     }
+    /* inlineElementToHTML() */
+
+
 
     /**
      * Convert and inline element to text.
@@ -309,6 +339,9 @@ final class CBMessageMarkup {
                 break;
         }
     }
+    /* inlineElementToText() */
+
+
 
     /**
      * @param string $line
@@ -352,6 +385,9 @@ final class CBMessageMarkup {
             'tagName' => $tagName,
         ];
     }
+    /* lineToCommand() */
+
+
 
     /**
      * @deprecated use messageToHTML()
@@ -360,12 +396,16 @@ final class CBMessageMarkup {
         return CBMessageMarkup::messageToHTML($message);
     }
 
+
+
     /**
      * @deprecated use messageToText()
      */
     static function markupToText(string $message): string {
         return CBMessageMarkup::messageToText($message);
     }
+
+
 
     /**
      * @param string $markup
@@ -469,6 +509,9 @@ final class CBMessageMarkup {
 
         return $html;
     }
+    /* messageToHTML() */
+
+
 
     /**
      * Converts a message to plain text. Useful for creating search text or
@@ -534,6 +577,9 @@ final class CBMessageMarkup {
 
         return implode("\n\n", $paragraphs);
     }
+    /* messageToText() */
+
+
 
     /**
      * @param string $markup
@@ -579,6 +625,9 @@ final class CBMessageMarkup {
 
         return $content;
     }
+    /* paragraphToHTML() */
+
+
 
     /**
      * This function will convert a paragraph with inline elements into text.
@@ -636,6 +685,9 @@ final class CBMessageMarkup {
 
         return $content;
     }
+    /* paragraphToText() */
+
+
 
     /**
      * @deprecated use stringToMessage()
@@ -680,6 +732,9 @@ final class CBMessageMarkup {
 
         return preg_replace($patterns, $replacements, $value);
     }
+    /* stringToMessage() */
+
+
 
     /**
      * @param string $tagName
@@ -699,6 +754,9 @@ final class CBMessageMarkup {
             'ul',
         ]);
     }
+    /* tagNameAllowsBlockChildren() */
+
+
 
     /**
      * @param string $tagName
@@ -726,4 +784,6 @@ final class CBMessageMarkup {
             'ul',
         ]);
     }
+    /* tagNameIsAllowedBlockElement() */
+
 }

@@ -7,6 +7,8 @@
     Colby,
 */
 
+
+
 var CBMessageMarkup = {
 
     /**
@@ -15,6 +17,8 @@ var CBMessageMarkup = {
     convert: function (message) {
         return CBMessageMarkup.messageToHTML(message);
     },
+
+
 
     /**
      * @param [object] stack
@@ -49,20 +53,32 @@ var CBMessageMarkup = {
     },
 
 
+
     /**
-     * Once a paragraph has been converted this will decode encoded markup
+     * Once a paragraph has been converted this will decode encoded cbmessage
      * characters to their unescaped form.
      *
-     * @param string $markup
+     * @param string cbmessage
      *
      * @return string
      */
-    decodeEncodedCharacters: function (markup) {
-        return markup.replace(new RegExp(CBMessageMarkup.encodedBackslash, "g"), "\\")
-                     .replace(new RegExp(CBMessageMarkup.encodedOpenBracket, "g"), "(")
-                     .replace(new RegExp(CBMessageMarkup.encodedCloseBracket, "g"), ")")
-                     .replace(new RegExp(CBMessageMarkup.encodedHyphen, "g"), "-");
+    decodeEncodedCharacters: function (cbmessage) {
+        return cbmessage.replace(
+            new RegExp(CBMessageMarkup.encodedBackslash, "g"),
+            "\\"
+        ).replace(
+            new RegExp(CBMessageMarkup.encodedOpenBracket, "g"),
+            "("
+        ).replace(
+            new RegExp(CBMessageMarkup.encodedCloseBracket, "g"),
+            ")"
+        ).replace(
+            new RegExp(CBMessageMarkup.encodedHyphen, "g"),
+            "-"
+        );
     },
+
+
 
     /**
      * @param [object] stack
@@ -115,13 +131,27 @@ var CBMessageMarkup = {
 
             switch (element.tagName) {
                 case "p":
-                    element.html = "<" + element.tagName + classAttribute + ">" +
-                                   html;
+                    element.html = (
+                        "<" +
+                        element.tagName +
+                        classAttribute +
+                        ">" +
+                        html
+                    );
+
                     break;
                 default:
-                    element.html = "<" + element.tagName + classAttribute + ">\n" +
-                                   html +
-                                   "</" + element.tagName + ">\n";
+                    element.html = (
+                        "<" +
+                        element.tagName +
+                        classAttribute +
+                        ">\n" +
+                        html +
+                        "</" +
+                        element.tagName +
+                        ">\n"
+                    );
+
                     break;
             }
         }
@@ -129,36 +159,57 @@ var CBMessageMarkup = {
         return stack[stack.length - 1];
     },
 
+
+
     /**
-     * Encodes escaped markup characters in preparation for the paragraph to be
-     * converted.
+     * Encodes escaped cbmessage characters in preparation for the paragraph to
+     * be converted.
      *
-     * @param string $markup
+     * @param string cbmessage
      *
      * @return string
      */
-    encodeEscapedCharacters: function (markup) {
-        return markup.replace(/\\\\/g, CBMessageMarkup.encodedBackslash)    /* double backslash */
-                     .replace(/\\\(/g, CBMessageMarkup.encodedOpenBracket)  /* backslash, open bracket */
-                     .replace(/\\\)/g, CBMessageMarkup.encodedCloseBracket) /* backslash, close bracket */
-                     .replace(/\\-/g, CBMessageMarkup.encodedHyphen);       /* backslash, hyphen */
+    encodeEscapedCharacters: function (cbmessage) {
+        return cbmessage.replace(
+            /\\\\/g, /* double backslash */
+            CBMessageMarkup.encodedBackslash
+        ).replace(
+            /\\\(/g, /* backslash, open bracket */
+            CBMessageMarkup.encodedOpenBracket
+        ).replace(
+            /\\\)/g, /* backslash, close bracket */
+            CBMessageMarkup.encodedCloseBracket
+        ).replace(
+            /\\-/g, /* backslash, hyphen */
+            CBMessageMarkup.encodedHyphen
+        );
     },
+
+
 
     get encodedBackslash() {
         return "836f784bf25aa0e5663779c36899c61efbaa114e";
     },
 
+
+
     get encodedOpenBracket() {
         return "f5a6328bda8575b25bbc5f0ece0181df57e54ed1";
     },
+
+
 
     get encodedCloseBracket() {
         return "edc679d4ac06a45884a23160030c4cb2d4b2ebf1";
     },
 
+
+
     get encodedHyphen() {
         return "4605702366f1f3d132e1a76a25165e2c0b6b352c";
     },
+
+
 
     /**
      * @param string match0
@@ -185,7 +236,12 @@ var CBMessageMarkup = {
         var inlineContent = match1.trim();
         var inlineTagData = match2.match(/^\s*(\S*)\s*(.*)/);
         var inlineTagName = inlineTagData[1];
-        var inlineTagAttributeValue = inlineTagData[2] ? inlineTagData[2].trim() : "";
+
+        var inlineTagAttributeValue = (
+            inlineTagData[2] ?
+            inlineTagData[2].trim() :
+            ""
+        );
 
         CBMessageMarkup.replacementCount += 1;
 
@@ -194,15 +250,45 @@ var CBMessageMarkup = {
             case "wbr":
                 return "<" + inlineTagName + ">";
             case "a":
-                return "<a href=\"" + inlineTagAttributeValue + "\">" + inlineContent + "</a>";
+                return (
+                    "<a href=\"" +
+                    inlineTagAttributeValue +
+                    "\">" +
+                    inlineContent +
+                    "</a>"
+                );
             case "abbr":
-                return "<abbr title=\"" + inlineTagAttributeValue + "\">" + inlineContent + "</abbr>";
+                return (
+                    "<abbr title=\"" +
+                    inlineTagAttributeValue +
+                    "\">" +
+                    inlineContent +
+                    "</abbr>"
+                );
             case "bdo":
-                return "<bdo dir=\"" + inlineTagAttributeValue + "\">" + inlineContent + "</bdo>";
+                return (
+                    "<bdo dir=\"" +
+                    inlineTagAttributeValue +
+                    "\">" +
+                    inlineContent +
+                    "</bdo>"
+                );
             case "data":
-                return "<data value=\"" + inlineTagAttributeValue + "\">" + inlineContent + "</data>";
+                return (
+                    "<data value=\"" +
+                    inlineTagAttributeValue +
+                    "\">" +
+                    inlineContent +
+                    "</data>"
+                );
             case "time":
-                return "<time datetime=\"" + inlineTagAttributeValue + "\">" + inlineContent + "</time>";
+                return (
+                    "<time datetime=\"" +
+                    inlineTagAttributeValue +
+                    "\">" +
+                    inlineContent +
+                    "</time>"
+                );
             case "b":
             case "bdi":
             case "cite":
@@ -226,11 +312,27 @@ var CBMessageMarkup = {
             case "sup":
             case "u":
             case "var":
-                return "<" + inlineTagName + ">" + inlineContent + "</" + inlineTagName + ">";
+                return (
+                    "<" +
+                    inlineTagName +
+                    ">" +
+                    inlineContent +
+                    "</" +
+                    inlineTagName +
+                    ">"
+                );
             default:
-                return "<span class=\"" + inlineTagName + "\">" + inlineContent + "</span>";
+                return (
+                    "<span class=\"" +
+                    inlineTagName +
+                    "\">" +
+                    inlineContent +
+                    "</span>"
+                );
         }
     },
+
+
 
     /**
      * @param string match0
@@ -269,6 +371,8 @@ var CBMessageMarkup = {
                 return inlineContent;
         }
     },
+
+
 
     /**
      * @param string line
@@ -310,12 +414,16 @@ var CBMessageMarkup = {
         };
     },
 
+
+
     /**
      * @deprecated use messageToHTML
      */
     markupToHTML: function (message) {
         return CBMessageMarkup.messageToHTML(message);
     },
+
+
 
     /**
      * @deprecated use messageToText
@@ -324,16 +432,24 @@ var CBMessageMarkup = {
         return CBMessageMarkup.messageToText(message);
     },
 
+
+
     /**
-     * @param string markup
+     * @param string cbmessage
      *
      * @return string
      */
-    messageToHTML: function (markup) {
-        markup = CBMessageMarkup.encodeEscapedCharacters(markup);
+    messageToHTML: function (
+        cbmessage
+    ) {
+        if (typeof cbmessage !== "string") {
+            throw TypeError("The cbmessage parameter is not a string.");
+        }
+
+        cbmessage = CBMessageMarkup.encodeEscapedCharacters(cbmessage);
 
         var content, line;
-        var lines = markup.split(/\r?\n/);
+        var lines = cbmessage.split(/\r?\n/);
         var stack = [];
         var root = CBMessageMarkup.createElement(stack);
         root.defaultChildTagName = "p";
@@ -345,7 +461,9 @@ var CBMessageMarkup = {
             var command = CBMessageMarkup.lineToCommand(line);
 
             if (command !== null) {
-                var parentAllows = CBMessageMarkup.tagNameAllowsBlockChildren(current.tagName);
+                var parentAllows = CBMessageMarkup.tagNameAllowsBlockChildren(
+                    current.tagName
+                );
 
                 if (parentAllows && command.tagName !== '') {
                     if (content !== undefined) {
@@ -354,7 +472,11 @@ var CBMessageMarkup = {
                     }
 
                     current = CBMessageMarkup.createElement(stack);
-                    current.classNamesAsHTML = Colby.textToHTML(command.classNames.join(" "));
+
+                    current.classNamesAsHTML = Colby.textToHTML(
+                        command.classNames.join(" ")
+                    );
+
                     current.tagName = command.tagName;
 
                     switch(command.tagName) {
@@ -442,17 +564,26 @@ var CBMessageMarkup = {
 
         return CBMessageMarkup.decodeEncodedCharacters(root.html);
     },
+    /* messageToHTML() */
+
+
 
     /**
-     * @param string markup
+     * @param string cbmessage
      *
      * @return string
      */
-    messageToText: function (markup) {
-        markup = CBMessageMarkup.encodeEscapedCharacters(markup);
+    messageToText: function (
+        cbmessage
+    ) {
+        if (typeof cbmessage !== "string") {
+            throw TypeError("The cbmessage parameter is not a string.");
+        }
+
+        cbmessage = CBMessageMarkup.encodeEscapedCharacters(cbmessage);
         var command, line, paragraph;
         var paragraphs = [];
-        var lines = CBConvert.stringToLines(markup);
+        var lines = CBConvert.stringToLines(cbmessage);
 
         for (var index = 0; index < lines.length; index++) {
             line = lines[index];
@@ -501,14 +632,17 @@ var CBMessageMarkup = {
 
         return paragraphs.join("\n\n");
     },
+    /* messageToText() */
+
+
 
     /**
-     * @param string markup
+     * @param string cbmessage
      *
      * @return string
      */
-    paragraphToHTML: function (markup) {
-        var content = Colby.textToHTML(markup);
+    paragraphToHTML: function (cbmessage) {
+        var content = Colby.textToHTML(cbmessage);
         var openBracket = "\\(";
         var closeBracket = "\\)";
         var notBracket = "[^\\(\\)]";
@@ -541,13 +675,15 @@ var CBMessageMarkup = {
         return content;
     },
 
+
+
     /**
-     * @param string markup
+     * @param string cbmessage
      *
      * @return string
      */
-    paragraphToText: function (markup) {
-        var content = markup;
+    paragraphToText: function (cbmessage) {
+        var content = cbmessage;
 
         var openBracket = "\\(";
         var closeBracket = "\\)";
@@ -583,6 +719,8 @@ var CBMessageMarkup = {
         return content;
     },
 
+
+
     /**
      * @deprecated use stringToMessage()
      */
@@ -590,9 +728,11 @@ var CBMessageMarkup = {
         return CBMessageMarkup.stringToMessage(value);
     },
 
+
+
     /**
-     * This function converts a string to markup representing that string as
-     * plain text. This function is the `htmlspecialchars` of message markup.
+     * This function converts a string to a cbmessage representing that string
+     * as plain text. This function is the "htmlspecialchars" of cbmessage.
      *
      * Conversions:
      *
@@ -627,6 +767,8 @@ var CBMessageMarkup = {
         return value;
     },
 
+
+
     /**
      * @param string tagName
      *
@@ -645,6 +787,8 @@ var CBMessageMarkup = {
             "ul",
         ].indexOf(tagName) !== -1;
     },
+
+
 
     /**
      * @param string $tagName
@@ -672,4 +816,5 @@ var CBMessageMarkup = {
             "ul",
         ].indexOf(tagName) !== -1;
     },
+
 };
