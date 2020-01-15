@@ -14,7 +14,7 @@ final class CBUser_PotentialUser {
      * @param object $args
      *
      *      {
-     *          email: string
+     *          emailAddress: string
      *          fullName: string
      *          password1: string
      *          password2: string
@@ -112,15 +112,30 @@ final class CBUser_PotentialUser {
         }
 
         $potentialUserCBID = CBID::generateRandomCBID();
+
         $oneTimePassword = CBOneTimePassword::generate();
+
+        $oneTimePasswordHash = password_hash(
+            $oneTimePassword,
+            PASSWORD_DEFAULT
+        );
+
+        if ($oneTimePasswordHash === false) {
+            throw new CBException(
+                'An error occurred while hashing a one time password',
+                '',
+                'bb7f2b075baf3952ecc60fae00664f2d55546b2b'
+            );
+        }
 
         $potentialUserSpec = (object)[
             'ID' => $potentialUserCBID,
             'className' => 'CBUser_PotentialUser',
-            'email' => $emailAddress,
+            'emailAddress' => $emailAddress,
             'fullName' => $fullName,
-            'oneTimePassword' => $oneTimePassword,
+            'oneTimePasswordHash' => $oneTimePasswordHash,
             'passwordHash' => $passwordHash,
+            'timestamp' => time(),
         ];
 
         CBDB::transaction(
@@ -131,7 +146,12 @@ final class CBUser_PotentialUser {
 
         $cbmessage = <<<EOT
 
-            code {$oneTimePassword}
+            The one time password that will allow you to create a user account
+            for this email address is:
+
+            --- blockquote
+            {$oneTimePassword}
+            ---
 
         EOT;
 
@@ -205,9 +225,9 @@ final class CBUser_PotentialUser {
             );
         }
 
-        $potentialUserModelOneTimePassword = CBModel::valueToString(
+        $oneTimePasswordHash = CBModel::valueToString(
             $potentialUserModel,
-            'oneTimePassword'
+            'oneTimePasswordHash'
         );
 
         $oneTimePassword = CBModel::valueToString(
@@ -215,7 +235,12 @@ final class CBUser_PotentialUser {
             'oneTimePassword'
         );
 
-        if ($oneTimePassword !== $potentialUserModelOneTimePassword) {
+        $oneTimePasswordIsVerified = password_verify(
+            $oneTimePassword,
+            $oneTimePasswordHash
+        );
+
+        if ($oneTimePasswordIsVerified !== true) {
             return (object)[
                 'cbmessage' => 'The one time password is not correct.',
             ];
@@ -230,7 +255,7 @@ final class CBUser_PotentialUser {
 
             'email' => CBModel::valueToString(
                 $potentialUserModel,
-                'email'
+                'emailAddress'
             ),
 
             'title' => CBModel::valueToString(
@@ -290,23 +315,73 @@ final class CBUser_PotentialUser {
     static function CBModel_build(
         stdClass $spec
     ): stdClass {
-        $oneTimePassword = CBModel::valueToString(
+        $emailAddress = CBModel::valueAsEmail(
             $spec,
-            'oneTimePassword'
+            'emailAddress'
         );
 
-        // @TODO validate one time password
+        if ($emailAddress === null) {
+            throw new CBExceptionWithValue(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The "emailAddress" property on this spec is not valid.
+
+                EOT),
+                $spec,
+                '3fd11a88b7ff8db85ae58fef6f561948388f95cf'
+            );
+        }
+
+        $oneTimePasswordHash = CBModel::valueToString(
+            $spec,
+            'oneTimePasswordHash'
+        );
+
+        if ($oneTimePasswordHash === '') {
+            throw new CBExceptionWithValue(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The "oneTimePasswordHash" property on this spec is not
+                    valid.
+
+                EOT),
+                $spec,
+                '10f7c52580542a6bf92a52c769b2479fba8dbb67'
+            );
+        }
 
         $passwordHash = CBModel::valueToString(
             $spec,
             'passwordHash'
         );
 
-        return (object)[
-            'email' => CBModel::valueToString(
+        if ($passwordHash === '') {
+            throw new CBExceptionWithValue(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The "passwordHash" property on this spec is not valid.
+
+                EOT),
                 $spec,
-                'email'
-            ),
+                'a182862901bd2b50cdf6391f56e636c1f791a278'
+            );
+        }
+
+        $timestamp = CBModel::valueAsInt(
+            $spec,
+            'timestamp'
+        );
+
+        if ($timestamp === null) {
+            throw new CBExceptionWithValue(
+                'The "timestamp" property on this spec is not valid.',
+                $spec,
+                '8345bd7a9ac4beaa460c91faaf8f762674c9118a'
+            );
+        }
+
+        return (object)[
+            'emailAddress' => $emailAddress,
 
             'fullName' => trim(
                 CBModel::valueToString(
@@ -315,9 +390,11 @@ final class CBUser_PotentialUser {
                 )
             ),
 
-            'oneTimePassword' => $oneTimePassword,
+            'oneTimePasswordHash' => $oneTimePasswordHash,
 
             'passwordHash' => $passwordHash,
+
+            'timestamp' => $timestamp,
         ];
     }
     /* CBModel_build() */
