@@ -1,6 +1,6 @@
 "use strict";
 /* jshint strict: global */
-/* jshint esversion: 6 */
+/* jshint esversion: 8 */
 /* global
     CBErrorHandler,
     CBUI,
@@ -11,376 +11,297 @@
 
 
 
-Colby.afterDOMContentLoaded(
+(function () {
+
+    Colby.afterDOMContentLoaded(afterDOMContentLoaded);
+
+
+    /**
+     * @return undefined
+     */
     function afterDOMContentLoaded() {
         let viewElements = document.getElementsByClassName("CBSignInView");
 
         for (let index = 0; index < viewElements.length; index += 1) {
             let viewElement = viewElements.item(index);
 
-            viewElement.appendChild(
-                createSignInElement()
-            );
-
-            viewElement.appendChild(
-                createCreateAccountElement()
+            initializeViewElement(
+                viewElement
             );
         }
-        /* for */
-
-
-
-        /**
-         * @return Element
-         */
-        function createCreateAccountElement() {
-            let accountInformationIsValid = false;
-
-            let element = CBUI.createElement(
-                "CBSignInView_createAccount"
-            );
-
-            let createAccountTitleElement = CBUI.createElement(
-                "CBUI_title1"
-            );
-
-            element.appendChild(
-                createAccountTitleElement
-            );
-
-            createAccountTitleElement.textContent = "Create Account";
-
-            let sectionContainerElement = CBUI.createElement(
-                "CBUI_sectionContainer"
-            );
-
-            element.appendChild(
-                sectionContainerElement
-            );
-
-            let sectionElement = CBUI.createElement(
-                "CBUI_section"
-            );
-
-            sectionContainerElement.appendChild(
-                sectionElement
-            );
-
-            let fullNameEditor = CBUIStringEditor.create();
-            fullNameEditor.title = "full name";
-            fullNameEditor.changed = function () { verify(); };
-
-            sectionElement.appendChild(
-                fullNameEditor.element
-            );
-
-            let emailEditor = CBUIStringEditor.create();
-            emailEditor.title = "email";
-            emailEditor.changed = function () { verify(); };
-
-            sectionElement.appendChild(
-                emailEditor.element
-            );
-
-            let password1Editor = CBUIStringEditor.create(
-                {
-                    inputType: "password",
-                }
-            );
-
-            password1Editor.title = "password";
-            password1Editor.changed = function () { verify(); };
-
-            sectionElement.appendChild(
-                password1Editor.element
-            );
-
-            let password2Editor = CBUIStringEditor.create(
-                {
-                    inputType: "password",
-                }
-            );
-
-            password2Editor.title = "confirm password";
-            password2Editor.changed = function () { verify(); };
-
-            sectionElement.appendChild(
-                password2Editor.element
-            );
-
-            /* status area */
-
-            let statusElement = CBUI.createElement(
-                "CBUI_container1"
-            );
-
-            element.appendChild(
-                statusElement
-            );
-
-
-            /* create account button */
-
-            let createAccountButtonContainerElement = CBUI.createElement(
-                "CBUI_container1"
-            );
-
-            element.appendChild(
-                createAccountButtonContainerElement
-            );
-
-            let createAccountButtonElement = CBUI.createElement(
-                "CBUI_button1"
-            );
-
-            createAccountButtonContainerElement.appendChild(
-                createAccountButtonElement
-            );
-
-            createAccountButtonElement.textContent = "Create Account";
-
-            createAccountButtonElement.addEventListener(
-                "click",
-                function () {
-                    if (accountInformationIsValid !== true) {
-                        CBUIPanel.displayText(
-                            "The account information is not valid."
-                        );
-
-                        return;
-                    }
-
-                    Colby.callAjaxFunction(
-                        "CBUser",
-                        "createAccount",
-                        {
-                            "email": emailEditor.value.trim(),
-                            "fullName": fullNameEditor.value.trim(),
-                            "password": password1Editor.value,
-                        }
-                    ).then(
-                        function (response) {
-                            if (response.succeeded === true) {
-                                window.location.reload();
-                            } else {
-                                CBUIPanel.displayCBMessage(
-                                    response.cbmessage
-                                );
-                            }
-                        }
-                    ).catch(
-                        function (error) {
-                            CBErrorHandler.displayAndReport(error);
-                        }
-                    );
-                }
-            );
-
-            return element;
-
-
-
-            /* -- closures -- -- -- -- -- */
-
-
-
-            /**
-             * @return void
-             */
-            function verify() {
-                accountInformationIsValid = false;
-
-                let isActive = false;
-                let statusTexts = [];
-
-                let fullName = fullNameEditor.value.trim();
-
-                if (fullName !== "") {
-                    isActive = true;
-                } else {
-                    statusTexts.push("enter a name");
-                }
-
-                let email = emailEditor.value.trim();
-
-                if (email !== "") {
-                    isActive = true;
-                }
-
-                if (/^\w+@\w+\.\w+/.test(email) === false) {
-                    statusTexts.push("fix email address");
-                }
-
-                let password1 = password1Editor.value;
-
-                if (password1 !== "") {
-                    isActive = true;
-                }
-
-                let password2 = password2Editor.value;
-
-                if (password1 !== "") {
-                    isActive = true;
-                }
-
-                if (password1 !== password2) {
-                    statusTexts.push("no match");
-                }
-
-                if (password1 === "" && password2 === "") {
-                    statusTexts.push("enter a password");
-                }
-
-                if (isActive === true) {
-                    if (statusTexts.length === 0) {
-                        accountInformationIsValid = true;
-                    }
-
-                    statusElement.textContent = statusTexts.join(", ");
-                } else {
-                    statusElement.textContent = "";
-                }
-            }
-            /* verify() */
-
-        }
-        /* createCreateAccountElement() */
-
-
-
-        /**
-         * @return Element
-         */
-        function createSignInElement() {
-            let element = CBUI.createElement(
-                "CBSignInView_signIn",
-                "form"
-            );
-
-            element.onsubmit = function (event) {
-                event.preventDefault();
-
-                signIn();
-            };
-
-            let signInTitleElement = CBUI.createElement(
-                "CBUI_title1"
-            );
-
-            element.appendChild(
-                signInTitleElement
-            );
-
-            signInTitleElement.textContent = "Sign In";
-
-            let elements = CBUI.createElementTree(
-                "CBUI_sectionContainer",
-                "CBUI_section"
-            );
-
-            element.appendChild(
-                elements[0]
-            );
-
-            let sectionElement = elements[1];
-
-            let emailEditor = CBUIStringEditor.create();
-            emailEditor.title = "email";
-
-            sectionElement.appendChild(
-                emailEditor.element
-            );
-
-            let passwordEditor = CBUIStringEditor.create(
-                {
-                    inputType: "password",
-                }
-            );
-
-            passwordEditor.title = "password";
-
-            sectionElement.appendChild(
-                passwordEditor.element
-            );
-
-            /* sign in button */
-
-            let signInButtonContainerElement = CBUI.createElement(
-                "CBUI_container1"
-            );
-
-            element.appendChild(
-                signInButtonContainerElement
-            );
-
-            let signInButtonElement = CBUI.createElement(
-                "CBUI_button1"
-            );
-
-            signInButtonContainerElement.appendChild(
-                signInButtonElement
-            );
-
-            signInButtonElement.textContent = "Sign In";
-            signInButtonElement.tabIndex = 0;
-
-            signInButtonElement.addEventListener(
-                "keydown",
-                function (event) {
-                    if (event.key === "Enter") {
-                        signInButtonElement.blur();
-
-                        signIn();
-                    }
-                }
-            );
-
-            signInButtonElement.addEventListener(
-                "click",
-                function () {
-                    signIn();
-                }
-            );
-
-            return element;
-
-
-
-            /* -- closures -- -- -- -- -- */
-
-
-
-            /**
-             * @return undefined
-             */
-            function signIn() {
-                Colby.callAjaxFunction(
-                    "CBUser",
-                    "signIn",
-                    {
-                        email: emailEditor.value.trim(),
-                        password: passwordEditor.value,
-                    }
-                ).then(
-                    function (response) {
-                        if (response.succeeded === true) {
-                            window.location.reload();
-                        } else {
-                            CBUIPanel.displayCBMessage(
-                                response.cbmessage
-                            );
-                        }
-                    }
-                ).catch(
-                    function (error) {
-                        CBErrorHandler.displayAndReport(error);
-                    }
-                );
-            }
-            /* signIn() */
-
-        }
-        /* createSignInElement() */
     }
     /* afterDOMContentLoaded() */
-);
+
+
+
+    /**
+     * @param Element viewElement
+     * @param function resolve
+     *
+     *      This function will call resolve() when a user is successfully signed
+     *      in.
+     *
+     * @return undefined
+     */
+    function createUserInterface(
+        viewElement,
+        resolve
+    ) {
+        let elements = CBUI.createElementTree(
+            ["CBSignInView_signIn", "form"],
+            "CBUI_title1"
+        );
+
+        let formElement = elements[0];
+
+        viewElement.appendChild(
+            formElement
+        );
+
+        formElement.onsubmit = function (event) {
+            event.preventDefault();
+
+            closure_tryToSignInViaAjax();
+        };
+
+        elements[1].textContent = "Sign In";
+
+        elements = CBUI.createElementTree(
+            "CBUI_sectionContainer",
+            "CBUI_section"
+        );
+
+        formElement.appendChild(
+            elements[0]
+        );
+
+        let sectionElement = elements[1];
+
+        let emailAddressEditor = CBUIStringEditor.create();
+        emailAddressEditor.title = "email";
+
+        sectionElement.appendChild(
+            emailAddressEditor.element
+        );
+
+        let passwordEditor = CBUIStringEditor.create(
+            {
+                inputType: "password",
+            }
+        );
+
+        passwordEditor.title = "password";
+
+        sectionElement.appendChild(
+            passwordEditor.element
+        );
+
+        /* sign in button */
+
+        elements = CBUI.createElementTree(
+            "CBUI_container1",
+            "CBUI_button1"
+        );
+
+        formElement.appendChild(
+            elements[0]
+        );
+
+        let signInButtonElement = elements[1];
+
+        signInButtonElement.textContent = "Sign In";
+        signInButtonElement.tabIndex = 0;
+
+        signInButtonElement.addEventListener(
+            "keydown",
+            function (event) {
+                if (event.key === "Enter") {
+                    signInButtonElement.blur();
+
+                    closure_tryToSignInViaAjax();
+                }
+            }
+        );
+
+        signInButtonElement.addEventListener(
+            "click",
+            closure_tryToSignInViaAjax
+        );
+
+        viewElement.appendChild(
+            createResetPasswordElement()
+        );
+
+        viewElement.appendChild(
+            createSignUpElement()
+        );
+
+
+
+        /**
+         * @return undefined
+         */
+        function closure_tryToSignInViaAjax() {
+            tryToSignInViaAjax(
+                emailAddressEditor.value,
+                passwordEditor.value,
+                resolve,
+            );
+        }
+        /* closure_tryToSignInViaAjax() */
+
+    }
+    /* createUserInterface() */
+
+
+
+    /**
+     * Creates a button that links to the sign up page.
+     *
+     * @return Element
+     */
+    function createResetPasswordElement() {
+        let elements = CBUI.createElementTree(
+            "CBSignInView_signUp",
+            "CBUI_title1"
+        );
+
+        let element = elements[0];
+
+        elements[1].textContent = "Have you forgotten your password?";
+
+        elements = CBUI.createElementTree(
+            "CBUI_sectionContainer",
+            "CBUI_section",
+            ["CBUI_action", "a"]
+        );
+
+        element.appendChild(
+            elements[0]
+        );
+
+        elements[2].textContent = "Reset Password >";
+        elements[2].href = "/colby/user/reset-password/";
+
+        return element;
+    }
+    /* createResetPasswordElement() */
+
+
+
+    /**
+     * Creates a button that links to the sign up page.
+     *
+     * @return Element
+     */
+    function createSignUpElement() {
+        let elements = CBUI.createElementTree(
+            "CBSignInView_signUp",
+            "CBUI_title1"
+        );
+
+        let element = elements[0];
+
+        elements[1].textContent = "Do you need to create an account?";
+
+        elements = CBUI.createElementTree(
+            "CBUI_sectionContainer",
+            "CBUI_section",
+            ["CBUI_action", "a"]
+        );
+
+        element.appendChild(
+            elements[0]
+        );
+
+        elements[2].textContent = "Sign Up / Create Account >";
+        elements[2].href = "/colby/user/create-account/";
+
+        return element;
+    }
+    /* createSignUpElement() */
+
+
+
+    /**
+     * @param Element viewElement
+     */
+    async function initializeViewElement(
+        viewElement
+    ) {
+        try {
+            await signInUser(viewElement);
+
+            window.location.reload();
+        } catch (error) {
+            CBErrorHandler.displayAndReport(error);
+        }
+    }
+    /* initializeViewElement() */
+
+
+
+    /**
+     * This is the function that using a view element will present user
+     * interface that will allow a user to sign in. When a use successfully
+     * signs in that promise will resolve.
+     *
+     * @param Element viewElement
+     *
+     * @return Promise -> undefined
+     */
+    async function signInUser(
+        viewElement
+    ) {
+        return new Promise(
+            function (resolve) {
+                createUserInterface(
+                    viewElement,
+                    resolve
+                );
+            }
+        );
+    }
+    /* signInUser() */
+
+
+
+    /**
+     * @param string emailAddress
+     * @param string password
+     * @param function resolve
+     *
+     *      This function will call resolve() if the user is successfully signed
+     *      in.
+     *
+     * @return undefined
+     */
+    async function tryToSignInViaAjax(
+        emailAddress,
+        password,
+        resolve
+    ) {
+        try {
+            let response = await Colby.callAjaxFunction(
+                "CBUser",
+                "signIn",
+                {
+                    emailAddress,
+                    password,
+                }
+            );
+
+            if (response.succeeded === true) {
+                resolve();
+            } else {
+                CBUIPanel.displayCBMessage(
+                    response.cbmessage
+                );
+            }
+        } catch (error) {
+            CBErrorHandler.displayAndReport(error);
+        }
+    }
+    /* tryToSignInViaAjax() */
+
+})();
