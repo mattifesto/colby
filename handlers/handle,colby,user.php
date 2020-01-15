@@ -16,7 +16,7 @@ if ($currentUserCBID === null) {
         ],
         (object)[
             'className' => 'CBSignInView',
-        ]
+        ],
     );
 } else {
     array_push(
