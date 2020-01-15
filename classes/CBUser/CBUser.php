@@ -268,129 +268,10 @@ final class CBUser {
     /**
      * @param object $args
      *
-     * @return object
-     *
      *      {
-     *          succeeded: bool
-     *
-     *          cbmessage: string
-     *
-     *              This will only be returned if succeeded is false.
+     *          emailAddress: string
+     *          password: string
      *      }
-     */
-    static function CBAjax_createAccount(
-        stdClass $args
-    ): stdClass {
-        if (ColbyUser::getCurrentUserCBID() !== null) {
-            return (object)[
-                'cbmessage' => 'You are already signed in.',
-            ];
-        }
-
-        $userEmail = CBModel::valueAsEmail(
-            $args,
-            'email'
-        );
-
-        if ($userEmail === null) {
-            throw new CBExceptionWithValue(
-                'The "email" argument is not valid.',
-                $args,
-                '1e0aa3c561175db1e58f22b70e4ee7630e6ebc3b'
-            );
-        }
-
-        if (CBUser::emailToUserCBID($userEmail) !== null) {
-            return (object)[
-                'cbmessage' => <<<EOT
-
-                    An account already exists using this email address.
-
-                EOT,
-            ];
-        }
-
-        $userFullName = trim(
-            CBModel::valueToString(
-                $args,
-                'fullName'
-            )
-        );
-
-        /**
-         * @TODO 2020_01_03
-         *
-         *      Verify password strength.
-         */
-
-        $userPassword = CBModel::valueToString(
-            $args,
-            'password'
-        );
-
-        $userPasswordIssues = CBUser::passwordIssues($userPassword);
-
-        if (
-            $userPasswordIssues !== null
-        ) {
-            return (object)[
-                'cbmessage' => CBMessageMarkup::stringToMessage(
-                    $userPasswordIssues
-                ),
-            ];
-        }
-
-        $userPasswordHash = password_hash(
-            $userPassword,
-            PASSWORD_DEFAULT
-        );
-
-        if ($userPasswordHash === false) {
-            return (object)[
-                'cbmessage' => 'An error occured while hashing your password.',
-            ];
-        }
-
-        $userSpec = (object)[
-            'className' => 'CBUser',
-            'ID' => CBID::generateRandomCBID(),
-            'title' => $userFullName,
-            'email' => $userEmail,
-            'lastLoggedIn' => time(),
-            'passwordHash' => $userPasswordHash,
-        ];
-
-        $countOfUsers = CBUsers::countOfUsers();
-
-        CBModels::save($userSpec);
-
-        if ($countOfUsers === 0) {
-            CBUser::initializeFirstUser($userCBID);
-        }
-
-        ColbyUser::loginUser(
-            $userSpec->ID
-        );
-
-        return (object)[
-            'succeeded' => true,
-        ];
-    }
-    /* CBAjax_createUser() */
-
-
-
-    /**
-     * @return string
-     */
-    static function CBAjax_createAccount_getUserGroupClassName(): string {
-        return 'CBPublicUserGroup';
-    }
-
-
-
-    /**
-     * @param object $args
      *
      * @return object
      *
@@ -405,13 +286,13 @@ final class CBUser {
     static function CBAjax_signIn(
         stdClass $args
     ): stdClass {
-        $email = CBModel::valueAsEmail(
+        $emailAddress = CBModel::valueAsEmail(
             $args,
-            'email'
+            'emailAddress'
         );
 
         if (
-            $email === null
+            $emailAddress === null
         ) {
             return (object)[
                 'cbmessage' => 'Your email address is not valid.'
@@ -423,7 +304,7 @@ final class CBUser {
             'password'
         );
 
-        $userCBID = CBUser::emailToUserCBID($email);
+        $userCBID = CBUser::emailToUserCBID($emailAddress);
 
         if ($userCBID === null) {
             return (object)[
@@ -697,12 +578,15 @@ final class CBUser {
 
         /* validation */
 
-        if ($email === null && $facebookUserID === null) {
+        if (
+            $email === null &&
+            $facebookUserID === null
+        ) {
             throw new CBExceptionWithValue(
                 CBConvert::stringToCleanLine(<<<EOT
 
-                    This spec must have at least a valid "email" or
-                    "facebookUserID" property.
+                    A CBUser spec must have at least one of the "email" or
+                    "facebookUserID" properties set.
 
                 EOT),
                 $spec,
@@ -710,6 +594,8 @@ final class CBUser {
             );
         }
 
+
+        /* return model */
 
         return (object)[
             'description' => trim(
@@ -738,13 +624,10 @@ final class CBUser {
 
             'facebookUserID' => $facebookUserID,
 
-
-            /* @TODO I don't think this is always updated */
-
             'lastLoggedIn' => CBModel::valueAsInt(
                 $spec,
                 'lastLoggedIn'
-            ) ?? 0,
+            ),
 
             'passwordHash' => $passwordHash,
 
