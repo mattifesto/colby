@@ -64,6 +64,13 @@ define(
     CBSiteDirectory
 );
 
+$websiteVersionFilepath = cbsitedir() . '/version.php';
+
+if (file_exists($websiteVersionFilepath)) {
+    include_once($websiteVersionFilepath);
+} else {
+    define('CBSiteVersionNumber', 'setup');
+}
 
 /**
  * Includes performed before setting up error handling should use
@@ -77,7 +84,6 @@ define(
  * Only the following lines should use `require_once`.
  */
 
-require_once cbsitedir() . '/version.php';
 require_once cbsysdir() . '/version.php';
 require_once cbsysdir() . '/functions.php';
 require_once cbsysdir() . '/classes/Colby/Colby.php';
