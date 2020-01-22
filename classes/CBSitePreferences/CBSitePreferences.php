@@ -631,12 +631,28 @@ final class CBSitePreferences {
     }
 
 
+
     /**
-     * @return string
+     * @NOTE 2020_01_22
+     *
+     *      This function has been altered to return null if there is no MySQL
+     *      host set, which is the case for a site that is in setup mode.
+     *
+     *      This may not be the best way to express this for the future, so work
+     *      through the scenarios in the future.
+     *
+     * @return string|null
      */
-    static function mysqlHost() {
-        return defined('CBMySQLHost') ? CBMySQLHost : COLBY_MYSQL_HOST;
+    static function mysqlHost(): ?string {
+        if (defined('CBMySQLHost')) {
+            return CBMySQLHost;
+        } else if (defined('COLBY_MYSQL_HOST')) {
+            return COLBY_MYSQL_HOST;
+        } else {
+            return null;
+        }
     }
+
 
 
     /**
