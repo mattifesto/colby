@@ -678,12 +678,21 @@ final class Colby {
 
 
     /**
-     * @return mysqli
+     * @return mysqli|null
+     *
+     *      This function returns null if the site does not have MySQL user
+     *      information set up yet.
      */
     static function mysqli() {
         if (null === Colby::$mysqli) {
+            $mysqlHost = CBSitePreferences::mysqlHost();
+
+            if ($mysqlHost === null) {
+                return null;
+            }
+
             $mysqli = new mysqli(
-                CBSitePreferences::mysqlHost(),
+                $mysqlHost,
                 CBSitePreferences::mysqlUser(),
                 CBSitePreferences::mysqlPassword(),
                 CBSitePreferences::mysqlDatabase()
