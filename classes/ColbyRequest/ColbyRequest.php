@@ -41,11 +41,12 @@ final class ColbyRequest {
             FROM    `ColbyPages`
             WHERE   `archiveID` = {$IDAsSQL}
 
-EOT;
+        EOT;
 
         return CBDB::SQLToValue($SQL);
     }
     /* currentIterationForPageID() */
+
 
 
     /**
@@ -113,6 +114,12 @@ EOT;
              * hander to a function that will respond with an Ajax response.
              */
             CBAjax::handleCallAjaxFunctionRequest();
+
+            return;
+        }
+
+        if (CBSiteVersionNumber === 'setup') {
+            CBSetup::renderSetupPage();
 
             return;
         }
