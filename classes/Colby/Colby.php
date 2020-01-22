@@ -557,7 +557,12 @@ final class Colby {
          * This file defines CBSiteURL.
          */
 
-        include_once cbsitedir() . '/colby-configuration.php';
+        $filepath = cbsitedir() . '/colby-configuration.php';
+
+        if (file_exists($filepath)) {
+            include_once($filepath);
+        }
+
 
         /**
          * Automatically load libraries in the "libraries" directory.
@@ -587,7 +592,12 @@ final class Colby {
          * After these tasks are performed autoloading will be fully functional.
          */
 
-        include_once cbsitedir() . '/site-configuration.php';
+        $filepath = cbsitedir() . '/site-configuration.php';
+
+        if (file_exists($filepath)) {
+            include_once($filepath);
+        }
+
 
         /**
          * 2014.08.26
