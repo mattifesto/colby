@@ -260,6 +260,13 @@ final class CBErrorHandler {
                     '()'
                 );
 
+                error_log(
+                    CBConvert::throwableToStackTrace($currentThrowable) .
+                    " | index {$index} | error log entry made in " .
+                    __METHOD__ .
+                    '()'
+                );
+
                 $currentThrowable = $currentThrowable->getPrevious();
                 $index += 1;
             }
