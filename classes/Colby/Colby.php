@@ -791,7 +791,7 @@ final class Colby {
                     continue;
                 } else {
                     // @TODO save InnoDB status somewhere for dev reference
-                    //$status = $msysqli->query('SHOW ENGINE INNODB STATUS');
+                    //$status = $mysqli->query('SHOW ENGINE INNODB STATUS');
                 }
             }
 
@@ -854,10 +854,11 @@ final class Colby {
  *      more flexibility, this function's implementation will change.
  *
  * @return string
+ *
  *      Returns the site URL with no trailing slash.
  */
 function cbsiteurl() {
-    if (defined(CBSiteURL)) {
+    if (defined('CBSiteURL')) {
         return CBSiteURL;
     } else if (defined('COLBY_SITE_URL')) { // @deprecated
         return COLBY_SITE_URL;
