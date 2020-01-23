@@ -2,25 +2,29 @@
 
 final class CBGeneralAdminMenu {
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return void
      */
     static function CBInstall_install(): void {
         $adminMenuSpec = CBModels::fetchSpecByID(
-            CBAdminMenu::ID()
+            CBAdminMenu::getModelCBID()
         );
 
         $adminMenuSpec->items[] = (object)[
             'className' => 'CBMenuItem',
             'name' => 'general',
-            'submenuID' => CBGeneralAdminMenu::getModelID(),
+            'submenuID' => CBGeneralAdminMenu::getModelCBID(),
             'text' => 'General',
             'URL' => '/admin/',
         ];
 
-        $spec = (object)[
+        $generalAdminMenuSpec = (object)[
             'className' => 'CBMenu',
-            'ID' => CBGeneralAdminMenu::getModelID(),
+            'ID' => CBGeneralAdminMenu::getModelCBID(),
             'title' => 'General',
             'titleURI' => '/admin/',
             'items' => [
@@ -34,13 +38,19 @@ final class CBGeneralAdminMenu {
         ];
 
         CBDB::transaction(
-            function () use ($adminMenuSpec, $spec) {
+            function () use ($adminMenuSpec, $generalAdminMenuSpec) {
                 CBModels::save($adminMenuSpec);
-                CBModels::deleteByID(CBGeneralAdminMenu::getModelID());
-                CBModels::save($spec);
+
+                CBModels::deleteByID(
+                    CBGeneralAdminMenu::getModelCBID()
+                );
+
+                CBModels::save($generalAdminMenuSpec);
             }
         );
     }
+    /* CBInstall_install() */
+
 
 
     /**
@@ -53,10 +63,25 @@ final class CBGeneralAdminMenu {
     }
 
 
+
+    /* -- functions -- -- -- -- -- */
+
+
+
     /**
      * @return string
      */
-    static function getModelID(): string {
+    static function getModelCBID(): string {
         return '1668c3011f7be273731903b012a5884628300898';
     }
+
+
+
+    /**
+     * @deprecated use CBGeneralAdminMenu::getModelCBID()
+     */
+    static function getModelID(): string {
+        return CBGeneralAdminMenu::getModelCBID();
+    }
+
 }
