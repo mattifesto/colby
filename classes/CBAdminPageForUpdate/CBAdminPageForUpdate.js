@@ -31,7 +31,7 @@
         let mainElement = document.getElementsByTagName("main")[0];
 
         /* backup, pull website, and update */
-        {
+        if (!CBAdminPageForUpdate_isDevelopmentWebsite) {
             let elements = CBUI.createElementTree(
                 "CBUI_sectionContainer",
                 "CBUI_section",
