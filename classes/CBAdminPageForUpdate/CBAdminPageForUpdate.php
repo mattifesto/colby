@@ -228,9 +228,6 @@ final class CBAdminPageForUpdate {
             'CBMessageMarkup',
             'CBUI',
             'CBUIExpander',
-            'CBUISection',
-            'CBUISectionItem4',
-            'CBUIStringsPart',
             'Colby',
         ];
     }

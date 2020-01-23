@@ -7,9 +7,6 @@
     CBMessageMarkup,
     CBUI,
     CBUIExpander,
-    CBUISection,
-    CBUISectionItem4,
-    CBUIStringsPart,
     Colby,
 
     CBAdminPageForUpdate_isDevelopmentWebsite,
@@ -72,75 +69,102 @@
         /* backup, pull website, and update */
 
 
+        /* individual actions */
         {
-            let section = CBUISection.create();
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
+
+            mainElement.appendChild(
+                elements[0]
+            );
+
+            let sectionElement = elements[1];
 
             /* backup only */
             {
-                let sectionItem = CBUISectionItem4.create();
-                sectionItem.callback = function () {
-                    task(
-                        "Backup Database",
-                        function () {
-                            return promiseToBackupDatabase();
-                        }
-                    );
-                };
+                let actionElement = CBUI.createElement(
+                    "CBUI_action"
+                );
 
-                let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Backup Database";
+                sectionElement.appendChild(
+                    actionElement
+                );
 
-                stringsPart.element.classList.add("action");
+                actionElement.textContent = "Backup Database";
 
-                sectionItem.appendPart(stringsPart);
-                section.appendItem(sectionItem);
+                actionElement.addEventListener(
+                    "click",
+                    function () {
+                        task(
+                            "Backup Database",
+                            function () {
+                                return promiseToBackupDatabase();
+                            }
+                        );
+                    }
+                );
             }
+            /* backup only */
+
 
             /* pull only */
             {
-                let sectionItem = CBUISectionItem4.create();
-                sectionItem.callback = function () {
-                    task(
-                        "Pull Website",
-                        function () {
-                            return promiseToPullWebsite();
-                        }
-                    );
-                };
+                let actionElement = CBUI.createElement(
+                    "CBUI_action"
+                );
 
-                let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Pull Website";
+                sectionElement.appendChild(
+                    actionElement
+                );
 
-                stringsPart.element.classList.add("action");
+                actionElement.textContent = "Pull Website";
 
-                sectionItem.appendPart(stringsPart);
-                section.appendItem(sectionItem);
+                actionElement.addEventListener(
+                    "click",
+                    function () {
+                        task(
+                            "Pull Website",
+                            function () {
+                                return promiseToPullWebsite();
+                            }
+                        );
+                    }
+                );
             }
+            /* pull only */
+
 
             /* update only */
             {
-                let sectionItem = CBUISectionItem4.create();
-                sectionItem.callback = function () {
-                    task(
-                        "Update Site",
-                        function () {
-                            return promiseToUpdateSite();
-                        }
-                    );
-                };
+                let actionElement = CBUI.createElement(
+                    "CBUI_action"
+                );
 
-                let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Update Site";
+                sectionElement.appendChild(
+                    actionElement
+                );
 
-                stringsPart.element.classList.add("action");
+                actionElement.textContent = "Update Site";
 
-                sectionItem.appendPart(stringsPart);
-                section.appendItem(sectionItem);
+                actionElement.addEventListener(
+                    "click",
+                    function () {
+                        task(
+                            "Update Site",
+                            function () {
+                                return promiseToUpdateSite();
+                            }
+                        );
+                    }
+                );
             }
+            /* update only */
 
-            mainElement.appendChild(section.element);
-            mainElement.appendChild(CBUI.createHalfSpace());
         }
+        /* individual actions */
+
 
         if (CBAdminPageForUpdate_isDevelopmentWebsite) {
             mainElement.appendChild(
