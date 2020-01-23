@@ -27,8 +27,8 @@
      * @return undefined
      */
     function afterDOMContentLoaded() {
-        var main = document.getElementsByTagName("main")[0];
-        var outputElement = document.createElement("div");
+        let main = document.getElementsByTagName("main")[0];
+        let outputElement = document.createElement("div");
         outputElement.className = "output";
 
         main.appendChild(CBUI.createHalfSpace());
@@ -62,29 +62,6 @@
 
                 let stringsPart = CBUIStringsPart.create();
                 stringsPart.string1 = "Backup, Pull Website, and Update";
-
-                stringsPart.element.classList.add("action");
-
-                sectionItem.appendPart(stringsPart);
-                section.appendItem(sectionItem);
-            }
-
-            /* pull website and update */
-            {
-                let sectionItem = CBUISectionItem4.create();
-                sectionItem.callback = function () {
-                    task(
-                        "Pull Website and Update",
-                        function () {
-                            return promiseToPullWebsite().then(
-                                promiseToUpdateSite
-                            );
-                        }
-                    );
-                };
-
-                let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Pull Website and Update";
 
                 stringsPart.element.classList.add("action");
 
