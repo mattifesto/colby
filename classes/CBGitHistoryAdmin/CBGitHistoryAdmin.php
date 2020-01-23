@@ -20,9 +20,8 @@ final class CBGitHistoryAdmin {
      */
     static function CBAdmin_menuNamePath(): array {
         return [
-            'develop',
-            'git',
-            'history'
+            'general',
+            'git_history'
         ];
     }
 
@@ -148,20 +147,32 @@ final class CBGitHistoryAdmin {
      * @return void
      */
     static function CBInstall_install(): void {
-        $spec = CBModels::fetchSpecByID(CBGitAdminMenu::ID());
-
-        $spec->items[] = (object)[
-            'className' => 'CBMenuItem',
-            'name' => 'history',
-            'text' => 'History',
-            'URL' => '/admin/?c=CBGitHistoryAdmin',
-        ];
-
-        CBDB::transaction(
-            function () use ($spec) {
-                CBModels::save($spec);
-            }
+        $updater = CBModelUpdater::fetch(
+            (object)[
+                'ID' => CBGeneralAdminMenu::getModelCBID(),
+            ]
         );
+
+        $items = CBModel::valueToArray(
+            $updater->working,
+            'items'
+        );
+
+        array_push(
+            $items,
+            (object)[
+                'className' => 'CBMenuItem',
+                'name' => 'git_history',
+                'text' => 'History',
+                'URL' => CBAdmin::getAdminPageURL(
+                    'CBGitHistoryAdmin'
+                ),
+            ]
+        );
+
+        $updater->working->items = $items;
+
+        CBModelUpdater::save($updater);
     }
     /* CBInstall_install() */
 
@@ -172,7 +183,7 @@ final class CBGitHistoryAdmin {
      */
     static function CBInstall_requiredClassNames(): array {
         return [
-            'CBGitAdminMenu'
+            'CBGeneralAdminMenu'
         ];
     }
 
