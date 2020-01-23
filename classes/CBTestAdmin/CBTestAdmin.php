@@ -114,6 +114,56 @@ final class CBTestAdmin {
 
 
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $updater = CBModelUpdater::fetch(
+            (object)[
+                'ID' => CBDevelopAdminMenu::getModelCBID(),
+            ]
+        );
+
+        $items = CBModel::valueToArray(
+            $updater->working,
+            'items'
+        );
+
+        array_push(
+            $items,
+            (object)[
+                'className' => 'CBMenuItem',
+                'name' => 'test',
+                'text' => 'Test',
+                'URL' => CBAdmin::getAdminPageURL(
+                    'CBTestAdmin'
+                ),
+            ]
+        );
+
+        $updater->working->items = $items;
+
+        CBModelUpdater::save($updater);
+    }
+    /* CBInstall_install() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBDevelopAdminMenu',
+        ];
+    }
+
+
+
     /* -- functions -- -- -- -- -- */
 
 
