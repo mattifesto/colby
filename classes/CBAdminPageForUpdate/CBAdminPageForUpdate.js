@@ -1,7 +1,6 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esversion: 6 */
-/* exported CBAdminPageForUpdate */
 /* globals
     CBErrorHandler,
     CBMaintenance,
@@ -18,12 +17,16 @@
 
 
 
-var CBAdminPageForUpdate = {
+(function() {
+
+    let taskIsRunning = false;
+
+    Colby.afterDOMContentLoaded(afterDOMContentLoaded);
 
     /**
      * @return undefined
      */
-    init: function () {
+    function afterDOMContentLoaded() {
         var main = document.getElementsByTagName("main")[0];
         var outputElement = document.createElement("div");
         outputElement.className = "output";
@@ -248,7 +251,7 @@ var CBAdminPageForUpdate = {
          * @return undefined
          */
         function task(title, callback) {
-            if (CBAdminPageForUpdate.taskIsRunning) {
+            if (taskIsRunning) {
                 let error = new Error("A task is already running.");
 
                 CBErrorHandler.displayAndReport(error);
@@ -257,7 +260,7 @@ var CBAdminPageForUpdate = {
             }
 
             outputElement.textContent = "";
-            CBAdminPageForUpdate.taskIsRunning = true;
+            taskIsRunning = true;
 
             Promise.resolve().then(
                 function () {
@@ -265,7 +268,7 @@ var CBAdminPageForUpdate = {
                 }
             ).finally(
                 function () {
-                    CBAdminPageForUpdate.taskIsRunning = false;
+                    taskIsRunning = false;
                 }
             ).catch(
                 function (error) {
@@ -406,9 +409,7 @@ var CBAdminPageForUpdate = {
         }
         /* promiseToUpdateSite() */
 
-    },
-    /* init() */
+    }
+    /* afterDOMContentLoaded() */
 
-};
-
-Colby.afterDOMContentLoaded(CBAdminPageForUpdate.init);
+})();

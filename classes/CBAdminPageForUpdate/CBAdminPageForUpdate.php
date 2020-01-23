@@ -197,7 +197,7 @@ final class CBAdminPageForUpdate {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v565.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v567.js', cbsysurl()),
         ];
     }
 
@@ -416,7 +416,7 @@ final class CBAdminPageForUpdate {
             WHERE   `TABLE_SCHEMA` = DATABASE() AND
                     `TABLE_NAME` = 'ColbyPages'
 
-EOT;
+        EOT;
 
         if (CBDB::SQLToValue($SQL) == 0) {
             CBAdminPageForUpdate::$installationIsRequired = true;
@@ -425,6 +425,7 @@ EOT;
             return false;
         }
     }
+    /* installationIsRequired() */
 
 
 
