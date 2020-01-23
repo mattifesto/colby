@@ -27,8 +27,15 @@
     function afterDOMContentLoaded() {
         let mainElement = document.getElementsByTagName("main")[0];
 
-        /* backup, pull website, and update */
-        if (!CBAdminPageForUpdate_isDevelopmentWebsite) {
+        if (CBAdminPageForUpdate_isDevelopmentWebsite) {
+            /* backup, pull colby, and update */
+
+            mainElement.appendChild(
+                createPullColbySectionElement()
+            );
+        } else {
+            /* backup, pull website, and update */
+
             let elements = CBUI.createElementTree(
                 "CBUI_sectionContainer",
                 "CBUI_section",
@@ -164,13 +171,6 @@
 
         }
         /* individual actions */
-
-
-        if (CBAdminPageForUpdate_isDevelopmentWebsite) {
-            mainElement.appendChild(
-                createPullColbySectionElement()
-            );
-        }
 
 
         /* output element */
