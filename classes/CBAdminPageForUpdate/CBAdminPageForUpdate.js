@@ -116,8 +116,30 @@
             /* backup only */
 
 
-            /* pull only */
-            {
+            /* pull colby or pull website */
+            if (CBAdminPageForUpdate_isDevelopmentWebsite) {
+                let actionElement = CBUI.createElement(
+                    "CBUI_action"
+                );
+
+                sectionElement.appendChild(
+                    actionElement
+                );
+
+                actionElement.textContent = "Pull Colby";
+
+                actionElement.addEventListener(
+                    "click",
+                    function () {
+                        task(
+                            "Pull Colby",
+                            function () {
+                                return promiseToPullColby();
+                            }
+                        );
+                    }
+                );
+            } else {
                 let actionElement = CBUI.createElement(
                     "CBUI_action"
                 );
@@ -140,7 +162,7 @@
                     }
                 );
             }
-            /* pull only */
+            /* pull colby or pull website */
 
 
             /* update only */
