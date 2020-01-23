@@ -28,17 +28,26 @@
      * @return undefined
      */
     function afterDOMContentLoaded() {
-        let main = document.getElementsByTagName("main")[0];
+        let mainElement = document.getElementsByTagName("main")[0];
 
-        main.appendChild(CBUI.createHalfSpace());
-
+        /* backup, pull website, and update */
         {
-            let section = CBUISection.create();
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section",
+                "CBUI_action"
+            );
 
-            /* backup, pull website, and update */
-            {
-                let sectionItem = CBUISectionItem4.create();
-                sectionItem.callback = function () {
+            mainElement.appendChild(
+                elements[0]
+            );
+
+            let actionElement = elements[2];
+            actionElement.textContent = "Backup, Pull Website, and Update";
+
+            actionElement.addEventListener(
+                "click",
+                function () {
                     task(
                         "Backup, Pull Website, and Update",
                         function () {
@@ -57,20 +66,11 @@
                             );
                         }
                     );
-                };
-
-                let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Backup, Pull Website, and Update";
-
-                stringsPart.element.classList.add("action");
-
-                sectionItem.appendPart(stringsPart);
-                section.appendItem(sectionItem);
-            }
-
-            main.appendChild(section.element);
-            main.appendChild(CBUI.createHalfSpace());
+                }
+            );
         }
+        /* backup, pull website, and update */
+
 
         {
             let section = CBUISection.create();
@@ -138,12 +138,12 @@
                 section.appendItem(sectionItem);
             }
 
-            main.appendChild(section.element);
-            main.appendChild(CBUI.createHalfSpace());
+            mainElement.appendChild(section.element);
+            mainElement.appendChild(CBUI.createHalfSpace());
         }
 
         if (CBAdminPageForUpdate_isDevelopmentWebsite) {
-            main.appendChild(
+            mainElement.appendChild(
                 createPullColbySectionElement()
             );
         }
@@ -154,7 +154,7 @@
         outputElement = document.createElement("div");
         outputElement.className = "output";
 
-        main.appendChild(outputElement);
+        mainElement.appendChild(outputElement);
 
         return;
     }
