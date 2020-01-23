@@ -248,7 +248,7 @@ final class CBAdminPageForUpdate {
     static function CBInstall_install(): void {
         $updater = CBModelUpdater::fetch(
             (object)[
-                'ID' => CBDevelopAdminMenu::ID(),
+                'ID' => CBDevelopAdminMenu::getModelCBID(),
             ]
         );
 
@@ -263,7 +263,9 @@ final class CBAdminPageForUpdate {
                 'className' => 'CBMenuItem',
                 'name' => 'update',
                 'text' => 'Update',
-                'URL' => CBAdmin::getAdminPageURL('CBAdminPageForUpdate'),
+                'URL' => CBAdmin::getAdminPageURL(
+                    'CBAdminPageForUpdate'
+                ),
             ]
         );
 
