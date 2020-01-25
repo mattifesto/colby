@@ -2,7 +2,9 @@
 /* jshint strict: global */
 
 /**
- * @deprecated 2018.03.09 use CBUIStringsPart and CBUIBooleanSwitchPart
+ * @deprecated 2018_03_09
+ *
+ *      Use CBUI_container_topAndBottom and CBUIBooleanSwitchPart.
  */
 var CBUIBooleanEditor = {
 
