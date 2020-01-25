@@ -4,15 +4,16 @@ final class CBArtworkViewEditor {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v531.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v568.js', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -26,6 +27,7 @@ final class CBArtworkViewEditor {
             'CBMessageMarkup',
             'CBModel',
             'CBUI',
+            'CBUIBooleanSwitchPart',
             'CBUIImageChooser',
             'CBUISelector',
             'CBUIStringEditor',
@@ -33,5 +35,6 @@ final class CBArtworkViewEditor {
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
+
 }
 /* CBArtworkViewEditor */

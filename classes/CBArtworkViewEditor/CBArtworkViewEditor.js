@@ -8,6 +8,7 @@
     CBMessageMarkup,
     CBModel,
     CBUI,
+    CBUIBooleanSwitchPart,
     CBUIImageChooser,
     CBUISelector,
     CBUIStringEditor,
@@ -28,14 +29,18 @@ var CBArtworkViewEditor = {
      * @return Element
      */
     createEditor: function (args) {
-        var section, item;
-        var element = CBUI.createElement("CBArtworkViewEditor");
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
+        let sectionElement, item;
+        let element = CBUI.createElement("CBArtworkViewEditor");
 
         element.appendChild(
             CBUI.createHalfSpace()
         );
 
-        section = CBUI.createSection();
+        sectionElement = CBUI.createSection();
+
+        element.appendChild(sectionElement);
 
         let imageChooser = CBUIImageChooser.create();
         imageChooser.chosen = createEditor_handleImageChosen;
@@ -44,7 +49,7 @@ var CBArtworkViewEditor = {
         item = CBUI.createSectionItem();
 
         item.appendChild(imageChooser.element);
-        section.appendChild(item);
+        sectionElement.appendChild(item);
 
         item = CBUI.createSectionItem();
 
@@ -59,7 +64,7 @@ var CBArtworkViewEditor = {
             ).element
         );
 
-        section.appendChild(item);
+        sectionElement.appendChild(item);
 
 
         /* captionAsCBMessage, captionAsMarkdown */
@@ -89,7 +94,7 @@ var CBArtworkViewEditor = {
                 }
             );
 
-            section.appendChild(stringEditor.element);
+            sectionElement.appendChild(stringEditor.element);
         }
         /* captionAsCBMessage, captionAsMarkdown */
 
@@ -149,9 +154,37 @@ var CBArtworkViewEditor = {
             ).element
         );
 
-        section.appendChild(item);
+        sectionElement.appendChild(item);
 
-        element.appendChild(section);
+        /* render image only */
+
+        let elements = CBUI.createElementTree(
+            "CBUI_sectionItem CBArtworkViewEditor_renderImageOnly",
+            "CBUI_container_topAndBottom CBUI_flexGrow",
+            "label"
+        );
+
+        sectionElement.appendChild(
+            elements[0]
+        );
+
+        elements[2].textContent = "Render Image Only";
+
+        let renderImageOnlyEditor = CBUIBooleanSwitchPart.create();
+
+        renderImageOnlyEditor.value = CBModel.valueToBool(
+            spec,
+            'renderImageOnly'
+        );
+
+        renderImageOnlyEditor.changed = function () {
+            spec.renderImageOnly = renderImageOnlyEditor.value;
+            specChangedCallback();
+        };
+
+        elements[0].appendChild(
+            renderImageOnlyEditor.element
+        );
 
         /* CSSClassNames */
 
@@ -164,21 +197,20 @@ var CBArtworkViewEditor = {
                 {
                     paragraphs: [
                         `
-                        Supported Class Names:
-                        `,`
-                        hideSocial: This will hide links to share the image via
-                        social networks.
-                        `,`
-                        left: Align the caption text to the left.
-                        `,`
-                        right: Align the caption text to the right.
+                            Supported Class Names:
+                        `,
                         `
+                            left: Align the caption text to the left.
+                        `,
+                        `
+                            right: Align the caption text to the right.
+                        `,
                    ],
                 }
             )
         );
 
-        section = CBUI.createSection();
+        sectionElement = CBUI.createSection();
 
         item = CBUI.createSectionItem();
         item.appendChild(
@@ -192,8 +224,8 @@ var CBArtworkViewEditor = {
             ).element
         );
 
-        section.appendChild(item);
-        element.appendChild(section);
+        sectionElement.appendChild(item);
+        element.appendChild(sectionElement);
 
         element.appendChild(
             CBUI.createHalfSpace()
