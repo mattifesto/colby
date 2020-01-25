@@ -431,7 +431,12 @@ final class CBViewPage {
             CBViewPage::initializePageInformation($model);
             CBHTMLOutput::begin();
 
-            if (empty($model->layout->className)) {
+            $frameClassName = CBModel::valueAsName(
+                $model,
+                'frameClassName'
+            );
+
+            if ($frameClassName !== null) {
 
                 /**
                  * @TODO 2018_04_07
@@ -459,27 +464,39 @@ final class CBViewPage {
                     echo '</main>';
                 };
 
-                $frameClassName = CBModel::valueToString(
-                    $model,
-                    'frameClassName'
-                );
-
                 CBPageFrame::render($frameClassName, $renderContent);
             } else {
                 $renderContentCallback = function () use ($model) {
-                    $sections = CBModel::valueToArray($model, 'sections');
-                    array_walk($sections, 'CBView::render');
+                    $viewModels = CBModel::valueToArray(
+                        $model,
+                        'sections'
+                    );
+
+                    array_walk(
+                        $viewModels,
+                        function ($viewModel) {
+                            CBView::render($viewModel);
+                        }
+                    );
                 };
 
-                CBHTMLOutput::requireClassName($model->layout->className);
+                $layoutClassName = CBModel::valueAsName(
+                    $model,
+                    'layout.className'
+                );
 
-                $renderLayoutFunctionName =
-                "{$model->layout->className}::render";
+                CBHTMLOutput::requireClassName($layoutClassName);
+
+                $renderLayoutFunctionName = "{$layoutClassName}::render";
 
                 if (is_callable($renderLayoutFunctionName)) {
                     call_user_func(
                         $renderLayoutFunctionName,
                         $model->layout,
+                        $renderContentCallback
+                    );
+                } else {
+                    call_user_func(
                         $renderContentCallback
                     );
                 }
