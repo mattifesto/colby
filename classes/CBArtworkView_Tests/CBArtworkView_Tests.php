@@ -4,6 +4,8 @@ final class CBArtworkView_Tests {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [object]
      */
@@ -11,7 +13,10 @@ final class CBArtworkView_Tests {
         return [
             (object)[
                 'name' => 'build',
-                'title' => 'CBArtworkView build()',
+                'type' => 'server',
+            ],
+            (object)[
+                'name' => 'toSearchText',
                 'type' => 'server',
             ],
         ];
@@ -21,15 +26,19 @@ final class CBArtworkView_Tests {
 
     /* -- tests -- -- -- -- -- */
 
+
+
+    /**
+     * @return object
+     */
     static function CBTest_build(): stdClass {
         $cases = [
             (object)[
                 'spec' => (object)[
                     'className' => 'CBArtworkView',
-                    'captionAsMarkdown' => 'a',
+                    'captionAsMarkdown' => '((br))',
                 ],
-                'expectedCaptionAsCBMessage' => '',
-                'expectedCaptionAsMarkdown' => 'a',
+                'expectedCaptionAsCBMessage' => '\\(\\(br\\)\\)',
             ],
             (object)[
                 'spec' => (object)[
@@ -37,8 +46,7 @@ final class CBArtworkView_Tests {
                     'captionAsCBMessage' => 'b',
                     'captionAsMarkdown' => 'a',
                 ],
-                'expectedCaptionAsCBMessage' => '',
-                'expectedCaptionAsMarkdown' => 'a',
+                'expectedCaptionAsCBMessage' => 'b',
             ],
             (object)[
                 'spec' => (object)[
@@ -47,7 +55,6 @@ final class CBArtworkView_Tests {
                     'captionAsMarkdown' => '   ',
                 ],
                 'expectedCaptionAsCBMessage' => 'b',
-                'expectedCaptionAsMarkdown' => '',
             ],
         ];
 
@@ -56,19 +63,6 @@ final class CBArtworkView_Tests {
         foreach ($cases as $case) {
             $model = CBModel::build($case->spec);
 
-            $captionAsMarkdown = CBModel::valueToString(
-                $model,
-                'captionAsMarkdown'
-            );
-
-            if ($captionAsMarkdown !== $case->expectedCaptionAsMarkdown) {
-                return CBTest::resultMismatchFailure(
-                    "Markdown for test at index {$index}",
-                    $captionAsMarkdown,
-                    $case->expectedCaptionAsMarkdown
-                );
-            }
-
             $captionAsCBMessage = CBModel::valueToString(
                 $model,
                 'captionAsCBMessage'
@@ -76,7 +70,12 @@ final class CBArtworkView_Tests {
 
             if ($captionAsCBMessage !== $case->expectedCaptionAsCBMessage) {
                 return CBTest::resultMismatchFailure(
-                    "CBMessage for test at index {$index}",
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        test index {$index}: The "captionAsCBMessage" model
+                        property value is not what was expected.
+
+                    EOT),
                     $captionAsCBMessage,
                     $case->expectedCaptionAsCBMessage
                 );
@@ -90,5 +89,66 @@ final class CBArtworkView_Tests {
         ];
     }
     /* CBTest_build() */
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_toSearchText(): stdClass {
+        $cases = [
+            (object)[
+                'spec' => (object)[
+                    'className' => 'CBArtworkView',
+                    'alternativeText' => 'alt',
+                    'captionAsMarkdown' => '((br))',
+                ],
+                'expectedSearchText' => 'alt ((br))',
+            ],
+            (object)[
+                'spec' => (object)[
+                    'className' => 'CBArtworkView',
+                    'alternativeText' => 'alt',
+                    'captionAsCBMessage' => 'b',
+                    'captionAsMarkdown' => 'a',
+                ],
+                'expectedSearchText' => 'alt b',
+            ],
+            (object)[
+                'spec' => (object)[
+                    'className' => 'CBArtworkView',
+                    'captionAsCBMessage' => 'b',
+                    'captionAsMarkdown' => '   ',
+                ],
+                'expectedSearchText' => 'b b',
+            ],
+        ];
+
+        $index = 0;
+
+        foreach ($cases as $case) {
+            $model = CBModel::build($case->spec);
+            $searchText = CBArtworkView::CBModel_toSearchText($model);
+
+            if ($searchText !== $case->expectedSearchText) {
+                return CBTest::resultMismatchFailure(
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        test index {$index}
+
+                    EOT),
+                    $searchText,
+                    $case->expectedSearchText
+                );
+            }
+
+            $index += 1;
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_toSearchText() */
 
 }
