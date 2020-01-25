@@ -2,8 +2,9 @@
 
 final class CBArtworkView {
 
-
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -13,10 +14,12 @@ final class CBArtworkView {
             Colby::flexpath(__CLASS__, 'v374.css', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_CSSURLs() */
+
 
 
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
@@ -27,6 +30,7 @@ final class CBArtworkView {
         );
     }
     /* CBInstall_install() */
+
 
 
     /**
@@ -40,19 +44,29 @@ final class CBArtworkView {
     /* CBInstall_requiredClassNames() */
 
 
+
     /* -- CBModel interfaces -- -- -- -- -- */
 
+
+
     /**
-     * @param model $spec
+     * @param object $spec
      *
      *      {
-     *          alternativeText: ?string
-     *          captionAsMarkdown: ?string
+     *          alternativeText: string
+     *          captionAsCBMessage: string
+     *          captionAsMarkdown: string (deprecated)
+     *          image: object
      *
-     *              The markdown format is CommonMark.
+     *              CBImage spec
      *
-     *          image: ?model
-     *          size: ?string
+     *          renderImageOnly: bool
+     *
+     *              This setting will ensure that there are no links rendered
+     *              inside of this view element. Use this when rendering an
+     *              artwork view inside of another element that is a link.
+     *
+     *          size: string
      *
      *              The maximum width of the image in retina pixels. rw1600
      *              (800pt) is the default.
@@ -60,9 +74,9 @@ final class CBArtworkView {
      *              rw320|rw640|rw960|rw1280|rw1600|rw1920|rw2560|original|page
      *      }
      *
-     * @return ?object
+     * @return object
      */
-    static function CBModel_build(stdClass $spec): ?stdClass {
+    static function CBModel_build(stdClass $spec): stdClass {
         $model = (object)[
             'alternativeText' => trim(
                 CBModel::valueToString($spec, 'alternativeText')
@@ -71,6 +85,11 @@ final class CBArtworkView {
             'CSSClassNames' => CBModel::valueToNames(
                 $spec,
                 'CSSClassNames'
+            ),
+
+            'renderImageOnly' => CBModel::valueToBool(
+                $spec,
+                'renderImageOnly'
             ),
 
             'size' => CBModel::valueAsName(
@@ -97,47 +116,46 @@ final class CBArtworkView {
 
         /* caption */
 
-        /**
-         * @NOTE 2019_10_01
-         *
-         *      The captionAsMarkdown property is deprecated.
-         */
-
-        $captionAsMarkdown = CBModel::valueToString(
+        $captionAsCBMessage = CBModel::valueToString(
             $spec,
-            'captionAsMarkdown'
+            'captionAsCBMessage'
         );
 
-        if (empty(trim($captionAsMarkdown))) {
-            $captionAsCBMessage = CBModel::valueToString(
+        if (trim($captionAsCBMessage) !== '') {
+            $model->captionAsHTML = CBMessageMarkup::messageToHTML(
+                $captionAsCBMessage
+            );
+        } else {
+
+            /**
+             * @deprecated 2019_10_01
+             */
+
+            $captionAsMarkdown = CBModel::valueToString(
                 $spec,
-                'captionAsCBMessage'
+                'captionAsMarkdown'
             );
 
-            if (!empty(trim($captionAsCBMessage))) {
-                $model->captionAsCBMessage = $captionAsCBMessage;
-
-                $model->captionAsHTML = CBMessageMarkup::messageToHTML(
-                    $captionAsCBMessage
-                );
-
-                if (empty($model->alternativeText)) {
-                    $model->alternativeText = mb_substr(
-                        CBMessageMarkup::messageToText($captionAsCBMessage),
-                        0,
-                        100
-                    );
-                }
-            }
-        } else {
             $parsedown = new Parsedown();
 
-            $model->captionAsMarkdown = $captionAsMarkdown;
             $model->captionAsHTML = $parsedown->text(
-                $model->captionAsMarkdown
+                $captionAsMarkdown
+            );
+
+            $captionAsCBMessage = CBMessageMarkup::stringToMessage(
+                $captionAsMarkdown
             );
         }
 
+        $model->captionAsCBMessage = $captionAsCBMessage;
+
+        if (empty($model->alternativeText)) {
+            $model->alternativeText = mb_substr(
+                CBMessageMarkup::messageToText($captionAsCBMessage),
+                0,
+                100
+            );
+        }
 
         /* done */
 
@@ -148,39 +166,53 @@ final class CBArtworkView {
 
 
     /**
-     * @param model $spec
+     * @param object $spec
      *
-     * @return model
+     * @return object
      */
-    static function CBModel_upgrade(stdClass $spec): stdClass {
+    static function CBModel_upgrade(
+        stdClass $spec
+    ): stdClass {
         if ($imageSpec = CBModel::valueAsObject($spec, 'image')) {
             $spec->image = CBImage::fixAndUpgrade($imageSpec);
         }
 
         return $spec;
     }
+    /* CBModel_upgrade() */
 
 
 
     /**
-     * @param string? $model->alternativeText
-     * @param string? $model->captionAsMarkdown
+     * @param object $model
      *
      * @return string
      */
-    static function CBModel_toSearchText(stdClass $model) {
-        $searchText[] = CBModel::valueToString($model, 'alternativeText');
-        $searchText[] = CBModel::valueToString($model, 'captionAsMarkdown');
+    static function CBModel_toSearchText(
+        stdClass $model
+    ) {
+        $alternativeText = CBModel::valueToString(
+            $model,
+            'alternativeText'
+        );
 
-        return implode(' ', $searchText);
+        $captionAsText = CBMessageMarkup::messageToText(
+            CBModel::valueToString(
+                $model,
+                'captionAsCBMessage'
+            )
+        );
+
+        return "{$alternativeText} {$captionAsText}";
     }
+    /* CBModel_toSearchText() */
 
 
 
     /**
      * @param string? $model->alternativeText
      * @param string? $model->captionAsHTML
-     * @param string? $model->captionAsMarkdown
+     * @param string? $model->captionAsCBMessage
      *
      *      This will be used as fallback alternative text if alternativeText
      *      is empty.
@@ -199,11 +231,18 @@ final class CBArtworkView {
      *
      * @return void
      */
-    static function CBView_render(stdClass $model): void {
+    static function CBView_render(
+        stdClass $model
+    ): void {
         if (empty($model->image)) {
             echo '<!-- CBArtworkView without an image. -->';
             return;
         }
+
+        $renderImageOnly = CBModel::valueToBool(
+            $model,
+            'renderImageOnly'
+        );
 
         $CSSClassNames = CBModel::valueToArray($model, 'CSSClassNames');
 
@@ -231,15 +270,15 @@ final class CBArtworkView {
          */
 
         if (empty($alternativeText)) {
-            $captionAsMarkdown = trim(
+            $captionAsCBMessage = trim(
                 CBModel::valueToString(
                     $model,
-                    'captionAsMarkdown'
+                    'captionAsCBMessage'
                 )
             );
 
             $alternativeText = mb_substr(
-                $captionAsMarkdown,
+                $captionAsCBMessage,
                 0,
                 100
             );
@@ -324,7 +363,10 @@ final class CBArtworkView {
                 ]
             );
 
-            if (!empty($captionAsHTML)) {
+            if (
+                !$renderImageOnly &&
+                !empty($captionAsHTML)
+            ) {
                 ?>
 
                 <div class="caption" style="<?= $captionDeclarations ?>">
@@ -334,17 +376,23 @@ final class CBArtworkView {
                 <?php
             }
 
-            ?>
+            if (!$renderImageOnly) {
+                ?>
 
-            <div class="social" style="<?= $captionDeclarations ?>">
-                <a href="https://www.pinterest.com/pin/create/button/"
-                   data-pin-custom="true"
-                   data-pin-description="<?= $alternativeTextAsHTML ?>"
-                   data-pin-do="buttonPin"
-                   data-pin-media="<?= $imageURL ?>">
-                    Pin to Pinterest
-                </a>
-            </div>
+                <div class="social" style="<?= $captionDeclarations ?>">
+                    <a href="https://www.pinterest.com/pin/create/button/"
+                       data-pin-custom="true"
+                       data-pin-description="<?= $alternativeTextAsHTML ?>"
+                       data-pin-do="buttonPin"
+                       data-pin-media="<?= $imageURL ?>">
+                        Pin to Pinterest
+                    </a>
+                </div>
+
+                <?php
+            }
+
+            ?>
 
         </div>
 
