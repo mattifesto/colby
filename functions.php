@@ -116,16 +116,24 @@ function cb_post_value($name, $default = null, callable $transform = null) {
  *
  * @return string
  */
-function cb_query_string_value($name, $default = '', callable $transform = null) {
+function cb_query_string_value(
+    string $name,
+    string $default = '',
+    callable $transform = null
+): string {
     if (empty($_GET[$name])) {
         return $default;
     } else {
         $value = $_GET[$name];
 
         if ($transform !== null) {
-            $value = call_user_func($transform, $value);
+            $value = call_user_func(
+                $transform,
+                $value
+            );
         }
 
         return $value;
     }
 }
+/* cb_query_string_value() */
