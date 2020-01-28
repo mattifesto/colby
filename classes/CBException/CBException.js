@@ -122,6 +122,7 @@ var CBException = {
     /* withError() */
 
 
+
     /**
      * @param Error error
      * @param mixed value
@@ -154,4 +155,5 @@ var CBException = {
         );
     },
     /* withValueRelatedError() */
+
 };
