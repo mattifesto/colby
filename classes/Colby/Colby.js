@@ -308,7 +308,7 @@ var Colby = {
 
         let sourceURL = (
             error.sourceURL === undefined ?
-            error.filename :
+            error.fileName :
             error.sourceURL
         );
 
