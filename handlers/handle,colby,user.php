@@ -2,11 +2,7 @@
 
 $currentUserCBID = ColbyUser::getCurrentUserCBID();
 
-$viewSpecs = [
-    (object)[
-        'className' => 'CBCurrentUserView',
-    ],
-];
+$viewSpecs = [];
 
 if ($currentUserCBID === null) {
     array_push(
@@ -22,7 +18,7 @@ if ($currentUserCBID === null) {
     array_push(
         $viewSpecs,
         (object)[
-            'className' => 'CBSignOutView',
+            'className' => 'CBCurrentUserView',
         ]
     );
 }
