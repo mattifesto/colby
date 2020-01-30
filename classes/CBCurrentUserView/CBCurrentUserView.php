@@ -11,7 +11,7 @@ final class CBCurrentUserView {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v565.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v569.js', cbsysurl()),
         ];
     }
 
@@ -54,6 +54,12 @@ final class CBCurrentUserView {
                 'CBCurrentUserView_userCBID',
                 $currentUserCBID,
             ],
+            [
+                'CBCurrentUserView_userSettingsManagerClassNames',
+                CBUserSettingsManagerCatalog::getListOfClassNames(
+                    $currentUserCBID
+                ),
+            ],
         ];
     }
     /* CBHTMLOutput_JavaScriptVariables() */
@@ -64,15 +70,27 @@ final class CBCurrentUserView {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
-        return [
-            'CBErrorHandler',
-            'CBUI',
-            'CBUIPanel',
-            'CBUIStringEditor',
-            'Colby',
+        $targetUserCBID = ColbyUser::getCurrentUserCBID();
 
-            'CBContentStyleSheet',
-        ];
+        $userSettingsManagerClassNames = (
+            CBUserSettingsManagerCatalog::getListOfClassNames(
+                $targetUserCBID
+            )
+        );
+
+        return array_merge(
+            $userSettingsManagerClassNames,
+            [
+                'CBErrorHandler',
+                'CBUI',
+                'CBUIPanel',
+                'CBUIStringEditor',
+                'CBUserSettingsManager',
+                'Colby',
+
+                'CBContentStyleSheet',
+            ]
+        );
     }
     /* CBHTMLOutput_requiredClassNames() */
 
@@ -109,7 +127,7 @@ final class CBCurrentUserView {
     ): void {
         ?>
 
-        <div class="CBCurrentUserView">
+        <div class="CBCurrentUserView CBUIRoot">
         </div>
 
         <?php

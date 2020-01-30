@@ -6,16 +6,30 @@
     CBUI,
     CBUIPanel,
     CBUIStringEditor,
+    CBUserSettingsManager,
     Colby,
 
-    CBCurrentUserView_userCBID,
     CBCurrentUserView_initialUserEmail,
     CBCurrentUserView_initialUserFullName,
+    CBCurrentUserView_userCBID,
+    CBCurrentUserView_userSettingsManagerClassNames,
 */
 
 
 
-Colby.afterDOMContentLoaded(
+(function () {
+
+    Colby.afterDOMContentLoaded(afterDOMContentLoaded);
+
+
+
+    /**
+     * CBCurrentUserView is a view that is meant to be displayed only once per
+     * page and should be the only view inside the main element of that page.
+     * Any other use will produce unpredictable results.
+     *
+     * @return undefined
+     */
     function afterDOMContentLoaded() {
         if (CBCurrentUserView_userCBID === null) {
             return;
@@ -25,24 +39,45 @@ Colby.afterDOMContentLoaded(
             "CBCurrentUserView"
         );
 
-        for (let index = 0; index < viewElements.length; index += 1) {
-            let viewElement = viewElements.item(index);
+        if (viewElements.length < 1) {
+            return;
+        }
 
-            viewElement.appendChild(
-                createFullNameEditorElement()
-            );
+        let viewElement = viewElements[0];
 
-            if (CBCurrentUserView_initialUserEmail === "") {
-                viewElement.appendChild(
-                    createAddEmailElement()
+        CBCurrentUserView_userSettingsManagerClassNames.forEach(
+            function (className) {
+                let element = CBUserSettingsManager.createElement(
+                    {
+                        className,
+                        targetUserCBID: CBCurrentUserView_userCBID,
+                    }
                 );
-            } else {
+
                 viewElement.appendChild(
-                    createEmailEditorElement()
+                    element
                 );
             }
+        );
+
+        /**
+         * @deprecated 2020_01_30
+         *
+         *      Move the following editors in CBUserSettingsManager classes.
+         */
+        viewElement.appendChild(
+            createFullNameEditorElement()
+        );
+
+        if (CBCurrentUserView_initialUserEmail === "") {
+            viewElement.appendChild(
+                createAddEmailElement()
+            );
+        } else {
+            viewElement.appendChild(
+                createEmailEditorElement()
+            );
         }
-        /* for */
 
 
 
@@ -408,4 +443,5 @@ Colby.afterDOMContentLoaded(
 
     }
     /* afterDOMContentLoaded() */
-);
+
+})();
