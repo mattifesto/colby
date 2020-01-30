@@ -8,6 +8,12 @@ final class CBUserSettingsManagerCatalog {
      */
     static $testID = null;
 
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return void
      */
@@ -17,9 +23,18 @@ final class CBUserSettingsManagerCatalog {
                 CBModels::deleteByID(
                     CBUserSettingsManagerCatalog::ID()
                 );
+
+                CBModels::save(
+                    (object)[
+                        'ID' => CBUserSettingsManagerCatalog::ID(),
+                        'className' => 'CBUserSettingsManagerCatalog',
+                    ]
+                );
             }
         );
     }
+    /* CBInstall_install() */
+
 
 
     /**
@@ -32,13 +47,24 @@ final class CBUserSettingsManagerCatalog {
     }
 
 
+
+    /* -- CBModel interfaces -- -- -- -- -- */
+
+
+
+
     /**
      * @param object $spec
      *
-     * @return ?object
+     * @return object
      */
-    static function CBModel_build(stdClass $spec): ?stdClass {
-        $managers = CBModel::valueToArray($spec, 'managers');
+    static function CBModel_build(
+        stdClass $spec
+    ): stdClass {
+        $managers = CBModel::valueToArray(
+            $spec,
+            'managers'
+        );
 
         usort(
             $managers,
@@ -54,15 +80,67 @@ final class CBUserSettingsManagerCatalog {
             'managers' => array_values($managers),
         ];
     }
+    /* CBModel_build() */
+
+
+
+    /* -- functions -- -- -- -- -- */
+
 
 
     /**
      * @return ID
      */
     static function ID(): string {
-        return CBUserSettingsManagerCatalog::$testID ??
-            '4e31f4b1aa8039c1195b55f15bee9e84e991ddbb';
+        return (
+            CBUserSettingsManagerCatalog::$testID ??
+            '4e31f4b1aa8039c1195b55f15bee9e84e991ddbb'
+        );
     }
+
+
+
+    /**
+     * @return [string]
+     *
+     *      This function returns a list of user settings manager class names
+     *      that can be viewed by the current user for the target user.
+     */
+    static function getListOfClassNames(
+        string $targetUserCBID
+    ): array {
+        $catalog = CBModels::fetchModelByIDNullable(
+            CBUserSettingsManagerCatalog::ID()
+        );
+
+        $managers = CBModel::valueToArray(
+            $catalog,
+            'managers'
+        );
+
+        $classNames = array_map(
+            function ($manager) {
+                return $manager->className;
+            },
+            $managers
+        );
+
+        $classNames = array_filter(
+            $classNames,
+            function ($className) use ($targetUserCBID) {
+                return CBUserSettingsManager::currentUserCanViewForTargetUser(
+                    $className,
+                    $targetUserCBID
+                );
+            }
+        );
+
+        return array_values(
+            $classNames
+        );
+    }
+    /* getListOfClassNames() */
+
 
 
     /**
@@ -75,38 +153,31 @@ final class CBUserSettingsManagerCatalog {
         string $managerClassName,
         int $sort = 100
     ): void {
-        $originalSpec = CBModels::fetchSpecByID(
-            CBUserSettingsManagerCatalog::ID()
+        $updater = CBModelUpdater::fetch(
+            (object)[
+                'ID' => CBUserSettingsManagerCatalog::ID(),
+            ]
         );
 
-        if (empty($originalSpec)) {
-            $spec = (object)[
-                'ID' => CBUserSettingsManagerCatalog::ID(),
-            ];
-        } else {
-            $spec = CBModel::clone($originalSpec);
-        }
+        $managers = CBModel::valueToArray(
+            $updater->working,
+            'managers'
+        );
 
-        $spec->className = 'CBUserSettingsManagerCatalog';
+        array_push(
+            $managers,
+            (object)[
+                'className' => $managerClassName,
+                'sort' => $sort,
+            ]
+        );
 
-        $managers = CBModel::valueToArray($spec, 'managers');
+        $updater->working->managers = $managers;
 
-        array_push($managers, (object)[
-            'className' => $managerClassName,
-            'sort' => $sort,
-        ]);
-
-        $spec->managers = $managers;
-
-        if ($spec != $originalSpec) {
-            CBDB::transaction(
-                function () use ($spec) {
-                    CBModels::save($spec);
-                }
-            );
-        }
+        CBModelUpdater::save($updater);
     }
     /* installUserSettingsManager() */
+
 
 
     /**
@@ -130,15 +201,25 @@ final class CBUserSettingsManagerCatalog {
             CBUserSettingsManagerCatalog::ID()
         );
 
-        $managers = CBModel::valueToArray($catalogModel, 'managers');
+        $managers = CBModel::valueToArray(
+            $catalogModel,
+            'managers'
+        );
 
         foreach ($managers as $manager) {
-            $managerClassName = CBModel::valueToString($manager, 'className');
+            $managerClassName = CBModel::valueToString(
+                $manager,
+                'className'
+            );
 
-            CBUserSettingsManager::render($managerClassName, $targetUserID);
+            CBUserSettingsManager::render(
+                $managerClassName,
+                $targetUserID
+            );
         }
 
         echo '</div>';
     }
     /* renderUserSettingsManagerViews() */
+
 }
