@@ -24,6 +24,7 @@ final class CBCurrentUserView {
         $currentUserCBID = ColbyUser::getCurrentUserCBID();
         $currentUserFullName = null;
         $currentUserEmail = null;
+        $userSettingsManagerClassNames = [];
 
         if ($currentUserCBID !== null) {
             $currentUserModel = CBModelCache::fetchModelByID(
@@ -38,6 +39,12 @@ final class CBCurrentUserView {
             $currentUserEmail = CBModel::valueToString(
                 $currentUserModel,
                 'email'
+            );
+
+            $userSettingsManagerClassNames = (
+                CBUserSettingsManagerCatalog::getListOfClassNames(
+                    $currentUserCBID
+                )
             );
         }
 
@@ -56,9 +63,7 @@ final class CBCurrentUserView {
             ],
             [
                 'CBCurrentUserView_userSettingsManagerClassNames',
-                CBUserSettingsManagerCatalog::getListOfClassNames(
-                    $currentUserCBID
-                ),
+                $userSettingsManagerClassNames,
             ],
         ];
     }
@@ -72,11 +77,15 @@ final class CBCurrentUserView {
     static function CBHTMLOutput_requiredClassNames(): array {
         $targetUserCBID = ColbyUser::getCurrentUserCBID();
 
-        $userSettingsManagerClassNames = (
-            CBUserSettingsManagerCatalog::getListOfClassNames(
-                $targetUserCBID
-            )
-        );
+        if ($targetUserCBID === null) {
+            $userSettingsManagerClassNames = [];
+        } else {
+            $userSettingsManagerClassNames = (
+                CBUserSettingsManagerCatalog::getListOfClassNames(
+                    $targetUserCBID
+                )
+            );
+        }
 
         return array_merge(
             $userSettingsManagerClassNames,
