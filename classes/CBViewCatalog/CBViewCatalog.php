@@ -8,49 +8,69 @@ final class CBViewCatalog {
      */
     static $testID = null;
 
+
+
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
      */
     static function CBInstall_install(): void {
-        CBModelUpdater::update(
-            (object)[
-                'ID' => CBViewCatalog::ID(),
-                'className' => 'CBViewCatalog',
-                'viewClassNames' => [],
-                'deprecatedViewClassNames' => [],
-                'unsupportedViewClassNames' => [],
-            ]
+        CBDB::transaction(
+            function () {
+                CBModels::deleteByID(
+                    CBViewCatalog::ID()
+                );
+
+                CBModels::save(
+                    (object)[
+                        'ID' => CBViewCatalog::ID(),
+                        'className' => 'CBViewCatalog',
+                    ]
+                );
+            }
         );
     }
+    /* CBInstall_install() */
+
+
 
     /**
      * @return array
      */
     static function CBInstall_requiredClassNames(): array {
         return [
-            'CBModelUpdater',
+            'CBModels',
         ];
     }
 
+
+
     /* -- CBModel interfaces -- -- -- -- -- */
 
+
+
     /**
-     * @param model $spec
+     * @param object $spec
      *
-     * @return ?object
+     * @return object
      */
-    static function CBModel_build(stdClass $spec): ?stdClass {
+    static function CBModel_build(
+        stdClass $spec
+    ): stdClass {
         return (object)[
             'viewClassNames' => CBModel::valueToArray(
                 $spec,
                 'viewClassNames'
             ),
+
             'deprecatedViewClassNames' => CBModel::valueToArray(
                 $spec,
                 'deprecatedViewClassNames'
             ),
+
             'unsupportedViewClassNames' => CBModel::valueToArray(
                 $spec,
                 'unsupportedViewClassNames'
@@ -60,7 +80,10 @@ final class CBViewCatalog {
     /* CBModel_build() */
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -75,6 +98,8 @@ final class CBViewCatalog {
             'deprecatedViewClassNames'
         );
     }
+    /* fetchDeprecatedViewClassNames() */
+
 
 
     /**
@@ -99,6 +124,7 @@ final class CBViewCatalog {
     /* fetchSupportedViewClassNames() */
 
 
+
     /**
      * @return [string]
      */
@@ -112,6 +138,8 @@ final class CBViewCatalog {
             'unsupportedViewClassNames'
         );
     }
+    /* fetchUnsupportedViewClassNames() */
+
 
 
     /**
@@ -130,6 +158,8 @@ final class CBViewCatalog {
             'viewClassNames'
         );
     }
+    /* fetchViewClassNames() */
+
 
 
     /**
@@ -140,6 +170,7 @@ final class CBViewCatalog {
             '3d1fad418d45d081a76a027e56079d5fa464b6cc';
     }
     /* ID() */
+
 
 
     /**
@@ -293,4 +324,5 @@ final class CBViewCatalog {
         }
     }
     /* installView() */
+
 }
