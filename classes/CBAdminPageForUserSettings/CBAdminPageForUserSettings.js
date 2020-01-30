@@ -4,10 +4,12 @@
 /* global
     CBErrorHandler,
     CBUI,
+    CBUserSettingsManager,
     Colby,
 
     CBAdminPageForUserSettings_currentUserIsDeveloper,
     CBAdminPageForUserSettings_userCBID,
+    CBAdminPageForUserSettings_userSettingsManagerClassNames,
 */
 
 
@@ -15,6 +17,21 @@
 Colby.afterDOMContentLoaded(
     function afterDOMContentLoaded() {
         let mainElement = document.getElementsByTagName("main").item(0);
+
+        CBAdminPageForUserSettings_userSettingsManagerClassNames.forEach(
+            function (className) {
+                let element = CBUserSettingsManager.createElement(
+                    {
+                        className,
+                        targetUserCBID: CBAdminPageForUserSettings_userCBID,
+                    }
+                );
+
+                mainElement.appendChild(
+                    element
+                );
+            }
+        );
 
         if (CBAdminPageForUserSettings_currentUserIsDeveloper) {
             let elements = CBUI.createElementTree(

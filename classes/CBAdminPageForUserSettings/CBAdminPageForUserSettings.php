@@ -32,15 +32,15 @@ final class CBAdminPageForUserSettings {
      * @return void
      */
     static function CBAdmin_render(): void {
-        $targetUserID = $_GET['hash'];
+        $targetUserCBID = $_GET['hash'];
 
         $userModel = CBModelCache::fetchModelByID(
-            $targetUserID
+            $targetUserCBID
         );
 
         if ($userModel === null) {
             CBAdminPageForUserSettings::CBAdmin_render_notFound(
-                $targetUserID
+                $targetUserCBID
             );
 
             return;
@@ -51,7 +51,7 @@ final class CBAdminPageForUserSettings {
         );
 
         CBUserSettingsManagerCatalog::renderUserSettingsManagerViews(
-            $targetUserID
+            $targetUserCBID
         );
     }
     /* CBAdmin_render() */
@@ -99,11 +99,11 @@ final class CBAdminPageForUserSettings {
 
 
     /**
-     * @param string $targetUserID
+     * @param object $userModel
      *
      * @return void
      */
-    static function CBAdmin_render_user(
+    private static function CBAdmin_render_user(
         stdClass $userModel
     ): void {
         $userTitle = CBModel::valueToString(
@@ -155,16 +155,18 @@ final class CBAdminPageForUserSettings {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v565.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v569.js', cbsysurl()),
         ];
     }
 
 
 
     /**
-     * @return [string]
+     * @return [[<name>, <value>]]
      */
     static function CBHTMLOutput_JavaScriptVariables(): array {
+        $targetUserCBID = cb_query_string_value('hash');
+
         return [
             [
                 'CBAdminPageForUserSettings_currentUserIsDeveloper',
@@ -175,10 +177,17 @@ final class CBAdminPageForUserSettings {
             ],
             [
                 'CBAdminPageForUserSettings_userCBID',
-                cb_query_string_value('hash'),
+                $targetUserCBID,
+            ],
+            [
+                'CBAdminPageForUserSettings_userSettingsManagerClassNames',
+                CBUserSettingsManagerCatalog::getListOfClassNames(
+                    $targetUserCBID
+                ),
             ],
         ];
     }
+    /* CBHTMLOutput_JavaScriptVariables() */
 
 
 
@@ -186,11 +195,23 @@ final class CBAdminPageForUserSettings {
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames(): array {
-        return [
-            'CBErrorHandler',
-            'CBUI',
-            'Colby',
-        ];
+        $targetUserCBID = cb_query_string_value('hash');
+
+        $userSettingsManagerClassNames = (
+            CBUserSettingsManagerCatalog::getListOfClassNames(
+                $targetUserCBID
+            )
+        );
+
+        return array_merge(
+            $userSettingsManagerClassNames,
+            [
+                'CBErrorHandler',
+                'CBUI',
+                'CBUserSettingsManager',
+                'Colby',
+            ]
+        );
     }
     /* CBHTMLOutput_requiredClassNames() */
 
