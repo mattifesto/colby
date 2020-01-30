@@ -1393,6 +1393,40 @@ final class CBCodeAdmin {
 
 
                 /**
+                 * 2020_01_30 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Update all user settings managers to build their user
+                        interface in JavaScript.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBUserSettingsManager::render',
+                    'severity' => 4,
+                    'title' => 'CBUserSettingsManager::render()',
+                ],
+
+
+                /**
+                 * 2020_01_30 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Update all user settings managers to build their user
+                        interface in JavaScript.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBUserSettingsManager_render',
+                    'severity' => 4,
+                    'title' => 'CBUserSettingsManager_render()',
+                ],
+
+
+                /**
                  * 2020_01_06 (warning)
                  */
                 (object)[
