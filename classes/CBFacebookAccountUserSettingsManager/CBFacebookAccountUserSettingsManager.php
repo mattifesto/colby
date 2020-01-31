@@ -2,33 +2,6 @@
 
 final class CBFacebookAccountUserSettingsManager {
 
-    /* -- CBInstall interfaces -- -- -- -- -- */
-
-
-
-    /**
-     * @return void
-     */
-    static function CBInstall_install(): void {
-        CBUserSettingsManagerCatalog::installUserSettingsManager(
-            __CLASS__,
-            20
-        );
-    }
-
-
-
-    /**
-     * @return [string]
-     */
-    static function CBInstall_requiredClassNames(): array {
-        return [
-            'CBUserSettingsManagerCatalog'
-        ];
-    }
-
-
-
     /* -- CBAjax interfaces -- -- -- -- -- */
 
 
@@ -145,6 +118,33 @@ final class CBFacebookAccountUserSettingsManager {
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
+
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        CBUserSettingsManagerCatalog::installUserSettingsManager(
+            __CLASS__,
+            20
+        );
+    }
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBUserSettingsManagerCatalog'
+        ];
+    }
 
 
 
