@@ -370,54 +370,6 @@ final class CBUser {
 
 
 
-    /**
-     * @param object $args
-     *
-     *      {
-     *          userCBID: CBID
-     *      }
-     */
-    static function CBAjax_switchToUser(
-        stdClass $args
-    ): void {
-        $userCBID = CBModel::valueAsCBID(
-            $args,
-            'userCBID'
-        );
-
-        if ($userCBID === null) {
-            throw new CBExceptionWithValue(
-                'The "userCBID" property is not valid.',
-                $args,
-                'f2bcfdc1b2911d797c4177d538ab8b3bfaccc0aa'
-            );
-        }
-
-        $userModel = CBModels::fetchModelByIDNullable(
-            $userCBID
-        );
-
-        if ($userModel->className !== 'CBUser') {
-            throw new Exception('foo');
-        }
-
-        ColbyUser::loginUser(
-            $userModel->ID
-        );
-    }
-    /* CBAjax_switchToUser() */
-
-
-
-    /**
-     * @return string
-     */
-    static function CBAjax_switchToUser_getUserGroupClassName(): string {
-        return 'CBDevelopersUserGroup';
-    }
-
-
-
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
 
