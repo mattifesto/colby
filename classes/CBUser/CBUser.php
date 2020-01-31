@@ -418,59 +418,6 @@ final class CBUser {
 
 
 
-    /**
-     * @NOTE 2020_01_04
-     *
-     *      This is the only way that a user can update their name.
-     *
-     * @param object $args
-     *
-     *      {
-     *          fullName: string
-     *      }
-     *
-     * @return void
-     */
-    static function CBAjax_updateFullName(
-        stdClass $args
-    ): void {
-        $currentUserCBID = ColbyUser::getCurrentUserCBID();
-
-        if ($currentUserCBID === null) {
-            throw new CBExceptionWithValue(
-                'You are not currently signed in.',
-                $args,
-                '06498193dfefff590fe3bdc87ae994a67b285ee3'
-            );
-        }
-
-        $fullName = CBConvert::stringToCleanLine(
-            CBModel::valueToString(
-                $args,
-                'fullName'
-            )
-        );
-
-        CBModelUpdater::update(
-            (object)[
-                'ID' => $currentUserCBID,
-                'title' => $fullName
-            ]
-        );
-    }
-    /* CBAjax_updateFullName() */
-
-
-
-    /**
-     * @return string
-     */
-    static function CBAjax_updateFullName_getUserGroupClassName(): string {
-        return 'CBPublicUserGroup';
-    }
-
-
-
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
 
