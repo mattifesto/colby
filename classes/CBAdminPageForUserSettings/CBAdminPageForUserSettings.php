@@ -114,22 +114,6 @@ final class CBAdminPageForUserSettings {
         CBHTMLOutput::pageInformation()->title = (
             "User Administration ({$userTitle})"
         );
-
-        $userFacebookID = CBModel::valueToString(
-            $userModel,
-            'facebookUserID'
-        );
-
-        $userPhotoURL = CBFacebook::userImageURL($userFacebookID);
-
-        ?>
-
-        <div class="CBAdminPageForUserSettings_user">
-            <img src="<?= $userPhotoURL ?>">
-            <div><?= $userTitle ?></div>
-        </div>
-
-        <?php
     }
     /* CBAdmin_render_user() */
 
