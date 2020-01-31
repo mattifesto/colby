@@ -153,13 +153,6 @@ final class CBAdminPageForUserSettings {
 
         return [
             [
-                'CBAdminPageForUserSettings_currentUserIsDeveloper',
-                CBUserGroup::userIsMemberOfUserGroup(
-                    ColbyUser::getCurrentUserCBID(),
-                    'CBDevelopersUserGroup'
-                ),
-            ],
-            [
                 'CBAdminPageForUserSettings_userCBID',
                 $targetUserCBID,
             ],
@@ -190,8 +183,6 @@ final class CBAdminPageForUserSettings {
         return array_merge(
             $userSettingsManagerClassNames,
             [
-                'CBErrorHandler',
-                'CBUI',
                 'CBUserSettingsManager',
                 'Colby',
             ]
