@@ -21,7 +21,9 @@ final class CBFacebookAccountUserSettingsManager {
      *              This property will be set to true if the current user is not
      *              allowed to access this information about the target user.
      *
-     *          facebookName: string|null
+     *          facebookUserImageURL: string|null
+     *
+     *          facebookUserFullName: string|null
      *
      *              This property will be set to null if the current user does
      *              not have a Facebook account associated with their user
@@ -65,16 +67,22 @@ final class CBFacebookAccountUserSettingsManager {
         );
 
         if ($targetUserFacebookUserID === null) {
-            $targetUserFacebookName = null;
+            $targetUserFacebookUserImageURL = null;
+            $targetUserFacebookUserFullName = null;
         } else {
-            $targetUserFacebookName = CBModel::valueToString(
+            $targetUserFacebookUserImageURL = CBFacebook::userImageURL(
+                $targetUserFacebookUserID
+            );
+
+            $targetUserFacebookUserFullName = CBModel::valueToString(
                 $targetUserModel,
                 'facebookName'
             );
         }
 
         return (object)[
-            'facebookName' => $targetUserFacebookName,
+            'facebookUserImageURL' => $targetUserFacebookUserImageURL,
+            'facebookUserFullName' => $targetUserFacebookUserFullName,
         ];
     }
     /* CBAjax_fetchTargetUserData() */
@@ -114,6 +122,7 @@ final class CBFacebookAccountUserSettingsManager {
             'CBException',
             'CBModel',
             'CBUI',
+            'CBUIThumbnailPart',
             'Colby',
         ];
     }

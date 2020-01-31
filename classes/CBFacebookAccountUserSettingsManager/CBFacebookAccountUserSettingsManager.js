@@ -6,6 +6,7 @@
     CBException,
     CBModel,
     CBUI,
+    CBUIThumbnailPart,
     Colby,
 */
 
@@ -73,32 +74,56 @@
         let elements = CBUI.createElementTree(
             "CBUI_sectionContainer",
             "CBUI_section",
-            "CBUI_sectionItem",
-            "CBUI_container_topAndBottom CBUI_flexGrow",
-            "label CBUI_textColor2"
+            "CBUI_sectionItem"
         );
 
         element.appendChild(
             elements[0]
         );
 
-        elements[4].textContent = "Facebook Account";
+        let sectionItemElement = elements[2];
+
+
+        /* thumbnail */
+
+        let thumbnailPart = CBUIThumbnailPart.create();
+
+        sectionItemElement.appendChild(
+            thumbnailPart.element
+        );
+
+        /* text */
+
+        elements = CBUI.createElementTree(
+            "CBUI_container_topAndBottom CBUI_flexGrow",
+            "label CBUI_textColor2"
+        );
+
+        sectionItemElement.appendChild(
+            elements[0]
+        );
+
+        elements[1].textContent = "Facebook Account";
 
         let valueElement = CBUI.createElement(
             "value"
         );
 
-        elements[3].appendChild(
+        elements[0].appendChild(
             valueElement
         );
 
         valueElement.textContent = Colby.nonBreakingSpace;
 
-        elements[2].appendChild(
+
+        /* navigation arrow */
+
+        sectionItemElement.appendChild(
             CBUI.createElement(
                 "CBUI_navigationArrow"
             )
         );
+
 
         Colby.callAjaxFunction(
             "CBFacebookAccountUserSettingsManager",
@@ -110,7 +135,7 @@
             function (targetUserData) {
                 let accessWasDenied = CBModel.valueToBool(
                     targetUserData,
-                    'accessWasDenied'
+                    "accessWasDenied"
                 );
 
                 if (accessWasDenied) {
@@ -121,7 +146,7 @@
                     return;
                 }
 
-                if (targetUserData.facebookName === null) {
+                if (targetUserData.facebookUserFullName === null) {
                     valueElement.textContent = "no account";
 
                     valueElement.classList.add("CBUI_textColor2");
@@ -129,17 +154,28 @@
                     return;
                 }
 
-                let facebookName = CBModel.valueToString(
+
+                /* image */
+
+                thumbnailPart.src = CBModel.valueToString(
                     targetUserData,
-                    'facebookName'
+                    "facebookUserImageURL"
+                );
+
+
+                /* full name */
+
+                let facebookUserFullName = CBModel.valueToString(
+                    targetUserData,
+                    "facebookUserFullName"
                 ).trim();
 
-                if (facebookName === "") {
+                if (facebookUserFullName === "") {
                     valueElement.textContent = "account has no name";
 
                     valueElement.classList.add("CBUI_textColor2");
                 } else {
-                    valueElement.textContent = facebookName;
+                    valueElement.textContent = facebookUserFullName;
 
                     valueElement.classList.remove("CBUI_textColor2");
                 }
