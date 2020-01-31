@@ -22,18 +22,12 @@ final class CBCurrentUserView {
      */
     static function CBHTMLOutput_JavaScriptVariables(): array {
         $currentUserCBID = ColbyUser::getCurrentUserCBID();
-        $currentUserFullName = null;
         $currentUserEmail = null;
         $userSettingsManagerClassNames = [];
 
         if ($currentUserCBID !== null) {
             $currentUserModel = CBModelCache::fetchModelByID(
                 $currentUserCBID
-            );
-
-            $currentUserFullName = CBModel::valueToString(
-                $currentUserModel,
-                'title'
             );
 
             $currentUserEmail = CBModel::valueToString(
@@ -49,10 +43,6 @@ final class CBCurrentUserView {
         }
 
         return [
-            [
-                'CBCurrentUserView_initialUserFullName',
-                $currentUserFullName,
-            ],
             [
                 'CBCurrentUserView_initialUserEmail',
                 $currentUserEmail,

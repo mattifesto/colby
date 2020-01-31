@@ -10,7 +10,6 @@
     Colby,
 
     CBCurrentUserView_initialUserEmail,
-    CBCurrentUserView_initialUserFullName,
     CBCurrentUserView_userCBID,
     CBCurrentUserView_userSettingsManagerClassNames,
 */
@@ -65,10 +64,6 @@
          *
          *      Move the following editors in CBUserSettingsManager classes.
          */
-        viewElement.appendChild(
-            createFullNameEditorElement()
-        );
-
         if (CBCurrentUserView_initialUserEmail === "") {
             viewElement.appendChild(
                 createAddEmailElement()
@@ -333,113 +328,6 @@
             }
         }
         /* createEmailEditorElement() */
-
-
-
-        /**
-         * @return Element
-         */
-        function createFullNameEditorElement() {
-            let element = CBUI.createElement(
-                "CBCurrentUserView_fullNameEditor"
-            );
-
-            element.appendChild(
-                CBUI.cbmessageToElement(
-                    `
-                        (Full Name (b))((br))
-                        You can edit your full name below.
-                    `
-                )
-            );
-
-            let elements = CBUI.createElementTree(
-                "CBUI_sectionContainer",
-                "CBUI_section"
-            );
-
-            element.appendChild(
-                elements[0]
-            );
-
-            let fullNameEditor = CBUIStringEditor.create();
-            fullNameEditor.title = "Full Name";
-            fullNameEditor.value = CBCurrentUserView_initialUserFullName;
-
-            elements[1].appendChild(
-                fullNameEditor.element
-            );
-
-            let hasChanged = false;
-            let isSaving = false;
-            let timeoutID;
-
-            fullNameEditor.changed = function () {
-                hasChanged = true;
-
-                if (isSaving) {
-                    return;
-                }
-
-                fullNameEditor.title = "Full Name (changed...)";
-
-                if (timeoutID !== undefined) {
-                    window.clearTimeout(timeoutID);
-                }
-
-                timeoutID = window.setTimeout(
-                    function () {
-                        timeoutID = undefined;
-
-                        updateFullName();
-                    },
-                    1000
-                );
-            };
-
-            return element;
-
-
-
-            /* -- closures -- -- -- -- -- */
-
-
-
-            /**
-             * @return undefined
-             */
-            function updateFullName() {
-                hasChanged = false;
-                isSaving = true;
-
-                fullNameEditor.title = "Full Name (saving...)";
-
-                Colby.callAjaxFunction(
-                    "CBUser",
-                    "updateFullName",
-                    {
-                        fullName: fullNameEditor.value,
-                    }
-                ).then(
-                    function () {
-                        isSaving = false;
-
-                        if (hasChanged) {
-                            updateFullName();
-                        } else {
-                            fullNameEditor.title = "Full Name";
-                        }
-                    }
-                ).catch(
-                    function (error) {
-                        CBErrorHandler.displayAndReport(error);
-                    }
-                );
-            }
-            /* updateFullName() */
-
-        }
-        /* createFullNameEditorElement() */
 
     }
     /* afterDOMContentLoaded() */
