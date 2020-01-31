@@ -182,7 +182,7 @@ final class CBFullNameUserSettingsManager {
     static function CBInstall_install(): void {
         CBUserSettingsManagerCatalog::installUserSettingsManager(
             __CLASS__,
-            30
+            5
         );
     }
 
