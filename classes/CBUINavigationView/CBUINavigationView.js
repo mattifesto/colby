@@ -143,7 +143,9 @@ var CBUINavigationView = {
         };
 
         if (CBUINavigationView.context !== undefined) {
-            throw new Error("There is only one CBUINavigationView allowed per page.");
+            throw new Error(
+                "There is only one CBUINavigationView allowed per page."
+            );
         } else {
             CBUINavigationView.context = api;
         }
@@ -201,7 +203,9 @@ var CBUINavigationView = {
                 state.items = state.items.slice(0, level);
             }
 
-            toItem.containerElement = CBUINavigationView.containerFromItem(toItem);
+            toItem.containerElement = CBUINavigationView.containerFromItem(
+                toItem
+            );
 
             state.items.push(toItem);
 
@@ -254,7 +258,9 @@ var CBUINavigationView = {
                 }
             }
 
-            toItem.containerElement = CBUINavigationView.containerFromItem(toItem);
+            toItem.containerElement = CBUINavigationView.containerFromItem(
+                toItem
+            );
 
             state.items[level] = toItem;
 
