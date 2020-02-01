@@ -2,14 +2,11 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
-    CBErrorHandler,
     CBUI,
-    CBUIPanel,
-    CBUIStringEditor,
+    CBUINavigationView,
     CBUserSettingsManager,
     Colby,
 
-    CBCurrentUserView_initialUserEmail,
     CBCurrentUserView_userCBID,
     CBCurrentUserView_userSettingsManagerClassNames,
 */
@@ -44,6 +41,14 @@
 
         let viewElement = viewElements[0];
 
+        viewElement.appendChild(
+            CBUINavigationView.create().element
+        );
+
+        let rootNavigationItemElement = CBUI.createElement(
+            "CBCurrentUserView_rootNavigationItemElement"
+        );
+
         CBCurrentUserView_userSettingsManagerClassNames.forEach(
             function (className) {
                 let element = CBUserSettingsManager.createElement(
@@ -53,282 +58,18 @@
                     }
                 );
 
-                viewElement.appendChild(
+                rootNavigationItemElement.appendChild(
                     element
                 );
             }
         );
 
-        /**
-         * @deprecated 2020_01_30
-         *
-         *      Move the following editors in CBUserSettingsManager classes.
-         */
-        if (CBCurrentUserView_initialUserEmail === "") {
-            viewElement.appendChild(
-                createAddEmailElement()
-            );
-        } else {
-            viewElement.appendChild(
-                createEmailEditorElement()
-            );
-        }
-
-
-
-        /* -- closures -- -- -- -- -- */
-
-
-
-        function createAddEmailElement() {
-            let element = CBUI.createElement(
-                "CBCurrentUserView_emailEditor"
-            );
-
-            element.appendChild(
-                CBUI.cbmessageToElement(
-                    `
-                        (Add Email Address (b))((br))
-                        You can add an email address and password to your
-                        account below.
-                    `
-                )
-            );
-
-            let elements = CBUI.createElementTree(
-                "CBUI_sectionContainer",
-                "CBUI_section"
-            );
-
-            element.appendChild(
-                elements[0]
-            );
-
-            let emailEditor = CBUIStringEditor.create();
-            emailEditor.title = "Email Address";
-
-            elements[1].appendChild(
-                emailEditor.element
-            );
-
-            let emailEditor2 = CBUIStringEditor.create();
-            emailEditor2.title = "Re-enter Email Address";
-
-            elements[1].appendChild(
-                emailEditor2.element
-            );
-
-            let passwordEditor = CBUIStringEditor.create(
-                {
-                    inputType: "password",
-                }
-            );
-
-            passwordEditor.title = "Password";
-
-            elements[1].appendChild(
-                passwordEditor.element
-            );
-
-            let passwordEditor2 = CBUIStringEditor.create(
-                {
-                    inputType: "password",
-                }
-            );
-
-            passwordEditor2.title = "Re-enter Password";
-
-            elements[1].appendChild(
-                passwordEditor2.element
-            );
-
-            elements = CBUI.createElementTree(
-                "CBUI_container1",
-                "CBUI_button1"
-            );
-
-            element.appendChild(
-                elements[0]
-            );
-
-            elements[1].textContent = "Add Email Address";
-
-            elements[1].addEventListener(
-                "click",
-                function () {
-                    addEmailAddress();
-                }
-            );
-
-            return element;
-
-
-
-            /* -- closures -- -- -- -- -- */
-
-
-
-            /**
-             * @return undefined
-             */
-            function addEmailAddress() {
-                Colby.callAjaxFunction(
-                    "CBUser",
-                    "addEmailAddress",
-                    {
-                        email: emailEditor.value.trim(),
-                        email2: emailEditor2.value.trim(),
-                        password: passwordEditor.value,
-                        password2: passwordEditor2.value,
-                    }
-                ).then(
-                    function (response) {
-                        if (response.succeeded === true) {
-                            window.location.reload();
-                        } else {
-                            CBUIPanel.displayCBMessage(
-                                response.cbmessage
-                            );
-                        }
-                    }
-                ).catch(
-                    function (error) {
-                        CBErrorHandler.displayAndReport(error);
-                    }
-                );
+        CBUINavigationView.navigate(
+            {
+                element: rootNavigationItemElement,
+                title: "root",
             }
-            /* addEmailAddress() */
-
-        }
-        /* createAddEmailElement() */
-
-
-
-        /**
-         * @return Element
-         */
-        function createEmailEditorElement() {
-            let element = CBUI.createElement(
-                "CBCurrentUserView_emailEditor"
-            );
-
-            element.appendChild(
-                CBUI.cbmessageToElement(
-                    `
-                        (Change Email Address (b))((br))
-                        You can change your email address below.
-                    `
-                )
-            );
-
-            let elements = CBUI.createElementTree(
-                "CBUI_sectionContainer",
-                "CBUI_section",
-                "CBUI_container_topAndBottom",
-                "CBUI_textColor2"
-            );
-
-            element.appendChild(
-                elements[0]
-            );
-
-            elements[3].textContent = "Current Email";
-
-            let emailElement = CBUI.createElement("");
-
-            elements[2].appendChild(
-                emailElement
-            );
-
-            if (CBCurrentUserView_initialUserEmail === "") {
-                emailElement.textContent = Colby.nonBreakingSpace;
-            } else {
-                emailElement.textContent = CBCurrentUserView_initialUserEmail;
-            }
-
-            let newEmailEditor = CBUIStringEditor.create();
-            newEmailEditor.title = "New Email";
-
-            elements[1].appendChild(
-                newEmailEditor.element
-            );
-
-            let newEmailEditor2 = CBUIStringEditor.create();
-            newEmailEditor2.title = "Re-enter New Email";
-
-            elements[1].appendChild(
-                newEmailEditor2.element
-            );
-
-            let passwordEditor = CBUIStringEditor.create(
-                {
-                    inputType: "password",
-                }
-            );
-
-            passwordEditor.title = "Password";
-
-            elements[1].appendChild(
-                passwordEditor.element
-            );
-
-            elements = CBUI.createElementTree(
-                "CBUI_container1",
-                "CBUI_button1"
-            );
-
-            element.appendChild(
-                elements[0]
-            );
-
-            elements[1].textContent = "Change Email Address";
-
-            elements[1].addEventListener(
-                "click",
-                function () {
-                    changeEmailAddress();
-                }
-            );
-
-            return element;
-
-
-
-            /* -- closures -- -- -- -- -- */
-
-
-
-            /**
-             * @return undefined
-             */
-            function changeEmailAddress() {
-                Colby.callAjaxFunction(
-                    "CBUser",
-                    "changeEmailAddress",
-                    {
-                        email: newEmailEditor.value.trim(),
-                        email2: newEmailEditor2.value.trim(),
-                        password: passwordEditor.value,
-                    }
-                ).then(
-                    function (response) {
-                        if (response.succeeded === true) {
-                            window.location.reload();
-                        } else {
-                            CBUIPanel.displayCBMessage(
-                                response.cbmessage
-                            );
-                        }
-                    }
-                ).catch(
-                    function (error) {
-                        CBErrorHandler.displayAndReport(error);
-                    }
-                );
-            }
-        }
-        /* createEmailEditorElement() */
-
+        );
     }
     /* afterDOMContentLoaded() */
 

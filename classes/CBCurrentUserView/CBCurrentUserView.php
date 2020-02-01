@@ -11,7 +11,7 @@ final class CBCurrentUserView {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v569.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v570.js', cbsysurl()),
         ];
     }
 
@@ -43,10 +43,6 @@ final class CBCurrentUserView {
         }
 
         return [
-            [
-                'CBCurrentUserView_initialUserEmail',
-                $currentUserEmail,
-            ],
             [
                 'CBCurrentUserView_userCBID',
                 $currentUserCBID,
@@ -80,10 +76,8 @@ final class CBCurrentUserView {
         return array_merge(
             $userSettingsManagerClassNames,
             [
-                'CBErrorHandler',
                 'CBUI',
-                'CBUIPanel',
-                'CBUIStringEditor',
+                'CBUINavigationView',
                 'CBUserSettingsManager',
                 'Colby',
 
