@@ -105,6 +105,7 @@ final class CBEmailAddressUserSettingsManager {
             'CBModel',
             'CBUI',
             'CBUINavigationView',
+            'CBUIPanel',
             'CBUIStringEditor',
             'Colby',
         ];
