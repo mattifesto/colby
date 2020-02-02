@@ -18,7 +18,7 @@ final class CBAdministratorsUserGroupUserSettingsManager {
      *      {
      *          accessWasDenied: bool
      *          currentUserCanChange: bool
-     *          targetUserEmailAddress: string
+     *          targetUserIsMemberOfUserGroup: bool
      *      }
      */
     static function CBAjax_fetchTargetUserData(
