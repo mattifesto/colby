@@ -67,7 +67,7 @@
         CBUINavigationView.navigate(
             {
                 element: rootNavigationItemElement,
-                title: "root",
+                title: "User",
             }
         );
     }

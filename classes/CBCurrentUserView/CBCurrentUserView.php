@@ -11,7 +11,7 @@ final class CBCurrentUserView {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v570.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v571.js', cbsysurl()),
         ];
     }
 
