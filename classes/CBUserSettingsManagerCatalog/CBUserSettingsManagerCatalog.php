@@ -178,48 +178,4 @@ final class CBUserSettingsManagerCatalog {
     }
     /* installUserSettingsManager() */
 
-
-
-    /**
-     * This function is called by the code that renders the admin page for user
-     * settings for a specific user.
-     *
-     * @param string $targetUserID
-     *
-     * @return void
-     */
-    static function renderUserSettingsManagerViews(
-        string $targetUserID
-    ): void {
-        echo (
-            '<div class="' .
-            'CBUserSettingsManagerCatalog_userSettingsManagerViews' .
-            '">'
-        );
-
-        $catalogModel = CBModels::fetchModelByID(
-            CBUserSettingsManagerCatalog::ID()
-        );
-
-        $managers = CBModel::valueToArray(
-            $catalogModel,
-            'managers'
-        );
-
-        foreach ($managers as $manager) {
-            $managerClassName = CBModel::valueToString(
-                $manager,
-                'className'
-            );
-
-            CBUserSettingsManager::render(
-                $managerClassName,
-                $targetUserID
-            );
-        }
-
-        echo '</div>';
-    }
-    /* renderUserSettingsManagerViews() */
-
 }
