@@ -283,6 +283,23 @@ final class CBCodeAdmin {
 
 
                 /**
+                 * 2020_02_01 (error)
+                 */
+                (object)[
+                    'args' => '--php --js --css',
+                    'cbmessage' => <<<EOT
+
+                        The CBUserGroupMembershipToggleView class no longer
+                        exists.
+
+                    EOT,
+                    'regex' => 'CBUserGroupMembershipToggleView',
+                    'severity' => 3,
+                    'title' => 'CBUserGroupMembershipToggleView',
+                ],
+
+
+                /**
                  * 2020_01_30 (warning)
                  * 2020_02_01 (error)
                  */
