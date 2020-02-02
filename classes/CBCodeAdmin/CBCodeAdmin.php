@@ -289,6 +289,26 @@ final class CBCodeAdmin {
                     'args' => '--php --js --css',
                     'cbmessage' => <<<EOT
 
+                        The renderUserSettingsManagerViews() function no longer
+                        exists on the CBUserSettingsManagerCatalog class.
+
+                    EOT,
+                    'regex' => 'renderUserSettingsManagerViews',
+                    'severity' => 3,
+                    'title' => (
+                        'CBUserSettingsManagerCatalog::' .
+                        'renderUserSettingsManagerViews'
+                    ),
+                ],
+
+
+                /**
+                 * 2020_02_01 (error)
+                 */
+                (object)[
+                    'args' => '--php --js --css',
+                    'cbmessage' => <<<EOT
+
                         The CBUserGroupMembershipToggleView class no longer
                         exists.
 
