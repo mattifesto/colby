@@ -49,10 +49,6 @@ final class CBAdminPageForUserSettings {
         CBAdminPageForUserSettings::CBAdmin_render_user(
             $userModel
         );
-
-        CBUserSettingsManagerCatalog::renderUserSettingsManagerViews(
-            $targetUserCBID
-        );
     }
     /* CBAdmin_render() */
 
