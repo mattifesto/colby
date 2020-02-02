@@ -269,12 +269,6 @@ final class CBView {
      *      sure to not hide that exception, because such an exception is an
      *      indication to developers that a bug exists.
      *
-     *      The view that brought up this issue is the
-     *      CBUserGroupMembershipToggleView. If this view's model does not have
-     *      certain properties set correctly it is a sign the something has
-     *      truly gone wrong that a developer would need to know about. It's
-     *      really and truly time for an exception.
-     *
      *      If view classes are allowed to throw exceptions during
      *      CBView_render() and views aren't supposed to stop render, that means
      *      we nees a try/catch block.
