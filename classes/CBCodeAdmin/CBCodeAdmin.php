@@ -283,6 +283,42 @@ final class CBCodeAdmin {
 
 
                 /**
+                 * 2020_01_30 (warning)
+                 * 2020_02_01 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Update all user settings managers to build their user
+                        interface in JavaScript.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBUserSettingsManager::render',
+                    'severity' => 3,
+                    'title' => 'CBUserSettingsManager::render()',
+                ],
+
+
+                /**
+                 * 2020_01_30 (warning)
+                 * 2020_02_01 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Update all user settings managers to build their user
+                        interface in JavaScript.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBUserSettingsManager_render',
+                    'severity' => 3,
+                    'title' => 'CBUserSettingsManager_render()',
+                ],
+
+
+                /**
                  * 2019_12_31 (error)
                  */
                 (object)[
@@ -1390,40 +1426,6 @@ final class CBCodeAdmin {
 
                 /* -- warnings -- -- -- -- -- */
 
-
-
-                /**
-                 * 2020_01_30 (warning)
-                 */
-                (object)[
-                    'cbmessage' => <<<EOT
-
-                        Update all user settings managers to build their user
-                        interface in JavaScript.
-
-                    EOT,
-                    'filetype' => 'php',
-                    'regex' => 'CBUserSettingsManager::render',
-                    'severity' => 4,
-                    'title' => 'CBUserSettingsManager::render()',
-                ],
-
-
-                /**
-                 * 2020_01_30 (warning)
-                 */
-                (object)[
-                    'cbmessage' => <<<EOT
-
-                        Update all user settings managers to build their user
-                        interface in JavaScript.
-
-                    EOT,
-                    'filetype' => 'php',
-                    'regex' => 'CBUserSettingsManager_render',
-                    'severity' => 4,
-                    'title' => 'CBUserSettingsManager_render()',
-                ],
 
 
                 /**
