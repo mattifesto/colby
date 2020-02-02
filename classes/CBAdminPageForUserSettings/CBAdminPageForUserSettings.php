@@ -139,7 +139,7 @@ final class CBAdminPageForUserSettings {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v569.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v570.js', cbsysurl()),
         ];
     }
 
@@ -183,6 +183,8 @@ final class CBAdminPageForUserSettings {
         return array_merge(
             $userSettingsManagerClassNames,
             [
+                'CBUI',
+                'CBUINavigationView',
                 'CBUserSettingsManager',
                 'Colby',
             ]

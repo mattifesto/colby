@@ -2,6 +2,8 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBUI,
+    CBUINavigationView,
     CBUserSettingsManager,
     Colby,
 
@@ -15,6 +17,12 @@ Colby.afterDOMContentLoaded(
     function afterDOMContentLoaded() {
         let mainElement = document.getElementsByTagName("main").item(0);
 
+        mainElement.appendChild(
+            CBUINavigationView.create().element
+        );
+
+        let rootElement = CBUI.createElement();
+
         CBAdminPageForUserSettings_userSettingsManagerClassNames.forEach(
             function (className) {
                 let element = CBUserSettingsManager.createElement(
@@ -24,9 +32,16 @@ Colby.afterDOMContentLoaded(
                     }
                 );
 
-                mainElement.appendChild(
+                rootElement.appendChild(
                     element
                 );
+            }
+        );
+
+        CBUINavigationView.navigate(
+            {
+                element: rootElement,
+                title: "User",
             }
         );
     }
