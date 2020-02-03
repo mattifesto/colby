@@ -61,7 +61,8 @@ final class CBUsers {
         $SQL = <<<EOT
 
             SELECT  COUNT(*)
-            FROM    ColbyUsers
+            FROM    CBModels
+            WHERE   className = 'CBUser';
 
         EOT;
 
