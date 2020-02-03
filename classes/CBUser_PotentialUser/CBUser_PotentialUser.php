@@ -278,7 +278,7 @@ final class CBUser_PotentialUser {
 
         $countOfUsers = CBUsers::countOfUsers();
 
-        if ($countOfUsers === 0) {
+        if ($countOfUsers < 2) {
             CBUser::initializeFirstUser($userCBID);
         }
 
