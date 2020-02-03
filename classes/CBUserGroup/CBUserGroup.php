@@ -13,6 +13,11 @@ final class CBUserGroup {
     /**
      * @param object $args
      *
+     *      {
+     *          userCBID: CBID
+     *          userGroupClassName: string
+     *      }
+     *
      * @return void
      */
     static function CBAjax_addUser(
@@ -66,6 +71,11 @@ final class CBUserGroup {
 
     /**
      * @param object $args
+     *
+     *      {
+     *          userCBID: CBID
+     *          userGroupClassName: string
+     *      }
      *
      * @return void
      */
@@ -303,13 +313,29 @@ final class CBUserGroup {
             $userGroupModel === null ||
             $userGroupModel->className !== 'CBUserGroup'
         ) {
-            throw CBException::createWithValue(
+            throw CBExceptionWithValue(
                 (
                     'The user group class name is not associated ' .
                     'with any user group'
                 ),
                 $userGroupClassName,
                 'df16aa741c27d2eb8ceb6394ff2993cbf6e3b89f'
+            );
+        }
+
+        $canModifyMembership = CBUserGroup::userCanModifyMembership(
+            ColbyUser::getCurrentUserCBID(),
+            $userGroupClassName
+        );
+
+        if ($canModifyMembership !== true) {
+            throw new CBExceptionWithValue(
+                (
+                    'You do not have pemission to modify the ' .
+                    'members of this group.'
+                ),
+                $userGroupClassName,
+                '314f8b7a1ee1aba2eb1a640593d4c544e2c8a3f4'
             );
         }
 
@@ -342,7 +368,6 @@ final class CBUserGroup {
                 CBModelAssociations::addMultiple($associations);
             }
         );
-
 
         $currentUserWasChanged = in_array(
             ColbyUser::getCurrentUserCBID(),
@@ -488,6 +513,22 @@ final class CBUserGroup {
             );
         }
 
+        $canModifyMembership = CBUserGroup::userCanModifyMembership(
+            ColbyUser::getCurrentUserCBID(),
+            $userGroupClassName
+        );
+
+        if ($canModifyMembership !== true) {
+            throw new CBExceptionWithValue(
+                (
+                    'You do not have pemission to modify the ' .
+                    'members of this group.'
+                ),
+                $userGroupClassName,
+                '314f8b7a1ee1aba2eb1a640593d4c544e2c8a3f4'
+            );
+        }
+
         CBDB::transaction(
             function () use ($userGroupCBID, $userCBIDs) {
                 $associations = array_map(
@@ -524,6 +565,59 @@ final class CBUserGroup {
         );
     }
     /* removeUsers() */
+
+
+
+    /**
+     * @param CBID $userCBID
+     * @param string $userGroupClassName
+     *
+     * @return bool
+     *
+     *      Returns true if the user is allowed to add and remove other users
+     *      from the group.
+     */
+    static function userCanModifyMembership(
+        string $userCBID,
+        string $userGroupClassName
+    ): bool {
+        $function = (
+            $userGroupClassName .
+            '::CBUserGroup_userCanModifyMembership'
+        );
+
+        if (is_callable($function)) {
+            $canModify = call_user_func($function, $userCBID);
+        } else {
+            $canModify = CBUserGroup::userIsMemberOfUserGroup(
+                $userCBID,
+                'CBAdministratorsUserGroup'
+            );
+        }
+
+        /**
+         * There are two situations that provide permission to modify group
+         * membership outside the normal rules.
+         *
+         *      1. Developers can always modify group membership.
+         *
+         *      2. The user of a website with only one user can always modify
+         *      group membership.
+         */
+        if ($canModify !== true) {
+            $canModify = CBUserGroup::userIsMemberOfUserGroup(
+                $userCBID,
+                'CBDevelopersUserGroup'
+            );
+        }
+
+        if ($canModify !== true) {
+            $canModify = CBUsers::countOfUsers() < 2;
+        }
+
+        return $canModify;
+    }
+    /* userCanModifyMembership() */
 
 
 
