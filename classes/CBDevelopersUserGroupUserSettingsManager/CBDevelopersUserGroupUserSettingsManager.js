@@ -7,6 +7,7 @@
     CBModel,
     CBUI,
     CBUIBooleanSwitchPart,
+    CBUIPanel,
     Colby,
 */
 
@@ -108,18 +109,36 @@
         switchPart.value = targetUserData.targetUserIsMemberOfUserGroup;
 
         switchPart.changed = function () {
-            let ajaxFunctionName = "removeUser";
+            let ajaxFunctionName;
+            let confirm;
 
             if (switchPart.value) {
                 ajaxFunctionName = "addUser";
+
+                confirm = Promise.resolve(true);
+            } else {
+                ajaxFunctionName = "removeUser";
+
+                confirm = CBUIPanel.confirmText(
+                    "Are you sure you want to remove this user " +
+                    "from the CBDevelopersUserGroup?"
+                );
             }
 
-            Colby.callAjaxFunction(
-                "CBUserGroup",
-                ajaxFunctionName,
-                {
-                    userCBID: targetUserCBID,
-                    userGroupClassName: 'CBDevelopersUserGroup',
+            confirm.then(
+                function (wasConfirmed) {
+                    if (wasConfirmed) {
+                        return Colby.callAjaxFunction(
+                            "CBUserGroup",
+                            ajaxFunctionName,
+                            {
+                                userCBID: targetUserCBID,
+                                userGroupClassName: 'CBDevelopersUserGroup',
+                            }
+                        );
+                    } else {
+                        switchPart.value = true;
+                    }
                 }
             ).catch(
                 function (error) {
