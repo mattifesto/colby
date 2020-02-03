@@ -74,4 +74,27 @@ final class CBDevelopersUserGroup {
         ];
     }
 
+
+
+    /* -- CBUserGroup interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @param CBID $userCBID
+     *
+     * @return bool
+     */
+    static function CBUserGroup_userCanModifyMembership(
+        string $userCBID
+    ): bool {
+        $isDeveloper = CBUserGroup::userIsMemberOfUserGroup(
+            $userCBID,
+            'CBDevelopersUserGroup'
+        );
+
+        return $isDeveloper;
+    }
+    /* CBUserGroup_userCanModifyMembership() */
+
 }
