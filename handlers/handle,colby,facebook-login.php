@@ -3,7 +3,7 @@
 /**
  * @NOTE 2020_01_28
  *
- *      Visiting /colby/facebook-login/ when you are alread signed in will
+ *      Visiting /colby/facebook-login/ when you are already signed in will
  *      behave as if you are not already signed in. This is probably not the
  *      correct behavior, but we are currently hardening the sign in/sign out
  *      processes since signing in using email has recently been added.
