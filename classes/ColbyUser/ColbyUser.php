@@ -240,13 +240,13 @@ final class ColbyUser {
             $userSpecUpdates
         );
 
-        if ($thisIsTheFirstLoginOfTheFirstUser) {
-            CBUser::initializeFirstUser($userCBID);
-        }
-
         ColbyUser::loginUser(
             $userCBID
         );
+
+        if ($thisIsTheFirstLoginOfTheFirstUser) {
+            CBUser::initializeFirstUser($userCBID);
+        }
     }
     /* loginFacebookUser() */
 

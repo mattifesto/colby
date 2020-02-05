@@ -280,13 +280,13 @@ final class CBUser_PotentialUser {
             }
         );
 
-        if ($thisIsTheFirstLoginOfTheFirstUser) {
-            CBUser::initializeFirstUser($userCBID);
-        }
-
         ColbyUser::loginUser(
             $userCBID
         );
+
+        if ($thisIsTheFirstLoginOfTheFirstUser) {
+            CBUser::initializeFirstUser($userCBID);
+        }
 
         return (object)[
             'succeeded' => true,
