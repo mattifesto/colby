@@ -2,31 +2,27 @@
 
 $currentUserCBID = ColbyUser::getCurrentUserCBID();
 
-$viewSpecs = [];
+/**
+ * If the user isn't signed in redirect them to the sign in page.
+ */
 
 if ($currentUserCBID === null) {
-    array_push(
-        $viewSpecs,
-        (object)[
-            'className' => 'CBFacebookSignInView',
-        ],
-        (object)[
-            'className' => 'CBSignInView',
-        ],
+    header(
+        'Location: ' .
+        CBUser::getSignInPageURL()
     );
-} else {
-    array_push(
-        $viewSpecs,
-        (object)[
-            'className' => 'CBCurrentUserView',
-        ]
-    );
+
+    exit();
 }
 
 $pageSpec = CBModelTemplateCatalog::fetchLivePageTemplate(
     (object)[
         'title' => 'User',
-        'sections' => $viewSpecs,
+        'sections' => [
+            (object)[
+                'className' => 'CBCurrentUserView',
+            ],
+        ],
     ]
 );
 
