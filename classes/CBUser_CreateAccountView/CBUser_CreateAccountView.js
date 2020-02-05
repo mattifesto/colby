@@ -82,7 +82,7 @@
 
         viewElement.appendChild(rootElement);
 
-        elements[1].textContent = "Sign Up";
+        elements[1].textContent = "Create New Account";
 
         /* form */
 
