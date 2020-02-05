@@ -265,111 +265,6 @@ final class CBUser {
 
 
 
-    /**
-     * @param object $args
-     *
-     *      {
-     *          emailAddress: string
-     *          password: string
-     *      }
-     *
-     * @return object
-     *
-     *      {
-     *          succeeded: bool
-     *
-     *          cbmessage: string
-     *
-     *              This will only be returned if succeeded is false.
-     *      }
-     */
-    static function CBAjax_signIn(
-        stdClass $args
-    ): stdClass {
-        $emailAddress = CBModel::valueAsEmail(
-            $args,
-            'emailAddress'
-        );
-
-        if (
-            $emailAddress === null
-        ) {
-            return (object)[
-                'cbmessage' => 'Your email address is not valid.'
-            ];
-        }
-
-        $password = CBModel::valueToString(
-            $args,
-            'password'
-        );
-
-        $userCBID = CBUser::emailToUserCBID($emailAddress);
-
-        if ($userCBID === null) {
-            return (object)[
-                'cbmessage' => <<<EOT
-
-                    No user exists with this email address.
-
-                EOT,
-            ];
-        }
-
-        $userModel = CBModels::fetchModelByIDNullable(
-            $userCBID
-        );
-
-        $passwordHash = CBModel::valueToString(
-            $userModel,
-            'passwordHash'
-        );
-
-        $passwordIsVerified = password_verify(
-            $password,
-            $passwordHash
-        );
-
-        if ($passwordIsVerified !== true) {
-            return (object)[
-                'cbmessage' => <<<EOT
-
-                    Your password is not correct.
-
-                EOT,
-            ];
-        }
-
-        $userSpecUpdates = (object)[
-            'ID' => $userCBID,
-            'lastLoggedIn' => time(),
-        ];
-
-        CBModelUpdater::update(
-            $userSpecUpdates
-        );
-
-        ColbyUser::loginUser(
-            $userCBID
-        );
-
-        return (object)[
-            'succeeded' => true,
-        ];
-    }
-    /* CBAjax_signIn() */
-
-
-
-    /**
-     * @return string
-     */
-    static function CBAjax_signIn_getUserGroupClassName(): string {
-        return 'CBPublicUserGroup';
-    }
-
-
-
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
 
@@ -804,6 +699,36 @@ final class CBUser {
 
 
     /**
+     * @param string|null $destinationURL
+     *
+     * @return string
+     */
+    static function getSignInPageURL(
+        ?string $destinationURL = null
+    ): string {
+        if (empty($destinationURL)) {
+            $destinationURL = $_SERVER['REQUEST_URI'];
+        }
+
+        $state = (object)[
+            'destinationURL' => $destinationURL,
+        ];
+
+        $stateAsJSON = json_encode($state);
+
+        $signInPageURL = (
+            cbsiteurl() .
+            '/signin/?state=' .
+            urlencode($stateAsJSON)
+        );
+
+        return $signInPageURL;
+    }
+    /* getSignInPageURL() */
+
+
+
+    /**
      * This function is called once per website. After the first user has signed
      * in they are assumed to belong to the groups CBAdministratorsUserGroup and
      * CBDevelopersUserGroup.
@@ -860,5 +785,98 @@ final class CBUser {
         }
     }
     /* passwordIssues() */
+
+
+
+    /**
+     * @param string $emailAddress
+     * @param string $password
+     *
+     * @return object
+     *
+     *      The properties of the returned object will not always be set. They
+     *      should be accessed with CBModel functions.
+     *
+     *      {
+     *          succeeded: bool
+     *
+     *              This will be true if the user was logged in; otherwise
+     *              false.
+     *
+     *          cbmessage: string
+     *
+     *              This will only be returned if succeeded is false.
+     *      }
+     */
+    static function signIn(
+        string $emailAddress,
+        string $password
+    ): stdClass {
+        $emailAddress = CBConvert::valueAsEmail(
+            $emailAddress
+        );
+
+        if (
+            $emailAddress === null
+        ) {
+            return (object)[
+                'cbmessage' => 'Your email address is not valid.'
+            ];
+        }
+
+        $userCBID = CBUser::emailToUserCBID($emailAddress);
+
+        if ($userCBID === null) {
+            return (object)[
+                'cbmessage' => <<<EOT
+
+                    No user exists with this email address.
+
+                EOT,
+            ];
+        }
+
+        $userModel = CBModels::fetchModelByIDNullable(
+            $userCBID
+        );
+
+        $passwordHash = CBModel::valueToString(
+            $userModel,
+            'passwordHash'
+        );
+
+        $passwordIsVerified = password_verify(
+            $password,
+            $passwordHash
+        );
+
+        if ($passwordIsVerified !== true) {
+            return (object)[
+                'cbmessage' => <<<EOT
+
+                    Your password is not correct.
+
+                EOT,
+            ];
+        }
+
+        $userSpecUpdates = (object)[
+            'ID' => $userCBID,
+            'lastLoggedIn' => time(),
+        ];
+
+        CBModelUpdater::update(
+            $userSpecUpdates
+        );
+
+        ColbyUser::loginUser(
+            $userCBID
+        );
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* signIn() */
 
 }
