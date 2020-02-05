@@ -1,41 +1,42 @@
 <?php
 
-$currentUserIsLoggedIn = ColbyUser::currentUserIsLoggedIn();
+/**
+ * This handler is included when a user doesn't have authorization to view a
+ * another page. It will either redirect to the sign in page or display a
+ * message stating that the user is not authorized to view the page.
+ */
 
-$pageTitle = (
-    $currentUserIsLoggedIn ?
-    'Authorization Failed' :
-    'Please Log In'
-);
+$currentUserCBID = ColbyUser::getCurrentUserCBID();
 
-$viewSpecs = [];
+/**
+ * If the user isn't signed in redirect them to the sign in page.
+ */
 
-if ($currentUserIsLoggedIn) {
-    $viewSpecs[] = (object)[
-        'className' => 'CBMessageView',
-        'markup' => <<<EOT
-            --- p center
-            You are not authorized to view this page.
-            ---
-        EOT,
-    ];
-} else {
-    array_push(
-        $viewSpecs,
-        (object)[
-            'className' => 'CBFacebookSignInView',
-        ],
-        (object)[
-            'className' => 'CBSignInView',
-        ]
+if ($currentUserCBID === null) {
+    header(
+        'Location: ' .
+        CBUser::getSignInPageURL()
     );
+
+    exit();
 }
+
+
 
 $pageSpec = CBModelTemplateCatalog::fetchLivePageTemplate(
     (object)[
-        'title' => $pageTitle,
+        'title' => 'Authorization Failed',
         'description' => 'You are not authorized to view this page.',
-        'sections' => $viewSpecs,
+        'sections' => [
+            (object)[
+                'className' => 'CBMessageView',
+                'markup' => <<<EOT
+                    --- p center
+                    You are not authorized to view this page.
+                    ---
+                EOT,
+            ],
+        ],
     ]
 );
 
