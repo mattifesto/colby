@@ -246,6 +246,10 @@ final class CBUser_PotentialUser {
             ];
         }
 
+        $thisIsTheFirstLoginOfTheFirstUser = (
+            CBUsers::countOfUsers() === 0
+        );
+
         $userCBID = CBID::generateRandomCBID();
 
         $userSpec = (object)[
@@ -276,9 +280,7 @@ final class CBUser_PotentialUser {
             }
         );
 
-        $countOfUsers = CBUsers::countOfUsers();
-
-        if ($countOfUsers < 2) {
+        if ($thisIsTheFirstLoginOfTheFirstUser) {
             CBUser::initializeFirstUser($userCBID);
         }
 

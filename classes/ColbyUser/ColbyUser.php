@@ -186,6 +186,8 @@ final class ColbyUser {
             time() + (60 * 60 * 24 * 30),
             '/'
         );
+
+        ColbyUser::$currentUserCBID = $userCBID;
     }
     /* loginUser() */
 
@@ -210,7 +212,7 @@ final class ColbyUser {
         string $facebookAccessToken,
         string $facebookName
     ): void {
-        $countOfUsers = 1;
+        $thisIsTheFirstLoginOfTheFirstUser = false;
 
         $userCBID = CBUser::facebookUserIDToUserCBID(
             $facebookUserID
@@ -219,6 +221,10 @@ final class ColbyUser {
         if ($userCBID === null) {
             $userCBID = CBID::generateRandomCBID();
             $countOfUsers = CBUsers::countOfUsers();
+
+            if ($countOfUsers === 0) {
+                $thisIsTheFirstLoginOfTheFirstUser = true;
+            }
         }
 
         $userSpecUpdates = (object)[
@@ -234,7 +240,7 @@ final class ColbyUser {
             $userSpecUpdates
         );
 
-        if ($countOfUsers < 2) {
+        if ($thisIsTheFirstLoginOfTheFirstUser) {
             CBUser::initializeFirstUser($userCBID);
         }
 
