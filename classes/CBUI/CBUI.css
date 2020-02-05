@@ -42,6 +42,11 @@ a.CBUI_action {
  *
  *      The class styles an element to look like a button which can be used
  *      instead of a link style for high priority user interface items.
+ *
+ * 2020_02_03
+ *
+ *      Styles were added to make sure that <input type="submit"> elements with
+ *      this class name will look the same as div elements.
  */
 .CBUI_button1 {
     display: inline-flex;
@@ -54,6 +59,7 @@ a.CBUI_action {
     border-radius: 5px;
     box-sizing: border-box;
     color: var(--CBButtonTextColor);
+    font: inherit;
     max-width: 100%;
     min-height: 44px;
     padding: 5px 10px;
