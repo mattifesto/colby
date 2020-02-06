@@ -11,7 +11,7 @@ final class CBUserSettingsManager {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v569.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v572.js', cbsysurl()),
         ];
     }
 
@@ -22,9 +22,11 @@ final class CBUserSettingsManager {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBException',
             'CBModel',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 
 
 
