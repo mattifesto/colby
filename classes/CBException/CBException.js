@@ -15,12 +15,12 @@ var CBException = {
      * @return string
      */
     errorToExtendedMessage: function (error) {
-        let extendedMessage = CBModel.valueToString(
+        let cbmessage = CBModel.valueToString(
             error,
             'CBException.extendedMessage'
         );
 
-        if (extendedMessage === "") {
+        if (cbmessage === "") {
             return CBMessageMarkup.stringToMessage(
                 CBModel.valueToString(
                     error,
@@ -29,7 +29,7 @@ var CBException = {
             );
         }
 
-        return extendedMessage;
+        return cbmessage;
     },
     /* errorToExtendedMessage() */
 
@@ -78,12 +78,12 @@ var CBException = {
      *      A secondary reason is that this allows the caller to create
      *      whichever specific type of error object they want to use.
      *
-     * @param string message
+     * @param string cbmessage
      * @param ID sourceID
      *
      * @return Error
      */
-    withError: function (error, extendedMessage, sourceID) {
+    withError: function (error, cbmessage, sourceID) {
         if (error.CBException !== undefined) {
             Colby.reportError(
                 Error(
@@ -99,7 +99,7 @@ var CBException = {
 
         let pod = {
             get extendedMessage() {
-                return extendedMessage;
+                return cbmessage;
             },
             get sourceID() {
                 return sourceID;
@@ -139,7 +139,7 @@ var CBException = {
             CBConvert.valueToPrettyJSON(value)
         );
 
-        let extendedMessage = `
+        let cbmessage = `
 
             ${messageAsMessage}
 
@@ -150,7 +150,7 @@ var CBException = {
 
         return CBException.withError(
             error,
-            extendedMessage,
+            cbmessage,
             sourceID
         );
     },
