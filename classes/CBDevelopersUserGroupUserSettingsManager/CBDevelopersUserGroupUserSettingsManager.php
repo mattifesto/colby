@@ -119,7 +119,7 @@ final class CBDevelopersUserGroupUserSettingsManager {
     static function CBInstall_install(): void {
         CBUserSettingsManagerCatalog::installUserSettingsManager(
             __CLASS__,
-            20
+            11
         );
     }
 
