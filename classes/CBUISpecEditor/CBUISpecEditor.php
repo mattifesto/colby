@@ -4,15 +4,18 @@ final class CBUISpecEditor {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v519.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v572.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -26,5 +29,6 @@ final class CBUISpecEditor {
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
+
 }
 /* CBUISpecEditor */

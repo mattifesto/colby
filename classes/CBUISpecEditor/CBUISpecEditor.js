@@ -33,41 +33,88 @@ var CBUISpecEditor = {
      *      }
      */
     create: function (args) {
-        let spec = CBModel.valueAsModel(args, "spec");
+        let useStrict = CBModel.valueToBool(
+            args,
+            "useStrict"
+        );
+
+        let spec = CBModel.valueAsModel(
+            args,
+            "spec"
+        );
 
         if (spec === undefined) {
-            throw CBException.withError(
-                TypeError("The \"spec\" argument must be a model."),
-                "",
+            throw CBException.withValueRelatedError(
+                TypeError(
+                    "The \"spec\" property must be a model."
+                ),
+                args,
                 "3593d2e3851720b1f4155b5e502b0a9bf7f33512"
             );
         }
 
-        let useStrict = CBModel.valueToBool(args, "useStrict");
-        let className = CBModel.valueToString(spec, "className");
+        let specChangedCallback = CBModel.valueAsFunction(
+            args,
+            "specChangedCallback"
+        );
 
+        if (
+            useStrict &&
+            specChangedCallback === undefined
+        ) {
+            throw CBException.withValueRelatedError(
+                TypeError(
+                    "The \"specChangedCallback\" argument must be a function."
+                ),
+                args,
+                "8c4e0c27b526a1ee3d1501a75f4fcbbc944e4b18"
+            );
+        }
+
+        let className = CBModel.valueToString(
+            spec,
+            "className"
+        );
+
+        let globalVariableName = className + "Editor";
         let editorObject;
 
         if (useStrict) {
-            editorObject = window[className + "Editor"];
+            editorObject = window[globalVariableName];
+
+            if (typeof editorObject !== "object") {
+                throw Error(
+                    `The ${globalVariableName} global variable is not an object`
+                );
+            }
         } else {
             editorObject =
-            window[className + "Editor"] ||
+            window[globalVariableName] ||
             window[className + "EditorFactory"] ||
             CBDefaultEditor;
         }
 
+        let functionName = "CBUISpecEditor_createEditorElement";
+
         let createEditorElementInterface = CBModel.valueAsFunction(
             editorObject,
-            "CBUISpecEditor_createEditorElement"
+            functionName
         );
 
         if (createEditorElementInterface === undefined) {
-            /* deprecated */
-            createEditorElementInterface = CBModel.valueAsFunction(
-                editorObject,
-                "createEditor"
-            );
+            if (useStrict) {
+                throw Error(
+                    `The ${functionName}() interface has not been ` +
+                    `implemented on the ${globalVariableName} object`
+                );
+            } else {
+                /* deprecated */
+                createEditorElementInterface = CBModel.valueAsFunction(
+                    editorObject,
+                    "createEditor"
+                );
+            }
+
         }
 
         let editorElement;
@@ -75,8 +122,8 @@ var CBUISpecEditor = {
         if (createEditorElementInterface) {
             editorElement = createEditorElementInterface(
                 {
-                    spec: spec,
-                    specChangedCallback: args.specChangedCallback,
+                    spec,
+                    specChangedCallback,
                 }
             );
         }
