@@ -3,6 +3,8 @@
 /* jshint esversion: 6 */
 /* exported CBModel */
 /* globals
+    CBException,
+    CBModel,
     CBUIPanel,
     Colby,
 */
@@ -11,42 +13,66 @@ var CBUISpecSaver = {
 
     specDataByID: {},
 
+
+
     /**
-     * @param object args.spec
-     * @param function? args.fulfilledCallback
-     * @param function? args.rejectedCallback
+     * @param object args
+     *
+     *      {
+     *          spec: object
+     *          fulfilledCallback: function|undefined
+     *          rejectedCallback: function|undefined
+     *      }
      *
      * @return object
      *
      *      {
-     *          specChangedCallback: function,
+     *          specChangedCallback: function
      *      }
      */
     create: function (args) {
-        if (CBUISpecSaver.specDataByID[args.spec.ID]) {
+        let specCBID = CBModel.valueAsCBID(
+            args,
+            "spec.ID"
+        );
+
+        if (specCBID === undefined) {
+            throw CBException.withValueRelatedError(
+                Error(
+                    "The \"spec\" property value must have " +
+                    "a valid \"ID\" property value."
+                ),
+                args,
+                "0ea31d26511a1cd77679e793fdac50d7478723c9"
+            );
+        }
+
+        if (CBUISpecSaver.specDataByID[specCBID]) {
             CBUIPanel.displayText(
                 "This spec already has a specSaver."
             );
         } else {
-            CBUISpecSaver.specDataByID[args.spec.ID] = {
+            CBUISpecSaver.specDataByID[specCBID] = {
                 fulfilledCallback: args.fulfilledCallback,
                 rejectedCallback: args.rejectedCallback,
                 spec: args.spec,
             };
         }
 
-        var specChangedCallback = CBUISpecSaver.specDidChange.bind(
-            undefined,
-            {
-                ID: args.spec.ID,
-            }
-        );
+        let specChangedCallback = function () {
+            CBUISpecSaver.specDidChange(
+                {
+                    ID: specCBID,
+                }
+            );
+        };
 
         return {
-            specChangedCallback: specChangedCallback,
+            specChangedCallback,
         };
     },
     /* create() */
+
 
 
     /**
@@ -100,27 +126,62 @@ var CBUISpecSaver = {
     /* flush() */
 
 
+
     /**
-     * @param hex160 args.ID
+     * @param object args
+     *
+     *      {
+     *          ID: CBID
+     *      }
      *
      * @return undefined
      */
     specDidChange: function (args) {
-        var specData = CBUISpecSaver.specDataByID[args.ID];
+        let specCBID = CBModel.valueAsCBID(
+            args,
+            "ID"
+        );
+
+        var specData = CBUISpecSaver.specDataByID[
+            specCBID
+        ];
 
         if (specData.timeoutID) {
-            clearTimeout(specData.timeoutID);
+            clearTimeout(
+                specData.timeoutID
+            );
+
             specData.timeoutID = undefined;
         }
 
-        specData.timeoutID = setTimeout(callback, 1000);
+        specData.timeoutID = setTimeout(
+            specDidChange_save,
+            1000
+        );
 
-        function callback() {
+
+
+        /* -- closures -- -- -- -- -- */
+
+
+
+        /**
+         * @return undefined
+         */
+        function specDidChange_save() {
             specData.timeoutID = undefined;
-            CBUISpecSaver.requestSave({ID: args.ID});
+
+            CBUISpecSaver.requestSave(
+                {
+                    ID: specCBID,
+                }
+            );
         }
+        /* specDidChange_save() */
+
     },
     /* specDidChange() */
+
 
 
     /**
