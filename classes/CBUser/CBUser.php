@@ -703,6 +703,36 @@ final class CBUser {
      *
      * @return string
      */
+    static function getCreateAccountPageURL(
+        ?string $destinationURL = null
+    ): string {
+        if (empty($destinationURL)) {
+            $destinationURL = $_SERVER['REQUEST_URI'];
+        }
+
+        $state = (object)[
+            'destinationURL' => $destinationURL,
+        ];
+
+        $stateAsJSON = json_encode($state);
+
+        $signInPageURL = (
+            cbsiteurl() .
+            '/colby/user/create-account/?state=' .
+            urlencode($stateAsJSON)
+        );
+
+        return $signInPageURL;
+    }
+    /* getCreateAccountPageURL() */
+
+
+
+    /**
+     * @param string|null $destinationURL
+     *
+     * @return string
+     */
     static function getSignInPageURL(
         ?string $destinationURL = null
     ): string {
