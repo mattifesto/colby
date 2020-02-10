@@ -1,5 +1,17 @@
 <?php
 
+try {
+    $stateAsJSON = cb_query_string_value('state');
+    $state = json_decode($stateAsJSON);
+} catch (Throwable $throwable) {
+    $state = (object)[];
+}
+
+$destinationURL = CBModel::valueToString(
+    $state,
+    'destinationURL'
+);
+
 $currentUserCBID = ColbyUser::getCurrentUserCBID();
 
 $sections = [];
@@ -24,6 +36,7 @@ array_push(
     $sections,
     (object)[
         'className' => 'CBUser_CreateAccountView',
+        'destinationURL' => $destinationURL,
     ]
 );
 
