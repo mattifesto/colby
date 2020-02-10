@@ -30,9 +30,11 @@
 
         for (let index = 0; index < viewElements.length; index += 1) {
             let viewElement = viewElements.item(index);
+            let destinationURL = viewElement.dataset.destinationURL;
 
             initializeViewElement(
-                viewElement
+                viewElement,
+                destinationURL
             );
         }
     }
@@ -256,13 +258,17 @@
 
     /**
      * @param Element viewElement
+     * @param string destinationURL
      *
      * @return Promise -> undefined
      */
     async function initializeViewElement(
-        viewElement
+        viewElement,
+        destinationURL
     ) {
         try {
+            destinationURL = destinationURL || "/";
+
             let potentialUserCBID = await createPotentialUserModel(
                 viewElement
             );
@@ -274,7 +280,7 @@
                 potentialUserCBID
             );
 
-            window.location = "/colby/user/";
+            window.location = destinationURL;
         } catch (error) {
             CBErrorHandler.displayAndReport(error);
         }

@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * @TODO 2020_02_10
+ *
+ * Consider making this a "local" view similar to SignInView in the sign in
+ * handler. This view should only be used on page rendered by the create account
+ * handler, not any other pages.
+ */
 final class CBUser_CreateAccountView {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
@@ -11,7 +18,7 @@ final class CBUser_CreateAccountView {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v571.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v572.js', cbsysurl()),
         ];
     }
 
@@ -45,7 +52,12 @@ final class CBUser_CreateAccountView {
     static function CBModel_build(
         stdClass $viewSpec
     ): stdClass {
-        return (object)[];
+        return (object)[
+            'destinationURL' => CBModel::valueToString(
+                $viewSpec,
+                'destinationURL'
+            ),
+        ];
     }
 
 
@@ -62,9 +74,17 @@ final class CBUser_CreateAccountView {
     static function CBView_render(
         stdClass $viewModel
     ): void {
+        $destinationURL = CBModel::valueToString(
+            $viewModel,
+            'destinationURL'
+        );
+
         ?>
 
-        <div class="CBUser_CreateAccountView">
+        <div
+            class="CBUser_CreateAccountView"
+            data-destination-u-r-l="<?= cbhtml($destinationURL) ?>"
+        >
         </div>
 
         <?php
