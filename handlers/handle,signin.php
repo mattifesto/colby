@@ -173,7 +173,11 @@ final class SignInView {
             'destinationURL'
         );
 
-        $actionURL = CBUser::getSignInPageURL(
+        $formActionURL = CBUser::getSignInPageURL(
+            $destinationURL
+        );
+
+        $createAccountURL = CBUser::getCreateAccountPageURL(
             $destinationURL
         );
 
@@ -181,7 +185,7 @@ final class SignInView {
 
         <form
             method="post"
-            action="<?= $actionURL ?>"
+            action="<?= $formActionURL ?>"
             style="padding-bottom: 44px;"
         >
             <div class="CBUI_sectionContainer">
@@ -239,7 +243,7 @@ final class SignInView {
             <div class="CBUI_section">
                 <a
                     class="CBUI_action"
-                    href="/colby/user/create-account/"
+                    href="<?= cbhtml($createAccountURL) ?>"
                 >Create New Account &gt;</a>
 
                 <a
@@ -248,6 +252,7 @@ final class SignInView {
                 >Reset Password &gt;</a>
             </div>
         </div>
+
         <?php
     }
     /* CBView_render() */
