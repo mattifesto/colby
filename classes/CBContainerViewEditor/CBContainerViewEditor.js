@@ -20,6 +20,9 @@
 
 var CBContainerViewEditor = {
 
+    /* -- CBUISpec interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param object spec
@@ -80,13 +83,19 @@ var CBContainerViewEditor = {
 
 
 
+    /* -- CBUISpecEditor interfaces -- -- -- -- -- */
+
+
+
     /**
      * @param object args.spec
      * @param function args.specChangedCallback
      *
      * @return Element
      */
-    createEditor: function(args) {
+    CBUISpecEditor_createEditorElement(
+        args
+    ) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBContainerViewEditor";
@@ -471,7 +480,7 @@ var CBContainerViewEditor = {
         /* createImageEditorElement() */
 
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
 
 
 

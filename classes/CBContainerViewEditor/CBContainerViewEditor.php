@@ -4,22 +4,23 @@ final class CBContainerViewEditor {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v537.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v572.js', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
     /**
-     * @return [[string, mixed]]
+     * @return [[<name>, <value>]]
      */
-    static function CBHTMLOutput_JavaScriptVariables() {
+    static function CBHTMLOutput_JavaScriptVariables(): array {
         return [
             [
                 'CBContainerViewEditor_addableClassNames',
@@ -34,7 +35,7 @@ final class CBContainerViewEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+    static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBImage',
             'CBModel',
