@@ -4,15 +4,17 @@ final class CBContainerView2Editor {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v572.js', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -27,6 +29,7 @@ final class CBContainerView2Editor {
         ];
     }
     /* CBHTMLOutput_JavaScriptVariables() */
+
 
 
     /**
@@ -46,5 +49,6 @@ final class CBContainerView2Editor {
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
+
 }
 /* CBContainerView2Editor */

@@ -16,7 +16,13 @@
     CBContainerView2Editor_addableClassNames,
 */
 
+
+
 var CBContainerView2Editor = {
+
+    /* -- CBUISpecEditor interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param object args.spec
@@ -24,7 +30,9 @@ var CBContainerView2Editor = {
      *
      * @return Element
      */
-     createEditor: function (args) {
+    CBUISpecEditor_createEditorElement(
+        args
+    ) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBContainerView2Editor";
@@ -177,10 +185,13 @@ var CBContainerView2Editor = {
 
         return element;
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
+
 
 
     /* -- CBUISpec interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param object spec
@@ -209,6 +220,7 @@ var CBContainerView2Editor = {
     /* CBUISpec_toDescription() */
 
 
+
     /**
      * @param object spec
      *
@@ -235,5 +247,6 @@ var CBContainerView2Editor = {
         }
     },
     /* CBUISpec_toThumbnailURL() */
+
 };
 /* CBContainerView2Editor */
