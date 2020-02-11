@@ -18,6 +18,10 @@
 
 var CBArtworkViewEditor = {
 
+    /* -- CBUISpecEditor interfaces -- -- -- -- -- */
+
+
+
     /**
      * @param object args
      *
@@ -28,7 +32,9 @@ var CBArtworkViewEditor = {
      *
      * @return Element
      */
-    createEditor: function (args) {
+    CBUISpecEditor_createEditorElement(
+        args
+    ) {
         let spec = args.spec;
         let specChangedCallback = args.specChangedCallback;
         let sectionElement, item;
@@ -289,7 +295,11 @@ var CBArtworkViewEditor = {
         }
         /* createEditor_handleImageRemoved() */
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
+
+
+
+    /* -- CBUISpec interfaces -- -- -- -- -- */
 
 
 
