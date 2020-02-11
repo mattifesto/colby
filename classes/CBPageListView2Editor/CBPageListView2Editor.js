@@ -8,7 +8,13 @@
     CBUIStringEditor,
 */
 
+
+
 var CBPageListView2Editor = {
+
+    /* -- CBUISpecEditor interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param object args
@@ -20,7 +26,9 @@ var CBPageListView2Editor = {
      *
      * @return Element
      */
-    createEditor: function (args) {
+    CBUISpecEditor_createEditorElement(
+        args
+    ) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBPageListView2Editor";
@@ -91,7 +99,8 @@ var CBPageListView2Editor = {
 
         return element;
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
+
 
 
     /**
@@ -108,5 +117,6 @@ var CBPageListView2Editor = {
         return description;
     },
     /* CBUISpec_toDescription() */
+
 };
 /* CBPageListView2Editor */

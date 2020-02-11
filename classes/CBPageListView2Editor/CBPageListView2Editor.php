@@ -4,15 +4,17 @@ final class CBPageListView2Editor {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- --  */
 
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v476.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v572.js', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -26,4 +28,5 @@ final class CBPageListView2Editor {
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
+
 }
