@@ -131,13 +131,15 @@ final class CBUser_PotentialPassword {
             }
         );
 
+        $siteName = CBSitePreferences::siteName();
+
         $cbmessage = <<<EOT
 
-            The one time password that will allow you to change the password on
-            the account for this email address is:
+            The one time password that will allow you to change the password for
+            the account on the {$siteName} website for this email address is:
 
             --- blockquote
-            {$oneTimePassword}
+            ({$oneTimePassword} (code))
             ---
 
         EOT;
@@ -150,7 +152,7 @@ final class CBUser_PotentialPassword {
         CBEmail::sendCBMessage(
             $emailAddress,
             $fullName,
-            'OTP',
+            "{$siteName} One Time Password",
             $cbmessage
         );
 
