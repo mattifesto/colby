@@ -4,15 +4,17 @@ final class CBMenuViewEditor {
 
     /* -- CBHtMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v513.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v572.js', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -33,6 +35,7 @@ final class CBMenuViewEditor {
     /* CBHTMLOutput_JavaScriptVariables() */
 
 
+
     /**
      * @return [string]
      */
@@ -47,7 +50,10 @@ final class CBMenuViewEditor {
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @return [menuID => [object]]
@@ -59,7 +65,7 @@ final class CBMenuViewEditor {
             FROM    CBModels
             WHERE   `className` = 'CBMenu'
 
-EOT;
+        EOT;
 
         $menuIDs = CBDB::SQLToArray($SQL);
         $menus = CBModels::fetchModelsByID($menuIDs);
@@ -86,6 +92,7 @@ EOT;
     /* fetchMenuItemOptionsByMenuID() */
 
 
+
     /**
      * @return [object]
      */
@@ -96,16 +103,20 @@ EOT;
             FROM    CBModels
             WHERE   `className` = 'CBMenu'
 
-EOT;
+        EOT;
 
         $options = CBDB::SQLToObjects($SQL);
 
-        array_unshift($options, (object)[
-            'title' => 'None',
-        ]);
+        array_unshift(
+            $options,
+            (object)[
+                'title' => 'None',
+            ]
+        );
 
         return $options;
     }
     /* fetchMenuOptions() */
+
 }
 /* CBMenuViewEditor */

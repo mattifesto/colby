@@ -12,7 +12,13 @@
     CBMenuViewEditor_menuOptions,
 */
 
+
+
 var CBMenuViewEditor = {
+
+    /* -- CBUISpecEditor interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param object args
@@ -24,7 +30,9 @@ var CBMenuViewEditor = {
      *
      * @return Element
      */
-    createEditor: function (args) {
+    CBUISpecEditor_createEditorElement(
+        args
+    ) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBMenuViewEditor";
@@ -139,7 +147,8 @@ var CBMenuViewEditor = {
             menuItemSelector.updateOptionsCallback(options);
         }
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
+
 
 
     /**
