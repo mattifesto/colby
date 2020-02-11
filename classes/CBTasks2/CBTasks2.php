@@ -702,13 +702,13 @@ final class CBTasks2 {
 
             EOT;
 
-            $task = CBDB::SQLToObject($SQL, /* retryOnDeadlock */ true);
+            $task = CBDB::SQLToObjectNullable($SQL);
 
             /**
              * If someone deleted or manually ran the task return false.
              */
 
-            if ($task === false) {
+            if ($task === null) {
                 return false;
             }
 
