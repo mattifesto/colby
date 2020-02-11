@@ -323,10 +323,24 @@ final class CBUserGroup {
             );
         }
 
+        $currentUserCBID = ColbyUser::getCurrentUserCBID();
+
         $canModifyMembership = CBUserGroup::userCanModifyMembership(
-            ColbyUser::getCurrentUserCBID(),
+            $currentUserCBID,
             $userGroupClassName
         );
+
+        if (
+            $canModifyMembership !== true &&
+            $currentUserCBID !== null &&
+            count($userCBIDs) === 1 &&
+            $userCBIDs[0] = $currentUserCBID
+        ) {
+            $canModifyMembership = CBUserGroup::userCanModifyOwnMembership(
+                $currentUserCBID,
+                $userGroupClassName
+            );
+        }
 
         if ($canModifyMembership !== true) {
             throw new CBExceptionWithValue(
@@ -513,10 +527,24 @@ final class CBUserGroup {
             );
         }
 
+        $currentUserCBID = ColbyUser::getCurrentUserCBID();
+
         $canModifyMembership = CBUserGroup::userCanModifyMembership(
-            ColbyUser::getCurrentUserCBID(),
+            $currentUserCBID,
             $userGroupClassName
         );
+
+        if (
+            $canModifyMembership !== true &&
+            $currentUserCBID !== null &&
+            count($userCBIDs) === 1 &&
+            $userCBIDs[0] = $currentUserCBID
+        ) {
+            $canModifyMembership = CBUserGroup::userCanModifyOwnMembership(
+                $currentUserCBID,
+                $userGroupClassName
+            );
+        }
 
         if ($canModifyMembership !== true) {
             throw new CBExceptionWithValue(
@@ -587,7 +615,10 @@ final class CBUserGroup {
         );
 
         if (is_callable($function)) {
-            $canModify = call_user_func($function, $userCBID);
+            $canModify = call_user_func(
+                $function,
+                $userCBID
+            );
         } else {
             $canModify = CBUserGroup::userIsMemberOfUserGroup(
                 $userCBID,
@@ -618,6 +649,39 @@ final class CBUserGroup {
         return $canModify;
     }
     /* userCanModifyMembership() */
+
+
+
+    /**
+     * @param CBID $userCBID
+     * @param string $userGroupClassName
+     *
+     * @return bool
+     *
+     *      Returns true if the user is allowed to add and remove other users
+     *      from the group.
+     */
+    static function userCanModifyOwnMembership(
+        string $userCBID,
+        string $userGroupClassName
+    ): bool {
+        $function = (
+            $userGroupClassName .
+            '::CBUserGroup_userCanModifyOwnMembership'
+        );
+
+        if (is_callable($function)) {
+            $canModify = call_user_func(
+                $function,
+                $userCBID
+            );
+        } else {
+            $canModify = false;
+        }
+
+        return $canModify;
+    }
+    /* userCanModifyOwnMembership() */
 
 
 
