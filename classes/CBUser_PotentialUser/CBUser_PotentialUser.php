@@ -144,13 +144,15 @@ final class CBUser_PotentialUser {
             }
         );
 
+        $siteName = CBSitePreferences::siteName();
+
         $cbmessage = <<<EOT
 
             The one time password that will allow you to create a user account
-            for this email address is:
+            on the {$siteName} website for this email address is:
 
             --- blockquote
-            {$oneTimePassword}
+            ({$oneTimePassword} (code))
             ---
 
         EOT;
@@ -158,7 +160,7 @@ final class CBUser_PotentialUser {
         CBEmail::sendCBMessage(
             $emailAddress,
             $fullName,
-            'OTP',
+            "{$siteName} One Time Password",
             $cbmessage
         );
 
