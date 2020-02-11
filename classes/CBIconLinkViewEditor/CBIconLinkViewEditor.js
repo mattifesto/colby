@@ -12,7 +12,13 @@
     Colby,
 */
 
+
+
 var CBIconLinkViewEditor = {
+
+    /* -- CBUISpecEditor interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param object args
@@ -24,7 +30,9 @@ var CBIconLinkViewEditor = {
      *
      * @return Element
      */
-    createEditor: function (args) {
+    CBUISpecEditor_createEditorElement(
+        args
+    ) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBIconLinkViewEditor";
