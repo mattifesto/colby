@@ -18,15 +18,22 @@
 */
 
 
+
 var CBBackgroundViewEditor = {
 
     /**
-     * @param Object args.spec
-     * @param function args.specChangedCallback
+     * @param object args
+     *
+     *      {
+     *          spec: object
+     *          specChangedCallback: function
+     *      }
      *
      * @return Element
      */
-    createEditor: function (args) {
+    CBUISpecEditor_createEditorElement(
+        args
+    ) {
         CBBackgroundViewEditor.prepareSpec(args.spec);
 
         var section, item;
@@ -294,6 +301,10 @@ var CBBackgroundViewEditor = {
         }
     },
     /* CBUISpec_toDescription() */
+
+
+
+    /* -- CBUISpec interfaces -- -- -- -- -- */
 
 
 
