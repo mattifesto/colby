@@ -127,13 +127,17 @@ final class ColbyRequest {
         /**
          * @NOTE 2019_12_09
          *
-         *      At this point we can't quite assume that the request is expecting an
-         *      HTML response, but should probably set an exception handler that
-         *      will respond with HTML anyway.
+         *      At this point we can't quite assume that the request is
+         *      expecting an HTML response, but should probably set an exception
+         *      handler that will respond with HTML anyway.
          */
+
+
+        /* front page */
 
         if (ColbyRequest::currentRequestIsForTheFrontPage()) {
             $canonicalEncodedPath = '/';
+
             $function = function() {
                 $frontPageID = CBSitePreferences::frontPageID();
 
@@ -155,6 +159,9 @@ final class ColbyRequest {
             };
         }
 
+
+        /* robots.txt */
+
         else if (
             1 === $countOfStubs &&
             'robots.txt' === ColbyRequest::$decodedStubs[0]
@@ -165,6 +172,9 @@ final class ColbyRequest {
                 '/handlers/handle-robots.php';
             };
         }
+
+
+        /* sitemap.xml */
 
         else if (
             1 === $countOfStubs &&
@@ -177,11 +187,17 @@ final class ColbyRequest {
             };
         }
 
+
+        /* interpret URI */
+
         else {
             $canonicalEncodedPath = implode('/', ColbyRequest::$encodedStubs);
             $canonicalEncodedPath = "/{$canonicalEncodedPath}/";
             $allStubs = implode(',', ColbyRequest::$encodedStubs);
             $firstStub = ColbyRequest::$encodedStubs[0];
+
+
+            /* all stubs handler */
 
             if (
                 $allStubsHandlerFilepath = Colby::findFile(
@@ -193,6 +209,9 @@ final class ColbyRequest {
                 };
             }
 
+
+            /* first stub handler */
+
             else if (
                 $firstStubHandlerFilepath = Colby::findFile(
                     "handlers/handle,{$firstStub},.php"
@@ -203,33 +222,38 @@ final class ColbyRequest {
                 };
             }
 
+
+            /* page model */
+
             else {
-                $row = ColbyRequest::pageRenderingDataForURI(
-                    implode(
-                        '/',
-                        ColbyRequest::$decodedStubs
-                    )
+                $URI = implode(
+                    '/',
+                    ColbyRequest::$decodedStubs
                 );
 
-                if ($row) {
-                    $canonicalEncodedPath =
-                    CBRequest::decodedPathToCanonicalEncodedPath($row->URI);
+                $pageModel = ColbyRequest::fetchPageModelForURI($URI);
 
-                    if ($row->model) {
-                        $function = function() use ($row) {
-                            CBPage::render($row->model);
-                            return 1;
-                        };
-                    }
+                if ($pageModel !== null) {
+                    $canonicalEncodedPath = (
+                        CBRequest::decodedPathToCanonicalEncodedPath(
+                            $URI
+                        )
+                    );
+
+                    $function = function() use ($pageModel) {
+                        CBPage::render($pageModel);
+                        return 1;
+                    };
                 }
             }
         }
 
         if ($function) {
             if (ColbyRequest::$originalEncodedPath !== $canonicalEncodedPath) {
-                $redirectURI =
-                $canonicalEncodedPath .
-                CBRequest::requestURIToOriginalEncodedQueryString();
+                $redirectURI = (
+                    $canonicalEncodedPath .
+                    CBRequest::requestURIToOriginalEncodedQueryString()
+                );
 
                 header('Location: ' . $redirectURI, true, 301);
 
@@ -282,38 +306,49 @@ final class ColbyRequest {
     /* initialize() */
 
 
-    /**
-     * @return object|false
-     */
-    private static function pageRenderingDataForURI($URI) {
-        $URIAsSQL   = CBDB::stringToSQL($URI);
-        $SQL        = <<<EOT
 
-            SELECT      LOWER(HEX(`p`.`archiveID`)) as `ID`,
-                        `p`.`className`,
-                        `p`.`iteration`,
-                        `v`.`modelAsJSON` as `model`,
-                        `p`.`URI`
-            FROM        `ColbyPages`        AS `p`
-            LEFT JOIN   `CBModels`          AS `m` ON `p`.`archiveID` = `m`.`ID`
-            LEFT JOIN   `CBModelVersions`   AS `v` ON `m`.`ID` = `v`.`ID` AND
-                                                      `m`.`version` = `v`.`version`
-            WHERE       `p`.`URI` = {$URIAsSQL} AND
-                        `p`.`published` IS NOT NULL
-            ORDER BY    `p`.`published` ASC
+    /**
+     * @param string $URI
+     *
+     * @return object|null
+     */
+    private static function fetchPageModelForURI(
+        string $URI
+    ): ?stdClass {
+        $URIAsSQL = CBDB::stringToSQL($URI);
+
+        $SQL = <<<EOT
+
+            SELECT      v.modelAsJSON
+
+            FROM        ColbyPages AS p
+
+            LEFT JOIN   CBModels AS m
+                ON      p.archiveID = m.ID
+
+            LEFT JOIN   CBModelVersions AS v
+                ON      m.ID = v.ID AND
+                        m.version = v.version
+
+            WHERE       p.URI = {$URIAsSQL} AND
+                        p.published IS NOT NULL
+
+            ORDER BY    p.published ASC
+
             LIMIT       1
 
-EOT;
+        EOT;
 
-        $data = CBDB::SQLToObject($SQL);
+        $pageModelAsJSON = CBDB::SQLToValue2($SQL);
 
-        if ($data !== false) {
-            $data->model = json_decode($data->model);
+        if ($pageModelAsJSON !== null) {
+            return json_decode($pageModelAsJSON);
+        } else {
+            return null;
         }
-
-        return $data;
     }
-    /* pageRenderingDataForURI() */
+    /* fetchPageModelForURI() */
+
 }
 /* ColbyRequest */
 
