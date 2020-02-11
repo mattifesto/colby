@@ -13,7 +13,13 @@
     Colby,
 */
 
+
+
 var CBLinkView1Editor = {
+
+    /* -- CBUISpecEditor interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param object args
@@ -25,7 +31,9 @@ var CBLinkView1Editor = {
      *
      * @return Element
      */
-    createEditor: function (args) {
+    CBUISpecEditor_createEditorElement(
+        args
+    ) {
         let spec = CBModel.valueAsModel(
             args,
             "spec"
