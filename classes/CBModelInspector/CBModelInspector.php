@@ -244,40 +244,42 @@ final class CBModelInspector {
 
 
     /**
-     * @param string $ID
+     * @param CBID $CBID
      *
-     * @return ?stdClass
+     * @return object|null
      */
-    private static function fetchRowFromCBImages(string $ID): ?stdClass {
-        $IDAsSQL = CBID::toSQL($ID);
+    private static function fetchRowFromCBImages(
+        string $CBID
+    ): ?stdClass {
+        $CBIDAsSQL = CBID::toSQL($CBID);
 
         $SQL = <<<EOT
 
-            SELECT  `created`, `modified`, `extension`
-            FROM    `CBImages`
-            WHERE   `ID` = {$IDAsSQL}
+            SELECT  created,
+                    modified,
+                    extension
+
+            FROM    CBImages
+
+            WHERE   ID = {$CBIDAsSQL}
 
         EOT;
 
-        $result = CBDB::SQLToObject($SQL);
-
-        if ($result === false) {
-            return null;
-        } else {
-            return $result;
-        }
+        return CBDB::SQLToObjectNullable($SQL);
     }
     /* fetchRowFromCBImages() */
 
 
 
     /**
-     * @param string $ID
+     * @param CBID $CBID
      *
-     * @return ?stdClass
+     * @return object|null
      */
-    private static function fetchRowFromColbyPages(string $ID): ?stdClass {
-        $IDAsSQL = CBID::toSQL($ID);
+    private static function fetchRowFromColbyPages(
+        string $CBID
+    ): ?stdClass {
+        $CBIDAsSQL = CBID::toSQL($CBID);
 
         $SQL = <<<EOT
 
@@ -295,16 +297,17 @@ final class CBModelInspector {
 
             FROM    ColbyPages
 
-            WHERE   archiveId = {$IDAsSQL}
+            WHERE   archiveId = {$CBIDAsSQL}
 
         EOT;
 
-        $result = CBDB::SQLToObject($SQL);
+        $result = CBDB::SQLToObjectNullable($SQL);
 
-        if ($result === false) {
+        if ($result === null) {
             return null;
         } else {
             $result->keyValueData = json_decode($result->keyValueData);
+
             return $result;
         }
     }
