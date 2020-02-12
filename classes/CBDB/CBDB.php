@@ -193,7 +193,9 @@ final class CBDB {
      *      will NOT be a valid UTF-8 string but it can be converted to a
      *      hexadecimal UTF-8 string using the bin2hex() function.
      */
-    static function SQLToValue2(string $SQL): ?string {
+    static function SQLToValue2(
+        string $SQL
+    ): ?string {
         $result = Colby::query($SQL);
 
         /**
@@ -211,23 +213,7 @@ final class CBDB {
 
         return $value;
     }
-
-
-
-    /**
-     * @deprecated use CBDB::SQLToObjectNullable()
-     *
-     * @return object|false
-     */
-    static function SQLToObject(string $SQL) {
-        $object = CBDB::SQLToObjectNullable($SQL);
-
-        if ($object !== null) {
-            return $object;
-        } else {
-            return false;
-        }
-    }
+    /* SQLToValue2() */
 
 
 
@@ -249,6 +235,7 @@ final class CBDB {
 
         return $object;
     }
+    /* SQLToObjectNullable() */
 
 
 
