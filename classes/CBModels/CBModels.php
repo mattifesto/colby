@@ -627,7 +627,7 @@ final class CBModels {
     /**
      * Fetches the spec and model for use in tasks that analyze both.
      *
-     * @param string $ID
+     * @param CBID $CBID
      *
      * @return object|false
      *
@@ -636,32 +636,36 @@ final class CBModels {
      *          model: object
      *      }
      */
-    static function fetchSpecAndModelByID($ID) {
-        $IDAsSQL = CBID::toSQL($ID);
+    static function fetchSpecAndModelByID(
+        string $CBID
+    ) {
+        $CBIDAsSQL = CBID::toSQL($CBID);
 
         $SQL = <<<EOT
 
-            SELECT  `v`.`specAsJSON` AS `spec`,
-                    `v`.`modelAsJSON` AS `model`
+            SELECT  v.specAsJSON AS spec,
+                    v.modelAsJSON AS model
 
-            FROM    `CBModels` AS `m`
+            FROM    CBModels AS m
 
-            JOIN    `CBModelVersions` AS `v`
-              ON    `m`.`ID` = `v`.`ID` AND
-                    `m`.`version` = `v`.`version`
+            JOIN    CBModelVersions AS v
+              ON    m.ID = v.ID AND
+                    m.version = v.version
 
-            WHERE   `m`.`ID` = {$IDAsSQL}
+            WHERE   m.ID = {$CBIDAsSQL}
 
         EOT;
 
-        $value = CBDB::SQLToObject($SQL);
+        $value = CBDB::SQLToObjectNullable($SQL);
 
-        if ($value) {
+        if ($value === null) {
+            return false;
+        } else {
             $value->spec = json_decode($value->spec);
             $value->model = json_decode($value->model);
-        }
 
-        return $value;
+            return $value;
+        }
     }
     /* fetchSpecAndModelByID() */
 
