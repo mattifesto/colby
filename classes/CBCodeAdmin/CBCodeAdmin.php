@@ -283,6 +283,23 @@ final class CBCodeAdmin {
 
 
                 /**
+                 * 2019_11_10 (warning)
+                 * 2020_02_11 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBDB::SQLToObjectNullable().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBDB::SQLToObject\(',
+                    'severity' => 3,
+                    'title' => 'CBDB::SQLToObject()',
+                ],
+
+
+                /**
                  * 2020_02_01 (error)
                  */
                 (object)[
@@ -1728,22 +1745,6 @@ final class CBCodeAdmin {
                         'Replace use of the ColbyUsers table with CBUser ' .
                         'models.'
                     ),
-                ],
-
-
-                /**
-                 * 2019_11_10 (warning)
-                 */
-                (object)[
-                    'cbmessage' => <<<EOT
-
-                        Use CBDB::SQLToObjectNullable().
-
-                    EOT,
-                    'filetype' => 'php',
-                    'regex' => 'CBDB::SQLToObject\(',
-                    'severity' => 4,
-                    'title' => 'CBDB::SQLToObject()',
                 ],
 
 
