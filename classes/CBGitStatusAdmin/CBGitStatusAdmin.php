@@ -194,6 +194,9 @@ final class CBGitStatusAdmin {
 
 
     /**
+     * This function lists the commits that have been made to the local branch
+     * that have not yet been pushed to the remote branch.
+     *
      * @return object
      */
     static function fetchStatus(string $directory): stdClass {
@@ -212,17 +215,37 @@ final class CBGitStatusAdmin {
         $message .= CBGitStatusAdmin::exec('git status --porcelain');
 
         $lines = [];
-        exec('git remote', $lines);
 
-        if (array_search('origin', $lines) === false) {
-            $range = '';
-        } else {
-            $range = 'origin/master..HEAD';
-        }
+        /**
+         * Get the name of the remote tracking branch. This will be something
+         * like "origin/master" or "origin/5.x".
+         */
 
-        $message .= CBGitStatusAdmin::exec(
-            "git log {$range} --oneline --no-decorate --reverse"
+        exec(
+            CBConvert::stringToCleanLine(<<<EOT
+
+                git for-each-ref
+                --format='%(upstream:short)'
+                "$(git symbolic-ref -q HEAD)"
+
+            EOT),
+            $lines
         );
+
+        if (empty($lines)) {
+            $message .= <<<EOT
+
+                This repository is not currently tracking a remote branch.
+
+            EOT;
+        } else {
+            $remoteBranch = trim($lines[0]);
+            $range = "{$remoteBranch}..HEAD";
+
+            $message .= CBGitStatusAdmin::exec(
+                "git log {$range} --oneline --no-decorate --reverse"
+            );
+        }
 
         return (object)[
             'location' => $location,
