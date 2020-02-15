@@ -1483,6 +1483,40 @@ final class CBCodeAdmin {
 
 
                 /**
+                 * 2020_02_14 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Specify the Facebook app ID in the CBFacebookPreferences
+                        model.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBFacebookAppID',
+                    'severity' => 4,
+                    'title' => 'CBFacebookAppID',
+                ],
+
+
+                /**
+                 * 2020_02_14 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Specify the Facebook app secret in the
+                        CBFacebookPreferences model.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBFacebookAppSecret',
+                    'severity' => 4,
+                    'title' => 'CBFacebookAppSecret',
+                ],
+
+
+                /**
                  * 2020_01_06 (warning)
                  */
                 (object)[
