@@ -63,6 +63,12 @@ final class CBFacebookSignInView {
     static function CBView_render(
         stdClass $viewModel
     ): void {
+        $facebookAppID = CBFacebookPreferences::getAppID();
+
+        if ($facebookAppID === '') {
+            return;
+        }
+
         $destinationURL = CBModel::valueToString(
             $viewModel,
             'destinationURL'
