@@ -214,6 +214,117 @@ final class CBEmail {
     }
     /* sendCBMessage() */
 
+
+
+    /**
+     * @param string $toEmail
+     * @param string $toFullName
+     * @param string $subject
+     * @param string $messageAsPlaintext
+     * @param string $messageAsHTMLDocument
+     *
+     *      The full HTML document for the message. Should start with
+     *      <!doctype html>.
+     *
+     * @param object|null $cbemailsender
+     *
+     *      If not null, this should be a CBEmailSender model.
+     *
+     * @return void
+     */
+    static function sendTextAndHTML(
+        string $toEmail,
+        string $toFullName,
+        string $subject,
+        string $messageAsPlaintext,
+        string $messageAsHTMLDocument,
+        ?stdClass $cbemailsender = null
+    ): void {
+        if ($cbemailsender === null) {
+            $cbemailsender = CBModelCache::fetchModelByID(
+                CBEmailSender::websiteEmailSenderCBID()
+            );
+
+            /**
+             * @TODO 2020_01_06
+             *
+             *      Better determine whether this is a functional model.
+             */
+
+            $SMTPServerHostname = CBModel::valueToString(
+                $cbemailsender,
+                'SMTPServerHostname'
+            );
+
+            if ($SMTPServerHostname === '') {
+                $cbemailsender = null;
+            }
+        }
+
+        if ($cbemailsender === null) {
+            if (!defined('COLBY_EMAIL_SMTP_SERVER')) {
+                throw new CBException(
+                    'The system email has not been configured.'
+                );
+            }
+
+            $cbemailsender = (object)[
+                'SMTPServerHostname' => COLBY_EMAIL_SMTP_SERVER,
+                'SMTPServerPort' => COLBY_EMAIL_SMTP_PORT,
+                'SMTPServerSecurity' => COLBY_EMAIL_SMTP_SECURITY,
+                'SMTPServerUsername' => COLBY_EMAIL_SMTP_USER,
+                'SMTPServerPassword' => COLBY_EMAIL_SMTP_PASSWORD,
+                'sendingEmailAddress' => COLBY_EMAIL_SENDER,
+                'sendingEmailFullName' => COLBY_EMAIL_SENDER_NAME,
+            ];
+        }
+
+        $SMTPTransport = Swift_SmtpTransport::newInstance(
+            $cbemailsender->SMTPServerHostname,
+            $cbemailsender->SMTPServerPort,
+            $cbemailsender->SMTPServerSecurity
+        );
+
+        $SMTPTransport->setUsername(
+            $cbemailsender->SMTPServerUsername
+        );
+
+        $SMTPTransport->setPassword(
+            $cbemailsender->SMTPServerPassword
+        );
+
+        $mailer = Swift_Mailer::newInstance($SMTPTransport);
+
+        $message = Swift_Message::newInstance();
+
+        $message->setSubject($subject);
+
+        $message->setFrom(
+            [
+                $cbemailsender->sendingEmailAddress =>
+                $cbemailsender->sendingEmailFullName
+            ]
+        );
+
+        $message->setTo(
+            [
+                $toEmail => $toFullName
+            ]
+        );
+
+        $message->setBody(
+            $messageAsPlaintext
+        );
+
+        $message->addPart(
+            $messageAsHTMLDocument,
+            'text/html'
+        );
+
+        $mailer->send($message);
+    }
+    /* sendTextAndHTML() */
+
 }
 
 
