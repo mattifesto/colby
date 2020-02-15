@@ -847,32 +847,6 @@ final class CBUser {
 
 
     /**
-     * This function is called once per website. After the first user has signed
-     * in they are assumed to belong to the groups CBAdministratorsUserGroup and
-     * CBDevelopersUserGroup.
-     *
-     * @param CBID $userCBID
-     *
-     * @return void
-     */
-    static function initializeFirstUser(
-        string $userCBID
-    ): void {
-        CBUserGroup::addUsers(
-            'CBAdministratorsUserGroup',
-            $userCBID
-        );
-
-        CBUserGroup::addUsers(
-            'CBDevelopersUserGroup',
-            $userCBID
-        );
-    }
-    /* initializeFirstUser() */
-
-
-
-    /**
      * @param string $password
      *
      * @return string|null

@@ -248,10 +248,6 @@ final class CBUser_PotentialUser {
             ];
         }
 
-        $thisIsTheFirstLoginOfTheFirstUser = (
-            CBUsers::countOfUsers() === 0
-        );
-
         $userCBID = CBID::generateRandomCBID();
 
         $userSpec = (object)[
@@ -285,10 +281,6 @@ final class CBUser_PotentialUser {
         ColbyUser::loginUser(
             $userCBID
         );
-
-        if ($thisIsTheFirstLoginOfTheFirstUser) {
-            CBUser::initializeFirstUser($userCBID);
-        }
 
         return (object)[
             'succeeded' => true,
