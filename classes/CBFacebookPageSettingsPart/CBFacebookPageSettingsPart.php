@@ -12,9 +12,13 @@ final class CBFacebookPageSettingsPart {
     static function CBPageSettings_renderHeadElementHTML(): void {
         $info = CBHTMLOutput::pageInformation();
 
-        if (defined('CBFacebookAppID')) {
+        $facebookAppID = CBFacebookPreferences::getAppID();
+
+        if ($facebookAppID !== '') {
             ?>
-            <meta property="fb:app_id" content="<?= CBFacebookAppID ?>">
+
+            <meta property="fb:app_id" content="<?= $facebookAppID ?>">
+
             <?php
         }
 
@@ -23,13 +27,28 @@ final class CBFacebookPageSettingsPart {
         <meta
             property="og:title"
             content="<?=
-                cbhtml(CBModel::valueToString($info, 'title'))
+
+                cbhtml(
+                    CBModel::valueToString(
+                        $info,
+                        'title'
+                    )
+                )
+
             ?>"
         >
+
         <meta
             property="og:description"
             content="<?=
-                cbhtml(CBModel::valueToString($info, 'description'))
+
+                cbhtml(
+                    CBModel::valueToString(
+                        $info,
+                        'description'
+                    )
+                )
+
             ?>"
         >
 
