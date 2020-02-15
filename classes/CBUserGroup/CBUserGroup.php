@@ -49,6 +49,42 @@ final class CBUserGroup {
             );
         }
 
+
+        /* permission */
+
+        $currentUserCBID = ColbyUser::getCurrentUserCBID();
+
+        $canModifyMembership = CBUserGroup::userCanModifyMembership(
+            $currentUserCBID,
+            $userGroupClassName
+        );
+
+        if (
+            $canModifyMembership !== true &&
+            $currentUserCBID !== null &&
+            count($userCBIDs) === 1 &&
+            $userCBIDs[0] = $currentUserCBID
+        ) {
+            $canModifyMembership = CBUserGroup::userCanModifyOwnMembership(
+                $currentUserCBID,
+                $userGroupClassName
+            );
+        }
+
+        if ($canModifyMembership !== true) {
+            throw new CBExceptionWithValue(
+                (
+                    'You do not have pemission to modify the ' .
+                    'members of this group.'
+                ),
+                $userGroupClassName,
+                '314f8b7a1ee1aba2eb1a640593d4c544e2c8a3f4'
+            );
+        }
+
+
+        /* permission granted */
+
         CBUserGroup::addUsers(
             $userGroupClassName,
             [
@@ -64,7 +100,7 @@ final class CBUserGroup {
      * @return string
      */
     static function CBAjax_addUser_getUserGroupClassName(): string {
-        return 'CBAdministratorsUserGroup';
+        return 'CBPublicUserGroup';
     }
 
 
@@ -108,6 +144,42 @@ final class CBUserGroup {
             );
         }
 
+
+        /* permission */
+
+        $currentUserCBID = ColbyUser::getCurrentUserCBID();
+
+        $canModifyMembership = CBUserGroup::userCanModifyMembership(
+            $currentUserCBID,
+            $userGroupClassName
+        );
+
+        if (
+            $canModifyMembership !== true &&
+            $currentUserCBID !== null &&
+            count($userCBIDs) === 1 &&
+            $userCBIDs[0] = $currentUserCBID
+        ) {
+            $canModifyMembership = CBUserGroup::userCanModifyOwnMembership(
+                $currentUserCBID,
+                $userGroupClassName
+            );
+        }
+
+        if ($canModifyMembership !== true) {
+            throw new CBExceptionWithValue(
+                (
+                    'You do not have pemission to modify the ' .
+                    'members of this group.'
+                ),
+                $userGroupClassName,
+                '314f8b7a1ee1aba2eb1a640593d4c544e2c8a3f4'
+            );
+        }
+
+
+        /* permission granted */
+
         CBUserGroup::removeUsers(
             $userGroupClassName,
             [
@@ -123,7 +195,7 @@ final class CBUserGroup {
      * @return string
      */
     static function CBAjax_removeUser_getUserGroupClassName(): string {
-        return 'CBAdministratorsUserGroup';
+        return 'CBPublicUserGroup';
     }
 
 
@@ -323,36 +395,6 @@ final class CBUserGroup {
             );
         }
 
-        $currentUserCBID = ColbyUser::getCurrentUserCBID();
-
-        $canModifyMembership = CBUserGroup::userCanModifyMembership(
-            $currentUserCBID,
-            $userGroupClassName
-        );
-
-        if (
-            $canModifyMembership !== true &&
-            $currentUserCBID !== null &&
-            count($userCBIDs) === 1 &&
-            $userCBIDs[0] = $currentUserCBID
-        ) {
-            $canModifyMembership = CBUserGroup::userCanModifyOwnMembership(
-                $currentUserCBID,
-                $userGroupClassName
-            );
-        }
-
-        if ($canModifyMembership !== true) {
-            throw new CBExceptionWithValue(
-                (
-                    'You do not have pemission to modify the ' .
-                    'members of this group.'
-                ),
-                $userGroupClassName,
-                '314f8b7a1ee1aba2eb1a640593d4c544e2c8a3f4'
-            );
-        }
-
         CBDB::transaction(
             function () use ($userGroupCBID, $userCBIDs) {
                 $associations = array_map(
@@ -381,11 +423,6 @@ final class CBUserGroup {
 
                 CBModelAssociations::addMultiple($associations);
             }
-        );
-
-        $currentUserWasChanged = in_array(
-            ColbyUser::getCurrentUserCBID(),
-            $userCBIDs
         );
     }
     /* addUsers() */
@@ -527,36 +564,6 @@ final class CBUserGroup {
             );
         }
 
-        $currentUserCBID = ColbyUser::getCurrentUserCBID();
-
-        $canModifyMembership = CBUserGroup::userCanModifyMembership(
-            $currentUserCBID,
-            $userGroupClassName
-        );
-
-        if (
-            $canModifyMembership !== true &&
-            $currentUserCBID !== null &&
-            count($userCBIDs) === 1 &&
-            $userCBIDs[0] = $currentUserCBID
-        ) {
-            $canModifyMembership = CBUserGroup::userCanModifyOwnMembership(
-                $currentUserCBID,
-                $userGroupClassName
-            );
-        }
-
-        if ($canModifyMembership !== true) {
-            throw new CBExceptionWithValue(
-                (
-                    'You do not have pemission to modify the ' .
-                    'members of this group.'
-                ),
-                $userGroupClassName,
-                '314f8b7a1ee1aba2eb1a640593d4c544e2c8a3f4'
-            );
-        }
-
         CBDB::transaction(
             function () use ($userGroupCBID, $userCBIDs) {
                 $associations = array_map(
@@ -585,11 +592,6 @@ final class CBUserGroup {
 
                 CBModelAssociations::deleteMultiple($associations);
             }
-        );
-
-        $currentUserWasChanged = in_array(
-            ColbyUser::getCurrentUserCBID(),
-            $userCBIDs
         );
     }
     /* removeUsers() */
