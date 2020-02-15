@@ -76,7 +76,7 @@ final class CBUser {
             'password'
         );
 
-        $passwordIssues = CBuser::passwordIssues($password);
+        $passwordIssues = CBUser::passwordIssues($password);
 
         if ($passwordIssues !== null) {
             return (object)[
@@ -278,6 +278,94 @@ final class CBUser {
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * This function checks the settings object for developer account
+     * information and then creates or updates the main developer user model.
+     * This is how the first account is created after installing a website.
+     *
+     * @return void
+     */
+    static function CBInstall_configure(): void {
+        $settingsObject = Colby::getSettingsObject();
+
+
+        /* email address */
+
+        $developerEmailAddress = CBModel::valueAsEmail(
+            $settingsObject,
+            'developerEmailAddress'
+        );
+
+        if ($developerEmailAddress === null) {
+            return;
+        }
+
+
+        /* CBUser CBID */
+
+        $foundUserCBID = CBUser::emailToUserCBID(
+            $developerEmailAddress
+        );
+
+        if ($foundUserCBID === null) {
+            $userCBID = CBID::generateRandomCBID();
+        } else {
+            $userCBID = $foundUserCBID;
+        }
+
+        $userSpec = (object)[
+            'className' => 'CBUser',
+            'ID' => $userCBID,
+            'email' => $developerEmailAddress,
+        ];
+
+        if ($foundUserCBID === null) {
+
+            /**
+             * If the user is being created, we set the user's password. We
+             * assume the password is valid because there is not much reason
+             * that it shouldn't be.
+             *
+             * @TODO 2020_02_14
+             *
+             *      We may want to set a short expiration on this password to
+             *      force the developer to set another password soon.
+             */
+
+            $developerPasswordHash = CBModel::valueToString(
+                $settingsObject,
+                'developerPasswordHash'
+            );
+
+            $userSpec->passwordHash = $developerPasswordHash;
+        }
+
+
+        /* create / save */
+
+        CBModelUpdater::update($userSpec);
+
+
+        /* add to groups */
+
+        CBUserGroup::addUsers(
+            'CBAdministratorsUserGroup',
+            $userCBID
+        );
+
+        CBUserGroup::addUsers(
+            'CBDevelopersUserGroup',
+            $userCBID
+        );
+    }
+    /* CBInstall_configure() */
 
 
 
