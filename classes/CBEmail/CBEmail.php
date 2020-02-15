@@ -8,6 +8,9 @@ final class CBEmail {
 
 
 
+    /**
+     * @return [string]
+     */
     static function CBAdmin_getIssueMessages(): array {
         if (!file_exists(
             CBEmail::getSwiftmailerIncludeFilename()
