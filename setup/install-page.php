@@ -47,19 +47,35 @@ directory.
 <form action="" method="post">
     <div class="property">
         <label>Site Domain Name</label>
-        <input type="text" name="siteDomainName" value="<?= cbhtml($p->siteDomainName) ?>">
+        <input
+            type="text"
+            name="siteDomainName"
+            value="<?= cbhtml($p->siteDomainName) ?>"
+        >
     </div>
     <div class="property">
         <label>Site Class Prefix</label>
-        <input type="text" name="siteClassPrefix" value="<?= cbhtml($p->siteClassPrefix) ?>">
+        <input
+            type="text"
+            name="siteClassPrefix"
+            value="<?= cbhtml($p->siteClassPrefix) ?>"
+        >
     </div>
     <div class="property">
         <label>MySQL Host</label>
-        <input type="text" name="mysqlHost" value="<?= cbhtml($p->mysqlHost) ?>">
+        <input
+            type="text"
+            name="mysqlHost"
+            value="<?= cbhtml($p->mysqlHost) ?>"
+        >
     </div>
     <div class="property">
         <label>MySQL User</label>
-        <input type="text" name="mysqlUser" value="<?= cbhtml($p->mysqlUser) ?>">
+        <input
+            type="text"
+            name="mysqlUser"
+            value="<?= cbhtml($p->mysqlUser) ?>"
+        >
     </div>
 
     <div class="property">
@@ -73,15 +89,11 @@ directory.
 
     <div class="property">
         <label>MySQL Database</label>
-        <input type="text" name="mysqlDatabase" value="<?= cbhtml($p->mysqlDatabase) ?>">
-    </div>
-    <div class="property">
-        <label>Facebook App ID</label>
-        <input type="text" name="facebookAppID" value="<?= cbhtml($p->facebookAppID) ?>">
-    </div>
-    <div class="property">
-        <label>Facebook App Secret</label>
-        <input type="text" name="facebookAppSecret" value="<?= cbhtml($p->facebookAppSecret) ?>">
+        <input
+            type="text"
+            name="mysqlDatabase"
+            value="<?= cbhtml($p->mysqlDatabase) ?>"
+        >
     </div>
 
     <!-- first user -->

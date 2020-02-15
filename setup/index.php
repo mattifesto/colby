@@ -190,12 +190,6 @@ class ColbyInstaller {
             'mysqlUser' => cb_post_value('mysqlUser', '', 'trim'),
             'mysqlPassword' => cb_post_value('mysqlPassword', '', 'trim'),
             'mysqlDatabase' => cb_post_value('mysqlDatabase', '', 'trim'),
-            'facebookAppID' => cb_post_value('facebookAppID', '', 'trim'),
-            'facebookAppSecret' => cb_post_value(
-                'facebookAppSecret',
-                '',
-                'trim'
-            ),
 
             'developerEmailAddress' => trim(
                 cb_post_value(
@@ -223,8 +217,6 @@ class ColbyInstaller {
             !empty($p->mysqlUser) &&
             !empty($p->mysqlPassword) &&
             !empty($p->mysqlDatabase) &&
-            !empty($p->facebookAppID) &&
-            !empty($p->facebookAppSecret) &&
             !empty($p->developerEmailAddress) &&
             !empty($p->developerPassword) &&
             !empty($p->developerPassword2)
@@ -630,9 +622,6 @@ class ColbyInstaller {
         $p = ColbyInstaller::$properties;
         $siteDomainName = addslashes($p->siteDomainName);
 
-        $facebookAppID = addslashes($p->facebookAppID);
-        $facebookAppSecret = addslashes($p->facebookAppSecret);
-
         $mysqlHost = addslashes($p->mysqlHost);
         $mysqlUser = addslashes($p->mysqlUser);
         $mysqlPassword = addslashes($p->mysqlPassword);
@@ -648,16 +637,6 @@ class ColbyInstaller {
         define(
             'CBSiteURL',
             'https://{$siteDomainName}'
-        );
-
-        define(
-            'CBFacebookAppID',
-            '{$facebookAppID}'
-        );
-
-        define(
-            'CBFacebookAppSecret',
-            '{$facebookAppSecret}'
         );
 
         define(
