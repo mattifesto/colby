@@ -15,8 +15,11 @@ function cbsysdir(): string {
 
 include cbsysdir() . '/functions.php';
 include cbsysdir() . '/classes/CBID/CBID.php';
+include cbsysdir() . '/classes/CBConvert/CBConvert.php';
 
 ColbyInstaller::initialize();
+
+
 
 class ColbyInstaller {
 
@@ -37,9 +40,61 @@ class ColbyInstaller {
     private static $siteConfigurationFilename;
     private static $versionFilename;
 
-    static function handleError($severity, $message, $file, $line) {
-        throw new ErrorException($message, 0, $severity, $file, $line);
+
+
+    /**
+     * @return void
+     */
+    static function createSettingsFile(): void {
+        $settingsFilepath = (
+            cbsitedir() .
+            '/settings.json'
+        );
+
+        $developerPasswordHash = password_hash(
+            ColbyInstaller::$properties->developerPassword,
+            PASSWORD_DEFAULT
+        );
+
+        $settingsObject = (object)[
+            'developerEmailAddress' => (
+                ColbyInstaller::$properties->developerEmailAddress
+            ),
+
+            'developerPasswordHash' => $developerPasswordHash,
+        ];
+
+        file_put_contents(
+            $settingsFilepath,
+            json_encode(
+                $settingsObject
+            )
+        );
     }
+    /* createSettingsFile() */
+
+
+
+    /**
+     * @return void
+     */
+    static function handleError(
+        $severity,
+        $message,
+        $file,
+        $line
+    ): void {
+        throw new ErrorException(
+            $message,
+            0,
+            $severity,
+            $file,
+            $line
+        );
+    }
+    /* handleError() */
+
+
 
     /**
      * @return void
@@ -95,6 +150,7 @@ class ColbyInstaller {
 
         if (ColbyInstaller::$propertiesAreAllSet) {
             try {
+                ColbyInstaller::verifyFormProperties();
                 ColbyInstaller::install();
             } catch (Throwable $exception) {
                 ColbyInstaller::$exception = $exception;
@@ -105,6 +161,9 @@ class ColbyInstaller {
             ColbyInstaller::renderPlan();
         }
     }
+    /* initialize() */
+
+
 
     /**
      * Set the ColbyInstaller::$properties variable
@@ -112,7 +171,9 @@ class ColbyInstaller {
      * @return null
      */
     static function initializeProperties() {
-        $siteClassPrefix = trim(cb_post_value('siteClassPrefix', ''));
+        $siteClassPrefix = trim(
+            cb_post_value('siteClassPrefix', '')
+        );
 
         if (empty($siteClassPrefix)) {
             $siteClassPrefix = 'CBX';
@@ -135,19 +196,42 @@ class ColbyInstaller {
                 '',
                 'trim'
             ),
+
+            'developerEmailAddress' => trim(
+                cb_post_value(
+                    'developerEmailAddress',
+                    ''
+                )
+            ),
+
+            'developerPassword' => cb_post_value(
+                'developerPassword',
+                ''
+            ),
+
+            'developerPassword2' => cb_post_value(
+                'developerPassword2',
+                ''
+            ),
         ];
 
         ColbyInstaller::$properties = $p;
 
-        ColbyInstaller::$propertiesAreAllSet =
+        ColbyInstaller::$propertiesAreAllSet = (
             !empty($p->siteDomainName) &&
             !empty($p->mysqlHost) &&
             !empty($p->mysqlUser) &&
             !empty($p->mysqlPassword) &&
             !empty($p->mysqlDatabase) &&
             !empty($p->facebookAppID) &&
-            !empty($p->facebookAppSecret);
+            !empty($p->facebookAppSecret) &&
+            !empty($p->developerEmailAddress) &&
+            !empty($p->developerPassword) &&
+            !empty($p->developerPassword2)
+        );
     }
+    /* initializeProperties() */
+
 
 
     /**
@@ -158,7 +242,8 @@ class ColbyInstaller {
             $siteDirectory = cbsitedir();
             $templateDirectory = __DIR__ . '/templates';
 
-            /* Verify MySQL login properties */
+
+            /* verify MySQL login properties */
 
             $mysqliDriver = new mysqli_driver();
             $mysqliDriver->report_mode = MYSQLI_REPORT_STRICT;
@@ -204,7 +289,10 @@ class ColbyInstaller {
 
             $mysqli->close();
 
+
             /* Create files and directories */
+
+            ColbyInstaller::createSettingsFile();
 
             if (!is_dir(ColbyInstaller::$dataDirectory)) {
                 mkdir(ColbyInstaller::$dataDirectory);
@@ -362,10 +450,13 @@ class ColbyInstaller {
     /* install() */
 
 
+
     /**
      * @return void
      */
     static function renderPageBegin(): void {
+        $fontURL = 'https://fonts.googleapis.com/css?family=Open+Sans:400,700';
+
         ?>
         <!doctype html>
         <html lang="en">
@@ -374,7 +465,7 @@ class ColbyInstaller {
                 <title>Colby Installation</title>
                 <link
                     rel="stylesheet"
-                    href="https://fonts.googleapis.com/css?family=Open+Sans:400,700"
+                    href="<?= $fontURL ?>"
                 >
                 <link
                     rel="stylesheet"
@@ -386,6 +477,7 @@ class ColbyInstaller {
         <?php
     }
     /* renderPageBegin() */
+
 
 
     /**
@@ -401,6 +493,7 @@ class ColbyInstaller {
     /* renderPageEnd() */
 
 
+
     /**
      * @return void
      */
@@ -412,6 +505,7 @@ class ColbyInstaller {
         ColbyInstaller::renderPageEnd();
     }
     /* renderPlan() */
+
 
 
     /**
@@ -441,6 +535,7 @@ class ColbyInstaller {
         ColbyInstaller::renderPageEnd();
     }
     /* renderSecurityWarning() */
+
 
 
     /**
@@ -473,6 +568,7 @@ class ColbyInstaller {
     /* renderSubmoduleWarning() */
 
 
+
     /**
      * This function determines whether a full or partial installation should
      * occur. In the future this function may do more detailed analysis to
@@ -486,6 +582,41 @@ class ColbyInstaller {
     private static function shouldPerformAFullInstallation(): bool {
         return !is_file(ColbyInstaller::$indexFilename);
     }
+
+
+
+    /**
+     * This function is called before ColbyInstaller::install(). If any of the
+     * values the developer entered on the form are not valid this function
+     * will throw an exception.
+     */
+    private static function verifyFormProperties(): void {
+        /* verify developer email address */
+
+        $developerEmailAddress = CBConvert::valueAsEmail(
+            ColbyInstaller::$properties->developerEmailAddress
+        );
+
+        if ($developerEmailAddress === null) {
+            throw new Exception(
+                'The developer email address is not valid.'
+            );
+        }
+
+
+        /* verify developer password */
+
+        if (
+            ColbyInstaller::$properties->developerPassword !==
+            ColbyInstaller::$properties->developerPassword2
+        ) {
+            throw new Exception(
+                'The developer passwords don\'t match.'
+            );
+        }
+    }
+    /* verifyFormProperties() */
+
 
 
     /**
@@ -507,52 +638,54 @@ class ColbyInstaller {
         $mysqlPassword = addslashes($p->mysqlPassword);
         $mysqlDatabase = addslashes($p->mysqlDatabase);
 
-        $encryptionPassword = bin2hex(openssl_random_pseudo_bytes(20));
+        $encryptionPassword = bin2hex(
+            openssl_random_pseudo_bytes(20)
+        );
 
         $content = <<<EOT
-<?php
+        <?php
 
-define(
-    'CBSiteURL',
-    'https://{$siteDomainName}'
-);
+        define(
+            'CBSiteURL',
+            'https://{$siteDomainName}'
+        );
 
-define(
-    'CBFacebookAppID',
-    '{$facebookAppID}'
-);
+        define(
+            'CBFacebookAppID',
+            '{$facebookAppID}'
+        );
 
-define(
-    'CBFacebookAppSecret',
-    '{$facebookAppSecret}'
-);
+        define(
+            'CBFacebookAppSecret',
+            '{$facebookAppSecret}'
+        );
 
-define(
-    'CBMySQLHost',
-    '{$mysqlHost}'
-);
+        define(
+            'CBMySQLHost',
+            '{$mysqlHost}'
+        );
 
-define(
-    'CBMySQLUser',
-    '{$mysqlUser}'
-);
+        define(
+            'CBMySQLUser',
+            '{$mysqlUser}'
+        );
 
-define(
-    'CBMySQLPassword',
-    '{$mysqlPassword}'
-);
+        define(
+            'CBMySQLPassword',
+            '{$mysqlPassword}'
+        );
 
-define(
-    'CBMySQLDatabase',
-    '{$mysqlDatabase}'
-);
+        define(
+            'CBMySQLDatabase',
+            '{$mysqlDatabase}'
+        );
 
-define(
-    'CBEncryptionPassword',
-    '{$encryptionPassword}'
-);
+        define(
+            'CBEncryptionPassword',
+            '{$encryptionPassword}'
+        );
 
-EOT;
+        EOT;
 
         file_put_contents(
             ColbyInstaller::$colbyConfigurationFilename,
@@ -560,4 +693,5 @@ EOT;
         );
     }
     /* writeColbyConfiguration() */
+
 }

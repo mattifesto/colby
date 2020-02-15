@@ -14,6 +14,7 @@ if (ColbyInstaller::$exception) {
 
     <?php
 }
+
 ?>
 
 <p>Installation will create database tables and some files in your site's root
@@ -60,10 +61,16 @@ directory.
         <label>MySQL User</label>
         <input type="text" name="mysqlUser" value="<?= cbhtml($p->mysqlUser) ?>">
     </div>
+
     <div class="property">
         <label>MySQL Password</label>
-        <input type="text" name="mysqlPassword" value="<?= cbhtml($p->mysqlPassword) ?>">
+        <input
+            type="password"
+            name="mysqlPassword"
+            value="<?= cbhtml($p->mysqlPassword) ?>"
+        >
     </div>
+
     <div class="property">
         <label>MySQL Database</label>
         <input type="text" name="mysqlDatabase" value="<?= cbhtml($p->mysqlDatabase) ?>">
@@ -76,7 +83,43 @@ directory.
         <label>Facebook App Secret</label>
         <input type="text" name="facebookAppSecret" value="<?= cbhtml($p->facebookAppSecret) ?>">
     </div>
-    <input type="submit">
+
+    <!-- first user -->
+
+    <div class="property">
+        <label>Developer Email Address</label>
+        <input
+            type="email"
+            name="developerEmailAddress"
+            value="<?= cbhtml($p->developerEmailAddress) ?>"
+        >
+    </div>
+
+    <div class="property">
+        <label>Developer Password</label>
+        <input
+            type="password"
+            name="developerPassword"
+            value="<?= cbhtml($p->developerPassword) ?>"
+        >
+    </div>
+
+    <div class="property">
+        <label>Re-enter Developer Password</label>
+        <input
+            type="password"
+            name="developerPassword2"
+            value="<?= cbhtml($p->developerPassword2) ?>"
+        >
+    </div>
+
+    <!-- submit -->
+
+    <input
+        type="submit"
+        value="Submit"
+    >
+
 </form>
 
 <h2>Installed Files</h2>
