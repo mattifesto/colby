@@ -1007,7 +1007,10 @@ final class CBCodeAdmin {
                  */
                 (object)[
                     'filetype' => 'js',
-                    'regex' => 'Colby\.(createPanel|setPanelElement|setPanelText|showPanel)',
+                    'regex' => (
+                        'Colby\.' .
+                        '(createPanel|setPanelElement|setPanelText|showPanel)'
+                    ),
                     'severity' => 3,
                     'title' => (
                         'Replace use of Colby.createPanel() and ' .
@@ -1480,6 +1483,25 @@ final class CBCodeAdmin {
 
                 /* -- warnings -- -- -- -- -- */
 
+
+
+                /**
+                 * 2020_02_15 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Specify email preferences in the CBEmailSender model.
+
+                        Move the swiftmailer submodule into the root directory
+                        if it is not already there.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'COLBY_EMAIL',
+                    'severity' => 4,
+                    'title' => 'Deprecated Email Constants',
+                ],
 
 
                 /**
