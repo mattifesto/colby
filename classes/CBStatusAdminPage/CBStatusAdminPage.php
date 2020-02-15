@@ -177,9 +177,6 @@ final class CBStatusAdminPage {
                     'Use site preferences.'
                 ],
 
-                ['CBFacebookFirstVerifiedUserID', 'Remove it.'],
-                ['COLBY_FACEBOOK_FIRST_VERIFIED_USER_ID', 'Remove it.'],
-
                 [
                     'COLBY_SITE_ERRORS_SEND_EMAILS',
                     'Use CBSiteDoesSendEmailErrorReports instead.'
@@ -208,12 +205,6 @@ final class CBStatusAdminPage {
                     'COLBY_SITE_ADMINISTRATOR',
                     'Remove it and use site preferences.'
                 ],
-
-                // 2017_07_08
-                ['COLBY_FACEBOOK_APP_ID', 'Use CBFacebookAppID instead.'],
-
-                // 2017_07_08
-                ['COLBY_FACEBOOK_APP_SECRET', 'Use CBFacebookAppSecret instead.'],
 
                 // 2017_07_08
                 ['COLBY_MYSQL_HOST', 'Use CBMySQLHost instead.'],
