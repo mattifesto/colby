@@ -65,7 +65,6 @@ var CBModelEditor = {
             {
                 spec: spec,
                 specChangedCallback: specSaver.specChangedCallback,
-                useStrict: true,
             }
         );
 
