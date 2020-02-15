@@ -76,15 +76,29 @@
         resolve
     ) {
         let elements = CBUI.createElementTree(
-            "CBUser_CreateAccountView_createPotentialUser",
-            "CBUI_title1"
+            "CBUser_CreateAccountView_createPotentialUser"
         );
 
         let rootElement = elements[0];
 
         viewElement.appendChild(rootElement);
 
-        elements[1].textContent = "Create New Account";
+        let cbmessageElement = CBUI.cbmessageToElement(`
+
+            --- CBUI_title1
+            Create New Account
+            ---
+
+            After you submit this form the website will send you an email
+            containing a one time password to confirm your access to this email
+            account. After you enter the one time password your account will be
+            created and you will be signed in.
+
+        `);
+
+        rootElement.appendChild(
+            cbmessageElement
+        );
 
         /* form */
 
@@ -189,8 +203,7 @@
         resolve
     ) {
         let elements = CBUI.createElementTree(
-            "CBUser_CreateAccountView_verifyPotentialUser",
-            "CBUI_title1"
+            "CBUser_CreateAccountView_verifyPotentialUser"
         );
 
         let rootElement = elements[0];
@@ -199,7 +212,23 @@
             rootElement
         );
 
-        elements[1].textContent = "Confirm";
+        let cbmessageElement = CBUI.cbmessageToElement(`
+
+            --- CBUI_title1
+            Confirm Access to Email Address
+            ---
+
+            The website has sent an email containing a one time password to the
+            email address you entered on the previous form. You should receive
+            it momentarily. Enter the one time password into the form below,
+            then press the Confirm button, then your account will be created and
+            you will be signed in.
+
+        `);
+
+        rootElement.appendChild(
+            cbmessageElement
+        );
 
         elements = CBUI.createElementTree(
             "CBUI_sectionContainer",

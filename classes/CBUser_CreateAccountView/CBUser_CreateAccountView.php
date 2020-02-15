@@ -18,7 +18,7 @@ final class CBUser_CreateAccountView {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v572.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v574.js', cbsysurl()),
         ];
     }
 
