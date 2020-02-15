@@ -373,6 +373,36 @@ final class Colby {
 
 
     /**
+     * @return object
+     */
+    static function getSettingsObject(): stdClass {
+        static $settingsObject = null;
+
+        if ($settingsObject === null) {
+            $settingsFilepath = cbsitedir() . '/settings.json';
+
+            if (!file_exists($settingsFilepath)) {
+                $settingsObject = (object)[];
+
+                return $settingsObject;
+            }
+
+            $settingsObjectAsJSON = file_get_contents($settingsFilepath);
+
+            $settingsObject = json_decode(
+                $settingsObjectAsJSON
+            );
+        }
+
+        return CBModel::clone(
+            $settingsObject
+        );
+    }
+    /* getSettingsObject() */
+
+
+
+    /**
      * Find files in all libraries.
      *
      * @param string $pattern
