@@ -9,8 +9,11 @@ final class CBFacebook {
 
     const loginStateCookieName = "facebook-login-state";
 
+
+
     /**
-     * https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/#confirm
+     * https://developers.facebook.com/docs/facebook-login/
+     * manually-build-a-login-flow/#confirm
      *
      * @param string $code
      *
@@ -27,30 +30,23 @@ final class CBFacebook {
          *      provided the $code value.
          */
 
-        $facebookAppID =
-        defined('COLBY_FACEBOOK_APP_ID') ?
-        COLBY_FACEBOOK_APP_ID :
-        CBFacebookAppID;
+        $redirectURI = (
+            cbsiteurl() .
+            '/colby/facebook-oauth-handler/'
+        );
 
-        $facebookAppSecret =
-        defined('COLBY_FACEBOOK_APP_SECRET') ?
-        COLBY_FACEBOOK_APP_SECRET :
-        CBFacebookAppSecret;
-
-        $redirectURI =
-        cbsiteurl() .
-        '/colby/facebook-oauth-handler/';
-
-        $URL =
-        'https://graph.facebook.com/v3.3/oauth/access_token' .
-        '?client_id=' . $facebookAppID .
-        '&redirect_uri=' . urlencode($redirectURI) .
-        '&client_secret=' . $facebookAppSecret .
-        '&code=' . $code;
+        $URL = (
+            'https://graph.facebook.com/v3.3/oauth/access_token' .
+            '?client_id=' . CBFacebookPreferences::getAppID() .
+            '&redirect_uri=' . urlencode($redirectURI) .
+            '&client_secret=' . CBFacebookPreferences::getAppSecret() .
+            '&code=' . $code
+        );
 
         return CBFacebook::fetchGraphAPIResponse($URL);
     }
     /* fetchAccessTokenObject() */
+
 
 
     /**
@@ -58,7 +54,9 @@ final class CBFacebook {
      *
      * @return object
      */
-    static function fetchGraphAPIResponse(string $URL): stdClass {
+    static function fetchGraphAPIResponse(
+        string $URL
+    ): stdClass {
         $curlHandle = curl_init();
 
         curl_setopt($curlHandle, CURLOPT_URL, $URL);
@@ -110,6 +108,7 @@ final class CBFacebook {
     /* fetchGraphAPIResponse() */
 
 
+
     /**
      * https://developers.facebook.com/docs/graph-api/reference/user
      *
@@ -132,6 +131,7 @@ final class CBFacebook {
         return CBFacebook::fetchGraphAPIResponse($URL);
     }
     /* fetchUserProperties() */
+
 
 
     /**
@@ -179,8 +179,10 @@ final class CBFacebook {
     /* loginURL() */
 
 
+
     /**
-     * https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow/#login
+     * https://developers.facebook.com/docs/facebook-login/
+     * manually-build-a-login-flow/#login
      *
      * @NOTE 2017_03_28
      *
@@ -192,20 +194,25 @@ final class CBFacebook {
      * @return string
      */
     static function loginURLForFacebook(): string {
-        $redirectURI =
-        cbsiteurl() .
-        '/colby/facebook-oauth-handler/';
+        $redirectURI = (
+            cbsiteurl() .
+            '/colby/facebook-oauth-handler/'
+        );
 
-        $loginURL =
-        'https://www.facebook.com/v3.3/dialog/oauth' .
-        '?client_id=' .
-        urlencode(CBFacebookAppID) .
-        '&redirect_uri=' .
-        urlencode($redirectURI);
+        $loginURL = (
+            'https://www.facebook.com/v3.3/dialog/oauth' .
+            '?client_id=' .
+            urlencode(
+                CBFacebookPreferences::getAppID()
+            ) .
+            '&redirect_uri=' .
+            urlencode($redirectURI)
+        );
 
         return $loginURL;
     }
     /* loginURLForFacebook() */
+
 
 
     /**
@@ -215,12 +222,15 @@ final class CBFacebook {
      *
      * @return string
      */
-    static function userImageURL(string $facebookID): string {
+    static function userImageURL(
+        string $facebookID
+    ): string {
         $userImageURL =
         "https://graph.facebook.com/v3.3/{$facebookID}/picture?type=large";
 
         return $userImageURL;
     }
     /* userImageURL() */
+
 }
 /* CBFacebook */
