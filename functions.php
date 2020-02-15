@@ -1,7 +1,11 @@
 <?php
 
-// This file contains core Colby functions that can be run without requiring any
-// other dependencies. For instance, initial setup uses theses functions.
+/**
+ * This file contains core Colby functions that can be run without requiring any
+ * other dependencies. For instance, initial setup uses theses functions.
+ */
+
+
 
 /**
  * This function is a standardized version of htmlspecialchars().
@@ -14,6 +18,8 @@ function cbhtml($text) {
     return htmlspecialchars($text, ENT_QUOTES);
 }
 
+
+
 /**
  * @param string $markdown
  *
@@ -24,8 +30,33 @@ function cbhtml($text) {
  * @return string (HTML)
  */
 function cbmdhtml($markdown) {
-    return (new Parsedown())->text($markdown);
+    $parsedown = new Parsedown();
+
+    return $parsedown->text($markdown);
 }
+
+
+
+/**
+ * @NOTE 2020_02_15
+ *
+ *      This function technically does not belong in this file because it has a
+ *      dependency. However, I'm not sure where to place functions like this so
+ *      for now it is going here.
+ *
+ * @param string $plaintext
+ *
+ * @return string
+ *
+ *      Returns a CBMessage safe version of $plaintext.
+ */
+function cbmessage(string $plaintext) {
+    return CBMessageMarkup::stringToMessage(
+        $plaintext
+    );
+}
+
+
 
 /**
  * @param callable $callback
