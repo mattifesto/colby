@@ -1491,6 +1491,23 @@ final class CBCodeAdmin {
                 (object)[
                     'cbmessage' => <<<EOT
 
+                        Replace createEditor() with
+                        CBUISpecEditor_createEditorElement().
+
+                    EOT,
+                    'filetype' => 'js',
+                    'regex' => ' createEditor\W',
+                    'severity' => 4,
+                    'title' => 'CBUISpecEditor createEditor() interface',
+                ],
+
+
+                /**
+                 * 2020_02_15 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
                         Specify email preferences in the CBEmailSender model.
 
                         Move the swiftmailer submodule into the root directory
