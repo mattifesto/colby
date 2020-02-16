@@ -1,5 +1,11 @@
 <?php
 
+$filename = CBEmail::getSwiftmailerIncludeFilename();
+
+if (file_exists($filename)) {
+    include_once($filename);
+}
+
 
 
 final class CBEmail {
@@ -45,9 +51,14 @@ final class CBEmail {
 
 
     /**
+     * @param string $subject
+     *
+     *      The subject of the email is used as the title of the HTML document.
+     *
      * @param string $HTMLContent
      *
-     *      HTML that would go inside the <body> element of an HTML document.
+     *      The HTML that would go inside the <body> element of the HTML
+     *      document.
      *
      * @return string
      *
@@ -109,7 +120,7 @@ final class CBEmail {
 
 
     /**
-     * @param string $toEmail
+     * @param string $toEmailAddress
      * @param string $toFullName
      * @param string $subject
      * @param string $cbmessage
@@ -120,104 +131,36 @@ final class CBEmail {
      * @return void
      */
     static function sendCBMessage(
-        string $toEmail,
+        string $toEmailAddress,
         string $toFullName,
         string $subject,
         string $cbmessage,
         ?stdClass $cbemailsender = null
     ): void {
-        if ($cbemailsender === null) {
-            $cbemailsender = CBModelCache::fetchModelByID(
-                CBEmailSender::websiteEmailSenderCBID()
-            );
-
-            /**
-             * @TODO 2020_01_06
-             *
-             *      Better determine whether this is a functional model.
-             */
-
-            $SMTPServerHostname = CBModel::valueToString(
-                $cbemailsender,
-                'SMTPServerHostname'
-            );
-
-            if ($SMTPServerHostname === '') {
-                $cbemailsender = null;
-            }
-        }
-
-        if ($cbemailsender === null) {
-            if (!defined('COLBY_EMAIL_SMTP_SERVER')) {
-                throw new CBException(
-                    'The system email has not been configured.'
-                );
-            }
-
-            $cbemailsender = (object)[
-                'SMTPServerHostname' => COLBY_EMAIL_SMTP_SERVER,
-                'SMTPServerPort' => COLBY_EMAIL_SMTP_PORT,
-                'SMTPServerSecurity' => COLBY_EMAIL_SMTP_SECURITY,
-                'SMTPServerUsername' => COLBY_EMAIL_SMTP_USER,
-                'SMTPServerPassword' => COLBY_EMAIL_SMTP_PASSWORD,
-                'sendingEmailAddress' => COLBY_EMAIL_SENDER,
-                'sendingEmailFullName' => COLBY_EMAIL_SENDER_NAME,
-            ];
-        }
-
-        $SMTPTransport = Swift_SmtpTransport::newInstance(
-            $cbemailsender->SMTPServerHostname,
-            $cbemailsender->SMTPServerPort,
-            $cbemailsender->SMTPServerSecurity
+        $messageAsPlaintext = CBMessageMarkup::messageToText(
+            $cbmessage
         );
 
-        $SMTPTransport->setUsername(
-            $cbemailsender->SMTPServerUsername
+        $messageAsHTMLDocument = CBEmail::HTMLContentToHTMLDocument(
+            $subject,
+            CBMessageMarkup::messageToHTML($cbmessage)
         );
 
-        $SMTPTransport->setPassword(
-            $cbemailsender->SMTPServerPassword
+        CBEmail::sendTextAndHTML(
+            $toEmailAddress,
+            $toFullName,
+            $subject,
+            $messageAsPlaintext,
+            $messageAsHTMLDocument,
+            $cbemailsender
         );
-
-        $mailer = Swift_Mailer::newInstance($SMTPTransport);
-
-        $message = Swift_Message::newInstance();
-
-        $message->setSubject($subject);
-
-        $message->setFrom(
-            [
-                $cbemailsender->sendingEmailAddress =>
-                $cbemailsender->sendingEmailFullName
-            ]
-        );
-
-        $message->setTo(
-            [
-                $toEmail => $toFullName
-            ]
-        );
-
-        $message->setBody(
-            CBMessageMarkup::messageToText($cbmessage)
-        );
-
-        $message->addPart(
-            CBEmail::HTMLContentToHTMLDocument(
-                $subject,
-                CBMessageMarkup::messageToHTML($cbmessage)
-            ),
-            'text/html'
-        );
-
-        $mailer->send($message);
     }
     /* sendCBMessage() */
 
 
 
     /**
-     * @param string $toEmail
+     * @param string $toEmailAddress
      * @param string $toFullName
      * @param string $subject
      * @param string $messageAsPlaintext
@@ -233,7 +176,7 @@ final class CBEmail {
      * @return void
      */
     static function sendTextAndHTML(
-        string $toEmail,
+        string $toEmailAddress,
         string $toFullName,
         string $subject,
         string $messageAsPlaintext,
@@ -308,7 +251,7 @@ final class CBEmail {
 
         $message->setTo(
             [
-                $toEmail => $toFullName
+                $toEmailAddress => $toFullName
             ]
         );
 
@@ -325,12 +268,4 @@ final class CBEmail {
     }
     /* sendTextAndHTML() */
 
-}
-
-
-
-$filename = CBEmail::getSwiftmailerIncludeFilename();
-
-if (file_exists($filename)) {
-    include_once($filename);
 }
