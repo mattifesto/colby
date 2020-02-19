@@ -56,7 +56,7 @@ var CBCodeAdmin = {
             );
 
             try {
-                let results = await Colby.callAjaxFunction(
+                let response = await Colby.callAjaxFunction(
                     "CBCodeAdmin",
                     "search",
                     {
@@ -64,29 +64,71 @@ var CBCodeAdmin = {
                     }
                 );
 
-                if (results.length === 0) {
-                    expander.severity = 5;
-
-                    continue;
-                }
-
-                expander.severity = search.severity || 3;
-
-                results = results.map(
-                    function (line) {
-                        return CBMessageMarkup.stringToMessage(
-                            line
-                        );
-                    }
+                let searchResults = CBModel.valueToArray(
+                    response,
+                    "results"
                 );
 
-                results = results.join("\n");
+                if (searchResults.length === 0) {
+                    expander.severity = 5;
+                    searchResults = "";
+                } else {
+                    expander.severity = search.severity || 3;
+
+                    let updatedSearchResults = [];
+
+                    for (
+                        let index = 0;
+                        index < searchResults.length;
+                        index += 1
+                    ) {
+                        let searchResult = searchResults[index];
+
+                        let searchResultAsCBMessage = (
+                            CBMessageMarkup.stringToMessage(
+                                searchResult
+                            )
+                        );
+
+                        if (searchResult.match(/^[^0-9]/)) {
+                            if (index > 0) {
+                                updatedSearchResults.push("");
+                                updatedSearchResults.push("");
+                                updatedSearchResults.push("");
+                            }
+
+                            updatedSearchResults.push(
+                                searchResultAsCBMessage
+                            );
+
+                            updatedSearchResults.push("");
+                        } else {
+                            updatedSearchResults.push(
+                                searchResultAsCBMessage
+                            );
+                        }
+                    }
+
+                    searchResults = updatedSearchResults.join("\n");
+                }
+
+                let searchCommand = CBModel.valueToString(
+                    response,
+                    "command"
+                );
 
                 expander.message = `
 
                     ${searchCBMessage}
 
-                    --- pre\n${results}
+                    (Search Command (b))
+
+                    --- pre CBUI_whiteSpace_preWrap\n${searchCommand}
+                    ---
+
+                    (Search Results (b))
+
+                    --- pre\n${searchResults}
                     ---
 
                 `;

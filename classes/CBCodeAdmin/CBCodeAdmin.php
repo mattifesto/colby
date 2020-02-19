@@ -43,14 +43,42 @@ final class CBCodeAdmin {
     /**
      * @param object $args
      *
-     * @return [string]
+     * @return object
+     *
+     *      {
+     *          command: string
+     *          output: [string]
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          command: string
+     *          results: [string]
+     *      }
      */
-    static function CBAjax_search(stdClass $args): array {
-        $index = CBModel::valueAsInt($args, 'index');
-
-        return CBCodeAdmin::search(
-            CBCodeAdmin::searches()[$index]
+    static function CBAjax_search(
+        stdClass $args
+    ): object {
+        $index = CBModel::valueAsInt(
+            $args,
+            'index'
         );
+
+        $searchModel = CBCodeAdmin::searches()[$index];
+
+        $searchCommand = CBCodeAdmin::searchModelToSearchCommand(
+            $searchModel
+        );
+
+        $searchResults = CBCodeAdmin::searchCommandToSearchResults(
+            $searchCommand
+        );
+
+        return (object)[
+            'command' => $searchCommand,
+            'results' => $searchResults,
+        ];
     }
     /* CBAjax_search() */
 
@@ -85,7 +113,7 @@ final class CBCodeAdmin {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v545.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v576.js', cbsysurl()),
         ];
     }
 
@@ -192,37 +220,44 @@ final class CBCodeAdmin {
      *      This is currently not perfect as some of the errors below should be
      *      warnings.
      *
-     * @param object $search
+     * @param object $searchModel
      *
-     * @return [string]
+     * @return string
      */
-    static function search(stdClass $search): array {
-        $output = [];
-
-        $command = implode(
+    static function searchModelToSearchCommand(
+        stdClass $searchModel
+    ): string {
+        $searchCommand = implode(
             ' ',
             [
                 'ack',
                 '--heading',
                 // '--underline', (enable only if ack v3 is available)
-                "--match '{$search->regex}'",
+                "--match '{$searchModel->regex}'",
                 '--ignore-dir=data',
                 '--ignore-file=match:CodeAdmin',
-                CBModel::valueToString($search, 'args'),
+                '--sort-files',
+                CBModel::valueToString(
+                    $searchModel,
+                    'args'
+                ),
             ]
         );
 
-        $filetype = CBModel::valueToString($search, 'filetype');
+        $filetype = CBModel::valueToString(
+            $searchModel,
+            'filetype'
+        );
 
         switch ($filetype) {
             case 'js':
 
-                $command .= ' --js';
+                $searchCommand .= ' --js';
                 break;
 
             case 'php':
 
-                $command .= ' --php';
+                $searchCommand .= ' --php';
                 break;
 
             case 'args':
@@ -231,29 +266,52 @@ final class CBCodeAdmin {
 
             default:
 
-                $command .= ' --css --js --php';
+                $searchCommand .= ' --css --js --php';
                 break;
         }
+
+        return $searchCommand;
+    }
+    /* searchModelToSearchCommand() */
+
+
+
+    /**
+     * @param string $searchCommand
+     *
+     * @return [string]
+     */
+    static function searchCommandToSearchResults(
+        string $searchCommand
+    ): array {
+        $searchResults = [];
 
         $pwd = getcwd();
 
         chdir(cbsitedir());
 
         try {
-            exec("{$command} 2>&1", $output, $exitCode);
+            exec(
+                "{$searchCommand} 2>&1",
+                $searchResults,
+                $exitCode
+            );
 
             if ($exitCode === 0) {
 
             } else if ($exitCode !== 1){
-                array_push($output, "! returned exit code: {$exitCode}");
+                array_push(
+                    $searchResults,
+                    "! returned exit code: {$exitCode}"
+                );
             }
         } finally {
             chdir($pwd);
         }
 
-        return $output;
+        return $searchResults;
     }
-    /* search() */
+    /* searchCommandToSearchResults() */
 
 
 
