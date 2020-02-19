@@ -78,6 +78,11 @@ a.CBUI_action {
     border-radius: 0;
 }
 
+.CBUI_button1.CBUI_button1_disabled {
+    opacity: 0.1;
+}
+
+
 
 
 /**
@@ -358,6 +363,18 @@ a.CBUI_action {
 .CBUI_padding_standard {
     padding: 20px;
 }
+
+
+
+/**
+ * 2020_02_18
+ */
+.CBUI_padding_standard_vertical {
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
+
 
 /**
  * 2019_06_17
@@ -702,7 +719,8 @@ a.CBUI_sectionItem {
  * 2019_06_17
  *
  *      All view and view-like root elements should have this class. Many views
- *      will also add the CBUI_padding_standard class.
+ *      will also add the CBUI_padding_standard or the
+ *      CBUI_padding_standard_vertical class.
  */
 .CBUI_view {
     display: flex;
