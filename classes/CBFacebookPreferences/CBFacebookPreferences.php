@@ -2,6 +2,50 @@
 
 final class CBFacebookPreferences {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBAdmin_getIssueMessages(): array {
+        $cbmessages = [];
+
+        /**
+         * @NOTE 2020_02_23
+         *
+         *      The COLBY_EMAIL constants are all deprecated.
+         */
+        if (defined('CBFacebookAppID')) {
+            $facebookPreferencesModelCBID = (
+                CBFacebookPreferences::getModelCBID()
+            );
+
+            $URL = (
+                '/admin/?c=CBModelEditor&ID=' .
+                $facebookPreferencesModelCBID
+            );
+
+            array_push(
+                $cbmessages,
+                <<<EOT
+
+                    The CBFacebookAppID constant is defined. This constant is
+                    deprecated. Remove the consant and enter the Facebook
+                    application information in the
+                    (CBFacebookPreferences model (a {$URL})).
+
+                EOT
+            );
+        }
+
+        return $cbmessages;
+    }
+    /* CBAdmin_getIssueMessages() */
+
+
+
     /* -- CBInstall interfaces -- -- -- -- -- */
 
 
