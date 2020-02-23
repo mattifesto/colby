@@ -10,7 +10,7 @@ final class CBUIPanel_Tests {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v531.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v578.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -52,11 +52,6 @@ final class CBUIPanel_Tests {
             (object)[
                 'name' => 'confirmText_interactive',
                 'title' => 'CBUIPanel confirmText()',
-                'type' => 'interactive',
-            ],
-            (object)[
-                'name' => 'deprecated',
-                'title' => 'CBUIPanel deprecated',
                 'type' => 'interactive',
             ],
             (object)[
