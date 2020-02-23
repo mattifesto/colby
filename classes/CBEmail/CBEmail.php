@@ -35,7 +35,7 @@ final class CBEmail {
         }
 
         /**
-         * @NOTE 2020_02_20
+         * @NOTE 2020_02_22
          *
          *      The COLBY_EMAIL constants are all deprecated.
          */
@@ -45,7 +45,7 @@ final class CBEmail {
                 <<<EOT
 
                     The COLBY_EMAIL_SMTP_SERVER constant is defined. Don't
-                    define it and instead place the email sender information in
+                    define it and instead enter the email sender information in
                     the CBEmailSender model.
 
                 EOT
