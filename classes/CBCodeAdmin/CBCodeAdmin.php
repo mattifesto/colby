@@ -341,6 +341,24 @@ final class CBCodeAdmin {
 
 
                 /**
+                 * 2019_09_19 (warning)
+                 * 2020_02_20 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Replace use of deprecated CBUIPanel APIs with new
+                        CBUIPanel APIs.
+
+                    EOT,
+                    'filetype' => 'js',
+                    'regex' => 'CBUIPanel\.(buttons|isShowing|message|reset)',
+                    'severity' => 3,
+                    'title' => 'Deprecated CBUIPanel APIs',
+                ],
+
+
+                /**
                  * 2019_11_10 (warning)
                  * 2020_02_11 (error)
                  */
@@ -1847,20 +1865,6 @@ final class CBCodeAdmin {
                     'title' => (
                         'Replace use of "setImageURI" with the ' .
                         '"src" property on the CBUIImageChooser object.'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_09_19 (warning)
-                 */
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => 'CBUIPanel\.(buttons|isShowing|message|reset)',
-                    'severity' => 4,
-                    'title' => (
-                        'Replace use of deprecated CBUIPanel API with ' .
-                        'CBUIPanel.displayElement().'
                     ),
                 ],
 
