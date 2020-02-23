@@ -18,20 +18,41 @@ final class CBEmail {
      * @return [string]
      */
     static function CBAdmin_getIssueMessages(): array {
+        $cbmessages = [];
+
         if (!file_exists(
             CBEmail::getSwiftmailerIncludeFilename()
         )) {
-            return [
+            array_push(
+                $cbmessages,
                 <<<EOT
 
                     Swiftmailer is not installed in the correct location for
                     this website.
 
-                EOT,
-            ];
+                EOT
+            );
         }
 
-        return [];
+        /**
+         * @NOTE 2020_02_20
+         *
+         *      The COLBY_EMAIL constants are all deprecated.
+         */
+        if (defined('COLBY_EMAIL_SMTP_SERVER')) {
+            array_push(
+                $cbmessages,
+                <<<EOT
+
+                    The COLBY_EMAIL_SMTP_SERVER constant is defined. Don't
+                    define it and instead place the email sender information in
+                    the CBEmailSender model.
+
+                EOT
+            );
+        }
+
+        return $cbmessages;
     }
     /* CBAdmin_getIssueMessages() */
 
