@@ -34,161 +34,22 @@
  *
  *          function displayText(textContent, buttonTextContent)
  *          -> Promise -> undefined
- *
- *
- *          -- everything below is deprecated -- -- -- -- --
- *
- *          buttons: [object] (get, set)
- *
- *              The default button of the panel is an OK button that hides the
- *              panel. Developers can add custom buttons for panels with more
- *              complex interaction.
- *
- *              {
- *                  title: string
- *                  callback: function?
- *
- *                      If no callback is specified, a callback will be used
- *                      that resets (and hides) the panel.
- *              }
- *
- *          isShowing: bool (get, set)
- *
- *              Shows and hides the panel.
- *
- *          message: string (get, set)
- *
- *              The content of the panel in message markup.
- *
- *          reset: function (get)
- *
- *              The reset function hides the panel, clears the message, and
- *              resets the buttons to a single OK button that will hide the
- *              panel.
  *      }
  */
 
 Colby.afterDOMContentLoaded(
     function init() {
-        let buttons;
-        let isShowing = false;
-        let message = "";
-
-        /**
-         * Stucture:
-         *
-         *      viewportElement
-         *          backgroundElement
-         *              surfaceElement
-         *                  messageElement
-         *                      contentElement
-         *                  interfaceElement
-         *                      [button element]
-         */
-
-        let viewportElement = document.createElement("div");
-        viewportElement.className = "CBUIPanel";
-
-        let backgroundElement = document.createElement("div");
-        backgroundElement.className = "CBUIPanel_background";
-
-        viewportElement.appendChild(backgroundElement);
-
-        let surfaceElement = document.createElement("div");
-        surfaceElement.className = "CBUIPanel_surface";
-
-        backgroundElement.appendChild(surfaceElement);
-
-        let messageElement = document.createElement("div");
-        messageElement.className = "CBUIPanel_message";
-
-        surfaceElement.appendChild(messageElement);
-
-        let contentElement = document.createElement("div");
-        contentElement.className = "CBUIPanel_content CBContentStyleSheet";
-
-        messageElement.appendChild(contentElement);
-
-        let interfaceElement = CBUI.createElement("CBUIPanel_interface");
-
-        surfaceElement.appendChild(interfaceElement);
-
-        document.body.appendChild(viewportElement);
-
         let api = {
-
             confirmText: init_confirmText,
-
             displayAjaxResponse: init_displayAjaxResponse,
-
             displayBusyText: init_displayBusyText,
-
             displayCBMessage: init_displayCBMessage,
-
             displayElement: init_displayElement,
-
             displayError: init_displayError,
-
             displayText: init_displayText,
-
-
-            /**
-             * @deprecated 2019_09_19
-             */
-            get buttons() {
-                return buttons;
-            },
-
-            /**
-             * @deprecated 2019_09_19
-             */
-            set buttons(value) {
-                init_setButtons(value);
-            },
-
-            /**
-             * @deprecated 2019_09_19
-             */
-            get isShowing() {
-                return isShowing;
-            },
-
-            /**
-             * @deprecated 2019_09_19
-             */
-            set isShowing(value) {
-                init_setIsShowing(value);
-            },
-
-            /**
-             * @deprecated 2019_09_19
-             */
-            get message() {
-                return message;
-            },
-
-            /**
-             * @deprecated 2019_09_19
-             */
-            set message(value) {
-                init_setMessage(value);
-            },
-
-            /**
-             * @deprecated 2019_09_19
-             */
-            reset: init_reset,
         };
 
-        init_reset();
-
-        Object.defineProperty(
-            window,
-            'CBUIPanel',
-            {
-                value: api,
-            }
-        );
+        window.CBUIPanel = api;
 
         return;
 
@@ -310,7 +171,9 @@ Colby.afterDOMContentLoaded(
             );
 
             if (callback === undefined) {
-                callback = init_reset;
+                throw Error(
+                    "Buttons must have a callback."
+                );
             }
 
             buttonElement.addEventListener(
@@ -701,88 +564,6 @@ Colby.afterDOMContentLoaded(
         }
         /* init_displayText() */
 
-
-        /**
-         * @return undefined
-         */
-        function init_reset() {
-            init_setIsShowing(false);
-
-            init_setMessage("");
-
-            init_setButtons(
-                [
-                    {
-                        title: "OK",
-                    }
-                ]
-            );
-        }
-        /* init_reset() */
-
-
-        /**
-         * @param [object] buttonArgsArray
-         *
-         *      {
-         *          callback: function
-         *          title: string,
-         *      }
-         *
-         * @return undefined
-         */
-        function init_setButtons(buttonArgsArray) {
-            interfaceElement.textContent = "";
-
-            if (
-                Array.isArray(buttonArgsArray) &&
-                buttonArgsArray.length > 0
-            ) {
-                buttonArgsArray.forEach(
-                    function (buttonArgs) {
-                        let buttonElement = init_createButtonElement(
-                            buttonArgs
-                        );
-
-                        interfaceElement.appendChild(
-                            buttonElement
-                        );
-                    }
-                );
-            }
-        }
-        /* init_setButtons() */
-
-
-        /**
-         * @param bool value
-         *
-         * @return undefined
-         */
-        function init_setIsShowing(value) {
-            isShowing = !!value;
-
-            if (isShowing) {
-                viewportElement.classList.add("CBUIPanel_showing");
-            } else {
-                viewportElement.scrollTop = 0;
-                viewportElement.classList.remove("CBUIPanel_showing");
-            }
-        }
-        /* init_setIsShowing() */
-
-
-        /**
-         * @param string message
-         *
-         * @return undefined
-         */
-        function init_setMessage(value) {
-            message = CBConvert.valueToString(value);
-
-            contentElement.innerHTML = CBMessageMarkup.markupToHTML(message);
-        }
-        /* init_setMessage() */
     }
     /* init() */
 );
