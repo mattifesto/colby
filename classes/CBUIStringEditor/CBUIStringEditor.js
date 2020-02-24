@@ -148,6 +148,25 @@ var CBUIStringEditor = {
 
 
     /**
+     * @deprecated 2020_02_24
+     *
+     *      This function was recently created as a replacement for
+     *      createEditor(). However, upon further use, code using the
+     *      CBUIStringEditor is most understandable when it uses
+     *      CBUIStringEditor.create() like the following code:
+     *
+     *          let nameEditor = CBUIStringEditor.create();
+     *          nameEditor.title = "Name";
+     *
+     *          nameEditor.changed = function () {
+     *              userModel.name = nameEditor.value;
+     *              notifyThatUserModelHasChanged();
+     *          };
+     *
+     *          sectionElement.appendChild(
+     *              nameEditor.element
+     *          );
+     *
      * @param string title
      * @param object spec
      * @param string propertyName
@@ -188,8 +207,19 @@ var CBUIStringEditor = {
     /**
      * @deprecated
      *
-     *      Use CBUIStringEditor.createSpecPropertyEditorElement() or
-     *      CBUIStringEditor.create().
+     *      Use CBUIStringEditor.create() like the code below:
+     *
+     *          let nameEditor = CBUIStringEditor.create();
+     *          nameEditor.title = "Name";
+     *
+     *          nameEditor.changed = function () {
+     *              userModel.name = nameEditor.value;
+     *              notifyThatUserModelHasChanged();
+     *          };
+     *
+     *          sectionElement.appendChild(
+     *              nameEditor.element
+     *          );
      *
      * @param object args
      *
