@@ -1637,14 +1637,18 @@ final class CBCodeAdmin {
                 (object)[
                     'cbmessage' => <<<EOT
 
-                        Use CBUIStringEditor.createSpecPropertyEditorElement()
-                        or CBUIStringEditor.create().
+                        Use CBUIStringEditor.create().
 
                     EOT,
                     'filetype' => 'js',
-                    'regex' => 'CBUIStringEditor.createEditor',
+                    'regex' => (
+                        'CBUIStringEditor\.(' .
+                        'createEditor|' .
+                        'createSpecPropertyEditorElement' .
+                        ')'
+                    ),
                     'severity' => 4,
-                    'title' => 'CBUIStringEditor.createEditor()',
+                    'title' => 'CBUIStringEditor deprecated APIs',
                 ],
 
 
