@@ -17,16 +17,66 @@
     CBPageKindsOptions,
 */
 
-var CBAdminPageForPagesFind = {
+
+
+(function () {
+
+    Colby.afterDOMContentLoaded(
+        afterDOMContentLoaded
+    );
+
+
+
+    /**
+     * @return undefined
+     */
+    function afterDOMContentLoaded() {
+        var elements = document.getElementsByClassName(
+            "CBAdminPageForPagesFind"
+        );
+
+        if (elements.length > 0) {
+            let element = elements.item(0);
+
+            element.appendChild(
+                CBUINavigationView.create().element
+            );
+
+            let rootUserInterfaceElement = createRootUserInterfaceElement();
+
+            CBUINavigationView.navigate(
+                {
+                    element: rootUserInterfaceElement,
+                    title: "Find Pages",
+                }
+            );
+        }
+    }
+    /* afterDOMContentLoaded() */
+
+
 
     /**
      * @return Element
      */
-    createElement: function() {
-        var section, item;
-        var element = CBUI.createElement("CBAdminPageForPagesFind");
-        var pageListContainer = document.createElement("div");
+    function createRootUserInterfaceElement() {
+        let rootUserInterfaceElement;
 
+        {
+            let elements = CBUI.createElementTree(
+                "CBAdminPageForPagesFind_rootUserInterfaceElement",
+                "CBUI_title1"
+            );
+
+            rootUserInterfaceElement = elements[0];
+
+            let titleElement = elements[1];
+
+            titleElement.textContent = "Search Criteria";
+        }
+
+
+        var pageListContainer = document.createElement("div");
         var parameters = {};
 
         var fetchPagesCallback = CBAdminPageForPagesFind.fetchPages.bind(
@@ -38,22 +88,25 @@ var CBAdminPageForPagesFind = {
             }
         );
 
-        element.appendChild(
-            CBUI.createHalfSpace()
-        );
 
-        element.appendChild(
-            CBUI.createSectionHeader(
-                {
-                    text: "Search Criteria",
-                }
-            )
-        );
+        let sectionElement;
 
-        section = CBUI.createSection();
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
+
+            rootUserInterfaceElement.appendChild(
+                elements[0]
+            );
+
+            sectionElement = elements[1];
+        }
+
 
         /* classNameForKind */
-        section.appendChild(
+        sectionElement.appendChild(
             CBUISelector.create(
                 {
                     labelText: "Kind",
@@ -65,8 +118,9 @@ var CBAdminPageForPagesFind = {
             ).element
         );
 
+
         /* published */
-        section.appendChild(
+        sectionElement.appendChild(
             CBUISelector.create(
                 {
                     labelText: "Published",
@@ -91,8 +145,9 @@ var CBAdminPageForPagesFind = {
             ).element
         );
 
+
         /* sorting */
-        section.appendChild(
+        sectionElement.appendChild(
             CBUISelector.create(
                 {
                     labelText: "Sorting",
@@ -121,57 +176,57 @@ var CBAdminPageForPagesFind = {
             ).element
         );
 
-        /* search */
-        item = CBUI.createSectionItem();
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Search",
-                    propertyName: "search",
-                    spec: parameters,
-                    specChangedCallback: fetchPagesCallback,
-                }
-            ).element
-        );
+        /* search for */
+        {
+            let searchForEditor = CBUIStringEditor.create();
 
-        section.appendChild(item);
+            searchForEditor.title = "Search For";
 
-        element.appendChild(section);
+            searchForEditor.changed = function () {
+                parameters.search = searchForEditor.value;
+                fetchPagesCallback();
+            };
 
-        element.appendChild(
-            CBUI.createHalfSpace()
-        );
+            sectionElement.appendChild(
+                searchForEditor.element
+            );
+        }
+        /* search for */
 
-        element.appendChild(
-            CBUI.createSectionHeader(
-                {
-                    text: "Results",
-                }
-            )
-        );
 
-        element.appendChild(pageListContainer);
+        /* found pages title */
+        {
+            let titleElement = CBUI.createElement(
+                "CBUI_title1"
+            );
 
-        element.appendChild(
+            rootUserInterfaceElement.appendChild(
+                titleElement
+            );
+
+            titleElement.textContent = "Found Pages";
+        }
+        /* found pages title */
+
+
+        rootUserInterfaceElement.appendChild(pageListContainer);
+
+        rootUserInterfaceElement.appendChild(
             CBUI.createHalfSpace()
         );
 
         fetchPagesCallback();
 
-        var navigationView = CBUINavigationView.create();
+        return rootUserInterfaceElement;
+    }
+    /* createRootUserInterfaceElement() */
 
-        CBUINavigationView.navigate(
-            {
-                element: element,
-                title: "Find Pages",
-            }
-        );
+})();
 
-        return navigationView.element;
-    },
-    /* createElement() */
 
+
+var CBAdminPageForPagesFind = {
 
     /**
      * @param object args
@@ -335,20 +390,3 @@ var CBPageList = {
     /* createElement() */
 };
 /* CBPageList (CBAdminPageForPagesFind) */
-
-
-Colby.afterDOMContentLoaded(
-    function() {
-        var elements = document.getElementsByClassName(
-            "CBAdminPageForPagesFind"
-        );
-
-        if (elements.length > 0) {
-            let element = elements.item(0);
-
-            element.appendChild(
-                CBAdminPageForPagesFind.createElement()
-            );
-        }
-    }
-);

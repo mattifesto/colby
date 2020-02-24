@@ -63,7 +63,9 @@ final class CBAdminPageForPagesFind {
                     $conditions[] = "`archiveID` = {$frontPageIDForSQL}";
                 }
             } else {
-                $classNameForKindAsSQL = CBDB::stringToSQL($parameters->classNameForKind);
+                $classNameForKindAsSQL = CBDB::stringToSQL(
+                    $parameters->classNameForKind
+                );
                 $conditions[] = "`classNameForKind` = {$classNameForKindAsSQL}";
             }
         }
@@ -162,7 +164,7 @@ final class CBAdminPageForPagesFind {
             Colby::flexpath(__CLASS__, 'css', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_CSSURLs() */
+
 
 
     /**
@@ -170,17 +172,19 @@ final class CBAdminPageForPagesFind {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v579.js', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
      * @return [[string, mixed]]
      */
     static function CBHTMLOutput_JavaScriptVariables() {
-        $pageKinds = CBDB::SQLToArray('SELECT DISTINCT `classNameForKind` FROM `ColbyPages`');
+        $pageKinds = CBDB::SQLToArray(
+            'SELECT DISTINCT classNameForKind FROM ColbyPages'
+        );
 
         $pageKinds = array_map(function ($pageKind) {
             if ($pageKind === null) {
@@ -215,6 +219,7 @@ final class CBAdminPageForPagesFind {
     /* CBHTMLOutput_JavaScriptVariables() */
 
 
+
     /**
      * @return [string]
      */
@@ -235,7 +240,10 @@ final class CBAdminPageForPagesFind {
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
@@ -255,12 +263,15 @@ final class CBAdminPageForPagesFind {
                 'className' => 'CBMenuItem',
                 'name' => 'find',
                 'text' => 'Find',
-                'URL' => CBAdmin::getAdminPageURL('CBAdminPageForPagesFind'),
+                'URL' => CBAdmin::getAdminPageURL(
+                    'CBAdminPageForPagesFind'
+                ),
             ]
         );
 
         CBModelUpdater::save($updater);
     }
+
 
 
     /**
@@ -271,5 +282,6 @@ final class CBAdminPageForPagesFind {
             'CBPagesAdminMenu',
         ];
     }
+
 }
 /* CBAdminPageForPagesFind */
