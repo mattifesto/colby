@@ -152,7 +152,7 @@ var CBUIStringEditor = {
      * @param object spec
      * @param string propertyName
      * @param function specChangedCallback
-     * @param object\undefined args
+     * @param object|undefined args
      *
      * @return Element
      */
