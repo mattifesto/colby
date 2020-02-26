@@ -2,18 +2,21 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBErrorHandler,
+    CBModel,
     CBUI,
     CBUIMessagePart,
     CBUISectionItem4,
     Colby,
-
-    CBStatusAdminPage_duplicateURIMessages,
-    CBStatusAdminPage_issues,
 */
 
 
 
 (function () {
+
+    let mainElement;
+
+
 
     Colby.afterDOMContentLoaded(
         afterDOMContentLoaded
@@ -24,9 +27,44 @@
      * @return undefined
      */
     function afterDOMContentLoaded() {
-        let mainElement = document.getElementsByTagName("main")[0];
+        mainElement = document.getElementsByTagName("main")[0];
 
-        if (CBStatusAdminPage_issues.length > 0) {
+        Colby.callAjaxFunction(
+            "CBStatusAdminPage",
+            "fetchMessages"
+        ).then(
+            function (messages) {
+                renderMessages(messages);
+            }
+        ).catch(
+            function (error) {
+                CBErrorHandler.displayAndReport(error);
+            }
+        );
+    }
+    /* afterDOMContentLoaded() */
+
+
+
+    /**
+     * @param object messages
+     *
+     *      {
+     *          issueCBMessages: [string]
+     *          duplicateURICBMessages: [string]
+     *      }
+     *
+     * @return undefined
+     */
+    function renderMessages(
+        messages
+    ) {
+        let issueCBMessages = CBModel.valueToArray(
+            messages,
+            "issueCBMessages"
+        );
+
+        if (issueCBMessages.length > 0) {
             {
                 let issuesTitleElement = CBUI.createElement(
                     "CBUI_title1"
@@ -41,7 +79,7 @@
 
             let sectionElement = CBUI.createSection();
 
-            CBStatusAdminPage_issues.forEach(
+            issueCBMessages.forEach(
                 function (issue) {
                     let sectionItem = CBUISectionItem4.create();
                     let messagePart = CBUIMessagePart.create();
@@ -67,7 +105,12 @@
             mainElement.appendChild(CBUI.createHalfSpace());
         }
 
-        if (CBStatusAdminPage_duplicateURIMessages.length > 0) {
+        let duplicateURICBMessages = CBModel.valueToArray(
+            messages,
+            "duplicateURICBMessages"
+        );
+
+        if (duplicateURICBMessages.length > 0) {
             mainElement.appendChild(
                 CBUI.createSectionHeader(
                     {
@@ -78,7 +121,7 @@
 
             let sectionElement = CBUI.createSection();
 
-            CBStatusAdminPage_duplicateURIMessages.forEach(
+            duplicateURICBMessages.forEach(
                 function (message) {
                     let sectionItem = CBUISectionItem4.create();
                     let messagePart = CBUIMessagePart.create();
@@ -93,6 +136,6 @@
             mainElement.appendChild(CBUI.createHalfSpace());
         }
     }
-    /* afterDOMContentLoaded() */
+    /* renderMessages() */
 
 })();
