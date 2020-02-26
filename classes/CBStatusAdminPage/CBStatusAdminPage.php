@@ -205,37 +205,6 @@ final class CBStatusAdminPage {
 
 
     /**
-     * @return [string]
-     */
-    private static function getDuplicateURICBMessages(): array {
-        $messages = [];
-
-        $SQL = <<<EOT
-
-            SELECT      `URI`
-            FROM        `ColbyPages`
-            WHERE       `published` IS NOT NULL AND
-                        `URI` IS NOT NULL
-            GROUP BY    `URI`
-            HAVING      COUNT(*) > 1
-
-        EOT;
-
-        $URIs = CBDB::SQLToArray($SQL);
-
-        if (!empty($URIs)) {
-            foreach ($URIs as $URI) {
-                $messages[] = CBStatusAdminPage::duplicateURIToMessage($URI);
-            }
-        }
-
-        return $messages;
-    }
-    /* getDuplicateURICBMessages() */
-
-
-
-    /**
      * @return string
      */
     static function duplicateURIToMessage($URI): string {
@@ -277,6 +246,37 @@ final class CBStatusAdminPage {
         return $message;
     }
     /* duplicateURIToMessage() */
+
+
+
+    /**
+     * @return [string]
+     */
+    private static function getDuplicateURICBMessages(): array {
+        $messages = [];
+
+        $SQL = <<<EOT
+
+            SELECT      `URI`
+            FROM        `ColbyPages`
+            WHERE       `published` IS NOT NULL AND
+                        `URI` IS NOT NULL
+            GROUP BY    `URI`
+            HAVING      COUNT(*) > 1
+
+        EOT;
+
+        $URIs = CBDB::SQLToArray($SQL);
+
+        if (!empty($URIs)) {
+            foreach ($URIs as $URI) {
+                $messages[] = CBStatusAdminPage::duplicateURIToMessage($URI);
+            }
+        }
+
+        return $messages;
+    }
+    /* getDuplicateURICBMessages() */
 
 
 
