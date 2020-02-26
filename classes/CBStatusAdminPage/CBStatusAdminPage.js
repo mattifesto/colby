@@ -111,29 +111,46 @@
         );
 
         if (duplicateURICBMessages.length > 0) {
-            mainElement.appendChild(
-                CBUI.createSectionHeader(
-                    {
-                        text: "Duplicate URIs",
-                    }
-                )
+            let titleElement = CBUI.createElement(
+                "CBUI_title1"
             );
 
-            let sectionElement = CBUI.createSection();
+            mainElement.appendChild(
+                titleElement
+            );
+
+            titleElement.textContent = "Duplicate URIs";
+
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
+
+            mainElement.appendChild(
+                elements[0]
+            );
+
+            let sectionElement = elements[1];
 
             duplicateURICBMessages.forEach(
                 function (message) {
-                    let sectionItem = CBUISectionItem4.create();
-                    let messagePart = CBUIMessagePart.create();
-                    messagePart.message = message;
+                    let sectionItemElement = CBUI.createElement(
+                        "CBUI_sectionItem"
+                    );
 
-                    sectionItem.appendPart(messagePart);
-                    sectionElement.appendChild(sectionItem.element);
+                    sectionElement.appendChild(
+                        sectionItemElement
+                    );
+
+                    let messagePart = CBUIMessagePart.create();
+
+                    sectionItemElement.appendChild(
+                        messagePart.element
+                    );
+
+                    messagePart.message = message;
                 }
             );
-
-            mainElement.appendChild(sectionElement);
-            mainElement.appendChild(CBUI.createHalfSpace());
         }
     }
     /* renderMessages() */
