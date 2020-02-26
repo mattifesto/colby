@@ -192,8 +192,7 @@ final class CBStatusAdminPage {
             'CBModel',
             'CBUI',
             'CBUIMessagePart',
-            'CBUISectionItem4',
-            'CBUIStringsPart'
+            'Colby',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

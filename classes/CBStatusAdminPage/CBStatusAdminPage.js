@@ -6,7 +6,6 @@
     CBModel,
     CBUI,
     CBUIMessagePart,
-    CBUISectionItem4,
     Colby,
 */
 
@@ -70,19 +69,39 @@
                     "CBUI_title1"
                 );
 
-                issuesTitleElement.textContent = "Issues";
-
                 mainElement.appendChild(
                     issuesTitleElement
                 );
+
+                issuesTitleElement.textContent = "Issues";
             }
 
-            let sectionElement = CBUI.createSection();
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
+
+            mainElement.appendChild(
+                elements[0]
+            );
+
+            let sectionElement = elements[1];
 
             issueCBMessages.forEach(
                 function (issue) {
-                    let sectionItem = CBUISectionItem4.create();
+                    let sectionItemElement = CBUI.createElement(
+                        "CBUI_sectionItem"
+                    );
+
+                    sectionElement.appendChild(
+                        sectionItemElement
+                    );
+
                     let messagePart = CBUIMessagePart.create();
+
+                    sectionItemElement.appendChild(
+                        messagePart.element
+                    );
 
                     if (Array.isArray(issue)) {
                         messagePart.message = `
@@ -95,14 +114,8 @@
                     } else {
                         messagePart.message = issue;
                     }
-
-                    sectionItem.appendPart(messagePart);
-                    sectionElement.appendChild(sectionItem.element);
                 }
             );
-
-            mainElement.appendChild(sectionElement);
-            mainElement.appendChild(CBUI.createHalfSpace());
         }
 
         let duplicateURICBMessages = CBModel.valueToArray(
