@@ -186,59 +186,6 @@ final class CBStatusAdminPage {
     /**
      * @return [string]
      */
-    private static function getIssueCBMessages() {
-        $currentUserIsDeveloper = CBUserGroup::currentUserIsMemberOfUserGroup(
-            'CBDevelopersUserGroup'
-        );
-
-        if ($currentUserIsDeveloper !== true) {
-            return [];
-        }
-
-        $issueCBMessages = [];
-
-        if (
-            sha1_file(cbsitedir() . '/.gitignore') !==
-            sha1_file(cbsysdir() . '/setup/gitignore.template.data')
-        ) {
-            $message = <<<EOT
-
-                The website (.gitigore (code)) file is different than the
-                (colby/setup/gitigore.template.data (code)) file.
-
-            EOT;
-
-            array_push($issueCBMessages, $message);
-        }
-
-        if (
-            sha1_file(cbsitedir() . '/.htaccess') !==
-            sha1_file(cbsysdir() . '/setup/htaccess.template.data')
-        ) {
-            $message = <<<EOT
-
-                The website (.htaccess (code)) file is different than the
-                (colby/setup/htaccess.template.data (code)) file.
-
-            EOT;
-
-            array_push($issueCBMessages, $message);
-        }
-
-        $issueCBMessages = array_merge(
-            $issueCBMessages,
-            CBAdmin::getIssueMessages()
-        );
-
-        return $issueCBMessages;
-    }
-    /* getIssueCBMessages() */
-
-
-
-    /**
-     * @return [string]
-     */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBErrorHandler',
@@ -330,6 +277,59 @@ final class CBStatusAdminPage {
         return $message;
     }
     /* duplicateURIToMessage() */
+
+
+
+    /**
+     * @return [string]
+     */
+    private static function getIssueCBMessages() {
+        $currentUserIsDeveloper = CBUserGroup::currentUserIsMemberOfUserGroup(
+            'CBDevelopersUserGroup'
+        );
+
+        if ($currentUserIsDeveloper !== true) {
+            return [];
+        }
+
+        $issueCBMessages = [];
+
+        if (
+            sha1_file(cbsitedir() . '/.gitignore') !==
+            sha1_file(cbsysdir() . '/setup/gitignore.template.data')
+        ) {
+            $message = <<<EOT
+
+                The website (.gitigore (code)) file is different than the
+                (colby/setup/gitigore.template.data (code)) file.
+
+            EOT;
+
+            array_push($issueCBMessages, $message);
+        }
+
+        if (
+            sha1_file(cbsitedir() . '/.htaccess') !==
+            sha1_file(cbsysdir() . '/setup/htaccess.template.data')
+        ) {
+            $message = <<<EOT
+
+                The website (.htaccess (code)) file is different than the
+                (colby/setup/htaccess.template.data (code)) file.
+
+            EOT;
+
+            array_push($issueCBMessages, $message);
+        }
+
+        $issueCBMessages = array_merge(
+            $issueCBMessages,
+            CBAdmin::getIssueMessages()
+        );
+
+        return $issueCBMessages;
+    }
+    /* getIssueCBMessages() */
 
 }
 /* CBStatusAdminPage */
