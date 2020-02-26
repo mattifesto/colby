@@ -8,14 +8,66 @@
 
 
 
+(function () {
+
+    /**
+     * Set the error handler as soon as possible to catch errors even if they
+     * occur later in this file. If CBErrorHandler is loaded it will gracefully
+     * replace this handler.
+     */
+    window.addEventListener(
+        "error",
+        handleError
+    );
+
+    /**
+     * The reportError() makes an Ajax request which will not complete if there
+     * is navigation immediately after because navigation cancels active
+     * requests.
+     *
+     * @param ErrorEvent errorEvent
+     *
+     * @return undefined
+     *
+     *      @NOTE 2020_02_26
+     *
+     *      It was recently very roughly documented here that the return value
+     *      of this function was boolean and had some effect, but according to
+     *      the linked documentation there is not supposed to be a return value
+     *      for this function. It makes sense because there could be potentially
+     *      many listeners added to the error event that could have different
+     *      return values.
+     *
+     *      https://mzl.la/2VosKqz
+     */
+    function handleError(
+        errorEvent
+    ) {
+        Colby.reportError(errorEvent.error);
+    }
+    /* handleError() */
+
+})();
+
+
+
 var Colby = {
     updateTimesTimeoutID: null,
     updateTimesCount: 0,
+
     monthNames: [
-        'January', 'February', 'March',
-        'April', 'May', 'June',
-        'July', 'August', 'September',
-        'October', 'November', 'December',
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
     ],
 
     /**
@@ -274,11 +326,11 @@ var Colby = {
      *
      * Properties:
      *
-     *      Safari          Firefox
-     *      ------          -------
-     *      column          columnNumber
-     *      line            lineNumber
-     *      sourceURL       filename
+     *      Safari          Firefox         Chrome
+     *      ------          -------         ------
+     *      column          columnNumber    no
+     *      line            lineNumber      no
+     *      sourceURL       filename        no
      *
      * History:
      *
@@ -288,6 +340,12 @@ var Colby = {
      *
      *      Additional information that is not contained in the Error object is
      *      added to the model returned by this function.
+     *
+     *      The ErrorEvent object passed to the listener of the "error" event
+     *      has some standardized properties that are similar, but not all
+     *      errors are handled by an error event listener. The "stack" property
+     *      actually contains all the data but has a different format on Chrome
+     *      browsers.
      *
      * @param Error error
      *
@@ -414,32 +472,6 @@ var Colby = {
     },
 
 
-    /**
-     * @NOTE 2016_12_28
-     *
-     *      Because this makes an asynchronous request it will not work if there
-     *      is navigation immediately after which cancels the request.
-     *
-     *
-     * @NOTE 2019_06_14
-     *
-     *      The properties of an error object such as column and line are
-     *      currently not well documented. The code to add these properties has
-     *      been left in despite discontinuation of IE 11 support because I
-     *      don't have the time right now to do a full investigation.
-     *
-     * @return false
-     *
-     *      Returning false allows the firing of the default event handler. I
-     *      don't remember right now why this is important and it was not
-     *      originally documented.
-     */
-    handleError: function (errorEvent) {
-        Colby.reportError(errorEvent.error);
-
-        return false;
-    },
-    /* handleError() */
 
     /**
      * @return undefined
@@ -1143,16 +1175,6 @@ var Colby = {
 };
 /* Colby */
 
-
-/**
- * Set the error handler as soon as possible to catch errors even if they occur
- * later in this file. If CBErrorHandler is loaded it will gracefully replace
- * this handler.
- */
-window.addEventListener(
-    "error",
-    Colby.handleError
-);
 
 
 /* initialize */
