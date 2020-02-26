@@ -1,7 +1,6 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esversion: 6 */
-/* exported CBStatusAdminPage */
 /* global
     CBUI,
     CBUIMessagePart,
@@ -12,12 +11,19 @@
     CBStatusAdminPage_issues,
 */
 
-var CBStatusAdminPage = {
+
+
+(function () {
+
+    Colby.afterDOMContentLoaded(
+        afterDOMContentLoaded
+    );
+
 
     /**
      * @return undefined
      */
-    init: function () {
+    function afterDOMContentLoaded() {
         let mainElement = document.getElementsByTagName("main")[0];
 
         if (CBStatusAdminPage_issues.length > 0) {
@@ -86,8 +92,7 @@ var CBStatusAdminPage = {
             mainElement.appendChild(sectionElement);
             mainElement.appendChild(CBUI.createHalfSpace());
         }
-    },
-    /* init() */
-};
+    }
+    /* afterDOMContentLoaded() */
 
-Colby.afterDOMContentLoaded(CBStatusAdminPage.init);
+})();

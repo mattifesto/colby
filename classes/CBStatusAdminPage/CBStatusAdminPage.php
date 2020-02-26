@@ -142,7 +142,7 @@ final class CBStatusAdminPage {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v565.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v580.js', cbsysurl()),
         ];
     }
 
