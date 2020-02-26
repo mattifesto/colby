@@ -8,6 +8,8 @@
     Colby,
 */
 
+
+
 /**
  * @NOTE 2017_11_14
  *
@@ -44,22 +46,34 @@ var CBImagesTests = {
         return promise;
 
 
+
         /* -- closures -- -- -- -- -- */
+
+
 
         /**
          * @return Promise -> bool
          */
         function CBTest_deleteByID_report1() {
-            var imageURI =
-            "/" +
-            CBDataStore.flexpath(
-                CBTestAdmin.testImageID,
-                "original.jpeg"
+            /**
+             * Random data is added to the URL to avoid the cache.
+             */
+            let imageURL = (
+                "/" +
+                CBDataStore.flexpath(
+                    CBTestAdmin.testImageID,
+                    "original.jpeg"
+                ) +
+                "?random=" +
+                Colby.random160()
             );
 
-            return CBImagesTests.fetchURIDoesExist(imageURI);
+            return CBImagesTests.fetchURIDoesExist(
+                imageURL
+            );
         }
         /* CBTest_deleteByID_report1() */
+
 
 
         /**
@@ -69,7 +83,9 @@ var CBImagesTests = {
          */
         function CBTest_deleteByID_report2(doesExist) {
             if (doesExist) {
-                throw new Error("The image file is available but should not be.");
+                throw new Error(
+                    "The image file is available but should not be."
+                );
             }
 
             return {
@@ -77,8 +93,10 @@ var CBImagesTests = {
             };
         }
         /* CBTest_deleteByID_report2() */
+
     },
     /* CBTest_deleteByID() */
+
 
 
     /**
@@ -98,7 +116,8 @@ var CBImagesTests = {
                     if (xhr.status === 200) {
                         resolve(true);
                     } else if (xhr.status === 404) {
-                        resolve(false); // The image has been deleted, as expected.
+                        // The image has been deleted, as expected.
+                        resolve(false);
                     } else {
                         reject(
                             Error(
@@ -112,6 +131,7 @@ var CBImagesTests = {
         );
     },
     /* fetchURIDoesExist() */
+
 
 
     /**
@@ -144,46 +164,75 @@ var CBImagesTests = {
                 imageModel.ID === CBTestAdmin.testImageID &&
                 imageModel.width === 1600
             ) {
-                var imageURI =
-                "/" +
-                CBDataStore.flexpath(
-                    CBTestAdmin.testImageID,
-                    "original.jpeg"
+                /**
+                 * Random data is added to the URL to avoid the cache.
+                 */
+                let imageURL = (
+                    "/" +
+                    CBDataStore.flexpath(
+                        CBTestAdmin.testImageID,
+                        "original.jpeg"
+                    ) +
+                    "?random=" +
+                    Colby.random160()
                 );
 
-                return CBImagesTests.fetchURIDoesExist(imageURI);
+                return CBImagesTests.fetchURIDoesExist(
+                    imageURL
+                );
             } else {
-                throw new Error("The image file did not upload correctly.");
+                throw new Error(
+                    "The image file did not upload correctly."
+                );
             }
         }
+        /* report1() */
+
 
 
         function report2(doesExist) {
             if (doesExist) {
-                var imageURI =
-                "/" +
-                CBDataStore.flexpath(
-                    CBTestAdmin.testImageID,
-                    "rw640.jpeg"
+                /**
+                 * Random data is added to the URL to avoid the cache.
+                 */
+                let imageURL = (
+                    "/" +
+                    CBDataStore.flexpath(
+                        CBTestAdmin.testImageID,
+                        "rw640.jpeg"
+                    ) +
+                    "?random=" +
+                    Colby.random160()
                 );
 
-                return CBImagesTests.fetchURIDoesExist(imageURI);
+                return CBImagesTests.fetchURIDoesExist(
+                    imageURL
+                );
             } else {
-                throw new Error("The image file is not available.");
+                throw new Error(
+                    "The image file is not available."
+                );
             }
         }
+        /* report2() */
+
 
 
         function report3(doesExist) {
             if (!doesExist) {
-                throw new Error("The image file is not available but should be.");
+                throw new Error(
+                    "The image file is not available but should be."
+                );
             }
 
             return {
                 succeeded: true,
             };
         }
+        /* report3() */
+
     },
     /* CBTest_upload() */
+
 };
 /* CBImagesTests */
