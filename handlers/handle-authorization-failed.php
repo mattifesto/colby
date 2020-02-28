@@ -13,9 +13,12 @@ $currentUserCBID = ColbyUser::getCurrentUserCBID();
  */
 
 if ($currentUserCBID === null) {
+    $signInPageURL = CBUser::getSignInPageURL();
+
     header(
-        'Location: ' .
-        CBUser::getSignInPageURL()
+        "Location: {$signInPageURL}",
+        true,
+        303
     );
 
     exit();
