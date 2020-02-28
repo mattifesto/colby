@@ -6,6 +6,21 @@
  */
 final class CBAdminPageFooterView {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+        ];
+    }
+
+
+
     /* -- CBView interfaces -- -- -- -- -- */
 
 
@@ -34,20 +49,23 @@ final class CBAdminPageFooterView {
                         $currentUserID
                     );
 
-                    $logoutURL = ColbyUser::logoutURL();
-
                     $userName = CBModel::valueToString(
                         $currentUserModel,
                         'title'
                     );
 
+                    $currentUserAdminPageURL = (
+                        '/admin/' .
+                        '?c=CBAdminPageForUserSettings' .
+                        "&hash={$currentUserID}"
+                    );
+
                     ?>
 
                     <li>
-                        <?= cbhtml($userName) ?>
-                    </li>
-                    <li>
-                        <a href="<?= cbhtml($logoutURL) ?>">log out</a>
+                        <a href="<?= cbhtml($currentUserAdminPageURL) ?>">
+                            <?= cbhtml($userName) ?>
+                        </a>
                     </li>
 
                     <?php
@@ -61,21 +79,5 @@ final class CBAdminPageFooterView {
         <?php
     }
     /* CBView_render() */
-
-
-
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
-
-
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs(): array {
-        return [
-            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
-        ];
-    }
-    /* CBHTMLOutput_CSSURLs() */
 
 }
