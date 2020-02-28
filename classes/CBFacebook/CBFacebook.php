@@ -7,19 +7,18 @@
  */
 final class CBFacebook {
 
-    const loginStateCookieName = "facebook-login-state";
-
-
-
     /**
-     * https://developers.facebook.com/docs/facebook-login/
-     * manually-build-a-login-flow/#confirm
+     * https://bit.ly/32zPqWq
      *
      * @param string $code
+     * @param string $destinationURL
      *
      * @return object
      */
-    static function fetchAccessTokenObject(string $code): stdClass {
+    static function fetchAccessTokenObject(
+        string $code,
+        string $destinationURL
+    ): stdClass {
 
         /**
          * @NOTE: 2017_03_28
@@ -30,9 +29,8 @@ final class CBFacebook {
          *      provided the $code value.
          */
 
-        $redirectURI = (
-            cbsiteurl() .
-            '/colby/facebook-oauth-handler/'
+        $redirectURI = CBFacebook::redirectURI(
+            $destinationURL
         );
 
         $URL = (
@@ -135,54 +133,7 @@ final class CBFacebook {
 
 
     /**
-     * @param string|null $redirectURL
-     *
-     *      Sending the user to this URL, usually by presenting a link that
-     *      appears to look like a login button, will request that Facebook
-     *      authenticate the user. The authentication may or may not need to
-     *      present UI to the user depending on the user's current state with
-     *      Facebook. After the user is authenticated, Facebook will redirect
-     *      the browser to the Colby Facebook oauth handler. Once the Colby
-     *      Facebook oauth handler has processed Facebook's response and
-     *      verified a successful login, the browser will be redirected to this
-     *      URL.
-     *
-     *      Any errors or a failure to authenticate will present error messages
-     *      to the user and the browser will not be redirected to this URL.
-     *
-     *      This parameter does not need to be URL encoded. If no value is
-     *      provided, $_SERVER['REQUEST_URI'] (the current page) will be used.
-     *
-     * @return string
-     *
-     *      The returned URL is properly URL encoded.
-     */
-    static function loginURL(?string $redirectURI = null): string {
-        if (empty($redirectURI)) {
-            $redirectURI = $_SERVER['REQUEST_URI'];
-        }
-
-        $state = (object)[
-            'colby_redirect_uri' => $redirectURI,
-        ];
-
-        $URL =
-        cbsiteurl() .
-        '/colby/facebook-login/' .
-        '?state=' .
-        urlencode(
-            json_encode($state)
-        );
-
-        return $URL;
-    }
-    /* loginURL() */
-
-
-
-    /**
-     * https://developers.facebook.com/docs/facebook-login/
-     * manually-build-a-login-flow/#login
+     * https://bit.ly/2wh9Gjl
      *
      * @NOTE 2017_03_28
      *
@@ -191,15 +142,18 @@ final class CBFacebook {
      *      required for this URL to work properly. The documentation doesn't
      *      say why.
      *
+     * @param string $destinationURL
+     *
      * @return string
      */
-    static function loginURLForFacebook(): string {
-        $redirectURI = (
-            cbsiteurl() .
-            '/colby/facebook-oauth-handler/'
+    static function oauthURLAtFacebookWebsite(
+        string $destinationURL = '/'
+    ): string {
+        $redirectURI = CBFacebook::redirectURI(
+            $destinationURL
         );
 
-        $loginURL = (
+        $oauthURLAtFacebookWebsite = (
             'https://www.facebook.com/v3.3/dialog/oauth' .
             '?client_id=' .
             urlencode(
@@ -209,9 +163,43 @@ final class CBFacebook {
             urlencode($redirectURI)
         );
 
-        return $loginURL;
+        return $oauthURLAtFacebookWebsite;
     }
-    /* loginURLForFacebook() */
+    /* oauthURLAtFacebookWebsite() */
+
+
+
+    /**
+     * This function returns the redirect URI that Facebook oauth will redirect
+     * to once a login attempt is completed, pass or fail.
+     *
+     * @param string $destinationURL
+     *
+     * @return string
+     */
+    static function redirectURI(
+        string $destinationURL = '/'
+    ): string {
+        $state = (object)[
+            'destinationURL' => $destinationURL,
+        ];
+
+        $stateAsJSON = json_encode($state);
+
+        /**
+         * The $redirectURI holds the URL that Facebook will redirect to after
+         * a Facebook login is attempted.
+         */
+
+        $redirectURI = (
+            cbsiteurl() .
+            '/colby/facebook-oauth-handler/?state=' .
+            (urlencode($stateAsJSON))
+        );
+
+        return $redirectURI;
+    }
+    /* redirectURI() */
 
 
 
