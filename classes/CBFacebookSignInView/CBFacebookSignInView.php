@@ -74,12 +74,16 @@ final class CBFacebookSignInView {
             'destinationURL'
         );
 
+        $oauthURLAtFacebookWebsite = CBFacebook::oauthURLAtFacebookWebsite(
+            $destinationURL
+        );
+
         ?>
 
         <div class="CBFacebookSignInView CBUI_view">
             <a
                 class="CBFacebookSignInView_button"
-                href="<?= CBFacebook::loginURL($destinationURL) ?>"
+                href="<?= $oauthURLAtFacebookWebsite ?>"
             >
                 Sign In with Facebook
             </a>
