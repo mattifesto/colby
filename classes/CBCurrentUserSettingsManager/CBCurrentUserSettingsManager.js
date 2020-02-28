@@ -2,9 +2,9 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBErrorHandler,
     CBUI,
-
-    CBCurrentUserSettingsManager_signoutURL,
+    CBUser,
 */
 
 
@@ -43,7 +43,15 @@
         buttonElement.addEventListener(
             "click",
             function () {
-                window.location.href = CBCurrentUserSettingsManager_signoutURL;
+                CBUser.signOut().then(
+                    function () {
+                        window.location.reload();
+                    }
+                ).catch(
+                    function (error) {
+                        CBErrorHandler.report(error);
+                    }
+                );
             }
         );
 

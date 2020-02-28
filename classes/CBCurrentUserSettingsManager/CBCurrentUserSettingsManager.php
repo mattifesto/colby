@@ -42,24 +42,9 @@ final class CBCurrentUserSettingsManager {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v569.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v584.js', cbsysurl()),
         ];
     }
-
-
-
-    /**
-     * @return [[<name>, <value>]]
-     */
-    static function CBHTMLOutput_JavaScriptVariables(): array {
-        return [
-            [
-                'CBCurrentUserSettingsManager_signoutURL',
-                ColbyUser::logoutURL(),
-            ],
-        ];
-    }
-    /* CBHTMLOutput_JavaScriptVariables() */
 
 
 
@@ -68,7 +53,9 @@ final class CBCurrentUserSettingsManager {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBErrorHandler',
             'CBUI',
+            'CBUser',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
