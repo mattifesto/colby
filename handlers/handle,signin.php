@@ -7,10 +7,19 @@ try {
     $state = (object)[];
 }
 
-$destinationURL = CBModel::valueToString(
-    $state,
-    'destinationURL'
+$destinationURL = trim(
+    CBModel::valueToString(
+        $state,
+        'destinationURL'
+    )
 );
+
+/**
+ * If the destination URL is empty, make the home page the destination.
+ */
+if ($destinationURL === '') {
+    $destinationURL = '/';
+}
 
 $cbmessage = '';
 $emailAddress = cb_post_value('emailAddress');
@@ -32,23 +41,11 @@ if (
         $password
     );
 
-    $cbmessage = CBModel::valueToString(
-        $result,
-        'cbmessage'
-    );
-}
-
-
-
-if (
-    ColbyUser::getCurrentUserCBID() !== null
-) {
     /**
-     * If the user is signed in, forward them on to the destinationURL if one is
-     * available.
+     * If the sign in was successful, redirect the user to the destination URL.
      */
 
-    if ($destinationURL !== '') {
+    if (ColbyUser::getCurrentUserCBID() !== null) {
         header(
             "Location: {$destinationURL}",
             true,
@@ -58,8 +55,21 @@ if (
         exit();
     }
 
+    /* error message */
+
+    $cbmessage = CBModel::valueToString(
+        $result,
+        'cbmessage'
+    );
+}
+
+
+
+if (ColbyUser::getCurrentUserCBID() !== null) {
+
     /**
-     * If there is no destination URL, display a message and a sign out view.
+     * If the user is signed in and came directly to this page show the sign out
+     * view.
      */
 
     $viewSpecs = [
