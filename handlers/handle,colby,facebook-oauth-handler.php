@@ -99,6 +99,7 @@ done:
 
 
 header(
-    'Location: ' .
-    $destinationURL
+    "Location: {$destinationURL}",
+    true,
+    303
 );
