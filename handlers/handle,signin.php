@@ -93,6 +93,7 @@ if (
         ],
         (object)[
             'className' => 'CBFacebookSignInView',
+            'destinationURL' => $destinationURL,
         ],
     ];
 }
