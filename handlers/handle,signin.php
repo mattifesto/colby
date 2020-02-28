@@ -50,8 +50,9 @@ if (
 
     if ($destinationURL !== '') {
         header(
-            'Location: ' .
-            $destinationURL
+            "Location: {$destinationURL}",
+            true,
+            303
         );
 
         exit();
