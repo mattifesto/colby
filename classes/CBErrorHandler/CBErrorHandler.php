@@ -11,7 +11,7 @@ final class CBErrorHandler {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v544.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v584.js', cbsysurl()),
         ];
     }
 
