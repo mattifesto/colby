@@ -9,9 +9,23 @@ final class CBSignOutView {
     /**
      * @return [string]
      */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v584.js', cbsysurl()),
+        ];
+    }
+
+
+
+    /**
+     * @return [string]
+     */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBErrorHandler',
             'CBUI',
+            'CBUser',
+            'Colby',
         ];
     }
 
@@ -48,13 +62,7 @@ final class CBSignOutView {
     ): void {
         ?>
 
-        <div class="CBUI_container1">
-            <a
-                class="CBUI_button1"
-                href="<?= ColbyUser::logoutURL() ?>"
-            >
-                Sign Out
-            </a>
+        <div class="CBSignOutView">
         </div>
 
         <?php
