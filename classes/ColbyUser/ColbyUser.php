@@ -252,44 +252,6 @@ final class ColbyUser {
 
 
     /**
-     * @param string $redirect
-     *
-     *      The URL to go to after logging out.
-     *
-     *      This URL should not be escaped for use in HTML.
-     *
-     *      The URL can be URL encoded or not. (If a case is found where it
-     *      needs to be one or the other, update this documentation.)
-     *
-     *      If no URL is provided, $_SERVER['REQUEST_URI'] will be used.
-     *
-     * @return string
-     *
-     *      The URL to visit to log out. This URL will be properly URL encoded.
-     *      This URL will not be escaped for use in HTML.
-     */
-    static function logoutURL($redirectURL = null) {
-        if (!$redirectURL) {
-            $redirectURL = $_SERVER['REQUEST_URI'];
-        }
-
-        $state = new stdClass();
-        $state->colby_redirect_uri = $redirectURL;
-
-        $URL =
-        cbsiteurl() .
-        '/colby/logout/?state=' .
-        urlencode(
-            json_encode($state)
-        );
-
-        return $URL;
-    }
-    /* logoutURL() */
-
-
-
-    /**
      * The expiration timestamp is set to
      *
      *      current time - 24 hours
