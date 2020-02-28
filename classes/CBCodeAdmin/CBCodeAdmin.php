@@ -341,6 +341,23 @@ final class CBCodeAdmin {
 
 
                 /**
+                 * 2020_02_28 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBUser.signOut() from JavaScript then
+                        window.location.reload() if appropriate.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'logoutURL',
+                    'severity' => 3,
+                    'title' => 'ColbyUser::logoutURL()',
+                ],
+
+
+                /**
                  * 2019_09_19 (warning)
                  * 2020_02_20 (error)
                  */
@@ -1559,6 +1576,22 @@ final class CBCodeAdmin {
 
                 /* -- warnings -- -- -- -- -- */
 
+
+
+                /**
+                 * 2020_02_28 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBErrorHandler.report().
+
+                    EOT,
+                    'filetype' => 'js',
+                    'regex' => 'Colby\.(report|reportError)',
+                    'severity' => 4,
+                    'title' => 'Colby.report[Error]()',
+                ],
 
 
                 /**
