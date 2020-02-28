@@ -265,6 +265,21 @@ final class CBUser {
 
 
 
+    /**
+     * @return void
+     */
+    static function CBAjax_signOut(): void {
+        ColbyUser::logoutCurrentUser();
+    }
+
+
+
+    static function CBAjax_signOut_getUserGroupClassName(): string {
+        return 'CBPublicUserGroup';
+    }
+
+
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
 
@@ -274,10 +289,22 @@ final class CBUser {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v500.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v584.js', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBErrorHandler',
+            'Colby',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
 
 
 
