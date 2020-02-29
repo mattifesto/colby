@@ -200,4 +200,24 @@ final class CBRequest {
     }
     /* requestURIToOriginalEncodedQueryString() */
 
+
+
+    /**
+     * @return void
+     */
+    static function setNoCacheHeaders(): void {
+        header(
+            'Cache-Control: private, no-cache, no-store, must-revalidate'
+        );
+
+        header(
+            'Expires: Sat, 01 Jan 2000 00:00:00 GMT'
+        );
+
+        header(
+            'Pragma: no-cache'
+        );
+    }
+    /* setNoCacheHeaders() */
+
 }
