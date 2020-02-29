@@ -104,37 +104,100 @@ final class CBRequest {
         if (isset($_POST['ajax'])) {
             $ajaxModelAsJSON = cb_post_value('ajax');
             $ajaxModel = json_decode($ajaxModelAsJSON);
-            $ajaxFunctionClassName = CBModel::value($ajaxModel, 'functionClassName', '(unset)');
-            $ajaxFunctionName = CBModel::value($ajaxModel, 'functionName', '(unset)');
-            $message .= "Ajax\nclassName: {$ajaxFunctionClassName}\n function: {$ajaxFunctionName}\n";
-            $args = CBModel::valueAsObject($ajaxModel, 'args');
+
+            $ajaxFunctionClassName = CBModel::value(
+                $ajaxModel,
+                'functionClassName',
+                '(unset)'
+            );
+
+            $ajaxFunctionName = CBModel::value(
+                $ajaxModel,
+                'functionName',
+                '(unset)'
+            );
+
+            $message .= (
+                "Ajax\n" .
+                "className: {$ajaxFunctionClassName}\n" .
+                " function: {$ajaxFunctionName}\n"
+            );
+
+            $args = CBModel::valueAsObject(
+                $ajaxModel,
+                'args'
+            );
+
             if (!empty($args)) {
-                $message .= "arguments: " . json_encode($args, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES). "\n";
+                $message .= (
+                    "arguments: " .
+                    json_encode(
+                        $args,
+                        JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+                    ) .
+                    "\n"
+                );
             }
         }
 
         return $message;
     }
+    /* requestInformation() */
+
+
 
     /**
+     * @param string|null $requestURI
+     *
      * @return string
      */
-    static function requestURIToOriginalEncodedPath($requestURI = null) {
-        $requestURI = ($requestURI !== null) ? $requestURI : $_SERVER['REQUEST_URI'];
+    static function requestURIToOriginalEncodedPath(
+        $requestURI = null
+    ) {
+        $requestURI = (
+            ($requestURI !== null) ?
+            $requestURI :
+            $_SERVER['REQUEST_URI']
+        );
 
-        preg_match('/^(.*?)(\?.*)?$/', $requestURI, $matches);
+        preg_match(
+            '/^(.*?)(\?.*)?$/',
+            $requestURI,
+            $matches
+        );
 
         return $matches[1];
     }
+    /* requestURIToOriginalEncodedPath() */
+
+
 
     /**
+     * @param string|null $requestURI
+     *
      * @return string
      */
-    static function requestURIToOriginalEncodedQueryString($requestURI = null) {
-        $requestURI = ($requestURI !== null) ? $requestURI : $_SERVER['REQUEST_URI'];
+    static function requestURIToOriginalEncodedQueryString(
+        $requestURI = null
+    ) {
+        $requestURI = (
+            ($requestURI !== null) ?
+            $requestURI :
+            $_SERVER['REQUEST_URI']
+        );
 
-        preg_match('/^(.*?)(\?.*)?$/', $requestURI, $matches);
+        preg_match(
+            '/^(.*?)(\?.*)?$/',
+            $requestURI,
+            $matches
+        );
 
-        return isset($matches[2]) ? $matches[2] : '';
+        return (
+            isset($matches[2]) ?
+            $matches[2] :
+            ''
+        );
     }
+    /* requestURIToOriginalEncodedQueryString() */
+
 }
