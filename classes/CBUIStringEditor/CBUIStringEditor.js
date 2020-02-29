@@ -10,9 +10,34 @@
 
 
 
-var CBUIStringEditor = {
+(function () {
+
+    /* public API */
+
+    window.CBUIStringEditor = {
+        create,
+        createEditor,
+        createSpecPropertyEditorElement,
+    };
+
+
 
     /**
+     * Example:
+     *
+     *      let nameEditor = CBUIStringEditor.create();
+     *      nameEditor.title = "Name";
+     *      nameEditor.value = spec.name;
+     *
+     *      nameEditor.changed = function () {
+     *          spec.name = nameEditor.value;
+     *          specChangedCallback();
+     *      };
+     *
+     *      sectionElement.appendChild(
+     *          nameEditor.element
+     *      );
+     *
      * @param object|undefined args
      *
      *      This function is meant to be called with no parameter most of the
@@ -34,7 +59,7 @@ var CBUIStringEditor = {
      *          value: string (get, set)
      *      }
      */
-    create: function (
+    function create(
         args
     ) {
         let changed;
@@ -142,7 +167,7 @@ var CBUIStringEditor = {
             input.style.height = "0";
             input.style.height = input.scrollHeight + "px";
         }
-    },
+    }
     /* create() */
 
 
@@ -150,22 +175,7 @@ var CBUIStringEditor = {
     /**
      * @deprecated 2020_02_24
      *
-     *      This function was recently created as a replacement for
-     *      createEditor(). However, upon further use, code using the
-     *      CBUIStringEditor is most understandable when it uses
-     *      CBUIStringEditor.create() like the following code:
-     *
-     *          let nameEditor = CBUIStringEditor.create();
-     *          nameEditor.title = "Name";
-     *
-     *          nameEditor.changed = function () {
-     *              userModel.name = nameEditor.value;
-     *              notifyThatUserModelHasChanged();
-     *          };
-     *
-     *          sectionElement.appendChild(
-     *              nameEditor.element
-     *          );
+     *      Use CBUISpecEditor.create().
      *
      * @param string title
      * @param object spec
@@ -175,14 +185,14 @@ var CBUIStringEditor = {
      *
      * @return Element
      */
-    createSpecPropertyEditorElement(
+    function createSpecPropertyEditorElement(
         title,
         spec,
         propertyName,
         specChangedCallback,
         args
     ) {
-        let editor = CBUIStringEditor.create(
+        let editor = create(
             args
         );
 
@@ -199,7 +209,7 @@ var CBUIStringEditor = {
         };
 
         return editor.element;
-    },
+    }
     /* createSpecPropertyEditorElement() */
 
 
@@ -207,19 +217,7 @@ var CBUIStringEditor = {
     /**
      * @deprecated
      *
-     *      Use CBUIStringEditor.create() like the code below:
-     *
-     *          let nameEditor = CBUIStringEditor.create();
-     *          nameEditor.title = "Name";
-     *
-     *          nameEditor.changed = function () {
-     *              userModel.name = nameEditor.value;
-     *              notifyThatUserModelHasChanged();
-     *          };
-     *
-     *          sectionElement.appendChild(
-     *              nameEditor.element
-     *          );
+     *      Use CBUIStringEditor.create().
      *
      * @param object args
      *
@@ -246,7 +244,9 @@ var CBUIStringEditor = {
      *          updateValueCallback: function
      *      }
      */
-    createEditor: function (args) {
+    function createEditor(
+        args
+    ) {
         let elements = CBUI.createElementTree(
             "CBUIStringEditor",
             "CBUIStringEditor_container",
@@ -261,7 +261,7 @@ var CBUIStringEditor = {
         label.htmlFor = ID;
         label.textContent = args.labelText || "";
 
-        var input = CBUIStringEditor.createInputElement(
+        var input = createInputElement(
             {
                 type: args.type
             }
@@ -275,17 +275,15 @@ var CBUIStringEditor = {
         var resizeTextAreaCallback;
 
         if (input.tagName === "TEXTAREA") {
-            resizeTextAreaCallback = CBUIStringEditor.resizeTextArea.bind(
-                undefined,
-                {
-                    inputElement: input,
-                }
-            );
+            resizeTextAreaCallback = function () {
+                input.style.height = "0";
+                input.style.height = input.scrollHeight + "px";
+            };
         } else {
-            resizeTextAreaCallback = CBUIStringEditor.noop;
+            resizeTextAreaCallback = function () {};
         }
 
-        var inputCallback = CBUIStringEditor.handleInput.bind(
+        var inputCallback = handleInput.bind(
             undefined,
             {
                 propertyName: args.propertyName,
@@ -296,14 +294,11 @@ var CBUIStringEditor = {
             }
         );
 
-        var updateLabelCallback = CBUIStringEditor.updateLabel.bind(
-            undefined,
-            {
-                labelElement: label,
-            }
-        );
+        var updateLabelCallback = function (labelText) {
+            label.textContent = labelText;
+        };
 
-        var updateValueCallback = CBUIStringEditor.updateValue.bind(
+        var updateValueCallback = updateValue.bind(
             undefined,
             {
                 propertyName: args.propertyName,
@@ -317,7 +312,7 @@ var CBUIStringEditor = {
         input.addEventListener("input", inputCallback);
 
         /**
-         * @NOTE 2015.09.24
+         * @NOTE 2015_09_24
          * We have two timeouts because there is a bug in Safari where the
          * height is not calculated correctly the first time. The first height
          * is close which is why we keep both calls. Remove the second timeout
@@ -338,7 +333,7 @@ var CBUIStringEditor = {
         function refresh() {
             input.value = args.spec[args.propertyName] || "";
         }
-    },
+    }
     /* createEditor() */
 
 
@@ -348,7 +343,9 @@ var CBUIStringEditor = {
      *
      * @return Element
      */
-    createInputElement: function (args) {
+    function createInputElement(
+        args
+    ) {
         var element;
 
         switch (args.type) {
@@ -368,7 +365,7 @@ var CBUIStringEditor = {
         }
 
         return element;
-    },
+    }
     /* createInputElement() */
 
 
@@ -382,45 +379,15 @@ var CBUIStringEditor = {
      *
      * @return undefined
      */
-    handleInput: function (args) {
+    function handleInput(
+        args
+    ) {
         args.spec[args.propertyName] = args.inputElement.value;
 
         args.resizeTextAreaCallback.call();
         args.specChangedCallback.call();
-    },
+    }
     /* handleInput() */
-
-
-
-    /**
-     * @return undefined
-     */
-    noop: function () {
-    },
-
-
-
-    /**
-     * @param Element args.inputElement
-     *
-     * @return undefined
-     */
-    resizeTextArea: function (args) {
-        args.inputElement.style.height = "0";
-        args.inputElement.style.height = args.inputElement.scrollHeight + "px";
-    },
-
-
-
-    /**
-     * @param Element args.labelElement
-     * @param string labelText
-     *
-     * @return undefined
-     */
-    updateLabel: function (args, labelText) {
-        args.labelElement.textContent = labelText;
-    },
 
 
 
@@ -434,7 +401,10 @@ var CBUIStringEditor = {
      *
      * @return undefined
      */
-    updateValue: function (args, value) {
+    function updateValue(
+        args,
+        value
+    ) {
         if (value === undefined) {
             args.inputElement.value = args.spec[args.propertyName] || "";
         } else {
@@ -445,7 +415,7 @@ var CBUIStringEditor = {
 
         args.specChangedCallback.call();
         args.resizeTextAreaCallback.call();
-    },
+    }
     /* updateValue() */
 
-};
+})();
