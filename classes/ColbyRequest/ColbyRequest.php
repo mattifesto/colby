@@ -132,13 +132,14 @@ final class ColbyRequest {
          *      handler that will respond with HTML anyway.
          */
 
-
         /* front page */
 
         if (ColbyRequest::currentRequestIsForTheFrontPage()) {
             $canonicalEncodedPath = '/';
 
             $function = function() {
+                CBRequest::setNoCacheHeaders();
+
                 $frontPageID = CBSitePreferences::frontPageID();
 
                 if (isset($frontPageID)) {
@@ -191,9 +192,18 @@ final class ColbyRequest {
         /* interpret URI */
 
         else {
-            $canonicalEncodedPath = implode('/', ColbyRequest::$encodedStubs);
+            $canonicalEncodedPath = implode(
+                '/',
+                ColbyRequest::$encodedStubs
+            );
+
             $canonicalEncodedPath = "/{$canonicalEncodedPath}/";
-            $allStubs = implode(',', ColbyRequest::$encodedStubs);
+
+            $allStubs = implode(
+                ',',
+                ColbyRequest::$encodedStubs
+            );
+
             $firstStub = ColbyRequest::$encodedStubs[0];
 
 
@@ -205,6 +215,7 @@ final class ColbyRequest {
                 )
             ) {
                 $function = function() use ($allStubsHandlerFilepath) {
+                    CBRequest::setNoCacheHeaders();
                     return include $allStubsHandlerFilepath;
                 };
             }
@@ -218,6 +229,7 @@ final class ColbyRequest {
                 )
             ) {
                 $function = function() use ($firstStubHandlerFilepath) {
+                    CBRequest::setNoCacheHeaders();
                     return include $firstStubHandlerFilepath;
                 };
             }
@@ -241,6 +253,7 @@ final class ColbyRequest {
                     );
 
                     $function = function() use ($pageModel) {
+                        CBRequest::setNoCacheHeaders();
                         CBPage::render($pageModel);
                         return 1;
                     };
