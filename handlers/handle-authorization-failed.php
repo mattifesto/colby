@@ -18,7 +18,7 @@ if ($currentUserCBID === null) {
     header(
         "Location: {$signInPageURL}",
         true,
-        303
+        302
     );
 
     exit();

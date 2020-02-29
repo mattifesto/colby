@@ -101,5 +101,5 @@ done:
 header(
     "Location: {$destinationURL}",
     true,
-    303
+    302
 );

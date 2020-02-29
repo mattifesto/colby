@@ -49,7 +49,7 @@ if (
         header(
             "Location: {$destinationURL}",
             true,
-            303
+            302
         );
 
         exit();
