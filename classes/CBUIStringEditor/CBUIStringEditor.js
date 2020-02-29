@@ -27,7 +27,11 @@
      *
      *      let nameEditor = CBUIStringEditor.create();
      *      nameEditor.title = "Name";
-     *      nameEditor.value = spec.name;
+     *
+     *      nameEditor.value = CBModel.valueToString(
+     *          spec,
+     *          "name"
+     *      );
      *
      *      nameEditor.changed = function () {
      *          spec.name = nameEditor.value;
