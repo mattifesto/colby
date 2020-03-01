@@ -15,7 +15,6 @@ final class CBBackgroundViewEditor {
             Colby::flexpath(__CLASS__, 'css', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_CSSURLs() */
 
 
 
@@ -24,10 +23,9 @@ final class CBBackgroundViewEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v572.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v586.js', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 

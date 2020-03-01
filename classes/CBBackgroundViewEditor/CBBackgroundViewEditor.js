@@ -34,122 +34,165 @@ var CBBackgroundViewEditor = {
     CBUISpecEditor_createEditorElement(
         args
     ) {
-        CBBackgroundViewEditor.prepareSpec(args.spec);
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
 
-        var section, item;
-        var element = CBUI.createElement("CBBackgroundViewEditor");
-
-        element.appendChild(
-            CBUI.createHalfSpace()
+        CBBackgroundViewEditor.prepareSpec(
+            spec
         );
 
-        section = CBUI.createSection();
+        let elements, sectionItemElement, sectionElement;
 
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Title",
-                    propertyName: "title",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
+        elements = CBUI.createElementTree(
+            "CBBackgroundViewEditor",
+            "CBUI_sectionContainer",
+            "CBUI_section"
         );
 
-        section.appendChild(item);
+        let element = elements[0];
+        sectionElement = elements[2];
 
-        item = CBUI.createSectionItem();
+        /* title */
+        {
+            let titleEditor = CBUIStringEditor.create();
+            titleEditor.title = "Title";
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Background color",
-                    propertyName: "color",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
+            titleEditor.value = CBModel.valueToString(
+                spec,
+                "title"
+            );
 
-        section.appendChild(item);
+            titleEditor.changed = function () {
+                spec.title = titleEditor.value;
+                specChangedCallback();
+            };
 
-        item = CBUI.createSectionItem();
+            sectionElement.appendChild(
+                titleEditor.element
+            );
+        }
+        /* title */
 
-        item.appendChild(
+
+        /* color */
+        {
+            let colorEditor = CBUIStringEditor.create();
+            colorEditor.title = "Background Color";
+
+            colorEditor.value = CBModel.valueToString(
+                spec,
+                "color"
+            );
+
+            colorEditor.changed = function () {
+                spec.color = colorEditor.value;
+                specChangedCallback();
+            };
+
+            sectionElement.appendChild(
+                colorEditor.element
+            );
+        }
+        /* color */
+
+
+        /* repeat horizontally */
+
+        sectionItemElement = CBUI.createSectionItem();
+
+        sectionItemElement.appendChild(
             CBUIBooleanEditor.create(
                 {
                     labelText: "Repeat Horizontally",
                     propertyName: "imageShouldRepeatHorizontally",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
+                    spec: spec,
+                    specChangedCallback: specChangedCallback,
                 }
             ).element
         );
 
-        section.appendChild(item);
+        sectionElement.appendChild(
+            sectionItemElement
+        );
 
-        item = CBUI.createSectionItem();
 
-        item.appendChild(
+        /* repeat vertically */
+
+        sectionItemElement = CBUI.createSectionItem();
+
+        sectionItemElement.appendChild(
             CBUIBooleanEditor.create(
                 {
                     labelText: "Repeat Vertically",
                     propertyName: "imageShouldRepeatVertically",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
+                    spec: spec,
+                    specChangedCallback: specChangedCallback,
                 }
             ).element
         );
 
-        section.appendChild(item);
+        sectionElement.appendChild(
+            sectionItemElement
+        );
 
-        item = CBUI.createSectionItem();
-        item.appendChild(
+
+        /* minimum view height is image height */
+
+        sectionItemElement = CBUI.createSectionItem();
+
+        sectionItemElement.appendChild(
             CBUIBooleanEditor.create(
                 {
                     labelText: "Minimum View Height is Image Height",
                     propertyName: "minimumViewHeightIsImageHeight",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
+                    spec: spec,
+                    specChangedCallback: specChangedCallback,
                 }
             ).element
         );
 
-        section.appendChild(item);
+        sectionElement.appendChild(
+            sectionItemElement
+        );
 
-        element.appendChild(section);
 
-        element.appendChild(CBUI.createHalfSpace());
-
+        /* subviews */
         {
             let editor = CBUISpecArrayEditor.create(
                 {
                     addableClassNames: CBBackgroundViewEditor_addableClassNames,
-                    specs: args.spec.children,
-                    specsChangedCallback: args.specChangedCallback,
+                    specs: spec.children,
+                    specsChangedCallback: specChangedCallback,
                 }
             );
 
-            editor.title = "Views";
+            editor.title = "Subviews";
 
-            element.appendChild(editor.element);
+            element.appendChild(
+                editor.element
+            );
 
             element.appendChild(
                 CBUI.createHalfSpace()
             );
         }
+        /* subviews */
 
-        /* image */
 
-        element.appendChild(
-            CBUI.createSectionHeader(
-                {
-                    text: "Background Image"
-                }
-            )
-        );
+        /* background image */
+
+        {
+            let titleElement = CBUI.createElement(
+                "CBUI_title1"
+            );
+
+            titleElement.textContent = "Background Image";
+
+            element.appendChild(
+                titleElement
+            );
+        }
+
 
         let imageChooser = CBUIImageChooser.create();
         imageChooser.chosen = createEditor_imageWasChosen;
@@ -157,14 +200,20 @@ var CBBackgroundViewEditor = {
 
         updateImagePreview();
 
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
-        item.appendChild(imageChooser.element);
-        section.appendChild(item);
-        element.appendChild(section);
+        elements = CBUI.createElementTree(
+            "CBUI_sectionContainer",
+            "CBUI_section",
+            "CBUI_sectionItem"
+        );
 
         element.appendChild(
-            CBUI.createHalfSpace()
+            elements[0]
+        );
+
+        sectionItemElement = elements[2];
+
+        sectionItemElement.appendChild(
+            imageChooser.element
         );
 
         return element;
@@ -186,16 +235,16 @@ var CBBackgroundViewEditor = {
                 imageChooser.file
             ).then(
                 function (imageModel) {
-                    args.spec.image = imageModel;
-                    args.spec.imageHeight = imageModel.height;
-                    args.spec.imageWidth = imageModel.width;
-                    args.spec.imageURL = CBImage.toURL(
+                    spec.image = imageModel;
+                    spec.imageHeight = imageModel.height;
+                    spec.imageWidth = imageModel.width;
+                    spec.imageURL = CBImage.toURL(
                         imageModel
                     );
 
                     updateImagePreview();
 
-                    args.specChangedCallback();
+                    specChangedCallback();
                 }
             ).catch(
                 function (error) {
@@ -211,14 +260,14 @@ var CBBackgroundViewEditor = {
          * @return undefined
          */
         function createEditor_imageWasRemoved() {
-            args.spec.image = undefined;
-            args.spec.imageHeight = undefined;
-            args.spec.imageWidth = undefined;
-            args.spec.imageURL = undefined;
+            spec.image = undefined;
+            spec.imageHeight = undefined;
+            spec.imageWidth = undefined;
+            spec.imageURL = undefined;
 
             updateImagePreview();
 
-            args.specChangedCallback();
+            specChangedCallback();
         }
         /* createEditor_imageWasRemoved() */
 
@@ -228,20 +277,20 @@ var CBBackgroundViewEditor = {
          * @return undefined
          */
         function updateImagePreview() {
-            if (args.spec.imageURL) {
-                if (args.spec.image) {
+            if (spec.imageURL) {
+                if (spec.image) {
                     imageChooser.src = CBImage.toURL(
-                        args.spec.image,
+                        spec.image,
                         'rw960'
                     );
                 } else {
-                    imageChooser.src = args.spec.imageURL;
+                    imageChooser.src = spec.imageURL;
                 }
 
                 imageChooser.caption = (
-                    args.spec.imageWidth +
+                    spec.imageWidth +
                     "px × " +
-                    args.spec.imageHeight +
+                    spec.imageHeight +
                     "px"
                 );
             } else {
@@ -252,7 +301,7 @@ var CBBackgroundViewEditor = {
         /* updateImagePreview */
 
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
 
 
 
