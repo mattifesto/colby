@@ -14,7 +14,6 @@ final class CBUISpecArrayEditor {
             Colby::flexpath(__CLASS__, 'v361.css', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_CSSURLs() */
 
 
 
@@ -23,10 +22,9 @@ final class CBUISpecArrayEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v536.js', cbsysurl())
+            Colby::flexpath(__CLASS__, 'v586.js', cbsysurl())
         ];
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 

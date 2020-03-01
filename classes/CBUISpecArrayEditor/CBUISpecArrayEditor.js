@@ -52,7 +52,7 @@ var CBUISpecArrayEditor = {
         var specsChangedCallback = args.specsChangedCallback;
 
         let element = CBUI.createElement(
-            "CBUISpecArrayEditor"
+            "CBUISpecArrayEditor CBUI_sectionContainer"
         );
 
         let selectableItemContainer = CBUISelectableItemContainer.create();
