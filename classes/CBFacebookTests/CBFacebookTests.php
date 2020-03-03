@@ -13,7 +13,6 @@ final class CBFacebookTests {
         return [
             (object)[
                 'name' => 'fetchUserProperties',
-                'title' => 'CBFacebook::fetchUserProperties()',
                 'type' => 'server',
             ],
         ];
@@ -39,6 +38,18 @@ final class CBFacebookTests {
             $currentUserModel,
             'facebookAccessToken'
         );
+
+        if (empty($facebookAccessToken)) {
+            return (object)[
+                'succeeded' => true,
+                'message' => <<<EOT
+
+                    This test was not run beacuse the current user does not have
+                    a Facebook access token.
+
+                EOT,
+            ];
+        }
 
         $facebookUserProperties = CBFacebook::fetchUserProperties(
             $facebookAccessToken
