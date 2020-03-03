@@ -169,6 +169,10 @@ final class CBFacebookAccountUserSettingsManager {
     static function CBUserSettingsManager_currentUserCanViewForTargetUser(
         string $targetUserCBID
     ): bool {
+        if (CBFacebookPreferences::getAppID() === '') {
+            return false;
+        }
+
         if (ColbyUser::getCurrentUserCBID() === $targetUserCBID) {
             return true;
         }
