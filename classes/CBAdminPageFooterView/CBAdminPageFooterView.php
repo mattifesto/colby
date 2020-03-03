@@ -49,10 +49,14 @@ final class CBAdminPageFooterView {
                         $currentUserID
                     );
 
-                    $userName = CBModel::valueToString(
+                    $fullName = CBModel::valueToString(
                         $currentUserModel,
                         'title'
                     );
+
+                    if (empty(trim($fullName))) {
+                        $fullName = "me";
+                    }
 
                     $currentUserAdminPageURL = (
                         '/admin/' .
@@ -64,7 +68,7 @@ final class CBAdminPageFooterView {
 
                     <li>
                         <a href="<?= cbhtml($currentUserAdminPageURL) ?>">
-                            <?= cbhtml($userName) ?>
+                            <?= cbhtml($fullName) ?>
                         </a>
                     </li>
 
