@@ -8,121 +8,131 @@
     CBUIStringEditor,
 */
 
+
+
 var CBCustomViewEditor = {
 
+    /* -- CBUISpecEditor interfaces -- -- -- -- -- */
+
+
+
     /**
-     * @param object args.spec
-     * @param function args.specChangedCallback
+     * @param object args
+     *
+     *      {
+     *          spec: object
+     *          specChangedCallback: function
+     *      }
      *
      * @return Element
      */
-    createEditor: function (args) {
-        var section, item;
-        var element = document.createElement("div");
-        element.className = "CBCustomViewEditor";
+    CBUISpecEditor_createEditorElement(
+        args
+    ) {
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
 
-        element.appendChild(CBUI.createHalfSpace());
+        let elements = CBUI.createElementTree(
+            "CBCustomViewEditor",
+            "CBUI_sectionContainer",
+            "CBUI_section"
+        );
+
+        let element = elements[0];
+        let sectionElement = elements[2];
+
 
         /* custom view class name */
+        {
+            let classNameEditor = CBUIStringEditor.create();
+            classNameEditor.title = "Custom View Class Name";
 
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText: "Custom View Class Name",
-            propertyName: "customViewClassName",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
+            classNameEditor.value = CBModel.valueToString(
+                spec,
+                "customViewClassName"
+            );
+
+            classNameEditor.changed = function () {
+                spec.customViewClassName = classNameEditor.value;
+                specChangedCallback();
+            };
+
+            sectionElement.appendChild(
+                classNameEditor.element
+            );
+        }
+        /* custom view class name */
+
 
         /* custom properties */
 
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({
-            text: "Custom Properties",
-        }));
-
-        var propertiesAsJSON = "{\n\n}";
-
-        if (typeof args.spec.properties === "object") {
-            propertiesAsJSON = JSON.stringify(args.spec.properties, undefined, 2);
+        if (typeof spec.properties !== "object") {
+            spec.properties = {};
         }
 
-        var propertiesSpec = { propertiesAsJSON: propertiesAsJSON };
+        let propertiesAsJSON = JSON.stringify(
+            spec.properties,
+            undefined,
+            2
+        );
 
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText: "Properties",
-            propertyName: "propertiesAsJSON",
-            spec: propertiesSpec,
-            specChangedCallback: CBCustomViewEditor.propertiesChanged.bind(undefined, {
-                propertiesSpec: propertiesSpec,
-                sectionItem: item,
-                spec: args.spec,
-                specChangedCallback: args.specChangedCallback,
-            }),
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
+        elements = CBUI.createElementTree(
+            "CBUI_sectionContainer",
+            "CBUI_section"
+        );
 
-        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(
+            elements[0]
+        );
+
+        sectionElement = elements[1];
+
+        let propertiesAsJSONEditor = CBUIStringEditor.create();
+        propertiesAsJSONEditor.title = "Custom Properties";
+
+        propertiesAsJSONEditor.value = propertiesAsJSON;
+
+        propertiesAsJSONEditor.changed = function () {
+            let propertiesObject;
+            let currentPropertiesAsJSON = propertiesAsJSONEditor.value;
+
+            try {
+                propertiesObject = JSON.parse(
+                    currentPropertiesAsJSON
+                );
+            } catch (error) {
+                propertiesAsJSONEditor.element.style.backgroundColor = (
+                    "hsl(0, 100%, 90%)"
+                );
+
+                return;
+            }
+
+            if (typeof propertiesObject !== "object") {
+                propertiesAsJSONEditor.element.style.backgroundColor = (
+                    "hsl(0, 100%, 90%)"
+                );
+
+                return;
+            }
+
+            propertiesAsJSONEditor.element.style.backgroundColor = "white";
+            spec.properties = propertiesObject;
+            specChangedCallback();
+        };
+
+        sectionElement.appendChild(
+            propertiesAsJSONEditor.element
+        );
 
         return element;
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
 
 
-    /**
-     * @param string? propertiesSpec.propertiesAsJSON
-     * @param Element sectionItem
-     * @param object spec
-     * @param function specChangedCallback
-     *
-     * @return undefined
-     */
-    propertiesChanged: function (args) {
-        do {
-            try {
-                if (typeof args.propertiesSpec.propertiesAsJSON !== "string") {
-                    break;
-                }
-            } catch (error) {
-                break;
-            }
 
-            var valueAsJSON = args.propertiesSpec.propertiesAsJSON.trim();
+    /* -- CBUISpec interfaces -- -- -- -- -- */
 
-            if (valueAsJSON === "") {
-                break;
-            }
-
-            var value;
-
-            try {
-                value = JSON.parse(valueAsJSON);
-            } catch (error) {
-                args.sectionItem.style.backgroundColor = "hsl(0, 100%, 90%)";
-                return;
-            }
-
-            if (typeof value !== "object") {
-                args.sectionItem.style.backgroundColor = "hsl(0, 100%, 90%)";
-                return;
-            }
-
-            args.sectionItem.style.backgroundColor = "white";
-            args.spec.properties = value;
-            args.specChangedCallback();
-
-            return;
-        } while (false);
-
-        args.sectionItem.style.backgroundColor = "white";
-        args.spec.properties = {};
-    },
-    /* propertiesChanged() */
 
 
     /**
@@ -139,5 +149,6 @@ var CBCustomViewEditor = {
         return description;
     },
     /* CBUISpec_toDescription() */
+
 };
 /* CBCustomViewEditor */
