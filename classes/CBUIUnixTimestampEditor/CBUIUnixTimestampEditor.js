@@ -1,7 +1,12 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* global
-    CBUIStringEditor */
+    CBModel,
+    CBUIStringEditor,
+*/
+
+
 
 var CBUIUnixTimestampEditor = {
 
@@ -22,53 +27,100 @@ var CBUIUnixTimestampEditor = {
      *          updateWithJavaScriptTimestamp: function
      *      }
      */
-    create: function (args) {
+    create(
+        args
+    ) {
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
+
+        let labelText = CBModel.valueToString(
+            args,
+            "labelText"
+        );
+
+        let propertyName = CBModel.valueToString(
+            args,
+            "propertyName"
+        );
+
         var dateStringSpec = {};
 
-
-        var dateStringEditor = CBUIStringEditor.createEditor({
-            labelText: "Publication Date",
-            placeholderText: "YYYY/MM/DD HH:MM AM",
-            propertyName: "value",
-            spec: dateStringSpec,
-            specChangedCallback: dateStringSpecChanged,
-        });
+        var dateStringEditor = CBUIStringEditor.createEditor(
+            {
+                labelText,
+                placeholderText: "YYYY/MM/DD HH:MM AM",
+                propertyName: "value",
+                spec: dateStringSpec,
+                specChangedCallback: dateStringSpecChanged,
+            }
+        );
 
         refresh();
 
         return {
             element: dateStringEditor.element,
-            refresh: refresh,
+            refresh,
         };
 
+
+
+        /* -- closures -- -- -- -- -- */
+
+
+
+        /**
+         * @return undefined
+         */
         function dateStringSpecChanged() {
             dateStringEditor.element.style.backgroundColor = "";
 
             var unixTimestamp;
 
             if (dateStringSpec.value.trim() !== "") {
-                unixTimestamp = CBUIUnixTimestampEditor.dateStringToUnixTimestamp(dateStringSpec.value);
+                unixTimestamp = (
+                    CBUIUnixTimestampEditor.dateStringToUnixTimestamp(
+                        dateStringSpec.value
+                    )
+                );
 
                 if (unixTimestamp === undefined) {
-                    dateStringEditor.element.style.backgroundColor = "hsl(0, 100%, 95%)";
+                    dateStringEditor.element.style.backgroundColor = (
+                        "hsl(0, 100%, 95%)"
+                    );
+
                     return;
                 }
             }
 
-            args.spec[args.propertyName] = unixTimestamp;
-            args.specChangedCallback();
+            spec[propertyName] = unixTimestamp;
+            specChangedCallback();
         }
+        /* dateStringSpecChanged() */
 
+
+
+        /**
+         * @return undefined
+         */
         function refresh() {
-            if (args.spec[args.propertyName] !== undefined) {
-                dateStringSpec.value = CBUIUnixTimestampEditor.unixTimestampToDateString(args.spec[args.propertyName]);
+            if (spec[propertyName] !== undefined) {
+                dateStringSpec.value = (
+                    CBUIUnixTimestampEditor.unixTimestampToDateString(
+                        spec[propertyName]
+                    )
+                );
             } else {
                 dateStringSpec.value = undefined;
             }
 
             dateStringEditor.refresh();
         }
+        /* refresh() */
+
     },
+    /* create() */
+
+
 
     /**
      * @param string dateString
@@ -80,8 +132,11 @@ var CBUIUnixTimestampEditor = {
      *      Empty strings or strings of all whitespace return `undefined`.
      *      Strings that aren't parseable return "unknown".
      */
-    dateStringToUnixTimestamp: function (dateString) {
+    dateStringToUnixTimestamp(
+        dateString
+    ) {
         var matches;
+
         var patterns = [
             /^\s*([0-9]{4})\/\s*([0-9]+)\s*\/\s*([0-9]+)\s*()()()()$/,
             /^\s*([0-9]{4})\/\s*([0-9]+)\s*\/\s*([0-9]+)\s+([0-9]+):([0-5][0-9])\s*()()$/,
@@ -126,7 +181,13 @@ var CBUIUnixTimestampEditor = {
             }
         }
 
-        if (month < 0 || month > 11 || day > 31 || hours > 23 || minutes > 59) {
+        if (
+            month < 0 ||
+            month > 11 ||
+            day > 31 ||
+            hours > 23 ||
+            minutes > 59
+        ) {
             return undefined;
         }
 
@@ -135,9 +196,14 @@ var CBUIUnixTimestampEditor = {
         if (isNaN(date)) {
             return undefined;
         } else {
-            return Math.floor(date.getTime() / 1000);
+            return Math.floor(
+                date.getTime() / 1000
+            );
         }
     },
+    /* dateStringToUnixTimestamp() */
+
+
 
     /**
      * @param mixed value
@@ -150,7 +216,9 @@ var CBUIUnixTimestampEditor = {
      *
      *      2017.10.12 3:14 PM
      */
-    unixTimestampToDateString: function (unixTimestamp) {
+    unixTimestampToDateString(
+        unixTimestamp
+    ) {
         var date = new Date(Math.floor(unixTimestamp * 1000));
 
         if (isNaN(date)) {
@@ -178,10 +246,26 @@ var CBUIUnixTimestampEditor = {
 
             hours = ("00" + hours).slice(-2);
 
-            var minutes = ("00" + date.getMinutes()).slice(-2);
+            var minutes = (
+                "00" +
+                date.getMinutes()
+            ).slice(-2);
 
-            return year + "/" + month + "/" + day +
-                   " " +  hours + ":" + minutes + " " + ampm;
+            return (
+                year +
+                "/" +
+                month +
+                "/" +
+                day +
+                " " +
+                hours +
+                ":" +
+                minutes +
+                " " +
+                ampm
+            );
         }
     },
+    /* unixTimestampToDateString() */
+
 };
