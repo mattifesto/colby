@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBViewPageInformationEditor */
 /* globals
+    CBConvert,
     CBErrorHandler,
     CBImage,
     CBModel,
@@ -29,6 +30,8 @@
     CBViewPageInformationEditor_settingsClassNames,
 */
 
+
+
 var CBViewPageInformationEditor = {
 
     /**
@@ -43,7 +46,14 @@ var CBViewPageInformationEditor = {
      *
      * @return Element
      */
-    createEditor: function (args) {
+    createEditor(
+        args
+    ) {
+        let handleTitleChanged = args.handleTitleChanged;
+        let makeFrontPageCallback = args.makeFrontPageCallback;
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
+
         let editorElement = CBUI.createElement(
             "CBViewPageInformationEditor"
         );
@@ -74,7 +84,10 @@ var CBViewPageInformationEditor = {
         return editorElement;
 
 
+
         /* -- closures -- -- -- -- -- */
+
+
 
         /**
          * @return Element
@@ -112,10 +125,10 @@ var CBViewPageInformationEditor = {
                         {
                             labelText: "Preview",
                             callback: function () {
-                                var name = "preview_" + args.spec.ID;
+                                var name = "preview_" + spec.ID;
                                 window.open(
                                     "/admin/pages/preview/?ID=" +
-                                    args.spec.ID,
+                                    spec.ID,
                                     name
                                 );
                             },
@@ -136,7 +149,7 @@ var CBViewPageInformationEditor = {
                     CBUIActionLink.create(
                         {
                             labelText: "Use as Front Page",
-                            callback: args.makeFrontPageCallback,
+                            callback: makeFrontPageCallback,
                         }
                     ).element
                 );
@@ -154,7 +167,7 @@ var CBViewPageInformationEditor = {
                     let newID = Colby.random160();
 
                     let URI =
-                    `/admin/?c=CBModelEditor&ID=${newID}&copyID=${args.spec.ID}`;
+                    `/admin/?c=CBModelEditor&ID=${newID}&copyID=${spec.ID}`;
 
                     window.location = URI;
                 };
@@ -175,26 +188,36 @@ var CBViewPageInformationEditor = {
                 let sectionItem = CBUISectionItem4.create();
 
                 sectionItem.callback = function () {
-                    if (
-                        window.confirm(
-                            "Are you sure you want to move this page to the trash?"
-                        )
-                    ) {
+                    let wasConfirmed = window.confirm(
+                        CBConvert.stringToCleanLine(`
+
+                            Are you sure you want to move this page to the
+                            trash?
+
+                        `)
+                    );
+
+                    if (wasConfirmed) {
                         Colby.callAjaxFunction(
                             "CBPages",
                             "moveToTrash",
                             {
-                                ID: args.spec.ID
+                                ID: spec.ID
                             }
                         ).then(
                             function () {
                                 window.alert(
-                                    "The page is the trash. You will be " +
-                                    "redirected to pages administration."
+                                    CBConvert.stringToCleanLine(`
+
+                                        The page is the trash. You will be
+                                        redirected to pages administration.
+
+                                    `)
                                 );
 
-                                window.location =
-                                CBViewPageInformationEditor_pagesAdminURL;
+                                window.location = (
+                                    CBViewPageInformationEditor_pagesAdminURL
+                                );
                             }
                         ).catch(
                             function (error) {
@@ -220,6 +243,7 @@ var CBViewPageInformationEditor = {
         /* createEditor_createActionsElement() */
 
 
+
         /**
          * @return Element
          */
@@ -228,7 +252,7 @@ var CBViewPageInformationEditor = {
                 "CBViewPageInformationEditor_layoutEditor"
             );
 
-            if (args.spec.layout) {
+            if (spec.layout) {
                 var options = CBPageClassNamesForLayouts.map(
                     function (className) {
                         return {
@@ -250,8 +274,8 @@ var CBViewPageInformationEditor = {
                         labelText: "Layout",
                         options: options,
                         propertyName: "layout",
-                        spec: args.spec,
-                        specChangedCallback: args.specChangedCallback,
+                        spec: spec,
+                        specChangedCallback: specChangedCallback,
                     }
                 );
 
@@ -261,6 +285,7 @@ var CBViewPageInformationEditor = {
             return layoutEditorElement;
         }
         /* createEditor_createLayoutEditorElement() */
+
 
 
         /**
@@ -286,10 +311,10 @@ var CBViewPageInformationEditor = {
                         {
                             labelText: "Title",
                             propertyName: 'title',
-                            spec: args.spec,
+                            spec: spec,
                             specChangedCallback: function () {
-                                args.handleTitleChanged();
-                                args.specChangedCallback();
+                                handleTitleChanged();
+                                specChangedCallback();
                             },
                         }
                     ).element
@@ -309,8 +334,8 @@ var CBViewPageInformationEditor = {
                         {
                             labelText: "Description",
                             propertyName: 'description',
-                            spec: args.spec,
-                            specChangedCallback: args.specChangedCallback,
+                            spec: spec,
+                            specChangedCallback: specChangedCallback,
                         }
                     ).element
                 );
@@ -326,8 +351,8 @@ var CBViewPageInformationEditor = {
                 {
                     labelText: "URI",
                     propertyName: "URI",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
+                    spec: spec,
+                    specChangedCallback: specChangedCallback,
                 }
             );
 
@@ -335,8 +360,8 @@ var CBViewPageInformationEditor = {
                 {
                     labelText: "Publication Date",
                     propertyName: "publicationTimeStamp",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
+                    spec: spec,
+                    specChangedCallback: specChangedCallback,
                 }
             );
 
@@ -344,39 +369,44 @@ var CBViewPageInformationEditor = {
             /* is published */
             {
                 let item = CBUI.createSectionItem();
+                let isPublishedEditor = CBUIBooleanEditor.create(
+                    {
+                        labelText: "Published",
+                        propertyName: "isPublished",
+                        spec: spec,
+                        specChangedCallback: function () {
+                            var URI = CBModel.valueToString(
+                                spec,
+                                "URI"
+                            ).trim();
 
-                item.appendChild(
-                    CBUIBooleanEditor.create(
-                        {
-                            labelText: "Published",
-                            propertyName: "isPublished",
-                            spec: args.spec,
-                            specChangedCallback: function () {
-                                var URI = CBModel.valueToString(
-                                    args.spec,
-                                    "URI"
-                                ).trim();
-
-                                if (args.spec.isPublished) {
-                                    if (URI === "") {
-                                        URIEditor.updateValueCallback(
-                                            Colby.textToURI(args.spec.title)
-                                        );
-                                    }
-
-                                    if (args.spec.publicationTimeStamp === undefined) {
-                                        args.spec.publicationTimeStamp = (
-                                            Math.floor(Date.now() / 1000)
-                                        );
-
-                                        publicationDateEditor.refresh();
-                                    }
+                            if (spec.isPublished) {
+                                if (URI === "") {
+                                    URIEditor.updateValueCallback(
+                                        Colby.textToURI(
+                                            spec.title
+                                        )
+                                    );
                                 }
 
-                                args.specChangedCallback();
-                            },
-                        }
-                    ).element
+                                if (spec.publicationTimeStamp === undefined) {
+                                    spec.publicationTimeStamp = (
+                                        Math.floor(
+                                            Date.now() / 1000
+                                        )
+                                    );
+
+                                    publicationDateEditor.refresh();
+                                }
+                            }
+
+                            specChangedCallback();
+                        },
+                    }
+                );
+
+                item.appendChild(
+                    isPublishedEditor.element
                 );
 
                 sectionElement.appendChild(item);
@@ -389,7 +419,9 @@ var CBViewPageInformationEditor = {
             {
                 let item = CBUI.createSectionItem();
 
-                item.appendChild(publicationDateEditor.element);
+                item.appendChild(
+                    publicationDateEditor.element
+                );
 
                 sectionElement.appendChild(item);
             }
@@ -401,7 +433,9 @@ var CBViewPageInformationEditor = {
             {
                 let item = CBUI.createSectionItem();
 
-                item.appendChild(URIEditor.element);
+                item.appendChild(
+                    URIEditor.element
+                );
 
                 sectionElement.appendChild(item);
             }
@@ -411,8 +445,8 @@ var CBViewPageInformationEditor = {
 
             /* published by */
             {
-                if (!args.spec.publishedByUserCBID) {
-                    args.spec.publishedByUserCBID =
+                if (!spec.publishedByUserCBID) {
+                    spec.publishedByUserCBID =
                     CBViewPageInformationEditor_currentUserCBID;
                 }
 
@@ -432,8 +466,8 @@ var CBViewPageInformationEditor = {
                         {
                             labelText: "Published By",
                             propertyName: "publishedByUserCBID",
-                            spec: args.spec,
-                            specChangedCallback: args.specChangedCallback,
+                            spec: spec,
+                            specChangedCallback: specChangedCallback,
                             options: users,
                         }
                     ).element
@@ -448,10 +482,10 @@ var CBViewPageInformationEditor = {
             {
                 let selector = CBUISelector.create();
                 selector.title = "Page Settings";
-                selector.value = args.spec.classNameForSettings;
+                selector.value = spec.classNameForSettings;
                 selector.onchange = function () {
-                    args.spec.classNameForSettings = selector.value;
-                    args.specChangedCallback();
+                    spec.classNameForSettings = selector.value;
+                    specChangedCallback();
                 };
 
                 let options = [
@@ -483,10 +517,10 @@ var CBViewPageInformationEditor = {
             {
                 let selector = CBUISelector.create();
                 selector.title = "Page Kind";
-                selector.value = args.spec.classNameForKind;
+                selector.value = spec.classNameForKind;
                 selector.onchange = function () {
-                    args.spec.classNameForKind = selector.value;
-                    args.specChangedCallback();
+                    spec.classNameForKind = selector.value;
+                    specChangedCallback();
                 };
 
                 let options = [
@@ -516,10 +550,10 @@ var CBViewPageInformationEditor = {
             {
                 let selector = CBUISelector.create();
                 selector.title = "Page Frame";
-                selector.value = args.spec.frameClassName;
+                selector.value = spec.frameClassName;
                 selector.onchange = function () {
-                    args.spec.frameClassName = selector.value;
-                    args.specChangedCallback();
+                    spec.frameClassName = selector.value;
+                    specChangedCallback();
                 };
 
                 let options = [
@@ -553,13 +587,13 @@ var CBViewPageInformationEditor = {
                 let stringEditor = CBUIStringEditor.create();
                 stringEditor.title = "Selected Main Menu Item Name";
 
-                if (args.spec.selectedMainMenuItemName !== undefined) {
-                    stringEditor.value = args.spec.selectedMainMenuItemName;
+                if (spec.selectedMainMenuItemName !== undefined) {
+                    stringEditor.value = spec.selectedMainMenuItemName;
                 }
 
                 stringEditor.changed = function () {
-                    args.spec.selectedMainMenuItemName = stringEditor.value;
-                    args.specChangedCallback();
+                    spec.selectedMainMenuItemName = stringEditor.value;
+                    specChangedCallback();
                 };
 
                 sectionItemElement.appendChild(stringEditor.element);
@@ -570,6 +604,7 @@ var CBViewPageInformationEditor = {
             return sectionContainerElement;
         }
         /* createEditor_createPropertiesSectionElement() */
+
 
 
         /**
@@ -609,8 +644,9 @@ var CBViewPageInformationEditor = {
 
             imageChooser.element.classList.add("CBUIImageChooser_thumbnail");
 
-            CBViewPageEditor.thumbnailChangedCallback =
-            createEditor_handlePageThumbnailChanged;
+            CBViewPageEditor.thumbnailChangedCallback = (
+                createEditor_handlePageThumbnailChanged
+            );
 
             let item = CBUI.createSectionItem();
 
@@ -618,9 +654,9 @@ var CBViewPageInformationEditor = {
 
             sectionElement.appendChild(item);
 
-            if (args.spec.image) {
+            if (spec.image) {
                 imageChooser.src = CBImage.toURL(
-                    args.spec.image,
+                    spec.image,
                     "rw320"
                 );
             }
@@ -628,6 +664,7 @@ var CBViewPageInformationEditor = {
             return pageThumbnailEditorElement;
         }
         /* createEditor_createPageThumbnailEditorElement() */
+
 
 
         /**
@@ -652,6 +689,7 @@ var CBViewPageInformationEditor = {
         /* createEditor_handleImageChosen() */
 
 
+
         /**
          * @return undefined
          */
@@ -659,6 +697,7 @@ var CBViewPageInformationEditor = {
             CBViewPageEditor.setThumbnailImage();
         }
         /* createEditor_handleImageRemoved() */
+
 
 
         /**
@@ -669,15 +708,24 @@ var CBViewPageInformationEditor = {
          *          image: object
          *      }
          */
-        function createEditor_handlePageThumbnailChanged(args) {
-            if (args.image) {
-                imageChooser.src = CBImage.toURL(args.image, "rw640");
+        function createEditor_handlePageThumbnailChanged(
+            args
+        ) {
+            let image = args.image;
+
+            if (image) {
+                imageChooser.src = CBImage.toURL(
+                    image,
+                    "rw640"
+                );
             } else {
                 imageChooser.src = "";
             }
         }
         /* createEditor_handlePageThumbnailChanged() */
+
     },
     /* createEditor() */
+
 };
 /* CBViewPageInformationEditor */
