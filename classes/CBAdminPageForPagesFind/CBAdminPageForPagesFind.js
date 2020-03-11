@@ -38,15 +38,17 @@
         if (elements.length > 0) {
             let element = elements.item(0);
 
-            element.appendChild(
-                CBUINavigationView.create().element
-            );
+            {
+                let navigationView = CBUINavigationView.create();
 
-            let rootUserInterfaceElement = createRootUserInterfaceElement();
+                element.appendChild(
+                    navigationView.element
+                );
+            }
 
             CBUINavigationView.navigate(
                 {
-                    element: rootUserInterfaceElement,
+                    element: createRootPanelElement(),
                     title: "Find Pages",
                 }
             );
@@ -59,16 +61,16 @@
     /**
      * @return Element
      */
-    function createRootUserInterfaceElement() {
-        let rootUserInterfaceElement;
+    function createRootPanelElement() {
+        let rootPanelElement;
 
         {
             let elements = CBUI.createElementTree(
-                "CBAdminPageForPagesFind_rootUserInterfaceElement",
+                "CBAdminPageForPagesFind_rootPanelElement",
                 "CBUI_title1"
             );
 
-            rootUserInterfaceElement = elements[0];
+            rootPanelElement = elements[0];
 
             let titleElement = elements[1];
 
@@ -76,13 +78,16 @@
         }
 
 
-        var pageListContainer = document.createElement("div");
+        let pageListContainerElement = CBUI.createElement(
+            "CBAdminPageForPagesFind_pageListContainer"
+        );
+
         var parameters = {};
 
         var fetchPagesCallback = CBAdminPageForPagesFind.fetchPages.bind(
             undefined,
             {
-                element: pageListContainer,
+                element: pageListContainerElement,
                 parameters: parameters,
                 state: {},
             }
@@ -97,7 +102,7 @@
                 "CBUI_section"
             );
 
-            rootUserInterfaceElement.appendChild(
+            rootPanelElement.appendChild(
                 elements[0]
             );
 
@@ -201,7 +206,7 @@
                 "CBUI_title1"
             );
 
-            rootUserInterfaceElement.appendChild(
+            rootPanelElement.appendChild(
                 titleElement
             );
 
@@ -210,17 +215,19 @@
         /* found pages title */
 
 
-        rootUserInterfaceElement.appendChild(pageListContainer);
+        rootPanelElement.appendChild(
+            pageListContainerElement
+        );
 
-        rootUserInterfaceElement.appendChild(
+        rootPanelElement.appendChild(
             CBUI.createHalfSpace()
         );
 
         fetchPagesCallback();
 
-        return rootUserInterfaceElement;
+        return rootPanelElement;
     }
-    /* createRootUserInterfaceElement() */
+    /* createRootPanelElement() */
 
 })();
 
@@ -388,5 +395,6 @@ var CBPageList = {
         return sectionContainerElement;
     },
     /* createElement() */
+
 };
 /* CBPageList (CBAdminPageForPagesFind) */

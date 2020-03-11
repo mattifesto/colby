@@ -172,7 +172,7 @@ final class CBAdminPageForPagesFind {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v579.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v589.js', cbsysurl()),
         ];
     }
 
