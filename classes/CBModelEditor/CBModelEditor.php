@@ -107,9 +107,21 @@ class CBModelEditor {
             return $originalSpec;
         }
 
-        $ID = cb_query_string_value('ID');
-        $copyID = cb_query_string_value('copyID');
-        $templateClassName = cb_query_string_value('templateClassName');
+        $ID = cb_query_string_value(
+            'ID'
+        );
+
+        $modelToCopyCBID = cb_query_string_value(
+            'copyID'
+        );
+
+        $templateClassName = cb_query_string_value(
+            'templateClassName'
+        );
+
+        $suggestedSpecAsJSON = cb_query_string_value(
+            'suggestedSpecAsJSON'
+        );
 
         if (!CBID::valueIsCBID($ID)) {
             throw new CBException(
@@ -117,48 +129,90 @@ class CBModelEditor {
                 '',
                 '2db0099f3f9cf6dd7db8220a00a1e944de834758'
             );
-        } else {
-            $originalSpec = CBModels::fetchSpecByID($ID);
+        }
 
-            if (empty($originalSpec) && CBID::valueIsCBID($copyID)) {
-                $copiedSpec = CBModels::fetchSpecByIDNullable($copyID);
+        $originalSpec = CBModels::fetchSpecByID($ID);
 
-                if ($copiedSpec === null) {
-                    throw new CBException(
-                        "No model exists to copy with the ID {$copyID}",
-                        '',
-                        'fcfe83a69d00d91d61360ad1c376b71e0a063393'
-                    );
-                }
-                $originalSpec = CBModel::copy($copiedSpec, $ID);
+
+        /* copy another model */
+
+        if (
+            empty($originalSpec) &&
+            CBID::valueIsCBID($modelToCopyCBID)
+        ) {
+            $modelToCopySpec = CBModels::fetchSpecByIDNullable(
+                $modelToCopyCBID
+            );
+
+            if ($modelToCopySpec === null) {
+                throw new CBException(
+                    "No model exists to copy with the ID {$modelToCopyCBID}",
+                    '',
+                    'fcfe83a69d00d91d61360ad1c376b71e0a063393'
+                );
             }
 
-            if (empty($originalSpec)) {
-                if (empty($templateClassName)) {
-                    throw new CBException(
-                        "No model exists with the ID {$ID}.",
-                        '',
-                        'ad535e8eb3c2f8f1d84cb29cd5781e926415a0f1'
-                    );
-                } else if (
-                    is_callable(
-                        $function = "{$templateClassName}::CBModelTemplate_spec"
-                    )
-                ) {
-                    $originalSpec = call_user_func($function);
-                    $originalSpec->ID = $ID;
-                } else {
-                    throw new CBException(
-                        (
-                            "No model template class exists with the " .
-                            "class name \"{$templateClassName}\""
-                        ),
-                        '',
-                        '8dab808b65ec7529abeba0d6c7b7788a6fdd325f'
-                    );
-                }
+            $originalSpec = CBModel::copy(
+                $modelToCopySpec,
+                $ID
+            );
+        }
+
+
+        /* use a template to generate the spec */
+
+        if (
+            empty($originalSpec) &&
+            !empty($templateClassName)
+        ) {
+            $functionName = "{$templateClassName}::CBModelTemplate_spec";
+
+            if (is_callable($functionName)) {
+                $originalSpec = call_user_func(
+                    $functionName
+                );
+
+                $originalSpec->ID = $ID;
+            } else {
+                throw new CBException(
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        No model template class exists with the class name
+                        "{$templateClassName}"
+
+                    EOT),
+                    '',
+                    '8dab808b65ec7529abeba0d6c7b7788a6fdd325f'
+                );
             }
         }
+
+        /* use a suggested spec passed in the URL */
+
+        if (
+            empty($originalSpec) &&
+            !empty($suggestedSpecAsJSON)
+        ) {
+            $originalSpec = json_decode(
+                $suggestedSpecAsJSON
+            );
+
+            $originalSpec->ID = $ID;
+
+            unset($originalSpec->version);
+        }
+
+
+        /* there is no source of a spec to edit */
+
+        if (empty($originalSpec)) {
+            throw new CBException(
+                "No model exists with the ID {$ID}.",
+                '',
+                'ad535e8eb3c2f8f1d84cb29cd5781e926415a0f1'
+            );
+        }
+
 
         /**
          * The original spec is upgraded before being sent to the editor to
@@ -167,7 +221,10 @@ class CBModelEditor {
          * scheduled to be upgraded after an update, but it does take some time.
          * A user may be editing a model before its upgrade task has run.
          */
-        $originalSpec = CBModel::upgrade($originalSpec);
+
+        $originalSpec = CBModel::upgrade(
+            $originalSpec
+        );
 
         $originalSpecHasBeenFetched = true;
 
