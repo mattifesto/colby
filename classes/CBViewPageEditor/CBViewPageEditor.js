@@ -22,16 +22,22 @@ var CBViewPageEditor = {
      */
     spec: undefined,
 
+
+
     /**
      * This variable will be set to the specChangedCallback as soon as the
      * editor is created.
      */
     specChangedCallback: undefined,
 
+
+
     /**
      * This will be set to a function by the CBViewPageInformationEditor.
      */
     thumbnailChangedCallback: undefined,
+
+
 
     /**
      * @param object args
@@ -43,7 +49,9 @@ var CBViewPageEditor = {
      *
      * @return Element
      */
-    CBUISpecEditor_createEditorElement: function (args) {
+    CBUISpecEditor_createEditorElement(
+        args
+    ) {
         let spec = args.spec;
         let specChangedCallback = args.specChangedCallback;
 
@@ -56,7 +64,7 @@ var CBViewPageEditor = {
 
         if (spec.ID === CBViewPageEditor_currentFrontPageID) {
             editorContainer.appendChild(
-                CBUISpecEditor_createEditorElement_createFrontPageNotificationElement()
+                createFrontPageNotificationElement()
             );
         }
 
@@ -133,12 +141,15 @@ var CBViewPageEditor = {
         return editorContainer;
 
 
+
         /* -- closures -- -- -- -- -- */
+
+
 
         /**
          * @return Element
          */
-        function CBUISpecEditor_createEditorElement_createFrontPageNotificationElement() {
+        function createFrontPageNotificationElement() {
             let element = CBUI.createElement(
                 "CBViewPageEditor_frontPageNotification " +
                 "CBUI_sectionContainer"
@@ -164,9 +175,11 @@ var CBViewPageEditor = {
 
             return element;
         }
-        /* CBUISpecEditor_createEditorElement_createFrontPageNotificationElement() */
+        /* createFrontPageNotificationElement() */
+
     },
     /* CBUISpecEditor_createEditorElement() */
+
 
 
     /**
@@ -178,8 +191,9 @@ var CBViewPageEditor = {
      *
      * @return undefined
      */
-    handleTitleChanged: function (args) {
-
+    handleTitleChanged(
+        args
+    ) {
         /**
          * Only change the page title if this is a CBModelEditor admin page.
          */
@@ -212,6 +226,7 @@ var CBViewPageEditor = {
     /* handleTitleChanged() */
 
 
+
     /**
      * @param object args
      *
@@ -221,7 +236,9 @@ var CBViewPageEditor = {
      *
      * @return undefined
      */
-    makeFrontPage: function (args) {
+    makeFrontPage(
+        args
+    ) {
         if (
             window.confirm(
                 "Are you sure you want to use this page as the front page?"
@@ -248,12 +265,15 @@ var CBViewPageEditor = {
     /* makeFrontPage() */
 
 
+
     /**
      * @param model? image
      *
      * @return undefined
      */
-    setThumbnailImage: function (image) {
+    setThumbnailImage(
+        image
+    ) {
         var spec = CBViewPageEditor.spec;
 
         if (spec === undefined) {
@@ -271,10 +291,8 @@ var CBViewPageEditor = {
             );
         }
 
-        var callback = CBViewPageEditor.thumbnailChangedCallback;
-
-        if (callback) {
-            callback(
+        if (CBViewPageEditor.thumbnailChangedCallback) {
+            CBViewPageEditor.thumbnailChangedCallback(
                 {
                     spec: spec,
                     image: image
@@ -287,12 +305,15 @@ var CBViewPageEditor = {
     /* setThumbnailImage() */
 
 
+
     /**
      * @param model image
      *
      * @return undefined
      */
-    suggestThumbnailImage: function (image) {
+    suggestThumbnailImage(
+        image
+    ) {
         var spec = CBViewPageEditor.spec;
 
         if (spec && !spec.image && !spec.thumbnailURL) {
@@ -300,5 +321,6 @@ var CBViewPageEditor = {
         }
     },
     /* suggestThumbnailImage() */
+
 };
 /* CBViewPageEditor */

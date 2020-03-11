@@ -4,15 +4,17 @@ final class CBViewPageEditor {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v589.js', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -31,6 +33,7 @@ final class CBViewPageEditor {
         ];
     }
     /* CBHTMLOutput_JavaScriptVariables() */
+
 
 
     /**
@@ -63,5 +66,6 @@ final class CBViewPageEditor {
         );
     }
     /* CBHTMLOutput_requiredClassNames() */
+
 }
 /* CBViewPageEditor */
