@@ -23,7 +23,9 @@ final class CBModelsAdminTemplateSelector {
      * @return void
      */
     static function CBAdmin_initialize(): void {
-        CBModelsAdminTemplateSelector::$modelClassName = cb_query_string_value('modelClassName');
+        CBModelsAdminTemplateSelector::$modelClassName = cb_query_string_value(
+            'modelClassName'
+        );
     }
 
 
@@ -43,10 +45,12 @@ final class CBModelsAdminTemplateSelector {
      * @return void
      */
     static function CBAdmin_render(): void {
-        CBHTMLOutput::pageInformation()->title =
+        CBHTMLOutput::pageInformation()->title = (
             CBModelsAdminTemplateSelector::$modelClassName .
-            ' Template Selector';
+            ' Template Selector'
+        );
     }
+    /* CBAdmin_render() */
 
 
 
@@ -57,24 +61,9 @@ final class CBModelsAdminTemplateSelector {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
-        return [
-            'CBUI',
-            'CBUISectionItem4',
-            'CBUIMessagePart',
-            'CBUINavigationArrowPart',
-            'CBUIStringsPart',
-        ];
-    }
-
-
-
-    /**
-     * @return [string]
-     */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v589.js', cbsysurl()),
         ];
     }
 
@@ -84,28 +73,56 @@ final class CBModelsAdminTemplateSelector {
      * @return [[<name>, <value>]]
      */
     static function CBHTMLOutput_JavaScriptVariables(): array {
-        $templateClassNames = CBModelTemplateCatalog::fetchTemplateClassNamesByTargetClassName(
-            CBModelsAdminTemplateSelector::$modelClassName
+        $templateClassNames = (
+            CBModelTemplateCatalog::fetchTemplateClassNamesByTargetClassName(
+                CBModelsAdminTemplateSelector::$modelClassName
+            )
         );
 
-        $templates = array_map(function ($templateClassName) {
-            if (is_callable($function = "{$templateClassName}::CBModelTemplate_title")) {
-                $title = call_user_func($function);
-            } else {
-                $title = $templateClassName;
-            }
+        $templates = array_map(
+            function ($templateClassName) {
+                $functionName = "{$templateClassName}::CBModelTemplate_title";
 
-            return (object)[
-                'className' => $templateClassName,
-                'title' => $title,
-            ];
-        }, $templateClassNames);
+                if (is_callable($functionName)) {
+                    $title = call_user_func(
+                        $functionName
+                    );
+                } else {
+                    $title = $templateClassName;
+                }
+
+                return (object)[
+                    'className' => $templateClassName,
+                    'title' => $title,
+                ];
+            },
+            $templateClassNames
+        );
 
         return [
-            ['CBModelsAdminTemplateSelector_modelClassName', CBModelsAdminTemplateSelector::$modelClassName],
-            ['CBModelsAdminTemplateSelector_templates', $templates],
+            [
+                'CBModelsAdminTemplateSelector_modelClassName',
+                CBModelsAdminTemplateSelector::$modelClassName,
+            ],
+            [
+                'CBModelsAdminTemplateSelector_templates',
+                $templates,
+            ],
         ];
     }
     /* CBHTMLOutput_JavaScriptVariables() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'CBUI',
+            'Colby',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
 
 }

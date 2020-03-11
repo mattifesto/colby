@@ -3,63 +3,110 @@
 /* jshint esversion: 6 */
 /* exported CBModelsAdminTemplateSelector */
 /* global
+    CBUI,
+    Colby,
+
     CBModelsAdminTemplateSelector_modelClassName,
     CBModelsAdminTemplateSelector_templates,
-    CBUI,
-    CBUIMessagePart,
-    CBUINavigationArrowPart,
-    CBUISectionItem4,
-    CBUIStringsPart,
-    Colby */
+*/
 
-var CBModelsAdminTemplateSelector = {
+
+(function () {
+
+    Colby.afterDOMContentLoaded(
+        afterDOMContentLoaded
+    );
+
+
 
     /**
      * @return undefined
      */
-    init: function () {
-        let mainElement = document.getElementsByTagName("main")[0];
+    function afterDOMContentLoaded() {
+        let element;
+        let sectionElement;
 
-        mainElement.appendChild(CBUI.createHalfSpace());
+        {
+            let elements = document.getElementsByClassName(
+                "CBModelsAdminTemplateSelector"
+            );
 
-        let sectionElement = CBUI.createSection();
+            if (elements.length < 1) {
+                return;
+            }
 
-        if (CBModelsAdminTemplateSelector_templates.length > 0) {
-            CBModelsAdminTemplateSelector_templates.forEach(function (template) {
-                let sectionItem = CBUISectionItem4.create();
-                sectionItem.callback = function () {
-                    let ID = Colby.random160();
-                    let URL = `/admin/?c=CBModelEditor&ID=${ID}&templateClassName=${template.className}`;
+            element = elements[0];
 
-                    window.location = URL;
-                };
+            elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-                let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = template.title;
+            element.appendChild(
+                elements[0]
+            );
 
-                sectionItem.appendPart(stringsPart);
-                sectionItem.appendPart(CBUINavigationArrowPart.create());
-                sectionElement.appendChild(sectionItem.element);
-            });
-        } else {
-            let sectionItem = CBUISectionItem4.create();
-            let messagePart = CBUIMessagePart.create();
-            messagePart.message = `
-
-                --- center
-                There are no model templates available for
-                ${CBModelsAdminTemplateSelector_modelClassName} models.
-                ---
-
-            `;
-
-            sectionItem.appendPart(messagePart);
-            sectionElement.appendChild(sectionItem.element);
+            sectionElement = elements[1];
         }
 
-        mainElement.appendChild(sectionElement);
-        mainElement.appendChild(CBUI.createHalfSpace());
-    },
-};
+        if (CBModelsAdminTemplateSelector_templates.length > 0) {
+            CBModelsAdminTemplateSelector_templates.forEach(
+                function (template) {
+                    let sectionItemElement;
 
-Colby.afterDOMContentLoaded(CBModelsAdminTemplateSelector.init);
+                    {
+                        let elements = CBUI.createElementTree(
+                            "CBUI_sectionItem",
+                            "CBUI_container_topAndBottom CBUI_flexGrow",
+                            "title"
+                        );
+
+                        sectionElement.appendChild(
+                            elements[0]
+                        );
+
+                        sectionItemElement = elements[0];
+                        let titleElement = elements[2];
+
+                        titleElement.textContent = template.title;
+
+                        sectionItemElement.appendChild(
+                            CBUI.createElement(
+                                "CBUI_navigationArrow"
+                            )
+                        );
+                    }
+
+                    sectionItemElement.addEventListener(
+                        "click",
+                        function () {
+                            let CBID = Colby.random160();
+
+                            let URL = (
+                                `/admin/` +
+                                `?c=CBModelEditor` +
+                                `&ID=${CBID}` +
+                                `&templateClassName=${template.className}`
+                            );
+
+                            window.location.href = URL;
+                        }
+                    );
+                }
+            );
+        } else {
+            sectionElement.appendChild(
+                CBUI.cbmessageToElement(`
+
+                    --- center
+                    There are no model templates available for
+                    ${CBModelsAdminTemplateSelector_modelClassName} models.
+                    ---
+
+                `)
+            );
+        }
+    }
+    /* afterDOMContentLoaded() */
+
+})();
