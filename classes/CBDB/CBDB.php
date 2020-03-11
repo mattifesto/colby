@@ -106,7 +106,10 @@ final class CBDB {
      *
      * @return [?string]|[mixed]|[string => ?string]|[string => mixed]|
      */
-    static function SQLToArray($SQL, $args = []) {
+    static function SQLToArray(
+        $SQL,
+        $args = []
+    ) {
         $valueIsJSON = false;
         extract($args, EXTR_IF_EXISTS);
 
@@ -123,6 +126,7 @@ final class CBDB {
 
         return $values;
     }
+    /* SQLToArray() */
 
 
 
@@ -135,16 +139,22 @@ final class CBDB {
      *      result. Since mysqli returns all values as either string or null
      *      regardless of type, all of the values will be nullable strings.
      */
-    static function SQLToArrayOfNullableStrings(string $SQL): array {
+    static function SQLToArrayOfNullableStrings(
+        string $SQL
+    ): array {
         $result = Colby::query($SQL);
         $values = [];
 
         while ($row = $result->fetch_array(MYSQLI_NUM)) {
-            $values[] = $row[0];
+            array_push(
+                $values,
+                $row[0]
+            );
         }
 
         return $values;
     }
+    /* SQLToArrayOfNullableStrings() */
 
 
 
@@ -174,6 +184,7 @@ final class CBDB {
 
         return $value;
     }
+    /* SQLToValue() */
 
 
 
