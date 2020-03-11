@@ -2,14 +2,19 @@
 
 final class CBMenuItemEditor {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v488.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v589.js', cbsysurl()),
         ];
     }
+
 
 
     /**
@@ -21,4 +26,6 @@ final class CBMenuItemEditor {
             'CBUIStringEditor'
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
+
 }
