@@ -28,8 +28,13 @@ final class CBModels {
      *
      * @return null
      */
-    static function CBAjax_deleteByID(stdClass $args) {
-        $ID = CBModel::value($args, 'ID');
+    static function CBAjax_deleteByID(
+        stdClass $args
+    ) {
+        $ID = CBModel::value(
+            $args,
+            'ID'
+        );
 
         CBDB::transaction(
             function () use ($ID) {
@@ -53,7 +58,9 @@ final class CBModels {
     /**
      * @return void
      */
-    static function CBAjax_revert(stdClass $args): void {
+    static function CBAjax_revert(
+        stdClass $args
+    ): void {
         $ID = CBModel::valueAsID($args, 'ID');
 
         if ($ID === null) {
@@ -268,13 +275,16 @@ final class CBModels {
      *      CBModels::deleteByID($ID);
      *      Colby::query('COMMIT');
      *
-     * @param string|[string] $IDs
-     *  All of the referenced models must have the same class name. Make
-     *  separate calls for each class name.
+     * @param CBID|[CBID] $IDs
      *
-     * @return null
+     *      All of the referenced models must have the same class name. Make
+     *      separate calls for each class name.
+     *
+     * @return void
      */
-    static function deleteByID($IDs) {
+    static function deleteByID(
+        $IDs
+    ): void {
         if (empty($IDs)) {
             return;
         }
@@ -287,11 +297,11 @@ final class CBModels {
 
         $SQL = <<<EOT
 
-            SELECT DISTINCT `className`
+            SELECT DISTINCT className
 
-            FROM            `CBModels`
+            FROM            CBModels
 
-            WHERE           `ID` IN ({$IDsForSQL})
+            WHERE           ID IN ({$IDsForSQL})
 
         EOT;
 
@@ -308,28 +318,37 @@ final class CBModels {
                 );
             }
 
-            if (
-                is_callable($function = "{$classNames[0]}::CBModels_willDelete")
-            ) {
-                call_user_func($function, $IDs);
-            } else  if (
-                is_callable($function = "{$classNames[0]}::modelsWillDelete")
-            ) {
-                call_user_func($function, $IDs);
+            $className = $classNames[0];
+            $functionName = "{$className}::CBModels_willDelete";
+
+            if (is_callable($functionName)) {
+                call_user_func(
+                    $functionName,
+                    $IDs
+                );
+            } else {
+                $functionName = "{$className}::modelsWillDelete";
+
+                if (is_callable($functionName)) {
+                    call_user_func(
+                        $functionName,
+                        $IDs
+                    );
+                }
             }
         }
 
         $SQL = <<<EOT
 
-            DELETE  `CBModels`,
-                    `CBModelVersions`
+            DELETE  CBModels,
+                    CBModelVersions
 
-            FROM    `CBModels`
+            FROM    CBModels
 
-            JOIN    `CBModelVersions`
-            ON      `CBModelVersions`.`ID` = `CBModels`.`ID`
+            JOIN    CBModelVersions
+            ON      CBModelVersions.ID = CBModels.ID
 
-            WHERE   `CBModels`.`ID` IN ($IDsForSQL)
+            WHERE   CBModels.ID IN ({$IDsForSQL})
 
         EOT;
 
@@ -436,7 +455,9 @@ final class CBModels {
      *
      * @return [ID => model]
      */
-    static function fetchModelsByClassName(string $className): array {
+    static function fetchModelsByClassName(
+        string $className
+    ): array {
         $classNameAsSQL = CBDB::stringToSQL($className);
 
         $SQL = <<<EOT
@@ -476,7 +497,9 @@ final class CBModels {
      *
      * @return [object]
      */
-    static function fetchModelsByClassName2(string $className): array {
+    static function fetchModelsByClassName2(
+        string $className
+    ): array {
         $classNameAsSQL = CBDB::stringToSQL($className);
 
         $SQL = <<<EOT
@@ -735,32 +758,41 @@ final class CBModels {
      *          ...
      *      ]
      */
-    static function fetchSpecsByID(array $IDs, $args = []): array {
+    static function fetchSpecsByID(
+        array $IDs,
+        $args = []
+    ): array {
         if (empty($IDs)) {
             return [];
         }
 
         $createSpecForIDCallback = null;
+
         extract($args, EXTR_IF_EXISTS);
 
         $IDsAsSQL = CBID::toSQL($IDs);
 
         $SQL = <<<EOT
 
-            SELECT  LOWER(HEX(`m`.`ID`)),
-                    `v`.`specAsJSON`
+            SELECT  LOWER(HEX(m.ID)),
+                    v.specAsJSON
 
-            FROM    `CBModels` AS `m`
+            FROM    CBModels AS m
 
-            JOIN    `CBModelVersions` AS `v`
-            ON      `m`.`ID` = `v`.`ID` AND
-                    `m`.`version` = `v`.`version`
+            JOIN    CBModelVersions AS v
+                ON  m.ID = v.ID AND
+                    m.version = v.version
 
-            WHERE   `m`.`ID` IN ($IDsAsSQL)
+            WHERE   m.ID IN ($IDsAsSQL)
 
         EOT;
 
-        $specs = CBDB::SQLToArray($SQL, ['valueIsJSON' => true]);
+        $specs = CBDB::SQLToArray(
+            $SQL,
+            [
+                'valueIsJSON' => true
+            ]
+        );
 
         if (is_callable($createSpecForIDCallback)) {
             $existingIDs = array_keys($specs);
@@ -938,7 +970,10 @@ final class CBModels {
      *
      * @return null
      */
-    static function save($originalSpecs, $force = false) {
+    static function save(
+        $originalSpecs,
+        $force = false
+    ) {
         if (empty($originalSpecs)) {
             return; // TODO: Why are we okay with this being empty? Document.
         }
@@ -1046,9 +1081,9 @@ final class CBModels {
             }
         );
 
-        if (
-            is_callable($function = "{$sharedClassName}::CBModels_willSave")
-        ) {
+        $functionName = "{$sharedClassName}::CBModels_willSave";
+
+        if (is_callable($functionName)) {
             $models = array_map(
                 function ($tuple) {
                     return $tuple->model;
@@ -1056,11 +1091,20 @@ final class CBModels {
                 $tuples
             );
 
-            call_user_func($function, $models);
-        } else if (
-            is_callable($function = "{$sharedClassName}::modelsWillSave")
-        ) { /* deprecated */
-            call_user_func($function, $tuples);
+            call_user_func(
+                $functionName,
+                $models
+            );
+        } else {
+            /* deprecated */
+            $functionName = "{$sharedClassName}::modelsWillSave";
+
+            if (is_callable($functionName)) {
+                call_user_func(
+                    $functionName,
+                    $tuples
+                );
+            }
         }
 
         CBModels::saveToDatabase($tuples);
