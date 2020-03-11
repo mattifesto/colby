@@ -4,7 +4,13 @@ final class CBModelUpdater {
 
     /* -- CBInstall interfaces -- -- -- -- -- */
 
+
+
     /**
+     * This interface is implemented so that other classes that need to use the
+     * CBModelUpdater during install can just add CBModelUpdater to their
+     * install required class names rather than figuring out the dependencies.
+     *
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
@@ -15,7 +21,10 @@ final class CBModelUpdater {
     /* CBInstall_requiredClassNames() */
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * The purpose of this function is to fetch and apply updates to a model.
@@ -70,6 +79,8 @@ final class CBModelUpdater {
             'working' => $workingSpec,
         ];
     }
+    /* fetch() */
+
 
 
     /**
@@ -86,30 +97,44 @@ final class CBModelUpdater {
             );
         }
     }
+    /* save() */
+
 
 
     /**
+     * This function will create or updated the target model.
+     *
      * @param object $updates
      *
      * @return void
      */
-    static function update(stdClass $updates): void {
+    static function update(
+        stdClass $updates
+    ): void {
         $updater = CBModelUpdater::fetch($updates);
 
         CBModelUpdater::save($updater);
     }
+    /* update() */
+
 
 
     /**
+     * This function will only update the target model if it already exists.
+     *
      * @param object $updates
      *
      * @return void
      */
-    static function updateIfExists(stdClass $updates): void {
+    static function updateIfExists(
+        stdClass $updates
+    ): void {
         $updater = CBModelUpdater::fetch($updates);
 
         if ($updater->original !== null) {
             CBModelUpdater::save($updater);
         }
     }
+    /* updateIfExists() */
+
 }
