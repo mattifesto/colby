@@ -166,8 +166,10 @@ final class CBViewCatalog {
      * @return ID
      */
     static function ID(): string {
-        return CBViewCatalog::$testID ??
-            '3d1fad418d45d081a76a027e56079d5fa464b6cc';
+        return (
+            CBViewCatalog::$testID ??
+            '3d1fad418d45d081a76a027e56079d5fa464b6cc'
+        );
     }
     /* ID() */
 
@@ -218,21 +220,22 @@ final class CBViewCatalog {
             return;
         }
 
-        $originalSpec = CBModels::fetchSpecByID(CBViewCatalog::ID());
-
-        if (empty($originalSpec)) {
-            $originalSpec = (object)[
+        $updater = CBModelUpdater::fetch(
+            (object)[
+                'className' => 'CBViewCatalog',
                 'ID' => CBViewCatalog::ID(),
-            ];
-        }
+            ]
+        );
 
-        $spec = CBModel::clone($originalSpec);
-        $spec->className = 'CBViewCatalog';
 
+        $workingSpec = $updater->working;
 
         /* view class names */
 
-        $viewClassNames = CBModel::valueToArray($spec, 'viewClassNames');
+        $viewClassNames = CBModel::valueToArray(
+            $workingSpec,
+            'viewClassNames'
+        );
 
         if (!in_array($viewClassName, $viewClassNames)) {
             array_push(
@@ -241,15 +244,18 @@ final class CBViewCatalog {
             );
         }
 
-        $spec->viewClassNames = $viewClassNames;
+        $workingSpec->viewClassNames = $viewClassNames;
 
 
         /* unsupported view class names */
 
-        $isUnsupported = CBModel::valueToBool($args, 'isUnsupported');
+        $isUnsupported = CBModel::valueToBool(
+            $args,
+            'isUnsupported'
+        );
 
         $unsupportedViewClassNames = CBModel::valueToArray(
-            $spec,
+            $workingSpec,
             'unsupportedViewClassNames'
         );
 
@@ -259,21 +265,23 @@ final class CBViewCatalog {
                 $viewClassName
             );
         } else {
-            $unsupportedViewClassNames =
-            array_values(
-                array_filter(
-                    $unsupportedViewClassNames,
-                    function ($currentViewClassName) use ($viewClassName) {
-                        return $currentViewClassName !== $viewClassName;
-                    }
+            $unsupportedViewClassNames = (
+                array_values(
+                    array_filter(
+                        $unsupportedViewClassNames,
+                        function ($currentViewClassName) use ($viewClassName) {
+                            return $currentViewClassName !== $viewClassName;
+                        }
+                    )
                 )
             );
         }
 
-        $spec->unsupportedViewClassNames =
-        array_values(
-            array_unique(
-                $unsupportedViewClassNames
+        $workingSpec->unsupportedViewClassNames = (
+            array_values(
+                array_unique(
+                    $unsupportedViewClassNames
+                )
             )
         );
 
@@ -283,11 +291,14 @@ final class CBViewCatalog {
         if ($isUnsupported) {
             $isDeprecated = false;
         } else {
-            $isDeprecated = CBModel::valueToBool($args, 'isDeprecated');
+            $isDeprecated = CBModel::valueToBool(
+                $args,
+                'isDeprecated'
+            );
         }
 
         $deprecatedViewClassNames = CBModel::valueToArray(
-            $spec,
+            $workingSpec,
             'deprecatedViewClassNames'
         );
 
@@ -297,31 +308,27 @@ final class CBViewCatalog {
                 $viewClassName
             );
         } else {
-            $deprecatedViewClassNames =
-            array_values(
-                array_filter(
-                    $deprecatedViewClassNames,
-                    function ($currentViewClassName) use ($viewClassName) {
-                        return $currentViewClassName !== $viewClassName;
-                    }
+            $deprecatedViewClassNames = (
+                array_values(
+                    array_filter(
+                        $deprecatedViewClassNames,
+                        function ($currentViewClassName) use ($viewClassName) {
+                            return $currentViewClassName !== $viewClassName;
+                        }
+                    )
                 )
             );
         }
 
-        $spec->deprecatedViewClassNames =
-        array_values(
-            array_unique(
-                $deprecatedViewClassNames
+        $workingSpec->deprecatedViewClassNames = (
+            array_values(
+                array_unique(
+                    $deprecatedViewClassNames
+                )
             )
         );
 
-        if ($spec != $originalSpec) {
-            CBDB::transaction(
-                function () use ($spec) {
-                    CBModels::save($spec);
-                }
-            );
-        }
+        CBModelUpdater::save($updater);
     }
     /* installView() */
 
