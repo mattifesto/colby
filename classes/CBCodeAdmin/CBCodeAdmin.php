@@ -1579,6 +1579,21 @@ final class CBCodeAdmin {
 
 
                 /**
+                 * 2020_03_08 (warning)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBUI_navigationArrow style in CBUI.css.
+
+                    EOT,
+                    'regex' => 'CBUINavigationArrowPart',
+                    'severity' => 4,
+                    'title' => 'CBUINavigationArrowPart',
+                ],
+
+
+                /**
                  * 2020_02_28 (warning)
                  */
                 (object)[
