@@ -26,8 +26,8 @@ var CBUI = {
         cbmessage
     ) {
         let elements = CBUI.createElementTree(
-                "CBUI_view_outer",
-                "CBUI_view_inner_text"
+            "CBUI_view_outer",
+            "CBUI_view_inner_text"
         );
 
         elements[1].innerHTML = CBMessageMarkup.messageToHTML(

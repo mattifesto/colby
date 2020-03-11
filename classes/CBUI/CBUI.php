@@ -22,7 +22,7 @@ final class CBUI {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v565.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v589.js', cbsysurl()),
         ];
     }
 
