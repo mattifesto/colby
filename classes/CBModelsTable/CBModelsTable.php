@@ -2,12 +2,22 @@
 
 final class CBModelsTable {
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return void
      */
     static function CBInstall_install(): void {
         CBModelsTable::create();
     }
+
+
+
+    /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * Creates either the permanent or a temporary CBModels table.
@@ -16,9 +26,12 @@ final class CBModelsTable {
      *
      * @return void
      */
-    static function create(bool $temporary = false): void {
+    static function create(
+        bool $temporary = false
+    ): void {
         $name = $temporary ? 'CBModelsTemp' : 'CBModels';
         $options = $temporary ? 'TEMPORARY' : '';
+
         $SQL = <<<EOT
 
             CREATE {$options} TABLE IF NOT EXISTS {$name} (
@@ -37,8 +50,10 @@ final class CBModelsTable {
             DEFAULT CHARSET=utf8mb4
             COLLATE=utf8mb4_unicode_520_ci
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
     }
+    /* create() */
+
 }
