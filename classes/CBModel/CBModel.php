@@ -423,9 +423,9 @@ final class CBModel {
              * @NOTE 2018_12_21
              *
              *      This code is deprecated. It infers that if the spec has its
-             *      "title" property set that the "title" property is a valid string
-             *      property for this particular model. In the future the class will
-             *      be responsible for building all model properties.
+             *      "title" property set that the "title" property is a valid
+             *      string property for this particular model. In the future the
+             *      class will be responsible for building all model properties.
              */
             if (!isset($model->title) && isset($spec->title)) {
                 $model->title = trim(
@@ -542,7 +542,9 @@ final class CBModel {
      *      argument to the returned model using == to determine if any changes
      *      were made during the upgrade.
      */
-    static function upgrade($originalSpec): stdClass {
+    static function upgrade(
+        $originalSpec
+    ): stdClass {
         if (CBConvert::valueAsModel($originalSpec) === null) {
             throw CBException::createModelIssueException(
                 'This spec can\'t be upgraded because it is not a model.',
@@ -551,10 +553,13 @@ final class CBModel {
             );
         }
 
-        $originalID = CBModel::valueAsID($originalSpec, 'ID');
+        $originalCBID = CBModel::valueAsCBID(
+            $originalSpec,
+            'ID'
+        );
 
-        if (!empty($originalID)) {
-            CBID::push($originalID);
+        if (!empty($originalCBID)) {
+            CBID::push($originalCBID);
         }
 
         $functionName = "{$originalSpec->className}::CBModel_upgrade";
@@ -571,9 +576,12 @@ final class CBModel {
                 );
             }
 
-            $upgradedID = CBModel::valueAsID($upgradedSpec, 'ID');
+            $upgradedCBID = CBModel::valueAsCBID(
+                $upgradedSpec,
+                'ID'
+            );
 
-            if ($upgradedID != $originalID) {
+            if ($upgradedCBID != $originalCBID) {
                 $value = (object)[
                     'originalSpec' => $originalSpec,
                     'upgradedSpec' => $upgradedSpec,
@@ -592,7 +600,7 @@ final class CBModel {
             $upgradedSpec = CBModel::clone($originalSpec);
         }
 
-        if (!empty($originalID)) {
+        if (!empty($originalCBID)) {
             CBID::pop();
         }
 
