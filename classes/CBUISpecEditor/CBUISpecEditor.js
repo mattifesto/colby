@@ -88,10 +88,10 @@ var CBUISpecEditor = {
                 );
             }
         } else {
-            editorObject =
-            window[globalVariableName] ||
-            window[className + "EditorFactory"] ||
-            CBDefaultEditor;
+            editorObject = (
+                window[globalVariableName] ||
+                CBDefaultEditor
+            );
         }
 
         let functionName = "CBUISpecEditor_createEditorElement";
