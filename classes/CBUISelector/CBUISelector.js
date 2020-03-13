@@ -4,11 +4,12 @@
 /* exported CBUISelector */
 /* global
     CBUI,
-    CBUINavigationArrowPart,
     CBUINavigationView,
     CBUISectionItem4,
     CBUIStringsPart,
 */
+
+
 
 var CBUISelector = {
 
@@ -69,25 +70,64 @@ var CBUISelector = {
          */
 
         let title = '';
-        var options = args.options || [{ title: "Default Option" }];
+
+        let options = (
+            args.options ||
+            [
+                {
+                    title: "Default Option",
+                }
+            ]
+        );
+
         var propertyName = args.propertyName || "value";
         var spec = args.spec || {};
         var onchangeCallback = args.specChangedCallback;
         var valueChangedCallback = args.valueChangedCallback;
 
-        let sectionItem = CBUISectionItem4.create();
-        let stringsPart = CBUIStringsPart.create();
+        let element;
+        let titleElement;
+        let descriptionElement;
 
-        stringsPart.element.classList.add('keyvalue');
+        {
+            let elements = CBUI.createElementTree(
+                "CBUISelector CBUI_sectionItem",
+                "CBUI_container_topAndBottom CBUI_flexGrow",
+                "CBUISelector_title"
+            );
 
-        sectionItem.appendPart(stringsPart);
-        sectionItem.appendPart(CBUINavigationArrowPart.create());
+            element = elements[0];
+            titleElement = elements[2];
 
-        var state = { options: undefined };
+            let textContainer = elements[1];
+
+            descriptionElement = CBUI.createElement(
+                "CBUISelector_description CBUI_textSize_small CBUI_textColor2"
+            );
+
+            textContainer.appendChild(
+                descriptionElement
+            );
+
+            element.appendChild(
+                CBUI.createElement(
+                    "CBUI_navigationArrow"
+                )
+            );
+        }
+
+        var state = {
+            options: undefined,
+        };
 
         updateOptions(options);
 
-        sectionItem.callback = showSelector;
+        element.addEventListener(
+            "click",
+            function () {
+                showSelector();
+            }
+        );
 
         let api = {
 
@@ -102,7 +142,10 @@ var CBUISelector = {
              * @param function|undefined value
              */
             set changed(value) {
-                if (typeof value === "function" || typeof value === "undefined") {
+                if (
+                    typeof value === "function" ||
+                    typeof value === "undefined"
+                ) {
                     onchangeCallback = value;
                 } else {
                     throw new TypeError(
@@ -113,26 +156,36 @@ var CBUISelector = {
             },
 
             get element() {
-                return sectionItem.element;
+                return element;
             },
+
             get onchange() {
                 return onchangeCallback;
             },
+
             set onchange(value) {
                 onchangeCallback = value;
             },
+
             get options() {
-                return JSON.parse(JSON.stringify(state.options));
+                return JSON.parse(
+                    JSON.stringify(
+                        state.options
+                    )
+                );
             },
+
             set options(value) {
                 updateOptions(value);
             },
+
             get title() {
                 return title;
             },
+
             set title(value) {
                 title = value;
-                stringsPart.string1 = title;
+                titleElement.textContent = title;
             },
 
             /**
@@ -157,12 +210,24 @@ var CBUISelector = {
 
         return api;
 
-        /* closure */
+
+
+        /* -- closures -- -- -- -- -- */
+
+
+
+        /**
+         * @return string
+         */
         function currentValueToTitle() {
             var options = state.options || [];
-            var selectedOption = options.find(function (option) {
-                return spec[propertyName] == option.value; /* allow string to int equality */
-            });
+
+            var selectedOption = options.find(
+                function (option) {
+                    /* allow string to int equality */
+                    return spec[propertyName] == option.value;
+                }
+            );
 
             if (selectedOption) {
                 return selectedOption.title;
@@ -174,25 +239,37 @@ var CBUISelector = {
                 }
             }
         }
+        /* currentValueToTitle() */
 
-        /* closure */
-        function showSelector() {
-            CBUISelector.showSelector({
-                callback: updateValue,
-                options: state.options,
-                selectValue: api.value,
-                title: title,
-            });
-        }
 
-        /* closure */
-        function updateInterface() {
-            stringsPart.string2 = currentValueToTitle();
-        }
 
         /**
-         * closure
-         *
+         * @return undefined
+         */
+        function showSelector() {
+            CBUISelector.showSelector(
+                {
+                    callback: updateValue,
+                    options: state.options,
+                    selectValue: api.value,
+                    title: title,
+                }
+            );
+        }
+        /* showSelector() */
+
+
+
+        /**
+         * @return undefined
+         */
+        function updateInterface() {
+            descriptionElement.textContent = currentValueToTitle();
+        }
+
+
+
+        /**
          * @param [object] options
          *
          *      {
@@ -200,8 +277,12 @@ var CBUISelector = {
          *          description: string
          *          value: mixed
          *      }
+         *
+         * @return undefined
          */
-        function updateOptions(options) {
+        function updateOptions(
+            options
+        ) {
             if (Array.isArray(options)) {
                 state.options = options;
             } else {
@@ -210,6 +291,9 @@ var CBUISelector = {
 
             updateInterface();
         }
+        /* updateOptions() */
+
+
 
         /**
          * CBUISelector.create() closure
@@ -218,7 +302,9 @@ var CBUISelector = {
          *
          * @return undefined
          */
-        function updateValue(value) {
+        function updateValue(
+            value
+        ) {
             spec[propertyName] = value;
 
             updateInterface();
@@ -231,43 +317,67 @@ var CBUISelector = {
                 valueChangedCallback(value);
             }
         }
+        /* updateValue() */
+
     },
+    /* create() */
+
+
 
     /**
-     * @param function args.callback
-     * @param [object] args.options
-     *  option = { string title, string? description, mixed value }
-     * @param mixed? args.selectedValue
+     * @param object args
+     *
+     *      {
+     *          callback: function
+     *          options: [object]
+     *
+     *              {
+     *                  title: string
+     *                  description: string
+     *                  value: mixed
+     *              }
+     *
+     *          selectValue: mixed
+     *      }
      *
      * @return Element
      */
-    createSelector: function (args) {
+    createSelector: function (
+        args
+    ) {
         var element = document.createElement("div");
         var section = CBUI.createSection();
 
-        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
 
-        args.options.forEach(function (option) {
-            let sectionItem = CBUISectionItem4.create();
-            let stringsPart = CBUIStringsPart.create();
-            stringsPart.string1 = option.title;
-            stringsPart.string2 = option.description;
+        args.options.forEach(
+            function (option) {
+                let sectionItem = CBUISectionItem4.create();
+                let stringsPart = CBUIStringsPart.create();
+                stringsPart.string1 = option.title;
+                stringsPart.string2 = option.description;
 
-            stringsPart.element.classList.add('titledescription');
+                stringsPart.element.classList.add('titledescription');
 
-            sectionItem.callback = function () {
-                args.callback(option.value);
-            };
+                sectionItem.callback = function () {
+                    args.callback(option.value);
+                };
 
-            sectionItem.appendPart(stringsPart);
-            section.appendChild(sectionItem.element);
-        });
+                sectionItem.appendPart(stringsPart);
+                section.appendChild(sectionItem.element);
+            }
+        );
+        /* forEach */
 
         element.appendChild(section);
         element.appendChild(CBUI.createHalfSpace());
 
         return element;
     },
+    /* createSelector() */
+
 
 
     /**
@@ -302,17 +412,20 @@ var CBUISelector = {
                 return;
             }
 
-            CBUISelector.showSelector({
-                callback: resolve,
-                options: args.options,
-                selectedValue: args.selectedValue,
-                title: args.title,
-            });
+            CBUISelector.showSelector(
+                {
+                    callback: resolve,
+                    options: args.options,
+                    selectedValue: args.selectedValue,
+                    title: args.title,
+                }
+            );
         };
 
         return new Promise(func);
     },
     /* selectValue() */
+
 
 
     /**
@@ -335,30 +448,42 @@ var CBUISelector = {
      * @return undefined
      */
     showSelector: function (args) {
-        var selector = CBUISelector.createSelector({
-            callback: valueSelected,
-            options: args.options,
-            selectedValue: args.selectedValue,
-        });
+        var selector = CBUISelector.createSelector(
+            {
+                callback: valueSelected,
+                options: args.options,
+                selectedValue: args.selectedValue,
+            }
+        );
 
-        CBUINavigationView.navigate({
-            element: selector,
-            title: args.title,
-        });
+        CBUINavigationView.navigate(
+            {
+                element: selector,
+                title: args.title,
+            }
+        );
 
         function valueSelected(value) {
             args.callback(value);
             history.back();
         }
     },
+    /* showSelector() */
+
 };
+/* CBUISelector */
+
 
 
 var CBUISelectorValueEditor = {
 
     /**
-     * @param function args.updateValueCallback
-     * @param mixed args.value
+     * @param object args
+     *
+     *      {
+     *          updateValueCallback: function
+     *          value: mixed
+     *      }
      *
      * @return undefined
      */
@@ -367,11 +492,21 @@ var CBUISelectorValueEditor = {
         history.back();
     },
 
+
+
     /**
-     * @param object args.spec
-     * @param function args.specChangedCallback
+     * @param object args
+     *
+     *      {
+     *          spec: object
+     *          specChangedCallback: function
+     *      }
+     *
+     * @return Element
      */
-    createEditor: function (args) {
+    CBUISpecEditor_createEditorElement(
+        args
+    ) {
         var section, item;
         var targetOptions = args.spec.state.options || [];
         var targetUpdateValueCallback = args.spec.updateValueCallback;
@@ -380,28 +515,40 @@ var CBUISelectorValueEditor = {
 
         section = CBUI.createSection();
 
-        targetOptions.forEach(function (option) {
-            item = CBUI.createSectionItem();
-            var title = document.createElement("div");
-            title.className = "title";
-            title.textContent = option.title;
-            var description = document.createElement("div");
-            description.className = "description";
-            description.textContent = option.description || "";
+        targetOptions.forEach(
+            function (option) {
+                item = CBUI.createSectionItem();
+                var title = document.createElement("div");
+                title.className = "title";
+                title.textContent = option.title;
+                var description = document.createElement("div");
+                description.className = "description";
+                description.textContent = option.description || "";
 
-            item.appendChild(title);
-            item.appendChild(description);
+                item.appendChild(title);
+                item.appendChild(description);
 
-            item.addEventListener("click", CBUISelectorValueEditor.acceptValue.bind(undefined, {
-                updateValueCallback: targetUpdateValueCallback,
-                value: option.value,
-            }));
+                item.addEventListener(
+                    "click",
+                    CBUISelectorValueEditor.acceptValue.bind(
+                        undefined,
+                        {
+                            updateValueCallback: targetUpdateValueCallback,
+                            value: option.value,
+                        }
+                    )
+                );
 
-            section.appendChild(item);
-        });
+                section.appendChild(item);
+            }
+        );
+        /* forEach */
 
         element.appendChild(section);
 
         return element;
     },
+    /* CBUISpecEditor_createEditorElement() */
+
 };
+/* CBUISelectorValueEditor */
