@@ -341,6 +341,21 @@ final class CBCodeAdmin {
 
 
                 /**
+                 * 2020_03_13 (error)
+                 */
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Name model editor classes "<className>Editor".
+
+                    EOT,
+                    'regex' => 'EditorFactory',
+                    'severity' => 3,
+                    'title' => 'EditorFactory',
+                ],
+
+
+                /**
                  * 2020_02_28 (error)
                  */
                 (object)[
