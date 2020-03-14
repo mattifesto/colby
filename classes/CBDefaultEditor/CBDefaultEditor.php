@@ -2,14 +2,19 @@
 
 final class CBDefaultEditor {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v368.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v590.js', cbsysurl()),
         ];
     }
+
 
 
     /**
@@ -18,7 +23,8 @@ final class CBDefaultEditor {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBUI',
-            'CBUISectionItem4',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
+
 }

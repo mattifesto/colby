@@ -1,40 +1,52 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBDefaultEditor */
 /* global
     CBUI,
-    CBUISectionItem4 */
+*/
+
+
 
 var CBDefaultEditor = {
+
+    /* -- CBUISpecEditor interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param object args
      *
      *      {
      *          spec: object
+     *          specChangedCallback: function
      *      }
      *
      * @return Element
      */
-    createEditor: function (args) {
-        var element = document.createElement("div");
-        element.className = "CBDefaultEditor";
+    CBUISpecEditor_createEditorElement(
+        args
+    ) {
+        let spec = args.spec;
 
-        element.appendChild(CBUI.createHalfSpace());
+        let elements = CBUI.createElementTree(
+            "CBDefaultEditor",
+            "CBUI_sectionContainer",
+            "CBUI_section",
+            "CBDefaultEditor_content CBUI_text1"
+        );
 
-        var section = CBUI.createSection();
-        var item = CBUISectionItem4.create();
+        let editorElement = elements[0];
+        let contentElement = elements[3];
 
-        item.appendPart(CBUI.createMessageSectionItemPart({
-            message: "There is no editor available for " +
-                     args.spec.className +
-                     " models.",
-        }));
+        contentElement.textContent = `
 
-        section.appendChild(item.element);
-        element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
+            There is no editor available for ${spec.className} specs.
 
-        return element;
+        `;
+
+        return editorElement;
     },
+    /* CBUISpecEditor_createEditorElement() */
+
 };
