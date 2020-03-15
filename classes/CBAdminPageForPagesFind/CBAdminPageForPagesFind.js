@@ -7,7 +7,6 @@
     CBErrorHandler,
     CBImage,
     CBUI,
-    CBUINavigationArrowPart,
     CBUINavigationView,
     CBUISelector,
     CBUIStringEditor,
@@ -384,10 +383,10 @@ var CBPageList = {
 
                 textElement2.textContent =  page.keyValueData.description;
 
-                let navigationArrowPart = CBUINavigationArrowPart.create();
-
                 sectionItemElement.appendChild(
-                    navigationArrowPart.element
+                    CBUI.createElement(
+                        "CBUI_navigationArrow"
+                    )
                 );
             }
         );
