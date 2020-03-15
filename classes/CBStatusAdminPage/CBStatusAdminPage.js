@@ -14,6 +14,7 @@
 (function () {
 
     let mainElement;
+    let statusTextElement;
 
 
 
@@ -26,7 +27,31 @@
      * @return undefined
      */
     function afterDOMContentLoaded() {
-        mainElement = document.getElementsByTagName("main")[0];
+        {
+            let mainElements = document.getElementsByClassName(
+                "CBStatusAdminPage"
+            );
+
+            if (mainElements.length < 1) {
+                return;
+            }
+
+            mainElement = mainElements.item(0);
+
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section",
+                "CBUI_text1"
+            );
+
+            mainElement.appendChild(
+                elements[0]
+            );
+
+            statusTextElement = elements[2];
+
+            statusTextElement.textContent = "fetching issues...";
+        }
 
         Colby.callAjaxFunction(
             "CBStatusAdminPage",
@@ -62,6 +87,20 @@
             messages,
             "issueCBMessages"
         );
+
+        let duplicateURICBMessages = CBModel.valueToArray(
+            messages,
+            "duplicateURICBMessages"
+        );
+
+        if (
+            issueCBMessages.length === 0 &&
+            duplicateURICBMessages.length === 0
+        ) {
+            statusTextElement.textContent = "no issues were found";
+        } else {
+            statusTextElement.textContent = "issues below";
+        }
 
         if (issueCBMessages.length > 0) {
             {
@@ -117,11 +156,6 @@
                 }
             );
         }
-
-        let duplicateURICBMessages = CBModel.valueToArray(
-            messages,
-            "duplicateURICBMessages"
-        );
 
         if (duplicateURICBMessages.length > 0) {
             let titleElement = CBUI.createElement(
