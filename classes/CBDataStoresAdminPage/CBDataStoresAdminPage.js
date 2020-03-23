@@ -1,7 +1,8 @@
 "use strict";
 /* jshint strict: global */
-/* jshint esnext: true */
+/* jshint esversion: 6 */
 /* global
+    CBErrorHandler,
     CBUI,
     CBUIActionPart,
     CBUINavigationArrowPart,
@@ -46,8 +47,7 @@
             }
         ).catch(
             function (error) {
-                CBUIPanel.displayError(error);
-                Colby.reportError(error);
+                CBErrorHandler.displayAndReport(error);
             }
         );
     }
@@ -81,8 +81,7 @@
                     }
                 ).catch(
                     function (error) {
-                        CBUIPanel.displayError(error);
-                        Colby.reportError(error);
+                        CBErrorHandler.displayAndReport(error);
                     }
                 );
             };
