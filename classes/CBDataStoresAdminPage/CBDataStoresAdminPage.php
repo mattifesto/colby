@@ -46,13 +46,18 @@ final class CBDataStoresAdminPage {
     static function CBAjax_fetchData(): array {
         $SQL = <<<EOT
 
-            SELECT      `m`.`className` as `className`, LOWER(HEX(`ds`.`ID`)) as `ID`
-            FROM        `CBDataStores` AS `ds`
-            LEFT JOIN   `CBModels` AS `m`
-            ON          `ds`.`ID` = `m`.`ID`
-            ORDER BY    `className`, `ID`
+            SELECT      m.className as className,
+                        LOWER(HEX(ds.ID)) as ID
 
-    EOT;
+            FROM        CBDataStores AS ds
+
+            LEFT JOIN   CBModels AS m
+                ON      ds.ID = m.ID
+
+            ORDER BY    className,
+                        ID
+
+        EOT;
 
         return CBDB::SQLToObjects($SQL);
     }
@@ -76,6 +81,17 @@ final class CBDataStoresAdminPage {
     /**
      * @return [string]
      */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v591.js', cbsysurl()),
+        ];
+    }
+
+
+
+    /**
+     * @return [string]
+     */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBUI',
@@ -89,19 +105,13 @@ final class CBDataStoresAdminPage {
             'Colby',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 
-
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
-        ];
-    }
 
 
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
@@ -132,6 +142,8 @@ final class CBDataStoresAdminPage {
 
         CBModelUpdater::save($updater);
     }
+    /* CBInstall_install() */
+
 
 
     /**
@@ -142,4 +154,5 @@ final class CBDataStoresAdminPage {
             'CBDevelopAdminMenu',
         ];
     }
+
 }

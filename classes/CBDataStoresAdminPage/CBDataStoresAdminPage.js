@@ -1,7 +1,6 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esnext: true */
-/* exported CBDataStoresAdminPage */
 /* global
     CBUI,
     CBUIActionPart,
@@ -14,12 +13,54 @@
     Colby,
 */
 
-var CBDataStoresAdminPage = {
+
+
+(function () {
+
+    Colby.afterDOMContentLoaded(afterDOMContentLoaded);
+
+
+
+    /**
+     * @return undefined
+     */
+    function afterDOMContentLoaded() {
+        let elements = document.getElementsByClassName(
+            "CBDataStoresAdminPage"
+        );
+
+        if (elements.length < 1) {
+            return;
+        }
+
+        let mainElement = elements.item(0);
+
+        Colby.callAjaxFunction(
+            "CBDataStoresAdminPage",
+            "fetchData"
+        ).then(
+            function (value) {
+                mainElement.appendChild(
+                    createElement(value)
+                );
+            }
+        ).catch(
+            function (error) {
+                CBUIPanel.displayError(error);
+                Colby.reportError(error);
+            }
+        );
+    }
+    /* afterDOMContentLoaded() */
+
+
 
     /**
      * @return Element
      */
-    createElement: function (data) {
+    function createElement(
+        data
+    ) {
         var element = document.createElement("div");
 
         element.appendChild(CBUI.createHalfSpace());
@@ -148,29 +189,7 @@ var CBDataStoresAdminPage = {
             });
         }
         /* update() */
-    },
+    }
     /* createElement() */
 
-
-    /**
-     * @return undefined
-     */
-    init: function () {
-        Colby.callAjaxFunction(
-            "CBDataStoresAdminPage",
-            "fetchData"
-        ).then(
-            function (value) {
-                let element = CBDataStoresAdminPage.createElement(value);
-                document.getElementsByTagName("main")[0].appendChild(element);
-            }
-        ).catch(
-            function (error) {
-                CBUIPanel.displayError(error);
-                Colby.reportError(error);
-            }
-        );
-    },
-};
-
-Colby.afterDOMContentLoaded(CBDataStoresAdminPage.init);
+})();
