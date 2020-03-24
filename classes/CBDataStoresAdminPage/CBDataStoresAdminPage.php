@@ -96,12 +96,9 @@ final class CBDataStoresAdminPage {
         return [
             'CBErrorHandler',
             'CBUI',
-            'CBUINavigationArrowPart',
             'CBUINavigationView',
             'CBUIPanel',
-            'CBUISectionItem4',
             'CBUISelector',
-            'CBUITitleAndDescriptionPart',
             'Colby',
         ];
     }

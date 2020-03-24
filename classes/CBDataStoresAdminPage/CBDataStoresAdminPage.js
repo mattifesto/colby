@@ -4,12 +4,9 @@
 /* global
     CBErrorHandler,
     CBUI,
-    CBUINavigationArrowPart,
     CBUINavigationView,
     CBUIPanel,
-    CBUISectionItem4,
     CBUISelector,
-    CBUITitleAndDescriptionPart,
     Colby,
 */
 
@@ -207,33 +204,47 @@
             data.forEach(
                 function (value) {
                     if (value.className === className) {
-                        let sectionItem = CBUISectionItem4.create();
-
-                        sectionItem.callback = function () {
-                            window.location = (
-                                "/admin/?c=CBModelInspector&ID=" +
-                                value.ID
-                            );
-                        };
-
-                        let titleAndDescriptionPart =
-                        CBUITitleAndDescriptionPart.create();
-
-                        titleAndDescriptionPart.title = value.ID;
-                        titleAndDescriptionPart.description = (
-                            value.className || "No model"
-                        );
-
-                        sectionItem.appendPart(
-                            titleAndDescriptionPart
-                        );
-
-                        sectionItem.appendPart(
-                            CBUINavigationArrowPart.create()
+                        let elements = CBUI.createElementTree(
+                            [
+                                "CBUI_sectionItem",
+                                "a",
+                            ],
+                            "CBUI_container_topAndBottom CBUI_flexGrow",
+                            "CBDataStoresAdminPage_title"
                         );
 
                         dataStoresSectionElement.appendChild(
-                            sectionItem.element
+                            elements[0]
+                        );
+
+                        let sectionItemElement = elements[0];
+
+                        sectionItemElement.href = (
+                            "/admin/?c=CBModelInspector&ID=" +
+                            value.ID
+                        );
+
+                        let textContainerElement = elements[1];
+                        let titleElement = elements[2];
+
+                        titleElement.textContent = value.ID;
+
+                        let descriptionElement = CBUI.createElement(
+                            "CBUI_textSize_small CBUI_textColor2"
+                        );
+
+                        textContainerElement.appendChild(
+                            descriptionElement
+                        );
+
+                        descriptionElement.textContent = (
+                            value.className || "No model"
+                        );
+
+                        sectionItemElement.appendChild(
+                            CBUI.createElement(
+                                "CBUI_navigationArrow"
+                            )
                         );
                     }
                 }
