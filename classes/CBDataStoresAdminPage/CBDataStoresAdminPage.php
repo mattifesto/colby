@@ -94,8 +94,8 @@ final class CBDataStoresAdminPage {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBErrorHandler',
             'CBUI',
-            'CBUIActionPart',
             'CBUINavigationArrowPart',
             'CBUINavigationView',
             'CBUIPanel',
