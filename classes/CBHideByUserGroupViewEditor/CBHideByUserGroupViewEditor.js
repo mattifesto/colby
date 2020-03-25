@@ -17,6 +17,10 @@
 
 var CBHideByUserGroupViewEditor = {
 
+    /* -- CBUISpecEditor interfaces -- -- -- -- -- */
+
+
+
     /**
      * @param object args
      *
@@ -27,7 +31,9 @@ var CBHideByUserGroupViewEditor = {
      *
      * @return Element
      */
-    createEditor: function (args) {
+    CBUISpecEditor_createEditorElement(
+        args
+    ) {
         var section, item;
 
         var element = document.createElement("div");
@@ -138,7 +144,11 @@ var CBHideByUserGroupViewEditor = {
 
         return element;
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
+
+
+
+    /* -- CBUISpec interfaces -- -- -- -- -- */
 
 
 
@@ -153,7 +163,9 @@ var CBHideByUserGroupViewEditor = {
      *
      * @return string|undefined
      */
-    CBUISpec_toDescription: function (spec) {
+    CBUISpec_toDescription(
+        spec
+    ) {
         let userGroupClassName = CBModel.valueAsName(
             spec,
             "userGroupClassName"
