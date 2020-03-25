@@ -538,161 +538,16 @@
                     }
 
                     section = CBUI.createSection();
-                    let unixNow = Math.floor(Date.now() / 1000);
 
-                    modelData.modelVersions.forEach(function (version) {
-                        let versionCreated = new Date(version.timestamp * 1000);
-                        let info = "";
-
-                        if (version.replaced !== null) {
-                            let deathspan = (
-                                unixNow - version.replaced
-                            ).toLocaleString();
-
-                            let lifespan = (
-                                version.replaced - version.timestamp
-                            ).toLocaleString();
-
-                            info = `(${deathspan} / ${lifespan} ${version.action})`;
+                    modelData.modelVersions.forEach(
+                        function (versionInformation) {
+                            section.appendChild(
+                                createVersionSectionItemElement(
+                                    versionInformation
+                                )
+                            );
                         }
-
-                        let sectionItem = CBUISectionItem4.create();
-                        let stringsPart = CBUIStringsPart.create();
-                        stringsPart.string1 = `Version ${version.version} ${info}`;
-
-                        stringsPart.element.classList.add("titledescription");
-
-                        Colby.requestTimeUpdate(
-                            function (javascriptTimestamp) {
-                                let now = new Date(javascriptTimestamp);
-
-                                stringsPart.string2 = (
-                                    Colby.dateToRelativeLocaleString(
-                                        versionCreated,
-                                        now
-                                    )
-                                );
-                            }
-                        );
-
-                        sectionItem.callback = function () {
-                            let element = document.createElement("div");
-
-                            element.appendChild(
-                                CBUI.createHalfSpace()
-                            );
-
-                            {
-                                let sectionElement = CBUI.createSection();
-                                let sectionItem = CBUISectionItem4.create();
-                                let stringsPart = CBUIStringsPart.create();
-                                stringsPart.string1 = "Revert to This Version";
-
-                                stringsPart.element.classList.add("action");
-
-                                sectionItem.callback = revert;
-
-                                sectionItem.appendPart(stringsPart);
-                                sectionElement.appendChild(sectionItem.element);
-                                element.appendChild(sectionElement);
-                                element.appendChild(CBUI.createHalfSpace());
-                            }
-
-                            {
-                                let message = CBMessageMarkup.stringToMarkup(
-                                    JSON.stringify(
-                                        JSON.parse(version.specAsJSON),
-                                        undefined,
-                                        2
-                                    )
-                                );
-
-                                let expander = CBUIExpander.create();
-                                expander.expanded = true;
-                                expander.message = `
-
-                                    Spec
-
-                                    --- pre\n${message}
-                                    ---
-
-                                `;
-
-                                element.appendChild(expander.element);
-
-                                element.appendChild(
-                                    CBUI.createHalfSpace()
-                                );
-                            }
-
-                            {
-                                let message = CBMessageMarkup.stringToMarkup(
-                                    JSON.stringify(
-                                        JSON.parse(
-                                            version.modelAsJSON
-                                        ),
-                                        undefined,
-                                        2
-                                    )
-                                );
-
-                                let expander = CBUIExpander.create();
-                                expander.expanded = true;
-                                expander.message = `
-
-                                    Model
-
-                                    --- pre\n${message}
-                                    ---
-
-                                `;
-
-                                element.appendChild(expander.element);
-
-                                element.appendChild(
-                                    CBUI.createHalfSpace()
-                                );
-                            }
-
-                            CBUINavigationView.context.navigate(
-                                {
-                                    element: element,
-                                    title: `Version ${version.version}`,
-                                }
-                            );
-
-
-                            /**
-                             * @return undefined
-                             */
-                            function revert() {
-                                Colby.callAjaxFunction(
-                                    "CBModels",
-                                    "revert",
-                                    {
-                                        ID: modelData.modelID,
-                                        version: version.version,
-                                    }
-                                ).then(
-                                    function () {
-                                        location.reload(true);
-                                    }
-                                ).catch(
-                                    function (error) {
-                                        CBErrorHandler.displayAndReport(error);
-                                    }
-                                );
-                            }
-                        };
-
-                        sectionItem.appendPart(stringsPart);
-
-                        sectionItem.appendPart(
-                            CBUINavigationArrowPart.create()
-                        );
-
-                        section.appendChild(sectionItem.element);
-                    });
+                    );
 
                     containerElement.appendChild(section);
                 }
@@ -899,6 +754,183 @@
         return viewElement;
     }
     /* createCBImagePanelElement() */
+
+
+
+    /**
+     * @param object versionInformation
+     *
+     * return Element
+     */
+    function createVersionSectionItemElement(
+        versionInformation
+    ) {
+        let versionSpec = JSON.parse(
+            versionInformation.specAsJSON
+        );
+
+        let versionModel = JSON.parse(
+            versionInformation.modelAsJSON
+        );
+
+        let unixNow = Math.floor(
+            Date.now() / 1000
+        );
+
+        let versionCreated = new Date(
+            versionInformation.timestamp * 1000
+        );
+
+        let info = "";
+
+        if (versionInformation.replaced !== null) {
+            let deathspan = (
+                unixNow - versionInformation.replaced
+            ).toLocaleString();
+
+            let lifespan = (
+                versionInformation.replaced - versionInformation.timestamp
+            ).toLocaleString();
+
+            info = `(${deathspan} / ${lifespan} ${versionInformation.action})`;
+        }
+
+        let sectionItem = CBUISectionItem4.create();
+        let stringsPart = CBUIStringsPart.create();
+        stringsPart.string1 = `Version ${versionInformation.version} ${info}`;
+
+        stringsPart.element.classList.add("titledescription");
+
+        Colby.requestTimeUpdate(
+            function (javascriptTimestamp) {
+                let now = new Date(javascriptTimestamp);
+
+                stringsPart.string2 = (
+                    Colby.dateToRelativeLocaleString(
+                        versionCreated,
+                        now
+                    )
+                );
+            }
+        );
+
+        sectionItem.callback = function () {
+            let element = document.createElement("div");
+
+            element.appendChild(
+                CBUI.createHalfSpace()
+            );
+
+            {
+                let sectionElement = CBUI.createSection();
+                let sectionItem = CBUISectionItem4.create();
+                let stringsPart = CBUIStringsPart.create();
+                stringsPart.string1 = "Revert to This Version";
+
+                stringsPart.element.classList.add("action");
+
+                sectionItem.callback = revert;
+
+                sectionItem.appendPart(stringsPart);
+                sectionElement.appendChild(sectionItem.element);
+                element.appendChild(sectionElement);
+                element.appendChild(CBUI.createHalfSpace());
+            }
+
+            {
+                let message = CBMessageMarkup.stringToMarkup(
+                    JSON.stringify(
+                        versionSpec,
+                        undefined,
+                        2
+                    )
+                );
+
+                let expander = CBUIExpander.create();
+                expander.expanded = true;
+                expander.message = `
+
+                    Spec
+
+                    --- pre\n${message}
+                    ---
+
+                `;
+
+                element.appendChild(expander.element);
+
+                element.appendChild(
+                    CBUI.createHalfSpace()
+                );
+            }
+
+            {
+                let message = CBMessageMarkup.stringToMarkup(
+                    JSON.stringify(
+                        versionModel,
+                        undefined,
+                        2
+                    )
+                );
+
+                let expander = CBUIExpander.create();
+                expander.expanded = true;
+                expander.message = `
+
+                    Model
+
+                    --- pre\n${message}
+                    ---
+
+                `;
+
+                element.appendChild(expander.element);
+
+                element.appendChild(
+                    CBUI.createHalfSpace()
+                );
+            }
+
+            CBUINavigationView.context.navigate(
+                {
+                    element: element,
+                    title: `Version ${versionInformation.version}`,
+                }
+            );
+
+
+            /**
+             * @return undefined
+             */
+            function revert() {
+                Colby.callAjaxFunction(
+                    "CBModels",
+                    "revert",
+                    {
+                        ID: versionModel.ID,
+                        version: versionInformation.version,
+                    }
+                ).then(
+                    function () {
+                        location.reload(true);
+                    }
+                ).catch(
+                    function (error) {
+                        CBErrorHandler.displayAndReport(error);
+                    }
+                );
+            }
+        };
+
+        sectionItem.appendPart(stringsPart);
+
+        sectionItem.appendPart(
+            CBUINavigationArrowPart.create()
+        );
+
+        return sectionItem.element;
+    }
+    /* createVersionSectionItemElement() */
 
 })();
 
