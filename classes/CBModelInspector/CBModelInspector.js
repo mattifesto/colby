@@ -18,8 +18,6 @@
     CBUIStringsPart,
     Colby,
 
-    CBModelInspector,
-
     CBModelInspector_associatedImageModel,
     CBModelInspector_modelID,
 */
@@ -28,610 +26,608 @@
 
 (function () {
 
-    window.CBModelInspector = {
 
-        /**
-         * @return undefined
-         */
-        init: function () {
-            let navigator = CBUINavigationView.create();
+    Colby.afterDOMContentLoaded(afterDOMContentLoaded);
 
-            let spec = {
-                ID: CBModelInspector_modelID,
-            };
 
-            let navigationHomeElement = document.createElement("div");
-            let modelInformationElement = document.createElement("div");
 
-            let IDDidChangeCallback = CBModelInspector.IDDidChange.bind(
-                undefined,
-                {
-                    spec: spec,
-                    container: modelInformationElement,
-                }
+    /**
+     * @return undefined
+     */
+    function afterDOMContentLoaded() {
+        let navigator = CBUINavigationView.create();
+
+        let spec = {
+            ID: CBModelInspector_modelID,
+        };
+
+        let navigationHomeElement = document.createElement("div");
+        let modelInformationElement = document.createElement("div");
+
+        let IDDidChangeCallback = IDDidChange.bind(
+            undefined,
+            {
+                spec: spec,
+                container: modelInformationElement,
+            }
+        );
+
+        navigationHomeElement.appendChild(
+            CBUI.createHalfSpace()
+        );
+
+        {
+            let sectionElement = CBUI.createSection();
+            let sectionItemElement = CBUI.createSectionItem();
+
+            sectionItemElement.appendChild(
+                CBUIStringEditor.createEditor(
+                    {
+                        labelText: "ID",
+                        propertyName: "ID",
+                        spec: spec,
+                        specChangedCallback: IDDidChangeCallback,
+                    }
+                ).element
             );
+
+            sectionElement.appendChild(sectionItemElement);
+
+            navigationHomeElement.appendChild(sectionElement);
 
             navigationHomeElement.appendChild(
                 CBUI.createHalfSpace()
             );
+        }
 
+        navigationHomeElement.appendChild(modelInformationElement);
+
+        navigationHomeElement.appendChild(
+            CBUI.createHalfSpace()
+        );
+
+        let mainElement = document.getElementsByTagName("main")[0];
+        mainElement.appendChild(navigator.element);
+
+        navigator.navigate(
             {
-                let sectionElement = CBUI.createSection();
-                let sectionItemElement = CBUI.createSectionItem();
+                element: navigationHomeElement,
+                title: "Inspector",
+            }
+        );
 
-                sectionItemElement.appendChild(
-                    CBUIStringEditor.createEditor(
+        IDDidChangeCallback();
+    }
+    /* afterDOMContentLoaded() */
+
+
+
+    /**
+     * @param object args
+     *
+     *      {
+     *          container: Element
+     *          spec: object
+     *
+     *              {
+     *                  ID: string
+     *              }
+     *      }
+     *
+     * @return undefined
+     */
+    function IDDidChange(
+        args
+    ) {
+        let containerElement = args.container;
+        let model, modelData;
+
+        let modelID = CBModel.valueAsID(
+            args.spec,
+            "ID"
+        );
+
+        if (modelID === undefined) {
+            document.title = "Inspector: Invalid ID";
+            containerElement.textContent = "";
+            return;
+        }
+
+        Colby.callAjaxFunction(
+            "CBModelInspector",
+            "fetchModelData",
+            {
+                ID: modelID,
+            }
+        ).then(
+            function (value) {
+                modelData = value;
+
+                if (modelData.modelVersions.length > 0) {
+                    model = JSON.parse(
+                        modelData.modelVersions[0].modelAsJSON
+                    );
+                } else {
+                    model = undefined;
+                }
+
+                IDDidChange_render();
+            }
+        ).catch(
+            function (error) {
+                CBErrorHandler.displayAndReport(error);
+            }
+        );
+
+        return;
+
+
+
+        /* -- closures -- -- -- -- -- */
+
+
+
+        /**
+         * @return Element
+         */
+        function IDDidChange_createAssociatedWithElement() {
+            let element = CBUI.createElement(
+                "CBModelInspector_associatedWith"
+            );
+
+            if (modelData.associatedWith.length === 0) {
+                return element;
+            }
+
+            let titleElement = CBUI.createElement(
+                "CBUI_title1"
+            );
+
+            titleElement.textContent = "Associated With";
+
+            element.appendChild(titleElement);
+
+            let sectionContainerElement = CBUI.createElement(
+                "CBUI_sectionContainer"
+            );
+
+            element.appendChild(sectionContainerElement);
+
+            let sectionElement = CBUI.createElement(
+                "CBUI_section"
+            );
+
+            sectionContainerElement.appendChild(sectionElement);
+
+            modelData.associatedWith.forEach(
+                function renderAssociation(association) {
+                    let associationElement = CBUI.createElement(
+                        "CBUI_container_leftAndRight"
+                    );
+
+                    sectionElement.appendChild(associationElement);
+
+                    /* associated with ID */
+
+                    let associatedWithIDElement = CBUI.createElement(
+                        "CBUI_textSize_small CBUI_fontFamily_monospace",
+                        "a"
+                    );
+
+                    let associatedWithID = CBModel.valueAsID(
+                        association,
+                        "ID"
+                    );
+
+                    associatedWithIDElement.href = (
+                        "/admin/?c=CBModelInspector&ID=" +
+                        associatedWithID
+                    );
+
+                    associatedWithIDElement.textContent = associatedWithID;
+
+                    associationElement.appendChild(associatedWithIDElement);
+
+                    /* association key */
+
+                    let associationKeyElement = CBUI.createElement();
+
+                    associationKeyElement.textContent = CBModel.valueToString(
+                        association,
+                        "className"
+                    );
+
+                    associationElement.appendChild(associationKeyElement);
+                }
+            );
+
+            return element;
+        }
+        /* IDDidChange_createAssociatedWithElement() */
+
+
+
+        /**
+         * @return Element
+         */
+        function IDDidChange_createAssociationsElement() {
+            let element = CBUI.createElement(
+                "CBModelInspector_associations"
+            );
+
+            if (modelData.associations.length === 0) {
+                return element;
+            }
+
+            let titleElement = CBUI.createElement(
+                "CBUI_title1"
+            );
+
+            titleElement.textContent = "Associations";
+
+            element.appendChild(titleElement);
+
+            let sectionContainerElement = CBUI.createElement(
+                "CBUI_sectionContainer"
+            );
+
+            element.appendChild(sectionContainerElement);
+
+            let sectionElement = CBUI.createElement(
+                "CBUI_section"
+            );
+
+            sectionContainerElement.appendChild(sectionElement);
+
+            modelData.associations.forEach(
+                function renderAssociation(association) {
+                    let associationElement = CBUI.createElement(
+                        "CBUI_container_leftAndRight"
+                    );
+
+                    sectionElement.appendChild(associationElement);
+
+                    let keyElement = CBUI.createElement();
+
+                    keyElement.textContent = CBModel.valueToString(
+                        association,
+                        "className"
+                    );
+
+                    associationElement.appendChild(keyElement);
+
+                    let IDElement = CBUI.createElement(
+                        "CBUI_textSize_small CBUI_fontFamily_monospace",
+                        "a"
+                    );
+
+                    let associatedID = CBModel.valueAsID(
+                        association,
+                        "associatedID"
+                    );
+
+                    IDElement.href = (
+                        "/admin/?c=CBModelInspector&ID=" +
+                        associatedID
+                    );
+
+                    IDElement.textContent = associatedID;
+
+                    associationElement.appendChild(IDElement);
+                }
+            );
+
+            return element;
+        }
+        /* IDDidChange_createAssociationsElement() */
+
+
+
+        /**
+         * @return undefined
+         */
+        function IDDidChange_render() {
+            let section;
+
+            containerElement.textContent = "";
+
+            section = CBUI.createSection();
+            containerElement.appendChild(section);
+
+            if (model === undefined) {
+                document.title = "Inspector: " + modelData.modelID;
+
+                section.appendChild(
+                    CBUI.createKeyValueSectionItem(
                         {
-                            labelText: "ID",
-                            propertyName: "ID",
-                            spec: spec,
-                            specChangedCallback: IDDidChangeCallback,
+                            key: "Notice",
+                            value: "This ID has no model."
                         }
                     ).element
                 );
 
-                sectionElement.appendChild(sectionItemElement);
-
-                navigationHomeElement.appendChild(sectionElement);
-
-                navigationHomeElement.appendChild(
-                    CBUI.createHalfSpace()
-                );
-            }
-
-            navigationHomeElement.appendChild(modelInformationElement);
-
-            navigationHomeElement.appendChild(
-                CBUI.createHalfSpace()
-            );
-
-            let mainElement = document.getElementsByTagName("main")[0];
-            mainElement.appendChild(navigator.element);
-
-            navigator.navigate(
-                {
-                    element: navigationHomeElement,
-                    title: "Inspector",
-                }
-            );
-
-            IDDidChangeCallback();
-        },
-        /* init() */
-
-
-
-        /**
-         * @param object args
-         *
-         *      {
-         *          container: Element
-         *          spec: object
-         *
-         *              {
-         *                  ID: string
-         *              }
-         *      }
-         *
-         * @return undefined
-         */
-        IDDidChange: function (args) {
-            let containerElement = args.container;
-            let model, modelData;
-
-            let modelID = CBModel.valueAsID(
-                args.spec,
-                "ID"
-            );
-
-            if (modelID === undefined) {
-                document.title = "Inspector: Invalid ID";
-                containerElement.textContent = "";
                 return;
             }
 
-            Colby.callAjaxFunction(
-                "CBModelInspector",
-                "fetchModelData",
-                {
-                    ID: modelID,
-                }
-            ).then(
-                function (value) {
-                    modelData = value;
-
-                    if (modelData.modelVersions.length > 0) {
-                        model = JSON.parse(
-                            modelData.modelVersions[0].modelAsJSON
-                        );
-                    } else {
-                        model = undefined;
-                    }
-
-                    IDDidChange_render();
-                }
-            ).catch(
-                function (error) {
-                    CBErrorHandler.displayAndReport(error);
-                }
+            document.title = (
+                "Inspector: " +
+                (
+                    model.title ?
+                    model.title.trim() :
+                    model.className
+                )
             );
 
-            return;
-
-
-
-            /* -- closures -- -- -- -- -- */
-
-
-
-            /**
-             * @return Element
-             */
-            function IDDidChange_createAssociatedWithElement() {
-                let element = CBUI.createElement(
-                    "CBModelInspector_associatedWith"
-                );
-
-                if (modelData.associatedWith.length === 0) {
-                    return element;
-                }
-
-                let titleElement = CBUI.createElement(
-                    "CBUI_title1"
-                );
-
-                titleElement.textContent = "Associated With";
-
-                element.appendChild(titleElement);
-
-                let sectionContainerElement = CBUI.createElement(
-                    "CBUI_sectionContainer"
-                );
-
-                element.appendChild(sectionContainerElement);
-
-                let sectionElement = CBUI.createElement(
-                    "CBUI_section"
-                );
-
-                sectionContainerElement.appendChild(sectionElement);
-
-                modelData.associatedWith.forEach(
-                    function renderAssociation(association) {
-                        let associationElement = CBUI.createElement(
-                            "CBUI_container_leftAndRight"
-                        );
-
-                        sectionElement.appendChild(associationElement);
-
-                        /* associated with ID */
-
-                        let associatedWithIDElement = CBUI.createElement(
-                            "CBUI_textSize_small CBUI_fontFamily_monospace",
-                            "a"
-                        );
-
-                        let associatedWithID = CBModel.valueAsID(
-                            association,
-                            "ID"
-                        );
-
-                        associatedWithIDElement.href = (
-                            "/admin/?c=CBModelInspector&ID=" +
-                            associatedWithID
-                        );
-
-                        associatedWithIDElement.textContent = associatedWithID;
-
-                        associationElement.appendChild(associatedWithIDElement);
-
-                        /* association key */
-
-                        let associationKeyElement = CBUI.createElement();
-
-                        associationKeyElement.textContent = CBModel.valueToString(
-                            association,
-                            "className"
-                        );
-
-                        associationElement.appendChild(associationKeyElement);
-                    }
-                );
-
-                return element;
-            }
-            /* IDDidChange_createAssociatedWithElement() */
-
-
-
-            /**
-             * @return Element
-             */
-            function IDDidChange_createAssociationsElement() {
-                let element = CBUI.createElement(
-                    "CBModelInspector_associations"
-                );
-
-                if (modelData.associations.length === 0) {
-                    return element;
-                }
-
-                let titleElement = CBUI.createElement(
-                    "CBUI_title1"
-                );
-
-                titleElement.textContent = "Associations";
-
-                element.appendChild(titleElement);
-
-                let sectionContainerElement = CBUI.createElement(
-                    "CBUI_sectionContainer"
-                );
-
-                element.appendChild(sectionContainerElement);
-
-                let sectionElement = CBUI.createElement(
-                    "CBUI_section"
-                );
-
-                sectionContainerElement.appendChild(sectionElement);
-
-                modelData.associations.forEach(
-                    function renderAssociation(association) {
-                        let associationElement = CBUI.createElement(
-                            "CBUI_container_leftAndRight"
-                        );
-
-                        sectionElement.appendChild(associationElement);
-
-                        let keyElement = CBUI.createElement();
-
-                        keyElement.textContent = CBModel.valueToString(
-                            association,
-                            "className"
-                        );
-
-                        associationElement.appendChild(keyElement);
-
-                        let IDElement = CBUI.createElement(
-                            "CBUI_textSize_small CBUI_fontFamily_monospace",
-                            "a"
-                        );
-
-                        let associatedID = CBModel.valueAsID(
-                            association,
-                            "associatedID"
-                        );
-
-                        IDElement.href = (
-                            "/admin/?c=CBModelInspector&ID=" +
-                            associatedID
-                        );
-
-                        IDElement.textContent = associatedID;
-
-                        associationElement.appendChild(IDElement);
-                    }
-                );
-
-                return element;
-            }
-            /* IDDidChange_createAssociationsElement() */
-
-
-
-            /**
-             * @return undefined
-             */
-            function IDDidChange_render() {
-                let section;
-
-                containerElement.textContent = "";
-
-                section = CBUI.createSection();
-                containerElement.appendChild(section);
-
-                if (model === undefined) {
-                    document.title = "Inspector: " + modelData.modelID;
-
-                    section.appendChild(
-                        CBUI.createKeyValueSectionItem(
-                            {
-                                key: "Notice",
-                                value: "This ID has no model."
-                            }
-                        ).element
-                    );
-
-                    return;
-                }
-
-                document.title = (
-                    "Inspector: " +
-                    (
-                        model.title ?
-                        model.title.trim() :
-                        model.className
-                    )
-                );
-
-                section.appendChild(
-                    CBUI.createKeyValueSectionItem(
-                        {
-                            key: "Class Name",
-                            value: model.className,
-                        }
-                    ).element
-                );
-
-                section.appendChild(
-                    CBUI.createKeyValueSectionItem(
-                        {
-                            key: "Title",
-                            value: model.title,
-                        }
-                    ).element
-                );
-
-                section.appendChild(
-                    CBUI.createKeyValueSectionItem(
-                        {
-                            key: "Description",
-                            value: model.description,
-                        }
-                    ).element
-                );
-
-                {
-                    let sectionItem = CBUISectionItem4.create();
-                    let stringsPart = CBUIStringsPart.create();
-                    stringsPart.string1 = "Edit Model";
-
-                    stringsPart.element.classList.add("action");
-
-                    sectionItem.callback = function () {
-                        window.location = (
-                            '/admin/?c=CBModelEditor&ID=' +
-                            model.ID
-                        );
-                    };
-
-                    sectionItem.appendPart(stringsPart);
-                    section.appendChild(sectionItem.element);
-                }
-
-                {
-                    let sectionItem = CBUISectionItem4.create();
-
-                    sectionItem.callback = function () {
-                        confirm();
-                    };
-
-                    let stringsPart = CBUIStringsPart.create();
-                    stringsPart.string1 = "Delete Model";
-
-                    stringsPart.element.classList.add("action");
-
-                    sectionItem.appendPart(stringsPart);
-                    section.appendChild(sectionItem.element);
-
-                    /* stage 1 */
-                    let confirm = function () {
-                        CBUIPanel.confirmText(
-                            "Are you sure you want to delete this model?"
-                        ).then(
-                            function (wasConfirmed) {
-                                if (wasConfirmed) {
-                                    deleteModel();
-                                }
-                            }
-                        ).catch(
-                            function (error) {
-                                CBErrorHandler.displayAndReport(error);
-                            }
-                        );
-                    };
-
-                    /* stage 2 */
-                    let deleteModel = function () {
-                        let controller = CBUIPanel.displayBusyText(
-                            "Deleting model..."
-                        );
-
-                        Colby.callAjaxFunction(
-                            "CBModels",
-                            "deleteByID",
-                            {
-                                ID: model.ID,
-                            }
-                        ).then(
-                            function () {
-                                return new Promise(
-                                    function (resolve) {
-                                        window.setTimeout(
-                                            resolve,
-                                            3000
-                                        );
-                                    }
-                                );
-                            }
-                        ).then(
-                            function () {
-                                report();
-                            }
-                        ).catch(
-                            function (error) {
-                                CBErrorHandler.displayAndReport(error);
-                            }
-                        ).finally(
-                            function () {
-                                controller.hide();
-                            }
-                        );
-                    };
-
-                    /* stage 3 */
-                    let report = function () {
-                        CBUIPanel.displayText(
-                            "The model has been deleted. Press OK to " +
-                            "navigate to the models admin page."
-                        ).then(
-                            function () {
-                                window.location = "/admin/?c=CBModelsAdmin";
-                            }
-                        ).catch(
-                            function (error) {
-                                CBErrorHandler.displayAndReport(error);
-                            }
-                        );
-                    };
-                }
-
-                containerElement.appendChild(
-                    CBUI.createHalfSpace()
-                );
-
-
-                /* CBImage view */
-
-                if (model.className === "CBImage") {
-                    containerElement.appendChild(
-                        createCBImageViewElement(model)
-                    );
-                }
-
-
-                /* associated image */
-
-                if (
-                    model.className !== "CBImage" ||
-                    CBModelInspector_associatedImageModel !== null
-                ){
-                    containerElement.appendChild(
-                        createAssociatedImageEditorElement(model)
-                    );
-                }
-
-
-                /* associations */
-
-                containerElement.appendChild(
-                    IDDidChange_createAssociationsElement()
-                );
-
-
-                /* associated with */
-
-                containerElement.appendChild(
-                    IDDidChange_createAssociatedWithElement()
-                );
-
-
-                /* versions */
-
-                if (modelData.modelVersions.length > 0) {
+            section.appendChild(
+                CBUI.createKeyValueSectionItem(
                     {
-                        let titleElement = document.createElement("div");
-                        titleElement.className = "CBUI_title1";
-                        titleElement.textContent = "Versions";
-                        containerElement.appendChild(titleElement);
+                        key: "Class Name",
+                        value: model.className,
                     }
+                ).element
+            );
 
-                    section = CBUI.createSection();
+            section.appendChild(
+                CBUI.createKeyValueSectionItem(
+                    {
+                        key: "Title",
+                        value: model.title,
+                    }
+                ).element
+            );
 
-                    modelData.modelVersions.forEach(
-                        function (versionInformation) {
-                            section.appendChild(
-                                createVersionSectionItemElement(
-                                    versionInformation
-                                )
+            section.appendChild(
+                CBUI.createKeyValueSectionItem(
+                    {
+                        key: "Description",
+                        value: model.description,
+                    }
+                ).element
+            );
+
+            {
+                let sectionItem = CBUISectionItem4.create();
+                let stringsPart = CBUIStringsPart.create();
+                stringsPart.string1 = "Edit Model";
+
+                stringsPart.element.classList.add("action");
+
+                sectionItem.callback = function () {
+                    window.location = (
+                        '/admin/?c=CBModelEditor&ID=' +
+                        model.ID
+                    );
+                };
+
+                sectionItem.appendPart(stringsPart);
+                section.appendChild(sectionItem.element);
+            }
+
+            {
+                let sectionItem = CBUISectionItem4.create();
+
+                sectionItem.callback = function () {
+                    confirm();
+                };
+
+                let stringsPart = CBUIStringsPart.create();
+                stringsPart.string1 = "Delete Model";
+
+                stringsPart.element.classList.add("action");
+
+                sectionItem.appendPart(stringsPart);
+                section.appendChild(sectionItem.element);
+
+                /* stage 1 */
+                let confirm = function () {
+                    CBUIPanel.confirmText(
+                        "Are you sure you want to delete this model?"
+                    ).then(
+                        function (wasConfirmed) {
+                            if (wasConfirmed) {
+                                deleteModel();
+                            }
+                        }
+                    ).catch(
+                        function (error) {
+                            CBErrorHandler.displayAndReport(error);
+                        }
+                    );
+                };
+
+                /* stage 2 */
+                let deleteModel = function () {
+                    let controller = CBUIPanel.displayBusyText(
+                        "Deleting model..."
+                    );
+
+                    Colby.callAjaxFunction(
+                        "CBModels",
+                        "deleteByID",
+                        {
+                            ID: model.ID,
+                        }
+                    ).then(
+                        function () {
+                            return new Promise(
+                                function (resolve) {
+                                    window.setTimeout(
+                                        resolve,
+                                        3000
+                                    );
+                                }
                             );
                         }
-                    );
-
-                    containerElement.appendChild(section);
-                }
-
-                containerElement.appendChild(
-                    CBUI.createHalfSpace()
-                );
-
-                if (modelData.rowFromColbyPages) {
-                    containerElement.appendChild(
-                        CBUIExpander.create(
-                            {
-                                message: (
-                                    "ColbyPages Row\n\n--- pre\n" +
-                                    CBMessageMarkup.stringToMarkup(
-                                        JSON.stringify(
-                                            modelData.rowFromColbyPages,
-                                            undefined,
-                                            2
-                                        )
-                                    ) +
-                                    "\n---"
-                                ),
-                            }
-                        ).element
-                    );
-                }
-
-                if (modelData.rowFromCBImages) {
-                    containerElement.appendChild(
-                        CBUIExpander.create(
-                            {
-                                message: (
-                                    "CBImages Row\n\n--- pre\n" +
-                                    CBMessageMarkup.stringToMarkup(
-                                        JSON.stringify(
-                                            modelData.rowFromCBImages,
-                                            undefined,
-                                            2
-                                        )
-                                    ) +
-                                    "\n---"
-                                ),
-                            }
-                        ).element
-                    );
-                }
-
-                if (modelData.dataStoreFiles.length > 0) {
-                    let links = modelData.dataStoreFiles.map(
-                        function (file) {
-                            let text = CBMessageMarkup.stringToMarkup(file.text);
-                            let URL = CBMessageMarkup.stringToMarkup(file.URL);
-
-                            return `(${text} (a ${URL}))`;
+                    ).then(
+                        function () {
+                            report();
+                        }
+                    ).catch(
+                        function (error) {
+                            CBErrorHandler.displayAndReport(error);
+                        }
+                    ).finally(
+                        function () {
+                            controller.hide();
                         }
                     );
+                };
 
-                    containerElement.appendChild(
-                        CBUIExpander.create(
-                            {
-                                message: (
-                                    "Data Store Files\n\n--- ul\n" +
-                                    links.join("\n\n") +
-                                    "\n---"
-                                ),
-                            }
-                        ).element
+                /* stage 3 */
+                let report = function () {
+                    CBUIPanel.displayText(
+                        "The model has been deleted. Press OK to " +
+                        "navigate to the models admin page."
+                    ).then(
+                        function () {
+                            window.location = "/admin/?c=CBModelsAdmin";
+                        }
+                    ).catch(
+                        function (error) {
+                            CBErrorHandler.displayAndReport(error);
+                        }
                     );
+                };
+            }
+
+            containerElement.appendChild(
+                CBUI.createHalfSpace()
+            );
+
+
+            /* CBImage view */
+
+            if (model.className === "CBImage") {
+                containerElement.appendChild(
+                    createCBImageViewElement(model)
+                );
+            }
+
+
+            /* associated image */
+
+            if (
+                model.className !== "CBImage" ||
+                CBModelInspector_associatedImageModel !== null
+            ){
+                containerElement.appendChild(
+                    createAssociatedImageEditorElement(model)
+                );
+            }
+
+
+            /* associations */
+
+            containerElement.appendChild(
+                IDDidChange_createAssociationsElement()
+            );
+
+
+            /* associated with */
+
+            containerElement.appendChild(
+                IDDidChange_createAssociatedWithElement()
+            );
+
+
+            /* versions */
+
+            if (modelData.modelVersions.length > 0) {
+                {
+                    let titleElement = document.createElement("div");
+                    titleElement.className = "CBUI_title1";
+                    titleElement.textContent = "Versions";
+                    containerElement.appendChild(titleElement);
                 }
 
-                Colby.updateTimes();
+                section = CBUI.createSection();
+
+                modelData.modelVersions.forEach(
+                    function (versionInformation) {
+                        section.appendChild(
+                            createVersionSectionItemElement(
+                                versionInformation
+                            )
+                        );
+                    }
+                );
+
+                containerElement.appendChild(section);
             }
-            /* IDDidChange_render() */
 
-        },
-        /* IDDidChange() */
+            containerElement.appendChild(
+                CBUI.createHalfSpace()
+            );
 
-    };
-    /* window.CBModelInspector */
+            if (modelData.rowFromColbyPages) {
+                containerElement.appendChild(
+                    CBUIExpander.create(
+                        {
+                            message: (
+                                "ColbyPages Row\n\n--- pre\n" +
+                                CBMessageMarkup.stringToMarkup(
+                                    JSON.stringify(
+                                        modelData.rowFromColbyPages,
+                                        undefined,
+                                        2
+                                    )
+                                ) +
+                                "\n---"
+                            ),
+                        }
+                    ).element
+                );
+            }
 
+            if (modelData.rowFromCBImages) {
+                containerElement.appendChild(
+                    CBUIExpander.create(
+                        {
+                            message: (
+                                "CBImages Row\n\n--- pre\n" +
+                                CBMessageMarkup.stringToMarkup(
+                                    JSON.stringify(
+                                        modelData.rowFromCBImages,
+                                        undefined,
+                                        2
+                                    )
+                                ) +
+                                "\n---"
+                            ),
+                        }
+                    ).element
+                );
+            }
 
+            if (modelData.dataStoreFiles.length > 0) {
+                let links = modelData.dataStoreFiles.map(
+                    function (file) {
+                        let text = CBMessageMarkup.stringToMarkup(file.text);
+                        let URL = CBMessageMarkup.stringToMarkup(file.URL);
 
-    /* -- closures -- -- -- -- -- */
+                        return `(${text} (a ${URL}))`;
+                    }
+                );
+
+                containerElement.appendChild(
+                    CBUIExpander.create(
+                        {
+                            message: (
+                                "Data Store Files\n\n--- ul\n" +
+                                links.join("\n\n") +
+                                "\n---"
+                            ),
+                        }
+                    ).element
+                );
+            }
+
+            Colby.updateTimes();
+        }
+        /* IDDidChange_render() */
+
+    }
+    /* IDDidChange() */
 
 
 
@@ -933,17 +929,3 @@
     /* createVersionSectionItemElement() */
 
 })();
-
-
-
-/**
- * @TODO 2019_11_05
- *
- *      Eventually, this can be moved inside the closure and the model
- *      instpector can have no publicly available API.
- */
-Colby.afterDOMContentLoaded(
-    function () {
-        CBModelInspector.init();
-    }
-);
