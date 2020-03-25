@@ -10,7 +10,6 @@
     CBUI,
     CBUIExpander,
     CBUIImageChooser,
-    CBUINavigationArrowPart,
     CBUINavigationView,
     CBUIPanel,
     CBUISectionItem4,
@@ -791,17 +790,42 @@
             info = `(${deathspan} / ${lifespan} ${versionInformation.action})`;
         }
 
-        let sectionItem = CBUISectionItem4.create();
-        let stringsPart = CBUIStringsPart.create();
-        stringsPart.string1 = `Version ${versionInformation.version} ${info}`;
+        let versionSectionItemElement;
+        let versionDescriptionElement;
 
-        stringsPart.element.classList.add("titledescription");
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionItem",
+                "CBUI_container_topAndBottom CBUI_flexGrow",
+                "CBModelInspector_versionTitle CBUI_ellipsis"
+            );
+
+            versionSectionItemElement = elements[0];
+
+            let titleElement = elements[2];
+
+            titleElement.textContent = (
+                `Version ${versionInformation.version} ${info}`
+            );
+
+            let textContainerElement = elements[1];
+
+            versionDescriptionElement = CBUI.createElement(
+                "CBModelInspector_versionDescription CBUI_textSize_small " +
+                "CBUI_textColor2 CBUI_ellipsis"
+            );
+
+            textContainerElement.appendChild(
+                versionDescriptionElement
+            );
+        }
+
 
         Colby.requestTimeUpdate(
             function (javascriptTimestamp) {
                 let now = new Date(javascriptTimestamp);
 
-                stringsPart.string2 = (
+                versionDescriptionElement.textContent = (
                     Colby.dateToRelativeLocaleString(
                         versionCreated,
                         now
@@ -810,7 +834,29 @@
             }
         );
 
-        sectionItem.callback = function () {
+        versionSectionItemElement.addEventListener(
+            "click",
+            showVersion
+        );
+
+        versionSectionItemElement.appendChild(
+            CBUI.createElement(
+                "CBUI_navigationArrow"
+            )
+        );
+
+        return versionSectionItemElement;
+
+
+
+        /* -- closures -- -- -- -- -- */
+
+
+
+        /**
+         * @return undefined
+         */
+        function showVersion() {
             let element = document.createElement("div");
 
             element.appendChild(
@@ -916,15 +962,9 @@
                     }
                 );
             }
-        };
+        }
+        /* showVersion() */
 
-        sectionItem.appendPart(stringsPart);
-
-        sectionItem.appendPart(
-            CBUINavigationArrowPart.create()
-        );
-
-        return sectionItem.element;
     }
     /* createVersionSectionItemElement() */
 

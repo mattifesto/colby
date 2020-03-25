@@ -156,7 +156,6 @@ final class CBModelInspector {
             'CBUI',
             'CBUIExpander',
             'CBUIImageChooser',
-            'CBUINavigationArrowPart',
             'CBUINavigationView',
             'CBUIPanel',
             'CBUISectionItem4',
