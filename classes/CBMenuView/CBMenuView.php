@@ -11,7 +11,7 @@ final class CBMenuView {
      */
     static function CBHTMLOutput_CSSURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v485.css', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v594.css', cbsysurl()),
         ];
     }
 
@@ -22,7 +22,7 @@ final class CBMenuView {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v376.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v594.js', cbsysurl()),
         ];
     }
 

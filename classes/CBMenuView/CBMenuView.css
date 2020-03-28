@@ -88,13 +88,26 @@
 
     .CBMenuView_default.open {
         position: fixed;
+        top: 0;
+
         height: 100%;
         width: 100%;
+
         z-index: 1000;
+
+        display: flex;
+        flex-direction: column;
+    }
+
+    .CBMenuView_default.open .CBMenuView_header {
+        flex: none;
     }
 
     .CBMenuView_default.open .menu_items {
         display: block;
+
+        overflow: scroll;
+        overscroll-behavior: contain;
     }
 
     .CBMenuView_default > .menu_header {
