@@ -138,7 +138,12 @@
     }
 
     .CBMenuView_default > .menu_items ul {
+        border-bottom: 1px solid var(--CBTextColor3);
         display: block;
+    }
+
+    .CBMenuView_default > .menu_items li {
+        border-top: 1px solid var(--CBTextColor3);
     }
 }
 
