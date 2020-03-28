@@ -1,4 +1,11 @@
-"use strict"; /* jshint strict: global */
+"use strict";
+/* jshint strict: global */
+/* jshint esversion: 6 */
+/* global
+    Colby,
+*/
+
+
 
 var CBMenuView = {
 
@@ -8,22 +15,32 @@ var CBMenuView = {
     /**
      * @return undefined
      */
-    handleResize: function () {
-        if ((CBMenuView.viewportWidth > 736) !== (window.innerWidth > 736)) {
-            CBMenuView.instances.forEach(function (element) {
-                element.classList.remove("open");
-            });
+    handleResize() {
+        if (
+            (CBMenuView.viewportWidth > 736) !== (window.innerWidth > 736)
+        ) {
+            CBMenuView.instances.forEach(
+                function (element) {
+                    element.classList.remove("open");
+                }
+            );
         }
 
         CBMenuView.viewportWidth = window.innerWidth;
     },
+    /* handleResize() */
+
+
 
     /**
      * @return undefined
      */
-    initialize: function () {
+    initialize() {
         var button, element;
-        var viewElements = document.getElementsByClassName("CBMenuView");
+
+        var viewElements = document.getElementsByClassName(
+            "CBMenuView"
+        );
 
         for (var i = 0; i < viewElements.length; i++) {
             element = viewElements[i];
@@ -35,7 +52,13 @@ var CBMenuView = {
                     button = element.getElementsByClassName("left")[0];
                 }
 
-                button.addEventListener("click", CBMenuView.toggle.bind(undefined, element));
+                button.addEventListener(
+                    "click",
+                    CBMenuView.toggle.bind(
+                        undefined,
+                        element
+                    )
+                );
 
                 element.classList.add("CBMenuView_initialized");
 
@@ -43,10 +66,16 @@ var CBMenuView = {
             }
         }
 
-        window.addEventListener("resize", CBMenuView.handleResize);
+        window.addEventListener(
+            "resize",
+            CBMenuView.handleResize
+        );
 
         CBMenuView.viewportWidth = window.innerWidth;
     },
+    /* initialize() */
+
+
 
     /**
      * @param Element element
@@ -58,6 +87,11 @@ var CBMenuView = {
     toggle: function (element) {
         element.classList.toggle("open");
     },
+
 };
 
-document.addEventListener("DOMContentLoaded", CBMenuView.initialize);
+
+
+Colby.afterDOMContentLoaded(
+    CBMenuView.initialize
+);

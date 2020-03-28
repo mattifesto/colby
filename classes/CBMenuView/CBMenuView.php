@@ -4,6 +4,8 @@ final class CBMenuView {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
@@ -12,7 +14,7 @@ final class CBMenuView {
             Colby::flexpath(__CLASS__, 'v485.css', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_CSSURLs() */
+
 
 
     /**
@@ -25,7 +27,22 @@ final class CBMenuView {
     }
 
 
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        return [
+            'Colby',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
+
+
+
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
@@ -36,6 +53,7 @@ final class CBMenuView {
         );
     }
     /* CBInstall_install() */
+
 
 
     /**
@@ -49,28 +67,48 @@ final class CBMenuView {
     /* CBInstall_requiredClassNames() */
 
 
+
     /* -- CBModel interfaces -- -- -- -- -- */
 
+
+
     /**
-     * @param model $spec
+     * @param object $spec
      *
      * @return object
      */
-    static function CBModel_build(stdClass $spec): stdClass {
+    static function CBModel_build(
+        stdClass $spec
+    ): stdClass {
         return (object)[
-            'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
-            'menuID' => CBModel::valueAsID($spec, 'menuID'),
-            'menuIndex' => CBModel::valueAsInt($spec, 'menuIndex'),
+            'CSSClassNames' => CBModel::valueToNames(
+                $spec,
+                'CSSClassNames'
+            ),
+            'menuID' => CBModel::valueAsID(
+                $spec,
+                'menuID'
+            ),
+            'menuIndex' => CBModel::valueAsInt(
+                $spec,
+                'menuIndex'
+            ),
             'selectedItemName' => CBModel::valueToString(
                 $spec,
                 'selectedItemName'
             ),
         ];
     }
+    /* CBModel_build() */
+
+
+
+    /* -- CBView interfaces -- -- -- -- -- */
+
 
 
     /**
-     * @param model $model
+     * @param object $model
      *
      *      {
      *          CSSClassNames: [string]
@@ -102,11 +140,19 @@ final class CBMenuView {
      *
      * @return void
      */
-    static function CBView_render(stdClass $model): void {
-        $menu = CBModel::valueAsObject($model, 'menu');
+    static function CBView_render(
+        stdClass $model
+    ): void {
+        $menu = CBModel::valueAsObject(
+            $model,
+            'menu'
+        );
 
         if (empty($menu)) {
-            $menuID = CBModel::valueAsID($model, 'menuID');
+            $menuID = CBModel::valueAsID(
+                $model,
+                'menuID'
+            );
 
             if (empty($menuID)) {
                 echo '<!-- CBMenuView: no menu ID -->';
@@ -116,15 +162,27 @@ final class CBMenuView {
             $menu = CBModelCache::fetchModelByID($menuID);
         }
 
-        if (empty($menu) || (empty($menu->title) && empty($menu->items))) {
+        if (
+            empty($menu) ||
+            (
+                empty($menu->title) &&
+                empty($menu->items)
+            )
+        ) {
             echo '<!-- CBMenuView: no menu items -->';
             return;
         }
 
-        $selectedItemName = CBModel::valueToString($model, 'selectedItemName');
+        $selectedItemName = CBModel::valueToString(
+            $model,
+            'selectedItemName'
+        );
 
         if (empty($selectedItemName)) {
-            $menuIndex = CBModel::valueAsInt($model, 'menuIndex');
+            $menuIndex = CBModel::valueAsInt(
+                $model,
+                'menuIndex'
+            );
 
             if ($menuIndex !== null) {
                 $selectedMenuItemNames = CBModel::valueToArray(
@@ -136,9 +194,15 @@ final class CBMenuView {
             }
         }
 
-        $CSSClassNames = CBModel::valueToArray($model, 'CSSClassNames');
+        $CSSClassNames = CBModel::valueToArray(
+            $model,
+            'CSSClassNames'
+        );
 
-        array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
+        array_walk(
+            $CSSClassNames,
+            'CBHTMLOutput::requireClassName'
+        );
 
         if (in_array('list1', $CSSClassNames)) {
             $CSSClassNames[] = 'CBMenuView_list1';
@@ -152,10 +216,22 @@ final class CBMenuView {
             $CSSClassNames[] = 'few';
         }
 
-        $CSSClassNames = implode(' ', $CSSClassNames);
+        $CSSClassNames = implode(
+            ' ',
+            $CSSClassNames
+        );
 
-        $titleAsHTML = cbhtml(CBModel::valueToString($menu, 'title'));
-        $titleURI = CBModel::valueToString($menu, 'titleURI');
+        $titleAsHTML = cbhtml(
+            CBModel::valueToString(
+                $menu,
+                'title'
+            )
+        );
+
+        $titleURI = CBModel::valueToString(
+            $menu,
+            'titleURI'
+        );
 
         if ($titleURI === '') {
             $titleHREFAttribute = '';
@@ -252,4 +328,5 @@ final class CBMenuView {
         <?php
     }
     /* CBView_render() */
+
 }
