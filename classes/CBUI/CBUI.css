@@ -709,6 +709,8 @@ a.CBUI_sectionItem {
  *      control.
  */
 .CBUI_userSelectNone {
+    cursor: default;
+
     user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
