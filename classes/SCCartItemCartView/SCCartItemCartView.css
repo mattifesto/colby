@@ -1,0 +1,14 @@
+.SCCartItemCartView_itemIsAvailable
+.SCCartItemCartView_removeCartItemButton {
+    display: none;
+}
+
+.SCCartItemCartView_itemIsNotAvalailable
+.SCCartItemCartView_increaseQuantityButton {
+    display: none;
+}
+
+.SCCartItemCartView_itemIsNotAvalailable
+.SCCartItemCartView_decreaseQuantityButton {
+    display: none;
+}

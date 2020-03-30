@@ -1,0 +1,74 @@
+.SCOrdersPage > h1 {
+    padding: 20px;
+    text-align: center;
+}
+
+.SCOrderList {
+    background-color: white;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.SCOrderList tr.wholesale {
+    background-color: hsla(60, 100%, 90%, 0.8);
+}
+
+.SCOrderList th,
+.SCOrderList td {
+    box-sizing: border-box;
+    padding: 2px 5px;
+}
+
+.SCOrderList th > div,
+.SCOrderList td > div {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.SCOrderList thead th {
+    border-bottom: 1px solid hsl(0, 0%, 80%);
+}
+
+.SCOrderList tfoot td {
+    border-top: 1px solid hsl(0, 0%, 80%);
+}
+
+.SCOrderList .ID {
+    text-align: right;
+    max-width: 80px;
+}
+
+.SCOrderList .created {
+    max-width: 200px;
+}
+
+.SCOrderList .customer {
+    max-width: 300px;
+}
+
+.SCOrderList .number {
+    text-align: right;
+    width: 100px;
+}
+
+/* 80 + 200 + 300 + 100 + 100 =780 */
+@media (max-width: 779px) {
+    .SCOrderList .customer {
+        max-width: 200px;
+    }
+}
+
+/* 80 + 200 + 200 + 100 + 100 = 680 */
+@media (max-width: 679px) {
+    .SCOrderList .customer {
+        display: none;
+    }
+}
+
+/* 80 + 200 + 100 + 100 = 480 */
+@media (max-width: 479px) {
+    .SCOrderList .created {
+        display: none;
+    }
+}

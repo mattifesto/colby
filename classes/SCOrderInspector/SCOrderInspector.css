@@ -1,0 +1,16 @@
+.SCOrderInspector_emailPreview {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+}
+
+.SCOrderInspector_emailPreview > iframe {
+    box-sizing: border-box;
+    max-width: 100%;
+    min-height: 50vh;
+    width: 800px;
+}
+
+.SCOrderInspector_hide {
+    display: none;
+}

@@ -1,0 +1,4 @@
+.SCShippingAddressEditorView_invalid label,
+.SCShippingAddressEditorView_invalid .string1 {
+    color: hsla(0, 100%, 65%, 0.6);
+}
