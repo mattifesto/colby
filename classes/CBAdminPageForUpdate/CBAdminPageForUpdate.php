@@ -127,28 +127,6 @@ final class CBAdminPageForUpdate {
             $exitCode
         );
 
-        if (
-            empty($exitCode) &&
-            function_exists('sclibdir')
-        ) {
-            $shoppingCartDirectory = sclibdir();
-
-            array_push(
-                $output,
-                '',
-                "$ cd {$shoppingCartDirectory}",
-                ''
-            );
-
-            chdir($shoppingCartDirectory);
-
-            CBExec::exec(
-                'git pull',
-                $output,
-                $exitCode
-            );
-        }
-
         chdir($originalDirectory);
 
         return (object)[
