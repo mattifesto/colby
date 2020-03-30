@@ -578,7 +578,7 @@ final class Colby {
 
         define(
             'SCLibraryURL',
-            cbsiteurl()
+            cbsysurl()
         );
 
         define(
@@ -942,6 +942,7 @@ function cbsiteurl() {
 }
 
 
+
 /**
  * @return string
  */
@@ -955,6 +956,8 @@ function cbsysurl(): string {
     return $value;
 }
 
+
+
 /**
  * @deprecated use cbsysdir()
  *
@@ -963,6 +966,8 @@ function cbsysurl(): string {
 function sclibdir() {
     return cbsysdir();
 }
+
+
 
 /**
  * @deprecated use cbsysurl()
