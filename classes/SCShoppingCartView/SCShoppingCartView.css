@@ -1,0 +1,8 @@
+.SCShoppingCartView {
+    flex: 1 1 auto;
+    padding-bottom: 100px;
+}
+
+.SCShoppingCartView_emptyCart {
+    padding-top: 100px;
+}

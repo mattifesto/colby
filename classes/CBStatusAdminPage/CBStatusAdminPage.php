@@ -323,7 +323,7 @@ final class CBStatusAdminPage {
 
         $issueCBMessages = array_merge(
             $issueCBMessages,
-            CBAdmin::getIssueMessages()
+            CBAdmin::getIssueCBMessages()
         );
 
         return $issueCBMessages;

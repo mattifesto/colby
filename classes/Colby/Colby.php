@@ -565,6 +565,48 @@ final class Colby {
         set_exception_handler('CBErrorHandler::handle');
         register_shutdown_function('Colby::handleShutdown');
 
+
+        /**
+         * Deprecated items from SCShoppingCartLibrary library-configuration.php
+         */
+
+        /* deprecated */
+        define(
+            'SCLibraryDirectory',
+            CBSystemDirectory
+        );
+
+        define(
+            'SCLibraryURL',
+            cbsysurl()
+        );
+
+        define(
+            'SCLibraryVersionNumber',
+            '148'
+        );
+
+        define(
+            'SHOPPING_CART_LIBRARY_ARCHIVE_ID',
+            '2f2a1852488cccfd3da88f818b7e78c3f6a79d19'
+        );
+
+        define(
+            'SC_ORDERS_DOCUMENT_GROUP_ID',
+            'ded6d9f0cd107c1bb026c3a54a33cd5ed971739c'
+        );
+
+        define(
+            'SHOPPING_CART_LIBRARY_DIRECTORY',
+            SCLibraryDirectory
+        );
+
+        define(
+            'SHOPPING_CART_LIBRARY_URL',
+            SCLibraryURL
+        );
+
+
         /**
          * Once error handling is enabled, the local configuration file can be
          * included. This file is not checked in and therefore is not shared
@@ -900,6 +942,7 @@ function cbsiteurl() {
 }
 
 
+
 /**
  * @return string
  */
@@ -911,4 +954,26 @@ function cbsysurl(): string {
     }
 
     return $value;
+}
+
+
+
+/**
+ * @deprecated use cbsysdir()
+ *
+ * @return string
+ */
+function sclibdir() {
+    return cbsysdir();
+}
+
+
+
+/**
+ * @deprecated use cbsysurl()
+ *
+ * @return string
+ */
+function scliburl() {
+    return cbsysurl();
 }

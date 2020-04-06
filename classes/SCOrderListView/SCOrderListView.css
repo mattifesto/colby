@@ -1,0 +1,11 @@
+.SCOrderListView_creditCard.SCOrderListView_authorized {
+    color: hsl(30, 100%, 60%);
+}
+
+.SCOrderListView_net30 {
+    color: hsl(220, 100%, 60%);
+}
+
+.SCOrderListView_wholesale {
+    background-color: hsl(60, 100%, 95%);
+}

@@ -3,6 +3,34 @@
 final class CBGit {
 
     /**
+     * @return [string]
+     */
+    static function getSubmoduleURLs(): array {
+        $pwd = getcwd();
+
+        chdir(cbsitedir());
+
+        try {
+            $command = (
+                'git config --file .gitmodules --get-regexp url ' .
+                '| awk \'{ print $2 }\''
+            );
+
+            exec(
+                $command,
+                $submoduleURLs
+            );
+        } finally {
+            chdir($pwd);
+        }
+
+        return $submoduleURLs;
+    }
+    /* getSubmoduleURLs() */
+
+
+
+    /**
      * @param string $command
      * @param [string] &$output
      * @param mixed &$exitCode

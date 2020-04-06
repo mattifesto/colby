@@ -216,48 +216,71 @@ final class CBAdmin {
 
 
     /**
-     * Classes can implement the CBAdmin_getIssueMessages() interface to provide
+     * Classes can implement the CBAdmin_getIssueCBMessages() interface to provide
      * system issue messages if needed. Messages should only be returned if
      * something needs to be adjusted by a developer, administrator, or user. If
      * everything is okay, no messages should be returned.
      *
      * @return [string]
+     *
+     *      Each string will be a CBMessage.
      */
-    static function getIssueMessages(): array {
+    static function getIssueCBMessages(): array {
         $classNames = CBAdmin::fetchClassNames();
-        $issueMessages = [];
+        $issueCBMessages = [];
 
         foreach ($classNames as $className) {
-            $functionName = "{$className}::CBAdmin_getIssueMessages";
+            $functionName = "{$className}::CBAdmin_getIssueCBMessages";
 
-            if (is_callable($functionName)) {
-                $currentIssueMessages = call_user_func($functionName);
+            if (!is_callable($functionName)) {
+                /* deprecated */
+                $functionName = "{$className}::CBAdmin_getIssueMessages";
 
-                if (!is_array($currentIssueMessages)) {
-                    throw new Exception(
-                        "{$functionName}() returned a non-array value."
-                    );
+                if (!is_callable($functionName)) {
+                    continue;
                 }
+            }
 
-                foreach ($currentIssueMessages as $currentIssueMessage) {
-                    if (!is_string($currentIssueMessage)) {
-                        throw new Exception(
-                            "{$functionName}() returned an issue message " .
-                            "that is not a string."
-                        );
-                    }
-                }
+            $currentIssueCBMessages = call_user_func(
+                $functionName
+            );
 
-                $issueMessages = array_merge(
-                    $issueMessages,
-                    $currentIssueMessages
+            if (!is_array($currentIssueCBMessages)) {
+                throw new Exception(
+                    "{$functionName}() returned a non-array value."
                 );
             }
+
+            foreach ($currentIssueCBMessages as $currentIssueCBMessage) {
+                if (!is_string($currentIssueCBMessage)) {
+                    throw new Exception(
+                        "{$functionName}() returned an issue message " .
+                        "that is not a string."
+                    );
+                }
+            }
+
+            $issueCBMessages = array_merge(
+                $issueCBMessages,
+                $currentIssueCBMessages
+            );
         }
         /* foreach */
 
-        return $issueMessages;
+        return $issueCBMessages;
     }
-    /* getIssueMessages() */
+    /* getIssueCBMessages() */
+
+
+
+    /**
+     * @deprecated use CBAdmin::getIssueCBMessages()
+     *
+     * @return [string]
+     */
+    static function getIssueMessages(): array {
+        return CBAdmin::getIssueCBMessages();
+    }
+
 }
 /* CBAdmin */

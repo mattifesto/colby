@@ -1,0 +1,101 @@
+.SCCheckoutView_orderSummary {
+    box-sizing: border-box;
+    padding: 5px 10px;
+}
+
+.SCCheckoutView_shippingInformation {
+    box-sizing: border-box;
+    padding: 5px 10px;
+}
+
+.SCCheckoutView > h1 {
+    text-align: center;
+    padding: 20px;
+}
+
+table.formatted-for-order {
+    border-spacing: 0px;
+}
+
+table.formatted-for-order td,
+table.formatted-for-order th {
+    padding: 3px 5px;
+    vertical-align: top;
+}
+
+table.formatted-for-order td.product-image {
+    height: 50px;
+    text-align: center;
+}
+
+table.formatted-for-order td.quantity,
+table.formatted-for-order td.total,
+table.formatted-for-order th.quantity,
+table.formatted-for-order th.total {
+    text-align: right;
+}
+
+table.formatted-for-order img {
+    max-width: 50px;
+    max-height: 50px;
+}
+
+table.formatted-for-order tr.subtotal td,
+table.formatted-for-order tr.total th,
+table.formatted-for-order tr.total td {
+    border-top: 1px solid #bfbfbf;
+}
+
+div.information {
+    margin: 10px 0 20px;
+}
+
+div.information h2 {
+    font-size: inherit;
+    padding: 20px 0 10px;
+}
+
+div.free-shipping-notice {
+    margin: 20px 0px 10px;
+    color: #ef3f3f;
+    font-weight: bold;
+}
+
+#checkoutNotice {
+    padding: 100px 0;
+}
+
+.SCCheckoutView_panel {
+    text-align: center;
+}
+
+.SCCheckoutView_leftAlignedPanel {
+    text-align: left;
+}
+
+.SCCheckoutView_spinner {
+    display: inline-block;
+
+    height: 50px;
+    width: 50px;
+
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 50%;
+
+    border-color: hsla(240, 100%, 50%, 0.2);
+}
+
+.SCCheckoutView_spinner.active {
+    border-left-color: hsla(240, 100%, 50%, 1.0);
+    animation: SCCheckoutView_animaton 2.0s infinite linear;
+}
+
+@keyframes SCCheckoutView_animaton {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
