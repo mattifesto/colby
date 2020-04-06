@@ -1,6 +1,6 @@
 <?php
 
-final class CBModelsAdmin {
+final class Admin_CBModelClassList {
 
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
@@ -66,7 +66,7 @@ final class CBModelsAdmin {
 
         return [
             [
-                'CBModelsAdmin_modelClassNames',
+                'Admin_CBModelClassList_modelClassNames',
                 $modelClassNames,
             ],
         ];
@@ -88,5 +88,56 @@ final class CBModelsAdmin {
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
+
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        $updater = CBModelUpdater::fetch(
+            (object)[
+                'ID' => CBModelsAdminMenu::getModelCBID(),
+            ]
+        );
+
+        $items = CBModel::valueToArray(
+            $updater->working,
+            'items'
+        );
+
+        array_push(
+            $items,
+            (object)[
+                'className' => 'CBMenuItem',
+                'name' => 'modelClassList',
+                'text' => 'Classes',
+                'URL' => CBAdmin::getAdminPageURL(
+                    'Admin_CBModelClassList'
+                ),
+            ]
+        );
+
+        $updater->working->items = $items;
+
+        CBModelUpdater::save($updater);
+    }
+    /* CBInstall_install() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBModelsAdminMenu',
+            'CBModelUpdater',
+        ];
+    }
 
 }

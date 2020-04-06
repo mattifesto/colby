@@ -8,7 +8,7 @@
     CBUITitleAndDescriptionPart,
     Colby,
 
-    CBModelsAdmin_modelClassNames,
+    Admin_CBModelClassList_modelClassNames,
 */
 
 (function () {
@@ -21,7 +21,7 @@
 
             if (
                 mainElement === undefined ||
-                !mainElement.classList.contains("CBModelsAdmin")
+                !mainElement.classList.contains("Admin_CBModelClassList")
             ) {
                 mainElement = undefined;
                 return;
@@ -47,7 +47,7 @@
 
         let sectionElement = CBUI.createSection();
 
-        CBModelsAdmin_modelClassNames.forEach(
+        Admin_CBModelClassList_modelClassNames.forEach(
             function (className) {
                 let sectionItem = CBUISectionItem4.create();
 
