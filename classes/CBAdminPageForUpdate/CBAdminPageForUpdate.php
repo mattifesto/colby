@@ -258,6 +258,7 @@ final class CBAdminPageForUpdate {
     static function CBInstall_requiredClassNames(): array {
         return [
             'CBDevelopAdminMenu',
+            'CBModelUpdater',
         ];
     }
 
