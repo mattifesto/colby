@@ -2,32 +2,36 @@
 
 final class CBModelsAdminMenu {
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return void
      */
     static function CBInstall_install(): void {
-        $adminMenuSpec = CBModels::fetchSpecByID(CBAdminMenu::ID());
+        $adminMenuSpec = CBModels::fetchSpecByID(
+            CBAdminMenu::ID()
+        );
 
         $adminMenuSpec->items[] = (object)[
             'className' => 'CBMenuItem',
             'name' => 'models',
             'submenuID' => CBModelsAdminMenu::ID(),
             'text' => 'Models',
-            'URL' => '/admin/?c=CBModelsAdmin',
+            'URL' => CBAdmin::getAdminPageURL(
+                'Admin_CBModelClassList'
+            ),
         ];
 
-        $spec = (object)[
+        $modelsMenuSpec = (object)[
             'className' => 'CBMenu',
             'ID' => CBModelsAdminMenu::ID(),
             'title' => 'Models',
-            'titleURI' => '/admin/?c=CBModelsAdmin',
+            'titleURI' => CBAdmin::getAdminPageURL(
+                'Admin_CBModelClassList'
+            ),
             'items' => [
-                (object)[
-                    'className' => 'CBMenuItem',
-                    'name' => 'directory',
-                    'text' => 'Directory',
-                    'URL' => '/admin/?c=CBModelsAdmin',
-                ],
                 (object)[
                     'className' => 'CBMenuItem',
                     'name' => 'inspector',
@@ -37,12 +41,21 @@ final class CBModelsAdminMenu {
             ],
         ];
 
-        CBDB::transaction(function () use ($adminMenuSpec, $spec) {
-            CBModels::save($adminMenuSpec);
-            CBModels::deleteByID(CBModelsAdminMenu::ID());
-            CBModels::save($spec);
-        });
+        CBDB::transaction(
+            function () use ($adminMenuSpec, $modelsMenuSpec) {
+                CBModels::save($adminMenuSpec);
+
+                CBModels::deleteByID(
+                    CBModelsAdminMenu::ID()
+                );
+
+                CBModels::save($modelsMenuSpec);
+            }
+        );
     }
+    /* CBInstall_install() */
+
+
 
     /**
      * @return [string]
@@ -53,11 +66,28 @@ final class CBModelsAdminMenu {
             'CBDevelopAdminMenu',
         ];
     }
+    /* CBInstall_requiredClassNames() */
+
+
+
+    /* -- functions -- -- -- -- -- */
+
+
 
     /**
-     * @return ID
+     * @return CBID
      */
-    static function ID(): string {
+    static function getModelCBID(): string {
         return 'f6a893489fb3ea4bfbc4af9f8cb3f052f8add349';
     }
+
+
+
+    /**
+     * @deprecated use CBModelsAdminMenu::getModelCBID()
+     */
+    static function ID(): string {
+        return CBModelsAdminMenu::getModelCBID();
+    }
+
 }
