@@ -635,20 +635,6 @@ final class Colby {
 
 
         /**
-         * Automatically load libraries in the "libraries" directory.
-         */
-
-        if (is_dir('libraries')) {
-            $filenames = glob('libraries/*');
-
-            foreach ($filenames as $filename) {
-                if (is_dir($filename)) {
-                    Colby::loadLibrary($filename);
-                }
-            }
-        }
-
-        /**
          * Include the site configuration file. Unlike 'colby-configuration.php'
          * which contains instance specific settings, 'site-configuration.php'
          * is checked in and shared by all instances of the site such as
