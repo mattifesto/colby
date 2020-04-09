@@ -361,14 +361,17 @@ final class CBHTMLOutput {
      * @return null
      */
     private static function processRequiredClassNames() {
-        $requiredClassNames = array_keys(CBHTMLOutput::$requiredClassNames);
+        $requiredClassNames = array_keys(
+            CBHTMLOutput::$requiredClassNames
+        );
 
-        $resolvedClassNames =
-        CBRequiredClassNamesResolver::resolveRequiredClassNames(
-            $requiredClassNames,
-            [
-                'CBHTMLOutput_requiredClassNames',
-            ]
+        $resolvedClassNames = (
+            CBRequiredClassNamesResolver::resolveRequiredClassNames(
+                $requiredClassNames,
+                [
+                    'CBHTMLOutput_requiredClassNames',
+                ]
+            )
         );
 
         foreach ($resolvedClassNames as $className) {
@@ -399,20 +402,24 @@ final class CBHTMLOutput {
                 );
             }
 
-            if (
-                is_callable($function = "{$className}::CBHTMLOutput_JavaScriptVariables") ||
-                is_callable($function = "{$className}::requiredJavaScriptVariables")
-            ) {
-                $variables = call_user_func($function);
+            $functionName = "{$className}::CBHTMLOutput_JavaScriptVariables";
+
+            if (is_callable($functionName)) {
+                $variables = call_user_func($functionName);
 
                 array_walk(
                     $variables,
-                    function ($variable, $index) use ($function) {
+                    function ($variable, $index) {
                         if (is_array($variable) && count($variable) > 1) {
-                            CBHTMLOutput::exportVariable($variable[0], $variable[1]);
+                            CBHTMLOutput::exportVariable(
+                                $variable[0],
+                                $variable[1]
+                            );
                         } else {
-                            $valueAsJSONAsMessage = CBMessageMarkup::stringToMessage(
-                                CBConvert::valueToPrettyJSON($variable)
+                            $valueAsJSONAsMessage = (
+                                CBMessageMarkup::stringToMessage(
+                                    CBConvert::valueToPrettyJSON($variable)
+                                )
                             );
 
                             $message = <<<EOT
@@ -666,7 +673,14 @@ final class CBHTMLOutput {
                 $async = $options & CBHTMLOutput::JSAsync ? 'async ' : '';
                 $defer = $options & CBHTMLOutput::JSDefer ? 'defer ' : '';
 
-                echo '<script ' . $async . $defer . 'src="' . $URL . '"></script>';
+                echo (
+                    '<script ' .
+                    $async .
+                    $defer .
+                    'src="' .
+                    $URL .
+                    '"></script>'
+                );
             }
         }
 
@@ -676,9 +690,18 @@ final class CBHTMLOutput {
             include $snippetFilename;
         }
 
-        if (!empty(CBHTMLOutput::$javaScriptSnippetStrings)) {
-            foreach (CBHTMLOutput::$javaScriptSnippetStrings as $snippetString) {
-                echo "\n<script>\n\"use strict\";\n\n{$snippetString}\n\n</script>\n";
+        $snippetStrings = CBHTMLOutput::$javaScriptSnippetStrings;
+
+        if (!empty($snippetStrings)) {
+            foreach ($snippetStrings as $snippetString) {
+                echo <<<EOT
+
+                    <script>
+                    use strict;
+                    {$snippetString}
+                    </script>
+
+                EOT;
             }
         }
     }
@@ -694,7 +717,14 @@ final class CBHTMLOutput {
                 $async = $options & CBHTMLOutput::JSAsync ? 'async ' : '';
                 $defer = $options & CBHTMLOutput::JSDefer ? 'defer ' : '';
 
-                echo '<script ' . $async . $defer . 'src="' . $URL . '"></script>';
+                echo (
+                    '<script ' .
+                    $async .
+                    $defer .
+                    'src="' .
+                    $URL .
+                    '"></script>'
+                );
             }
         }
     }
