@@ -470,23 +470,8 @@ var Colby = {
             }
         });
     },
+    /* fetchAjaxResponse() */
 
-
-
-    /**
-     * @return undefined
-     */
-    hidePanel: function () {
-        if (
-            Colby.panel &&
-            Colby.panel.parentNode
-        ) {
-            Colby.panel.parentNode.removeChild(
-                Colby.panel
-            );
-        }
-    },
-    /* hidePanel() */
 
 
     /**
@@ -510,12 +495,14 @@ var Colby = {
     /* localStorageIsSupported() */
 
 
+
     /**
      * @return string
      */
     get nonBreakingSpace() {
         return "\u00A0";
     },
+
 
 
     /**
