@@ -15,14 +15,21 @@
 */
 
 
+(function () {
 
-var CBCodeAdmin = {
+    Colby.afterDOMContentLoaded(
+        afterDOMContentLoaded
+    );
+
+
 
     /**
      * @return undefined
      */
-    async init() {
-        let elements = document.getElementsByClassName("CBCodeAdmin");
+    async function afterDOMContentLoaded() {
+        let elements = document.getElementsByClassName(
+            "CBCodeAdmin"
+        );
 
         if (elements.length === 0) {
             return;
@@ -210,16 +217,7 @@ var CBCodeAdmin = {
         }
         /* init_createOptionsElement() */
 
-    },
-    /* init() */
-
-};
-/* CBCodeAdmin */
-
-
-
-Colby.afterDOMContentLoaded(
-    function () {
-        CBCodeAdmin.init();
     }
-);
+    /* afterDOMContentLoaded() */
+
+})();
