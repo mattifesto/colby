@@ -81,9 +81,6 @@ final class Admin_CBModelClassList {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBUI',
-            'CBUINavigationArrowPart',
-            'CBUISectionItem4',
-            'CBUITitleAndDescriptionPart',
             'Colby',
         ];
     }

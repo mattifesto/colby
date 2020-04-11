@@ -3,9 +3,6 @@
 /* jshint esversion: 6 */
 /* globals
     CBUI,
-    CBUINavigationArrowPart,
-    CBUISectionItem4,
-    CBUITitleAndDescriptionPart,
     Colby,
 
     Admin_CBModelClassList_modelClassNames,
@@ -49,27 +46,35 @@
 
         Admin_CBModelClassList_modelClassNames.forEach(
             function (className) {
-                let sectionItem = CBUISectionItem4.create();
-
-                let titleAndDescriptionPart =
-                CBUITitleAndDescriptionPart.create();
-
-                titleAndDescriptionPart.title = className;
-
-                sectionItem.callback = function () {
-                    window.location = (
-                        "/admin/?c=Admin_CBModelList&modelClassName=" +
-                        className
-                    );
-                };
-
-                sectionItem.appendPart(titleAndDescriptionPart);
-
-                sectionItem.appendPart(
-                    CBUINavigationArrowPart.create()
+                let elements = CBUI.createElementTree(
+                    [
+                        "CBUI_sectionItem",
+                        "a"
+                    ],
+                    "CBUI_container_topAndBottom CBUI_flexGrow",
+                    "title CBUI_ellipsis"
                 );
 
-                sectionElement.appendChild(sectionItem.element);
+                let sectionItemElement = elements[0];
+
+                sectionElement.appendChild(
+                    sectionItemElement
+                );
+
+                sectionItemElement.href = (
+                    "/admin/?c=Admin_CBModelList&modelClassName=" +
+                    className
+                );
+
+                let titleElement = elements[2];
+                titleElement.textContent = className;
+
+
+                sectionItemElement.appendChild(
+                    CBUI.createElement(
+                        "CBUI_navigationArrow"
+                    )
+                );
             }
         );
 
