@@ -1,6 +1,6 @@
 <?php
 
-final class CBCodeAdmin {
+final class Admin_CBCode {
 
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
@@ -65,13 +65,13 @@ final class CBCodeAdmin {
             'index'
         );
 
-        $searchModel = CBCodeAdmin::searches()[$index];
+        $searchModel = Admin_CBCode::searches()[$index];
 
-        $searchCommand = CBCodeAdmin::searchModelToSearchCommand(
+        $searchCommand = Admin_CBCode::searchModelToSearchCommand(
             $searchModel
         );
 
-        $searchResults = CBCodeAdmin::searchCommandToSearchResults(
+        $searchResults = Admin_CBCode::searchCommandToSearchResults(
             $searchCommand
         );
 
@@ -125,8 +125,8 @@ final class CBCodeAdmin {
     static function CBHTMLOutput_JavaScriptVariables() {
         return [
             [
-                'CBCodeAdmin_searches',
-                CBCodeAdmin::searches(),
+                'Admin_CBCode_searches',
+                Admin_CBCode::searches(),
             ],
         ];
     }
@@ -158,20 +158,32 @@ final class CBCodeAdmin {
      * @return void
      */
     static function CBInstall_install(): void {
-        $spec = CBModels::fetchSpecByID(
+        $developAdminMenuSpec = CBModels::fetchSpecByID(
             CBDevelopAdminMenu::ID()
         );
 
-        $spec->items[] = (object)[
-            'className' => 'CBMenuItem',
-            'name' => 'code',
-            'text' => 'Code',
-            'URL' => CBAdmin::getAdminPageURL('CBCodeAdmin'),
-        ];
+        $items = CBModel::valueToArray(
+            $developAdminMenuSpec,
+            'items'
+        );
+
+        array_push(
+            $items,
+            (object)[
+                'className' => 'CBMenuItem',
+                'name' => 'code',
+                'text' => 'Code',
+                'URL' => CBAdmin::getAdminPageURL(
+                    'Admin_CBCode'
+                ),
+            ]
+        );
+
+        $developAdminMenuSpec->items = $items;
 
         CBDB::transaction(
-            function () use ($spec) {
-                CBModels::save($spec);
+            function () use ($developAdminMenuSpec) {
+                CBModels::save($developAdminMenuSpec);
             }
         );
     }
@@ -235,7 +247,16 @@ final class CBCodeAdmin {
                 // '--underline', (enable only if ack v3 is available)
                 "--match '{$searchModel->regex}'",
                 '--ignore-dir=data',
+
+                /**
+                 * @TODO 2020_04_11
+                 *
+                 *      Develop a more direct way to ignore the search defining
+                 *      file from the files to be searched.
+                 */
                 '--ignore-file=match:CodeAdmin',
+                '--ignore-file=match:Admin_CBCode',
+
                 '--sort-files',
                 CBModel::valueToString(
                     $searchModel,
@@ -1414,4 +1435,4 @@ final class CBCodeAdmin {
     }
     /* searches() */
 }
-/* CBCodeAdmin */
+/* Admin_CBCode */

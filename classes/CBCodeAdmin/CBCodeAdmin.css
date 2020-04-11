@@ -1,7 +1,0 @@
-.CBCodeAdmin .CBUIExpander.severity5 {
-    display: none;
-}
-
-.CBCodeAdmin.CBCodeAdmin_showSearchesWithNoResults .CBUIExpander.severity5 {
-    display: block;
-}

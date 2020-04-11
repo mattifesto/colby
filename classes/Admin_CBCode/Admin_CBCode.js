@@ -1,7 +1,6 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esversion: 8 */
-/* exported CBCodeAdmin */
 /* global
     CBErrorHandler,
     CBMessageMarkup,
@@ -11,7 +10,7 @@
     CBUIExpander,
     Colby,
 
-    CBCodeAdmin_searches,
+    Admin_CBCode_searches,
 */
 
 
@@ -32,7 +31,7 @@
      */
     async function afterDOMContentLoaded() {
         let elements = document.getElementsByClassName(
-            "CBCodeAdmin"
+            "Admin_CBCode"
         );
 
         if (elements.length === 0) {
@@ -47,11 +46,11 @@
 
         for (
             let index = 0;
-            index < CBCodeAdmin_searches.length;
+            index < Admin_CBCode_searches.length;
             index += 1
         ) {
             try {
-                let search = CBCodeAdmin_searches[index];
+                let search = Admin_CBCode_searches[index];
 
                 await doSearch(search, index);
             } catch (error) {
@@ -114,11 +113,11 @@
         switchPart.changed = function () {
             if (switchPart.value) {
                 rootElement.classList.add(
-                    "CBCodeAdmin_showSearchesWithNoResults"
+                    "Admin_CBCode_showSearchesWithNoResults"
                 );
             } else {
                 rootElement.classList.remove(
-                    "CBCodeAdmin_showSearchesWithNoResults"
+                    "Admin_CBCode_showSearchesWithNoResults"
                 );
             }
         };
@@ -154,7 +153,7 @@
         );
 
         let response = await Colby.callAjaxFunction(
-            "CBCodeAdmin",
+            "Admin_CBCode",
             "search",
             {
                 index: index,
