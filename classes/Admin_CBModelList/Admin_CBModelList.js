@@ -4,10 +4,7 @@
 /* globals
     CBImage,
     CBUI,
-    CBUINavigationArrowPart,
-    CBUISectionItem4,
     CBUIThumbnailPart,
-    CBUITitleAndDescriptionPart,
     Colby,
 
     CBModelsAdmin_classHasTemplates,
@@ -42,24 +39,37 @@
 
 
     /**
+     * @param object modelListItem
+     *
      * @return Element
      */
-    function createModelListItemElement(modelListItem) {
-        var sectionItem = CBUISectionItem4.create();
+    function createModelListItemElement(
+        modelListItem
+    ) {
+        let elements = CBUI.createElementTree(
+            [
+                "CBUI_sectionItem",
+                "a"
+            ],
+            "CBUI_container_topAndBottom CBUI_flexGrow",
+            "title CBUI_ellipsis"
+        );
 
-        sectionItem.callback = function () {
-            window.location = (
-                "/admin/?c=CBModelEditor&ID=" +
-                encodeURIComponent(modelListItem.ID)
-            );
-        };
+        let sectionItemElement = elements[0];
 
+        sectionItemElement.href = (
+            "/admin/?c=CBModelEditor&ID=" +
+            encodeURIComponent(modelListItem.ID)
+        );
 
         /* thumbnail part */
 
         let thumbnailPart = CBUIThumbnailPart.create();
 
-        sectionItem.appendPart(thumbnailPart);
+        sectionItemElement.insertBefore(
+            thumbnailPart.element,
+            sectionItemElement.firstElementChild
+        );
 
         if (modelListItem.image) {
             thumbnailPart.src = CBImage.toURL(
@@ -69,33 +79,46 @@
         }
 
 
-        /* title and description part */
+        /* title */
 
-        var titleAndDescriptionPart =
-        CBUITitleAndDescriptionPart.create();
+        let textContainerElement = elements[1];
+        let titleElement = elements[2];
 
-        var title =
-        modelListItem.title ?
-        modelListItem.title.trim() :
-        '';
+        let title = (
+            modelListItem.title ?
+            modelListItem.title.trim() :
+            ''
+        );
 
         if (title === "") {
             title = CBModelsAdmin_modelClassName + " (no title)";
         }
 
-        titleAndDescriptionPart.title = title;
-        titleAndDescriptionPart.description = modelListItem.ID;
+        titleElement.textContent = title;
 
-        sectionItem.appendPart(titleAndDescriptionPart);
+
+        /* description */
+
+        let descriptionElement = CBUI.createElement(
+            "description CBUI_textColor2 CBUI_textSize_small CBUI_ellipsis"
+        );
+
+        textContainerElement.appendChild(
+            descriptionElement
+        );
+
+        descriptionElement.textContent = modelListItem.ID;
 
 
         /* navigation arrow */
 
-        sectionItem.appendPart(
-            CBUINavigationArrowPart.create()
+        sectionItemElement.appendChild(
+            CBUI.createElement(
+                "CBUI_navigationArrow"
+            )
         );
 
-        return sectionItem.element;
+        return sectionItemElement;
     }
     /* createModelSectionItemElement() */
 

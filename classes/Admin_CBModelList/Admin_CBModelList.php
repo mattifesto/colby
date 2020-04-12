@@ -51,7 +51,7 @@ final class Admin_CBModelList {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v596.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v599.js', cbsysurl()),
         ];
     }
 
@@ -97,9 +97,6 @@ final class Admin_CBModelList {
         return [
             'CBImage',
             'CBUI',
-            'CBUINavigationArrowPart',
-            'CBUISectionItem4',
-            'CBUITitleAndDescriptionPart',
             'CBUIThumbnailPart',
             'Colby',
         ];
