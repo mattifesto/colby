@@ -12,12 +12,18 @@
     Colby,
 */
 
-var CBPagesDevelopmentAdmin = {
+(function () {
+
+    Colby.afterDOMContentLoaded(
+        afterDOMContentLoaded
+    );
+
+
 
     /**
      * @return undefined
      */
-    init: function () {
+    function afterDOMContentLoaded() {
         let mainElement = document.getElementsByTagName("main")[0];
 
         mainElement.appendChild(CBUI.createHalfSpace());
@@ -58,7 +64,7 @@ var CBPagesDevelopmentAdmin = {
         let pagesByCategory = {};
 
         CBPagesDevelopmentAdmin_pages.forEach(function (page) {
-            let category = CBPagesDevelopmentAdmin.pageToCategory(page);
+            let category = pageToCategory(page);
 
             if (pagesByCategory[category] === undefined) {
                 pagesByCategory[category] = [];
@@ -160,11 +166,19 @@ var CBPagesDevelopmentAdmin = {
             mainElement.appendChild(sectionElement);
             mainElement.appendChild(CBUI.createHalfSpace());
         }
-    },
-    /* init() */
+    }
+    /* afterDOMContentLoaded() */
 
 
-    pageToCategory: function (page) {
+
+    /**
+     * @param object page
+     *
+     * @return string
+     */
+    function pageToCategory(
+        page
+    ) {
         let name = "";
 
         if (page.published === null) {
@@ -186,8 +200,7 @@ var CBPagesDevelopmentAdmin = {
         }
 
         return name;
-    },
+    }
     /* pageToCategory() */
-};
 
-Colby.afterDOMContentLoaded(CBPagesDevelopmentAdmin.init);
+})();

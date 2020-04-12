@@ -2,6 +2,10 @@
 
 final class CBPagesDevelopmentAdmin {
 
+    /* -- CBAdmin interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return string
      */
@@ -32,14 +36,19 @@ final class CBPagesDevelopmentAdmin {
 
 
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v599.js', cbsysurl()),
         ];
     }
+
 
 
     /**
@@ -62,12 +71,14 @@ final class CBPagesDevelopmentAdmin {
                         ColbyPages.archiveID = CBModels.ID
             ORDER BY    ISNULL(published), className, classNameForKind, title
 
-EOT;
+        EOT;
 
         return [
             ['CBPagesDevelopmentAdmin_pages', CBDB::SQLToObjects($SQL)],
         ];
     }
+    /* CBHTMLOutput_JavaScriptVariables() */
+
 
 
     /**
@@ -83,13 +94,22 @@ EOT;
             'CBUIStringsPart',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
+
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
 
 
     /**
      * @return void
      */
     static function CBInstall_install(): void {
-        $spec = CBModels::fetchSpecByID(CBPagesAdminMenu::ID());
+        $spec = CBModels::fetchSpecByID(
+            CBPagesAdminMenu::ID()
+        );
+
         $spec->items[] = (object)[
             'className' => 'CBMenuItem',
             'name' => 'develop',
@@ -97,10 +117,14 @@ EOT;
             'URL' => '/admin/?c=CBPagesDevelopmentAdmin',
         ];
 
-        CBDB::transaction(function () use ($spec) {
-            CBModels::save($spec);
-        });
+        CBDB::transaction(
+            function () use ($spec) {
+                CBModels::save($spec);
+            }
+        );
     }
+    /* CBInstall_install() */
+
 
 
     /**
@@ -108,7 +132,8 @@ EOT;
      */
     static function CBInstall_requiredClassNames(): array {
         return [
-            'CBPagesAdminMenu'
+            'CBPagesAdminMenu',
         ];
     }
+
 }
