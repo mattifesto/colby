@@ -35,45 +35,6 @@ final class Colby {
 
 
 
-    /* -- CBAdmin interfaces -- -- -- -- -- */
-
-
-
-    /**
-     * @return [string]
-     */
-    static function CBAdmin_getIssueMessages(): array {
-        $messages = [];
-
-        if (defined('SCLibraryVersionNumber')) {
-            $actualSCLibraryVersionNumber = SCLibraryVersionNumber;
-            $expectedSCLibraryVersionNumber = '148';
-
-            if (
-                $actualSCLibraryVersionNumber !==
-                $expectedSCLibraryVersionNumber
-            ) {
-                array_push(
-                    $messages,
-                    <<<EOT
-
-                        This version of Colby is meant to be paired with version
-                        {$expectedSCLibraryVersionNumber} of the SCShoppingCart
-                        library and the current version of the SCShoppingCart
-                        library is {$actualSCLibraryVersionNumber}
-
-                    EOT
-                );
-            }
-        }
-        /* SCLibraryVersionNumber */
-
-        return $messages;
-    }
-    /* CBAdmin_getIssueMessages() */
-
-
-
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
 
