@@ -3,13 +3,14 @@
 /* jshint esversion: 6 */
 /* exported CBPagesDevelopmentAdmin */
 /* global
-    CBPagesDevelopmentAdmin_pages,
+    CBModel,
     CBUI,
-    CBUINavigationArrowPart,
     CBUIPanel,
     CBUISectionItem4,
     CBUIStringsPart,
     Colby,
+
+    CBPagesDevelopmentAdmin_pages,
 */
 
 (function () {
@@ -121,37 +122,76 @@
             mainElement.appendChild(CBUI.createHalfSpace());
         }
 
+        /**
+         * If there is no nonstandard test page on your website, you can run the
+         * CBTestPageTests "toggleNonstandardTestPage" test to add one.
+         */
+
         if (nonstandardPages.length > 0) {
             let sectionElement = CBUI.createSection();
 
             nonstandardPages.forEach(
                 function (page) {
-                    let sectionItem = CBUISectionItem4.create();
-                    sectionItem.callback = function () {
-                        window.location = (
-                            `/admin/?c=CBModelInspector&ID=${page.ID}`
-                        );
-                    };
+                    let elements = CBUI.createElementTree(
+                        [
+                            "CBUI_sectionItem",
+                            "a",
+                        ],
+                        "CBUI_container_topAndBottom CBUI_flexGrow",
+                        "title CBUI_ellipsis"
+                    );
 
-                    let stringsPart = CBUIStringsPart.create();
+                    let sectionItemElement = elements[0];
+
+                    sectionElement.appendChild(
+                        sectionItemElement
+                    );
+
+                    sectionItemElement.href = (
+                        `/admin/?c=CBModelInspector&ID=${page.ID}`
+                    );
+
+
+                    /* title */
+
+                    let titleElement = elements[2];
 
                     if (page.className === null) {
-                        stringsPart.string1 = "No Model";
+                        /**
+                         * @NOTE 2020_04_12
+                         *
+                         *      I'm not sure how this scenario happens.
+                         */
+
+                        titleElement.textContent = "No Model";
                     } else {
-                        stringsPart.string1 = (
-                            page.className +
-                            " " +
-                            (
-                                page.title === null ?
-                                "(no title)" :
-                                `(${page.title})`
-                            )
+                        let pageClassName = CBModel.valueToString(
+                            page,
+                            "className"
+                        );
+
+                        let pageTitle = CBModel.valueToString(
+                            page,
+                            "title"
+                        ).trim();
+
+                        if (pageTitle === "") {
+                            pageTitle = "<empty title>";
+                        }
+
+                        titleElement.textContent = (
+                            `${pageClassName} | ${pageTitle}`
                         );
                     }
 
-                    sectionItem.appendPart(stringsPart);
-                    sectionItem.appendPart(CBUINavigationArrowPart.create());
-                    sectionElement.appendChild(sectionItem.element);
+
+                    /* navigation arrow */
+
+                    sectionItemElement.appendChild(
+                        CBUI.createElement(
+                            "CBUI_navigationArrow"
+                        )
+                    );
                 }
             );
 

@@ -61,20 +61,29 @@ final class CBPagesDevelopmentAdmin {
     static function CBHTMLOutput_JavaScriptVariables() {
         $SQL = <<< EOT
 
-            SELECT      LOWER(HEX(ColbyPages.archiveID)) as ID,
-                        CBModels.className as className,
-                        ColbyPages.classNameForKind as classNameForKind,
-                        ColbyPages.published as published,
-                        CBModels.title as title
+            SELECT      LOWER(HEX(ColbyPages.archiveID)) AS ID,
+                        CBModels.className AS className,
+                        ColbyPages.classNameForKind AS classNameForKind,
+                        ColbyPages.published AS published,
+                        CBModels.title AS title
+
             FROM        ColbyPages
+
             LEFT JOIN   CBModels ON
                         ColbyPages.archiveID = CBModels.ID
-            ORDER BY    ISNULL(published), className, classNameForKind, title
+
+            ORDER BY    ISNULL(published),
+                        className,
+                        classNameForKind,
+                        title
 
         EOT;
 
         return [
-            ['CBPagesDevelopmentAdmin_pages', CBDB::SQLToObjects($SQL)],
+            [
+                'CBPagesDevelopmentAdmin_pages',
+                CBDB::SQLToObjects($SQL)
+            ],
         ];
     }
     /* CBHTMLOutput_JavaScriptVariables() */
@@ -86,9 +95,9 @@ final class CBPagesDevelopmentAdmin {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBModel',
             'CBUI',
             'CBUIExpander',
-            'CBUINavigationArrowPart',
             'CBUIPanel',
             'CBUISectionItem4',
             'CBUIStringsPart',
