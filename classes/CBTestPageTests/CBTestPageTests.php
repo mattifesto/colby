@@ -13,9 +13,17 @@ final class CBTestPageTests {
         return [
             (object)[
                 'name' => 'general',
-                'title' => 'CBTestPage',
                 'type' => 'server',
             ],
+            (object)[
+                'name' => 'toggleNonstandardTestPage',
+                'type' => 'interactive_server',
+                'description' => CBConvert::stringToCleanLine(<<<EOT
+
+                    Toggles the existence of a nonstandard test page.
+
+                EOT),
+            ]
         ];
     }
 
@@ -126,5 +134,44 @@ final class CBTestPageTests {
         ];
     }
     /* CBTest_general() */
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_toggleNonstandardTestPage(): stdClass {
+        $CBID = 'df3d079d3c8507e1b5d66a97ea4b74ac7ac2b6dc';
+
+        $testPageSpec = CBModels::fetchSpecByIDNullable(
+            $CBID
+        );
+
+        if ($testPageSpec === null) {
+            $testPageSpec = (object)[
+                'className' => 'CBTestPage',
+                'ID' => $CBID,
+                'title' => 'CBTestPageTests Nonstandard Test Page',
+            ];
+
+            CBModels::save(
+                $testPageSpec
+            );
+
+            $message = 'The nonstandard test page was created.';
+        } else {
+            CBModels::deleteByID(
+                $CBID
+            );
+
+            $message = 'The nonstandard test page was deleted.';
+        }
+
+        return (object)[
+            'succeeded' => true,
+            'message' => $message,
+        ];
+    }
+    /* CBTest_toggleNonstandardTestPage() */
 
 }
