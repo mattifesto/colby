@@ -4,6 +4,8 @@ final class CBAdmin_RenderExceptionTest {
 
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
@@ -14,6 +16,7 @@ final class CBAdmin_RenderExceptionTest {
         ];
     }
     /* CBAdmin_menuNamePath() */
+
 
 
     /**
@@ -27,7 +30,7 @@ final class CBAdmin_RenderExceptionTest {
             allow developers to see what an admin page looks like if its
             rendering code throws an exception.
 
-EOT;
+        EOT;
 
         throw new CBException(
             'test exception',
@@ -38,7 +41,10 @@ EOT;
     /* CBAdmin_render() */
 
 
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -51,7 +57,10 @@ EOT;
     /* CBHTMLOutput_JavaScriptURLs() */
 
 
+
     /* -- CBTest interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [string]
@@ -60,20 +69,19 @@ EOT;
         return [
             (object)[
                 'type' => 'interactive',
-                'name' => 'exception',
-                'title' => 'Exception during CBAdmin_render()',
-                'description' => implode(
-                    ' ',
-                    [
-                        'Opens an admin page in a new tab that throws an',
-                        'exception while the page is being rendered by the',
-                        'server so the developer can see how an admin page is',
-                        'displayed when an exception occurs.',
-                    ]
-                ),
+                'name' => 'general',
+                'description' => CBConvert::stringToCleanLine(<<<EOT
+
+                        Opens an admin page in a new tab that throws an
+                        exception while the page is being rendered by the server
+                        so the developer can see how an admin page is displayed
+                        when an exception occurs.
+
+                EOT),
             ],
         ];
     }
     /* CBTest_getTests() */
+
 }
 /* CBAdmin_RenderExceptionTest */
