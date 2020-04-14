@@ -23,6 +23,16 @@ final class SCPromotionsTable {
                         $promotionModel,
                         'title'
                     ),
+
+                    'beginTimestamp' => CBModel::valueAsInt(
+                        $promotionModel,
+                        'beginTimestamp'
+                    ),
+
+                    'endTimestamp' => CBModel::valueAsInt(
+                        $promotionModel,
+                        'endTimestamp'
+                    ),
                 ];
             },
             $promotionModels
