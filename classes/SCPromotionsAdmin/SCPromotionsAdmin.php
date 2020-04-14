@@ -43,9 +43,20 @@ final class SCPromotionsAdmin {
     /**
      * @return [string]
      */
+    static function CBHTMLOutput_CSSURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v600.css', scliburl()),
+        ];
+    }
+
+
+
+    /**
+     * @return [string]
+     */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v146.js', scliburl()),
+            Colby::flexpath(__CLASS__, 'v600.js', scliburl()),
         ];
     }
 
@@ -74,7 +85,6 @@ final class SCPromotionsAdmin {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBErrorHandler',
-            'CBMessageMarkup',
             'CBModel',
             'CBUI',
             'CBUINavigationView',

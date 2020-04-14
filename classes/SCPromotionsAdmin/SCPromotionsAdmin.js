@@ -3,7 +3,6 @@
 /* jshint esversion: 6 */
 /* global
     CBErrorHandler,
-    CBMessageMarkup,
     CBModel,
     CBUI,
     CBUINavigationView,
@@ -18,6 +17,9 @@
 
     let promotionListSectionElement;
 
+    let currentTimestamp = Math.floor(
+        Date.now() / 1000
+    );
 
 
     Colby.afterDOMContentLoaded(
@@ -94,8 +96,18 @@
     function createPromotionListSectionItemElement(
         promotionSummary
     ) {
+        let statusClassName;
+
+        if (promotionSummary.endTimestamp < currentTimestamp) {
+            statusClassName = "SCPromotionsAdmin_past";
+        } else if (promotionSummary.beginTimestamp < currentTimestamp) {
+            statusClassName = "SCPromotionsAdmin_current";
+        } else {
+            statusClassName = "SCPromotionsAdmin_future";
+        }
+
         let elements = CBUI.createElementTree(
-            "CBUI_sectionItem",
+            `CBUI_sectionItem ${statusClassName}`,
             "CBUI_container_topAndBottom",
             "SCPromotionsAdmin_promotionTitle"
         );
@@ -127,21 +139,29 @@
             "title"
         ) || "<no title>";
 
-        let descriptionCBMessage = CBModel.valueToString(
-            promotionSummary,
-            "description"
-        );
+
+        /* description */
 
         let descriptionElement = CBUI.createElement(
             "CBUI_textColor2 CBUI_textSize_small"
         );
 
-        descriptionElement.innerHTML = CBMessageMarkup.messageToHTML(
-            descriptionCBMessage
-        );
-
         textContainerElement.appendChild(
             descriptionElement
+        );
+
+        descriptionElement.appendChild(
+            Colby.unixTimestampToElement(
+                promotionSummary.beginTimestamp
+            )
+        );
+
+        descriptionElement.append(" -> ");
+
+        descriptionElement.appendChild(
+            Colby.unixTimestampToElement(
+                promotionSummary.endTimestamp
+            )
         );
 
         return element;
@@ -228,6 +248,26 @@
             "fetchSummaries"
         ).then(
             function (promotionSpecs) {
+                promotionSpecs.sort(
+                    function (promotion1, promotion2) {
+                        if (
+                            promotion1.endTimestamp >
+                            promotion2.endTimestamp
+                        ) {
+                            return -1;
+                        }
+
+                        if (
+                            promotion1.endTimestamp <
+                            promotion2.endTimestamp
+                        ) {
+                            return 1;
+                        }
+
+                        return 0;
+                    }
+                );
+
                 promotionListSectionElement.textContent = "";
 
                 for (

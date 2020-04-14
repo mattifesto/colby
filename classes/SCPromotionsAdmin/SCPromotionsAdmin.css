@@ -1,0 +1,11 @@
+.SCPromotionsAdmin_current {
+    background-color: hsl(120, 100%, 95%);
+}
+
+.SCPromotionsAdmin_future {
+    background-color: hsl(60, 100%, 95%);
+}
+
+.SCPromotionsAdmin_past {
+    background-color: hsl(0, 100%, 95%);
+}
