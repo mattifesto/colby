@@ -11,7 +11,7 @@ final class CBUISpecArrayEditor {
      */
     static function CBHTMLOutput_CSSURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v361.css', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v601.css', cbsysurl()),
         ];
     }
 
