@@ -22,7 +22,7 @@ final class CBUISpecArrayEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v586.js', cbsysurl())
+            Colby::flexpath(__CLASS__, 'v601.js', cbsysurl())
         ];
     }
 
@@ -35,7 +35,6 @@ final class CBUISpecArrayEditor {
         return [
             'CBUI',
             'CBUICommandPart',
-            'CBUINavigationArrowPart',
             'CBUINavigationView',
             'CBUIPanel',
             'CBUISelectableItem',

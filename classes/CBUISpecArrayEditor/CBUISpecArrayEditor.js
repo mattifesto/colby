@@ -5,7 +5,6 @@
 /* global
     CBUI,
     CBUICommandPart,
-    CBUINavigationArrowPart,
     CBUINavigationView,
     CBUIPanel,
     CBUISelectableItem,
@@ -102,14 +101,25 @@ var CBUISpecArrayEditor = {
                 let spec = {
                     className: className,
                 };
+
                 let selectableItem = specToSelectableItem(spec);
 
-                selectableItemContainer.splice(pasteIndex, 0, selectableItem);
-                specs.splice(pasteIndex, 0, spec);
+                selectableItemContainer.splice(
+                    pasteIndex,
+                    0,
+                    selectableItem
+                );
+
+                specs.splice(
+                    pasteIndex,
+                    0,
+                    spec
+                );
 
                 specsChangedCallback();
             }
             /* add() */
+
         };
         /* addCommand.callback */
 
@@ -458,11 +468,11 @@ var CBUISpecArrayEditor = {
             let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
             selectableItem.push(titleAndDescriptionPart);
 
-            {
-                let arrowPart = CBUINavigationArrowPart.create();
-
-                selectableItem.push(arrowPart);
-            }
+            selectableItem.partsElement.appendChild(
+                CBUI.createElement(
+                    "CBUI_navigationArrow"
+                )
+            );
 
             updateThumbnail();
             updateTitleAndDescription();
