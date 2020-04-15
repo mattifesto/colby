@@ -14,9 +14,11 @@ var CBUISelectableItem = {
      *      {
      *          callback: function
      *          element: Element (readonly)
-     *          push(part)
+     *          partsElement: Element (readonly)
      *          selectable: bool
      *          seleted: bool
+     *
+     *          push(part) (deprecated)
      *      }
      */
     create: function () {
@@ -61,20 +63,34 @@ var CBUISelectableItem = {
             get callback() {
                 return callback;
             },
+
             set callback(value) {
                 if (typeof value === "function") {
                     callback = value;
                 }
             },
+
             get element() {
                 return element;
             },
+
+            get partsElement() {
+                return partsElement;
+            },
+
+            /**
+             * @deprecated 2020_04_14
+             *
+             *      Use partsElement.appendChild().
+             */
             push: function (part) {
                 partsElement.appendChild(part.element);
             },
+
             get selectable() {
                 return selectable;
             },
+
             set selectable(value) {
                 if (value) {
                     element.classList.add("selectable");
@@ -85,9 +101,11 @@ var CBUISelectableItem = {
                     selectable = false;
                 }
             },
+
             get selected() {
                 return selected;
             },
+
             set selected(value) {
                 if (value) {
                     element.classList.add("selected");
