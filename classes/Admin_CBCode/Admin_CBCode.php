@@ -362,14 +362,32 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'args' => '--ignore-file=match:CBUINavigationArrowPart',
+                    'regex' => 'CBUINavigationArrowPart',
+                    'severity' => 3,
+                    'title' => 'CBUINavigationArrowPart',
+
+                    'cbmessage' => <<<EOT
+
+                        Use CBUI_navigationArrow style in CBUI.css.
+
+                    EOT,
+
+                    'errorStartDate' => '2020/04/14',
+                    'warningStartDate' => '2020/03/08',
+                ],
+
+
+                (object)[
                     'filetype' => 'php',
                     'regex' => 'function\s+requiredJavaScriptVariables\\(',
                     'severity' => 3,
+                    'title' => 'requiredJavaScriptVariables()',
 
-                    'title' => <<<EOT
+                    'cbmessage' => <<<EOT
 
-                        Replace requiredJavaScriptVariables() with
-                        CBHTMLOutput_JavaScriptVariables()
+                        Replace requiredJavaScriptVariables\(\) with
+                        CBHTMLOutput_JavaScriptVariables\(\)
 
                     EOT,
 
@@ -1041,21 +1059,6 @@ final class Admin_CBCode {
 
                 /* -- warnings -- -- -- -- -- */
 
-
-
-                /**
-                 * 2020_03_08 (warning)
-                 */
-                (object)[
-                    'cbmessage' => <<<EOT
-
-                        Use CBUI_navigationArrow style in CBUI.css.
-
-                    EOT,
-                    'regex' => 'CBUINavigationArrowPart',
-                    'severity' => 4,
-                    'title' => 'CBUINavigationArrowPart',
-                ],
 
 
                 /**
