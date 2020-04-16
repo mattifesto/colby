@@ -245,7 +245,9 @@ final class CBViewPage {
      *
      * @return object
      */
-    static function CBModel_upgrade(stdClass $spec): stdClass {
+    static function CBModel_upgrade(
+        stdClass $spec
+    ): stdClass {
         if ($image = CBModel::valueAsObject($spec, 'image')) {
             $spec->image = CBImage::fixAndUpgrade($image);
         }
@@ -315,43 +317,6 @@ final class CBViewPage {
                 ]
             );
         }
-
-
-        /**
-         * Upgrade publishedBy -> publishedByUserCBID to move away from user
-         * numeric IDs.
-         */
-
-        $publishedBy = CBModel::valueAsInt(
-            $spec,
-            'publishedBy'
-        );
-
-        if (isset($spec->publishedBy)) {
-            unset($spec->publishedBy);
-        }
-
-        if ($publishedBy !== null) {
-            $publishedByUserCBID = CBModel::valueAsCBID(
-                $spec,
-                'publishedByUserCBID'
-            );
-
-            if ($publishedByUserCBID === null) {
-                $userCBIDs = CBUsers::userNumericIDsToUserCBIDs(
-                    [
-                        $publishedBy,
-                    ]
-                );
-
-                if (count($userCBIDs) > 0) {
-                    $publishedByUserCBID = $userCBIDs[0];
-                }
-
-                $spec->publishedByUserCBID = $publishedByUserCBID;
-            }
-        }
-
 
         /* done */
 
