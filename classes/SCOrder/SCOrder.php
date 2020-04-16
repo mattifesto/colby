@@ -1188,7 +1188,6 @@ final class SCOrder {
             $orderSpec
         );
 
-
         /* orderItems */
 
         $originalCartItemSpecs = CBModel::valueToArray(
@@ -1204,93 +1203,14 @@ final class SCOrder {
                  *
                  *      Removed some more complex code here that should no
                  *      longer be necessary. If the original cart item spec is
-                 *      not a model this will fail and eeds to be looked at by a
-                 *      developer.
+                 *      not a model this will fail and needs to be looked at by
+                 *      a developer.
                  */
 
                 return CBModel::upgrade($originalCartItemSpec);
             },
             $originalCartItemSpecs
         );
-
-
-        /* orderPaymentCapturedBy -> orderPaymentCapturedByUserCBID */
-
-        if (
-            !isset($upgradedOrderSpec->orderPaymentCapturedByUserCBID)
-        ) {
-            $orderPaymentCapturedBy = CBModel::valueAsInt(
-                $upgradedOrderSpec,
-                'orderPaymentCapturedBy'
-            );
-
-            /**
-             * If orderPaymentCapturedBy is set to a non-integer value it is
-             * strange, but we upgrade by not setting the
-             * orderPaymentCapturedByUserCBID property.
-             */
-
-            if ($orderPaymentCapturedBy !== null) {
-                $userCBIDs = CBUsers::userNumericIDsToUserCBIDs(
-                    [
-                        $orderPaymentCapturedBy,
-                    ]
-                );
-
-                /**
-                 * If a user CBID is not found it is strange, but we upgrade by
-                 * not setting the orderPaymentCapturedByUserCBID property.
-                 */
-
-                if (count($userCBIDs) > 0) {
-                    $upgradedOrderSpec->orderPaymentCapturedByUserCBID = (
-                        $userCBIDs[0]
-                    );
-                }
-            }
-        }
-
-        unset($upgradedOrderSpec->orderPaymentCapturedBy);
-
-
-        /* orderArchivedBy -> orderArchivedByUserCBID */
-
-        if (
-            !isset($upgradedOrderSpec->orderArchivedByUserCBID)
-        ) {
-            $orderArchivedBy = CBModel::valueAsInt(
-                $upgradedOrderSpec,
-                'orderArchivedBy'
-            );
-
-            /**
-             * If orderArchivedBy is set to a non-integer value it is strange,
-             * but we upgrade by not setting the orderArchivedByUserCBID
-             * property.
-             */
-
-            if ($orderArchivedBy !== null) {
-                $userCBIDs = CBUsers::userNumericIDsToUserCBIDs(
-                    [
-                        $orderArchivedBy,
-                    ]
-                );
-
-                /**
-                 * If a user CBID is not found it is strange, but we upgrade by
-                 * not setting the orderArchivedByUserCBID property.
-                 */
-
-                if (count($userCBIDs) > 0) {
-                    $upgradedOrderSpec->orderArchivedByUserCBID = (
-                        $userCBIDs[0]
-                    );
-                }
-            }
-        }
-
-        unset($upgradedOrderSpec->orderArchivedBy);
-
 
         /* done */
 
