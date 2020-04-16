@@ -223,6 +223,12 @@ final class CBViewPageTests {
 
 
     /**
+     * @NOTE 2020_04_15
+     *
+     *      Upgrading numberic user IDs was removed from the CBViewPage class.
+     *      These tests were modified only to remove that functionality. The
+     *      tests were not checked otherwise.
+     *
      * @return object
      */
     static function CBTest_upgrade(): stdClass {
@@ -243,10 +249,7 @@ final class CBViewPageTests {
                 'width' => 900,
             ],
 
-            'publishedBy' => CBUsers::forTesting_userCBIDtoUserNumericID(
-                ColbyUser::getCurrentUserCBID()
-            ),
-
+            'publishedByUserCBID' => ColbyUser::getCurrentUserCBID(),
             'sections' => CBViewTests::testSubviewSpecs(),
         ];
 
@@ -283,7 +286,6 @@ final class CBViewPageTests {
         $originalSpec = (object)[
             'className' => 'CBViewPage',
             'classNameForSettings' => 'CBViewPageTests_PageSettings',
-            'publishedBy' => PHP_INT_MAX,
         ];
 
         $actualUpgradedSpec = CBModel::upgrade($originalSpec);
@@ -291,7 +293,6 @@ final class CBViewPageTests {
         $expectedUpgradedSpec = (object)[
             'className' => 'CBViewPage',
             'classNameForSettings' => 'CBViewPageTests_PageSettings',
-            'publishedByUserCBID' => null,
             'sections' => [],
         ];
 
@@ -311,7 +312,6 @@ final class CBViewPageTests {
         $originalSpec = (object)[
             'className' => 'CBViewPage',
             'classNameForSettings' => 'CBViewPageTests_PageSettings',
-            'publishedBy' => PHP_INT_MAX,
             'publishedByUserCBID' => $publishedByUserCBID,
         ];
 
