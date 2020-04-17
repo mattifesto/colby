@@ -12,33 +12,33 @@
 /**
  * @NOTE 2020_02_28
  *
- * Error handling functions should move here from other classes.
+ *      Error handling functions should move here from other classes.
+ *
+ * @NOTE 2020_04_16
+ *
+ *      This class should not have any user interface functionality.
  */
 var CBErrorHandler = {
 
     /**
-     * This function is currently approved to replace
-     * Colby.displayAndReportError() as a start to move error handling out of
-     * the Colby.js file.
+     * @deprecated 2020_04_16
      *
-     * Example:
+     *      Use CBUIPanel.displayAndReportError().
      *
-     *      Colby.callAjaxFunction(
-     *          "MyClass",
-     *          "MyFunction"
-     *      ).then(
-     *          function (value) { ... }
-     *      ).catch(
-     *          function (error) {
-     *              CBErrorHandler.displayAndReport(error);
-     *          }
-     *      );
+     *      CBErrorHandler should only have the ability to do low level error
+     *      handling. It should not have any user interface functionality.
+     *      Instead displayAndReportError() should become a function provided by
+     *      one or more classes that do have user interface functionality, such
+     *      as CBUIPanel. The dependency on CBUIPanel should be removed from
+     *      this class.
      *
      * @param Error error
      *
      * @return undefined
      */
-    displayAndReport: function (error) {
+    displayAndReport(
+        error
+    ) {
         CBUIPanel.displayError(error);
         Colby.reportError(error);
     },
