@@ -1062,6 +1062,24 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'filetype' => 'js',
+                    'regex' => 'CBErrorHandler\.displayAndReport',
+                    'severity' => 4,
+                    'title' => 'CBErrorHandler.displayAndReport()',
+
+                    'cbmessage' => <<<EOT
+
+                        Use CBUIPanel.displayAndReportError() because
+                        CBErrorHandler should not have user interface
+                        functionality.
+
+                    EOT,
+
+                    'warningStartDate' => '2020/04/16',
+                ],
+
+
+                (object)[
                     'regex' => 'forTesting_userCBIDtoUserNumericID',
                     'severity' => 4,
                     'title' => 'CBUsers::forTesting_userCBIDtoUserNumericID()',
@@ -1091,19 +1109,19 @@ final class Admin_CBCode {
                 ],
 
 
-                /**
-                 * 2020_02_28 (warning)
-                 */
                 (object)[
+                    'filetype' => 'js',
+                    'regex' => 'Colby\.(report|reportError)',
+                    'severity' => 4,
+                    'title' => 'Colby.report[Error]()',
+
                     'cbmessage' => <<<EOT
 
                         Use CBErrorHandler.report().
 
                     EOT,
-                    'filetype' => 'js',
-                    'regex' => 'Colby\.(report|reportError)',
-                    'severity' => 4,
-                    'title' => 'Colby.report[Error]()',
+
+                    'warningStartDate' => '2020/02/28',
                 ],
 
 
