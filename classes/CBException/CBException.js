@@ -79,18 +79,29 @@ var CBException = {
      *      whichever specific type of error object they want to use.
      *
      * @param string cbmessage
-     * @param ID sourceID
+     * @param CBID sourceCBID
      *
      * @return Error
      */
-    withError: function (error, cbmessage, sourceID) {
+    withError(
+        error,
+        cbmessage,
+        sourceCBID
+    ) {
         if (error.CBException !== undefined) {
+
+            /**
+             * Use CBErrorHandler.reportError() only after CBErrorHandler does
+             * not depend on CBUIPanel.
+             */
             Colby.reportError(
                 Error(
-                    [
-                        "CBException.withError() was call with an error that",
-                        "is already a CBException",
-                    ].join(" ")
+                    CBConvert.stringToCleanLine(`
+
+                        CBException.withError() was called with an error that is
+                        already a CBException
+
+                    `)
                 )
             );
 
@@ -102,7 +113,7 @@ var CBException = {
                 return cbmessage;
             },
             get sourceID() {
-                return sourceID;
+                return sourceCBID;
             },
         };
 
@@ -126,11 +137,15 @@ var CBException = {
     /**
      * @param Error error
      * @param mixed value
-     * @param string sourceID
+     * @param CBID sourceCBID
      *
      * @return Error
      */
-    withValueRelatedError: function (error, value, sourceID) {
+    withValueRelatedError(
+        error,
+        value,
+        sourceCBID
+    ) {
         let messageAsMessage = CBMessageMarkup.stringToMessage(
             error.message
         );
@@ -151,7 +166,7 @@ var CBException = {
         return CBException.withError(
             error,
             cbmessage,
-            sourceID
+            sourceCBID
         );
     },
     /* withValueRelatedError() */
