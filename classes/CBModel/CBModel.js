@@ -95,24 +95,35 @@ var CBModel = {
      *
      * @return boolean
      */
-    equals: function (value1, value2) {
+    equals(
+        value1,
+        value2
+    ) {
         let type = typeof value1;
 
         if (type !== typeof value2) {
             return false;
         }
 
-        if (Array.isArray(value1) && Array.isArray(value2)) {
+        if (
+            Array.isArray(value1) &&
+            Array.isArray(value2)
+        ) {
             if (value1.length !== value2.length) {
                 return false;
             }
 
-            return value1.every(function (value, index) {
-                return CBModel.equals(value, value2[index]);
-            });
+            return value1.every(
+                function (value, index) {
+                    return CBModel.equals(value, value2[index]);
+                }
+            );
         }
 
-        if (Array.isArray(value1) || Array.isArray(value2)) {
+        if (
+            Array.isArray(value1) ||
+            Array.isArray(value2)
+        ) {
             return false;
         }
 
@@ -154,6 +165,7 @@ var CBModel = {
                 return false;
         }
     },
+    /* equals() */
 
 
 
@@ -233,7 +245,7 @@ var CBModel = {
 
 
     /**
-     * @deprecated use CBMode.valueAsCBID()
+     * @deprecated use CBModel.valueAsCBID()
      */
     valueAsID: function (model, keyPath) {
         return CBModel.valueAsCBID(model, keyPath);
