@@ -811,10 +811,11 @@ var Colby = {
                     function go() {
 
                         /**
-                         * Errors occuring during this process are likely to be server
-                         * side errors and will be reported on the server. If the
-                         * promise is rejected further requests will be stopped. This
-                         * process does not communicate with the end user.
+                         * Errors occuring during this process are likely to be
+                         * server side errors and will be reported on the
+                         * server. If the promise is rejected further requests
+                         * will be stopped. This process does not communicate
+                         * with the end user.
                          */
 
                         let args = {
@@ -842,9 +843,9 @@ var Colby = {
 
 
                     /**
-                     * This function will determine if there is any reason to continue
-                     * to attempt to run tasks. If there is, it will go again; if not,
-                     * it will resolve the promise.
+                     * This function will determine if there is any reason to
+                     * continue to attempt to run tasks. If there is, it will go
+                     * again; if not, it will resolve the promise.
                      *
                      * @return undefined
                      */
@@ -1147,6 +1148,8 @@ var Colby = {
             );
         }
     },
+    /* updateTimes() */
+
 
 
     /**
@@ -1157,9 +1160,24 @@ var Colby = {
      *
      * @return object|undefined
      */
-    URIToImage: function (URI) {
-        var regex =
-        /\/data\/([0-9a-f]{2})\/([0-9a-f]{2})\/([0-9a-f]{36})\/([^\/\.]+)\.([^\/\.]+)$/;
+    URIToImage(
+        URI
+    ) {
+        let regex = new RegExp(
+            "/" +
+            "data" +
+            "/" +
+            "([0-9a-f]{2})" +
+            "/" +
+            "([0-9a-f]{2})" +
+            "/" +
+            "([0-9a-f]{36})" +
+            "/" +
+            "([^/\\.]+)" +
+            "\\." +
+            "([^/\\.]+)" +
+            "$"
+        );
 
         var matches = URI.match(regex);
 
@@ -1173,6 +1191,7 @@ var Colby = {
         }
     },
     /* URIToImage() */
+
 };
 /* Colby */
 
