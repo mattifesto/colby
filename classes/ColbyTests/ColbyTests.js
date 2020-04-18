@@ -4,12 +4,18 @@
 /* exported ColbyTests */
 /* global
     CBErrorHandler,
+    CBModel,
+    CBTest,
     Colby,
 */
+
+
 
 var ColbyTests = {
 
     /* -- tests -- -- -- -- -- */
+
+
 
     /**
      * @return undefined
@@ -162,5 +168,77 @@ var ColbyTests = {
         };
     },
     /* CBTest_random160() */
+
+
+
+    /**
+     * @return object
+     */
+    CBTest_URIToImage() {
+        let tests = [
+            [
+                "",
+                undefined,
+            ],
+            [
+                "/data/ac/d2/193372211e6271e130333f598b3027278b49/fred.png",
+                {
+                    className: "CBImage",
+                    extension: "png",
+                    filename: "fred",
+                    ID: "acd2193372211e6271e130333f598b3027278b49",
+                }
+            ],
+            [
+                "/data/zc/d2/193372211e6271e130333f598b3027278b49/fred.png",
+                undefined,
+            ],
+            [
+                "/data/1c/dg/193372211e6271e130333f598b3027278b49/fred.png",
+                undefined,
+            ],
+            [
+                "/data/ac/d2/193372211e6271e130333f598b30h7278b49/fred.png",
+                undefined,
+            ],
+            [
+                "/data/ac/d2/193372211e6271e130333f598b3027278b49/fred",
+                undefined,
+            ],
+            [
+                "data/ac/d2/193372211e6271e130333f598b3027278b49/fred.png",
+                undefined,
+            ],
+        ];
+
+        for (let index = 0; index < tests.length; index += 1) {
+            let test = tests[index];
+            let URI = test[0];
+            let expectedResult = test[1];
+
+            let actualResult = Colby.URIToImage(URI);
+
+            let resultsAreEqual = CBModel.equals(
+                actualResult,
+                expectedResult
+            );
+
+            if (resultsAreEqual) {
+                continue;
+            }
+
+            return CBTest.resultMismatchFailure(
+                `test index ${index}`,
+                actualResult,
+                expectedResult
+            );
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_URIToImage() */
+
 };
 /* ColbyTests */

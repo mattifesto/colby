@@ -47,10 +47,9 @@ final class ColbyTests {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v604.js', cbsysurl()),
         ];
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -60,6 +59,8 @@ final class ColbyTests {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBErrorHandler',
+            'CBModel',
+            'CBTest',
             'Colby',
         ];
     }
@@ -78,20 +79,19 @@ final class ColbyTests {
         return [
             (object)[
                 'name' => 'dateToString',
-                'title' => 'Colby.dateToString()',
             ],
             (object)[
                 'name' => 'random160',
-                'title' => 'Colby.random160()',
+            ],
+            (object)[
+                'name' => 'URIToImage',
             ],
             (object)[
                 'name' => 'encrypt',
-                'title' => 'Colby::encrypt() and Colby::decrypt()',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'displayAndReportError',
-                'title' => 'Colby.displayAndReportError()',
                 'type' => 'interactive',
             ],
         ];
