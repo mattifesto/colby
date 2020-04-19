@@ -1080,6 +1080,56 @@ final class Admin_CBCode {
 
                 (object)[
                     'filetype' => 'js',
+                    'regex' => 'Colby\.callAjaxFunction',
+                    'severity' => 4,
+                    'title' => 'Colby.callAjaxFunction()',
+
+                    'cbmessage' => <<<EOT
+
+                        Use CBAjax.call().
+
+                    EOT,
+
+                    'warningStartDate' => '2020/04/18',
+                ],
+
+
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'Colby\.fetchAjaxResponse',
+                    'severity' => 4,
+                    'title' => 'Colby.fetchAjaxResponse()',
+
+                    'cbmessage' => <<<EOT
+
+                        Use CBAjax.call(). During the transition to CBAjax
+                        CBAjax.fetchResponse() is available, but deprecated.
+
+                    EOT,
+
+                    'warningStartDate' => '2020/04/18',
+                ],
+
+
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'CBAjax\.fetchResponse',
+                    'severity' => 4,
+                    'title' => 'CBAjax.fetchResponse()',
+
+                    'cbmessage' => <<<EOT
+
+                        Use CBAjax.call(). The CBAjax.fetchResponse() only
+                        exists for transitional reasons.
+
+                    EOT,
+
+                    'warningStartDate' => '2020/04/18',
+                ],
+
+
+                (object)[
+                    'filetype' => 'js',
                     'regex' => 'CBErrorHandler\.displayAndReport',
                     'severity' => 4,
                     'title' => 'CBErrorHandler.displayAndReport()',
