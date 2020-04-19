@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported Colby */
 /* global
+    CBAjax,
     console,
 */
 
@@ -92,6 +93,7 @@ var Colby = {
     /* afterDOMContentLoaded() */
 
 
+
     /**
      * This function is often used with bind() to create a single callback from
      * multiple callbacks.
@@ -105,17 +107,11 @@ var Colby = {
     },
 
 
+
     /**
-     * @param string className
-     * @param string functionName
-     * @param object args (optional)
-     * @param File file (optional)
+     * @deprecated 2020_04_18
      *
-     *      A File usually retrieved from an input element.
-     *
-     *      https://developer.mozilla.org/en-US/docs/Web/API/File
-     *
-     * @return Promise
+     *      Use CBAjax.call().
      */
     callAjaxFunction: function (
         functionClassName,
@@ -123,34 +119,11 @@ var Colby = {
         functionArguments,
         file
     ) {
-        var formData = new FormData();
-
-        if (functionArguments === undefined) {
-            functionArguments = {};
-        }
-
-        formData.append(
-            "ajaxArgumentsAsJSON",
-            JSON.stringify(
-                {
-                    functionClassName: functionClassName,
-                    functionName: functionName,
-                    functionArguments: functionArguments,
-                }
-            )
-        );
-
-        if (file !== undefined) {
-            formData.append("file", file);
-        }
-
-        return Colby.fetchAjaxResponse(
-            "/",
-            formData
-        ).then(
-            function (response) {
-                return response.value;
-            }
+        return CBAjax.call(
+            functionClassName,
+            functionName,
+            functionArguments,
+            file
         );
     },
     /* callAjaxFunction() */
@@ -406,69 +379,19 @@ var Colby = {
 
 
     /**
-     * This function is the recommended way to make an Ajax request for Colby.
-     * To alleviate error notifications in situations where customers have less
-     * stable internet service, this function will attempt the Ajax request
-     * up to three times if errors occur.
+     * @deprecated 2020_04_18
      *
-     * @param string URL
-     * @param any? data
-     *
-     *      The data can be of any form accepted by the XMLHttpRequest.send()
-     *      function. Most commonly, if used, it will be a FormData instance.
-     *
-     * @return Promise
-     *
-     *      Returns a promise that passes an 'ajax response' object (created by
-     *      this class) to resolve handlers. If an error occurs for any reason a
-     *      JavaScript Error object is passed to reject handlers with an 'ajax
-     *      response' object set to the Error's `ajaxResponse` propery.
+     *      Use CBAjax.call() or CBAjax.fetchResponse() for transitional
+     *      purposes.
      */
-    fetchAjaxResponse: function (URL, data) {
-        if (
-            typeof URL !== "string" ||
-            URL === ""
-        ) {
-            throw TypeError(
-                "Colby.fetchAjaxResponse() was called with an invalid URL " +
-                " parameter value of: " +
-                JSON.stringify(URL)
-            );
-        }
-
-        return new Promise(function (resolve, reject) {
-            var fetchCount = 0;
-            var xhr;
-
-            fetch();
-
-            function fetch() {
-                xhr = new XMLHttpRequest();
-                xhr.onloadend = handleLoadEnd;
-                xhr.open("POST", URL);
-                xhr.send(data);
-
-                fetchCount += 1;
-            }
-
-            function handleLoadEnd() {
-                if (xhr.status === 0 && fetchCount < 3) {
-                    fetch();
-                    return;
-                }
-
-                var ajaxResponse = Colby.responseFromXMLHttpRequest(xhr);
-
-                if (ajaxResponse.wasSuccessful) {
-                    resolve(ajaxResponse);
-                } else {
-                    var error = new Error(ajaxResponse.message);
-                    error.ajaxResponse = ajaxResponse;
-
-                    reject(error);
-                }
-            }
-        });
+    fetchAjaxResponse(
+        URL,
+        data
+    ) {
+        return CBAjax.fetchResponse(
+            URL,
+            data
+        );
     },
     /* fetchAjaxResponse() */
 
@@ -645,88 +568,7 @@ var Colby = {
             Colby.updateTimes(true);
         }
     },
-
-
-    /**
-     * @return object
-     *
-     *      {
-     *          message: string,
-     *          wasSuccessful: bool,
-     *          xhr: XMLHttpRequest,
-     *      }
-     */
-    responseFromXMLHttpRequest: function (xhr) {
-        var response;
-
-        switch (xhr.status) {
-            case 0:
-
-                response = {
-                    className: "CBAjaxResponse",
-                    message: "An error occured when making an Ajax request " +
-                              "to the server. This was most likely caused by " +
-                              "a network issue or less likely caused by the " +
-                              "server domain name in the request URL being " +
-                              "incorrect.",
-                    wasSuccessful: false,
-                };
-
-                break;
-
-            case 200:
-
-                try {
-                    response = JSON.parse(xhr.responseText);
-                } catch (error) {
-                    response = {
-                        className: "CBAjaxResponse",
-                        message: "An Ajax request to the server returned " +
-                                 "without error but the xhr.responseText is " +
-                                 "not valid JSON.",
-                        wasSuccessful: false,
-                    };
-                }
-
-                break;
-
-            case 404:
-
-                response = {
-                    className: "CBAjaxResponse",
-                    message: (
-                        "An Ajax request to the server ended with a status " +
-                        "of 404, meaning the request URL was not found. " +
-                        "The request URL was: " +
-                        (
-                            xhr.responseURL ||
-                            "(not available in this browser)"
-                        )
-                    ),
-                    wasSuccessful: false,
-                };
-
-                break;
-
-            default:
-
-                response = {
-                    className: "CBAjaxResponse",
-                    message: "An Ajax request to the server returned an " +
-                              "unexpected response with the status code " +
-                              xhr.status + " and the status text: \"" +
-                              xhr.statusText + "\".",
-                    wasSuccessful: false,
-                };
-
-                break;
-        }
-
-        response.xhr = xhr;
-
-        return response;
-    },
-    /* responseFromXMLHttpRequest() */
+    /* requestTimeUpdate() */
 
 
 
