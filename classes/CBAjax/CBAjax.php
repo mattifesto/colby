@@ -2,6 +2,21 @@
 
 final class CBAjax {
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_JavaScriptURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v605.js', cbsysurl()),
+        ];
+    }
+
+
+
     /* -- functions -- -- -- -- -- */
 
 
