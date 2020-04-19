@@ -362,6 +362,23 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'filetype' => 'js',
+                    'regex' => 'Colby\.responseFromXMLHttpRequest',
+                    'severity' => 3,
+                    'title' => 'Colby.responseFromXMLHttpRequest()',
+
+                    'cbmessage' => <<<EOT
+
+                        There is no public replacement for this function.
+
+                    EOT,
+
+                    'errorStartDate' => '2020/04/18',
+                    'warningStartDate' => '2020/04/18',
+                ],
+
+
+                (object)[
                     'args' => '--ignore-file=match:CBUINavigationArrowPart',
                     'regex' => 'CBUINavigationArrowPart',
                     'severity' => 3,
