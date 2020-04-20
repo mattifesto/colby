@@ -545,7 +545,7 @@ final class Colby {
         /* deprecated */
         define(
             'SCLibraryDirectory',
-            CBSystemDirectory
+            cbsysdir()
         );
 
         define(
