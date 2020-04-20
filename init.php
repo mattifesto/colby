@@ -33,11 +33,6 @@ define(
     realpath($_SERVER['DOCUMENT_ROOT'])
 );
 
-define(
-    'CBSystemDirectory',
-    __DIR__
-);
-
 /**
  * @return string
  */
@@ -49,14 +44,8 @@ function cbsitedir() {
  * @return string
  */
 function cbsysdir() {
-    return CBSystemDirectory;
+    return __DIR__;
 }
-
-/* deprecated */
-define(
-    'COLBY_SYSTEM_DIRECTORY',
-    CBSystemDirectory
-);
 
 /* deprecated */
 define(
