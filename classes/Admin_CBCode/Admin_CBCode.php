@@ -362,6 +362,28 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'filetype' => 'php',
+                    'regex' => 'COLBY_SYSTEM_DIRECTORY',
+                    'severity' => 3,
+                    'title' => 'Replace COLBY_SYSTEM_DIRECTORY with cbsysdir()',
+
+                    'errorStartDate' => '2020/04/19',
+                    'warningStartDate' => '2019/06/26',
+                ],
+
+
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'CBSystemDirectory',
+                    'severity' => 3,
+                    'title' => 'Replace CBSystemDirectory with cbsysdir()',
+
+                    'errorStartDate' => '2020/04/19',
+                    'warningStartDate' => '2019/06/26',
+                ],
+
+
+                (object)[
                     'filetype' => 'js',
                     'regex' => 'Colby\.responseFromXMLHttpRequest',
                     'severity' => 3,
@@ -1304,30 +1326,6 @@ final class Admin_CBCode {
                     'regex' => 'CBSiteDirectory',
                     'severity' => 4,
                     'title' => 'Replace CBSiteDirectory with cbsitedir()',
-                ],
-
-
-                /**
-                 * 2019_06_26
-                 */
-                (object)[
-                    'args' => '--ignore-file=match:init.php',
-                    'filetype' => 'php',
-                    'regex' => 'COLBY_SYSTEM_DIRECTORY',
-                    'severity' => 4,
-                    'title' => 'Replace COLBY_SYSTEM_DIRECTORY with cbsysdir()',
-                ],
-
-
-                /**
-                 * 2019_06_26
-                 */
-                (object)[
-                    'args' => '--ignore-file=match:init.php',
-                    'filetype' => 'php',
-                    'regex' => 'CBSystemDirectory',
-                    'severity' => 4,
-                    'title' => 'Replace CBSystemDirectory with cbsysdir()',
                 ],
 
 
