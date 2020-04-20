@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBAdminPageForPagesFind */
 /* globals
+    CBAjax,
     CBConvert,
     CBErrorHandler,
     CBImage,
@@ -253,7 +254,7 @@ var CBAdminPageForPagesFind = {
 
         args.state.waiting = true;
 
-        let promise = Colby.callAjaxFunction(
+        let promise = CBAjax.call(
             "CBAdminPageForPagesFind",
             "fetchPages",
             CBConvert.valueToObject(args.parameters)
