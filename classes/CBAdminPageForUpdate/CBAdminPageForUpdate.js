@@ -2,6 +2,7 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* globals
+    CBAjax,
     CBErrorHandler,
     CBMaintenance,
     CBMessageMarkup,
@@ -314,7 +315,7 @@
 
         outputElement.appendChild(expander.element);
 
-        let promise = Colby.callAjaxFunction(
+        let promise = CBAjax.call(
             "CBAdminPageForUpdate",
             "backupDatabase"
         ).then(
@@ -340,7 +341,7 @@
 
         outputElement.appendChild(expander.element);
 
-        let promise = Colby.callAjaxFunction(
+        let promise = CBAjax.call(
             "CBAdminPageForUpdate",
             "pull"
         ).then(
@@ -381,7 +382,7 @@
             expander.element
         );
 
-        let promise = Colby.callAjaxFunction(
+        let promise = CBAjax.call(
             "CBAdminPageForUpdate",
             "pullColby"
         ).then(
@@ -419,7 +420,7 @@
 
         outputElement.appendChild(expander.element);
 
-        let promise = Colby.callAjaxFunction(
+        let promise = CBAjax.call(
             "CBAdminPageForUpdate",
             "update"
         ).then(
