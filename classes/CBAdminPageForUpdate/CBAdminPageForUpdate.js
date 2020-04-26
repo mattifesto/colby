@@ -3,11 +3,11 @@
 /* jshint esversion: 6 */
 /* globals
     CBAjax,
-    CBErrorHandler,
     CBMaintenance,
     CBMessageMarkup,
     CBUI,
     CBUIExpander,
+    CBUIPanel,
     Colby,
 
     CBAdminPageForUpdate_isDevelopmentWebsite,
@@ -279,7 +279,7 @@
         if (taskIsRunning) {
             let error = new Error("A task is already running.");
 
-            CBErrorHandler.displayAndReport(error);
+            CBUIPanel.displayAndReportError(error);
 
             return;
         }
@@ -297,7 +297,7 @@
             }
         ).catch(
             function (error) {
-                CBErrorHandler.displayAndReport(error);
+                CBUIPanel.displayAndReportError(error);
             }
         );
     }

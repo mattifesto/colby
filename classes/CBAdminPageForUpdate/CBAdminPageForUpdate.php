@@ -175,7 +175,7 @@ final class CBAdminPageForUpdate {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v607.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v608.js', cbsysurl()),
         ];
     }
 
@@ -202,11 +202,11 @@ final class CBAdminPageForUpdate {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBAjax',
-            'CBErrorHandler',
             'CBMaintenance',
             'CBMessageMarkup',
             'CBUI',
             'CBUIExpander',
+            'CBUIPanel',
             'Colby',
         ];
     }
