@@ -5,10 +5,10 @@
 /* globals
     CBAjax,
     CBConvert,
-    CBErrorHandler,
     CBImage,
     CBUI,
     CBUINavigationView,
+    CBUIPanel,
     CBUISelector,
     CBUIStringEditor,
     CBUIThumbnailPart,
@@ -264,7 +264,7 @@ var CBAdminPageForPagesFind = {
             }
         ).catch(
             function (error) {
-                CBErrorHandler.displayAndReport(error);
+                CBUIPanel.displayAndReportError(error);
             }
         ).then(
             fetchPages_onFinally,
