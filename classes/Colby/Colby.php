@@ -55,7 +55,7 @@ final class Colby {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v605.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v608.js', cbsysurl()),
         ];
     }
 

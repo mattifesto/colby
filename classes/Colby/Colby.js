@@ -481,11 +481,10 @@ var Colby = {
 
 
     /**
-     * @deprecated 2020_02_28
+     * @deprecated 2020_04_25
      *
-     *      Use CBErrorHandler.report(). This function must contain the
-     *      reporting code until all uses of it and Colby.report() are replaced
-     *      with calls to CBErrorHandler.report().
+     *      This function will be moved to CBErrorHandler.report(). See
+     *      CBErrorHandler.js for the steps required for the transition.
      *
      * Use this function to report an error to the server.
      *
@@ -1047,6 +1046,12 @@ var Colby = {
      *
      *      Browsers must natively support Promises. This requirement makes
      *      Internet Explorer 11 an unsupported browser.
+     *
+     * @NOTE 2020_04_25
+     *
+     *      The browserIsSupported functionality will move to either
+     *      CBErrorHandler or a new class like CBBrowser. See comments in
+     *      CBErrorHandler.js
      */
 
     let browserIsSupported = false;
