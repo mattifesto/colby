@@ -85,7 +85,7 @@ final class CBAdministratorsUserGroupUserSettingsManager {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v570.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v608.js', cbsysurl()),
         ];
     }
 
@@ -96,11 +96,11 @@ final class CBAdministratorsUserGroupUserSettingsManager {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
-            'CBErrorHandler',
             'CBException',
             'CBModel',
             'CBUI',
             'CBUIBooleanSwitchPart',
+            'CBUIPanel',
             'Colby',
         ];
     }
