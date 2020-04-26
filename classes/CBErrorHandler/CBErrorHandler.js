@@ -17,6 +17,24 @@
  * @NOTE 2020_04_16
  *
  *      This class should not have any user interface functionality.
+ *
+ * @NOTE 2020_04_25
+ *
+ *      The plan:
+ *
+ *      1. All uses of CBErrorHandler.displayAndReport() must be changed to
+ *      CBUIPanel.displayAndReportError() so that this class can no longer
+ *      require the CBUIPanel class.
+ *
+ *      2. The displayAndReport() function is removed from this class.
+ *
+ *      3. This class will require CBAjax.
+ *
+ *      4. The Colby.js error reporting code will be moved to this class and
+ *      Colby.js functions will call it while its functions are deprecated.
+ *
+ *      4a. Colby.browserIsSupported functionality will move to this class or
+ *      a class something like CBBrowser.
  */
 var CBErrorHandler = {
 
