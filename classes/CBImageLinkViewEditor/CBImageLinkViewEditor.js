@@ -3,15 +3,17 @@
 /* jshint esversion: 6 */
 /* exported CBImageLinkViewEditor */
 /* global
-    CBErrorHandler,
     CBImage,
     CBModel,
     CBUI,
     CBUIBooleanEditor,
     CBUIImageChooser,
     CBUIStringEditor,
+    CBUIPanel,
     Colby,
 */
+
+
 
 var CBImageLinkViewEditor = {
 
@@ -201,7 +203,7 @@ var CBImageLinkViewEditor = {
                 }
             ).catch(
                 function (error) {
-                    CBErrorHandler.displayAndReport(error);
+                    CBUIPanel.displayAndReportError(error);
                 }
             );
         }
