@@ -3,12 +3,12 @@
 /* jshint esversion: 6 */
 /* exported CBBackgroundViewEditor */
 /* global
-    CBErrorHandler,
     CBImage,
     CBModel,
     CBUI,
     CBUIBooleanEditor,
     CBUIImageChooser,
+    CBUIPanel,
     CBUISpec,
     CBUISpecArrayEditor,
     CBUIStringEditor,
@@ -248,7 +248,7 @@ var CBBackgroundViewEditor = {
                 }
             ).catch(
                 function (error) {
-                    CBErrorHandler.displayAndReport(error);
+                    CBUIPanel.displayAndReportError(error);
                 }
             );
         }
