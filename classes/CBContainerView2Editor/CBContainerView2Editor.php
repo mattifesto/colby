@@ -11,7 +11,7 @@ final class CBContainerView2Editor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v572.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v609.js', cbsysurl()),
         ];
     }
 
@@ -37,11 +37,11 @@ final class CBContainerView2Editor {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
-            'CBErrorHandler',
             'CBImage',
             'CBModel',
             'CBUI',
             'CBUIImageChooser',
+            'CBUIPanel',
             'CBUISpec',
             'CBUISpecArrayEditor',
             'CBUIStringEditor',

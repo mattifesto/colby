@@ -3,11 +3,11 @@
 /* jshint esversion: 6 */
 /* exported CBContainerView2Editor */
 /* globals
-    CBErrorHandler,
     CBImage,
     CBModel,
     CBUI,
     CBUIImageChooser,
+    CBUIPanel,
     CBUISpec,
     CBUISpecArrayEditor,
     CBUIStringEditor,
@@ -59,7 +59,7 @@ var CBContainerView2Editor = {
                 }
             ).catch(
                 function (error) {
-                    CBErrorHandler.displayAndReport(error);
+                    CBUIPanel.displayAndReportError(error);
                 }
             );
         };
