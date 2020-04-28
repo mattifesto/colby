@@ -120,40 +120,46 @@ var CBImageLinkViewEditor = {
         /* -- alternative text -- -- -- -- -- */
 
         {
-            let sectionItemElement = CBUI.createElement("CBUI_sectionItem");
+            let stringEditor = CBUIStringEditor.create();
 
-            sectionElement.appendChild(sectionItemElement);
-
-            sectionItemElement.appendChild(
-                CBUIStringEditor.createEditor(
-                    {
-                        labelText: "Alternative Text",
-                        propertyName: "alt",
-                        spec: spec,
-                        specChangedCallback: specChangedCallback,
-                    }
-                ).element
+            sectionElement.appendChild(
+                stringEditor.element
             );
+
+            stringEditor.title = "Alternative Text";
+
+            stringEditor.value = CBModel.valueToString(
+                spec,
+                "alt"
+            );
+
+            stringEditor.changed = function () {
+                spec.alt = stringEditor.value;
+                specChangedCallback();
+            };
         }
 
 
         /* -- URL -- -- -- -- -- */
 
         {
-            let sectionItemElement = CBUI.createElement("CBUI_sectionItem");
+            let stringEditor = CBUIStringEditor.create();
 
-            sectionElement.appendChild(sectionItemElement);
-
-            sectionItemElement.appendChild(
-                CBUIStringEditor.createEditor(
-                    {
-                        labelText: "URL",
-                        propertyName: "HREF",
-                        spec: spec,
-                        specChangedCallback: specChangedCallback,
-                    }
-                ).element
+            sectionElement.appendChild(
+                stringEditor.element
             );
+
+            stringEditor.title = "URL";
+
+            stringEditor.value = CBModel.valueToString(
+                spec,
+                "HREF"
+            );
+
+            stringEditor.changed = function () {
+                spec.HREF = stringEditor.value;
+                specChangedCallback();
+            };
         }
 
         createEditor_updateDimensions();
