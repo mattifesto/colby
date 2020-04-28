@@ -3,13 +3,13 @@
 /* jshint esversion: 6 */
 /* exported CBArtworkViewEditor */
 /* globals
-    CBErrorHandler,
     CBImage,
     CBMessageMarkup,
     CBModel,
     CBUI,
     CBUIBooleanSwitchPart,
     CBUIImageChooser,
+    CBUIPanel,
     CBUISelector,
     CBUIStringEditor,
     Colby,
@@ -278,7 +278,7 @@ var CBArtworkViewEditor = {
                 }
             ).catch(
                 function (error) {
-                    CBErrorHandler.displayAndReport(error);
+                    CBUIPanel.displayAndReportError(error);
                 }
             );
         }
