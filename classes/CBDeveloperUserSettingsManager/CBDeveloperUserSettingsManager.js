@@ -2,10 +2,10 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
-    CBErrorHandler,
     CBException,
     CBModel,
     CBUI,
+    CBUIPanel,
     Colby,
 */
 
@@ -74,7 +74,7 @@
                     }
                 ).catch(
                     function (error) {
-                        CBErrorHandler.displayAndReport(error);
+                        CBUIPanel.displayAndReportError(error);
                     }
                 );
             }
