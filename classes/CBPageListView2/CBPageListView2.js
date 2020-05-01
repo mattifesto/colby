@@ -4,7 +4,6 @@
 /* exported CBPageListView2 */
 /* global
     CBArtworkElement,
-    CBErrorHandler,
     CBImage,
     CBUIButton,
     CBUIPanel,
@@ -44,7 +43,7 @@ var CBPageListView2 = {
         ).catch(
             function (error) {
                 if (CBPageListView2_currentUserIsDeveloper) {
-                    CBErrorHandler.displayAndReport(error);
+                    CBUIPanel.displayAndReportError(error);
                 } else {
                     CBUIPanel.displayText(
                         "The site is currently unable to " +
