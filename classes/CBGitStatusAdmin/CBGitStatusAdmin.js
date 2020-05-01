@@ -3,9 +3,9 @@
 /* jshint esversion: 6 */
 /* exported CBGitStatusAdmin */
 /* global
-    CBErrorHandler,
     CBUI,
     CBUIExpander,
+    CBUIPanel,
     CBUISectionItem4,
     CBUIStringsPart,
     Colby,
@@ -85,7 +85,7 @@ var CBGitStatusAdmin = {
                 }
             ).catch(
                 function (error) {
-                    CBErrorHandler.displayAndReport(error);
+                    CBUIPanel.displayAndReportError(error);
                 }
             );
         }
