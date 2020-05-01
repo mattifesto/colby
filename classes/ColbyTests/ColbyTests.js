@@ -3,9 +3,9 @@
 /* jshint esversion: 6 */
 /* exported ColbyTests */
 /* global
-    CBErrorHandler,
     CBModel,
     CBTest,
+    CBUIPanel,
     Colby,
 */
 
@@ -113,7 +113,7 @@ var ColbyTests = {
             "requestWithPHPError"
         ).catch(
             function (error) {
-                CBErrorHandler.displayAndReport(error);
+                CBUIPanel.displayAndReportError(error);
 
                 testDidPass = true;
             }
