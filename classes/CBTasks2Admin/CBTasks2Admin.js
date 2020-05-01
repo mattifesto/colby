@@ -3,11 +3,11 @@
 /* jshint esversion: 6 */
 /* exported CBTasks2Admin */
 /* global
-    CBErrorHandler,
     CBModel,
     CBUI,
     CBUIBooleanSwitchPart,
     CBUIMessagePart,
+    CBUIPanel,
     CBUISection,
     CBUISectionItem4,
     CBUIStringsPart,
@@ -222,7 +222,7 @@ var CBTasks2Admin = {
                         }
                     ).catch(
                         function (error) {
-                            CBErrorHandler.displayAndReport(error);
+                            CBUIPanel.displayAndReportError(error);
                         }
                     ).finally(
                         function () {
@@ -345,7 +345,7 @@ var CBTasks2Admin = {
                 }
             ).catch(
                 function (error) {
-                    CBErrorHandler.displayAndReport(error);
+                    CBUIPanel.displayAndReportError(error);
                 }
             );
         }
