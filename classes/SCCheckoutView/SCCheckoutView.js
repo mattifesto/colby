@@ -4,7 +4,6 @@
 /* exported SCCheckoutView */
 /* global
     CBConvert,
-    CBErrorHandler,
     CBMessageMarkup,
     CBModel,
     CBUI,
@@ -57,7 +56,7 @@ var SCCheckoutView = {
             }
         ).catch(
             function (error) {
-                CBErrorHandler.displayAndReport(error);
+                CBUIPanel.displayAndReportError(error);
             }
         );
 
@@ -108,7 +107,7 @@ var SCCheckoutView = {
                     }
                 ).catch(
                     function (error) {
-                        CBErrorHandler.displayAndReport(error);
+                        CBUIPanel.displayAndReportError(error);
                     }
                 );
 
