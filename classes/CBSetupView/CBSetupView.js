@@ -2,7 +2,6 @@
 /* jshint strict: global */
 /* jshint esversion: 8 */
 /* global
-    CBErrorHandler,
     CBUI,
     CBUIPanel,
     CBUIStringEditor,
@@ -164,7 +163,7 @@
                 );
             }
         } catch (error) {
-            CBErrorHandler.displayAndReport(error);
+            CBUIPanel.displayAndReportError(error);
         }
     }
     /* setupDatabaseUser_verifyDatabaseUserViaAjax() */
