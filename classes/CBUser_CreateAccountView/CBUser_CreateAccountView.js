@@ -2,7 +2,6 @@
 /* jshint strict: global */
 /* jshint esversion: 8 */
 /* global
-    CBErrorHandler,
     CBUI,
     CBUIPanel,
     CBUIStringEditor,
@@ -311,7 +310,7 @@
 
             window.location = destinationURL;
         } catch (error) {
-            CBErrorHandler.displayAndReport(error);
+            CBUIPanel.displayAndReportError(error);
         }
     }
     /* initializeViewElement() */
