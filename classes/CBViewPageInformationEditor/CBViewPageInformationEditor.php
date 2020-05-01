@@ -11,7 +11,7 @@ final class CBViewPageInformationEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v589.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v612.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -63,13 +63,13 @@ final class CBViewPageInformationEditor {
     static function CBHTMLOutput_requiredClassNames() {
         return [
             'CBConvert',
-            'CBErrorHandler',
             'CBImage',
             'CBModel',
             'CBUI',
             'CBUIActionLink',
             'CBUIBooleanEditor',
             'CBUIImageChooser',
+            'CBUIPanel',
             'CBUISectionItem4',
             'CBUISelector',
             'CBUISpecPropertyEditor',

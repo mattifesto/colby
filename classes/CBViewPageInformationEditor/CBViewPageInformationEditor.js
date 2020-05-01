@@ -4,13 +4,13 @@
 /* exported CBViewPageInformationEditor */
 /* globals
     CBConvert,
-    CBErrorHandler,
     CBImage,
     CBModel,
     CBUI,
     CBUIActionLink,
     CBUIBooleanEditor,
     CBUIImageChooser,
+    CBUIPanel,
     CBUISectionItem4,
     CBUISelector,
     CBUISpecPropertyEditor,
@@ -221,7 +221,7 @@ var CBViewPageInformationEditor = {
                             }
                         ).catch(
                             function (error) {
-                                CBErrorHandler.displayAndReport(error);
+                                CBUIPanel.displayAndReportError(error);
                             }
                         );
                     }
@@ -682,7 +682,7 @@ var CBViewPageInformationEditor = {
                 }
             ).catch(
                 function (error) {
-                    CBErrorHandler.displayAndReport(error);
+                    CBUIPanel.displayAndReportError(error);
                 }
             );
         }
