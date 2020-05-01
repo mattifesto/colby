@@ -3,7 +3,6 @@
 /* jshint esversion: 6 */
 /* global
     CBArtworkElement,
-    CBErrorHandler,
     CBImage,
     CBMessageMarkup,
     CBModel,
@@ -154,7 +153,7 @@
             }
         ).catch(
             function (error) {
-                CBErrorHandler.displayAndReport(error);
+                CBUIPanel.displayAndReportError(error);
             }
         );
 
@@ -429,7 +428,7 @@
                         }
                     ).catch(
                         function (error) {
-                            CBErrorHandler.displayAndReport(error);
+                            CBUIPanel.displayAndReportError(error);
                         }
                     );
                 };
@@ -463,7 +462,7 @@
                         }
                     ).catch(
                         function (error) {
-                            CBErrorHandler.displayAndReport(error);
+                            CBUIPanel.displayAndReportError(error);
                         }
                     ).finally(
                         function () {
@@ -483,7 +482,7 @@
                         }
                     ).catch(
                         function (error) {
-                            CBErrorHandler.displayAndReport(error);
+                            CBUIPanel.displayAndReportError(error);
                         }
                     );
                 };
@@ -697,7 +696,7 @@
                 }
             ).catch(
                 function (error) {
-                    CBErrorHandler.displayAndReport(error);
+                    CBUIPanel.displayAndReportError(error);
                 }
             );
         };
@@ -958,7 +957,7 @@
                     }
                 ).catch(
                     function (error) {
-                        CBErrorHandler.displayAndReport(error);
+                        CBUIPanel.displayAndReportError(error);
                     }
                 );
             }
