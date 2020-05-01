@@ -4,7 +4,6 @@
 /* exported SCPromotionEditor */
 /* global
     CBConvert,
-    CBErrorHandler,
     CBModel,
     CBUI,
     CBUIPanel,
@@ -167,7 +166,7 @@
                         }
                     ).catch(
                         function (error) {
-                            CBErrorHandler.displayAndReport(error);
+                            CBUIPanel.displayAndReportError(error);
                         }
                     );
                 }
