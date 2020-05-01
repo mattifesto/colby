@@ -2,7 +2,6 @@
 /* jshint strict: global */
 /* jshint esversion: 8 */
 /* global
-    CBErrorHandler,
     CBUI,
     CBUIPanel,
     CBUIStringEditor,
@@ -269,7 +268,7 @@
 
             window.location = "/colby/user/";
         } catch (error) {
-            CBErrorHandler.displayAndReport(error);
+            CBUIPanel.displayAndReportError(error);
         }
     }
     /* initializeViewElement() */
@@ -314,7 +313,7 @@
                 );
             }
         } catch (error) {
-            CBErrorHandler.displayAndReport(error);
+            CBUIPanel.displayAndReportError(error);
         }
     }
     /* tryToCreatePotentialPasswordViaAjax() */
