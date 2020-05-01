@@ -45,7 +45,7 @@ final class CBLogAdminPage {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v529.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v612.js', cbsysurl()),
         ];
     }
 
@@ -84,11 +84,11 @@ final class CBLogAdminPage {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
-            'CBErrorHandler',
             'CBModel',
             'CBUI',
             'CBUIExpander',
             'CBUINavigationView',
+            'CBUIPanel',
             'CBUISelector',
             'Colby',
         ];

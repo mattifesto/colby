@@ -3,11 +3,11 @@
 /* jshint esversion: 6 */
 /* exported CBLogAdminPage */
 /* globals
-    CBErrorHandler,
     CBModel,
     CBUI,
     CBUIExpander,
     CBUINavigationView,
+    CBUIPanel,
     CBUISelector,
     Colby,
 
@@ -124,7 +124,7 @@ var CBLogAdminPage = {
                 }
             ).catch(
                 function (error) {
-                    CBErrorHandler.displayAndReport(error);
+                    CBUIPanel.displayAndReportError(error);
                 }
             );
         }
