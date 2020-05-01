@@ -10,7 +10,7 @@ final class CBTextView2Editor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v530.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v612.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -22,7 +22,6 @@ final class CBTextView2Editor {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
-            'CBErrorHandler',
             'CBModel',
             'CBUI',
             'CBUINavigationView',

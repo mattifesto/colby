@@ -3,7 +3,6 @@
 /* jshint esversion: 6 */
 /* exported CBTextView2Editor */
 /* global
-    CBErrorHandler,
     CBModel,
     CBUI,
     CBUINavigationView,
@@ -209,7 +208,7 @@ var CBTextView2Editor = {
                 }
             ).catch(
                 function (error) {
-                    CBErrorHandler.displayAndReport(error);
+                    CBUIPanel.displayAndReportError(error);
                 }
             );
         }
