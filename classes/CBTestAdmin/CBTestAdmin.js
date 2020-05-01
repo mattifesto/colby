@@ -3,7 +3,6 @@
 /* jshint esversion: 8 */
 /* global
     CBConvert,
-    CBErrorHandler,
     CBException,
     CBMessageMarkup,
     CBModel,
@@ -11,6 +10,7 @@
     CBUI,
     CBUIExpander,
     CBUINavigationView,
+    CBUIPanel,
     CBUISectionItem4,
     CBUISelector,
     CBUIStringsPart,
@@ -240,7 +240,7 @@
                                     handleRunTests();
                                 }
                             } catch (error) {
-                                CBErrorHandler.displayAndReport(error);
+                                CBUIPanel.displayAndReportError(error);
                             }
                         }
                     );
@@ -379,7 +379,7 @@
             CBTestAdmin.status.element.appendChild(expander.element);
             expander.element.scrollIntoView();
         } catch (error) {
-            CBErrorHandler.displayAndReport(error);
+            CBUIPanel.displayAndReportError(error);
         } finally {
             CBTestAdmin.fileInputElementIsResetting = true;
             CBTestAdmin.fileInputElement.value = null;

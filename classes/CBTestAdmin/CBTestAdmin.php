@@ -57,7 +57,7 @@ final class CBTestAdmin {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v558.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v612.js', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -85,7 +85,6 @@ final class CBTestAdmin {
     static function CBHTMLOutput_requiredClassNames() {
         $classNames = [
             'CBConvert',
-            'CBErrorHandler',
             'CBException',
             'CBMessageMarkup',
             'CBModel',
@@ -93,6 +92,7 @@ final class CBTestAdmin {
             'CBUI',
             'CBUIExpander',
             'CBUINavigationView',
+            'CBUIPanel',
             'CBUISectionItem4',
             'CBUISelector',
             'CBUIStringsPart',
