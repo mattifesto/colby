@@ -4,7 +4,6 @@
 /* exported SCOrderInspector */
 /* global
     CBConvert,
-    CBErrorHandler,
     CBMessageMarkup,
     CBModel,
     CBUI,
@@ -126,7 +125,7 @@ var SCOrderInspector = {
                     }
                 ).catch(
                     function (error) {
-                        CBErrorHandler.displayAndReport(error);
+                        CBUIPanel.displayAndReportError(error);
                     }
                 );
             }
@@ -251,7 +250,7 @@ var SCOrderInspector = {
                     }
                 ).catch(
                     function (error) {
-                        CBErrorHandler.displayAndReport(error);
+                        CBUIPanel.displayAndReportError(error);
                     }
                 );
             }
@@ -1020,7 +1019,7 @@ var SCOrderInspector = {
                             }
                         ).catch(
                             function (error) {
-                                CBErrorHandler.displayAndReport(error);
+                                CBUIPanel.displayAndReportError(error);
                             }
                         );
                     };
@@ -1089,7 +1088,7 @@ var SCOrderInspector = {
                         switchPart.value = !switchPart.value;
                         changeInProgress = false;
 
-                        CBErrorHandler.displayAndReport(error);
+                        CBUIPanel.displayAndReportError(error);
                     }
                 );
             };
@@ -1129,7 +1128,7 @@ var SCOrderInspector = {
                         }
                     ).catch(
                         function (error) {
-                            return CBErrorHandler.displayAndReport(error);
+                            return CBUIPanel.displayAndReportError(error);
                         }
                     );
                 }
