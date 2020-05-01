@@ -3,7 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBUISelectableItem */
 /* global
-    CBErrorHandler,
+    CBUIPanel,
 */
 
 var CBUISelectableItem = {
@@ -38,7 +38,7 @@ var CBUISelectableItem = {
                         callback();
                     }
                 } catch (error) {
-                    CBErrorHandler.displayAndReport(error);
+                    CBUIPanel.displayAndReportError(error);
                 }
             }
         );
