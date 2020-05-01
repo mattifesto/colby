@@ -3,11 +3,11 @@
 /* jshint esversion: 6 */
 /* exported CBSitePreferencesEditor */
 /* globals
-    CBErrorHandler,
     CBImage,
     CBUI,
     CBUIBooleanEditor,
     CBUIImageChooser,
+    CBUIPanel,
     CBUISpecArrayEditor,
     CBUIStringEditor,
     Colby,
@@ -366,7 +366,7 @@ var CBSitePreferencesEditor = {
                 }
             ).catch(
                 function (error) {
-                    CBErrorHandler.displayAndReport(error);
+                    CBUIPanel.displayAndReportError(error);
                 }
             );
         }
