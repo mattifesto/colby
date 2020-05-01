@@ -3,10 +3,10 @@
 /* jshint esversion: 6 */
 /* exported CBUIProcessStatus */
 /* global
-    CBErrorHandler,
     CBConvert,
     CBLog,
     CBUIExpander,
+    CBUIPanel,
     Colby,
 */
 
@@ -152,7 +152,7 @@ var CBUIProcessStatus = {
                 reschedule
             ).catch(
                 function (error) {
-                    CBErrorHandler.displayAndReport(error);
+                    CBUIPanel.displayAndReportError(error);
                 }
             );
 
