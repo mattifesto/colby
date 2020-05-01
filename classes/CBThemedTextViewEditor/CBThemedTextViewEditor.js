@@ -3,7 +3,6 @@
 /* jshint esversion: 6 */
 /* exported CBThemedTextViewEditor */
 /* globals
-    CBErrorHandler,
     CBUI,
     CBUIBooleanEditor,
     CBUINavigationView,
@@ -65,7 +64,7 @@ var CBThemedTextViewEditor = {
             }
         ).catch(
             function (error) {
-                CBErrorHandler.displayAndReport(error);
+                CBUIPanel.displayAndReportError(error);
             }
         );
     },
