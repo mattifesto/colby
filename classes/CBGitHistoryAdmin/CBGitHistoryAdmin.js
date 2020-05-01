@@ -3,10 +3,10 @@
 /* jshint esversion: 6 */
 /* exported CBGitHistoryAdmin */
 /* global
-    CBErrorHandler,
     CBUI,
     CBUIExpander,
     CBUINavigationView,
+    CBUIPanel,
     CBUISelector,
     Colby,
 
@@ -144,7 +144,7 @@ var CBGitHistoryAdmin = {
                 }
             ).catch(
                 function (error) {
-                    CBErrorHandler.displayAndReport(error);
+                    CBUIPanel.displayAndReportError(error);
                 }
             );
         }
