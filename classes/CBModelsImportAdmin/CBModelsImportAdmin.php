@@ -239,7 +239,7 @@ final class CBModelsImportAdmin {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v540.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v612.js', cbsysurl()),
         ];
     }
 
@@ -250,10 +250,10 @@ final class CBModelsImportAdmin {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
-            'CBErrorHandler',
             'CBMaintenance',
             'CBModelImporter',
             'CBUI',
+            'CBUIPanel',
             'CBUIProcessStatus',
             'CBUISectionItem4',
             'CBUIStringsPart',

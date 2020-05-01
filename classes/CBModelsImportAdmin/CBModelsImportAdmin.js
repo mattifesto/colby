@@ -3,11 +3,11 @@
 /* jshint esversion: 6 */
 /* exported CBModelsImportAdmin */
 /* global
-    CBErrorHandler,
     CBMaintenance,
     CBModelImporter,
     CBModelImporter_processID,
     CBUI,
+    CBUIPanel,
     CBUIProcessStatus,
     CBUISectionItem4,
     CBUIStringsPart,
@@ -90,7 +90,7 @@ var CBModelsImportAdmin = {
                         }
                     ).catch(
                         function (error) {
-                            CBErrorHandler.displayAndReport(error);
+                            CBUIPanel.displayAndReportError(error);
                         }
                     );
                 }
