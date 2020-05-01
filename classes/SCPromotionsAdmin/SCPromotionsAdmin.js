@@ -2,10 +2,10 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
-    CBErrorHandler,
     CBModel,
     CBUI,
     CBUINavigationView,
+    CBUIPanel,
     Colby,
 
     SCPromotionsAdmin_promotionExecutorRegistrations,
@@ -286,7 +286,7 @@
             }
         ).catch(
             function (error) {
-                CBErrorHandler.displayAndReport(error);
+                CBUIPanel.displayAndReportError(error);
             }
         );
     }
