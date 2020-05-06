@@ -51,25 +51,6 @@ class CBModelEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
-        $originalSpec = CBModelEditor::fetchOriginalSpec();
-
-        return [
-            'CBUI',
-            'CBUINavigationView',
-            'CBUIPanel',
-            'CBUISpecEditor',
-            'CBUISpecSaver',
-            'Colby',
-            $originalSpec->className . 'Editor',
-        ];
-    }
-
-
-
-    /**
-     * @return [string]
-     */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
             Colby::flexpath(__CLASS__, 'v574.js', cbsysurl()),
@@ -89,6 +70,32 @@ class CBModelEditor {
             ],
         ];
     }
+    /* CBHTMLOutput_JavaScriptVariables() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(): array {
+        $originalSpec = CBModelEditor::fetchOriginalSpec();
+
+        $specEditorClassName = (
+            $originalSpec->className .
+            'Editor'
+        );
+
+        return [
+            'CBUI',
+            'CBUINavigationView',
+            'CBUIPanel',
+            'CBUISpecEditor',
+            'CBUISpecSaver',
+            'Colby',
+            $specEditorClassName,
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
 
 
 
