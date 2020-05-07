@@ -92,11 +92,11 @@ var CBYouTubeViewEditor = {
                         function (response) {
                             if (response.isValid) {
                                 spec.videoID = response.videoID;
-                                videoIDEditor.value = response.videoID;
-                                videoIDEditor.title = "Video ID";
+                                videoIDEditor.title = "Video ID (accepted)";
 
                                 specChangedCallback();
                             } else {
+                                spec.videoID = undefined;
                                 videoIDEditor.title = "Video ID (not valid)";
                             }
                         }

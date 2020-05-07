@@ -46,27 +46,38 @@ final class CBYouTubeViewEditor {
         );
 
         if ($suggestedValueIsURL) {
-            $query = parse_url(
-                $suggestedValue,
-                PHP_URL_QUERY
-            );
-
-            parse_str(
-                $query,
-                $variables
-            );
-
-            if (isset($variables['v'])) {
-                $videoID = $variables['v'];
-            } else {
-                return (object)[
-                    'isValid' => false,
-                ];
-
-            }
+            $originalURL = $suggestedValue;
         } else {
-            $videoID = $suggestedValue;
+            $originalURL = "https://www.youtube.com/watch?v={$suggestedValue}";
         }
+
+        try {
+            $redirectURL = CBCurl::fetchRedirectURL(
+                $originalURL
+            );
+        } catch (Throwable $error) {
+            return (object)[
+                'isValid' => false,
+            ];
+        }
+
+        $query = parse_url(
+            $redirectURL,
+            PHP_URL_QUERY
+        );
+
+        parse_str(
+            $query,
+            $variables
+        );
+
+        if (!isset($variables['v'])) {
+            return (object)[
+                'isValid' => false,
+            ];
+        }
+
+        $videoID = $variables['v'];
 
         return (object)[
             'isValid' => true,
@@ -95,7 +106,7 @@ final class CBYouTubeViewEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v614.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v615.js', cbsysurl()),
         ];
     }
 
