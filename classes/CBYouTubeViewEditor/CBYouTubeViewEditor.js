@@ -3,8 +3,10 @@
 /* jshint esversion: 6 */
 /* exported CBYouTubeViewEditor */
 /* globals
+    CBAjax,
     CBModel,
     CBUI,
+    CBUIPanel,
     CBUISelector,
     CBUIStringEditor,
 */
@@ -36,6 +38,7 @@ var CBYouTubeViewEditor = {
 
         /* video id */
         {
+            let timeoutID;
             let videoIDEditor = CBUIStringEditor.create();
 
             sectionElement.appendChild(
@@ -49,9 +52,62 @@ var CBYouTubeViewEditor = {
                 "videoID"
             );
 
+            /**
+             * @NOTE 2020_05_06
+             *
+             *      This function is a first draft. What happens if additional
+             *      input is provided while a check is being performed has not
+             *      been tested.
+             *
+             *      Also, this sort of "wait one second then do" is a common
+             *      pattern that needs to be solidified and documented.
+             */
             videoIDEditor.changed = function () {
-                spec.videoID = videoIDEditor.value;
-                specChangedCallback();
+                videoIDEditor.title = "Video ID (checking)";
+
+                if (timeoutID !== undefined) {
+                    window.clearTimeout(
+                        timeoutID
+                    );
+                }
+
+                timeoutID = window.setTimeout(
+                    check,
+                    1000
+                );
+
+                /**
+                 * @return undefined
+                 */
+                function check() {
+                    timeoutID = undefined;
+
+                    CBAjax.call(
+                        "CBYouTubeViewEditor",
+                        "checkVideoID",
+                        {
+                            suggestedValue: videoIDEditor.value,
+                        }
+                    ).then(
+                        function (response) {
+                            if (response.isValid) {
+                                spec.videoID = response.videoID;
+                                videoIDEditor.value = response.videoID;
+                                videoIDEditor.title = "Video ID";
+
+                                specChangedCallback();
+                            } else {
+                                videoIDEditor.title = "Video ID (not valid)";
+                            }
+                        }
+                    ).catch(
+                        function (error) {
+                            CBUIPanel.displayAndReportError(
+                                error
+                            );
+                        }
+                    );
+                }
             };
         }
         /* video id */
