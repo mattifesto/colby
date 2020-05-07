@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBYouTubeViewEditor */
 /* globals
+    CBModel,
     CBUI,
     CBUISelector,
     CBUIStringEditor,
@@ -21,32 +22,40 @@ var CBYouTubeViewEditor = {
      * @return Element
      */
     createEditor: function (args) {
-        var element = document.createElement("div");
-        element.className = "CBYouTubeViewEditor";
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
 
-        element.appendChild(
-            CBUI.createHalfSpace()
+        let elements = CBUI.createElementTree(
+            "CBYouTubeViewEditor",
+            "CBUI_sectionContainer",
+            "CBUI_section"
         );
 
-        let sectionElement = CBUI.createSection();
+        let element = elements[0];
+        let sectionElement = elements[2];
 
         /* video id */
         {
-            let item = CBUI.createSectionItem();
+            let videoIDEditor = CBUIStringEditor.create();
 
-            item.appendChild(
-                CBUIStringEditor.createEditor(
-                    {
-                        labelText: "Video ID",
-                        propertyName: "videoID",
-                        spec: args.spec,
-                        specChangedCallback: args.specChangedCallback,
-                    }
-                ).element
+            sectionElement.appendChild(
+                videoIDEditor.element
             );
 
-            sectionElement.appendChild(item);
+            videoIDEditor.title = "Video ID";
+
+            videoIDEditor.value = CBModel.valueToString(
+                spec,
+                "videoID"
+            );
+
+            videoIDEditor.changed = function () {
+                spec.videoID = videoIDEditor.value;
+                specChangedCallback();
+            };
         }
+        /* video id */
+
 
         /* caption */
         {
@@ -65,6 +74,8 @@ var CBYouTubeViewEditor = {
 
             sectionElement.appendChild(item);
         }
+        /* caption */
+
 
         /* max width */
         {
@@ -118,15 +129,10 @@ var CBYouTubeViewEditor = {
             sectionElement.appendChild(item);
         }
 
-        element.appendChild(sectionElement);
-
-        element.appendChild(
-            CBUI.createHalfSpace()
-        );
-
         return element;
     },
     /* createEditor() */
+
 
 
     /**
