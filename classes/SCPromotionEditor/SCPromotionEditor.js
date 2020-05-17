@@ -121,10 +121,37 @@
         }
 
 
+        /* back */
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section",
+                [
+                    "CBUI_action",
+                    "a"
+                ]
+            );
+
+            element.appendChild(
+                elements[0]
+            );
+
+            let actionElement = elements[2];
+            actionElement.href = "/admin/?c=SCPromotionsAdmin";
+            actionElement.textContent = "< Back to Promotion List";
+        }
+        /* back */
+
+
+        /* delete */
         {
             let elements = CBUI.createElementTree(
                 "CBUI_container1",
                 "CBUI_button1"
+            );
+
+            element.appendChild(
+                elements[0]
             );
 
             let buttonElement = elements[1];
@@ -171,11 +198,8 @@
                     );
                 }
             );
-
-            element.appendChild(
-                elements[0]
-            );
         }
+        /* delete */
 
         return element;
     }
