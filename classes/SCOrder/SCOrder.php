@@ -676,15 +676,6 @@ final class SCOrder {
         $spec->orderItems = $updatedCartItemSpecs;
 
 
-        /* subtotal */
-
-        $updatedSubtotalInCents = SCOrder::calculateSubtotalInCents(
-            $updatedCartItemSpecs
-        );
-
-        $spec->orderSubtotalInCents = $updatedSubtotalInCents;
-
-
         /**
          * One by one, the above actions that are suitable to be done in
          * prepare() will be migrated out of this function and into prepare().
@@ -1593,6 +1584,18 @@ final class SCOrder {
         $preparedSpec = CBModel::clone($orderSpec);
 
 
+        /* subtotal */
+
+        $orderCartItemSpecs = CBModel::valueToArray(
+            $preparedSpec,
+            'orderItems'
+        );
+
+        $preparedSpec->orderSubtotalInCents = SCOrder::calculateSubtotalInCents(
+            $orderCartItemSpecs
+        );
+
+
         /* kindClassName */
 
         $orderKindClassName = SCOrder::getOrderKindClassName(
@@ -1641,20 +1644,8 @@ final class SCOrder {
 
         /* orderTotalInCents */
 
-        /**
-         * TODO 2019_10_10
-         *
-         *      When these properties are set in this function they can be
-         *      accessed directly.
-         */
-
-        $orderSubtotalInCents = CBModel::valueAsInt(
-            $preparedSpec,
-            'orderSubtotalInCents'
-        ) ?? 0;
-
         $preparedSpec->orderTotalInCents = (
-            $orderSubtotalInCents +
+            $preparedSpec->orderSubtotalInCents +
             $preparedSpec->orderShippingChargeInCents +
             $preparedSpec->orderSalesTaxInCents
         );
