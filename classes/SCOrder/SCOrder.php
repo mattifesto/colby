@@ -635,18 +635,30 @@ final class SCOrder {
 
         /* cart items */
 
-        $originalCartItemSpecs = SCShoppingCart::getItems(
+        $spec->orderItems = SCShoppingCart::getItems(
             CBModel::valueToObject(
                 $args,
                 'shoppingCart'
             )
         );
 
-        $updatedCartItemSpecs = SCCartItem::updateSpecs(
-            $originalCartItemSpecs
+
+        /**
+         * One by one, the above actions that are suitable to be done in
+         * prepare() will be migrated out of this function and into prepare().
+         */
+
+        $preparedSpec = SCOrder::prepare(
+            $spec
         );
 
-        foreach ($updatedCartItemSpecs as $updatedCartItemSpec) {
+
+        /**
+         * If prepare() has produced an order with issues make this Ajax
+         * function call fail.
+         */
+
+        foreach ($preparedSpec->orderItems as $updatedCartItemSpec) {
             $quantity = SCCartItem::getQuantity(
                 $updatedCartItemSpec
             );
@@ -656,32 +668,23 @@ final class SCOrder {
             );
 
             if ($quantity === 0 || $isNotAvailable) {
-                $message = <<<EOT
+                $message = CBConvert::stringToCleanLine(<<<EOT
 
                     There is an issue with one of the items in your shopping
                     cart that must be reviewed on the shopping cart page before
                     your order can be completed.
 
-                EOT;
+                EOT);
 
                 return (object)[
                     'wasCancelled' => true,
-                    'messageAsText' => CBConvert::stringToCleanLine(
-                        $message
-                    ),
+                    'messageAsText' => $message,
                 ];
             }
+            /* if */
         }
+        /* foreach */
 
-        $spec->orderItems = $updatedCartItemSpecs;
-
-
-        /**
-         * One by one, the above actions that are suitable to be done in
-         * prepare() will be migrated out of this function and into prepare().
-         */
-
-        $preparedSpec = SCOrder::prepare($spec);
 
         /**
          * If the order doesn't meet the minimum subtotal, which is a
@@ -1581,7 +1584,28 @@ final class SCOrder {
     static function prepare(
         stdClass $originalOrderSpec
     ): stdClass {
-        $preparedOrderSpec = CBModel::clone($originalOrderSpec);
+        $preparedOrderSpec = CBModel::clone(
+            $originalOrderSpec
+        );
+
+
+        /* cart items */
+
+        $originalCartItemSpecs = CBModel::valueToArray(
+            $preparedOrderSpec,
+            'orderItems'
+        );
+
+        /**
+         * @TODO 2020_05_31
+         *
+         *      This should use Colby::prepare() on each cart item spec in the
+         *      future.
+         */
+
+        $preparedOrderSpec->orderItems = SCCartItem::updateSpecs(
+            $originalCartItemSpecs
+        );
 
 
         /* subtotal */
