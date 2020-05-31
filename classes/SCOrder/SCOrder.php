@@ -1579,30 +1579,30 @@ final class SCOrder {
      * @return object
      */
     static function prepare(
-        stdClass $orderSpec
+        stdClass $originalOrderSpec
     ): stdClass {
-        $preparedSpec = CBModel::clone($orderSpec);
+        $preparedOrderSpec = CBModel::clone($originalOrderSpec);
 
 
         /* subtotal */
 
         $orderCartItemSpecs = CBModel::valueToArray(
-            $preparedSpec,
+            $preparedOrderSpec,
             'orderItems'
         );
 
-        $preparedSpec->orderSubtotalInCents = SCOrder::calculateSubtotalInCents(
-            $orderCartItemSpecs
+        $preparedOrderSpec->orderSubtotalInCents = (
+            SCOrder::calculateSubtotalInCents(
+                $orderCartItemSpecs
+            )
         );
 
 
         /* kindClassName */
 
-        $orderKindClassName = SCOrder::getOrderKindClassName(
-            $orderSpec
+        $preparedOrderSpec->kindClassName = SCOrder::prepareOrderKindClassName(
+            $preparedOrderSpec
         );
-
-        $preparedSpec->kindClassName = $orderKindClassName;
 
 
         /* orderShippingMethod */
@@ -1615,39 +1615,39 @@ final class SCOrder {
          *      class.
          */
 
-        $preparedSpec->orderShippingMethod = (
+        $preparedOrderSpec->orderShippingMethod = (
             SCOrderKind::defaultShippingMethod(
-                $orderKindClassName
+                $preparedOrderSpec->kindClassName
             )
         );
 
 
         /* orderShippingChargeInCents */
 
-        $preparedSpec->orderShippingChargeInCents = (
+        $preparedOrderSpec->orderShippingChargeInCents = (
             SCOrderKind::shippingChargeInCents(
-                $orderKindClassName,
-                $preparedSpec
+                $preparedOrderSpec->kindClassName,
+                $preparedOrderSpec
             )
         );
 
 
         /* orderSalesTaxInCents */
 
-        $preparedSpec->orderSalesTaxInCents = (
+        $preparedOrderSpec->orderSalesTaxInCents = (
             SCOrderKind::salesTaxInCents(
-                $orderKindClassName,
-                $preparedSpec
+                $preparedOrderSpec->kindClassName,
+                $preparedOrderSpec
             )
         );
 
 
         /* orderTotalInCents */
 
-        $preparedSpec->orderTotalInCents = (
-            $preparedSpec->orderSubtotalInCents +
-            $preparedSpec->orderShippingChargeInCents +
-            $preparedSpec->orderSalesTaxInCents
+        $preparedOrderSpec->orderTotalInCents = (
+            $preparedOrderSpec->orderSubtotalInCents +
+            $preparedOrderSpec->orderShippingChargeInCents +
+            $preparedOrderSpec->orderSalesTaxInCents
         );
 
 
@@ -1660,14 +1660,14 @@ final class SCOrder {
         foreach ($promotionModels as $promotionModel) {
             $preparedSpec = SCPromotion::apply(
                 $promotionModel,
-                $preparedSpec
+                $preparedOrderSpec
             );
         }
 
 
         /* done */
 
-        return $preparedSpec;
+        return $preparedOrderSpec;
     }
     /* prepare() */
 
@@ -1682,7 +1682,7 @@ final class SCOrder {
      *
      * @return string
      */
-    private static function getOrderKindClassName(
+    private static function prepareOrderKindClassName(
         stdClass $orderSpec
     ): string {
         $orderKindClassName = CBModel::valueAsName(
@@ -1715,7 +1715,7 @@ final class SCOrder {
 
         return $orderKindClassName;
     }
-    /* getOrderKindClassName() */
+    /* prepareOrderKindClassName() */
 
 
 
