@@ -256,6 +256,14 @@ final class SCCartItem {
 
 
     /**
+     * @TODO 2020_06_06
+     *
+     *      Rename to getSubtotalInCents(). That is, add getSubtotalInCents()
+     *      and deprecate this function.
+     *
+     *      Then add getUnitPriceInCents(), getOriginalUnitPriceInCents(), and
+     *      getOriginalSubtotalInCents().
+     *
      * @param object $model
      *
      * @return int
@@ -614,7 +622,9 @@ final class SCCartItem {
      *          updated cart item
      *          with a message sharing more cart item details and features
      */
-    static function update($originalCartItemSpec): ?stdClass {
+    static function update(
+        $originalCartItemSpec
+    ): ?stdClass {
         if (CBConvert::valueAsModel($originalCartItemSpec) === null) {
             return null;
         }
@@ -630,8 +640,9 @@ final class SCCartItem {
                 'ID'
             );
 
-            $functionName =
-            "{$originalCartItemSpecClassName}::SCCartItem_update";
+            $functionName = (
+                "{$originalCartItemSpecClassName}::SCCartItem_update"
+            );
 
             if (is_callable($functionName)) {
                 $updatedCartItemSpec = call_user_func(
