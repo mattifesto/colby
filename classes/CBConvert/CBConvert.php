@@ -337,13 +337,31 @@ final class CBConvert {
      *
      * @return string
      */
-    static function stringToURI($string): string {
-        $stubs = preg_split('/\//', $string, /* limit: */ -1, PREG_SPLIT_NO_EMPTY);
-        $stubs = array_map('CBConvert::stringToStub', $stubs);
-        $stubs = array_filter($stubs, function ($value) { return $value !== ''; });
+    static function stringToURI(
+        $string
+    ): string {
+        $stubs = preg_split(
+            '/\//',
+            $string,
+            /* limit: */ -1,
+            PREG_SPLIT_NO_EMPTY
+        );
+
+        $stubs = array_map(
+            'CBConvert::stringToStub',
+            $stubs
+        );
+
+        $stubs = array_filter(
+            $stubs,
+            function ($value) {
+                return $value !== '';
+            }
+        );
 
         return implode('/', $stubs);
     }
+    /* stringToURI() */
 
 
 
@@ -686,7 +704,9 @@ final class CBConvert {
      *      If the parameter contains a valid name, the name is returned;
      *      otherwise null is returned.
      */
-    static function valueAsName($value): ?string {
+    static function valueAsName(
+        $value
+    ): ?string {
         $potentialName = trim(
             CBConvert::valueToString($value)
         );
@@ -703,17 +723,24 @@ final class CBConvert {
 
     /**
      * This function converts a string containing comma and/or white space
-     * separated names  into an array of valid names.
+     * separated names into an array of valid names.
      *
      * @param mixed $value
      *
      * @return [string]|null
      *
+     *      If the $value paramater contains only whitespace or comma separated
+     *      whitespace an empty array is returned.
+     *
      *      If the $value parameter contains a valid set of names, an array of
-     *      names is returned. If the $value parameter contains any characters
-     *      not allowed in a name, null will be returned.
+     *      names is returned.
+     *
+     *      If the $value parameter contains any characters not allowed in a
+     *      name, null will be returned.
      */
-    static function valueAsNames($value): ?array {
+    static function valueAsNames(
+        $value
+    ): ?array {
         $stringValue = CBConvert::valueToString($value);
 
         $potentialNames = preg_split(
@@ -1022,7 +1049,7 @@ final class CBConvert {
      * @deprecated use CBConvert::valueAsNames()
      *
      *      This function has an odd implementation in that it will convert the
-     *      word naïve into ["na", "ve"]. The concepts of "name" and "monikder"
+     *      word naïve into ["na", "ve"]. The concepts of "name" and "moniker"
      *      have been more completely analyzed resulting in the valueAsName()
      *      and valueAsNames() functions on this class.``
      *
