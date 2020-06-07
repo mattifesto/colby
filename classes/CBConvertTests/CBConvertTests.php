@@ -916,6 +916,18 @@ EOT;
     static function valueAsNamesTestCases(): array {
         return [
             (object)[
+                'originalValue' => '',
+                'expectedResult' => [],
+            ],
+            (object)[
+                'originalValue' => ' ,   ,   , ',
+                'expectedResult' => [],
+            ],
+            (object)[
+                'originalValue' => ' , dogs* ,',
+                'expectedResult' => null,
+            ],
+            (object)[
                 'originalValue' => 'dogs',
                 'expectedResult' => ['dogs'],
             ],
