@@ -2,6 +2,13 @@
 
 final class SCPromotionsTable {
 
+    /**
+     * This static variable is set by fetchCachedActivePromotionModels().
+     */
+    private static $cachedActivePromotionModels = null;
+
+
+
     /* -- CBAjax interfaces -- -- -- -- -- */
 
 
@@ -139,6 +146,40 @@ final class SCPromotionsTable {
         return CBDB::SQLToArrayOfNullableStrings($SQL);
     }
     /* fetchActivePromotionCBIDs() */
+
+
+
+    /**
+     * The array of promotion models is cached the first time this function is
+     * called. There is not currently a function to clear the cache. If a need
+     * exists for such a function add it to this class.
+     *
+     * @return [object]
+     */
+    static function fetchCachedActivePromotionModels(): array {
+        $cachedActivePromotionModels = (
+            SCPromotionsTable::$cachedActivePromotionModels
+        );
+
+        if ($cachedActivePromotionModels === null) {
+            $activePromotionCBIDs = (
+                SCPromotionsTable::fetchActivePromotionCBIDs()
+            );
+
+            $cachedActivePromotionModels = CBModels::fetchModelsByID2(
+                $activePromotionCBIDs
+            );
+
+            SCPromotionsTable::$cachedActivePromotionModels = (
+                $cachedActivePromotionModels
+            );
+        }
+
+        return CBModel::clone(
+            $cachedActivePromotionModels
+        );
+    }
+    /* fetchCachedActivePromotionModels() */
 
 
 
