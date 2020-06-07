@@ -1677,8 +1677,8 @@ final class SCOrder {
 
         /* promotions */
 
-        $promotionModels = CBModels::fetchModelsByID2(
-            SCPromotionsTable::fetchActivePromotionCBIDs()
+        $promotionModels = (
+            SCPromotionsTable::fetchCachedActivePromotionModels()
         );
 
         foreach ($promotionModels as $promotionModel) {
