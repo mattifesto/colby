@@ -786,15 +786,26 @@ final class CBModel {
      * @param mixed $model
      * @param string $keyPath
      *
-     * @return ?array
+     * @return [string]|null
      *
-     *      Returns null if the value contains an invalid name.
+     *      If the $value paramater contains only whitespace or comma separated
+     *      whitespace an empty array is returned.
+     *
+     *      If the $value parameter contains a valid set of names, an array of
+     *      names is returned.
+     *
+     *      If the $value parameter contains any characters not allowed in a
+     *      name, null will be returned.
      */
-    static function valueAsNames($model, string $keyPath): ?array {
+    static function valueAsNames(
+        $model,
+        string $keyPath
+    ): ?array {
         return CBConvert::valueAsNames(
             CBModel::value($model, $keyPath)
         );
     }
+    /* valueAsNames() */
 
 
 
