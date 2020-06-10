@@ -1682,7 +1682,7 @@ final class SCOrder {
         );
 
         foreach ($promotionModels as $promotionModel) {
-            $preparedSpec = SCPromotion::apply(
+            $preparedOrderSpec = SCPromotion::apply(
                 $promotionModel,
                 $preparedOrderSpec
             );
