@@ -28,12 +28,15 @@ var SCProductBuyView = {
     /* init() */
 
 
+
     /**
      * @param Element element
      *
      * @return undefined
      */
-    render: function (viewElement) {
+    render(
+        viewElement
+    ) {
         let activeCartItemSpec;
 
         let information = {};
@@ -86,22 +89,54 @@ var SCProductBuyView = {
         viewElement.appendChild(viewContentElement);
 
 
+        /* productPageURL */
+
+        let productPageURL = "";
+
+        let shouldShowProductPageLink = CBModel.valueToBool(
+            information,
+            "showProductPageLink"
+        );
+
+        if (shouldShowProductPageLink) {
+            productPageURL = CBModel.valueToString(
+                information,
+                "productPageURL"
+            ).trim();
+        }
+
         /* image */
 
-        if (!CBModel.valueToBool(information, "hideImage")) {
-            let image = CBModel.valueAsModel(activeCartItemSpec, "image");
+        let shouldHideImage = CBModel.valueToBool(
+            information,
+            "hideImage"
+        );
+
+        if (!shouldHideImage) {
+            let image = CBModel.valueAsModel(
+                activeCartItemSpec,
+                "image"
+            );
 
             if (image !== undefined) {
-                let imageContainerElement = CBUI.createElement("CBUI_view");
+                let imageContainerElement = CBUI.createElement(
+                    "CBUI_view"
+                );
 
-                viewContentElement.appendChild(imageContainerElement);
+                viewContentElement.appendChild(
+                    imageContainerElement
+                );
 
                 let artworkElement = CBArtworkElement.create(
                     {
                         aspectRatioWidth: image.width,
                         aspectRatioHeight: image.height,
                         maxHeight: 240,
-                        URL: CBImage.toURL(image, "rw1280"),
+                        URL: CBImage.toURL(
+                            image,
+                            "rw1280"
+                        ),
+                        linkURL: productPageURL,
                     }
                 );
 
@@ -158,12 +193,12 @@ var SCProductBuyView = {
 
         /* product page link */
 
-        if (CBModel.valueToBool(information, "showProductPageLink")) {
+        if (productPageURL !== "") {
             let actionElement = CBUI.createElement(
                 "CBUI_action", "a"
             );
 
-            actionElement.href = information.productPageURL;
+            actionElement.href = productPageURL;
             actionElement.textContent = "View Product Page >";
 
             sectionElement.appendChild(actionElement);
