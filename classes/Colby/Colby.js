@@ -324,34 +324,85 @@ var Colby = {
      *
      * @return object (CBJavaScriptError)
      */
-    errorToCBJavaScriptErrorModel: function (error) {
-        let lineNumber = (
-            error.line === undefined ?
-            error.lineNumber :
-            error.line
-        );
-
-        let columnNumber = (
-            error.column === undefined ?
-            error.columnNumber :
-            error.column
-        );
-
-        let sourceURL = (
-            error.sourceURL === undefined ?
-            error.fileName :
-            error.sourceURL
+    errorToCBJavaScriptErrorModel(
+        error
+    ) {
+        let errorDetails = errorToErrorDetails(
+            error
         );
 
         return {
             className: 'CBJavaScriptError',
-            column: columnNumber,
-            line: lineNumber,
+            column: errorDetails.columnNumber,
+            line: errorDetails.lineNumber,
             message: error.message,
             pageURL: location.href,
-            sourceURL: sourceURL,
+            sourceURL: errorDetails.sourceURL,
             stack: error.stack,
         };
+
+
+
+        /* -- closures -- -- -- -- -- */
+
+
+
+        /**
+         * @param Error error
+         *
+         * @return object
+         *
+         *      {
+         *          sourceURL: string
+         *          lineNumber: int
+         *          columnNumber: int
+         *      }
+         */
+        function errorToErrorDetails(
+            error
+        ) {
+            let errorDetails = {};
+
+            if (error.line !== undefined) {
+                /* Safari */
+
+                errorDetails.sourceURL = error.sourceURL;
+                errorDetails.lineNumber = error.line;
+                errorDetails.columnNumber = error.column;
+            } else if (error.lineNumber !== undefined) {
+                /* Firefox */
+
+                errorDetails.sourceURL = error.filename;
+                errorDetails.lineNumber = error.lineNumber;
+                errorDetails.columnNumber = error.columnNumber;
+            } else if (typeof error.stack === "string") {
+                /* Chrome */
+
+                let stackLines = error.stack.split("\n");
+
+                if (stackLines.length < 1) {
+                    return errorDetails;
+                }
+
+                let stackLine = stackLines[1];
+
+                let matches = stackLine.match(
+                    /\((.*):([0-9]+):([0-9]+)\)$/
+                );
+
+                if (matches === null) {
+                    return errorDetails;
+                }
+
+                errorDetails.sourceURL = matches[1];
+                errorDetails.lineNumber = matches[2];
+                errorDetails.columnNumber = matches[3];
+            }
+
+            return errorDetails;
+        }
+        /* errorToLineNumber() */
+
     },
     /* errorToCBJavaScriptErrorModel() */
 
