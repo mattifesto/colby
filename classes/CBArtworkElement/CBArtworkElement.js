@@ -39,6 +39,11 @@
      *          maxHeight: number (optional)
      *
      *              The units for these properties are CSS pixels.
+     *
+     *          linkURL: string
+     *
+     *              If specified, the main artwork element will be an anchor
+     *              instead of a div and like to this URL.
      *      }
      *
      * @return Element
@@ -78,9 +83,22 @@
             aspectRatioHeight
         );
 
+        let linkURL = CBModel.valueToString(
+            args,
+            "linkURL"
+        ).trim();
+
         /* outer element */
 
-        var outerElement = document.createElement("div");
+        let outerElement;
+
+        if (linkURL === "") {
+            outerElement = document.createElement("div");
+        } else {
+            outerElement = document.createElement("a");
+            outerElement.href = linkURL;
+        }
+
         outerElement.className = "CBArtworkElement";
 
         if (calculatedMaxWidth !== undefined) {

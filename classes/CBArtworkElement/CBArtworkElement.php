@@ -11,7 +11,7 @@ final class CBArtworkElement {
      */
     static function CBHTMLOutput_CSSURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v383.css', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v618.css', cbsysurl()),
         ];
     }
 
