@@ -6,7 +6,12 @@
     CBModel,
 */
 
-var CBArtworkElement = {
+
+(function () {
+
+    window.CBArtworkElement = {
+        create,
+    };
 
     /**
      * For a better understanding of this function and CBArtworkElement, view
@@ -38,14 +43,35 @@ var CBArtworkElement = {
      *
      * @return Element
      */
-    create: function (args) {
-        let URL = CBModel.valueToString(args, "URL");
-        let aspectRatioWidth = CBModel.valueAsNumber(args, 'aspectRatioWidth') || 1;
-        let aspectRatioHeight = CBModel.valueAsNumber(args, 'aspectRatioHeight') || 1;
-        let maxWidth = CBModel.valueAsNumber(args, 'maxWidth');
-        let maxHeight = CBModel.valueAsNumber(args, 'maxHeight');
+    function create(
+        args
+    ) {
+        let URL = CBModel.valueToString(
+            args,
+            "URL"
+        );
 
-        let calculatedMaxWidth = CBArtworkElement.calculateMaxWidth(
+        let aspectRatioWidth = CBModel.valueAsNumber(
+            args,
+            'aspectRatioWidth'
+        ) || 1;
+
+        let aspectRatioHeight = CBModel.valueAsNumber(
+            args,
+            'aspectRatioHeight'
+        ) || 1;
+
+        let maxWidth = CBModel.valueAsNumber(
+            args,
+            'maxWidth'
+        );
+
+        let maxHeight = CBModel.valueAsNumber(
+            args,
+            'maxHeight'
+        );
+
+        let calculatedMaxWidth = calculateMaxWidth(
             maxWidth,
             maxHeight,
             aspectRatioWidth,
@@ -83,7 +109,10 @@ var CBArtworkElement = {
         outerElement.appendChild(innerElement);
 
         return outerElement;
-    },
+    }
+    /* create() */
+
+
 
     /**
      * @param number? maxWidth
@@ -96,7 +125,7 @@ var CBArtworkElement = {
      *      If neither maxWidth nor maxHeight are provided, undefined will be
      *      returned.
      */
-    calculateMaxWidth: function(
+    function calculateMaxWidth(
         maxWidth,
         maxHeight,
         aspectRatioWidth,
@@ -115,5 +144,7 @@ var CBArtworkElement = {
         }
 
         return result;
-    },
-};
+    }
+    /* calculateMaxWidth() */
+
+})();
