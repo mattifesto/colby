@@ -72,7 +72,9 @@ var CBPageListView2 = {
          *
          * @return undefined
          */
-        function display(result) {
+        function display(
+            result
+        ) {
             var count = 0;
 
             result.pages.forEach(
@@ -182,9 +184,13 @@ var CBPageListView2 = {
             if (result.pages.length === 0 && !state.hasFetchedAllElements) {
                 state.hasFetchedAllElements = true;
 
-                state.buttonContainerElement.classList.add("hidden");
+                if (state.buttonContainerElement !== undefined) {
+                    state.buttonContainerElement.classList.add("hidden");
+                }
             }
         }
+        /* display() */
+
     },
     /* fetchPages() */
 

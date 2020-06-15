@@ -20,7 +20,9 @@ final class CBPageListView2 {
      *          pages: [object]
      *      }
      */
-    static function CBAjax_fetchPages($args): stdClass {
+    static function CBAjax_fetchPages(
+        $args
+    ): stdClass {
         $classNameForKind = CBModel::valueToString($args, 'classNameForKind');
         $classNameForKindAsSQL = CBDB::stringToSQL($classNameForKind);
         $publishedBeforeTimestamp = CBModel::valueAsInt($args, 'publishedBeforeTimestamp');
@@ -84,7 +86,7 @@ final class CBPageListView2 {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v612.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v619.js', cbsysurl()),
         ];
     }
 
