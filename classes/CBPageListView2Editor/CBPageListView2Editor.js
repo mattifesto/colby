@@ -69,6 +69,9 @@ var CBPageListView2Editor = {
                         View Specific CSS Class Names
                         `,`
                         "custom": disable the default view styles.
+                        `,`
+                        "recent": show only the two most recently published
+                        pages.
                         `
                     ],
                 }
