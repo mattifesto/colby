@@ -603,6 +603,9 @@ final class Colby {
 
         if (file_exists($filepath)) {
             include_once($filepath);
+            define('CBSiteIsConfigured', true);
+        } else {
+            define('CBSiteIsConfigured', false);
         }
 
 
