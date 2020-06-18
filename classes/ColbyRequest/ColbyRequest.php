@@ -118,7 +118,10 @@ final class ColbyRequest {
             return;
         }
 
-        if (CBSiteVersionNumber === 'setup') {
+        if (
+            CBSiteVersionNumber === 'setup' ||
+            CBSiteIsConfigured === false
+        ) {
             CBSetup::renderSetupPage();
 
             return;
