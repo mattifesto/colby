@@ -55,7 +55,16 @@ final class CBTasks2 {
      *          taskWasRun: bool
      *      }
      */
-    static function CBAjax_runNextTask($args): stdClass {
+    static function CBAjax_runNextTask(
+        $args
+    ): stdClass {
+        if (CBSiteIsConfigured === false) {
+            return (object)[
+                'tasksRunCount' => 0,
+                'taskWasRun' => false,
+            ];
+        }
+
         $processID = CBModel::valueAsID($args, 'processID');
         $tasksRunCount = 0;
         $expirationTimestamp = microtime(true) + 1;
