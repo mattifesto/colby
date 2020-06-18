@@ -121,7 +121,7 @@ final class CBSetup {
         $pageSpec = (object)[
             'className' => 'CBViewPage',
 
-            'classNameForSettings' => 'CBPageSettingsForResponsivePages',
+            'classNameForSettings' => 'CBPageSettingsForSetup',
 
             'title' => 'CBSetup',
 
@@ -141,3 +141,42 @@ final class CBSetup {
     /* renderSetupPage() */
 
 }
+/* CBSetup */
+
+
+
+/**
+ *
+ */
+final class CBPageSettingsForSetup {
+
+    /* -- CBPageSettings interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBPageSettings_htmlElementClassNames(): array {
+        return [
+            'CBLightTheme',
+            'CBStyleSheet'
+        ];
+    }
+    /* CBPageSettings_htmlElementClassNames() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBPageSettings_requiredClassNames(): array {
+        return [
+            'CBEqualizePageSettingsPart',
+            'CBResponsiveViewportPageSettingsPart',
+        ];
+    }
+    /* CBPageSettings_requiredClassNames() */
+
+}
+/* CBPageSettingsForSetup */
