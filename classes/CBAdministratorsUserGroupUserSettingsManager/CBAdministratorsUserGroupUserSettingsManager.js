@@ -2,12 +2,12 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBAjax,
     CBException,
     CBModel,
     CBUI,
     CBUIBooleanSwitchPart,
     CBUIPanel,
-    Colby,
 */
 
 
@@ -67,7 +67,7 @@
 
         elements[5].textContent = "CBAdministratorsUserGroup";
 
-        Colby.callAjaxFunction(
+        CBAjax.call(
             "CBAdministratorsUserGroupUserSettingsManager",
             "fetchTargetUserData",
             {
@@ -94,7 +94,9 @@
      *
      * @return undefined
      */
-    function initialize(targetUserData) {
+    function initialize(
+        targetUserData
+    ) {
         if (targetUserData.accessWasDenied) {
             return;
         }
@@ -114,7 +116,7 @@
                 ajaxFunctionName = "addUser";
             }
 
-            Colby.callAjaxFunction(
+            CBAjax.call(
                 "CBUserGroup",
                 ajaxFunctionName,
                 {

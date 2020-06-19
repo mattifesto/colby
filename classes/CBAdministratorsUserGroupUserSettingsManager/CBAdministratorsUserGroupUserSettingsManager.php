@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * This class will render user interface to set whether a website user is a
+ * member of the CBAdministratorsUserGroup on user admin pages if the current
+ * user has permission to change users' CBAdministratorsUserGroup membership.
+ */
 final class CBAdministratorsUserGroupUserSettingsManager {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
@@ -85,7 +90,7 @@ final class CBAdministratorsUserGroupUserSettingsManager {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v608.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v621.js', cbsysurl()),
         ];
     }
 
@@ -96,12 +101,12 @@ final class CBAdministratorsUserGroupUserSettingsManager {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBAjax',
             'CBException',
             'CBModel',
             'CBUI',
             'CBUIBooleanSwitchPart',
             'CBUIPanel',
-            'Colby',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
