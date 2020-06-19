@@ -99,7 +99,9 @@ final class SCCartItem {
      *
      * @return [object|null]
      */
-    static function consolidateSpecs(array $originalCartItemSpecs): array {
+    static function consolidateSpecs(
+        array $originalCartItemSpecs
+    ): array {
         $consolidatedCartItemSpecs = [];
         $count = count($originalCartItemSpecs);
 
@@ -307,14 +309,22 @@ final class SCCartItem {
      *      in the quantity property. If the quantity property is undefined or
      *      is not an integer, this function returns 0.
      */
-    static function getQuantity($cartItemModel): float {
+    static function getQuantity(
+        $cartItemModel
+    ): float {
         $className = CBModel::valueToString($cartItemModel, 'className');
         $functionName = "{$className}::SCCartItem_getQuantity";
 
         if (is_callable($functionName)) {
-            return call_user_func($functionName, $cartItemModel);
+            return call_user_func(
+                $functionName,
+                $cartItemModel
+            );
         } else {
-            $quantity = CBModel::valueAsInt($cartItemModel, 'quantity');
+            $quantity = CBModel::valueAsInt(
+                $cartItemModel,
+                'quantity'
+            );
 
             if ($quantity === null || $quantity < 0) {
                 return 0;
@@ -323,6 +333,7 @@ final class SCCartItem {
             }
         }
     }
+    /* getQuantity() */
 
 
 
@@ -353,16 +364,29 @@ final class SCCartItem {
      *      cbsiteurl() if the URL will be used outside the website, for example
      *      in an email.
      */
-    static function getSourceURL(stdClass $cartItemModel): string {
-        $className = CBModel::valueToString($cartItemModel, 'className');
+    static function getSourceURL(
+        stdClass $cartItemModel
+    ): string {
+        $className = CBModel::valueToString(
+            $cartItemModel,
+            'className'
+        );
+
         $functionName = "{$className}::SCCartItem_getSourceURL";
 
         if (is_callable($functionName)) {
-            return call_user_func($functionName, $cartItemModel);
+            return call_user_func(
+                $functionName,
+                $cartItemModel
+            );
         } else {
-            return CBModel::valueToString($cartItemModel, 'sourceURL');
+            return CBModel::valueToString(
+                $cartItemModel,
+                'sourceURL'
+            );
         }
     }
+    /* getSourceURL() */
 
 
 
@@ -371,16 +395,29 @@ final class SCCartItem {
      *
      * @return string
      */
-    static function getTitle(stdClass $cartItemModel): string {
-        $className = CBModel::valueToString($cartItemModel, 'className');
+    static function getTitle(
+        stdClass $cartItemModel
+    ): string {
+        $className = CBModel::valueToString(
+            $cartItemModel,
+            'className'
+        );
+
         $functionName = "{$className}::SCCartItem_getTitle";
 
         if (is_callable($functionName)) {
-            return call_user_func($functionName, $cartItemModel);
+            return call_user_func(
+                $functionName,
+                $cartItemModel
+            );
         } else {
-            return CBModel::valueToString($cartItemModel, 'title');
+            return CBModel::valueToString(
+                $cartItemModel,
+                'title'
+            );
         }
     }
+    /* getTitle() */
 
 
 
@@ -394,7 +431,11 @@ final class SCCartItem {
         stdClass $cartItemSpec,
         float $quantity
     ): void {
-        $className = CBModel::valueToString($cartItemSpec, 'className');
+        $className = CBModel::valueToString(
+            $cartItemSpec,
+            'className'
+        );
+
         $functionName = "{$className}::SCCartItem_setQuantity";
 
         if (is_callable($functionName)) {
@@ -415,6 +456,7 @@ final class SCCartItem {
             $cartItemSpec->quantity = $quantityAsInt;
         }
     }
+    /* setQuantity() */
 
 
 
@@ -579,6 +621,7 @@ final class SCCartItem {
             }
         }
     }
+    /* toText() */
 
 
 
@@ -819,7 +862,9 @@ final class SCCartItem {
      *
      * @return [object|null]
      */
-    static function updateSpecs(array $originalCartItemSpecs): array {
+    static function updateSpecs(
+        array $originalCartItemSpecs
+    ): array {
         return array_map(
             function ($cartItemSpec) {
                 return SCCartItem::update($cartItemSpec);
@@ -827,5 +872,6 @@ final class SCCartItem {
             $originalCartItemSpecs
         );
     }
+    /* updateSpecs() */
 
 }
