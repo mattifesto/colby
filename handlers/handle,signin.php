@@ -22,8 +22,8 @@ if ($destinationURL === '') {
 }
 
 $cbmessage = '';
-$emailAddress = cb_post_value('emailAddress');
-$password = cb_post_value('password');
+$emailAddress = cb_post_value('emailAddress', '');
+$password = cb_post_value('password', '');
 
 
 
