@@ -11,7 +11,7 @@ final class CBUser_ResetPasswordView {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v612.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v622.js', cbsysurl()),
         ];
     }
 
@@ -44,7 +44,12 @@ final class CBUser_ResetPasswordView {
     static function CBModel_build(
         stdClass $viewSpec
     ): stdClass {
-        return (object)[];
+        return (object)[
+            'userEmailAddress' => CBModel::valueAsEmail(
+                $viewSpec,
+                'userEmailAddress'
+            ),
+        ];
     }
 
 
@@ -61,9 +66,22 @@ final class CBUser_ResetPasswordView {
     static function CBView_render(
         stdClass $viewModel
     ): void {
+        /**
+         * We don't validate the email address in this function. If someone
+         * wants to pass in something wacky this is not the place to prevent
+         * that.
+         */
+        $userEmailAddress = CBModel::valueToString(
+            $viewModel,
+            'userEmailAddress'
+        );
+
         ?>
 
-        <div class="CBUser_ResetPasswordView">
+        <div
+            class="CBUser_ResetPasswordView"
+            data-user-email-address="<?= cbhtml($userEmailAddress) ?>"
+        >
         </div>
 
         <?php

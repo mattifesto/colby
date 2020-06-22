@@ -84,7 +84,7 @@
             rootElement
         );
 
-        elements[1].textContent = "Reset Password";
+        elements[1].textContent = "Change/Reset Password";
 
         elements = CBUI.createElementTree(
             "CBUI_sectionContainer",
@@ -99,7 +99,8 @@
 
         let emailAddressEditor = CBUIStringEditor.create();
         emailAddressEditor.title = "Email Address";
-
+        emailAddressEditor.value = viewElement.dataset.userEmailAddress;
+        
         sectionElement.appendChild(
             emailAddressEditor.element
         );
@@ -139,7 +140,7 @@
 
         let buttonElement = elements[1];
 
-        buttonElement.textContent = "Reset Password";
+        buttonElement.textContent = "Change/Reset Password";
 
         buttonElement.addEventListener(
             "click",
