@@ -22,8 +22,18 @@ if ($destinationURL === '') {
 }
 
 $cbmessage = '';
-$emailAddress = cb_post_value('emailAddress', '');
-$password = cb_post_value('password', '');
+
+$emailAddress = trim(
+    cb_post_value(
+        'emailAddress',
+        ''
+    )
+);
+
+$password = cb_post_value(
+    'password',
+    ''
+);
 
 
 
@@ -34,7 +44,7 @@ $password = cb_post_value('password', '');
 
 if (
     ColbyUser::getCurrentUserCBID() === null &&
-    $emailAddress !== null
+    $emailAddress !== ''
 ) {
     $result = CBUser::signIn(
         $emailAddress,
@@ -101,6 +111,7 @@ if (ColbyUser::getCurrentUserCBID() !== null) {
         (object)[
             'className' => 'SignInView',
             'destinationURL' => $destinationURL,
+            'emailAddress' => $emailAddress,
         ],
         (object)[
             'className' => 'CBFacebookSignInView',
@@ -162,6 +173,10 @@ final class SignInView {
                 $spec,
                 'destinationURL'
             ),
+            'emailAddress' => CBModel::valueToString(
+                $spec,
+                'emailAddress'
+            ),
         ];
     }
     /* CBModel_build() */
@@ -183,6 +198,11 @@ final class SignInView {
         $destinationURL = CBModel::valueToString(
             $viewModel,
             'destinationURL'
+        );
+
+        $emailAddress = CBModel::valueToString(
+            $viewModel,
+            'emailAddress'
         );
 
         $formActionURL = CBUser::getSignInPageURL(
@@ -217,6 +237,7 @@ final class SignInView {
                                 type="email"
                                 name="emailAddress"
                                 id="emailAddress"
+                                value="<?= cbhtml($emailAddress) ?>"
                             />
                         </div>
                     </div>
