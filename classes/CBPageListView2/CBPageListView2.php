@@ -23,9 +23,19 @@ final class CBPageListView2 {
     static function CBAjax_fetchPages(
         $args
     ): stdClass {
-        $classNameForKind = CBModel::valueToString($args, 'classNameForKind');
-        $classNameForKindAsSQL = CBDB::stringToSQL($classNameForKind);
-        $publishedBeforeTimestamp = CBModel::valueAsInt($args, 'publishedBeforeTimestamp');
+        $classNameForKind = CBModel::valueToString(
+            $args,
+            'classNameForKind'
+        );
+
+        $classNameForKindAsSQL = CBDB::stringToSQL(
+            $classNameForKind
+        );
+
+        $publishedBeforeTimestamp = CBModel::valueAsInt(
+            $args,
+            'publishedBeforeTimestamp'
+        );
 
         if (empty($publishedBeforeTimestamp)) {
             $publishedBeforeClause = '';
@@ -50,7 +60,12 @@ final class CBPageListView2 {
         EOT;
 
         return (object)[
-            'pages' => CBDB::SQLToArray($SQL, ['valueIsJSON' => true]),
+            'pages' => CBDB::SQLToArray(
+                $SQL,
+                [
+                    'valueIsJSON' => true,
+                ]
+            ),
         ];
     }
     /* CBAjax_fetchPages() */
@@ -200,7 +215,10 @@ final class CBPageListView2 {
             return;
         }
 
-        $CSSClassNames = CBModel::valueToArray($model, 'CSSClassNames');
+        $CSSClassNames = CBModel::valueToArray(
+            $model,
+            'CSSClassNames'
+        );
 
         if (in_array('custom', $CSSClassNames)) {
             /* don't apply any built-in styles */
@@ -216,9 +234,17 @@ final class CBPageListView2 {
             );
         }
 
-        array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
+        array_walk(
+            $CSSClassNames,
+            'CBHTMLOutput::requireClassName'
+        );
 
-        $CSSClassNames = cbhtml(implode(' ', $CSSClassNames));
+        $CSSClassNames = cbhtml(
+            implode(
+                ' ',
+                $CSSClassNames
+            )
+        );
 
         ?>
 
