@@ -75,7 +75,7 @@ final class CBPageListView2 {
      */
     static function CBHTMLOutput_CSSURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v453.css', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v624.css', cbsysurl()),
         ];
     }
 
@@ -86,7 +86,7 @@ final class CBPageListView2 {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v619.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v624.js', cbsysurl()),
         ];
     }
 
@@ -202,8 +202,18 @@ final class CBPageListView2 {
 
         $CSSClassNames = CBModel::valueToArray($model, 'CSSClassNames');
 
-        if (!in_array('custom', $CSSClassNames)) {
-            $CSSClassNames[] = 'CBPageListView2_default';
+        if (in_array('custom', $CSSClassNames)) {
+            /* don't apply any built-in styles */
+        } else if (in_array('CBPageListView2_small', $CSSClassNames)) {
+            array_push(
+                $CSSClassNames,
+                'CBPageListView2_small'
+            );
+        } else {
+            array_push(
+                $CSSClassNames,
+                'CBPageListView2_default'
+            );
         }
 
         array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');

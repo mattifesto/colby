@@ -1,3 +1,6 @@
+
+/* CBPageListView2_default */
+
 /**
  * This view's declarations follow the Colby View Element Standards
  */
@@ -46,6 +49,17 @@
 .CBPageListView2_default > article .readmore {
     color: var(--CBTextColorForLinks);
 }
+
+/* CBPageListView2_small */
+
+.CBPageListView2_small {
+    /* need to add container */
+}
+
+
+
+
+/* button */
 
 .CBPageListView2 .buttonContainer {
     padding: 20px 0;

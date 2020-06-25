@@ -198,20 +198,49 @@ var CBPageListView2 = {
 /* CBPageListView2 */
 
 
+(function () {
 
-Colby.afterDOMContentLoaded(
-    function () {
+    Colby.afterDOMContentLoaded(
+        function () {
+            afterDOMContentLoaded();
+        }
+    );
+
+
+
+    /**
+     * @return undefined
+     */
+    function afterDOMContentLoaded() {
         let elements = document.getElementsByClassName("CBPageListView2");
 
         for (let index = 0; index < elements.length; index++) {
             let element = elements[index];
 
-            CBPageListView2.fetchPages(
-                {
-                    element: element,
-                    renderStyleIsRecent: element.classList.contains("recent"),
-                }
-            );
+            initializeElement(element);
         }
     }
-);
+    /* afterDOMContentLoaded() */
+
+
+
+    /**
+     * @param Element element
+     *
+     *      The CBPageListView2 element.
+     *
+     * @return undefined
+     */
+    function initializeElement(
+        element
+    ) {
+        CBPageListView2.fetchPages(
+            {
+                element: element,
+                renderStyleIsRecent: element.classList.contains("recent"),
+            }
+        );
+    }
+    /* initializeElement() */
+
+})();
