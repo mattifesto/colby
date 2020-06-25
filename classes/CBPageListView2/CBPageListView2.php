@@ -224,7 +224,7 @@ final class CBPageListView2 {
 
         <div
             class="CBPageListView2 <?= $CSSClassNames ?>"
-            data-classnameforkind="<?= $model->classNameForKind ?>"
+            data-class-name-for-kind="<?= $model->classNameForKind ?>"
         >
         </div>
 

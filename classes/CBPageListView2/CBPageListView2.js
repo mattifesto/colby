@@ -29,7 +29,7 @@ var CBPageListView2 = {
      * @return undefined
      */
     fetchPages: function (state) {
-        var classNameForKind = state.element.dataset.classnameforkind;
+        var classNameForKind = state.element.dataset.classNameForKind;
 
         Colby.callAjaxFunction(
             "CBPageListView2",
