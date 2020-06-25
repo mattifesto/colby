@@ -4,7 +4,7 @@
 /**
  * This view's declarations follow the Colby View Element Standards
  */
-.CBPageListView2_default > article {
+.CBPageListView2_default article {
     box-sizing: border-box;
     display: flex;
     justify-content: center;
@@ -12,7 +12,7 @@
     padding: 60px 20px;
 }
 
-.CBPageListView2_default > article > .content {
+.CBPageListView2_default article > .content {
     max-width: 100%;
     width: 36em;
 
@@ -21,43 +21,71 @@
     text-decoration: none;
 }
 
-.CBPageListView2_default > article .image {
+.CBPageListView2_default article .image {
     background-color: var(--CBBackgroundOffsetColor);
 }
 
-.CBPageListView2_default > article .text {
+.CBPageListView2_default article .text {
     line-height: 1.6;
     text-align: center;
 }
 
-.CBPageListView2_default > article .text > * {
+.CBPageListView2_default article .text > * {
     margin: 10px 0;
 }
 
-.CBPageListView2_default > article h2 {
+.CBPageListView2_default article h2 {
     font-size: inherit;
 }
 
-.CBPageListView2_default > article .description {
+.CBPageListView2_default article .description {
     color: var(--CBTextColor2);
 }
 
-.CBPageListView2_default > article .published {
+.CBPageListView2_default article .published {
     color: var(--CBTextColor3);
 }
 
-.CBPageListView2_default > article .readmore {
+.CBPageListView2_default article .readmore {
     color: var(--CBTextColorForLinks);
 }
 
 /* CBPageListView2_small */
 
-.CBPageListView2_small {
-    /* need to add container */
+.CBPageListView2_small .CBPageListView2_pagesContainer {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    box-sizing: border-box;
+    overflow-wrap: break-word;
 }
 
+.CBPageListView2_small .CBPageListView2_pagesContainer > article {
+    max-width: 100%;
+    width: 210px;
 
+    font-size: 12px;
+    padding: 15px 5px;
+}
 
+.CBPageListView2_small .CBPageListView2_pageDescription,
+.CBPageListView2_small .CBPageListView2_pagePublicationDate {
+    color: var(--CBTextColor2);
+}
+
+.CBPageListView2_small .CBPageListView2_pageReadMore {
+    display: none;
+}
+
+.CBPageListView2_small a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.CBPageListView2_small h2 {
+    font-size: 14px;
+}
 
 /* button */
 

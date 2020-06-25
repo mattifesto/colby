@@ -5,6 +5,7 @@
 /* global
     CBArtworkElement,
     CBImage,
+    CBUI,
     CBUIButton,
     CBUIPanel,
     Colby,
@@ -23,13 +24,29 @@ var CBPageListView2 = {
      *          buttonContainerElement: Element
      *          element: Element
      *          hasFetchedAllElements: bool
+     *          pagesContainerElement: Element
      *          renderStyleIsRecent: bool
      *      }
      *
      * @return undefined
      */
     fetchPages: function (state) {
-        var classNameForKind = state.element.dataset.classNameForKind;
+        let classNameForKind = state.element.dataset.classNameForKind;
+        let pagesContainerElement;
+
+        if (state.pagesContainerElement === undefined) {
+            pagesContainerElement = CBUI.createElement(
+                "CBPageListView2_pagesContainer"
+            );
+
+            state.element.appendChild(
+                pagesContainerElement
+            );
+
+            state.pagesContainerElement = pagesContainerElement;
+        } else {
+            pagesContainerElement = state.pagesContainerElement;
+        }
 
         Colby.callAjaxFunction(
             "CBPageListView2",
@@ -39,7 +56,11 @@ var CBPageListView2 = {
                 publishedBeforeTimestamp: state.published,
             }
         ).then(
-            display
+            function (result) {
+                displayFetchedPages(
+                    result
+                );
+            }
         ).catch(
             function (error) {
                 if (CBPageListView2_currentUserIsDeveloper) {
@@ -72,7 +93,7 @@ var CBPageListView2 = {
          *
          * @return undefined
          */
-        function display(
+        function displayFetchedPages(
             result
         ) {
             var count = 0;
@@ -87,7 +108,7 @@ var CBPageListView2 = {
                         pageSummary
                     );
 
-                    state.element.insertBefore(
+                    state.pagesContainerElement.insertBefore(
                         element,
                         state.buttonContainerElement
                     );
@@ -178,14 +199,17 @@ var CBPageListView2 = {
 
                 textElement.appendChild(titleElement);
 
-                let descriptionElement = document.createElement("div");
-                descriptionElement.className = "description";
+                let descriptionElement = CBUI.createElement(
+                    "CBPageListView2_pageDescription description"
+                );
+
                 descriptionElement.textContent = pageSummary.description;
 
                 textElement.appendChild(descriptionElement);
 
-                var dateElement = document.createElement("div");
-                dateElement.className = "published";
+                var dateElement = CBUI.createElement(
+                    "CBPageListView2_pagePublicationDate published"
+                );
 
                 dateElement.appendChild(
                     Colby.unixTimestampToElement(
@@ -195,8 +219,10 @@ var CBPageListView2 = {
 
                 textElement.appendChild(dateElement);
 
-                let readModeElement = document.createElement("div");
-                readModeElement.className = "readmore";
+                let readModeElement = CBUI.createElement(
+                    "CBPageListView2_pageReadMore readmore"
+                );
+
                 readModeElement.textContent = "read more >";
 
                 textElement.appendChild(readModeElement);

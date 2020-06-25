@@ -132,11 +132,13 @@ final class CBPageListView2 {
         return [
             'CBArtworkElement',
             'CBImage',
+            'CBUI',
             'CBUIButton',
             'CBUIPanel',
             'Colby',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 
 
 
