@@ -78,84 +78,21 @@ var CBPageListView2 = {
             var count = 0;
 
             result.pages.forEach(
-                function (page) {
+                function (pageSummary) {
                     if (state.renderStyleIsRecent && count >= 2) {
                         return;
                     }
 
-                    var element = document.createElement("article");
-                    var anchorElement = document.createElement("a");
-                    anchorElement.href = "/" + page.URI + "/";
-
-                    anchorElement.classList.add("content");
-
-                    /* image */
-
-                    var imageElement = document.createElement("div");
-                    imageElement.className = "image";
-
-                    let URL = CBImage.toURL(page.image, "rw1280");
-
-                    if (URL === "") {
-                        URL = page.thumbnailURL;
-                    }
-
-                    let artworkElement = CBArtworkElement.create(
-                        {
-                            URL: URL,
-                            aspectRatioWidth: 16,
-                            aspectRatioHeight: 9,
-                        }
+                    let element = pagesSummaryToElement(
+                        pageSummary
                     );
-
-                    imageElement.appendChild(artworkElement);
-                    anchorElement.appendChild(imageElement);
-
-                    /* text */
-
-                    {
-                        let textElement = document.createElement("div");
-                        textElement.className = "text";
-
-                        let titleElement = document.createElement("h2");
-                        titleElement.className = "title";
-                        titleElement.textContent = page.title;
-
-                        textElement.appendChild(titleElement);
-
-                        let descriptionElement = document.createElement("div");
-                        descriptionElement.className = "description";
-                        descriptionElement.textContent = page.description;
-
-                        textElement.appendChild(descriptionElement);
-
-                        var dateElement = document.createElement("div");
-                        dateElement.className = "published";
-
-                        dateElement.appendChild(
-                            Colby.unixTimestampToElement(
-                                page.publicationTimeStamp
-                            )
-                        );
-
-                        textElement.appendChild(dateElement);
-
-                        let readModeElement = document.createElement("div");
-                        readModeElement.className = "readmore";
-                        readModeElement.textContent = "read more >";
-
-                        textElement.appendChild(readModeElement);
-                        anchorElement.appendChild(textElement);
-                    }
-
-                    element.appendChild(anchorElement);
 
                     state.element.insertBefore(
                         element,
                         state.buttonContainerElement
                     );
 
-                    state.published = page.publicationTimeStamp;
+                    state.published = pageSummary.publicationTimeStamp;
 
                     count += 1;
                 }
@@ -190,6 +127,87 @@ var CBPageListView2 = {
             }
         }
         /* display() */
+
+
+
+        /**
+         * @param object pageSummary
+         *
+         * @return Element
+         */
+        function pagesSummaryToElement(
+            pageSummary
+        ) {
+            var element = document.createElement("article");
+            var anchorElement = document.createElement("a");
+            anchorElement.href = "/" + pageSummary.URI + "/";
+
+            anchorElement.classList.add("content");
+
+            /* image */
+
+            var imageElement = document.createElement("div");
+            imageElement.className = "image";
+
+            let URL = CBImage.toURL(pageSummary.image, "rw1280");
+
+            if (URL === "") {
+                URL = pageSummary.thumbnailURL;
+            }
+
+            let artworkElement = CBArtworkElement.create(
+                {
+                    URL: URL,
+                    aspectRatioWidth: 16,
+                    aspectRatioHeight: 9,
+                }
+            );
+
+            imageElement.appendChild(artworkElement);
+            anchorElement.appendChild(imageElement);
+
+            /* text */
+
+            {
+                let textElement = document.createElement("div");
+                textElement.className = "text";
+
+                let titleElement = document.createElement("h2");
+                titleElement.className = "title";
+                titleElement.textContent = pageSummary.title;
+
+                textElement.appendChild(titleElement);
+
+                let descriptionElement = document.createElement("div");
+                descriptionElement.className = "description";
+                descriptionElement.textContent = pageSummary.description;
+
+                textElement.appendChild(descriptionElement);
+
+                var dateElement = document.createElement("div");
+                dateElement.className = "published";
+
+                dateElement.appendChild(
+                    Colby.unixTimestampToElement(
+                        pageSummary.publicationTimeStamp
+                    )
+                );
+
+                textElement.appendChild(dateElement);
+
+                let readModeElement = document.createElement("div");
+                readModeElement.className = "readmore";
+                readModeElement.textContent = "read more >";
+
+                textElement.appendChild(readModeElement);
+                anchorElement.appendChild(textElement);
+            }
+
+            element.appendChild(anchorElement);
+
+            return element;
+        }
+        /* pagesSummaryToElement() */
 
     },
     /* fetchPages() */
