@@ -11,7 +11,7 @@ final class CBPageListView2Editor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v619.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v624.js', cbsysurl()),
         ];
     }
 

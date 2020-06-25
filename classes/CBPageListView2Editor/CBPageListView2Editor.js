@@ -66,12 +66,18 @@ var CBPageListView2Editor = {
                 {
                     paragraphs: [
                         `
-                        View Specific CSS Class Names
-                        `,`
-                        "custom": disable the default view styles.
-                        `,`
-                        "recent": show only the two most recently published
-                        pages.
+                            View Specific CSS Class Names
+                        `,
+                        `
+                            "custom": disable the default view styles
+                        `,
+                        `
+                            "recent": show only the two most recently published
+                            pages
+                        `,
+                        `
+                            "CBPageListView2_small": show thumbnails in a tight
+                            horizontally flowing layout
                         `
                     ],
                 }
