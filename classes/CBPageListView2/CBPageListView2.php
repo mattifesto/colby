@@ -11,7 +11,8 @@ final class CBPageListView2 {
      *
      *      {
      *          classNameForKind: string
-     *          publishedBeforeTimestamp: ?int
+     *          maximumPageCount: int|null
+     *          publishedBeforeTimestamp: int|null
      *      }
      *
      * @return object
@@ -43,6 +44,14 @@ final class CBPageListView2 {
             $publishedBeforeClause = "AND `published` < {$publishedBeforeTimestamp}";
         }
 
+        $maximumPageCount = CBModel::valueAsInt(
+            $args,
+            'maximumPageCount'
+        ) ?? 10;
+
+        $maximumPageCount = max($maximumPageCount, 1);
+        $maximumPageCount = min($maximumPageCount, 10);
+
         $SQL = <<<EOT
 
             SELECT      keyValueData
@@ -55,7 +64,7 @@ final class CBPageListView2 {
 
             ORDER BY    published DESC
 
-            LIMIT       10
+            LIMIT       {$maximumPageCount}
 
         EOT;
 
@@ -131,6 +140,7 @@ final class CBPageListView2 {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBArtworkElement',
+            'CBConvert',
             'CBImage',
             'CBUI',
             'CBUIButton',
@@ -182,6 +192,15 @@ final class CBPageListView2 {
     static function CBModel_build(
         stdClass $spec
     ): stdClass {
+        $maximumPageCount = CBModel::valueAsInt(
+            $spec,
+            'maximumPageCount'
+        );
+
+        if ($maximumPageCount !== null) {
+            $maximumPageCount = max($maximumPageCount, 1);
+        }
+
         return (object)[
             'classNameForKind' => trim(
                 CBModel::valueToString(
@@ -194,6 +213,8 @@ final class CBPageListView2 {
                 $spec,
                 'CSSClassNames'
             ),
+
+            'maximumPageCount' => $maximumPageCount,
         ];
     }
     /* CBModel_build() */
@@ -211,7 +232,9 @@ final class CBPageListView2 {
      *
      * @return void
      */
-    static function CBView_render(stdClass $model): void {
+    static function CBView_render(
+        stdClass $model
+    ): void {
         if (empty($model->classNameForKind)) {
             echo '<!-- CBPageListView2 with no classNameForKind -->';
             return;
@@ -241,6 +264,19 @@ final class CBPageListView2 {
             'CBHTMLOutput::requireClassName'
         );
 
+        if (in_array('recent', $CSSClassNames)) {
+            $maximumPageCount = 2;
+        } else {
+            $maximumPageCount = CBModel::valueAsInt(
+                $model,
+                'maximumPageCount'
+            );
+
+            if ($maximumPageCount !== null) {
+                $maximumPageCount = max($maximumPageCount, 1);
+            }
+        }
+
         $CSSClassNames = cbhtml(
             implode(
                 ' ',
@@ -253,6 +289,7 @@ final class CBPageListView2 {
         <div
             class="CBPageListView2 <?= $CSSClassNames ?>"
             data-class-name-for-kind="<?= $model->classNameForKind ?>"
+            data-maximum-page-count="<?= $maximumPageCount ?>"
         >
         </div>
 

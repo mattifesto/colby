@@ -4,6 +4,7 @@
 /* exported CBPageListView2 */
 /* global
     CBArtworkElement,
+    CBConvert,
     CBImage,
     CBUI,
     CBUIButton,
@@ -24,14 +25,21 @@ var CBPageListView2 = {
      *          buttonContainerElement: Element
      *          element: Element
      *          hasFetchedAllElements: bool
+     *          maximumPageCount: int|undefined
      *          pagesContainerElement: Element
-     *          renderStyleIsRecent: bool
      *      }
      *
      * @return undefined
      */
     fetchPages: function (state) {
         let classNameForKind = state.element.dataset.classNameForKind;
+
+        let maximumPageCount = CBConvert.valueAsInt(
+            state.element.dataset.maximumPageCount
+        ) || Number.MAX_SAFE_INTEGER;
+
+        maximumPageCount = Math.max(maximumPageCount, 1);
+
         let pagesContainerElement;
 
         if (state.pagesContainerElement === undefined) {
@@ -52,7 +60,8 @@ var CBPageListView2 = {
             "CBPageListView2",
             "fetchPages",
             {
-                classNameForKind: classNameForKind,
+                classNameForKind,
+                maximumPageCount,
                 publishedBeforeTimestamp: state.published,
             }
         ).then(
@@ -100,7 +109,7 @@ var CBPageListView2 = {
 
             result.pages.forEach(
                 function (pageSummary) {
-                    if (state.renderStyleIsRecent && count >= 2) {
+                    if (count >= maximumPageCount) {
                         return;
                     }
 
@@ -108,9 +117,8 @@ var CBPageListView2 = {
                         pageSummary
                     );
 
-                    state.pagesContainerElement.insertBefore(
-                        element,
-                        state.buttonContainerElement
+                    state.pagesContainerElement.appendChild(
+                        element
                     );
 
                     state.published = pageSummary.publicationTimeStamp;
@@ -122,7 +130,7 @@ var CBPageListView2 = {
             Colby.updateTimes();
 
             if (
-                !state.renderStyleIsRecent &&
+                maximumPageCount > 10 &&
                 state.buttonContainerElement === undefined
             ) {
                 state.buttonContainerElement = document.createElement("div");
@@ -281,7 +289,6 @@ var CBPageListView2 = {
         CBPageListView2.fetchPages(
             {
                 element: element,
-                renderStyleIsRecent: element.classList.contains("recent"),
             }
         );
     }
