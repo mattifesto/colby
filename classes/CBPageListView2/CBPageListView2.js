@@ -167,33 +167,65 @@ var CBPageListView2 = {
         function pagesSummaryToElement(
             pageSummary
         ) {
-            var element = document.createElement("article");
-            var anchorElement = document.createElement("a");
-            anchorElement.href = "/" + pageSummary.URI + "/";
+            let element = CBUI.createElement(
+                "CBPageListView2_page",
+                "article"
+            );
 
-            anchorElement.classList.add("content");
+            /* anchorElement */
 
-            /* image */
+            let anchorElement = CBUI.createElement(
+                /* the "content" class is deprecated */
+                "CBPageListView2_pageAnchor content",
+                "a"
+            );
 
-            var imageElement = document.createElement("div");
-            imageElement.className = "image";
+            element.appendChild(
+                anchorElement
+            );
 
-            let URL = CBImage.toURL(pageSummary.image, "rw1280");
+            anchorElement.href = (
+                "/" +
+                pageSummary.URI +
+                "/"
+            );
 
-            if (URL === "") {
-                URL = pageSummary.thumbnailURL;
+
+            /* imageElement */
+
+            let imageElement = CBUI.createElement(
+                /* the "image" class is deprecated */
+                "CBPageListView2_pageImage image"
+            );
+
+            anchorElement.appendChild(
+                imageElement
+            );
+
+            let imageURL = CBImage.toURL(
+                pageSummary.image,
+                "rw1280"
+            );
+
+            if (imageURL === "") {
+                imageURL = pageSummary.thumbnailURL;
             }
+
+
+            /* artworkElement */
 
             let artworkElement = CBArtworkElement.create(
                 {
-                    URL: URL,
+                    URL: imageURL,
                     aspectRatioWidth: 16,
                     aspectRatioHeight: 9,
                 }
             );
 
-            imageElement.appendChild(artworkElement);
-            anchorElement.appendChild(imageElement);
+            imageElement.appendChild(
+                artworkElement
+            );
+
 
             /* text */
 
@@ -236,8 +268,6 @@ var CBPageListView2 = {
                 textElement.appendChild(readModeElement);
                 anchorElement.appendChild(textElement);
             }
-
-            element.appendChild(anchorElement);
 
             return element;
         }

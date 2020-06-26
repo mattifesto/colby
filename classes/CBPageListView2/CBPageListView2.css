@@ -12,7 +12,7 @@
     padding: 60px 20px;
 }
 
-.CBPageListView2_default article > .content {
+.CBPageListView2_default .CBPageListView2_pageAnchor {
     max-width: 100%;
     width: 36em;
 
@@ -21,7 +21,7 @@
     text-decoration: none;
 }
 
-.CBPageListView2_default article .image {
+.CBPageListView2_default .CBPageListView2_pageImage {
     background-color: var(--CBBackgroundOffsetColor);
 }
 
@@ -67,6 +67,10 @@
 
     font-size: 12px;
     padding: 15px 5px;
+}
+
+.CBPageListView2_small .CBPageListView2_pageImage {
+    background-color: var(--CBBackgroundOffsetColor);
 }
 
 .CBPageListView2_small .CBPageListView2_pageDescription,
