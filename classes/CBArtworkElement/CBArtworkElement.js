@@ -51,10 +51,10 @@
     function create(
         args
     ) {
-        let URL = CBModel.valueToString(
+        let imageURL = CBModel.valueToString(
             args,
             "URL"
-        );
+        ).trim();
 
         let aspectRatioWidth = CBModel.valueAsNumber(
             args,
@@ -107,9 +107,14 @@
             outerElement.style.width = "100vw";
         }
 
+
         /* inner element */
 
-        var innerElement = document.createElement("div");
+        let innerElement = document.createElement("div");
+
+        outerElement.appendChild(
+            innerElement
+        );
 
         {
             let ratio = (aspectRatioHeight / aspectRatioWidth);
@@ -118,13 +123,18 @@
             innerElement.style.paddingBottom = percent + "%";
         }
 
+
         /* image element */
 
-        var imageElement = document.createElement("img");
-        imageElement.src = URL;
+        if (imageURL !== "") {
+            let imageElement = document.createElement("img");
+            imageElement.src = imageURL;
 
-        innerElement.appendChild(imageElement);
-        outerElement.appendChild(innerElement);
+            innerElement.appendChild(
+                imageElement
+            );
+        }
+
 
         return outerElement;
     }
