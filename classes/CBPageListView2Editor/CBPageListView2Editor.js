@@ -29,15 +29,18 @@ var CBPageListView2Editor = {
     CBUISpecEditor_createEditorElement(
         args
     ) {
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
         var section, item;
-        var element = document.createElement("div");
-        element.className = "CBPageListView2Editor";
 
-        element.appendChild(
-            CBUI.createHalfSpace()
+        let elements = CBUI.createElementTree(
+            "CBPageListView2Editor",
+            "CBUI_sectionContainer",
+            "CBUI_section"
         );
 
-        section = CBUI.createSection();
+        let element = elements[0];
+        let sectionElement = elements[2];
 
         item = CBUI.createSectionItem();
 
@@ -46,14 +49,33 @@ var CBPageListView2Editor = {
                 {
                     labelText: "Class Name for Kind",
                     propertyName: "classNameForKind",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
+                    spec: spec,
+                    specChangedCallback: specChangedCallback,
                 }
             ).element
         );
 
-        section.appendChild(item);
-        element.appendChild(section);
+        sectionElement.appendChild(
+            item
+        );
+
+        let maximumPageCountEditor = CBUIStringEditor.create();
+        maximumPageCountEditor.title = "Maximum Page Count";
+
+        maximumPageCountEditor.value = CBModel.valueToString(
+            spec,
+            "maximumPageCount"
+        );
+
+        maximumPageCountEditor.changed = function () {
+            spec.maximumPageCount = maximumPageCountEditor.value;
+            specChangedCallback();
+        };
+
+        sectionElement.appendChild(
+            maximumPageCountEditor.element
+        );
+
 
         /* CSSClassNames */
 
@@ -69,16 +91,12 @@ var CBPageListView2Editor = {
                             View Specific CSS Class Names
                         `,
                         `
-                            "custom": disable the default view styles
+                            custom: disable the default view styles
                         `,
                         `
-                            "recent": show only the two most recently published
-                            pages
-                        `,
-                        `
-                            "CBPageListView2_small": show thumbnails in a tight
+                            CBPageListView2_small: show thumbnails in a tight
                             horizontally flowing layout
-                        `
+                        `,
                     ],
                 }
             )
