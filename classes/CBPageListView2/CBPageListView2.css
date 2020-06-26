@@ -34,7 +34,7 @@
     margin: 10px 0;
 }
 
-.CBPageListView2_default article h2 {
+.CBPageListView2_default .CBPageListView2_pageTitle {
     font-size: inherit;
 }
 
@@ -78,6 +78,12 @@
     color: var(--CBTextColor2);
 }
 
+.CBPageListView2_small .CBPageListView2_pageDescription {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .CBPageListView2_small .CBPageListView2_pageReadMore {
     display: none;
 }
@@ -87,8 +93,14 @@
     text-decoration: none;
 }
 
-.CBPageListView2_small h2 {
+.CBPageListView2_small .CBPageListView2_pageTitle {
     font-size: 14px;
+
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
 }
 
 /* button */

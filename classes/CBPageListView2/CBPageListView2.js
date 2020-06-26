@@ -233,8 +233,12 @@ var CBPageListView2 = {
                 let textElement = document.createElement("div");
                 textElement.className = "text";
 
-                let titleElement = document.createElement("h2");
-                titleElement.className = "title";
+                let titleElement = CBUI.createElement(
+                    /* the "title" class is deprecated */
+                    "CBPageListView2_pageTitle title",
+                    "h2"
+                );
+
                 titleElement.textContent = pageSummary.title;
 
                 textElement.appendChild(titleElement);
