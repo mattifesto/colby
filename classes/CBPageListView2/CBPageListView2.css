@@ -88,7 +88,7 @@
     display: none;
 }
 
-.CBPageListView2_small a {
+.CBPageListView2_small .CBPageListView2_pageAnchor {
     color: inherit;
     text-decoration: none;
 }
