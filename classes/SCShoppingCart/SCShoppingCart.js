@@ -187,10 +187,16 @@
      */
     function init_getMainCartItemSpecs() {
         if (mainShoppingCartSpec === undefined) {
-            let record = CBModels.fetch(
-                mainShoppingCartID,
-                localStorage
-            );
+            let record;
+
+            try {
+                record = CBModels.fetch(
+                    mainShoppingCartID,
+                    localStorage
+                );
+            } catch (error) {
+                /* TODO 2020_06_28: display local storage error */
+            }
 
             if (record === undefined) {
                 mainShoppingCartSpec = {};
@@ -389,14 +395,18 @@
                 mainShoppingCartSpec.cartItems =
                 mainCartItemSpecs.getCartItems();
 
-                CBModels.save(
-                    mainShoppingCartID,
-                    mainShoppingCartSpec,
-                    mainShoppingCartVersion,
-                    localStorage
-                );
+                try {
+                    CBModels.save(
+                        mainShoppingCartID,
+                        mainShoppingCartSpec,
+                        mainShoppingCartVersion,
+                        localStorage
+                    );
 
-                mainShoppingCartVersion += 1;
+                    mainShoppingCartVersion += 1;
+                } catch (error) {
+                    /* TODO 2020_06_28: display local storage error */
+                }
 
                 resolve();
             } catch (error) {
