@@ -46,7 +46,7 @@
      * @return Element
      *
      *      {
-     *          promise_potentialPasswordCBID: Promise
+     *          promise_getPotentialPasswordCBID: Promise
      *      }
      */
     function createResetPasswordFormElement(
@@ -117,7 +117,7 @@
 
         buttonElement.textContent = "Change/Reset Password";
 
-        rootElement.promise_potentialPasswordCBID = new Promise(
+        rootElement.promise_getPotentialPasswordCBID = new Promise(
             function (resolve) {
                 buttonElement.addEventListener(
                     "click",
@@ -140,16 +140,16 @@
 
 
     /**
-     * @param Element viewElement
      * @param CBID potentialPasswordCBID
-     * @param function resolve
      *
-     * @return undefined
+     * @return Element
+     *
+     *      {
+     *          promise_passwordWasVerified: Promise
+     *      }
      */
-    function createVerificationForm(
-        viewElement,
+    function createVerificationFormElement(
         potentialPasswordCBID,
-        resolve
     ) {
         let elements = CBUI.createElementTree(
             "CBUser_ResetPasswordView_verifyPotentialPassword",
@@ -157,10 +157,6 @@
         );
 
         let rootElement = elements[0];
-
-        viewElement.appendChild(
-            rootElement
-        );
 
         elements[1].textContent = "Confirm";
 
@@ -195,27 +191,24 @@
 
         buttonElement.textContent = "Confirm";
 
-        buttonElement.addEventListener(
-            "click",
-            closure_tryToVerifyPotentialPasswordViaAjax
+        rootElement.promise_passwordWasVerified = new Promise(
+            function (resolve) {
+                buttonElement.addEventListener(
+                    "click",
+                    function () {
+                        tryToVerifyPotentialPasswordViaAjax(
+                            potentialPasswordCBID,
+                            oneTimePasswordEditor.value,
+                            resolve
+                        );
+                    }
+                );
+            }
         );
 
-
-
-        /**
-         * @return undefined
-         */
-        function closure_tryToVerifyPotentialPasswordViaAjax() {
-            tryToVerifyPotentialPasswordViaAjax(
-                potentialPasswordCBID,
-                oneTimePasswordEditor.value,
-                resolve
-            );
-        }
-        /* closure_tryToVerifyPotentialPasswordViaAjax() */
-
+        return rootElement;
     }
-    /* createVerificationForm() */
+    /* createVerificationFormElement() */
 
 
 
@@ -239,19 +232,28 @@
             );
 
             let potentialPasswordCBID = (
-                await resetPasswordFormElement.promise_potentialPasswordCBID
+                await resetPasswordFormElement.promise_getPotentialPasswordCBID
             );
 
             viewElement.textContent = "";
 
-            await verifyPotentialPassword(
-                viewElement,
-                potentialPasswordCBID
+            let verifyPotentialPasswordElement = (
+                createVerificationFormElement(
+                    potentialPasswordCBID
+                )
             );
+
+            viewElement.appendChild(
+                verifyPotentialPasswordElement
+            );
+
+            await verifyPotentialPasswordElement.promise_passwordWasVerified;
 
             window.location = "/colby/user/";
         } catch (error) {
-            CBUIPanel.displayAndReportError(error);
+            CBUIPanel.displayAndReportError(
+                error
+            );
         }
     }
     /* initializeViewElement() */
@@ -296,7 +298,9 @@
                 );
             }
         } catch (error) {
-            CBUIPanel.displayAndReportError(error);
+            CBUIPanel.displayAndReportError(
+                error
+            );
         }
     }
     /* tryToCreatePotentialPasswordViaAjax() */
@@ -333,29 +337,5 @@
         }
     }
     /* tryToVerifyPotentialPasswordViaAjax() */
-
-
-
-    /**
-     * @param Element viewElement
-     * @param CBID potentialPasswordCBID
-     *
-     * @return Promise -> undefined
-     */
-    function verifyPotentialPassword(
-        viewElement,
-        potentialPasswordCBID
-    ) {
-        return new Promise(
-            function (resolve) {
-                createVerificationForm(
-                    viewElement,
-                    potentialPasswordCBID,
-                    resolve
-                );
-            }
-        );
-    }
-    /* verifyPotentialPassword() */
 
 })();
