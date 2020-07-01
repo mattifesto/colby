@@ -118,15 +118,35 @@
         buttonElement.textContent = "Change/Reset Password";
 
         rootElement.promise_getPotentialPasswordCBID = new Promise(
-            function (resolve) {
+            function(resolve) {
+                let isDisabled = false;
+
                 buttonElement.addEventListener(
                     "click",
                     function () {
+                        if (isDisabled) {
+                            return;
+                        }
+
+                        isDisabled = true;
+
+                        buttonElement.classList.add(
+                            "CBUI_button1_disabled"
+                        );
+
                         tryToCreatePotentialPasswordViaAjax(
                             emailAddressEditor.value,
                             password1Editor.value,
                             password2Editor.value,
                             resolve
+                        ).finally(
+                            function () {
+                                buttonElement.classList.remove(
+                                    "CBUI_button1_disabled"
+                                );
+
+                                isDisabled = false;
+                            }
                         );
                     }
                 );
