@@ -41,37 +41,16 @@
 
 
     /**
-     * @param Element viewElement
+     * @param string userEmailAddress
      *
-     * @return Promise -> CBID
+     * @return Element
      *
-     *      This promise returns the CBID of a CBUser_PotentialPassword model.
+     *      {
+     *          promise_potentialPasswordCBID: Promise
+     *      }
      */
-    function createPotentialPassword(
-        viewElement
-    ) {
-        return new Promise(
-            function (resolve) {
-                createResetPasswordForm(
-                    viewElement,
-                    resolve
-                );
-            }
-        );
-    }
-    /* createPotentialPassword() */
-
-
-
-    /**
-     * @param Element viewElement
-     * @param function resolve
-     *
-     * @return undefined
-     */
-    function createResetPasswordForm(
-        viewElement,
-        resolve
+    function createResetPasswordFormElement(
+        userEmailAddress
     ) {
         let elements = CBUI.createElementTree(
             "CBUser_ResetPasswordView_resetPasswordForm",
@@ -80,10 +59,6 @@
 
         let rootElement = elements[0];
 
-        viewElement.appendChild(
-            rootElement
-        );
-
         elements[1].textContent = "Change/Reset Password";
 
         elements = CBUI.createElementTree(
@@ -91,7 +66,7 @@
             "CBUI_section"
         );
 
-        viewElement.appendChild(
+        rootElement.appendChild(
             elements[0]
         );
 
@@ -99,8 +74,8 @@
 
         let emailAddressEditor = CBUIStringEditor.create();
         emailAddressEditor.title = "Email Address";
-        emailAddressEditor.value = viewElement.dataset.userEmailAddress;
-        
+        emailAddressEditor.value = userEmailAddress;
+
         sectionElement.appendChild(
             emailAddressEditor.element
         );
@@ -134,7 +109,7 @@
             "CBUI_button1"
         );
 
-        viewElement.appendChild(
+        rootElement.appendChild(
             elements[0]
         );
 
@@ -142,28 +117,25 @@
 
         buttonElement.textContent = "Change/Reset Password";
 
-        buttonElement.addEventListener(
-            "click",
-            closure_tryToCreatePotentialPasswordViaAjax
+        rootElement.promise_potentialPasswordCBID = new Promise(
+            function (resolve) {
+                buttonElement.addEventListener(
+                    "click",
+                    function () {
+                        tryToCreatePotentialPasswordViaAjax(
+                            emailAddressEditor.value,
+                            password1Editor.value,
+                            password2Editor.value,
+                            resolve
+                        );
+                    }
+                );
+            }
         );
 
-
-
-        /**
-         * @return undefined
-         */
-        function closure_tryToCreatePotentialPasswordViaAjax() {
-            tryToCreatePotentialPasswordViaAjax(
-                emailAddressEditor.value,
-                password1Editor.value,
-                password2Editor.value,
-                resolve
-            );
-        }
-        /* closure_tryToCreatePotentialPasswordViaAjax() */
-
+        return rootElement;
     }
-    /* createResetPasswordForm() */
+    /* createResetPasswordFormElement() */
 
 
 
@@ -256,8 +228,18 @@
         viewElement
     ) {
         try {
-            let potentialPasswordCBID = await createPotentialPassword(
-                viewElement
+            let userEmailAddress = viewElement.dataset.userEmailAddress;
+
+            let resetPasswordFormElement = createResetPasswordFormElement(
+                userEmailAddress
+            );
+
+            viewElement.appendChild(
+                resetPasswordFormElement
+            );
+
+            let potentialPasswordCBID = (
+                await resetPasswordFormElement.promise_potentialPasswordCBID
             );
 
             viewElement.textContent = "";
