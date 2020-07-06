@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBArtworkViewEditor */
 /* globals
+    CBAjax,
     CBImage,
     CBMessageMarkup,
     CBModel,
@@ -12,7 +13,6 @@
     CBUIPanel,
     CBUISelector,
     CBUIStringEditor,
-    Colby,
 */
 
 
@@ -254,7 +254,7 @@ var CBArtworkViewEditor = {
          * @return undefined
          */
         function createEditor_handleImageChosen() {
-            Colby.callAjaxFunction(
+            CBAjax.call(
                 "CBImages",
                 "upload",
                 {},
