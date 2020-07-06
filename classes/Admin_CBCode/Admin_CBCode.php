@@ -362,6 +362,25 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'filetype' => 'js',
+                    'regex' => 'CBErrorHandler\.displayAndReport',
+                    'severity' => 3,
+                    'title' => 'CBErrorHandler.displayAndReport()',
+
+                    'cbmessage' => <<<EOT
+
+                        Use CBUIPanel.displayAndReportError() because
+                        CBErrorHandler should not have user interface
+                        functionality.
+
+                    EOT,
+
+                    'errorStartDate' => '2020/07/06',
+                    'warningStartDate' => '2020/04/16',
+                ],
+
+
+                (object)[
                     'filetype' => 'php',
                     'regex' => 'COLBY_SYSTEM_DIRECTORY',
                     'severity' => 3,
@@ -1147,24 +1166,6 @@ final class Admin_CBCode {
                     EOT,
 
                     'warningStartDate' => '2020/04/18',
-                ],
-
-
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => 'CBErrorHandler\.displayAndReport',
-                    'severity' => 4,
-                    'title' => 'CBErrorHandler.displayAndReport()',
-
-                    'cbmessage' => <<<EOT
-
-                        Use CBUIPanel.displayAndReportError() because
-                        CBErrorHandler should not have user interface
-                        functionality.
-
-                    EOT,
-
-                    'warningStartDate' => '2020/04/16',
                 ],
 
 
