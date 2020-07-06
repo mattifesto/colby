@@ -11,7 +11,7 @@ final class CBErrorHandler {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v608.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v627.js', cbsysurl()),
         ];
     }
 
@@ -22,7 +22,6 @@ final class CBErrorHandler {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
-            'CBUIPanel',
             'Colby',
         ];
     }

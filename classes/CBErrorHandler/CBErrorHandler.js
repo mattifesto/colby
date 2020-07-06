@@ -3,7 +3,6 @@
 /* jshint esversion: 6 */
 /* exported CBErrorHandler */
 /* global
-    CBUIPanel,
     Colby,
 */
 
@@ -18,51 +17,19 @@
  *
  *      This class should not have any user interface functionality.
  *
- * @NOTE 2020_04_25
+ * @NOTE 2020_04_25, 2020_07_06
  *
  *      The plan:
  *
- *      1. All uses of CBErrorHandler.displayAndReport() must be changed to
- *      CBUIPanel.displayAndReportError() so that this class can no longer
- *      require the CBUIPanel class.
+ *      1. This class will require CBAjax.
  *
- *      2. The displayAndReport() function is removed from this class.
- *
- *      3. This class will require CBAjax.
- *
- *      4. The Colby.js error reporting code will be moved to this class and
+ *      2. The Colby.js error reporting code will be moved to this class and
  *      Colby.js functions will call it while its functions are deprecated.
  *
- *      4a. Colby.browserIsSupported functionality will move to this class or
+ *      2a. Colby.browserIsSupported functionality will move to this class or
  *      a class something like CBBrowser.
  */
 var CBErrorHandler = {
-
-    /**
-     * @deprecated 2020_04_16
-     *
-     *      Use CBUIPanel.displayAndReportError().
-     *
-     *      CBErrorHandler should only have the ability to do low level error
-     *      handling. It should not have any user interface functionality.
-     *      Instead displayAndReportError() should become a function provided by
-     *      one or more classes that do have user interface functionality, such
-     *      as CBUIPanel. The dependency on CBUIPanel should be removed from
-     *      this class.
-     *
-     * @param Error error
-     *
-     * @return undefined
-     */
-    displayAndReport(
-        error
-    ) {
-        CBUIPanel.displayError(error);
-        Colby.reportError(error);
-    },
-    /* displayAndReport() */
-
-
 
      /**
       * Use this function to report an error to the server.
