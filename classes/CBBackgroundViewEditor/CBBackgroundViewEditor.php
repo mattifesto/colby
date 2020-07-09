@@ -23,7 +23,7 @@ final class CBBackgroundViewEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v609.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v629.js', cbsysurl()),
         ];
     }
 
@@ -49,6 +49,7 @@ final class CBBackgroundViewEditor {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBAjax',
             'CBImage',
             'CBModel',
             'CBUI',
@@ -58,7 +59,6 @@ final class CBBackgroundViewEditor {
             'CBUISpec',
             'CBUISpecArrayEditor',
             'CBUIStringEditor',
-            'Colby',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

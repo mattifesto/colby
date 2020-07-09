@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBBackgroundViewEditor */
 /* global
+    CBAjax,
     CBImage,
     CBModel,
     CBUI,
@@ -12,7 +13,6 @@
     CBUISpec,
     CBUISpecArrayEditor,
     CBUIStringEditor,
-    Colby,
 
     CBBackgroundViewEditor_addableClassNames,
 */
@@ -228,7 +228,7 @@ var CBBackgroundViewEditor = {
          * @return undefined
          */
         function createEditor_imageWasChosen() {
-            Colby.callAjaxFunction(
+            CBAjax.call(
                 "CBImages",
                 "upload",
                 {},
