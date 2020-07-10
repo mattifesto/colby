@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBContainerView2Editor */
 /* globals
+    CBAjax,
     CBImage,
     CBModel,
     CBUI,
@@ -11,7 +12,6 @@
     CBUISpec,
     CBUISpecArrayEditor,
     CBUIStringEditor,
-    Colby,
 
     CBContainerView2Editor_addableClassNames,
 */
@@ -45,7 +45,7 @@ var CBContainerView2Editor = {
         imageChooser.src = CBImage.toURL(args.spec.image, "rw960");
 
         imageChooser.chosen = function (chooserArgs) {
-            CBContainerView2Editor.promise = Colby.callAjaxFunction(
+            CBContainerView2Editor.promise = CBAjax.call(
                 "CBImages",
                 "upload",
                 {},
