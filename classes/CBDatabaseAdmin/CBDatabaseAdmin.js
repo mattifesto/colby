@@ -10,48 +10,68 @@
     Colby,
 */
 
-var CBDatabaseAdmin = {
+(function () {
 
-    init: function () {
-        CBDatabaseAdmin_tableMetadataList.sort(function (a, b) {
-            let aval = Number(a.tableSizeInMB);
-            let bval = Number(b.tableSizeInMB);
+    Colby.afterDOMContentLoaded(
+        afterDOMContentLoaded
+    );
 
-            /* sort from largest to smallest */
-            if (aval < bval) {
-                return 1;
-            } else if (aval > bval) {
-                return -1;
-            } else {
-                return 0;
+
+
+    /**
+     * @return undefined
+     */
+    function afterDOMContentLoaded() {
+        CBDatabaseAdmin_tableMetadataList.sort(
+            function (a, b) {
+                let aval = Number(a.tableSizeInMB);
+                let bval = Number(b.tableSizeInMB);
+
+                /* sort from largest to smallest */
+                if (aval < bval) {
+                    return 1;
+                } else if (aval > bval) {
+                    return -1;
+                } else {
+                    return 0;
+                }
             }
-        });
+        );
 
         let main = document.getElementsByTagName("main")[0];
 
-        main.appendChild(CBUI.createHalfSpace());
+        main.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         {
             let sectionElement = CBUI.createSection();
 
-            CBDatabaseAdmin_tableMetadataList.forEach(function (tableMetadata) {
-                let sectionItem = CBUISectionItem4.create();
-                let stringsPart = CBUIStringsPart.create();
+            CBDatabaseAdmin_tableMetadataList.forEach(
+                function (tableMetadata) {
+                    let sectionItem = CBUISectionItem4.create();
+                    let stringsPart = CBUIStringsPart.create();
 
-                stringsPart.element.classList.add("keyvalue");
-                stringsPart.element.classList.add("sidebyside");
+                    stringsPart.element.classList.add("keyvalue");
+                    stringsPart.element.classList.add("sidebyside");
 
-                stringsPart.string1 = tableMetadata.tableName;
-                stringsPart.string2 = `${tableMetadata.tableSizeInMB} MB`;
+                    stringsPart.string1 = tableMetadata.tableName;
+                    stringsPart.string2 = `${tableMetadata.tableSizeInMB} MB`;
 
-                sectionItem.appendPart(stringsPart);
-                sectionElement.appendChild(sectionItem.element);
-            });
+                    sectionItem.appendPart(stringsPart);
+                    sectionElement.appendChild(sectionItem.element);
+                }
+            );
 
-            main.appendChild(sectionElement);
-            main.appendChild(CBUI.createHalfSpace());
+            main.appendChild(
+                sectionElement
+            );
+
+            main.appendChild(
+                CBUI.createHalfSpace()
+            );
         }
-    },
-};
+    }
+    /* afterDOMContentLoaded() */
 
-Colby.afterDOMContentLoaded(CBDatabaseAdmin.init);
+})();
