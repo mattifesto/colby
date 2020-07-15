@@ -363,31 +363,36 @@ var Colby = {
         ) {
             let errorDetails = {};
 
+            /* Safari */
             if (error.line !== undefined) {
-                /* Safari */
-
                 errorDetails.sourceURL = error.sourceURL;
                 errorDetails.lineNumber = error.line;
                 errorDetails.columnNumber = error.column;
-            } else if (error.lineNumber !== undefined) {
-                /* Firefox */
+            }
 
+            /* Firefox */
+            else if (error.lineNumber !== undefined) {
                 errorDetails.sourceURL = error.filename;
                 errorDetails.lineNumber = error.lineNumber;
                 errorDetails.columnNumber = error.columnNumber;
-            } else if (typeof error.stack === "string") {
-                /* Chrome */
+            }
 
+            /* Chrome */
+            else if (typeof error.stack === "string") {
                 let stackLines = error.stack.split("\n");
 
-                if (stackLines.length < 1) {
+                /**
+                 * The first line is the error message, the second is the code
+                 * location.
+                 */
+                if (stackLines.length < 2) {
                     return errorDetails;
                 }
 
                 let stackLine = stackLines[1];
 
                 let matches = stackLine.match(
-                    /\((.*):([0-9]+):([0-9]+)\)$/
+                    /at (.*):([0-9]+):([0-9]+)$/
                 );
 
                 if (matches === null) {
@@ -534,6 +539,8 @@ var Colby = {
     /**
      * @deprecated 2020_04_25
      *
+     *      Use CBErrorHandler.report().
+     *
      *      This function will be moved to CBErrorHandler.report(). See
      *      CBErrorHandler.js for the steps required for the transition.
      *
@@ -570,11 +577,15 @@ var Colby = {
             return;
         }
 
+        let errorModel = Colby.errorToCBJavaScriptErrorModel(
+            error
+        );
+
         let promise = Colby.callAjaxFunction(
             "CBJavaScript",
             "reportError",
             {
-                errorModel: Colby.errorToCBJavaScriptErrorModel(error),
+                errorModel,
             }
         ).catch(
             function (error) {
