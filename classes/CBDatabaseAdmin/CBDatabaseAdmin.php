@@ -71,8 +71,6 @@ final class CBDatabaseAdmin {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBUI',
-            'CBUISectionItem4',
-            'CBUIStringsPart',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

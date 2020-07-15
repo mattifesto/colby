@@ -3,11 +3,10 @@
 /* jshint esversion: 6 */
 /* exported CBDatabaseAdmin */
 /* global
-    CBDatabaseAdmin_tableMetadataList,
     CBUI,
-    CBUISectionItem4,
-    CBUIStringsPart,
     Colby,
+
+    CBDatabaseAdmin_tableMetadataList,
 */
 
 (function () {
@@ -38,39 +37,48 @@
             }
         );
 
-        let main = document.getElementsByTagName("main")[0];
-
-        main.appendChild(
-            CBUI.createHalfSpace()
-        );
+        let mainElement = document.getElementsByTagName("main")[0];
+        let sectionElement;
 
         {
-            let sectionElement = CBUI.createSection();
-
-            CBDatabaseAdmin_tableMetadataList.forEach(
-                function (tableMetadata) {
-                    let sectionItem = CBUISectionItem4.create();
-                    let stringsPart = CBUIStringsPart.create();
-
-                    stringsPart.element.classList.add("keyvalue");
-                    stringsPart.element.classList.add("sidebyside");
-
-                    stringsPart.string1 = tableMetadata.tableName;
-                    stringsPart.string2 = `${tableMetadata.tableSizeInMB} MB`;
-
-                    sectionItem.appendPart(stringsPart);
-                    sectionElement.appendChild(sectionItem.element);
-                }
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
             );
 
-            main.appendChild(
-                sectionElement
+            mainElement.appendChild(
+                elements[0]
             );
 
-            main.appendChild(
-                CBUI.createHalfSpace()
-            );
+            sectionElement = elements[1];
         }
+
+        CBDatabaseAdmin_tableMetadataList.forEach(
+            function (tableMetadata) {
+                let elements = CBUI.createElementTree(
+                    "CBUI_container_leftAndRight",
+                    "CBDatabaseAdmin_tableName CBUI_ellipsis"
+                );
+
+                let textContainerElement = elements[0];
+                let tableNameElement = elements[1];
+
+                sectionElement.appendChild(
+                    textContainerElement
+                );
+
+                let tableSizeElement = CBUI.createElement(
+                    "CBDatabaseAdmin_tableSize"
+                );
+
+                textContainerElement.appendChild(
+                    tableSizeElement
+                );
+
+                tableNameElement.textContent = tableMetadata.tableName;
+                tableSizeElement.textContent = `${tableMetadata.tableSizeInMB} MB`;
+            }
+        );
     }
     /* afterDOMContentLoaded() */
 
