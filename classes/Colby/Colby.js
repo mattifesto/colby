@@ -303,7 +303,7 @@ var Colby = {
      *      ------          -------         ------
      *      column          columnNumber    no
      *      line            lineNumber      no
-     *      sourceURL       filename        no
+     *      sourceURL       fileName        no
      *
      * History:
      *
@@ -372,7 +372,7 @@ var Colby = {
 
             /* Firefox */
             else if (error.lineNumber !== undefined) {
-                errorDetails.sourceURL = error.filename;
+                errorDetails.sourceURL = error.fileName;
                 errorDetails.lineNumber = error.lineNumber;
                 errorDetails.columnNumber = error.columnNumber;
             }
