@@ -250,16 +250,25 @@
 
         if ($throwable instanceof CBException) {
             $extendedMessage = $throwable->getExtendedMessage();
+            $sourceCBID = $throwable->getSourceCBID();
+
             $errorReportAsCBMessage = <<<EOT
 
                 {$oneLineErrorReportAsCBMessage}
 
                 --- dl
                     --- dt
-                        extended message
+                        error extended message
                     ---
                     --- dd
                         {$extendedMessage}
+                    ---
+
+                    --- dt
+                        error source CBID
+                    ---
+                    --- dd
+                        {$sourceCBID}
                     ---
 
                     --- dt
