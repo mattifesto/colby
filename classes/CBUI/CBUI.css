@@ -454,6 +454,8 @@ a.CBUI_action {
     width: 640px;
 }
 
+
+
 /**
  * 2019_03_01
  *
@@ -464,9 +466,15 @@ a.CBUI_action {
 .CBUI_sectionContainer {
     display: flex;
     justify-content: center;
+
+    box-sizing: border-box;
+    max-width: 100%;
+
     padding-bottom: 10px;
     padding-top: 10px;
 }
+
+
 
 /**
  * 2019_03_01
