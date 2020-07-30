@@ -1,7 +1,11 @@
 .CBUISelectableItemContainer {
-    cursor: default;
     display: flex;
     justify-content: center;
+
+    max-width: 100%;
+    box-sizing: border-box;
+
+    cursor: default;
 
     -webkit-user-select: none;
     -moz-user-select: none;
