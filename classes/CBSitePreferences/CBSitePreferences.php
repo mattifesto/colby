@@ -5,7 +5,7 @@
  * the functions in this class return default values even if the site hasn't
  * been fully or properly installed or updated yet.
  *
- * Devlopers should call the functions on this class rather than accessing the
+ * Developers should call the functions on this class rather than accessing the
  * model directly so that the use of deprecated properties can be found and the
  * implementation of individual property calculation can change.
  */
@@ -15,15 +15,24 @@ final class CBSitePreferences {
     const ID = '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
 
     const defaultResizeOperations = [
-        'rs200clc200',  /*  100 x 100 */
-        'rw320',        /*  160 x ? */
-        'rw480',        /*  240 x ? */
-        'rw640',        /*  320 x ? */
-        'rw960',        /*  480 x ? */
-        'rw1280',       /*  640 x ? */
-        'rw1600',       /*  800 x ? */
-        'rw1920',       /*  960 x ? */
-        'rw2560',       /* 1280 x ? */
+        'rl320',        /* long edge of 160pt */
+        'rl640',        /* long edge of 320pt */
+        'rl960',        /* long edge of 480pt */
+        'rl1280',       /* long edge of 640pt */
+        'rl1600',       /* long edge of 800pt */
+        'rl1920',       /* long edge of 960pt */
+        'rl2560',       /* long edge of 1280pt */
+
+        'rs200clc200',  /*  100pt x 100pt */
+
+        'rw320',        /*  160pt x ? */
+        'rw480',        /*  240pt x ? */
+        'rw640',        /*  320pt x ? */
+        'rw960',        /*  480pt x ? */
+        'rw1280',       /*  640pt x ? */
+        'rw1600',       /*  800pt x ? */
+        'rw1920',       /*  960pt x ? */
+        'rw2560',       /* 1280pt x ? */
     ];
 
     private static $model = null;
