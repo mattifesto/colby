@@ -8,13 +8,24 @@
 
 var CBModel = {
 
+    /* -- functions -- -- -- -- -- */
+
+
+
     /**
+     * @TODO 2020_07_29
+     *
+     *      Rename to getClassFunction() to match PHP.
+     *
      * @param object model
      * @param string functionName
      *
      * @return function|undefined
      */
-    classFunction: function (model, functionName) {
+    classFunction: function (
+        model,
+        functionName
+    ) {
         let className = CBModel.valueToString(model, "className");
 
         return CBModel.valueAsFunction(
@@ -22,6 +33,7 @@ var CBModel = {
             functionName
         );
     },
+    /* classFunction() */
 
 
 

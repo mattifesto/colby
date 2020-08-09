@@ -50,7 +50,7 @@ final class CBModel {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v604.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v632.js', cbsysurl()),
         ];
     }
 
@@ -171,6 +171,38 @@ final class CBModel {
 
         return null;
     }
+    /* findModelInArrayByPropertyValue() */
+
+
+
+    /**
+     * @param object $model
+     * @param string $functionName
+     *
+     * @return callable|null
+     */
+    static function getClassFunction(
+        stdClass $model,
+        string $functionName
+    ): ?callable {
+        $className = CBModel::valueToString(
+            $model,
+            'className'
+        );
+
+        if ($className === '') {
+            return null;
+        }
+
+        $functionName = "{$className}::{$functionName}";
+
+        if (is_callable($functionName)) {
+            return $functionName;
+        } else {
+            return null;
+        }
+    }
+    /* getClassFunction() */
 
 
 
@@ -736,8 +768,9 @@ final class CBModel {
      *
      * @param mixed $model
      * @param string $keyPath
+     * @param [string] $classNames
      *
-     * @return ?model
+     * @return object|null
      */
     static function valueAsModel(
         $model,
@@ -749,6 +782,7 @@ final class CBModel {
             $classNames
         );
     }
+    /* valueAsModel() */
 
 
 
