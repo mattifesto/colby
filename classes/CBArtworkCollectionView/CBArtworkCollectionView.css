@@ -1,0 +1,15 @@
+.CBArtworkCollectionView_imageContainer {
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.CBArtworkCollectionView_thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.CBArtworkCollectionView_thumbnail {
+    box-sizing: border-box;
+    padding: 5px;
+    width: 75px;
+}
