@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBUISpecArrayEditor */
 /* global
+    CBException,
     CBUI,
     CBUICommandPart,
     CBUINavigationView,
@@ -45,8 +46,20 @@ var CBUISpecArrayEditor = {
      *              editor element.
      *      }
      */
-    create: function (args) {
-        var addableClassNames = args.addableClassNames;
+    create: function (
+        args
+    ) {
+        if (!Array.isArray(args.addableClassNames)) {
+            throw CBException.withError(
+                Error(
+                    "The addableClassNames parameter must be an array."
+                ),
+                "",
+                "fc964668d6d197dda3d1d5327e307eeab0a787ac"
+            );
+        }
+
+        let addableClassNames = args.addableClassNames;
         var specs = args.specs;
         var specsChangedCallback = args.specsChangedCallback;
 
@@ -74,14 +87,29 @@ var CBUISpecArrayEditor = {
 
             return;
 
+
+
             /* --  closures -- -- -- -- -- */
+
+
 
             /**
              * @param string className
              *
              * @return undefined
              */
-            function add(className) {
+            function add(
+                className
+            ) {
+                /**
+                 * @NOTE 2020_07_29
+                 *
+                 *      I'm not sure why we just return instead of throwing an
+                 *      error here. I literally have a situation where this is
+                 *      happening and would have appreciated an error. I'm not
+                 *      changing the code now because I have too many other
+                 *      tasks to do.
+                 */
                 if (className === undefined) {
                     return;
                 }

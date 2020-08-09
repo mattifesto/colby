@@ -33,6 +33,7 @@ final class CBUISpecArrayEditor {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBException',
             'CBUI',
             'CBUICommandPart',
             'CBUINavigationView',
