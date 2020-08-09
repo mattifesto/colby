@@ -4,6 +4,8 @@ final class SCProduct {
 
     /* -- CBModel interfaces -- -- -- -- -- */
 
+
+
     /**
      * @param object $spec
      *
@@ -71,6 +73,7 @@ final class SCProduct {
     /* CBModel_build() */
 
 
+
     /**
      * @param object $spec
      *
@@ -92,7 +95,10 @@ final class SCProduct {
     /* CBModel_toID() */
 
 
+
     /* -- CBModels interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param [string] $IDs
@@ -107,6 +113,7 @@ final class SCProduct {
         );
     }
     /* CBModels_willDelete() */
+
 
 
     /**
@@ -131,7 +138,41 @@ final class SCProduct {
     /* CBModels_willSave() */
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
+
+    /**
+     * This function can also be used for product models that have a class name
+     * other than SCProduct.
+     *
+     * @param string productCBID
+     *
+     * @return string
+     */
+    static function productCBIDToArtworkCollectionCBID(
+        string $productCBID
+    ): string {
+        if (!CBID::valueIsCBID($productCBID)) {
+            $message = "This value is not a CBID";
+            $value = $productCBID;
+            $sourceCBID = "bd48cb576b59cffc049067eee24522596ca46587";
+
+            throw new CBExceptionWithValue(
+                $message,
+                $value,
+                $sourceCBID
+            );
+        }
+
+        return sha1(
+            "d45dc86e5de33cda02bff8b69c1f079536dcddf3 {$productCBID}"
+        );
+    }
+    /* productCBIDToArtworkCollectionCBID() */
+
+
 
     /**
      * Generate an ID for an SCProduct model.
@@ -140,9 +181,15 @@ final class SCProduct {
      *
      * @return ID
      */
-    static function productCodeToProductID(string $productCode): string {
-        return sha1("f28573d30b15a24d71f5d0af23624d8b0029d5d4 {$productCode}");
+    static function productCodeToProductID(
+        string $productCode
+    ): string {
+        return sha1(
+            "f28573d30b15a24d71f5d0af23624d8b0029d5d4 {$productCode}"
+        );
     }
+    /* productCodeToProductID() */
+
 
 
     /**
@@ -157,9 +204,15 @@ final class SCProduct {
      *
      * @return string
      */
-    static function productIDToProductPageID(string $productID): string {
-        return sha1("13ef22a79c5a4583b1199d31201925af8cb51bf8 {$productID}");
+    static function productIDToProductPageID(
+        string $productID
+    ): string {
+        return sha1(
+            "13ef22a79c5a4583b1199d31201925af8cb51bf8 {$productID}"
+        );
     }
+    /* productIDToProductPageID() */
+
 
 
     /**
@@ -167,11 +220,15 @@ final class SCProduct {
      *
      * @return string
      */
-    static function productCodeToProductPageURL(string $productCode): string {
+    static function productCodeToProductPageURL(
+        string $productCode
+    ): string {
         return (
             '/products/' .
             CBConvert::stringToStub($productCode) .
             '/'
         );
     }
+    /* productCodeToProductPageURL() */
+
 }
