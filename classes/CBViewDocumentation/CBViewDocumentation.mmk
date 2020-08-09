@@ -55,11 +55,18 @@ Root element styles
     --- li
     (max-width: 100%; (code))
 
-    This prevents children with padding from pushing the width of the root
-    element wider than 100%.
+    Although this element's child specifies a max-width of 100%, this element
+    must also specify a max-width of 100%. There are a number of reasons the
+    child element may try to and be allowed to have a width wider than what is
+    available without it.
 
-    (TODO 2018/09/10 This text was copied from the previous documentation
-    location and it needs a more detailed scenario description. (small))
+        --- ul
+        because this element is a flexbox
+
+        because the child might have padding
+
+        add other reasons when discovered
+        ---
     ---
 
     --- li
