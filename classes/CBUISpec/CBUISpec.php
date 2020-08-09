@@ -27,7 +27,7 @@ final class CBUISpec {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
-            'CBConvert'.
+            'CBConvert',
             'CBImage',
             'CBModel',
         ];
