@@ -35,6 +35,7 @@ final class SCProductEditor {
             (object)[
                 'className' => 'CBArtworkCollection',
                 'ID' => $artworkCollectionCBID,
+                'SCProduct_productCBID' => $productCBID,
             ]
         );
 
