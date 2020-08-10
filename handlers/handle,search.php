@@ -95,7 +95,7 @@ $formClass = empty($searchQuery) ? 'no-query' : 'has-query';
                 $imageURL = CBImage::valueToFlexpath(
                     $model,
                     'image',
-                    'rw320',
+                    'rl320',
                     cbsiteurl()
                 );
 
