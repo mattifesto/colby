@@ -175,6 +175,63 @@ final class SCProduct {
 
 
     /**
+     * @param $productCBID
+     *
+     * @param string
+     *
+     *      Returns the thumbnail image URL for the main image for the product.
+     *      May return an empty string if there is no image for the product or
+     *      if the product doesn't exist.
+     */
+    static function productCBIDToThumbnailImageURL(
+        string $productCBID
+    ): string {
+        $productArtworkCollectionCBID = (
+            SCProduct::productCBIDToArtworkCollectionCBID(
+                $productCBID
+            )
+        );
+
+        $productArtworkCollectionModel = CBModelCache::fetchModelByID(
+            $productArtworkCollectionCBID
+        );
+
+        $productMainArtworkModel = CBArtworkCollection::getMainArtwork(
+            $productArtworkCollectionModel
+        );
+
+        $productThumbnailImageURL = CBArtwork::getThumbnailImageURL(
+            $productMainArtworkModel
+        );
+
+
+        if ($productThumbnailImageURL === '') {
+            $productModel = CBModelCache::fetchModelByID(
+                $productCBID
+            );
+
+            if ($productModel !== null) {
+                $callable = CBModel::getClassFunction(
+                    $productModel,
+                    'SCProduct_getThumbnailImageURL'
+                );
+
+                if ($callable !== null) {
+                    $productThumbnailImageURL = call_user_func(
+                        $callable,
+                        $productModel
+                    );
+                }
+            }
+        }
+
+        return $productThumbnailImageURL;
+    }
+    /* productCBIDToThumbnailImageURL() */
+
+
+
+    /**
      * Generate an ID for an SCProduct model.
      *
      * @param string $productCode
