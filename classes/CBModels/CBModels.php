@@ -370,11 +370,41 @@ final class CBModels {
 
 
     /**
+     * @param string $className
+     *
+     * @return [CBID]
+     */
+    public static function fetchCBIDsByClassName(
+        string $className
+    ): array {
+        $classNameAsSQL = CBDB::stringToSQL(
+            $className
+        );
+
+        $SQL = <<<EOT
+
+            SELECT  LOWER(HEX(ID))
+            FROM    CBModels
+            WHERE   className = {$classNameAsSQL}
+
+        EOT;
+
+        return CBDB::SQLToArrayOfNullableStrings(
+            $SQL
+        );
+    }
+    /* fetchCBIDsByClassName() */
+
+
+
+    /**
      * @param [string] $IDs
      *
      * @return [int]
      */
-    private static function fetchCreatedTimestampsForIDs(array $IDs) {
+    private static function fetchCreatedTimestampsForIDs(
+        array $IDs
+    ) {
         if (empty($IDs)) {
             return [];
         }
