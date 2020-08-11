@@ -2,7 +2,17 @@
 
 final class CBAPIStyleSheet {
 
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v374.css', cbsysurl())];
+    /* -- CBHTMLOutput interfaces -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs(): array {
+        return [
+            Colby::flexpath(__CLASS__, 'v374.css', cbsysurl())
+        ];
     }
+
 }
