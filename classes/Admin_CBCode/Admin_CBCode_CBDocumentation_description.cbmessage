@@ -1,0 +1,2 @@
+This class implements CBAdmin interfaces to render a page that shows issues in
+the website's code in PHP, JS, or CSS for deprecated code use and other errors.
