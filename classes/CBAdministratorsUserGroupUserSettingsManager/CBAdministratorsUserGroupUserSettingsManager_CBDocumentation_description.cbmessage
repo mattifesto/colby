@@ -1,0 +1,5 @@
+This class implements CBInstall interfaces to add itself to the
+CBUserSettingsManagerCatalog. It implements CBUserSettingsManager interfaces so
+that it can present user interface on individual user settings pages to members
+of the CBAdministratorsUserGroup so that they can add or remove people from the
+CBAdministratorsUserGroup.
