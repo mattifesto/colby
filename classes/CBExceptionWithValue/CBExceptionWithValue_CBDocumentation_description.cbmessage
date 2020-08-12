@@ -1,0 +1,3 @@
+The CBExceptionWithValue class extends CBException and is used to create
+exceptions that occur because a value is not what was desired, required, or
+expected.
