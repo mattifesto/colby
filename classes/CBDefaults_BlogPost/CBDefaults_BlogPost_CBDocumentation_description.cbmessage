@@ -1,0 +1,9 @@
+The CBDefaults_BlogPost class has one function, viewSpecs(), that returns the
+current recommended set of view specs for a brand new blog post. It would be
+used by a blog post page template to create a new page spec so that the page
+template wouldn't have to be updated when the set of commonly used blog post
+views changes.
+
+At one point in history the CBYouTubeView became a very popular view to have in
+a blog post. All of the blog post page templates on each site had to be manually
+changed. This class was created to prevent that from needing to be done again.
