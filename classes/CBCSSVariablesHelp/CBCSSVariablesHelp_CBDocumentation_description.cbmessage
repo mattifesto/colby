@@ -1,0 +1,3 @@
+This class implements CBAdmin interfaces to render a documentation page that
+documents various CSS variables provided by Colby which can be used for text
+colors and other uses.
