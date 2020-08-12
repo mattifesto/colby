@@ -1,0 +1,2 @@
+This class creates the menu that is the main menu for all admin pages. Other
+classes can add menu items to this menu using the CBInstall interfaces.
