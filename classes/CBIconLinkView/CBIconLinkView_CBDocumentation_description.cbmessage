@@ -1,0 +1,3 @@
+The CBIconLinkView class implements CBView interfaces to present a view of a
+single image and small amount of text that changes size responsively and
+provides a link to another page.
