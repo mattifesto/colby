@@ -1,0 +1,12 @@
+A CBArtworkCollection may be associated with another model. If it is, when a
+CBArtworkCollection model is updated or deleted, this task will be restarted
+for that associated model so that it can updated related information.
+
+Models associated with CBArtworkCollection models will usually generate the CBID
+for the CBArtworkCollection model or otherwise know how to retrieve it through
+other means.
+
+For instance, if the CBArtworkCollection is associated with a product model, and
+the first CBArtwork in the CBArtworkCollection represents the main image for the
+product, the product model may update the thumbnail image for the product page
+if the main image has changed.
