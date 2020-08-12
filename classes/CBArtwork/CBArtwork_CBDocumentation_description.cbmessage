@@ -1,0 +1,2 @@
+This class represents models that hold a single CBImage, its alternative text,
+and a cbmessage caption.
