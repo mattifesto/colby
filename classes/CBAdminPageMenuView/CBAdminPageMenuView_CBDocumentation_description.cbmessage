@@ -1,0 +1,2 @@
+This class implements CBView interfaces and renders the set of admin page menus
+on all admin pages.
