@@ -1,0 +1,3 @@
+The CBModelsPreferences class implements CBInstall interfaces to create a
+singleton CBModelsPreferences model. The purpose of this model is questionable
+and this class may need to be deprecated.
