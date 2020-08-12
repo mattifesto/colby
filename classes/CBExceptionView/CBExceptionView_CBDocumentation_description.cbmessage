@@ -1,0 +1,5 @@
+The CBMessageView class implements CBView interfaces to display exception
+details to both users and developers.
+
+This view is not a CBModel because its model contains an exception which can't
+be converted to JSON.
