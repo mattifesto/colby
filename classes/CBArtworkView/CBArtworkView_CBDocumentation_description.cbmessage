@@ -1,0 +1,10 @@
+This class implements CBView interfaces to render a view containing a single
+image and a caption in a pleasant responsive design presentation. It's main goal
+is to be the standard view when you want to show an image and a caption, and it
+works well for that and has been well-tested by time.
+
+It uses the CBArtworkElement to render the image.
+
+This class existed before the CBArtwork class and does not use a CBArtwork
+sub-model to hold the image, caption, and alternative text. However,
+CBArtworkView models may be upgraded to do so in the future.
