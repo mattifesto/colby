@@ -1,0 +1,2 @@
+This class implements CBAdmin interfaces to render a page that developers can
+use to backup the database, pull site updates, and run the site update process.
