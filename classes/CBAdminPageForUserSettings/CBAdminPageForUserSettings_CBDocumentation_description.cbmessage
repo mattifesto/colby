@@ -1,0 +1,2 @@
+This class implements CBAdmin interfaces to render an admin page that displays
+and edits the settings for a single user.
