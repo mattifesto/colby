@@ -1,0 +1,3 @@
+This class processes Colby Ajax function call requests. It is called by the
+ColbyRequest class when ColbyRequest determines that a request is an Ajax
+request.
