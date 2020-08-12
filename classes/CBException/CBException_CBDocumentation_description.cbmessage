@@ -1,0 +1,3 @@
+The CBException class is used to create exceptions that have a cbmessage and a
+sourceCBID in addition to the regular PHP or JavaScript exception/error
+properties.
