@@ -1,0 +1,3 @@
+The CBContentStyleSheet class implements CBHTMLOutput interfaces to load a style
+sheet that will style content inside an element with the "CBContentStyleSheet"
+class in a way that is pleasantly formatted for a general content context.
