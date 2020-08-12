@@ -1,0 +1,3 @@
+The CBCurrentUserView class implements CBView interfaces to render the user
+settings for the current user on a page that is not an admin page. It allows
+non-admin users to edit their own settings.
