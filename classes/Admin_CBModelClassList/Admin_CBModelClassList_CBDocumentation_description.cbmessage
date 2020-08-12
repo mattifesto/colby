@@ -1,0 +1,2 @@
+This admin page renders a list of all of the model class names in the CBModels
+table, each linking to a list of models of that class name.
