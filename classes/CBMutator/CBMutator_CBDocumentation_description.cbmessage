@@ -1,0 +1,3 @@
+The CBMutator class is used in JavaScript to create an object with a value
+property and an addChangeListener() function. When the value property is
+modifed, the change listeners will be notified.
