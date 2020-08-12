@@ -1,0 +1,4 @@
+The CBCurrentUserSettingsManager class implements CBInstall interfaces to add
+itself to the CBUserSettingsManagerCatalog. On an individual user settings admin
+page for a user that is currently logged in it will show user interface to allow
+the user to change their email, change their password, or sign out.
