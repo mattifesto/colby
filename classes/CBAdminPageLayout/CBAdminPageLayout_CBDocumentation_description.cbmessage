@@ -1,0 +1,8 @@
+@deprecated 2020_08_10
+
+This class implements CBPageLayout interfaces can be used as the
+customLayoutClassName class for admin pages created using the CBPageLayout
+layout class.
+
+CBPageLayout has been deprecated and replaced by CBPageFrame so uses of this
+class should be replaced with a page frame.
