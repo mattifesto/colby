@@ -1,0 +1,6 @@
+The CBEmailSender class implements CBInstall interfaces to create the singleton
+CBEmailSender model that will specify the SMTP values necessary to send emails
+from the website.
+
+Models of this class could also be used to specify additional senders if
+necessary for a website.
