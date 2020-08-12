@@ -1,0 +1,2 @@
+This class implements CBInstall interfaces to create or update the model for the
+CBAdministratorsUserGroup, which creates the user group.
