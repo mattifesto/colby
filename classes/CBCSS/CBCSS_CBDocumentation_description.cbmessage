@@ -1,0 +1,6 @@
+Possibly deprecated on 2020_08_12.
+
+This class is probably meant to represent commonly used CSS related functions.
+It only contains the function isCustom() which has functionality which is
+questionable. The only class that uses this function is CBTextView2 which is
+deprecated.
