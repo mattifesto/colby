@@ -1,0 +1,2 @@
+This admin page renders a list of models for a given class name, each linking to
+a model editor for that model.
