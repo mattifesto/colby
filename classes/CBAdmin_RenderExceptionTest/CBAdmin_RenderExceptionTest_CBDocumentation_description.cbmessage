@@ -1,0 +1,3 @@
+This class implements CBAdmin interfaces and is an interactive test. It throws
+and exception during CBAdmin_render() so that developers can see the results
+when that happens.
