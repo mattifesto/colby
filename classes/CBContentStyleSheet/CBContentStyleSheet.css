@@ -7,18 +7,58 @@
     overflow-wrap: break-word;
 }
 
+
+
+/**
+ * 2020_08_16
+ *
+ *      We remove all margins by default in CBEqualizePageSettingsPart.css. But
+ *      in this style sheet we want to add the default header margins back in.
+ *      However, if you look at the user agent style sheets they take actions
+ *      that are very complex with regard to margins.
+ *
+ *      Our goals here are to:
+ *
+ *          Mostly use default header styles and margins.
+ *
+ *          Reduce the h1 and h2 font sizes (and margins) because in this
+ *          context 2.0em is too large for an h1.
+ *
+ *          Stop the reduction of the h1 font-size when inside section elements.
+ *
+ *      As Colby ages, these styles will improve, but there is some concern over
+ *      the complexity of simply setting font sizes and margins. As we
+ *      understand these complexities Colby will make better decisions.
+ */
+
 .CBContentStyleSheet h1 {
     font-size: 1.5em;
+    margin-top: 0.83em;
+    margin-bottom: 0.83em;
 }
 
 .CBContentStyleSheet h2 {
-    font-size: 1.2em;
+    font-size: 1.35em;
+    margin-top: 0.90em;
+    margin-bottom: 0.90em;
 }
 
 .CBContentStyleSheet h3 {
-    font-size: 1em;
-    font-weight: normal;
+    margin: revert;
 }
+
+.CBContentStyleSheet h4 {
+    margin: revert;
+}
+
+.CBContentStyleSheet h5 {
+    margin: revert;
+}
+
+.CBContentStyleSheet h6 {
+    margin: revert;
+}
+
 
 .CBContentStyleSheet blockquote {
     margin: 2em 3em;
@@ -28,34 +68,41 @@
     font-style: italic;
 }
 
+
+
+/**
+ * 2020_08_16
+ *
+ *      Dictionary lists, ordered lists, and unordered lists have slightly
+ *      compressed vertical margins.
+ */
+.CBContentStyleSheet dd,
+.CBContentStyleSheet dd p,
+.CBContentStyleSheet dt,
+.CBContentStyleSheet dt p,
+.CBContentStyleSheet li,
+.CBContentStyleSheet li p {
+    margin-bottom: 0.75em;
+    margin-top: 0.75em;
+}
+
+
+
 .CBContentStyleSheet dt {
     font-weight: bold;
-    margin-bottom: 0.5em;
-    margin-top: 0.5em;
 }
 
 /**
- * @NOTE 2019_02_19
- *
- *      <p> elements inside of <dt> elements should have no margin. If there are
- *      multiple <p> elements they should be display directly on top of each
- *      other.
- *
- *      It is more appropriate to use two adjacent <dt> elements than to use two
- *      <p> elements inside a single <dt> element.
- */
-.CBContentStyleSheet dt > p {
-    margin-bottom: 0;
-}
-
-/**
- * 2017.11.30 A rare use of left an right margins because the border box should
+ * 2017_11_30 A rare use of left an right margins because the border box should
  * be inset relative to the parent element. This allows the dd element to look
  * like a sub-element of its preceding dt element.
  */
 .CBContentStyleSheet dd {
-    margin: 0.5em 1em;
+    margin-left: 1.0em;
+    margin-right: 1.0em;
 }
+
+
 
 .CBContentStyleSheet hr {
     border-style: none;
@@ -63,14 +110,7 @@
     margin: 3em 8em !important;
 }
 
-/**
- * 2017.11.30 Today I found a rule here that applied a top and bottom margin of
- * 0.5em to p elements inside of dd elements. I do not know why this rule was
- * here but it was incorrect because as soon as you place a border on the dd
- * element, the first and last p elements add an awkward whitespace inside the
- * border. I'm leaving this comment for reference in case the original
- * motivation for the rule comes up again.
- */
+
 
 .CBContentStyleSheet b cite,
 .CBContentStyleSheet b i,
@@ -81,6 +121,8 @@
     font-style: inherit;
     font-weight: inherit;
 }
+
+
 
 /**
  * @NOTE 2019_02_19
@@ -104,23 +146,13 @@
     margin-top: 1.5em;
 }
 
-/**
- * @NOTE 2019_02_19
- *
- *      Applying only a bottom margin to <p> elements tends to work better than
- *      placing top and bottom margins. In many cases a <p> element is the first
- *      element and having no top margin looks good. Having a large bottom
- *      margin also looks good most of the time.
- */
+
+
 .CBContentStyleSheet p {
-    margin-bottom: 1.5em;
+    margin: revert;
 }
 
-.CBContentStyleSheet li,
-.CBContentStyleSheet li p {
-    margin-bottom: 0.75em;
-    margin-top: 0.75em;
-}
+
 
 .CBContentStyleSheet pre {
     overflow-wrap: normal; /* unset inherited value */
