@@ -784,6 +784,7 @@ var CBMessageMarkup = {
             "li",
             "ol",
             "root", // custom
+            "section",
             "ul",
         ].indexOf(tagName) !== -1;
     },
@@ -810,9 +811,10 @@ var CBMessageMarkup = {
             "h6",
             "hr",
             "li",
+            "ol",
             "p",
             "pre",
-            "ol",
+            "section",
             "ul",
         ].indexOf(tagName) !== -1;
     },
