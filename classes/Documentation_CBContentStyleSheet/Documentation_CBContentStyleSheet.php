@@ -2,6 +2,10 @@
 
 final class Documentation_CBContentStyleSheet {
 
+    /* -- CBAdmin interfaces -- */
+
+
+
     /**
      * @return string
      */
@@ -44,27 +48,43 @@ final class Documentation_CBContentStyleSheet {
                 margin: 1em 0 5em;
             }
 
-EOT;
+        EOT;
 
         CBHTMLOutput::addCSS($CSS);
 
-        CBView::renderSpec((object)[
-            'className' => 'CBPageTitleAndDescriptionView',
-        ]);
+        CBView::renderSpec(
+            (object)[
+                'className' => 'CBPageTitleAndDescriptionView',
+            ]
+        );
 
-        CBView::renderSpec((object)[
-            'className' => 'CBMessageView',
-            'markup' => file_get_contents(__DIR__ . '/Documentation_CBContentStyleSheet.mmk'),
-        ]);
+        CBView::renderSpec(
+            (object)[
+                'className' => 'CBMessageView',
+                'markup' => file_get_contents(
+                    __DIR__ .
+                    '/Documentation_CBContentStyleSheet.cbmessage'
+                ),
+            ]
+        );
     }
+    /* CBAdmin_render() */
+
+
+
+    /* -- CBInstall interfaces -- */
+
+
 
     /**
      * @return void
      */
     static function CBInstall_install(): void {
-        $updater = CBModelUpdater::fetch((object)[
-            'ID' => CBHelpAdminMenu::ID(),
-        ]);
+        $updater = CBModelUpdater::fetch(
+            (object)[
+                'ID' => CBHelpAdminMenu::ID(),
+            ]
+        );
 
         $menuSpec = $updater->working;
 
@@ -80,6 +100,9 @@ EOT;
 
         CBModelUpdater::save($updater);
     }
+    /* CBInstall_install() */
+
+
 
     /**
      * @return [string]
@@ -89,4 +112,5 @@ EOT;
             'CBHelpAdminMenu'
         ];
     }
+
 }
