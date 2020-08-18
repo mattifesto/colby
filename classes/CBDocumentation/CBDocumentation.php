@@ -149,7 +149,7 @@ final class CBDocumentation {
      */
     static function CBHTMLOutput_CSSURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v633.css', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v635.css', cbsysurl()),
         ];
     }
 
@@ -216,7 +216,7 @@ final class CBDocumentation_ClassListView {
     static function CBView_render(
         stdClass $viewModel
     ): void {
-        $classNames = CBAdmin::fetchClassNames();
+        $classNames = CBLibrary::getAllClassDirectoryNames();
 
         ?>
 
@@ -312,6 +312,32 @@ final class CBDocumentation_DeveloperView {
         );
 
         if ($targetClassFilepath === null) {
+            $classDirectories = CBLibrary::getClassDirectories(
+                $targetClassName
+            );
+
+            ?>
+
+            <dd class="CBDocumentation_DeveloperView_error">
+                Warning. There is no class file in:
+
+                <ul>
+                    <?php
+
+                        foreach ($classDirectories as $classDirectory) {
+                            echo (
+                                '<li><code>' .
+                                cbhtml($classDirectory) .
+                                '</code></li>'
+                            );
+                        }
+
+                    ?>
+                </ul>
+            </dd>
+
+            <?php
+
             return;
         }
 
