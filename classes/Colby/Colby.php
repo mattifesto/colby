@@ -245,6 +245,10 @@ final class Colby {
 
 
     /**
+     * @TODO 2020_08_18
+     *
+     *      Move to CBLibrary
+     *
      * This function searches the website, the Colby system, and the libraries
      * for a file, usually in that order. The behavior of this function is what
      * allows the website to override the behavior of the Colby system and the
@@ -318,6 +322,10 @@ final class Colby {
 
 
     /**
+     * @TODO 2020_08_18
+     *
+     *      Move to CBLibrary
+     *
      * This function builds a flexpath from a class name. It is mosly used to
      * construct flexpaths for css and js files associated with a class.
      *
@@ -330,7 +338,11 @@ final class Colby {
      *
      * @return string
      */
-    static function flexpath($className, $extension, $flexdir = null) {
+    static function flexpath(
+        $className,
+        $extension,
+        $flexdir = null
+    ) {
         $flexpath = "classes/{$className}/{$className}.{$extension}";
 
         if (empty($flexdir)) {
@@ -339,6 +351,7 @@ final class Colby {
             return "{$flexdir}/{$flexpath}";
         }
     }
+    /* flexpath() */
 
 
 
@@ -373,6 +386,10 @@ final class Colby {
 
 
     /**
+     * @TODO 2020_08_18
+     *
+     *      Move to CBLibrary
+     *
      * Find files in all libraries.
      *
      * @param string $pattern
@@ -402,6 +419,7 @@ final class Colby {
 
         return $filenames;
     }
+    /* globFiles() */
 
 
 
