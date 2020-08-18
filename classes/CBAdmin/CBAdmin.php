@@ -172,44 +172,12 @@ final class CBAdmin {
 
 
     /**
-     * @return [string]
+     * @deprecated 2020_08_18
      *
-     *      Returns a unique list of subdirectories of each library's classes
-     *      directory.
+     *      Use CBLibrary::getAllClassDirectoryNames()
      */
     static function fetchClassNames(): array {
-        $classNames = [];
-
-        foreach (Colby::$libraryDirectories as $libraryDirectory) {
-            if ($libraryDirectory === '') {
-                $libraryClassesDirectory =
-                cbsitedir() .
-                '/classes';
-            } else {
-                $libraryClassesDirectory =
-                cbsitedir() .
-                "/{$libraryDirectory}/classes";
-            }
-
-            $libraryClassDirectories = glob(
-                "{$libraryClassesDirectory}/*",
-                GLOB_ONLYDIR
-            );
-
-            $libraryClassNames = array_map(
-                'basename',
-                $libraryClassDirectories
-            );
-
-            $classNames = array_merge(
-                $classNames,
-                $libraryClassNames
-            );
-        }
-
-        return array_values(
-            array_unique($classNames)
-        );
+        return CBLibrary::getAllClassDirectoryNames();
     }
     /* fetchClassNames() */
 
