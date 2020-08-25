@@ -70,13 +70,15 @@ final class CBSetup {
     /**
      * @return string
      */
-    static function CBAjax_verifyDatabaseUser_getUserGroupClassName(): string {
-        if (CBSiteVersionNumber === 'setup') {
-            return 'CBPublicUserGroup';
-        } else {
+    static function CBAjax_verifyDatabaseUser_getUserGroupClassName(
+    ): string {
+        if (CBSiteIsConfigured) {
             return 'CBDevelopersUserGroup';
+        } else {
+            return 'CBPublicUserGroup';
         }
     }
+    /* CBAjax_verifyDatabaseUser_getUserGroupClassName() */
 
 
 
