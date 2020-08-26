@@ -98,27 +98,6 @@ final class CBSetup {
         }
 
 
-        /* MySQL binary directory */
-
-        $mysqlBinaryDirectory = trim(
-            CBModel::valueToString(
-                $args,
-                'mysqlBinaryDirectory'
-            )
-        );
-
-        if (
-            $mysqlBinaryDirectory !== '' &&
-            !is_dir($mysqlBinaryDirectory)
-        ) {
-            throw new CBException(
-                'The MySQL binary directory does not exist.',
-                '',
-                '88f5cdc9af229e15302a055e913b60f0f90efaf8'
-            );
-        }
-
-
         /* MySQL hostname */
 
         $mysqlHostname = trim(
@@ -251,17 +230,6 @@ final class CBSetup {
         );
 
         EOT;
-
-        if ($mysqlBinaryDirectory !== '') {
-            $contents .= <<<EOT
-
-            define(
-                'CBMySQLDirectory',
-                '{$mysqlBinaryDirectory}'
-            );
-
-            EOT;
-        }
 
         file_put_contents(
             cbsitedir() . '/colby-configuration.php',
