@@ -11,7 +11,7 @@ final class CBSetupView {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v612.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v636.js', cbsysurl()),
         ];
     }
 
@@ -22,6 +22,7 @@ final class CBSetupView {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBAjax',
             'CBUI',
             'CBUIPanel',
             'CBUIStringEditor',
@@ -29,6 +30,21 @@ final class CBSetupView {
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
+
+
+
+    /**
+     * @return [[<name>, <value>]]
+     */
+    static function CBHTMLOutput_JavaScriptVariables(): array {
+        return [
+            [
+                'CBSetupView_suggestedWebsiteHostname',
+                $_SERVER['HTTP_HOST'],
+            ],
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptVariables() */
 
 
 

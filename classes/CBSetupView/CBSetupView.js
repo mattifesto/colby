@@ -2,17 +2,21 @@
 /* jshint strict: global */
 /* jshint esversion: 8 */
 /* global
+    CBAjax,
     CBUI,
     CBUIPanel,
     CBUIStringEditor,
     Colby,
-*/
 
+    CBSetupView_suggestedWebsiteHostname,
+*/
 
 
 (function () {
 
-    Colby.afterDOMContentLoaded(afterDOMContentLoaded);
+    Colby.afterDOMContentLoaded(
+      afterDOMContentLoaded
+    );
 
 
 
@@ -27,25 +31,20 @@
             viewElement
         );
 
-        window.alert("done");
+        location.href = "/admin/";
     }
     /* afterDOMContentLoaded() */
 
 
 
     /**
-     * @return Promise -> ???
+     * @return Promise -> undefined
      */
-    function setupDatabaseUser(
+    async function setupDatabaseUser(
         viewElement
     ) {
-        return new Promise(
-            function (resolve) {
-                setupDatabaseUser_createUserInterface(
-                    viewElement,
-                    resolve
-                );
-            }
+        await setupDatabaseUser_createUserInterface(
+            viewElement
         );
     }
     /* setupDatabaseUser() */
@@ -53,11 +52,10 @@
 
 
     /**
-     *
+     * @return Promise -> undefined
      */
-    function setupDatabaseUser_createUserInterface(
+    async function setupDatabaseUser_createUserInterface(
         viewElement,
-        resolve
     ) {
         let elements = CBUI.createElementTree(
             "CBUI_sectionContainer",
@@ -68,38 +66,74 @@
 
         let sectionElement = elements[1];
 
-        let hostnameEditor = CBUIStringEditor.create();
-        hostnameEditor.title = "MySQL Host";
+
+        /* Website Domain */
+
+        let websiteHostnameEditor = CBUIStringEditor.create();
+        websiteHostnameEditor.title = "Website Hostname";
+        websiteHostnameEditor.value = CBSetupView_suggestedWebsiteHostname;
 
         sectionElement.appendChild(
-            hostnameEditor.element
+          websiteHostnameEditor.element
         );
 
-        let usernameEditor = CBUIStringEditor.create();
-        usernameEditor.title = "MySQL Username";
+
+        /* MySQL Binary Directory */
+
+        let mysqlBinaryDirectoryEditor = CBUIStringEditor.create();
+        mysqlBinaryDirectoryEditor.title = "MySQL Binary Directory (Optional)";
 
         sectionElement.appendChild(
-            usernameEditor.element
+          mysqlBinaryDirectoryEditor.element
         );
 
-        let passwordEditor = CBUIStringEditor.create(
+
+        /* MySQL Hostname */
+
+        let mysqlHostnameEditor = CBUIStringEditor.create();
+        mysqlHostnameEditor.title = "MySQL Host";
+
+        sectionElement.appendChild(
+            mysqlHostnameEditor.element
+        );
+
+
+        /* MySQL Username */
+
+        let mysqlUsernameEditor = CBUIStringEditor.create();
+        mysqlUsernameEditor.title = "MySQL Username";
+
+        sectionElement.appendChild(
+            mysqlUsernameEditor.element
+        );
+
+
+        /* MySQL Password */
+
+        let mysqlPasswordEditor = CBUIStringEditor.create(
             {
                 inputType: "password",
             }
         );
 
-        passwordEditor.title = "MySQL Password";
+        mysqlPasswordEditor.title = "MySQL Password";
 
         sectionElement.appendChild(
-            passwordEditor.element
+            mysqlPasswordEditor.element
         );
 
-        let databaseEditor = CBUIStringEditor.create();
-        databaseEditor.title = "MySQL Database";
+
+        /* MySQL Database Name */
+
+        let mysqlDatabaseNameEditor = CBUIStringEditor.create();
+        mysqlDatabaseNameEditor.title = "MySQL Database";
 
         sectionElement.appendChild(
-            databaseEditor.element
+            mysqlDatabaseNameEditor.element
         );
+
+
+        /* Verify Button */
 
         elements = CBUI.createElementTree(
             "CBUI_container1",
@@ -113,57 +147,88 @@
         let buttonElement = elements[1];
         buttonElement.textContent = "Verify Database User";
 
-        buttonElement.addEventListener(
-            "click",
-            closure_setupDatabaseUser_verifyDatabaseUserViaAjax
+        let resolve;
+
+        let promise = new Promise(
+            function (resolveCallback) {
+                resolve = resolveCallback;
+            }
         );
 
+        buttonElement.addEventListener(
+            "click",
+            async function () {
+                let succeeded = (
+                    await setupDatabaseUser_verifyDatabaseUserViaAjax(
+                        websiteHostnameEditor.value,
+                        mysqlBinaryDirectoryEditor.value,
+                        mysqlHostnameEditor.value,
+                        mysqlUsernameEditor.value,
+                        mysqlPasswordEditor.value,
+                        mysqlDatabaseNameEditor.value
+                    )
+                );
 
+                if (succeeded) {
+                    resolve();
+                }
+            }
+        );
 
-        /**
-         * return undefined
-         */
-        function closure_setupDatabaseUser_verifyDatabaseUserViaAjax() {
-            setupDatabaseUser_verifyDatabaseUserViaAjax(
-                hostnameEditor.value,
-                usernameEditor.value,
-                passwordEditor.value,
-                resolve
-            );
-        }
-        /* closure_setupDatabaseUser_verifyDatabaseUserViaAjax() */
-
+        return promise;
     }
     /* setupDatabaseUser_createUserInterface() */
 
 
 
+    /**
+     * @param string hostname
+     * @param string username
+     * @param string password
+     *
+     * @return Promise -> bool
+     */
     async function setupDatabaseUser_verifyDatabaseUserViaAjax(
-        hostname,
-        username,
-        password,
-        resolve
+        websiteHostname,
+        mysqlBinaryDirectory,
+        mysqlHostname,
+        mysqlUsername,
+        mysqlPassword,
+        mysqlDatabaseName
     ) {
         try {
-            let response = await Colby.callAjaxFunction(
+            let response = await CBAjax.call(
                 "CBSetup",
                 "verifyDatabaseUser",
                 {
-                    hostname,
-                    username,
-                    password,
+                    websiteHostname,
+                    mysqlBinaryDirectory,
+                    mysqlHostname,
+                    mysqlUsername,
+                    mysqlPassword,
+                    mysqlDatabaseName,
                 }
             );
 
             if (response.succeeded === true) {
-                resolve();
+                await CBUIPanel.displayCBMessage(
+                    'thing approved'
+                );
+
+                return true;
             } else {
-                CBUIPanel.displayCBMessage(
+                await CBUIPanel.displayCBMessage(
                     response.cbmessage
                 );
+
+                return false;
             }
         } catch (error) {
-            CBUIPanel.displayAndReportError(error);
+            await CBUIPanel.displayAndReportError(
+                error
+            );
+
+            return false;
         }
     }
     /* setupDatabaseUser_verifyDatabaseUserViaAjax() */
