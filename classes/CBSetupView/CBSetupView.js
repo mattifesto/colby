@@ -15,7 +15,7 @@
 (function () {
 
     Colby.afterDOMContentLoaded(
-      afterDOMContentLoaded
+        afterDOMContentLoaded
     );
 
 
@@ -57,14 +57,23 @@
     async function setupDatabaseUser_createUserInterface(
         viewElement,
     ) {
-        let elements = CBUI.createElementTree(
-            "CBUI_sectionContainer",
-            "CBUI_section"
-        );
+        let sectionElement;
 
-        viewElement.appendChild(elements[0]);
 
-        let sectionElement = elements[1];
+        /* Website section */
+
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
+
+            sectionElement = elements[1];
+
+            viewElement.appendChild(
+                elements[0]
+            );
+        }
 
 
         /* Website Domain */
@@ -76,6 +85,22 @@
         sectionElement.appendChild(
           websiteHostnameEditor.element
         );
+
+
+        /* MySQL section */
+
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
+
+            sectionElement = elements[1];
+
+            viewElement.appendChild(
+                elements[0]
+            );
+        }
 
 
         /* MySQL Binary Directory */
@@ -133,18 +158,79 @@
         );
 
 
+        /* Developer username and password section */
+
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
+
+            sectionElement = elements[1];
+
+            viewElement.appendChild(
+                elements[0]
+            );
+        }
+
+
+        /* Developer email address */
+
+        let developerEmailAddressEditor = CBUIStringEditor.create();
+        developerEmailAddressEditor.title = "Developer Email Address";
+
+        sectionElement.appendChild(
+            developerEmailAddressEditor.element
+        );
+
+
+        /* Developer password 1 */
+
+        let developerPassword1Editor = CBUIStringEditor.create(
+            {
+                inputType: "password",
+            }
+        );
+
+        developerPassword1Editor.title = "Developer Password";
+
+        sectionElement.appendChild(
+            developerPassword1Editor.element
+        );
+
+
+        /* Developer password 2 */
+
+        let developerPassword2Editor = CBUIStringEditor.create(
+            {
+                inputType: "password",
+            }
+        );
+
+        developerPassword2Editor.title = "Confirm Developer Password";
+
+        sectionElement.appendChild(
+            developerPassword2Editor.element
+        );
+
+
         /* Verify Button */
 
-        elements = CBUI.createElementTree(
-            "CBUI_container1",
-            "CBUI_button1"
-        );
+        let buttonElement;
 
-        viewElement.appendChild(
-            elements[0]
-        );
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_container1",
+                "CBUI_button1"
+            );
 
-        let buttonElement = elements[1];
+            viewElement.appendChild(
+                elements[0]
+            );
+
+            buttonElement = elements[1];
+        }
+
         buttonElement.textContent = "Verify Database User";
 
         let resolve;
@@ -160,6 +246,9 @@
             async function () {
                 let succeeded = (
                     await setupDatabaseUser_verifyDatabaseUserViaAjax(
+                        developerEmailAddressEditor.value,
+                        developerPassword1Editor.value,
+                        developerPassword2Editor.value,
                         websiteHostnameEditor.value,
                         mysqlBinaryDirectoryEditor.value,
                         mysqlHostnameEditor.value,
@@ -182,13 +271,16 @@
 
 
     /**
-     * @param string hostname
-     * @param string username
-     * @param string password
+     * @param string developerEmailAddress
+     * @param string developerPassword1
+     * @param string developerPassword2
      *
      * @return Promise -> bool
      */
     async function setupDatabaseUser_verifyDatabaseUserViaAjax(
+        developerEmailAddress,
+        developerPassword1,
+        developerPassword2,
         websiteHostname,
         mysqlBinaryDirectory,
         mysqlHostname,
@@ -201,6 +293,9 @@
                 "CBSetup",
                 "verifyDatabaseUser",
                 {
+                    developerEmailAddress,
+                    developerPassword1,
+                    developerPassword2,
                     websiteHostname,
                     mysqlBinaryDirectory,
                     mysqlHostname,
