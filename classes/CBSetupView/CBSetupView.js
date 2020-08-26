@@ -204,7 +204,7 @@
         );
 
 
-        /* Verify Button */
+        /* Configure website button */
 
         let buttonElement;
 
@@ -221,7 +221,7 @@
             buttonElement = elements[1];
         }
 
-        buttonElement.textContent = "Verify Database User";
+        buttonElement.textContent = "Configure Website";
 
         let resolve;
 
@@ -293,10 +293,6 @@
             );
 
             if (response.succeeded === true) {
-                await CBUIPanel.displayCBMessage(
-                    'thing approved'
-                );
-
                 return true;
             } else {
                 await CBUIPanel.displayCBMessage(
