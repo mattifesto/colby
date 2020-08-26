@@ -1,9 +1,10 @@
 "use strict";
 /* jshint strict: global */
-/* jshint esversion: 6 */
+/* jshint esversion: 8 */
 /* exported CBUIPanel */
 /* global
     CBConvert,
+    CBErrorHandler,
     CBException,
     CBMessageMarkup,
     CBModel,
@@ -297,9 +298,19 @@
     /**
      * @param object ajaxResponse
      *
-     * @return undefined
+     * @return Promise -> undefined
      */
-    function init_displayAjaxResponse(ajaxResponse) {
+    async function init_displayAjaxResponse(
+        ajaxResponse
+    ) {
+        let resolve;
+
+        let promise = new Promise(
+            function (resolveCallback) {
+                resolve = resolveCallback;
+            }
+        );
+
         let element = CBUI.createElement();
 
         /* message */
@@ -310,7 +321,9 @@
             );
 
             element.appendChild(
-                init_createTextElement(textContent)
+                init_createTextElement(
+                    textContent
+                )
             );
         }
         /* message */
@@ -339,6 +352,7 @@
                     {
                         callback: function () {
                             element.CBUIPanel.hide();
+                            resolve();
                         },
                         title: "OK",
                     }
@@ -391,7 +405,11 @@
         }
         /* stack trace */
 
-        init_displayElement(element);
+        init_displayElement(
+            element
+        );
+
+        return promise;
     }
     /* init_displayAjaxResponse() */
 
@@ -427,43 +445,53 @@
      *
      *      The default value for this parameter is "OK".
      *
-     * @return Promise
+     * @return Promise -> undefined
      *
      *      The promise resolves when the user clicks the button.
      */
-    function init_displayCBMessage(cbmessage, buttonTextContent) {
-        return new Promise(
-            function (resolve) {
-                let element = CBUI.createElement();
+    async function init_displayCBMessage(
+        cbmessage,
+        buttonTextContent
+    ) {
+        let resolve;
 
-                element.appendChild(
-                    init_createCBMessageElement(cbmessage)
-                );
-
-                buttonTextContent = CBConvert.valueToString(
-                    buttonTextContent
-                ).trim();
-
-                if (buttonTextContent === "") {
-                    buttonTextContent = "OK";
-                }
-
-                element.appendChild(
-                    init_createButtonElement(
-                        {
-                            callback: function () {
-                                element.CBUIPanel.hide();
-                                resolve();
-                            },
-                            title: buttonTextContent,
-                        }
-                    )
-                );
-
-                init_displayElement(element);
+        let promise = new Promise(
+            function (resolveCallback) {
+                resolve = resolveCallback;
             }
         );
-        /* new Promise */
+
+        let element = CBUI.createElement();
+
+        element.appendChild(
+            init_createCBMessageElement(cbmessage)
+        );
+
+        buttonTextContent = CBConvert.valueToString(
+            buttonTextContent
+        ).trim();
+
+        if (buttonTextContent === "") {
+            buttonTextContent = "OK";
+        }
+
+        element.appendChild(
+            init_createButtonElement(
+                {
+                    callback: function () {
+                        element.CBUIPanel.hide();
+                        resolve();
+                    },
+                    title: buttonTextContent,
+                }
+            )
+        );
+
+        init_displayElement(
+            element
+        );
+
+        return promise;
     }
     /* init_displayCBMessage() */
 
@@ -508,12 +536,13 @@
     /* init_displayElement() */
 
 
+
     /**
      * @param Error error
      *
-     * @return undefined
+     * @return Promise -> undefined
      */
-    function displayError(
+    async function displayError(
         error
     ) {
         if (!Colby.browserIsSupported) {
@@ -521,12 +550,14 @@
         }
 
         if (error.ajaxResponse) {
-            init_displayAjaxResponse(
+            return init_displayAjaxResponse(
                 error.ajaxResponse
             );
         } else {
-            init_displayText(
-                Colby.errorToMessage(error)
+            return init_displayText(
+                Colby.errorToMessage(
+                    error
+                )
             );
         }
     }
@@ -537,18 +568,14 @@
     /**
      * @param Error error
      *
-     * @return undefined
+     * @return Promise -> undefined
      */
     function displayAndReportError(
         error
     ) {
-        displayError(error);
+        CBErrorHandler.report(error);
 
-        /**
-         * This should change to CBErrorHandler.report() only after
-         * CBErrorHandler no longer dependes on CBUIPanel.
-         */
-        Colby.reportError(error);
+        return displayError(error);
     }
     /* displayAndReportError() */
 
@@ -560,43 +587,53 @@
      *
      *      The default value for this parameter is "OK".
      *
-     * @return Promise
+     * @return Promise -> undefined
      *
      *      The promise resolves when the user clicks the OK button.
      */
-    function init_displayText(textContent, buttonTextContent) {
-        return new Promise(
-            function (resolve) {
-                let element = CBUI.createElement();
+    async function init_displayText(
+        textContent,
+        buttonTextContent
+    ) {
+        let resolve;
 
-                element.appendChild(
-                    init_createTextElement(textContent)
-                );
-
-                buttonTextContent = CBConvert.valueToString(
-                    buttonTextContent
-                ).trim();
-
-                if (buttonTextContent === "") {
-                    buttonTextContent = "OK";
-                }
-
-                element.appendChild(
-                    init_createButtonElement(
-                        {
-                            callback: function () {
-                                element.CBUIPanel.hide();
-                                resolve();
-                            },
-                            title: buttonTextContent,
-                        }
-                    )
-                );
-
-                init_displayElement(element);
+        let promise = new Promise(
+            function (resolveCallback) {
+                resolve = resolveCallback;
             }
         );
-        /* new Promise */
+
+        let element = CBUI.createElement();
+
+        element.appendChild(
+            init_createTextElement(textContent)
+        );
+
+        buttonTextContent = CBConvert.valueToString(
+            buttonTextContent
+        ).trim();
+
+        if (buttonTextContent === "") {
+            buttonTextContent = "OK";
+        }
+
+        element.appendChild(
+            init_createButtonElement(
+                {
+                    callback: function () {
+                        element.CBUIPanel.hide();
+                        resolve();
+                    },
+                    title: buttonTextContent,
+                }
+            )
+        );
+
+        init_displayElement(
+            element
+        );
+
+        return promise;
     }
     /* init_displayText() */
 
