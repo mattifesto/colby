@@ -10,9 +10,11 @@ final class CBSetup {
      * @param object $args
      *
      *      {
-     *          hostname: string
-     *          password: string
-     *          username: string
+     *          mysqlDatabaseName: string
+     *          mysqlHostname: string
+     *          mysqlPassword: string
+     *          mysqlUsername: string
+     *          websiteHostname: string
      *      }
      *
      * @return object
@@ -27,29 +29,121 @@ final class CBSetup {
     static function CBAjax_verifyDatabaseUser(
         stdClass $args
     ): stdClass {
-        $hostname = trim(
+
+        /* Website hostname */
+
+        $websiteHostname = trim(
             CBModel::valueToString(
                 $args,
-                'hostname'
+                'websiteHostname'
             )
         );
 
-        $username = trim(
+        if ($websiteHostname === '') {
+            throw new CBException(
+                'The website hostname is empty.',
+                '',
+                'd57c10eb5b3093eadf5abea2a45ee6003241d9c9'
+            );
+        }
+
+
+        /* MySQL binary directory */
+
+        $mysqlBinaryDirectory = trim(
             CBModel::valueToString(
                 $args,
-                'username'
+                'mysqlBinaryDirectory'
             )
         );
 
-        $password = CBModel::valueToString(
+        if (
+            $mysqlBinaryDirectory !== '' &&
+            !is_dir($mysqlBinaryDirectory)
+        ) {
+            throw new CBException(
+                'The MySQL binary directory does not exist.',
+                '',
+                '88f5cdc9af229e15302a055e913b60f0f90efaf8'
+            );
+        }
+
+
+        /* MySQL hostname */
+
+        $mysqlHostname = trim(
+            CBModel::valueToString(
+                $args,
+                'mysqlHostname'
+            )
+        );
+
+        if ($mysqlHostname === '') {
+            throw new CBException(
+                'The MySQL hostname is empty.',
+                '',
+                '41bab52757441c27b9cdefbe82652eba54ed3510'
+            );
+        }
+
+
+        /* MySQL username */
+
+        $mysqlUsername = trim(
+            CBModel::valueToString(
+                $args,
+                'mysqlUsername'
+            )
+        );
+
+        if ($mysqlUsername === '') {
+            throw new CBException(
+                'The MySQL username is empty.',
+                '',
+                '7ca97af9059161edc7958f57defd631d5f53de38'
+            );
+        }
+
+        /* MySQL password */
+
+        $mysqlPassword = CBModel::valueToString(
             $args,
-            'password'
+            'mysqlPassword'
         );
+
+        if ($mysqlPassword === '') {
+            throw new CBException(
+                'The MySQL password is empty.',
+                '',
+                '382cbf09df874ec99993337eb46bb84007f6f086'
+            );
+        }
+
+
+        /* MySQL database name */
+
+        $mysqlDatabaseName = trim(
+            CBModel::valueToString(
+                $args,
+                'mysqlDatabaseName'
+            )
+        );
+
+        if ($mysqlDatabaseName === '') {
+            throw new CBException(
+                'The MySQL database name is empty.',
+                '',
+                '2e46ee1efc85338390019e26cc6d0584e14487a8'
+            );
+        }
+
+        /* attempt connection */
 
         $mysqli = new mysqli(
-            $hostname,
-            $username,
-            $password
+            $mysqlHostname,
+            $mysqlUsername,
+            $mysqlPassword,
+            $mysqlDatabaseName,
         );
 
         if ($mysqli->connect_error) {
@@ -59,6 +153,65 @@ final class CBSetup {
                 ),
             ];
         }
+
+
+        /* create colby-configuration.php */
+
+        $encryptionPassword = CBID::generateRandomCBID();
+
+        $contents = <<<EOT
+        <?php
+
+        define(
+            'CBSiteURL',
+            'https://{$websiteHostname}'
+        );
+
+        define(
+            'CBMySQLHost',
+            '{$mysqlHostname}'
+        );
+
+        define(
+            'CBMySQLUser',
+            '{$mysqlUsername}'
+        );
+
+        define(
+            'CBMySQLPassword',
+            '{$mysqlPassword}'
+        );
+
+        define(
+            'CBMySQLDatabase',
+            '$mysqlDatabaseName'
+        );
+
+        define(
+            'CBEncryptionPassword',
+            '{$encryptionPassword}'
+        );
+
+        EOT;
+
+        if ($mysqlBinaryDirectory !== '') {
+            $contents .= <<<EOT
+
+            define(
+                'CBMySQLDirectory',
+                '{$mysqlBinaryDirectory}'
+            );
+
+            EOT;
+        }
+
+        file_put_contents(
+            cbsitedir() . '/colby-configuration.php',
+            $contents
+        );
+
+
+        /* done */
 
         return (object)[
             'succeeded' => true,
