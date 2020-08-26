@@ -103,16 +103,6 @@
         }
 
 
-        /* MySQL Binary Directory */
-
-        let mysqlBinaryDirectoryEditor = CBUIStringEditor.create();
-        mysqlBinaryDirectoryEditor.title = "MySQL Binary Directory (Optional)";
-
-        sectionElement.appendChild(
-          mysqlBinaryDirectoryEditor.element
-        );
-
-
         /* MySQL Hostname */
 
         let mysqlHostnameEditor = CBUIStringEditor.create();
@@ -250,7 +240,6 @@
                         developerPassword1Editor.value,
                         developerPassword2Editor.value,
                         websiteHostnameEditor.value,
-                        mysqlBinaryDirectoryEditor.value,
                         mysqlHostnameEditor.value,
                         mysqlUsernameEditor.value,
                         mysqlPasswordEditor.value,
@@ -282,7 +271,6 @@
         developerPassword1,
         developerPassword2,
         websiteHostname,
-        mysqlBinaryDirectory,
         mysqlHostname,
         mysqlUsername,
         mysqlPassword,
@@ -297,7 +285,6 @@
                     developerPassword1,
                     developerPassword2,
                     websiteHostname,
-                    mysqlBinaryDirectory,
                     mysqlHostname,
                     mysqlUsername,
                     mysqlPassword,
