@@ -10,6 +10,9 @@ final class CBSetup {
      * @param object $args
      *
      *      {
+     *          developerEmailAddress: string
+     *          developerPassword1: string
+     *          developerPassword2: string
      *          mysqlDatabaseName: string
      *          mysqlHostname: string
      *          mysqlPassword: string
@@ -29,6 +32,53 @@ final class CBSetup {
     static function CBAjax_verifyDatabaseUser(
         stdClass $args
     ): stdClass {
+
+        /* Developer email address */
+
+        $developerEmailAddress = CBModel::valueAsEmail(
+            $args,
+            'developerEmailAddress'
+        );
+
+        if ($developerEmailAddress === null) {
+            throw new CBException(
+                'The developer email address is not valid.',
+                '',
+                '833e8864fce5dbd4ba67e24daeeec83ce98345f2'
+            );
+        }
+
+
+        /* Developer password 1 */
+
+        $developerPassword1 = CBModel::valueToString(
+            $args,
+            'developerPassword1'
+        );
+
+        $developerPassword2 = CBModel::valueToString(
+            $args,
+            'developerPassword2'
+        );
+
+        $passwordIssues = CBUser::passwordIssues(
+            $developerPassword1
+        );
+
+        if ($passwordIssues !== null) {
+            return (object)[
+                'cbmessage' => CBMessageMarkup::stringToMessage(
+                    $passwordIssues
+                ),
+            ];
+        }
+
+        if ($developerPassword1 !== $developerPassword2) {
+            return (object)[
+                'cbmessage' => 'Your passwords don\'t match.',
+            ];
+        }
+
 
         /* Website hostname */
 
@@ -155,6 +205,14 @@ final class CBSetup {
         }
 
 
+        /* create settings.json */
+
+        CBSetup::createSettingsFile(
+            $developerEmailAddress,
+            $developerPassword1
+        );
+
+
         /* create colby-configuration.php */
 
         $encryptionPassword = CBID::generateRandomCBID();
@@ -217,6 +275,7 @@ final class CBSetup {
             'succeeded' => true,
         ];
     }
+    /* CBAjax_verifyDatabaseUser() */
 
 
 
@@ -266,6 +325,39 @@ final class CBSetup {
         );
     }
     /* bootstrap() */
+
+
+
+    /**
+     * @return void
+     */
+    static function createSettingsFile(
+        string $developerEmailAddress,
+        string $developerPassword
+    ): void {
+        $settingsFilepath = (
+            cbsitedir() .
+            '/settings.json'
+        );
+
+        $developerPasswordHash = password_hash(
+            $developerPassword,
+            PASSWORD_DEFAULT
+        );
+
+        $settingsObject = (object)[
+            'developerEmailAddress' => $developerEmailAddress,
+            'developerPasswordHash' => $developerPasswordHash,
+        ];
+
+        file_put_contents(
+            $settingsFilepath,
+            json_encode(
+                $settingsObject
+            )
+        );
+    }
+    /* createSettingsFile() */
 
 
 
