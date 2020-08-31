@@ -100,6 +100,23 @@ final class CBArtwork {
     /**
      * @param object $artworkModel
      *
+     * @return stdClass|null
+     */
+    static function getImageModel(
+        stdClass $artworkModel
+    ): ?stdClass {
+        return CBModel::valueAsModel(
+            $artworkModel,
+            'image'
+        );
+    }
+    /* getImageModel() */
+
+
+
+    /**
+     * @param object $artworkModel
+     *
      * @return string
      *
      *      Returns an empty string if no URL is available.
