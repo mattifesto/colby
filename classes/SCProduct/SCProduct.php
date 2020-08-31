@@ -2,6 +2,72 @@
 
 final class SCProduct {
 
+    /* -- CBArtworkCollection interfaces -- */
+
+
+
+    /**
+     * @return void
+     */
+    static function CBArtworkCollection_UpdatedTask_notify(
+        stdClass $productModel
+    ): void {
+        $artworkCollectionCBID = SCProduct::productCBIDToArtworkCollectionCBID(
+            $productModel->ID
+        );
+
+        $artworkCollectionModel = CBModelCache::fetchModelByID(
+            $artworkCollectionCBID
+        );
+
+        if ($artworkCollectionModel === null) {
+            return;
+        }
+
+        $mainArtworModel = CBArtworkCollection::getMainArtwork(
+            $artworkCollectionModel
+        );
+
+        if ($mainArtworModel === null) {
+            return;
+        }
+
+        $mainArtworkImageModel = CBArtwork::getImageModel(
+            $mainArtworModel
+        );
+
+        if ($mainArtworkImageModel === null) {
+            return;
+        }
+
+        $associationKey = 'CBModelToCBImageAssociation';
+
+        CBModelAssociations::replaceAssociatedID(
+            $productModel->ID,
+            $associationKey,
+            $mainArtworkImageModel->ID
+        );
+
+        $productPageCBID = SCProduct::productIDToProductPageID(
+            $productModel->ID
+        );
+
+        if ($productPageCBID === null) {
+            return;
+        }
+
+        CBModelUpdater::update(
+            (object)[
+                'ID' => $productPageCBID,
+                'image' => $mainArtworkImageModel,
+                'thumbnailURL' => null,
+            ]
+        );
+    }
+    /* CBArtworkCollection_UpdatedTask_notify() */
+
+
+
     /* -- CBModel interfaces -- -- -- -- -- */
 
 
