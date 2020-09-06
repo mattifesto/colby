@@ -16,12 +16,21 @@ final class SCProductUpdateTask {
      *
      * @return null
      */
-    static function CBTasks2_run(string $productID): ?stdClass {
-        $productModel = CBModelCache::fetchModelByID($productID);
+    static function CBTasks2_run(
+        string $productID
+    ): ?stdClass {
+        $productModel = CBModelCache::fetchModelByID(
+            $productID
+        );
 
         if ($productModel === null) {
-            SCProductUpdateTask::removeProductPage($productID);
-            SCProductUpdateTask::removeProductAssociations($productID);
+            SCProductUpdateTask::removeProductPage(
+                $productID
+            );
+
+            SCProductUpdateTask::removeProductAssociations(
+                $productID
+            );
         } else {
             if ($productModel->className !== 'SCProduct') {
                 throw CBException::createModelIssueException(
@@ -31,8 +40,13 @@ final class SCProductUpdateTask {
                 );
             }
 
-            SCProductUpdateTask::updateProductPage($productModel);
-            SCProductUpdateTask::updateProductGroups($productModel);
+            SCProductUpdateTask::updateProductPage(
+                $productModel
+            );
+
+            SCProductUpdateTask::updateProductGroups(
+                $productModel
+            );
         }
 
         return null;
@@ -40,7 +54,10 @@ final class SCProductUpdateTask {
     /* CBTasks2_run() */
 
 
+
     /* -- functions -- -- -- -- -- */
+
+
 
     /**
      * @return int
@@ -53,6 +70,7 @@ final class SCProductUpdateTask {
     static function getDefaultPriority(): int {
         return 70;
     }
+
 
 
     /**
@@ -80,6 +98,7 @@ final class SCProductUpdateTask {
     /* removeProductPage() */
 
 
+
     /**
      * @param string $productID
      *
@@ -92,6 +111,7 @@ final class SCProductUpdateTask {
         CBModelAssociations::delete(null, null, $productID);
     }
     /* removeProductAssociations() */
+
 
 
     /**
@@ -178,6 +198,7 @@ final class SCProductUpdateTask {
         }
     }
     /* updateProductGroups() */
+
 
 
     /**
