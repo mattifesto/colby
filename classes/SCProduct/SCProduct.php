@@ -77,8 +77,18 @@ final class SCProduct {
      *
      * @return object
      */
-    static function CBModel_build(stdClass $spec): stdClass {
-        $productCode = CBModel::valueAsName($spec, 'productCode');
+    static function CBModel_build(
+        stdClass $spec
+    ): stdClass {
+        $contentCBMessage = CBModel::valueToString(
+            $spec,
+            'contentCBMessage'
+        );
+
+        $productCode = CBModel::valueAsName(
+            $spec,
+            'productCode'
+        );
 
         if ($productCode === null) {
             throw CBException::createModelIssueException(
@@ -88,7 +98,10 @@ final class SCProduct {
             );
         }
 
-        $priceInCents = CBModel::valueAsInt($spec, 'priceInCents');
+        $priceInCents = CBModel::valueAsInt(
+            $spec,
+            'priceInCents'
+        );
 
         if ($priceInCents === null || $priceInCents < 0) {
             throw CBException::createModelIssueException(
@@ -112,6 +125,8 @@ final class SCProduct {
         }
 
         return (object)[
+            'contentCBMessage' => $contentCBMessage,
+
             'groupNames' => $productGroupNames,
 
             'hasPage' => CBModel::valueToBool(
@@ -159,6 +174,29 @@ final class SCProduct {
         return SCProduct::productCodeToProductID($productCode);
     }
     /* CBModel_toID() */
+
+
+
+    /**
+     * @param object $spec
+     *
+     * @return object
+     */
+    static function CBModel_upgrade(
+        stdClass $spec
+    ): stdClass {
+
+        /**
+         * @NOTE 2020_09_06
+         *
+         *      The processVersionNumber is set to 2 on the spec to force a
+         *      re-save because product pages need to be upgraded.
+         */
+        $spec->processVersionNumber = 2;
+
+        return $spec;
+    }
+    /* CBModel_upgrade() */
 
 
 
