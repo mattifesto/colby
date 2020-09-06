@@ -50,6 +50,11 @@ final class CBArtworkCollectionView {
     /**
      * @param object $viewModel
      *
+     *      {
+     *          artworkCollection: object
+     *          CSSClassNames: [string]
+     *      }
+     *
      * @return void
      */
     static function CBView_render(
@@ -60,16 +65,47 @@ final class CBArtworkCollectionView {
             'artworkCollection.artworks'
         );
 
+        if (count($artworks) === 0) {
+            return;
+        }
+
         $artworksAsData = cbhtml(
             json_encode(
                 $artworks
             )
         );
 
+
+        /* CSS Class Names */
+
+        $CSSClassNames = CBModel::valueToArray(
+            $viewModel,
+            'CSSClassNames'
+        );
+
+        array_walk(
+            $CSSClassNames,
+            function ($CSSClassName) {
+                CBHTMLOutput::requireClassName(
+                    $CSSClassName
+                );
+            }
+        );
+
+        $CSSClassNames = cbhtml(
+            implode(
+                ' ',
+                $CSSClassNames
+            )
+        );
+
+
+        /* HTML */
+
         ?>
 
         <div
-            class="CBArtworkCollectionView"
+            class="CBArtworkCollectionView CBUI_view <?= $CSSClassNames ?>"
             data-artworks="<?= $artworksAsData ?>"
         >
         </div>

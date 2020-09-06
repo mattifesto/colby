@@ -115,15 +115,25 @@
             element.dataset.artworks
         );
 
+        let contentElement = CBUI.createElement(
+            "CBArtworkCollectionView_content CBUI_viewContent"
+        );
+
+        contentElement.style.width = "640px";
+
+        element.appendChild(
+            contentElement
+        );
+
         let imageContainerElement = CBUI.createElement(
             "CBArtworkCollectionView_imageContainer"
         );
 
-        element.appendChild(
+        contentElement.appendChild(
             imageContainerElement
         );
 
-        element.appendChild(
+        contentElement.appendChild(
             createThumbnailsElement(
                 artworks,
                 function (index) {

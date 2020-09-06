@@ -13,3 +13,9 @@
     padding: 5px;
     width: 75px;
 }
+
+
+
+.CBArtworkCollectionView_theme1 .CBArtworkCollectionView_imageContainer {
+    background-color: var(--CBBackgroundOffsetColor);
+}
