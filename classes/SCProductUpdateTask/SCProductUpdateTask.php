@@ -209,7 +209,12 @@ final class SCProductUpdateTask {
     private static function updateProductPage(
         stdClass $productModel
     ): void {
-        if (!CBModel::valueToBool($productModel, 'hasPage')) {
+        $productShouldHaveAPage = CBModel::valueToBool(
+            $productModel,
+            'hasPage'
+        );
+
+        if (!$productShouldHaveAPage) {
             SCProductUpdateTask::removeProductPage($productModel->ID);
 
             return;
@@ -279,4 +284,5 @@ final class SCProductUpdateTask {
         CBModelUpdater::save($updater);
     }
     /* updateProductPage() */
+
 }
