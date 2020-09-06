@@ -11,6 +11,12 @@
  */
 final class SCProductUpdateTask {
 
+
+
+    /* -- CBTasks2 interfaces -- */
+
+
+
     /**
      * @param string $productID
      *
@@ -275,13 +281,15 @@ final class SCProductUpdateTask {
             'sourceID',
             'afe00a7ebf6f609782d6112700b34d9d4b011cae',
             (object)[
-                'className' => 'SCProductBuyView',
+                'className' => 'SCProduct_ProductPageMainView',
                 'productCode' => $productCode,
                 'sourceID' => 'afe00a7ebf6f609782d6112700b34d9d4b011cae'
             ]
         );
 
-        CBModelUpdater::save($updater);
+        CBModelUpdater::save(
+            $updater
+        );
     }
     /* updateProductPage() */
 
