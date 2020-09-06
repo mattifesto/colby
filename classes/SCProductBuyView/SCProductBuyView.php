@@ -130,25 +130,29 @@ final class SCProductBuyView {
             return;
         }
 
+        $information = (object)[
+            'hideImage' => CBModel::valueToBool(
+                $model,
+                'hideImage'
+            ),
+
+            'productPageURL' => SCProduct::productCodeToProductPageURL(
+                $productCode
+            ),
+
+            'showProductPageLink' => CBModel::valueToBool(
+                $model,
+                'showProductPageLink'
+            ),
+        ];
+
         $informationAsJSON = json_encode(
-            (object)[
-                'hideImage' => CBModel::valueToBool(
-                    $model,
-                    'hideImage'
-                ),
-
-                'productPageURL' => SCProduct::productCodeToProductPageURL(
-                    $productCode
-                ),
-
-                'showProductPageLink' => CBModel::valueToBool(
-                    $model,
-                    'showProductPageLink'
-                ),
-            ]
+            $information
         );
 
-        $updatedCartItemSpecAsJSON = json_encode($updatedCartItemSpec);
+        $updatedCartItemSpecAsJSON = json_encode(
+            $updatedCartItemSpec
+        );
 
         $CSSClassNames = implode(
             ' ',
