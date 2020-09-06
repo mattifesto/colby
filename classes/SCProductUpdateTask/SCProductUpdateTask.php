@@ -287,6 +287,28 @@ final class SCProductUpdateTask {
             ]
         );
 
+
+        /* content */
+
+        $contentCBMessage = CBModel::valueToString(
+            $productModel,
+            'contentCBMessage'
+        );
+
+        CBSubviewUpdater::push(
+            $pageSpec,
+            'sourceID',
+            '97470967fbb2baad6af38771b487bf354be35c9d',
+            (object)[
+                'className' => 'CBMessageView',
+                'markup' => $contentCBMessage,
+                'sourceID' => '97470967fbb2baad6af38771b487bf354be35c9d'
+            ]
+        );
+
+
+        /* done */
+
         CBModelUpdater::save(
             $updater
         );
