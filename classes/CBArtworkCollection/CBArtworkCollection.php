@@ -46,10 +46,16 @@ final class CBArtworkCollection {
                     $artworkSpec
                 );
 
-                array_push(
-                    $artworkModels,
+                $thumbnailImageURL = CBArtwork::getThumbnailImageURL(
                     $artworkModel
                 );
+
+                if ($thumbnailImageURL !== '') {
+                    array_push(
+                        $artworkModels,
+                        $artworkModel
+                    );
+                }
             }
         }
 
