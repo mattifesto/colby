@@ -22,7 +22,7 @@ final class CBArtworkCollectionView {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v632.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v637.js', cbsysurl()),
         ];
     }
 
