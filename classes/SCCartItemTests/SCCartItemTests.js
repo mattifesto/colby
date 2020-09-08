@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported SCCartItemTests */
 /* exported SCCartItemTests_MaximumQuantityCartItem */
+/* exported SCCartItemTests_SubtotalCartItem1 */
 /* global
     CBModel,
     CBTest,
@@ -11,6 +12,7 @@
 
     SCCartItemTests_getMaximumQuantityTestCases,
     SCCartItemTests_getQuantityTestCases,
+    SCCartItemTests_getSubtotalInCentsTestCases,
 */
 
 var SCCartItemTests = {
@@ -214,7 +216,48 @@ var SCCartItemTests = {
 
 
 
-    CBTest_updateSpecs: function () {
+    /**
+     * @return object
+     */
+    CBTest_getSubtotalInCents(
+    ) {
+        for (
+            let index = 0;
+            index < SCCartItemTests_getSubtotalInCentsTestCases.length;
+            index += 1
+        ) {
+            let testCase = SCCartItemTests_getSubtotalInCentsTestCases[index];
+
+            let actualResult = SCCartItem.getSubtotalInCents(
+                testCase.cartItemModel
+            );
+
+            let expectedResult = testCase.expectedSubtotalInCents;
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    JSON.stringify(
+                        testCase.cartItemModel
+                    ),
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_getSubtotalInCents() */
+
+
+
+    /**
+     * @return Promise -> object
+     */
+    CBTest_updateSpecs(
+    ) {
         let originalCartItemSpecs = [
             {
                 className: "SCProductCartItem",
@@ -331,3 +374,21 @@ var SCCartItemTests_MaximumQuantityCartItem = {
     },
 
 };
+/* SCCartItemTests_MaximumQuantityCartItem */
+
+
+
+/**
+ *
+ */
+var SCCartItemTests_SubtotalCartItem1 = {
+
+    /**
+     * @return int
+     */
+    SCCartItem_getSubtotalInCents() {
+        return 1000;
+    },
+
+};
+/* SCCartItemTests_SubtotalCartItem1 */

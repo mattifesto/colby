@@ -11,7 +11,7 @@ final class SCCartItemTests {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v134.js', scliburl()),
+            Colby::flexpath(__CLASS__, 'v638.js', scliburl()),
         ];
     }
 
@@ -22,14 +22,22 @@ final class SCCartItemTests {
      */
     static function CBHTMLOutput_JavaScriptVariables(): array {
         return [
+
             [
                 'SCCartItemTests_getMaximumQuantityTestCases',
                 SCCartItemTests::getMaximumQuantityTestCases(),
             ],
+
             [
                 'SCCartItemTests_getQuantityTestCases',
                 SCCartItemTests::getQuantityTestCases(),
             ],
+
+            [
+                'SCCartItemTests_getSubtotalInCentsTestCases',
+                SCCartItemTests::getSubtotalInCentsTestCases(),
+            ],
+
         ];
     }
     /* CBHTMLOutput_JavaScriptVariables() */
@@ -73,6 +81,10 @@ final class SCCartItemTests {
                 'type' => 'server',
             ],
             (object)[
+                'name' => 'getSubtotalInCents',
+                'type' => 'server',
+            ],
+            (object)[
                 'name' => 'update_errors',
                 'type' => 'server',
             ],
@@ -88,6 +100,9 @@ final class SCCartItemTests {
             ],
             (object)[
                 'name' => 'getQuantity',
+            ],
+            (object)[
+                'name' => 'getSubtotalInCents',
             ],
             (object)[
                 'name' => 'updateSpecs',
@@ -249,6 +264,39 @@ final class SCCartItemTests {
         ];
     }
     /* CBTest_getQuantity() */
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_getSubtotalInCents(
+    ): stdClass {
+        $testCases = SCCartItemTests::getSubtotalInCentsTestCases();
+
+        for ($index = 0; $index < count($testCases); $index += 1) {
+            $testCase = $testCases[$index];
+
+            $actualResult = SCCartItem::getSubtotalInCents(
+                $testCase->cartItemModel
+            );
+
+            $expectedResult = $testCase->expectedSubtotalInCents;
+
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    "test case index {$index}",
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_getSubtotalInCents() */
 
 
 
@@ -496,7 +544,63 @@ final class SCCartItemTests {
     }
     /* getQuantityTestCases() */
 
+
+
+    /**
+     * @return [object]
+     *
+     *      {
+     *          cartItemModel: object
+     *          expectedSubtotalInCents: int
+     *      }
+     */
+    static function getSubtotalInCentsTestCases() {
+        return [
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'className' => 'SCCartItemTests_SubtotalCartItem1',
+                ],
+                'expectedSubtotalInCents' => 1000,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'SCCartItem_subtotalInCents' => 900,
+                ],
+                'expectedSubtotalInCents' => 900,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'priceInCents' => 800,
+                ],
+                'expectedSubtotalInCents' => 800,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'SCCartItem_subtotalInCents' => 700,
+                    'priceInCents' => 600,
+                ],
+                'expectedSubtotalInCents' => 700,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'className' => 'SCCartItemTests_SubtotalCartItem1',
+                    'SCCartItem_subtotalInCents' => 500,
+                    'priceInCents' => 400,
+                ],
+                'expectedSubtotalInCents' => 1000,
+            ],
+
+        ];
+    }
+    /* getSubtotalInCentsTestCases() */
+
 }
+/* SCCartItemTests */
 
 
 
@@ -557,11 +661,28 @@ final class SCCartItemTests_ErrorCartItemDeprecated {
 final class SCCartItemTests_MaximumQuantityCartItem {
 
     /**
-     * @return stdClass
+     * @return float|null
      */
     static function SCCartItem_getMaximumQuantity(
         stdClass $cartItemModel
     ): ?float {
         return 5;
+    }
+}
+
+
+
+/**
+ *
+ */
+final class SCCartItemTests_SubtotalCartItem1 {
+
+    /**
+     * @return int
+     */
+    static function SCCartItem_getSubtotalInCents(
+        stdClass $cartItemModel
+    ): int {
+        return 1000;
     }
 }
