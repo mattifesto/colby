@@ -362,6 +362,22 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'regex' => 'SCCartItem_getPriceInCents',
+                    'severity' => 3,
+                    'title' => 'SCCartItem_getPriceInCents',
+
+                    'cbmessage' => <<<EOT
+
+                        Implement SCCartItem_getSubtotalInCents()
+
+                    EOT,
+
+                    'errorStartDate' => '2020/09/08',
+                    'warningStartDate' => '2020/09/08',
+                ],
+
+
+                (object)[
                     'filetype' => 'js',
                     'regex' => 'CBErrorHandler\.displayAndReport',
                     'severity' => 3,
