@@ -71,44 +71,101 @@ final class SCProductCartItem  {
      *
      * @return object
      */
-    static function CBModel_build(stdClass $spec): stdClass {
-        $priceInCents = CBModel::valueAsInt($spec, 'priceInCents');
+    static function CBModel_build(
+        stdClass $spec
+    ): stdClass {
+
+        /* price */
+
+        $priceInCents = CBModel::valueAsInt(
+            $spec,
+            'priceInCents'
+        );
 
         if ($priceInCents === null || $priceInCents < 0) {
-            throw CBException::createModelIssueException(
-                'The "priceInCents" property on an SCProductCartItem spec ' .
-                'should be an integer >= 0.',
-                $spec
+            $message = CBConvert::stringToCleanLine(<<<EOT
+
+                The "priceInCents" property on an SCProductCartItem spec should
+                be an integer >= 0.
+
+            EOT);
+
+            throw new CBExceptionWithValue(
+                $message,
+                $spec,
+                '59bba497eaa5480b037627e314f9801f4836edc4'
             );
         }
 
-        $productCode = CBModel::valueAsName($spec, 'productCode');
+
+        /* product code */
+
+        $productCode = CBModel::valueAsName(
+            $spec,
+            'productCode'
+        );
 
         if ($productCode === null) {
-            throw CBException::createModelIssueException(
-                'The "productCode" property on an SCProductCartItem spec is ' .
-                'not valid.',
-                $spec
+            $message = CBConvert::stringToCleanLine(<<<EOT
+
+                The "productCode" property on an SCProductCartItem is not valid.
+
+            EOT);
+
+            throw new CBExceptionWithValue(
+                $message,
+                $spec,
+                '9b6926170f7318e5a60324fc79b3e0d57b9338f2'
             );
         }
 
-        $quantity = CBModel::valueAsInt($spec, 'quantity');
+
+        /* quantity */
+
+        $quantity = CBModel::valueAsInt(
+            $spec,
+            'quantity'
+        );
 
         if ($quantity === null || $quantity < 1) {
-            throw CBException::createModelIssueException(
-                'The "quantity" property on an SCProductCartItem spec should ' .
-                'be set to an integer > 0.',
-                $spec
+            $message = CBConvert::stringToCleanLine(<<<EOT
+
+                The "quantity" property on an SCProductCartItem spec should be
+                set to an integer > 0.
+
+            EOT);
+
+            throw new CBExceptionWithValue(
+                $message,
+                $spec,
+                '2396ab7815bf7ca3fca9827a95835b909d5f013b'
             );
         }
 
+
+        /* done */
+
         return (object)[
-            'image' => CBModel::valueAsModel($spec, 'image'),
-            'message' => CBModel::valueToString($spec, 'message'),
+            'image' => CBModel::valueAsModel(
+                $spec,
+                'image'
+            ),
+
+            'message' => CBModel::valueToString(
+                $spec,
+                'message'
+            ),
+
             'priceInCents' => $priceInCents,
+
             'productCode' => $productCode,
+
             'quantity' => $quantity,
-            'title' => CBModel::valueToString($spec, 'title'),
+
+            'title' => CBModel::valueToString(
+                $spec,
+                'title'
+            ),
         ];
     }
     /* CBModel_build() */
