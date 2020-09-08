@@ -67,18 +67,18 @@ final class SCProductCartItem  {
 
 
     /**
-     * @param object $spec
+     * @param object $cartItemSpec
      *
      * @return object
      */
     static function CBModel_build(
-        stdClass $spec
+        stdClass $cartItemSpec
     ): stdClass {
 
         /* price */
 
         $priceInCents = CBModel::valueAsInt(
-            $spec,
+            $cartItemSpec,
             'priceInCents'
         );
 
@@ -92,7 +92,7 @@ final class SCProductCartItem  {
 
             throw new CBExceptionWithValue(
                 $message,
-                $spec,
+                $cartItemSpec,
                 '59bba497eaa5480b037627e314f9801f4836edc4'
             );
         }
@@ -101,7 +101,7 @@ final class SCProductCartItem  {
         /* product code */
 
         $productCode = CBModel::valueAsName(
-            $spec,
+            $cartItemSpec,
             'productCode'
         );
 
@@ -114,7 +114,7 @@ final class SCProductCartItem  {
 
             throw new CBExceptionWithValue(
                 $message,
-                $spec,
+                $cartItemSpec,
                 '9b6926170f7318e5a60324fc79b3e0d57b9338f2'
             );
         }
@@ -123,7 +123,7 @@ final class SCProductCartItem  {
         /* quantity */
 
         $quantity = CBModel::valueAsInt(
-            $spec,
+            $cartItemSpec,
             'quantity'
         );
 
@@ -137,7 +137,7 @@ final class SCProductCartItem  {
 
             throw new CBExceptionWithValue(
                 $message,
-                $spec,
+                $cartItemSpec,
                 '2396ab7815bf7ca3fca9827a95835b909d5f013b'
             );
         }
@@ -147,12 +147,12 @@ final class SCProductCartItem  {
 
         return (object)[
             'image' => CBModel::valueAsModel(
-                $spec,
+                $cartItemSpec,
                 'image'
             ),
 
             'message' => CBModel::valueToString(
-                $spec,
+                $cartItemSpec,
                 'message'
             ),
 
@@ -163,7 +163,7 @@ final class SCProductCartItem  {
             'quantity' => $quantity,
 
             'title' => CBModel::valueToString(
-                $spec,
+                $cartItemSpec,
                 'title'
             ),
         ];
