@@ -1168,6 +1168,22 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'filetype' => 'php',
+                    'regex' => 'SCCartItem::getPriceInCents',
+                    'severity' => 4,
+                    'title' => 'SCCartItem::getPriceInCents()',
+
+                    'cbmessage' => <<<EOT
+
+                        Use SCCartItem::getSubtotalInCents().
+
+                    EOT,
+
+                    'warningStartDate' => '2020/09/08',
+                ],
+
+
+                (object)[
                     'filetype' => 'js',
                     'regex' => 'Colby\.callAjaxFunction',
                     'severity' => 4,
