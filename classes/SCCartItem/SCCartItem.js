@@ -279,24 +279,16 @@ var SCCartItem = {
 
 
     /**
-     * @param object cartItemModel
+     * @deprecated 2020_09_08
      *
-     * @return int
+     *      Use SCCartItem.getSubtotalInCents()
      */
-    getPriceInCents: function (cartItemModel) {
-        let callable = CBModel.classFunction(
-            cartItemModel,
-            "SCCartItem_getPriceInCents"
+    getPriceInCents(
+        cartItemModel
+    ) {
+        return SCCartItem.getSubtotalInCents(
+            cartItemModel
         );
-
-        if (callable !== undefined) {
-            return callable(cartItemModel);
-        } else {
-            return CBModel.valueAsInt(
-                cartItemModel,
-                "priceInCents"
-            ) || 0;
-        }
     },
     /* getPriceInCents() */
 
@@ -355,6 +347,48 @@ var SCCartItem = {
             return CBModel.valueToString(cartItemModel, "sourceURL");
         }
     },
+
+
+
+    /**
+     * @param object cartItemModel
+     *
+     * @return int
+     */
+    getSubtotalInCents(
+        cartItemModel
+    ) {
+        let callable = CBModel.getClassFunction(
+            cartItemModel,
+            "SCCartItem_getSubtotalInCents"
+        );
+
+        if (callable !== undefined) {
+            return callable(
+                cartItemModel
+            );
+        }
+
+        let subtotalInCents = CBModel.valueAsInt(
+            cartItemModel,
+            "SCCartItem_subtotalInCents"
+        );
+
+        if (subtotalInCents === undefined) {
+            /* deprecated */
+            subtotalInCents = CBModel.valueAsInt(
+                cartItemModel,
+                "priceInCents"
+            );
+        }
+
+        if (subtotalInCents === undefined) {
+            return 0;
+        }
+
+        return subtotalInCents;
+    },
+    /* getSubtotalInCents() */
 
 
 
