@@ -1137,6 +1137,22 @@ final class Admin_CBCode {
 
                 (object)[
                     'filetype' => 'js',
+                    'regex' => 'CBModel\.classFunction',
+                    'severity' => 4,
+                    'title' => 'CBModel.classFunction()',
+
+                    'cbmessage' => <<<EOT
+
+                        Use CBModel.getClassFunction().
+
+                    EOT,
+
+                    'warningStartDate' => '2020/09/08',
+                ],
+
+
+                (object)[
+                    'filetype' => 'js',
                     'regex' => 'Colby\.callAjaxFunction',
                     'severity' => 4,
                     'title' => 'Colby.callAjaxFunction()',
