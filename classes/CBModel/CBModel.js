@@ -13,23 +13,16 @@ var CBModel = {
 
 
     /**
-     * @TODO 2020_07_29
+     * @deprecated 2020_09_08
      *
-     *      Rename to getClassFunction() to match PHP.
-     *
-     * @param object model
-     * @param string functionName
-     *
-     * @return function|undefined
+     *      Use CBModel.getClassFunction()
      */
     classFunction: function (
         model,
         functionName
     ) {
-        let className = CBModel.valueToString(model, "className");
-
-        return CBModel.valueAsFunction(
-            window[className],
+        return CBModel.getClassFunction(
+            model,
             functionName
         );
     },
@@ -178,6 +171,34 @@ var CBModel = {
         }
     },
     /* equals() */
+
+
+
+    /**
+     * @param object model
+     * @param string functionName
+     *
+     * @return function|undefined
+     */
+    getClassFunction(
+        model,
+        functionName
+    ) {
+        let className = CBModel.valueToString(
+            model,
+            "className"
+        );
+
+        if (className === "") {
+            return undefined;
+        }
+
+        return CBModel.valueAsFunction(
+            window[className],
+            functionName
+        );
+    },
+    /* getClassFunction() */
 
 
 
