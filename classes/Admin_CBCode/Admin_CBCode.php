@@ -1153,6 +1153,22 @@ final class Admin_CBCode {
 
                 (object)[
                     'filetype' => 'js',
+                    'regex' => 'SCCartItem\.getPriceInCents',
+                    'severity' => 4,
+                    'title' => 'SCCartItem.getPriceInCents()',
+
+                    'cbmessage' => <<<EOT
+
+                        Use SCCartItem.getSubtotalInCents().
+
+                    EOT,
+
+                    'warningStartDate' => '2020/09/08',
+                ],
+
+
+                (object)[
+                    'filetype' => 'js',
                     'regex' => 'Colby\.callAjaxFunction',
                     'severity' => 4,
                     'title' => 'Colby.callAjaxFunction()',
