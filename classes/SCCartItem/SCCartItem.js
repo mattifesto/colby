@@ -279,6 +279,42 @@ var SCCartItem = {
 
 
     /**
+     * @param object cartItemModel
+     *
+     * @return int
+     */
+    getOriginalSubtotalInCents(
+        cartItemModel
+    ) {
+        let callable = CBModel.getClassFunction(
+            cartItemModel,
+            "SCCartItem_getOriginalSubtotalInCents"
+        );
+
+        if (callable !== undefined) {
+            return callable(
+                cartItemModel
+            );
+        }
+
+        let originalSubtotalInCents = CBModel.valueAsInt(
+            cartItemModel,
+            "SCCartItem_originalSubtotalInCents"
+        );
+
+        if (originalSubtotalInCents === undefined) {
+            return SCCartItem.getSubtotalInCents(
+                cartItemModel
+            );
+        }
+
+        return originalSubtotalInCents;
+    },
+    /* getOriginalSubtotalInCents() */
+
+
+
+    /**
      * @deprecated 2020_09_08
      *
      *      Use SCCartItem.getSubtotalInCents()

@@ -258,6 +258,70 @@ final class SCCartItem {
 
 
     /**
+     * This function is used to get the original subtotal for a cart item,
+     * before an promotions have been applied. This function most often returns
+     * the same value as getSubtotalInCents(). For this result, you don't need
+     * to write any code or even be aware of this value.
+     *
+     * If you want to allow a promotional price for your cart item class, you
+     * should implement your cart item class to return this value as the
+     * original subtotal for the item before the promotional price was applied.
+     *
+     * Ways of implementing this value in order of priority are:
+     *
+     *      1. Implement the SCCartItem_getOriginalSubtotalInCents() interfaces
+     *      on the class.
+     *
+     *      2. Set the "SCCartItem_originalSubtotalInCents" property on the item
+     *      model.
+     *
+     *
+     * @param object $cartItemModel
+     *
+     * @return int
+     */
+    static function getOriginalSubtotalInCents(
+        stdClass $cartItemModel
+    ): int {
+        $callable = CBModel::getClassFunction(
+            $cartItemModel,
+            'SCCartItem_getOriginalSubtotalInCents'
+        );
+
+        if ($callable !== null) {
+            return call_user_func(
+                $callable,
+                $cartItemModel
+            );
+        }
+
+        /**
+         * @TODO 2020_09_11
+         *
+         *      This function is currently allowed to return negative integers.
+         *      I'm not sure if negative integers should be changed to 0 or
+         *      throw an exception instead. Once this is determined change the
+         *      behavior of the function or document why negative integers are
+         *      allowed to be returned.
+         */
+        $originalSubtotalInCents = CBModel::valueAsInt(
+            $cartItemModel,
+            'SCCartItem_originalSubtotalInCents'
+        );
+
+        if ($originalSubtotalInCents === null) {
+            return SCCartItem::getSubtotalInCents(
+                $cartItemModel
+            );
+        }
+
+        return $originalSubtotalInCents;
+    }
+    /* getOriginalSubtotalInCents() */
+
+
+
+    /**
      * @deprecated 2020_09_08
      *
      *      Use SCCartItem::getSubtotalInCents()
@@ -442,19 +506,21 @@ final class SCCartItem {
 
 
     /**
-     * This function is used to get the actual priced charged for a cart item.
-     * This function most often returns a value that is equal to unit price
-     * multiplied by the quantity, but sometimes may return a different price if
-     * a promotion has been applied.
+     * This function is used to get the subtotal for a cart item. This function
+     * most often returns a value that is equal to unit price multiplied by the
+     * quantity, but sometimes may return a different price if a promotion has
+     * been applied.
      *
      * If you are creating a class that implements the SCCartItem interfaces,
      * making this function work is necessary for an item that has a non-zero
-     * price. Options are:
+     * price.
      *
-     *      1. Set the "SCCartItem_subtotalInCents" property on the item model.
+     * Ways of implementing this value in order of priority are:
      *
-     *      2. Implement the SCCartItem_getSubtotalInCents() interface on the
+     *      1. Implement the SCCartItem_getSubtotalInCents() interface on the
      *      class.
+     *
+     *      2. Set the "SCCartItem_subtotalInCents" property on the item model.
      *
      * @TODO 2020_06_06
      *
