@@ -29,6 +29,11 @@ final class SCCartItemTests {
             ],
 
             [
+                'SCCartItemTests_getOriginalSubtotalInCentsTestCases',
+                SCCartItemTests::getOriginalSubtotalInCentsTestCases(),
+            ],
+
+            [
                 'SCCartItemTests_getQuantityTestCases',
                 SCCartItemTests::getQuantityTestCases(),
             ],
@@ -77,6 +82,10 @@ final class SCCartItemTests {
                 'type' => 'server',
             ],
             (object)[
+                'name' => 'getOriginalSubtotalInCents',
+                'type' => 'server',
+            ],
+            (object)[
                 'name' => 'getQuantity',
                 'type' => 'server',
             ],
@@ -97,6 +106,9 @@ final class SCCartItemTests {
             ],
             (object)[
                 'name' => 'getMaximumQuantity',
+            ],
+            (object)[
+                'name' => 'getOriginalSubtotalInCents',
             ],
             (object)[
                 'name' => 'getQuantity',
@@ -228,6 +240,39 @@ final class SCCartItemTests {
         ];
     }
     /* CBTest_getMaximumQuantity() */
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_getOriginalSubtotalInCents(
+    ): stdClass {
+        $testCases = SCCartItemTests::getOriginalSubtotalInCentsTestCases();
+
+        for ($index = 0; $index < count($testCases); $index += 1) {
+            $testCase = $testCases[$index];
+
+            $actualResult = SCCartItem::getOriginalSubtotalInCents(
+                $testCase->cartItemModel
+            );
+
+            $expectedResult = $testCase->expectedOriginalSubtotalInCents;
+
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    "test case index {$index}",
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_getOriginalSubtotalInCents() */
 
 
 
@@ -490,8 +535,116 @@ final class SCCartItemTests {
 
     /**
      * @return [object]
+     *
+     *      {
+     *          cartItemModel: object
+     *          expectedOriginalSubtotalInCents: int
+     *      }
      */
-    static function getQuantityTestCases(): array {
+    static function getOriginalSubtotalInCentsTestCases(
+    ): array {
+        return [
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'className' => 'SCCartItemTests_OriginalSubtotalCartItem1',
+                ],
+                'expectedOriginalSubtotalInCents' => 2000,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'className' => 'SCCartItemTests_OriginalSubtotalCartItem1',
+                    'SCCartItem_originalSubtotalInCents' => 1900,
+                ],
+                'expectedOriginalSubtotalInCents' => 2000,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'SCCartItem_originalSubtotalInCents' => 900,
+                ],
+                'expectedOriginalSubtotalInCents' => 900,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'SCCartItem_subtotalInCents' => 700,
+                    'SCCartItem_originalSubtotalInCents' => 800,
+                ],
+                'expectedOriginalSubtotalInCents' => 800,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'SCCartItem_subtotalInCents' => 700,
+                    'SCCartItem_originalSubtotalInCents' => 600,
+                ],
+                'expectedOriginalSubtotalInCents' => 600,
+            ],
+
+            /**
+             * The following tests were copied from
+             * getSubtotalInCentsTestCases() and adjusted for
+             * getOriginalSubtotalInCents().
+             */
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'className' => 'SCCartItemTests_SubtotalCartItem1',
+                ],
+                'expectedOriginalSubtotalInCents' => 1000,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'className' => 'SCCartItemTests_SubtotalCartItem1',
+                ],
+                'expectedOriginalSubtotalInCents' => 1000,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'SCCartItem_subtotalInCents' => 900,
+                ],
+                'expectedOriginalSubtotalInCents' => 900,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'priceInCents' => 800,
+                ],
+                'expectedOriginalSubtotalInCents' => 800,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'SCCartItem_subtotalInCents' => 700,
+                    'priceInCents' => 600,
+                ],
+                'expectedOriginalSubtotalInCents' => 700,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'className' => 'SCCartItemTests_SubtotalCartItem1',
+                    'SCCartItem_subtotalInCents' => 500,
+                    'priceInCents' => 400,
+                ],
+                'expectedOriginalSubtotalInCents' => 1000,
+            ],
+
+        ];
+    }
+    /* getOriginalSubtotalInCentsTestCases() */
+
+
+
+    /**
+     * @return [object]
+     */
+    static function getQuantityTestCases(
+    ): array {
         return [
             (object)[
                 'originalValue' => (object)[
@@ -554,7 +707,8 @@ final class SCCartItemTests {
      *          expectedSubtotalInCents: int
      *      }
      */
-    static function getSubtotalInCentsTestCases() {
+    static function getSubtotalInCentsTestCases(
+    ): array {
         return [
 
             (object)[
@@ -669,6 +823,34 @@ final class SCCartItemTests_MaximumQuantityCartItem {
         return 5;
     }
 }
+
+
+
+/**
+ *
+ */
+final class SCCartItemTests_OriginalSubtotalCartItem1 {
+
+    /**
+     * @return int
+     */
+    static function SCCartItem_getOriginalSubtotalInCents(
+        stdClass $cartItemModel
+    ): int {
+        return 2000;
+    }
+
+    /**
+     * @return int
+     */
+    static function SCCartItem_getSubtotalInCents(
+        stdClass $cartItemModel
+    ): int {
+        return 1800;
+    }
+
+}
+/* SCCartItemTests_OriginalSubtotalCartItem1 */
 
 
 

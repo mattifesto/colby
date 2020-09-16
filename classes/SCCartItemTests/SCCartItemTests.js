@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported SCCartItemTests */
 /* exported SCCartItemTests_MaximumQuantityCartItem */
+/* exported SCCartItemTests_OriginalSubtotalCartItem1 */
 /* exported SCCartItemTests_SubtotalCartItem1 */
 /* global
     CBModel,
@@ -11,6 +12,7 @@
     SCCartItem,
 
     SCCartItemTests_getMaximumQuantityTestCases,
+    SCCartItemTests_getOriginalSubtotalInCentsTestCases,
     SCCartItemTests_getQuantityTestCases,
     SCCartItemTests_getSubtotalInCentsTestCases,
 */
@@ -156,7 +158,8 @@ var SCCartItemTests = {
     /**
      * @return object|Promise
      */
-    CBTest_getMaximumQuantity: function () {
+    CBTest_getMaximumQuantity: function (
+    ) {
         let testCaseCount = SCCartItemTests_getMaximumQuantityTestCases.length;
 
         for (let index = 0; index < testCaseCount; index += 1) {
@@ -184,7 +187,46 @@ var SCCartItemTests = {
             succeeded: true,
         };
     },
-    /* CBTest_getQuantity() */
+    /* CBTest_getMaximumQuantity() */
+
+
+
+    /**
+     * @return object
+     */
+    CBTest_getOriginalSubtotalInCents(
+    ) {
+        for (
+            let index = 0;
+            index < SCCartItemTests_getOriginalSubtotalInCentsTestCases.length;
+            index += 1
+        ) {
+            let testCase = (
+                SCCartItemTests_getOriginalSubtotalInCentsTestCases[index]
+            );
+
+            let actualResult = SCCartItem.getOriginalSubtotalInCents(
+                testCase.cartItemModel
+            );
+
+            let expectedResult = testCase.expectedOriginalSubtotalInCents;
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    JSON.stringify(
+                        testCase.cartItemModel
+                    ),
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_getOriginalSubtotalInCents() */
 
 
 
@@ -381,12 +423,42 @@ var SCCartItemTests_MaximumQuantityCartItem = {
 /**
  *
  */
+var SCCartItemTests_OriginalSubtotalCartItem1 = {
+
+    /**
+     * @return int
+     */
+    SCCartItem_getOriginalSubtotalInCents(
+        /* cartItemModel */
+    ) {
+        return 2000;
+    },
+
+    /**
+     * @return int
+     */
+    SCCartItem_getSubtotalInCents(
+        /* cartItemModel */
+    ) {
+        return 1800;
+    },
+
+};
+/* SCCartItemTests_OriginalSubtotalCartItem1 */
+
+
+
+/**
+ *
+ */
 var SCCartItemTests_SubtotalCartItem1 = {
 
     /**
      * @return int
      */
-    SCCartItem_getSubtotalInCents() {
+    SCCartItem_getSubtotalInCents(
+        /* cartItemModel */
+    ) {
         return 1000;
     },
 
