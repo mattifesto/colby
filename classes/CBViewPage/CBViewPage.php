@@ -17,6 +17,28 @@ final class CBViewPage {
 
 
 
+    /* -- CBInstall interfaces -- */
+
+
+
+    /**
+     * Developers installing a CBViewPage model using the CBInstall_install()
+     * interface may not know which classes that they require. Implementing this
+     * interface on this class allows them to just require the one class they
+     * know about.
+     *
+     * @return void
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBModels',
+            'CBPages',
+        ];
+    }
+    /* CBInstall_requiredClassNames() */
+
+
+
     /* -- CBModel interfaces -- -- -- -- -- */
 
 
