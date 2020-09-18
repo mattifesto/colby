@@ -115,7 +115,10 @@ final class CBGit {
      *
      * @return void
      */
-    static function submoduleUpdate(&$output, &$exitCode): void {
+    static function submoduleUpdate(
+        &$output,
+        &$exitCode
+    ): void {
 
         /**
          * The "git sync" command will synchronize submodules if the remove
