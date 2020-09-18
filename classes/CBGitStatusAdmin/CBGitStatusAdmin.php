@@ -79,7 +79,7 @@ final class CBGitStatusAdmin {
      */
     static function CBHTMLOutput_CSSURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v463.css', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v640.css', cbsysurl()),
         ];
     }
 
@@ -157,39 +157,71 @@ final class CBGitStatusAdmin {
     /**
      * @param string $command
      *
-     * @return string
+     * @return cbmessage
      *
-     *      Returns a multiline message with the command output and potentially
-     *      error information.
+     *      Returns a multiline cbmessage with the command output and
+     *      potentially error information.
      */
-    private static function exec(string $command): string {
+    private static function exec(
+        string $command
+    ): string {
         $lines = [];
 
-        exec("{$command} 2>&1", $lines, $returnValue);
+        exec(
+            "{$command} 2>&1",
+            $lines,
+            $returnValue
+        );
 
         if ($returnValue !== 0) {
-            array_unshift($lines, '');
-            array_unshift($lines, "! returned error code: {$returnValue}");
-            array_unshift($lines, "$ {$command}");
+            array_unshift(
+                $lines,
+                ''
+            );
+
+            array_unshift(
+                $lines,
+                "! returned error code: {$returnValue}"
+            );
+
+            array_unshift(
+                $lines,
+                "$ {$command}"
+            );
         }
 
-        $lines = array_map(function ($line) {
-            return CBMessageMarkup::stringToMessage($line);
-        }, $lines);
+        $linesAsCBMessage = array_map(
+            function ($line) {
+                return CBMessageMarkup::stringToMessage($line);
+            },
+            $lines
+        );
 
-        $lines = implode("\n", $lines);
+        $linesAsCBMessage = implode(
+            "\n",
+            $linesAsCBMessage
+        );
 
-        if (empty($lines)) {
+        if (empty($linesAsCBMessage)) {
             return '';
         } else {
+            $commandAsCBMessage = CBMessageMarkup::stringToMessage(
+                $command
+            );
+
             return <<<EOT
 
-                --- pre CBGitStatusAdmin_pre\n{$lines}
+                --- p CBGitStatusAdmin_command
+                {$commandAsCBMessage}
+                ---
+
+                --- pre CBGitStatusAdmin_pre\n{$linesAsCBMessage}
                 ---
 
             EOT;
         }
     }
+    /* exec() */
 
 
 
@@ -199,7 +231,9 @@ final class CBGitStatusAdmin {
      *
      * @return object
      */
-    static function fetchStatus(string $directory): stdClass {
+    static function fetchStatus(
+        string $directory
+    ): stdClass {
         $location = empty($directory) ? 'website' : $directory;
         $locationAsMessage = CBMessageMarkup::stringToMessage($location);
 
@@ -211,6 +245,7 @@ final class CBGitStatusAdmin {
 
         chdir(cbsitedir() . "/{$directory}");
 
+        $message .= CBGitStatusAdmin::exec('git branch');
         $message .= CBGitStatusAdmin::exec('git describe');
         $message .= CBGitStatusAdmin::exec('git status --porcelain');
 

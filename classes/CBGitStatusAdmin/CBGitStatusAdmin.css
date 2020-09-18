@@ -1,6 +1,18 @@
-.CBGitStatusAdmin_pre {
-    border-left: 1px solid var(--CBTextColor3);
+/**
+ * @NOTE 2020_09_18
+ *
+ *      The styles in this file may appear over specified, but the are specified
+ *      more specifically to override the default styles in CBContentStyleSheet.
+ */
+
+p.CBGitStatusAdmin_command {
+    font-size: 14px;
+    margin-bottom: 0.5em;
+}
+
+pre.CBGitStatusAdmin_pre {
+    color: var(--CBTextColor2);
     font-size: 12px;
-    line-height: 1.6;
-    padding: 0.5em;
+    line-height: 1.5;
+    margin-top: 0.5em;
 }
