@@ -237,7 +237,7 @@ final class CBGitStatusAdmin {
         $location = empty($directory) ? 'website' : $directory;
         $locationAsMessage = CBMessageMarkup::stringToMessage($location);
 
-        $message = <<<EOT
+        $cbmessage = <<<EOT
 
             {$locationAsMessage}
 
@@ -245,46 +245,48 @@ final class CBGitStatusAdmin {
 
         chdir(cbsitedir() . "/{$directory}");
 
-        $message .= CBGitStatusAdmin::exec('git branch');
-        $message .= CBGitStatusAdmin::exec('git describe');
-        $message .= CBGitStatusAdmin::exec('git status --porcelain');
+        $cbmessage .= CBGitStatusAdmin::exec('git branch');
+        $cbmessage .= CBGitStatusAdmin::exec('git describe');
+        $cbmessage .= CBGitStatusAdmin::exec('git status --porcelain');
 
-        $lines = [];
+        $currentBranch = CBGit::getCurrentBranchName();
+        $currentTrackecBranch = CBGit::getCurrentTrackedBranchName();
 
-        /**
-         * Get the name of the remote tracking branch. This will be something
-         * like "origin/master" or "origin/5.x".
-         */
+        if (
+            empty($currentBranch) ||
+            empty($currentTrackecBranch)
+        ) {
+            $cbmessage .= <<<EOT
 
-        exec(
-            CBConvert::stringToCleanLine(<<<EOT
+                --- dl
+                    --- dt
+                    current branch
+                    ---
+                    --- dd
+                    {$currentBranch}
+                    ---
+                    --- dt
+                    current tracked branch
+                    ---
+                    --- dd
+                    {$currentTrackecBranch}
+                    ---
+                ---
 
-                git for-each-ref
-                --format='%(upstream:short)'
-                "$(git symbolic-ref -q HEAD)"
-
-            EOT),
-            $lines
-        );
-
-        if (empty($lines)) {
-            $message .= <<<EOT
-
-                This repository is not currently tracking a remote branch.
+                The current branch or tracked branch are not valid.
 
             EOT;
         } else {
-            $remoteBranch = trim($lines[0]);
-            $range = "{$remoteBranch}..HEAD";
+            $range = "{$currentTrackecBranch}..{$currentBranch}";
 
-            $message .= CBGitStatusAdmin::exec(
+            $cbmessage .= CBGitStatusAdmin::exec(
                 "git log {$range} --oneline --no-decorate --reverse"
             );
         }
 
         return (object)[
             'location' => $location,
-            'message' => $message,
+            'message' => $cbmessage,
         ];
     }
     /* fetchStatus() */
