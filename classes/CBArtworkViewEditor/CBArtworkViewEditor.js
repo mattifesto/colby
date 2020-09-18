@@ -254,6 +254,8 @@ var CBArtworkViewEditor = {
          * @return undefined
          */
         function createEditor_handleImageChosen() {
+            imageChooser.caption = "uploading...";
+
             CBAjax.call(
                 "CBImages",
                 "upload",
@@ -279,6 +281,10 @@ var CBArtworkViewEditor = {
             ).catch(
                 function (error) {
                     CBUIPanel.displayAndReportError(error);
+                }
+            ).finally(
+                function () {
+                    imageChooser.caption = "";
                 }
             );
         }

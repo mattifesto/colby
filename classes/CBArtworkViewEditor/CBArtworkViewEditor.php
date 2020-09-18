@@ -11,7 +11,7 @@ final class CBArtworkViewEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v627.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v640.js', cbsysurl()),
         ];
     }
 
