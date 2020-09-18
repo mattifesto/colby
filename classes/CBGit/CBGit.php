@@ -2,6 +2,59 @@
 
 final class CBGit {
 
+    /* -- functions -- */
+
+
+
+    /**
+     * @return string
+     */
+    static function getCurrentBranchName(
+    ): string {
+        exec(
+            'git branch --show-current',
+            $outputLines
+        );
+
+        if (count($outputLines) > 0) {
+            return $outputLines[0];
+        } else {
+            return '';
+        }
+    }
+    /* getCurrentBranchName() */
+
+
+
+    /**
+     * @return string
+     */
+    static function getCurrentTrackedBranchName(
+    ): string {
+        $command = implode(
+            ' ',
+            [
+                'git for-each-ref',
+                '--format=\'%(upstream:short)\'',
+                '"$(git symbolic-ref -q HEAD)"',
+            ]
+        );
+
+        exec(
+            $command,
+            $outputLines
+        );
+
+        if (count($outputLines) > 0) {
+            return $outputLines[0];
+        } else {
+            return '';
+        }
+    }
+    /* getCurrentTrackedBranchName() */
+
+
+
     /**
      * @return [string]
      */
