@@ -79,6 +79,8 @@
          * @return undefined
          */
         function handleImageChosen() {
+            imageChooser.caption = "uploading...";
+
             CBAjax.call(
                 "CBImages",
                 "upload",
@@ -100,6 +102,10 @@
                     CBUIPanel.displayAndReportError(
                         error
                     );
+                }
+            ).finally(
+                function () {
+                    imageChooser.caption = "";
                 }
             );
         }
