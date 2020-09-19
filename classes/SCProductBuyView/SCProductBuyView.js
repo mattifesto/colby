@@ -44,6 +44,99 @@
 
 
     /**
+     * @param object activeCartItemSpec
+     *
+     * @return Element
+     */
+    function createBuyButtonElement(
+        activeCartItemSpec
+    ) {
+        let elements = CBUI.createElementTree(
+            (
+                "CBUI_container_flexCenterHorizontal" +
+                " CBUI_container_paddingHalfTopBottom"
+            ),
+            "CBUI_button1"
+        );
+
+        let buyButtonElement = elements[1];
+
+        buyButtonElement.textContent = (
+            "$" +
+            CBConvert.centsToDollars(
+                CBModel.valueAsInt(
+                    activeCartItemSpec,
+                    "unitPriceInCents"
+                ) || 0
+            ) +
+            " Add to Cart"
+        );
+
+        buyButtonElement.addEventListener(
+            "click",
+            function () {
+                increaseQuantity(
+                    activeCartItemSpec
+                );
+
+                location.href = "/view-cart/";
+            }
+        );
+
+        return elements[0];
+    }
+    /* createBuyButtonElement() */
+
+
+
+    /**
+     * @param string productPageURL
+     *
+     * @return Element
+     */
+    function createProductPageLinkElement(
+        productPageURL
+    ) {
+        let elements = CBUI.createElementTree(
+            "CBUI_sectionContainer",
+            "CBUI_section CBUI_section_inner",
+            [
+                "CBUI_action",
+                "a",
+            ]
+        );
+
+        let actionElement = elements[2];
+
+        actionElement.href = productPageURL;
+        actionElement.textContent = "View Product Page >";
+
+        return elements[0];
+    }
+    /* createProductPageLinkElement() */
+
+
+
+    /**
+     * @return undefined
+     */
+    function increaseQuantity(
+        activeCartItemSpec
+    ) {
+        SCCartItem.setQuantity(
+            activeCartItemSpec,
+            SCCartItem.getQuantity(activeCartItemSpec) + 1
+        );
+
+        activeCartItemSpec
+        .CBActiveObject
+        .tellListenersThatTheObjectDataHasChanged();
+    }
+    /* increaseQuantity() */
+
+
+
+    /**
      * @param Element element
      *
      * @return undefined
@@ -158,88 +251,39 @@
             }
         }
 
-        let sectionContainerElement = CBUI.createElement(
-            "CBUI_sectionContainer"
-        );
-
-        viewContentElement.appendChild(sectionContainerElement);
-
-        let sectionElement = CBUI.createElement(
-            "CBUI_section CBUI_section_inner"
-        );
-
-        sectionContainerElement.appendChild(sectionElement);
-
 
         /* title */
 
-        let titleElement = CBUI.createElement("CBUI_text1");
+        let titleElement = CBUI.createElement(
+            "SCProductBuyView_title CBUI_textAlign_center"
+        );
 
-        sectionElement.appendChild(titleElement);
+        viewContentElement.appendChild(
+            titleElement
+        );
 
-        titleElement.textContent = SCCartItem.getTitle(activeCartItemSpec);
+        titleElement.textContent = SCCartItem.getTitle(
+            activeCartItemSpec
+        );
 
 
         /* buy button */
 
-        let actionElement = document.createElement("div");
-
-        sectionElement.appendChild(actionElement);
-
-        actionElement.className = "CBUI_action";
-        actionElement.textContent = [
-            "$",
-            CBConvert.centsToDollars(
-                CBModel.valueAsInt(activeCartItemSpec, "unitPriceInCents") || 0
-            ),
-            " Add to Cart",
-        ].join("");
-
-        actionElement.addEventListener(
-            "click",
-            function () {
-                render_increaseQuantity();
-
-                location.href = "/view-cart/";
-            }
+        viewContentElement.appendChild(
+            createBuyButtonElement(
+                activeCartItemSpec
+            )
         );
-
 
         /* product page link */
 
         if (productPageURL !== "") {
-            let actionElement = CBUI.createElement(
-                "CBUI_action", "a"
+            viewContentElement.appendChild(
+                createProductPageLinkElement(
+                    productPageURL
+                )
             );
-
-            actionElement.href = productPageURL;
-            actionElement.textContent = "View Product Page >";
-
-            sectionElement.appendChild(actionElement);
         }
-
-
-        /* finished */
-
-        return;
-
-
-        /* -- closures -- -- -- -- -- */
-
-        /**
-         * @return undefined
-         */
-        function render_increaseQuantity() {
-            SCCartItem.setQuantity(
-                activeCartItemSpec,
-                SCCartItem.getQuantity(activeCartItemSpec) + 1
-            );
-
-            activeCartItemSpec
-            .CBActiveObject
-            .tellListenersThatTheObjectDataHasChanged();
-        }
-        /* render_increaseQuantity() */
     }
     /* render() */
 
