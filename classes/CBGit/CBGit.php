@@ -58,10 +58,13 @@ final class CBGit {
     /**
      * @return [string]
      */
-    static function getSubmoduleURLs(): array {
+    static function getSubmoduleURLs(
+    ): array {
         $pwd = getcwd();
 
-        chdir(cbsitedir());
+        chdir(
+            cbsitedir()
+        );
 
         try {
             $command = (
@@ -97,7 +100,9 @@ final class CBGit {
     ): void {
         $pwd = getcwd();
 
-        chdir(cbsitedir());
+        chdir(
+            cbsitedir()
+        );
 
         try {
             CBExec::exec(
@@ -129,16 +134,20 @@ final class CBGit {
             $exitCode
         );
     }
+    /* pull() */
 
 
 
     /**
      * @return [string]
      */
-    static function submodules(): array {
+    static function submodules(
+    ): array {
         $pwd = getcwd();
 
-        chdir(cbsitedir());
+        chdir(
+            cbsitedir()
+        );
 
         try {
             exec(
