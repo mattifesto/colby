@@ -16,6 +16,10 @@
 
 (function() {
 
+    window.SCProductBuyView = {
+        render,
+    };
+
     Colby.afterDOMContentLoaded(
         function () {
             afterDOMContentLoaded();
