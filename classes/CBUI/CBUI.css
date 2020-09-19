@@ -83,6 +83,27 @@ a.CBUI_action {
 }
 
 
+/**
+ * 2020_09_19
+ *
+ *      The CBUI_container_ classes were created to create combinable classes
+ *      that can be used to create a container with the behavior desired without
+ *      having to create a custom style sheet.
+ *
+ *      The old container classes were good in many cases, but also weren't good
+ *      in many cases.
+**/
+
+.CBUI_container_flexCenterHorizontal {
+    display: flex;
+    justify-content: center;
+}
+
+.CBUI_container_paddingHalfTopBottom {
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+
 
 
 /**
