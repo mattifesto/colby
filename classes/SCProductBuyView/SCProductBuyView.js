@@ -13,19 +13,33 @@
     SCShoppingCart,
 */
 
-var SCProductBuyView = {
+
+(function() {
+
+    Colby.afterDOMContentLoaded(
+        function () {
+            afterDOMContentLoaded();
+        }
+    );
+
+
 
     /**
      * @return undefined
      */
-    init: function () {
-        let elements = document.getElementsByClassName("SCProductBuyView");
+    function afterDOMContentLoaded(
+    ) {
+        let elements = document.getElementsByClassName(
+            "SCProductBuyView"
+        );
 
         for (let index = 0; index < elements.length; index += 1) {
-            SCProductBuyView.render(elements[index]);
+            render(
+                elements[index]
+            );
         }
-    },
-    /* init() */
+    }
+    /* afterDOMContentLoaded() */
 
 
 
@@ -34,7 +48,7 @@ var SCProductBuyView = {
      *
      * @return undefined
      */
-    render(
+    function render(
         viewElement
     ) {
         let activeCartItemSpec;
@@ -226,14 +240,7 @@ var SCProductBuyView = {
             .tellListenersThatTheObjectDataHasChanged();
         }
         /* render_increaseQuantity() */
-    },
-    /* render() */
-};
-/* SCProductBuyView */
-
-
-Colby.afterDOMContentLoaded(
-    function () {
-        SCProductBuyView.init();
     }
-);
+    /* render() */
+
+})();
