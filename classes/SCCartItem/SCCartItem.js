@@ -436,7 +436,9 @@ var SCCartItem = {
      *      If the cart item class has not implemented SCCartItem_getTitle()
      *      this function will return the string value of the "title" property.
      */
-    getTitle: function (cartItemSpec) {
+    getTitle(
+        cartItemSpec
+    ) {
         let callable = CBModel.classFunction(
             cartItemSpec,
             "SCCartItem_getTitle"
@@ -448,6 +450,71 @@ var SCCartItem = {
             return CBModel.valueToString(cartItemSpec, "title");
         }
     },
+    /* getTitle() */
+
+
+
+    /**
+     * @param object cartItemModel
+     *
+     * @return int
+     */
+    getUnitPriceInCents(
+        cartItemModel
+    ) {
+        let unitPriceInCents;
+
+        let callable = CBModel.getClassFunction(
+            cartItemModel,
+            "SCCartItem_getUnitPriceInCents"
+        );
+
+        if (callable !== undefined) {
+            unitPriceInCents = CBConvert.valueAsInt(
+                callable(
+                    cartItemModel
+                )
+            );
+        } else {
+            unitPriceInCents = CBModel.valueAsInt(
+                cartItemModel,
+                "SCCartItem_unitPriceInCents"
+            );
+
+            if (unitPriceInCents === undefined) {
+                /* deprecated */
+                unitPriceInCents = CBModel.valueAsInt(
+                    cartItemModel,
+                    "unitPriceInCents"
+                );
+            }
+        }
+
+        if (
+            unitPriceInCents === undefined ||
+            unitPriceInCents <= 0
+        ) {
+            let unitPriceInCentsAsJSON = JSON.stringify(
+                unitPriceInCents
+            );
+
+            let message = CBConvert.stringToCleanLine(`
+
+                This cart item has an invalid unit price of
+                "${unitPriceInCentsAsJSON}"
+
+            `);
+
+            throw CBException.withValueRelatedError(
+                Error(message),
+                cartItemModel,
+                "6dbed66c7b0c63dd578ecd83b8a79f4a90a0a684"
+            );
+        }
+
+        return unitPriceInCents;
+    },
+    /* getUnitPriceInCents() */
 
 
 

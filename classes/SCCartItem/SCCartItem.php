@@ -54,11 +54,17 @@ final class SCCartItem {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v638.js', scliburl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v642.js',
+                scliburl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -536,6 +542,69 @@ final class SCCartItem {
         }
     }
     /* getTitle() */
+
+
+
+    /**
+     * @param object $cartItemModel
+     *
+     * @return int
+     */
+    static function getUnitPriceInCents(
+        stdClass $cartItemModel
+    ): int {
+        $callable = CBModel::getClassFunction(
+            $cartItemModel,
+            'SCCartItem_getUnitPriceInCents'
+        );
+
+        if ($callable !== null) {
+            $unitPriceInCents = CBConvert::valueAsInt(
+                call_user_func(
+                    $callable,
+                    $cartItemModel
+                )
+            );
+        } else {
+            $unitPriceInCents = CBModel::valueAsInt(
+                $cartItemModel,
+                'SCCartItem_unitPriceInCents'
+            );
+
+            if ($unitPriceInCents === null) {
+                /* deprecated */
+                $unitPriceInCents = CBModel::valueAsInt(
+                    $cartItemModel,
+                    'unitPriceInCents'
+                );
+            }
+        }
+
+        if (
+            $unitPriceInCents === null ||
+            $unitPriceInCents <= 0
+        ) {
+            $unitPriceInCentsAsJSON = json_encode(
+                $unitPriceInCents
+            );
+
+            $message = CBConvert::stringToCleanLine(<<<EOT
+
+                This cart item has an invalid unit price of
+                "{$unitPriceInCentsAsJSON}"
+
+            EOT);
+
+            throw new CBExceptionWithValue(
+                $message,
+                $cartItemModel,
+                'eb1465850e5a201b8d33006b79bfbe4be54482ce'
+            );
+        }
+
+        return $unitPriceInCents;
+    }
+    /* getUnitPriceInCents() *./
 
 
 
