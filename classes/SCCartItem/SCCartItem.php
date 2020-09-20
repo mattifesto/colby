@@ -436,76 +436,6 @@ final class SCCartItem {
 
 
     /**
-     * @param object $cartItemModel
-     *
-     * @return string
-     */
-    static function getTitle(
-        stdClass $cartItemModel
-    ): string {
-        $className = CBModel::valueToString(
-            $cartItemModel,
-            'className'
-        );
-
-        $functionName = "{$className}::SCCartItem_getTitle";
-
-        if (is_callable($functionName)) {
-            return call_user_func(
-                $functionName,
-                $cartItemModel
-            );
-        } else {
-            return CBModel::valueToString(
-                $cartItemModel,
-                'title'
-            );
-        }
-    }
-    /* getTitle() */
-
-
-
-    /**
-     * @param object $cartItemSpec
-     * @param number $quantity
-     *
-     * @return void
-     */
-    static function setQuantity(
-        stdClass $cartItemSpec,
-        float $quantity
-    ): void {
-        $className = CBModel::valueToString(
-            $cartItemSpec,
-            'className'
-        );
-
-        $functionName = "{$className}::SCCartItem_setQuantity";
-
-        if (is_callable($functionName)) {
-            call_user_func(
-                $functionName,
-                $cartItemSpec,
-                $quantity
-            );
-        } else {
-            $quantityAsInt = CBConvert::valueAsInt($quantity);
-
-            if ($quantityAsInt === null || $quantityAsInt < 0) {
-                throw new InvalidArgumentException(
-                    'The "quantity" parameter must be an integer 0 or greater.'
-                );
-            }
-
-            $cartItemSpec->quantity = $quantityAsInt;
-        }
-    }
-    /* setQuantity() */
-
-
-
-    /**
      * This function is used to get the subtotal for a cart item. This function
      * most often returns a value that is equal to unit price multiplied by the
      * quantity, but sometimes may return a different price if a promotion has
@@ -575,6 +505,76 @@ final class SCCartItem {
         return $subtotalInCents;
     }
     /* getSubtotalInCents() */
+
+
+
+    /**
+     * @param object $cartItemModel
+     *
+     * @return string
+     */
+    static function getTitle(
+        stdClass $cartItemModel
+    ): string {
+        $className = CBModel::valueToString(
+            $cartItemModel,
+            'className'
+        );
+
+        $functionName = "{$className}::SCCartItem_getTitle";
+
+        if (is_callable($functionName)) {
+            return call_user_func(
+                $functionName,
+                $cartItemModel
+            );
+        } else {
+            return CBModel::valueToString(
+                $cartItemModel,
+                'title'
+            );
+        }
+    }
+    /* getTitle() */
+
+
+
+    /**
+     * @param object $cartItemSpec
+     * @param number $quantity
+     *
+     * @return void
+     */
+    static function setQuantity(
+        stdClass $cartItemSpec,
+        float $quantity
+    ): void {
+        $className = CBModel::valueToString(
+            $cartItemSpec,
+            'className'
+        );
+
+        $functionName = "{$className}::SCCartItem_setQuantity";
+
+        if (is_callable($functionName)) {
+            call_user_func(
+                $functionName,
+                $cartItemSpec,
+                $quantity
+            );
+        } else {
+            $quantityAsInt = CBConvert::valueAsInt($quantity);
+
+            if ($quantityAsInt === null || $quantityAsInt < 0) {
+                throw new InvalidArgumentException(
+                    'The "quantity" parameter must be an integer 0 or greater.'
+                );
+            }
+
+            $cartItemSpec->quantity = $quantityAsInt;
+        }
+    }
+    /* setQuantity() */
 
 
 
