@@ -65,16 +65,13 @@
 
         let buyButtonElement = elements[1];
 
-        buyButtonElement.textContent = (
-            "$" +
-            CBConvert.centsToDollars(
-                CBModel.valueAsInt(
-                    activeCartItemSpec,
-                    "unitPriceInCents"
-                ) || 0
-            ) +
-            " Add to Cart"
+        let unitPriceInDollars = CBConvert.centsToDollars(
+            SCCartItem.getUnitPriceInCents(
+                activeCartItemSpec
+            )
         );
+
+        buyButtonElement.textContent = `$${unitPriceInDollars} Add To Cart`;
 
         buyButtonElement.addEventListener(
             "click",
@@ -158,7 +155,9 @@
             );
 
             if (informationAsJSON !== "") {
-                information = JSON.parse(informationAsJSON);
+                information = JSON.parse(
+                    informationAsJSON
+                );
             }
         }
 
@@ -189,15 +188,23 @@
 
             SCCartItem.setQuantity(
                 originalCartItemSpec,
-                SCCartItem.getQuantity(activeCartItemSpec)
+                SCCartItem.getQuantity(
+                    activeCartItemSpec
+                )
             );
 
-            activeCartItemSpec.CBActiveObject.replace(originalCartItemSpec);
+            activeCartItemSpec.CBActiveObject.replace(
+                originalCartItemSpec
+            );
         }
 
-        let viewContentElement = CBUI.createElement("CBUI_viewContent");
+        let viewContentElement = CBUI.createElement(
+            "CBUI_viewContent"
+        );
 
-        viewElement.appendChild(viewContentElement);
+        viewElement.appendChild(
+            viewContentElement
+        );
 
 
         /* productPageURL */
@@ -251,7 +258,9 @@
                     }
                 );
 
-                imageContainerElement.appendChild(artworkElement);
+                imageContainerElement.appendChild(
+                    artworkElement
+                );
             }
         }
 
