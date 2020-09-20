@@ -11,7 +11,11 @@ final class SCProductBuyViewTests {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v95.js', scliburl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v642.js',
+                scliburl()
+            ),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */

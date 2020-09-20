@@ -22,6 +22,7 @@ var SCProductBuyViewTests = {
                 {
                     className: "SCProductCartItem",
                     productCode: "SCProductBuyViewTests_0001",
+                    SCCartItem_unitPriceInCents: 999,
                 }
             );
 
