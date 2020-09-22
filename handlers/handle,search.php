@@ -13,32 +13,24 @@ if ($searchQueryHTML) {
 CBHTMLOutput::begin();
 CBHTMLOutput::pageInformation()->title = $title;
 CBHTMLOutput::pageInformation()->description = 'Search for site content.';
-CBHTMLOutput::addCSSURL(cbsysurl() . '/handlers/handle,search.v459.css');
+CBHTMLOutput::addCSSURL(cbsysurl() . '/handlers/handle,search.v643.css');
 
 CBPageLayout::renderPageHeader();
 
-$formClass = empty($searchQuery) ? 'no-query' : 'has-query';
 
 ?>
 
 <main class="CBSearch">
-    <form action="<?= cbsiteurl() ?>/search/" class="search <?= $formClass ?>">
-        <div>
-            <input
-                type="text"
-                name="search-for"
-                value="<?php echo $searchQueryHTML; ?>"
-            >
-            <input
-                type="submit"
-                value="Search Now"
-            >
-        </div>
-    </form>
 
     <?php
 
-    if (empty($searchQuery)) {
+    CBView::render(
+        (object)[
+            'className' => 'CBSearchFormView',
+        ]
+    );
+
+    if (empty(trim($searchQuery))) {
         goto done;
     }
 
