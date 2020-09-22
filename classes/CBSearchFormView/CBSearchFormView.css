@@ -1,0 +1,17 @@
+.CBSearchFormView > form > div {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 20px;
+}
+
+.CBSearchFormView > form input[type=text] {
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: inherit;
+    margin-bottom: 20px;
+    max-width: 100%;
+    padding: 5px;
+    width: 480px;;
+}
