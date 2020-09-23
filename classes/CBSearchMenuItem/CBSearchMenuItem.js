@@ -19,11 +19,22 @@ var CBSearchMenuItem = {
         element.addEventListener(
             "click",
             function CBSearchMenuItem_show() {
-                let element = CBUI.createElement("CBUI_panel CBUIRoot");
+                let element = CBUI.createElement(
+                    "CBUI_panel CBUIRoot",
+                    "form"
+                );
+
+                element.action = "/search/";
 
                 document.body.appendChild(element);
 
-                let stringEditor = CBUIStringEditor.create();
+                let stringEditor = CBUIStringEditor.create(
+                    {
+                        inputType: "CBUIStringEditor_text",
+                    }
+                );
+
+                stringEditor.name = "search-for";
                 stringEditor.title = "Search For";
 
                 {
@@ -88,26 +99,12 @@ var CBSearchMenuItem = {
                     );
                 }
 
-                CBSearchMenuItem.focusFirstTextareaChild(stringEditor.element);
+                stringEditor.focus();
             }
         );
     },
     /* activateElement() */
 
-
-    /**
-     * @param Element element
-     *
-     * @return undefined
-     */
-    focusFirstTextareaChild: function (element) {
-        let textareaElements = element.getElementsByTagName("textarea");
-
-        if (textareaElements.length > 0) {
-            textareaElements.item(0).focus();
-        }
-    },
-    /* focusFirstTextareaChild() */
 };
 /* CBSearchMenuItem */
 

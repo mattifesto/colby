@@ -14,7 +14,7 @@ final class CBSearchMenuItem {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v485.js',
+                'v643.js',
                 cbsysurl()
             ),
         ];
