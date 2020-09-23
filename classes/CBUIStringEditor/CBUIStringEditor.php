@@ -11,9 +11,14 @@ final class CBUIStringEditor {
      */
     static function CBHTMLOutput_CSSURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v565.css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v565.css',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
 
 
 
@@ -22,9 +27,14 @@ final class CBUIStringEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v586.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v643.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 

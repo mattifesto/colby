@@ -51,7 +51,25 @@
      *      {
      *          inputType: string
      *
-     *              "password" - The returned editor will be a password editor.
+     *              "CBUIStringEditor_password"
+     *
+     *              "password" (deprecated)
+     *
+     *                  The returned editor will be a password editor.
+     *
+     *              "CBUIStringEditor_text"
+     *
+     *                  The returned editor will be a single line text editor.
+     *
+     *                  Using this option is not recommended. Multiline text
+     *                  editors are more comfortable user interface experience
+     *                  in almost all cases. If you need a single line it is
+     *                  better to use a multiline editor and remove new lines
+     *                  before using the input.
+     *
+     *                  This option exists for the specific case where you need
+     *                  pressing return in a CBUIStringEditor to submit a form.
+     *                  This is usually a search form.
      *      }
      *
      * @return object
@@ -59,6 +77,12 @@
      *      {
      *          changed: function (get, set)
      *          element: Element (readonly)
+     *
+     *          focus()
+     *
+     *              Focus the input or textarea element.
+     *
+     *          name: string (get, set)
      *          title: string (get, set)
      *          value: string (get, set)
      *      }
@@ -71,7 +95,10 @@
         let elements = CBUI.createElementTree(
             "CBUIStringEditor",
             "CBUIStringEditor_container",
-            ["CBUIStringEditor_label", "label"]
+            [
+                "CBUIStringEditor_label",
+                "label"
+            ]
         );
 
         let element = elements[0];
@@ -83,28 +110,50 @@
 
         let input;
 
+
+        /*  input type */
         {
             let inputType = CBModel.valueToString(
                 args,
                 "inputType"
             );
 
-            if (inputType === "password") {
+            if (
+                inputType === "CBUIStringEditor_password" ||
+                inputType === "password" /* deprecated */
+            ) {
                 input = CBUI.createElement(
                     "CBUIStringEditor_input",
                     "input"
                 );
 
                 input.type = "password";
-            } else {
+            }
+
+            else if (
+                inputType === "CBUIStringEditor_text"
+            ) {
+                input = CBUI.createElement(
+                    "CBUIStringEditor_input",
+                    "input"
+                );
+
+                input.type = "text";
+            }
+
+            else {
                 input = CBUI.createElement(
                     "CBUIStringEditor_input",
                     "textarea"
                 );
             }
         }
+        /*  input type */
 
-        containerElement.appendChild(input);
+
+        containerElement.appendChild(
+            input
+        );
 
         input.id = ID;
 
@@ -119,6 +168,7 @@
             }
         );
 
+
         /**
          * @NOTE 2015_09_24
          *
@@ -131,21 +181,36 @@
         window.setTimeout(resize, 1000);
 
         let api = {
+
             get changed() {
                 return changed;
             },
             set changed(value) {
                 changed = value;
             },
+
             get element() {
                 return element;
             },
+
+            focus() {
+                input.focus();
+            },
+
+            get name() {
+                return input.name;
+            },
+            set name(value) {
+                input.name = value;
+            },
+
             get title() {
                 return label.textContent;
             },
             set title(value) {
                 label.textContent = value;
             },
+
             get value() {
                 return input.value;
             },
@@ -153,6 +218,7 @@
                 input.value = newValue;
                 resize();
             },
+
         };
 
         return api;
