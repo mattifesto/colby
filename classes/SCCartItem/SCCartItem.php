@@ -627,7 +627,7 @@ final class SCCartItem {
 
         return $unitPriceInCents;
     }
-    /* getUnitPriceInCents() *./
+    /* getUnitPriceInCents() */
 
 
 

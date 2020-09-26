@@ -539,7 +539,7 @@ var SCCartItem = {
             throw CBException.withValueRelatedError(
                 Error(message),
                 cartItemModel,
-                "6dbed66c7b0c63dd578ecd83b8a79f4a90a0a684"
+                "eb1465850e5a201b8d33006b79bfbe4be54482ce"
             );
         }
 
