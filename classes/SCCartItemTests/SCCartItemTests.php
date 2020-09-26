@@ -9,11 +9,17 @@ final class SCCartItemTests {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v638.js', scliburl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v644.js',
+                scliburl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -54,6 +60,7 @@ final class SCCartItemTests {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBException',
             'CBModel',
             'CBTest',
             'Colby',
@@ -282,9 +289,23 @@ final class SCCartItemTests {
     static function CBTest_getQuantity(): stdClass {
         $testCases = SCCartItemTests::getQuantityTestCases();
 
-        for ($index = 0; $index < count($testCases); $index += 1) {
+        for (
+            $index = 0;
+            $index < count($testCases);
+            $index += 1
+        ) {
             $testCase = $testCases[$index];
-            $actualResult = SCCartItem::getQuantity($testCase->originalValue);
+
+            try {
+                $actualResult = SCCartItem::getQuantity(
+                    $testCase->originalValue
+                );
+            } catch (Throwable $throwable) {
+                $actualResult = CBException::throwableToSourceCBID(
+                    $throwable
+                );
+            }
+
             $expectedResult = $testCase->expectedResult;
 
             /**
@@ -652,6 +673,7 @@ final class SCCartItemTests {
                 ],
                 'expectedResult' => 0.0,
             ],
+
             (object)[
                 'originalValue' => (object)[
                     'className' => 'TestCartItem',
@@ -659,6 +681,7 @@ final class SCCartItemTests {
                 ],
                 'expectedResult' => 1.0,
             ],
+
             (object)[
                 'originalValue' => (object)[
                     'className' => 'TestCartItem',
@@ -666,13 +689,15 @@ final class SCCartItemTests {
                 ],
                 'expectedResult' => 0.0,
             ],
+
             (object)[
                 'originalValue' => (object)[
                     'className' => 'TestCartItem',
                     'quantity' => -1,
                 ],
-                'expectedResult' => 0.0,
+                'expectedResult' => 'e18433a4d2739c7c3a707fa04b9a899cd4e70f68',
             ],
+
             (object)[
                 'originalValue' => (object)[
                     'className' => 'TestCartItem',
@@ -680,12 +705,14 @@ final class SCCartItemTests {
                 ],
                 'expectedResult' => 5.0,
             ],
+
             (object)[
                 'originalValue' => (object)[
                     'quantity' => 5,
                 ],
                 'expectedResult' => 5.0,
             ],
+
             (object)[
                 'originalValue' => (object)[
                     'isEphemeral' => true,
@@ -693,6 +720,21 @@ final class SCCartItemTests {
                 ],
                 'expectedResult' => 5.0,
             ],
+
+            (object)[
+                'originalValue' => (object)[
+                    'quantity' => -5,
+                ],
+                'expectedResult' => 'e18433a4d2739c7c3a707fa04b9a899cd4e70f68',
+            ],
+
+            (object)[
+                'originalValue' => (object)[
+                    'className' => 'SCCartItemTests_QuantityCartItem1',
+                ],
+                'expectedResult' => 'e18433a4d2739c7c3a707fa04b9a899cd4e70f68',
+            ],
+
         ];
     }
     /* getQuantityTestCases() */
@@ -851,6 +893,25 @@ final class SCCartItemTests_OriginalSubtotalCartItem1 {
 
 }
 /* SCCartItemTests_OriginalSubtotalCartItem1 */
+
+
+
+/**
+ *
+ */
+final class SCCartItemTests_QuantityCartItem1 {
+
+    /**
+     * @return float
+     */
+    static function SCCartItem_getQuantity(
+        $cartItemModel
+    ): float {
+        return -4.2;
+    }
+
+}
+/* SCCartItemTests_QuantityCartItem1 */
 
 
 

@@ -4,8 +4,10 @@
 /* exported SCCartItemTests */
 /* exported SCCartItemTests_MaximumQuantityCartItem */
 /* exported SCCartItemTests_OriginalSubtotalCartItem1 */
+/* exported SCCartItemTests_QuantityCartItem1 */
 /* exported SCCartItemTests_SubtotalCartItem1 */
 /* global
+    CBException,
     CBModel,
     CBTest,
     Colby,
@@ -233,17 +235,33 @@ var SCCartItemTests = {
     /**
      * @return object|Promise
      */
-    CBTest_getQuantity: function () {
+    CBTest_getQuantity(
+    ) {
         let testCaseCount = SCCartItemTests_getQuantityTestCases.length;
 
-        for (let index = 0; index < testCaseCount; index += 1) {
+        for (
+            let index = 0;
+            index < testCaseCount;
+            index += 1
+        ) {
+            let actualResult;
             let testCase = SCCartItemTests_getQuantityTestCases[index];
-            let actualResult = SCCartItem.getQuantity(testCase.originalValue);
+
+            try {
+                actualResult = SCCartItem.getQuantity(
+                    testCase.originalValue
+                );
+            } catch(error) {
+                actualResult = CBException.errorToSourceCBID(
+                    error
+                );
+            }
+
             let expectedResult = testCase.expectedResult;
 
             if (actualResult !== expectedResult) {
                 return CBTest.resultMismatchFailure(
-                    JSON.stringify(testCase.originalValue),
+                    `test case index ${index}`,
                     actualResult,
                     expectedResult
                 );
@@ -445,6 +463,25 @@ var SCCartItemTests_OriginalSubtotalCartItem1 = {
 
 };
 /* SCCartItemTests_OriginalSubtotalCartItem1 */
+
+
+
+/**
+ *
+ */
+var SCCartItemTests_QuantityCartItem1 = {
+
+    /**
+     * @return float
+     */
+    SCCartItem_getQuantity(
+        /* cartItemModel */
+    ) {
+        return -4.2;
+    }
+
+};
+/* SCCartItemTests_QuantityCartItem1 */
 
 
 
