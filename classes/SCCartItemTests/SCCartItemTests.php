@@ -24,9 +24,10 @@ final class SCCartItemTests {
 
 
     /**
-     * @return [[<variableName>, <variableValue>]]
+     * @return [[<variable name>, <variable value>]]
      */
-    static function CBHTMLOutput_JavaScriptVariables(): array {
+    static function CBHTMLOutput_JavaScriptVariables(
+    ): array {
         return [
 
             [
@@ -47,6 +48,11 @@ final class SCCartItemTests {
             [
                 'SCCartItemTests_getSubtotalInCentsTestCases',
                 SCCartItemTests::getSubtotalInCentsTestCases(),
+            ],
+
+            [
+                'SCCartItemTests_getUnitPriceInCentsTestCases',
+                SCCartItemTests::getUnitPriceInCentsTestCases(),
             ],
 
         ];
@@ -101,6 +107,10 @@ final class SCCartItemTests {
                 'type' => 'server',
             ],
             (object)[
+                'name' => 'getUnitPriceInCents',
+                'type' => 'server',
+            ],
+            (object)[
                 'name' => 'update_errors',
                 'type' => 'server',
             ],
@@ -122,6 +132,9 @@ final class SCCartItemTests {
             ],
             (object)[
                 'name' => 'getSubtotalInCents',
+            ],
+            (object)[
+                'name' => 'getUnitPriceInCents',
             ],
             (object)[
                 'name' => 'updateSpecs',
@@ -363,6 +376,45 @@ final class SCCartItemTests {
         ];
     }
     /* CBTest_getSubtotalInCents() */
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_getUnitPriceInCents(
+    ): stdClass {
+        $testCases = SCCartItemTests::getUnitPriceInCentsTestCases();
+
+        for ($index = 0; $index < count($testCases); $index += 1) {
+            $testCase = $testCases[$index];
+
+            try {
+                $actualResult = SCCartItem::getUnitPriceInCents(
+                    $testCase->cartItemModel
+                );
+            } catch (Throwable $throwable) {
+                $actualResult = CBException::throwableToSourceCBID(
+                    $throwable
+                );
+            }
+
+            $expectedResult = $testCase->expectedResult;
+
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    "test case index {$index}",
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_getUnitPriceInCents() */
 
 
 
@@ -795,6 +847,60 @@ final class SCCartItemTests {
     }
     /* getSubtotalInCentsTestCases() */
 
+
+
+    /**
+     * @return [object]
+     */
+    static function getUnitPriceInCentsTestCases(
+    ): array {
+        return [
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'className' => 'SCCartItemTests_UnitPriceCartItem1',
+                ],
+                'expectedResult' => 4242,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'className' => 'SCCartItemTests_UnitPriceCartItem1',
+                    'hasNegativeUnitPrice' => true,
+                ],
+                'expectedResult' => 'eb1465850e5a201b8d33006b79bfbe4be54482ce',
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'SCCartItem_unitPriceInCents' => 4242,
+                ],
+                'expectedResult' => 4242,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'unitPriceInCents' => 4242,
+                ],
+                'expectedResult' => 4242,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'SCCartItem_unitPriceInCents' => 'foo',
+                ],
+                'expectedResult' => 'eb1465850e5a201b8d33006b79bfbe4be54482ce',
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[],
+                'expectedResult' => 'eb1465850e5a201b8d33006b79bfbe4be54482ce',
+            ],
+
+        ];
+    }
+    /* getUnitPriceInCentsTestCases() */
+
 }
 /* SCCartItemTests */
 
@@ -928,4 +1034,34 @@ final class SCCartItemTests_SubtotalCartItem1 {
     ): int {
         return 1000;
     }
+
 }
+/* SCCartItemTests_SubtotalCartItem1 */
+
+
+
+/**
+ *
+ */
+final class SCCartItemTests_UnitPriceCartItem1 {
+
+    /**
+     * @return int
+     */
+    static function SCCartItem_getUnitPriceInCents(
+        stdClass $cartItemModel
+    ): int {
+        $hasNegativeUnitPrice = CBModel::valueToBool(
+            $cartItemModel,
+            'hasNegativeUnitPrice'
+        );
+
+        if ($hasNegativeUnitPrice) {
+            return -4242;
+        } else {
+            return 4242;
+        }
+    }
+
+}
+/* SCCartItemTests_UnitPriceCartItem1 */

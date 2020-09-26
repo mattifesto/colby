@@ -6,6 +6,7 @@
 /* exported SCCartItemTests_OriginalSubtotalCartItem1 */
 /* exported SCCartItemTests_QuantityCartItem1 */
 /* exported SCCartItemTests_SubtotalCartItem1 */
+/* exported SCCartItemTests_UnitPriceCartItem1 */
 /* global
     CBException,
     CBModel,
@@ -17,6 +18,7 @@
     SCCartItemTests_getOriginalSubtotalInCentsTestCases,
     SCCartItemTests_getQuantityTestCases,
     SCCartItemTests_getSubtotalInCentsTestCases,
+    SCCartItemTests_getUnitPriceInCentsTestCases,
 */
 
 var SCCartItemTests = {
@@ -314,6 +316,50 @@ var SCCartItemTests = {
 
 
     /**
+     * @return object|Promise
+     */
+    CBTest_getUnitPriceInCents(
+    ) {
+        let testCaseCount = SCCartItemTests_getUnitPriceInCentsTestCases.length;
+
+        for (
+            let index = 0;
+            index < testCaseCount;
+            index += 1
+        ) {
+            let actualResult;
+            let testCase = SCCartItemTests_getUnitPriceInCentsTestCases[index];
+
+            try {
+                actualResult = SCCartItem.getUnitPriceInCents(
+                    testCase.cartItemModel
+                );
+            } catch(error) {
+                actualResult = CBException.errorToSourceCBID(
+                    error
+                );
+            }
+
+            let expectedResult = testCase.expectedResult;
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    `test case index ${index}`,
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_getUnitPriceInCents() */
+
+
+
+    /**
      * @return Promise -> object
      */
     CBTest_updateSpecs(
@@ -501,3 +547,31 @@ var SCCartItemTests_SubtotalCartItem1 = {
 
 };
 /* SCCartItemTests_SubtotalCartItem1 */
+
+
+
+/**
+ *
+ */
+var SCCartItemTests_UnitPriceCartItem1 = {
+
+    /**
+     * @return int
+     */
+    SCCartItem_getUnitPriceInCents(
+        cartItemModel
+    ) {
+        let hasNegativeUnitPrice = CBModel.valueToBool(
+            cartItemModel,
+            'hasNegativeUnitPrice'
+        );
+
+        if (hasNegativeUnitPrice) {
+            return -4242;
+        } else {
+            return 4242;
+        }
+    }
+
+};
+/* SCCartItemTests_UnitPriceCartItem1 */
