@@ -59,7 +59,7 @@ final class SCCartItem {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v642.js',
+                'v644.js',
                 scliburl()
             ),
         ];
@@ -363,26 +363,49 @@ final class SCCartItem {
     static function getQuantity(
         $cartItemModel
     ): float {
-        $className = CBModel::valueToString($cartItemModel, 'className');
-        $functionName = "{$className}::SCCartItem_getQuantity";
+        $callable = CBModel::getClassFunction(
+            $cartItemModel,
+            'SCCartItem_getQuantity'
+        );
 
-        if (is_callable($functionName)) {
-            return call_user_func(
-                $functionName,
-                $cartItemModel
+        if ($callable !== null) {
+            $quantity = CBConvert::valueAsNumber(
+                call_user_func(
+                    $callable,
+                    $cartItemModel
+                )
             );
         } else {
             $quantity = CBModel::valueAsInt(
                 $cartItemModel,
                 'quantity'
             );
-
-            if ($quantity === null || $quantity < 0) {
-                return 0;
-            } else {
-                return $quantity;
-            }
         }
+
+        if ($quantity === null) {
+            $quantity = 0;
+        }
+
+        if ($quantity < 0) {
+            $quantityAsJSON = json_encode(
+                $quantity
+            );
+
+            $message = CBConvert::stringToCleanLine(<<<EOT
+
+                This cart item model has an invalid quantity of
+                {$quantityAsJSON}
+
+            EOT);
+
+            throw new CBExceptionWithValue(
+                $message,
+                $cartItemModel,
+                'e18433a4d2739c7c3a707fa04b9a899cd4e70f68'
+            );
+        }
+
+        return $quantity;
     }
     /* getQuantity() */
 

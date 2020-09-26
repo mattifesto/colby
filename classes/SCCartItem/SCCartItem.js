@@ -339,24 +339,55 @@ var SCCartItem = {
      *      in the "quantity" property. If the "quantity" property is undefined
      *      or is not an integer, this function returns 1.
      */
-    getQuantity: function (cartItemModel) {
-        let callable = CBModel.classFunction(
+    getQuantity(
+        cartItemModel
+    ) {
+        let quantity;
+
+        let callable = CBModel.getClassFunction(
             cartItemModel,
             "SCCartItem_getQuantity"
         );
 
         if (callable !== undefined) {
-            return callable(cartItemModel);
+            quantity = CBConvert.valueAsNumber(
+                callable(
+                    cartItemModel
+                )
+            );
         } else {
-            let quantity = CBModel.valueAsInt(cartItemModel, "quantity");
-
-            if (quantity === undefined || quantity < 0) {
-                return 0;
-            } else {
-                return quantity;
-            }
+            quantity = CBModel.valueAsInt(
+                cartItemModel,
+                "quantity"
+            );
         }
+
+        if (quantity === undefined) {
+            quantity = 0;
+        }
+
+        if (quantity < 0) {
+            let quantityAsJSON = JSON.stringify(
+                quantity
+            );
+
+            let message = CBConvert.stringToCleanLine(`
+
+                This cart item model has an invalid quantity of
+                ${quantityAsJSON}
+
+            `);
+
+            throw CBException.withValueRelatedError(
+                Error(message),
+                cartItemModel,
+                'e18433a4d2739c7c3a707fa04b9a899cd4e70f68'
+            );
+        }
+
+        return quantity;
     },
+    /* getQuantity() */
 
 
 
