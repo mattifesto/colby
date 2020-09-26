@@ -40,12 +40,15 @@ var CBException = {
      *
      * @return CBID|undefined
      */
-    errorToSourceCBID: function (error) {
+    errorToSourceCBID(
+        error
+    ) {
         return CBModel.valueAsCBID(
             error,
-            "ajaxResponse.sourceCBID"
+            "CBException.sourceCBID"
         );
     },
+    /* errorToSourceCBID() */
 
 
 
@@ -112,7 +115,17 @@ var CBException = {
             get extendedMessage() {
                 return cbmessage;
             },
+
+            /**
+             * @deprecated 2020_09_26
+             *
+             *      Use sourceCBID.
+             */
             get sourceID() {
+                return sourceCBID;
+            },
+
+            get sourceCBID() {
                 return sourceCBID;
             },
         };

@@ -71,11 +71,17 @@
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v603.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v644.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
