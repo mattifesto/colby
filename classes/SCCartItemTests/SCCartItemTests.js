@@ -4,6 +4,7 @@
 /* exported SCCartItemTests */
 /* exported SCCartItemTests_MaximumQuantityCartItem */
 /* exported SCCartItemTests_OriginalSubtotalCartItem1 */
+/* exported SCCartItemTests_OriginalUnitPriceCartItem1 */
 /* exported SCCartItemTests_QuantityCartItem1 */
 /* exported SCCartItemTests_SubtotalCartItem1 */
 /* exported SCCartItemTests_UnitPriceCartItem1 */
@@ -16,6 +17,7 @@
 
     SCCartItemTests_getMaximumQuantityTestCases,
     SCCartItemTests_getOriginalSubtotalInCentsTestCases,
+    SCCartItemTests_getOriginalUnitPriceInCentsTestCases,
     SCCartItemTests_getQuantityTestCases,
     SCCartItemTests_getSubtotalInCentsTestCases,
     SCCartItemTests_getUnitPriceInCentsTestCases,
@@ -231,6 +233,55 @@ var SCCartItemTests = {
         };
     },
     /* CBTest_getOriginalSubtotalInCents() */
+
+
+
+    /**
+     * @return object|Promise
+     */
+    CBTest_getOriginalUnitPriceInCents(
+    ) {
+        let testCaseCount = (
+            SCCartItemTests_getOriginalUnitPriceInCentsTestCases.length
+        );
+
+        for (
+            let index = 0;
+            index < testCaseCount;
+            index += 1
+        ) {
+            let actualResult;
+
+            let testCase = (
+                SCCartItemTests_getOriginalUnitPriceInCentsTestCases[index]
+            );
+
+            try {
+                actualResult = SCCartItem.getOriginalUnitPriceInCents(
+                    testCase.cartItemModel
+                );
+            } catch(error) {
+                actualResult = CBException.errorToSourceCBID(
+                    error
+                );
+            }
+
+            let expectedResult = testCase.expectedResult;
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    `test case index ${index}`,
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_getOriginalUnitPriceInCents() */
 
 
 
@@ -509,6 +560,34 @@ var SCCartItemTests_OriginalSubtotalCartItem1 = {
 
 };
 /* SCCartItemTests_OriginalSubtotalCartItem1 */
+
+
+
+/**
+ *
+ */
+var SCCartItemTests_OriginalUnitPriceCartItem1 = {
+
+    /**
+     * @return int
+     */
+    SCCartItem_getOriginalUnitPriceInCents(
+        cartItemModel
+    ) {
+        let hasNegativeUnitPrice = CBModel.valueToBool(
+            cartItemModel,
+            'hasNegativeUnitPrice'
+        );
+
+        if (hasNegativeUnitPrice) {
+            return -5252;
+        } else {
+            return 5252;
+        }
+    }
+
+};
+/* SCCartItemTests_OriginalUnitPriceCartItem1 */
 
 
 
