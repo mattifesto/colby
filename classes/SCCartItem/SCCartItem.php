@@ -412,6 +412,64 @@ final class SCCartItem {
 
 
     /**
+     * @param object $cartItemModel
+     *
+     * @return int
+     */
+    static function getOriginalUnitPriceInCents(
+        stdClass $cartItemModel
+    ): int {
+        $callable = CBModel::getClassFunction(
+            $cartItemModel,
+            'SCCartItem_getOriginalUnitPriceInCents'
+        );
+
+        if ($callable !== null) {
+            $originalUnitPriceInCents = CBConvert::valueAsInt(
+                call_user_func(
+                    $callable,
+                    $cartItemModel
+                )
+            );
+        } else {
+            $originalUnitPriceInCents = CBModel::valueAsInt(
+                $cartItemModel,
+                'SCCartItem_originalUnitPriceInCents'
+            );
+        }
+
+        if ($originalUnitPriceInCents === null) {
+            $originalUnitPriceInCents = SCCartItem::getUnitPriceInCents(
+                $cartItemModel
+            );
+        }
+
+        if ($originalUnitPriceInCents <= 0) {
+            $originalUnitPriceInCentsAsJSON = json_encode(
+                $originalUnitPriceInCents
+            );
+
+            $message = CBConvert::stringToCleanLine(<<<EOT
+
+                This cart item model has an invalid original unit price of
+                "{$originalUnitPriceInCentsAsJSON}"
+
+            EOT);
+
+            throw new CBExceptionWithValue(
+                $message,
+                $cartItemModel,
+                '363b7914a1a1d9adec962ef043c89f1495d4eb74'
+            );
+        }
+
+        return $originalUnitPriceInCents;
+    }
+    /* getOriginalUnitPriceInCents() */
+
+
+
+    /**
      * The source URL is a root-relative URL that links to the page that most
      * represents the cart item. Some cart items will not have a source URL.
      *
@@ -569,6 +627,13 @@ final class SCCartItem {
 
 
     /**
+     * A cart item model must have a valid unit price in cents. This means that
+     * an empty cart item model is not valid. This is because it makes no sense
+     * to have a cart item without a price and to choose a price of zero as the
+     * default is dangerous because it means by defaul everything is free.
+     *
+     * The unit price must also be greater than or equal to zero.
+     *
      * @param object $cartItemModel
      *
      * @return int

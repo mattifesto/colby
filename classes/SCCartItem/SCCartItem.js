@@ -246,7 +246,7 @@ var SCCartItem = {
         } else {
             return CBModel.valueToBool(
                 cartItemModel,
-                'isNotAvailable'
+                "isNotAvailable"
             );
         }
     },
@@ -311,6 +311,65 @@ var SCCartItem = {
         return originalSubtotalInCents;
     },
     /* getOriginalSubtotalInCents() */
+
+
+
+    /**
+     * @param object cartItemModel
+     *
+     * @return int
+     */
+    getOriginalUnitPriceInCents(
+        cartItemModel
+    ) {
+        let originalUnitPriceInCents;
+
+        let callable = CBModel.getClassFunction(
+            cartItemModel,
+            "SCCartItem_getOriginalUnitPriceInCents"
+        );
+
+        if (callable !== undefined) {
+            originalUnitPriceInCents = CBConvert.valueAsInt(
+                callable(
+                    cartItemModel
+                )
+            );
+        } else {
+            originalUnitPriceInCents = CBModel.valueAsInt(
+                cartItemModel,
+                "SCCartItem_originalUnitPriceInCents"
+            );
+        }
+
+        if (originalUnitPriceInCents === undefined) {
+            originalUnitPriceInCents = SCCartItem.getUnitPriceInCents(
+                cartItemModel
+            );
+        }
+
+        if (originalUnitPriceInCents <= 0) {
+            let originalUnitPriceInCentsAsJSON = JSON.stringify(
+                originalUnitPriceInCents
+            );
+
+            let message = CBConvert.stringToCleanLine(`
+
+                This cart item has an invalid original unit price of
+                "${originalUnitPriceInCentsAsJSON}"
+
+            `);
+
+            throw CBException.withValueRelatedError(
+                Error(message),
+                cartItemModel,
+                "363b7914a1a1d9adec962ef043c89f1495d4eb74"
+            );
+        }
+
+        return originalUnitPriceInCents;
+    },
+    /* getOriginalUnitPriceInCents() */
 
 
 
@@ -381,7 +440,7 @@ var SCCartItem = {
             throw CBException.withValueRelatedError(
                 Error(message),
                 cartItemModel,
-                'e18433a4d2739c7c3a707fa04b9a899cd4e70f68'
+                "e18433a4d2739c7c3a707fa04b9a899cd4e70f68"
             );
         }
 
