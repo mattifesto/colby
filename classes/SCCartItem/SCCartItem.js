@@ -286,25 +286,64 @@ var SCCartItem = {
     getOriginalSubtotalInCents(
         cartItemModel
     ) {
+        let quantity = SCCartItem.getQuantity(
+            cartItemModel
+        );
+
+        if (quantity === 0) {
+            return 0;
+        }
+
+        let originalSubtotalInCents;
+
         let callable = CBModel.getClassFunction(
             cartItemModel,
             "SCCartItem_getOriginalSubtotalInCents"
         );
 
         if (callable !== undefined) {
-            return callable(
-                cartItemModel
+            originalSubtotalInCents = CBConvert.valueAsInt(
+                callable(
+                    cartItemModel
+                )
             );
         }
 
-        let originalSubtotalInCents = CBModel.valueAsInt(
-            cartItemModel,
-            "SCCartItem_originalSubtotalInCents"
-        );
+        if (originalSubtotalInCents === undefined) {
+            originalSubtotalInCents = CBModel.valueAsInt(
+                cartItemModel,
+                "SCCartItem_originalSubtotalInCents"
+            );
+        }
 
         if (originalSubtotalInCents === undefined) {
-            return SCCartItem.getSubtotalInCents(
-                cartItemModel
+            let originalUnitPriceInCents = (
+                SCCartItem.getOriginalUnitPriceInCents(
+                    cartItemModel
+                )
+            );
+
+            originalSubtotalInCents = Math.ceil(
+                quantity * originalUnitPriceInCents
+            );
+        }
+
+        if (originalSubtotalInCents < 0) {
+            let originalSubtotalInCentsAsJSON = JSON.stringify(
+                originalSubtotalInCents
+            );
+
+            let message = CBConvert.stringToCleanLine(`
+
+                This cart item model has an invalid original subtotal in cents
+                of "${originalSubtotalInCentsAsJSON}"
+
+            `);
+
+            throw CBException.withValueRelatedError(
+                Error(message),
+                cartItemModel,
+                "0ac8ccfb1d04da7ddcdbf89640e588de48917c3b"
             );
         }
 

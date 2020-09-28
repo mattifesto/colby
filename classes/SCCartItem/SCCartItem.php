@@ -273,14 +273,19 @@ final class SCCartItem {
      * should implement your cart item class to return this value as the
      * original subtotal for the item before the promotional price was applied.
      *
-     * Ways of implementing this value in order of priority are:
+     * The methods of calculating this value in order of priority are:
      *
-     *      1. Implement the SCCartItem_getOriginalSubtotalInCents() interfaces
-     *      on the class.
+     *      1. If the value returned by SCCartItem::getQuantity() is 0, 0 will
+     *      be returned.
      *
-     *      2. Set the "SCCartItem_originalSubtotalInCents" property on the item
-     *      model.
+     *      1. If the SCCartItem_getOriginalSubtotalInCents() interface is
+     *      implemented and returns an integer it will be returned.
      *
+     *      2. If the "SCCartItem_originalSubtotalInCents" property on the cart
+     *      item model is an integer, it will be returned.
+     *
+     *      4. The value returned by SCCartItem::getOriginalUnitPriceInCents()
+     *      will be multiplied by the quantity and returned.
      *
      * @param object $cartItemModel
      *
@@ -289,35 +294,63 @@ final class SCCartItem {
     static function getOriginalSubtotalInCents(
         stdClass $cartItemModel
     ): int {
+        $quantity = SCCartItem::getQuantity(
+            $cartItemModel,
+        );
+
+        if ($quantity === 0.0) {
+            return 0;
+        }
+
+        $originalSubtotalInCents = null;
+
         $callable = CBModel::getClassFunction(
             $cartItemModel,
             'SCCartItem_getOriginalSubtotalInCents'
         );
 
         if ($callable !== null) {
-            return call_user_func(
-                $callable,
-                $cartItemModel
+            $originalSubtotalInCents = CBConvert::valueAsInt(
+                call_user_func(
+                    $callable,
+                    $cartItemModel
+                )
             );
         }
 
-        /**
-         * @TODO 2020_09_11
-         *
-         *      This function is currently allowed to return negative integers.
-         *      I'm not sure if negative integers should be changed to 0 or
-         *      throw an exception instead. Once this is determined change the
-         *      behavior of the function or document why negative integers are
-         *      allowed to be returned.
-         */
-        $originalSubtotalInCents = CBModel::valueAsInt(
-            $cartItemModel,
-            'SCCartItem_originalSubtotalInCents'
-        );
+        if ($originalSubtotalInCents === null) {
+            $originalSubtotalInCents = CBModel::valueAsInt(
+                $cartItemModel,
+                'SCCartItem_originalSubtotalInCents'
+            );
+        }
 
         if ($originalSubtotalInCents === null) {
-            return SCCartItem::getSubtotalInCents(
+            $originalUnitPriceInCents = SCCartItem::getOriginalUnitPriceInCents(
                 $cartItemModel
+            );
+
+            $originalSubtotalInCents = ceil(
+                $quantity * $originalUnitPriceInCents
+            );
+        }
+
+        if ($originalSubtotalInCents < 0) {
+            $originalSubtotalInCentsAsJSON = json_encode(
+                $originalSubtotalInCents
+            );
+
+            $message = CBConvert::stringToCleanLine(<<<EOT
+
+                This cart item model has an invalid original subtotal in cents
+                of "{$originalSubtotalInCentsAsJSON}"
+
+            EOT);
+
+            throw new CBExceptionWithValue(
+                $message,
+                $cartItemModel,
+                '0ac8ccfb1d04da7ddcdbf89640e588de48917c3b'
             );
         }
 
