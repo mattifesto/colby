@@ -207,21 +207,27 @@ var SCCartItemTests = {
             index < SCCartItemTests_getOriginalSubtotalInCentsTestCases.length;
             index += 1
         ) {
+            let actualResult;
+
             let testCase = (
                 SCCartItemTests_getOriginalSubtotalInCentsTestCases[index]
             );
 
-            let actualResult = SCCartItem.getOriginalSubtotalInCents(
-                testCase.cartItemModel
-            );
+            try {
+                actualResult = SCCartItem.getOriginalSubtotalInCents(
+                    testCase.cartItemModel
+                );
+            } catch (error) {
+                actualResult = CBException.errorToSourceCBID(
+                    error
+                );
+            }
 
             let expectedResult = testCase.expectedOriginalSubtotalInCents;
 
             if (actualResult !== expectedResult) {
                 return CBTest.resultMismatchFailure(
-                    JSON.stringify(
-                        testCase.cartItemModel
-                    ),
+                    `test case index ${index}`,
                     actualResult,
                     expectedResult
                 );

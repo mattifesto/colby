@@ -282,12 +282,22 @@ final class SCCartItemTests {
     ): stdClass {
         $testCases = SCCartItemTests::getOriginalSubtotalInCentsTestCases();
 
-        for ($index = 0; $index < count($testCases); $index += 1) {
+        for (
+            $index = 0;
+            $index < count($testCases);
+            $index += 1
+        ) {
             $testCase = $testCases[$index];
 
-            $actualResult = SCCartItem::getOriginalSubtotalInCents(
-                $testCase->cartItemModel
-            );
+            try {
+                $actualResult = SCCartItem::getOriginalSubtotalInCents(
+                    $testCase->cartItemModel
+                );
+            } catch (Throwable $throwable) {
+                $actualResult = CBException::throwableToSourceCBID(
+                    $throwable
+                );
+            }
 
             $expectedResult = $testCase->expectedOriginalSubtotalInCents;
 
@@ -676,6 +686,7 @@ final class SCCartItemTests {
             (object)[
                 'cartItemModel' => (object)[
                     'className' => 'SCCartItemTests_OriginalSubtotalCartItem1',
+                    'SCCartItem_quantity' => 1,
                 ],
                 'expectedOriginalSubtotalInCents' => 2000,
             ],
@@ -684,6 +695,7 @@ final class SCCartItemTests {
                 'cartItemModel' => (object)[
                     'className' => 'SCCartItemTests_OriginalSubtotalCartItem1',
                     'SCCartItem_originalSubtotalInCents' => 1900,
+                    'SCCartItem_quantity' => 1,
                 ],
                 'expectedOriginalSubtotalInCents' => 2000,
             ],
@@ -691,77 +703,84 @@ final class SCCartItemTests {
             (object)[
                 'cartItemModel' => (object)[
                     'SCCartItem_originalSubtotalInCents' => 900,
+                    'SCCartItem_quantity' => 1,
                 ],
                 'expectedOriginalSubtotalInCents' => 900,
             ],
 
             (object)[
                 'cartItemModel' => (object)[
-                    'SCCartItem_subtotalInCents' => 700,
                     'SCCartItem_originalSubtotalInCents' => 800,
+                    'SCCartItem_subtotalInCents' => 700,
+                    'SCCartItem_quantity' => 1,
                 ],
                 'expectedOriginalSubtotalInCents' => 800,
             ],
 
             (object)[
                 'cartItemModel' => (object)[
-                    'SCCartItem_subtotalInCents' => 700,
                     'SCCartItem_originalSubtotalInCents' => 600,
+                    'SCCartItem_subtotalInCents' => 700,
+                    'SCCartItem_quantity' => 1,
                 ],
                 'expectedOriginalSubtotalInCents' => 600,
             ],
 
-            /**
-             * The following tests were copied from
-             * getSubtotalInCentsTestCases() and adjusted for
-             * getOriginalSubtotalInCents().
-             */
-
             (object)[
                 'cartItemModel' => (object)[
-                    'className' => 'SCCartItemTests_SubtotalCartItem1',
+                    'SCCartItem_originalUnitPriceInCents' => 1000,
+                    'SCCartItem_quantity' => 1,
+                    'SCCartItem_unitPriceInCents' => 500,
                 ],
                 'expectedOriginalSubtotalInCents' => 1000,
             ],
 
             (object)[
                 'cartItemModel' => (object)[
-                    'className' => 'SCCartItemTests_SubtotalCartItem1',
+                    'SCCartItem_originalUnitPriceInCents' => 1000,
+                    'SCCartItem_quantity' => 1,
+                    'SCCartItem_unitPriceInCents' => 1500,
                 ],
                 'expectedOriginalSubtotalInCents' => 1000,
             ],
 
             (object)[
                 'cartItemModel' => (object)[
-                    'SCCartItem_subtotalInCents' => 900,
+                    'SCCartItem_originalUnitPriceInCents' => 900,
+                    'SCCartItem_quantity' => 1,
                 ],
                 'expectedOriginalSubtotalInCents' => 900,
             ],
 
             (object)[
                 'cartItemModel' => (object)[
-                    'priceInCents' => 800,
-                ],
-                'expectedOriginalSubtotalInCents' => 800,
-            ],
-
-            (object)[
-                'cartItemModel' => (object)[
+                    'SCCartItem_quantity' => 1,
                     'SCCartItem_subtotalInCents' => 700,
-                    'priceInCents' => 600,
+                    'SCCartItem_unitPriceInCents' => 600,
                 ],
-                'expectedOriginalSubtotalInCents' => 700,
+                'expectedOriginalSubtotalInCents' => 600,
             ],
 
             (object)[
                 'cartItemModel' => (object)[
                     'className' => 'SCCartItemTests_SubtotalCartItem1',
-                    'SCCartItem_subtotalInCents' => 500,
                     'priceInCents' => 400,
+                    'SCCartItem_subtotalInCents' => 500,
+                    'SCCartItem_quantity' => 1,
+                    'SCCartItem_unitPriceInCents' => 1000,
                 ],
                 'expectedOriginalSubtotalInCents' => 1000,
             ],
 
+            (object)[
+                'cartItemModel' => (object)[
+                    'SCCartItem_quantity' => 1,
+                    'SCCartItem_originalSubtotalInCents' => -700,
+                ],
+                'expectedOriginalSubtotalInCents' => (
+                    '0ac8ccfb1d04da7ddcdbf89640e588de48917c3b'
+                ),
+            ],
         ];
     }
     /* getOriginalSubtotalInCentsTestCases() */
