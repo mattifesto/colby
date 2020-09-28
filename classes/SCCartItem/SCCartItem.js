@@ -414,7 +414,17 @@ var SCCartItem = {
                     cartItemModel
                 )
             );
-        } else {
+        }
+
+        if (quantity === undefined) {
+            quantity = CBModel.valueAsInt(
+                cartItemModel,
+                "SCCartItem_quantity"
+            );
+        }
+
+        if (quantity === undefined) {
+            /* quantity */
             quantity = CBModel.valueAsInt(
                 cartItemModel,
                 "quantity"

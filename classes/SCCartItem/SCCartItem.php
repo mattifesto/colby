@@ -357,12 +357,14 @@ final class SCCartItem {
      * @return number
      *
      *      The default implementation assumes that the quantity is an integer
-     *      in the quantity property. If the quantity property is undefined or
-     *      is not an integer, this function returns 0.
+     *      in the "SCCartItem_quantity" or "quantity" property. If the quantity
+     *      property is undefined or is not an integer, this function returns 0.
      */
     static function getQuantity(
         $cartItemModel
     ): float {
+        $quantity = null;
+
         $callable = CBModel::getClassFunction(
             $cartItemModel,
             'SCCartItem_getQuantity'
@@ -375,7 +377,17 @@ final class SCCartItem {
                     $cartItemModel
                 )
             );
-        } else {
+        }
+
+        if ($quantity === null) {
+            $quantity = CBModel::valueAsInt(
+                $cartItemModel,
+                'SCCartItem_quantity'
+            );
+        }
+
+        if ($quantity === null) {
+            /* deprecated */
             $quantity = CBModel::valueAsInt(
                 $cartItemModel,
                 'quantity'
