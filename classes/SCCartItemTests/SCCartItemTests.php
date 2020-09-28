@@ -418,12 +418,24 @@ final class SCCartItemTests {
     ): stdClass {
         $testCases = SCCartItemTests::getSubtotalInCentsTestCases();
 
-        for ($index = 0; $index < count($testCases); $index += 1) {
+        for (
+            $index = 0;
+            $index < count($testCases);
+            $index += 1
+        ) {
+            $actualResult = null;
+
             $testCase = $testCases[$index];
 
-            $actualResult = SCCartItem::getSubtotalInCents(
-                $testCase->cartItemModel
-            );
+            try {
+                $actualResult = SCCartItem::getSubtotalInCents(
+                    $testCase->cartItemModel
+                );
+            } catch (Throwable $throwable) {
+                $actualResult = CBException::throwableToSourceCBID(
+                    $throwable
+                );
+            }
 
             $expectedResult = $testCase->expectedSubtotalInCents;
 
@@ -956,12 +968,14 @@ final class SCCartItemTests {
             (object)[
                 'cartItemModel' => (object)[
                     'className' => 'SCCartItemTests_SubtotalCartItem1',
+                    'SCCartItem_quantity' => 1,
                 ],
                 'expectedSubtotalInCents' => 1000,
             ],
 
             (object)[
                 'cartItemModel' => (object)[
+                    'SCCartItem_quantity' => 1,
                     'SCCartItem_subtotalInCents' => 900,
                 ],
                 'expectedSubtotalInCents' => 900,
@@ -970,14 +984,16 @@ final class SCCartItemTests {
             (object)[
                 'cartItemModel' => (object)[
                     'priceInCents' => 800,
+                    'SCCartItem_quantity' => 1,
                 ],
                 'expectedSubtotalInCents' => 800,
             ],
 
             (object)[
                 'cartItemModel' => (object)[
-                    'SCCartItem_subtotalInCents' => 700,
                     'priceInCents' => 600,
+                    'SCCartItem_quantity' => 1,
+                    'SCCartItem_subtotalInCents' => 700,
                 ],
                 'expectedSubtotalInCents' => 700,
             ],
@@ -985,10 +1001,74 @@ final class SCCartItemTests {
             (object)[
                 'cartItemModel' => (object)[
                     'className' => 'SCCartItemTests_SubtotalCartItem1',
-                    'SCCartItem_subtotalInCents' => 500,
                     'priceInCents' => 400,
+                    'SCCartItem_quantity' => 1,
+                    'SCCartItem_subtotalInCents' => 500,
                 ],
                 'expectedSubtotalInCents' => 1000,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'SCCartItem_quantity' => 5,
+                    'unitPriceInCents' => 150
+                ],
+                'expectedSubtotalInCents' => 750,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'SCCartItem_quantity' => 5,
+                    'SCCartItem_unitPriceInCents' => 150
+                ],
+                'expectedSubtotalInCents' => 750,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                ],
+                'expectedSubtotalInCents' => 0,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'priceInCents' => 100,
+                ],
+                'expectedSubtotalInCents' => 0,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'SCCartItem_subtotalInCents' => 100,
+                ],
+                'expectedSubtotalInCents' => 0,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'className' => 'SCCartItemTests_SubtotalCartItem1',
+                ],
+                'expectedSubtotalInCents' => 0,
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'priceInCents' => -100,
+                    'SCCartItem_quantity' => 1,
+                ],
+                'expectedSubtotalInCents' => (
+                    'e26349b3e3092338ffe5d57a7c85e10277036027'
+                ),
+            ],
+
+            (object)[
+                'cartItemModel' => (object)[
+                    'SCCartItem_quantity' => 1,
+                    'SCCartItem_subtotalInCents' => -100,
+                ],
+                'expectedSubtotalInCents' => (
+                    'e26349b3e3092338ffe5d57a7c85e10277036027'
+                ),
             ],
 
         ];
