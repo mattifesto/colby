@@ -533,21 +533,35 @@ var SCCartItem = {
     getSubtotalInCents(
         cartItemModel
     ) {
+        let quantity = SCCartItem.getQuantity(
+            cartItemModel
+        );
+
+        if (quantity === 0) {
+            return 0;
+        }
+
+        let subtotalInCents;
+
         let callable = CBModel.getClassFunction(
             cartItemModel,
             "SCCartItem_getSubtotalInCents"
         );
 
         if (callable !== undefined) {
-            return callable(
-                cartItemModel
+            subtotalInCents = CBConvert.valueAsInt(
+                callable(
+                    cartItemModel
+                )
             );
         }
 
-        let subtotalInCents = CBModel.valueAsInt(
-            cartItemModel,
-            "SCCartItem_subtotalInCents"
-        );
+        if (subtotalInCents === undefined) {
+            subtotalInCents = CBModel.valueAsInt(
+                cartItemModel,
+                "SCCartItem_subtotalInCents"
+            );
+        }
 
         if (subtotalInCents === undefined) {
             /* deprecated */
@@ -558,7 +572,32 @@ var SCCartItem = {
         }
 
         if (subtotalInCents === undefined) {
-            return 0;
+            let unitPriceInCents = SCCartItem.getUnitPriceInCents(
+                cartItemModel
+            );
+
+            subtotalInCents = Math.ceil(
+                quantity * unitPriceInCents
+            );
+        }
+
+        if (subtotalInCents < 0) {
+            let subtotalInCentsAsJSON = JSON.stringify(
+                subtotalInCents
+            );
+
+            let message = CBConvert.stringToCleanLine(`
+
+                This cart item model has an invalid subtotal in cents of
+                "${subtotalInCentsAsJSON}"
+
+            `);
+
+            throw CBException.withValueRelatedError(
+                Error(message),
+                cartItemModel,
+                "e26349b3e3092338ffe5d57a7c85e10277036027"
+            );
         }
 
         return subtotalInCents;

@@ -584,11 +584,6 @@ final class SCCartItem {
      *
      *      2. Set the "SCCartItem_subtotalInCents" property on the item model.
      *
-     * @TODO 2020_06_06
-     *
-     *      Add getUnitPriceInCents(), getOriginalUnitPriceInCents(), and
-     *      getOriginalSubtotalInCents().
-     *
      * @param object $cartItemModel
      *
      * @return int
@@ -596,31 +591,36 @@ final class SCCartItem {
     static function getSubtotalInCents(
         stdClass $cartItemModel
     ): int {
+        $quantity = SCCartItem::getQuantity(
+            $cartItemModel,
+        );
+
+        if ($quantity === 0.0) {
+            return 0;
+        }
+
+        $subtotalInCents = null;
+
         $callable = CBModel::getClassFunction(
             $cartItemModel,
             'SCCartItem_getSubtotalInCents'
         );
 
         if ($callable !== null) {
-            return call_user_func(
-                $callable,
-                $cartItemModel
+            $subtotalInCents = CBConvert::valueAsInt(
+                call_user_func(
+                    $callable,
+                    $cartItemModel
+                )
             );
         }
 
-        /**
-         * @TODO 2020_09_08
-         *
-         *      This function is currently allowed to return negative integers.
-         *      I'm not sure if negative integers should be changed to 0 or
-         *      throw an exception instead. Once this is determined change the
-         *      behavior of the function or document why negative integers are
-         *      allowed to be returned.
-         */
-        $subtotalInCents = CBModel::valueAsInt(
-            $cartItemModel,
-            'SCCartItem_subtotalInCents'
-        );
+        if ($subtotalInCents === null) {
+            $subtotalInCents = CBModel::valueAsInt(
+                $cartItemModel,
+                'SCCartItem_subtotalInCents'
+            );
+        }
 
         if ($subtotalInCents === null) {
             /* deprecated */
@@ -631,7 +631,32 @@ final class SCCartItem {
         }
 
         if ($subtotalInCents === null) {
-            return 0;
+            $unitPriceInCents = SCCartItem::getUnitPriceInCents(
+                $cartItemModel
+            );
+
+            $subtotalInCents = ceil(
+                $quantity * $unitPriceInCents
+            );
+        }
+
+        if ($subtotalInCents < 0) {
+            $subtotalInCentsAsJSON = json_encode(
+                $subtotalInCents
+            );
+
+            $message = CBConvert::stringToCleanLine(<<<EOT
+
+                This cart item model has an invalid subtotal in cents of
+                "{$subtotalInCentsAsJSON}"
+
+            EOT);
+
+            throw new CBExceptionWithValue(
+                $message,
+                $cartItemModel,
+                'e26349b3e3092338ffe5d57a7c85e10277036027'
+            );
         }
 
         return $subtotalInCents;
