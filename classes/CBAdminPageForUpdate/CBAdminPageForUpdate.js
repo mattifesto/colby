@@ -1,16 +1,19 @@
 "use strict";
 /* jshint strict: global */
-/* jshint esversion: 6 */
+/* jshint esversion: 8 */
 /* globals
     CBAjax,
     CBMaintenance,
     CBMessageMarkup,
     CBUI,
     CBUIExpander,
+    CBUINavigationView,
     CBUIPanel,
     Colby,
 
     CBAdminPageForUpdate_isDevelopmentWebsite,
+
+    CBAdmin_CreateBranchPane,
 */
 
 
@@ -20,7 +23,11 @@
     let taskIsRunning = false;
     let outputElement;
 
-    Colby.afterDOMContentLoaded(afterDOMContentLoaded);
+    Colby.afterDOMContentLoaded(
+        afterDOMContentLoaded
+    );
+
+
 
     /**
      * @return undefined
@@ -28,10 +35,23 @@
     function afterDOMContentLoaded() {
         let mainElement = document.getElementsByTagName("main")[0];
 
+        mainElement.appendChild(
+            CBUINavigationView.create().element
+        );
+
+        let navigationPaneElement = document.createElement("div");
+
+        CBUINavigationView.navigate(
+            {
+                element: navigationPaneElement,
+                title: "Developer Tools",
+            }
+        );
+
         if (CBAdminPageForUpdate_isDevelopmentWebsite) {
             /* backup, pull colby, and update */
 
-            mainElement.appendChild(
+            navigationPaneElement.appendChild(
                 createPullColbySectionElement()
             );
         } else {
@@ -43,7 +63,7 @@
                 "CBUI_action"
             );
 
-            mainElement.appendChild(
+            navigationPaneElement.appendChild(
                 elements[0]
             );
 
@@ -84,7 +104,7 @@
                 "CBUI_section"
             );
 
-            mainElement.appendChild(
+            navigationPaneElement.appendChild(
                 elements[0]
             );
 
@@ -192,6 +212,11 @@
             }
             /* update only */
 
+
+            sectionElement.appendChild(
+                CBAdmin_CreateBranchPane.createElement()
+            );
+
         }
         /* individual actions */
 
@@ -201,7 +226,9 @@
         outputElement = document.createElement("div");
         outputElement.className = "output";
 
-        mainElement.appendChild(outputElement);
+        navigationPaneElement.appendChild(
+            outputElement
+        );
 
         return;
     }
@@ -435,3 +462,93 @@
     /* promiseToUpdateSite() */
 
 })();
+
+
+
+/* CBAdmin_CreateBranchPane */
+(function () {
+
+    window.CBAdmin_CreateBranchPane = {
+        createElement,
+    };
+
+
+
+    /**
+     * @return Element
+     */
+    function createElement() {
+        let actionElement = CBUI.createElement(
+            "CBUI_action"
+        );
+
+        actionElement.textContent = "Create Development Branch >";
+
+        actionElement.addEventListener(
+            "click",
+            function () {
+                showPane();
+            }
+        );
+
+        return actionElement;
+    }
+    /* createElement() */
+
+
+
+    /**
+     * @return undefined
+     */
+    function showPane() {
+        let elements = CBUI.createElementTree(
+            "CBAdmin_CreateBranchPane",
+            "CBUI_container1",
+            "CBUI_button1"
+        );
+
+        {
+            let isWorking = false;
+            let buttonElement = elements[2];
+            buttonElement.textContent = "Create Development Branch";
+
+            buttonElement.addEventListener(
+                "click",
+                async function () {
+                    if (isWorking) {
+                        return;
+                    }
+
+                    isWorking = true;
+
+                    try {
+                        let response = await CBAjax.call(
+                            "CBAdminPageForUpdate",
+                            "createDevelopmentBranch"
+                        );
+
+                        CBUIPanel.displayCBMessage(
+                            response.cbmessage
+                        );
+                    } catch (error) {
+                        CBUIPanel.displayAndReportError(
+                            error
+                        );
+                    } finally {
+                        isWorking = false;
+                    }
+                }
+            );
+        }
+
+        CBUINavigationView.navigate(
+            {
+                element: elements[0],
+                title: "Create Development Branch",
+            }
+        );
+    }
+    /* showPane() */
+
+})();
+/* CBAdmin_CreateBranchPane */

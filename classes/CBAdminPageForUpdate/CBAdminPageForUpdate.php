@@ -65,6 +65,37 @@ final class CBAdminPageForUpdate {
 
     /**
      * @return object
+     */
+    static function CBAjax_createDevelopmentBranch(
+    ): stdClass {
+        return (object)[
+            'succeeded' => 'true',
+            'cbmessage' => <<<EOT
+
+                (2020_10_06 (b))
+
+                This request doesn't currently do anything.
+
+            EOT,
+        ];
+    }
+    /* CBAjax_createDevelopmentBranch() */
+
+
+
+    /**
+     * @return string
+     */
+    static function CBAjax_createDevelopmentBranch_getUserGroupClassName(
+    ): string {
+        return 'CBDevelopersUserGroup';
+    }
+    /* CBAjax_createDevelopmentBranch_getUserGroupClassName() */
+
+
+
+    /**
+     * @return object
      *
      *      {
      *          output: string
@@ -175,9 +206,14 @@ final class CBAdminPageForUpdate {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v608.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v645.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -206,6 +242,7 @@ final class CBAdminPageForUpdate {
             'CBMessageMarkup',
             'CBUI',
             'CBUIExpander',
+            'CBUINavigationView',
             'CBUIPanel',
             'Colby',
         ];
