@@ -15,6 +15,19 @@
     padding: 3px 10px;
 }
 
+
+
+/**
+ * Use JavaScript to add and remove the CBUIStringEditor_error from a
+ * CBUIStringEditor element to provide a visual indication of whether the value
+ * is valid or invalid.
+ */
+.CBUIStringEditor.CBUIStringEditor_error {
+    background-color: var(--CBErrorBackgroundColor);
+}
+
+
+
 .CBUIStringEditor:focus-within .CBUIStringEditor_container {
     border-left: 5px solid Highlight;
     border-right: 5px solid Highlight;
