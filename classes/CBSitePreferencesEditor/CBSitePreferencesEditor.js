@@ -14,8 +14,13 @@
 */
 
 
+(function () {
 
-var CBSitePreferencesEditor = {
+    window.CBSitePreferencesEditor = {
+        CBUISpecEditor_createEditorElement,
+    };
+
+
 
     /* -- CBUISpecEditor interfaces -- -- -- -- -- */
 
@@ -31,7 +36,7 @@ var CBSitePreferencesEditor = {
      *
      * @return Element
      */
-    CBUISpecEditor_createEditorElement(
+    function CBUISpecEditor_createEditorElement(
         args
     ) {
         var section, item;
@@ -382,8 +387,7 @@ var CBSitePreferencesEditor = {
         }
         /* createEditor_handleImageRemoved() */
 
-    },
+    }
     /* CBUISpecEditor_createEditorElement() */
 
-};
-/* CBSitePreferencesEditor */
+})();
