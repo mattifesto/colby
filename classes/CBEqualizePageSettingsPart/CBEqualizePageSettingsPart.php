@@ -9,12 +9,18 @@ final class CBEqualizePageSettingsPart {
     /**
      * @return void
      */
-    static function CBPageSettings_renderHeadElementHTML(): void {
-        $CSSURL = Colby::flexpath(__CLASS__, 'v564.css', cbsysurl());
+    static function CBPageSettings_renderHeadElementHTML(
+    ): void {
+        $CSSURL = Colby::flexpath(
+            __CLASS__,
+            'v646.css',
+            cbsysurl()
+        );
 
         ?>
         <link rel="stylesheet" href="<?= $CSSURL ?>">
         <?php
     }
     /* CBPageSettings_renderHeadElementHTML() */
+
 }
