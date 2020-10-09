@@ -28,6 +28,7 @@ final class CBSitePreferencesEditor {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBImage',
+            'CBModel',
             'CBUI',
             'CBUIBooleanEditor',
             'CBUIImageChooser',

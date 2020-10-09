@@ -4,6 +4,7 @@
 /* exported CBSitePreferencesEditor */
 /* globals
     CBImage,
+    CBModel,
     CBUI,
     CBUIBooleanEditor,
     CBUIImageChooser,
@@ -39,8 +40,12 @@
     function CBUISpecEditor_createEditorElement(
         args
     ) {
-        var section, item;
-        var element = document.createElement("div");
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
+
+        let section, item;
+
+        let element = document.createElement("div");
         element.className = "CBSitePreferencesEditor";
 
         element.appendChild(CBUI.createHalfSpace());
@@ -155,20 +160,18 @@
 
         section.appendChild(item);
 
-        item = CBUI.createSectionItem();
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Google Tag Manager ID",
-                    propertyName: "googleTagManagerID",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
+        /* google analytics */
+
+        section.appendChild(
+            createGoogleAnalyticsIDEditorElement(
+                spec,
+                specChangedCallback
+            )
         );
 
-        section.appendChild(item);
+
+        /* default page settings class name */
 
         item = CBUI.createSectionItem();
 
@@ -179,13 +182,16 @@
                         "Default Class Name for Page Settings (deprecated)"
                     ),
                     propertyName: "defaultClassNameForPageSettings",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
+                    spec,
+                    specChangedCallback,
                 }
             ).element
         );
 
         section.appendChild(item);
+
+
+        /* on demand resize operations */
 
         item = CBUI.createSectionItem();
 
@@ -389,5 +395,69 @@
 
     }
     /* CBUISpecEditor_createEditorElement() */
+
+
+
+    /* -- functions -- */
+
+
+
+    /**
+     * @param object spec
+     * @param function specChangedCallback
+     *
+     * @return Element
+     */
+    function createGoogleAnalyticsIDEditorElement(
+        spec,
+        specChangedCallback
+    ) {
+        let googleAnalyticsIDEditor = CBUIStringEditor.create();
+
+        googleAnalyticsIDEditor.title = (
+            "Google Analytics ID | Google Tag Manager ID"
+        );
+
+        googleAnalyticsIDEditor.value = CBModel.valueToString(
+            spec,
+            "googleTagManagerID"
+        );
+
+        createGoogleAnalyticsIDEditorElement_validate();
+
+        googleAnalyticsIDEditor.changed = function () {
+            spec.googleTagManagerID = googleAnalyticsIDEditor.value;
+
+            createGoogleAnalyticsIDEditorElement_validate();
+            specChangedCallback();
+        };
+
+        return googleAnalyticsIDEditor.element;
+
+
+
+        /**
+         * @return undefined
+         */
+        function createGoogleAnalyticsIDEditorElement_validate() {
+            let value = googleAnalyticsIDEditor.value.trim();
+
+            if (
+                /^(UA-|GTM-)/.test(value) ||
+                value === ""
+            ) {
+                googleAnalyticsIDEditor.element.classList.remove(
+                    "CBUIStringEditor_error"
+                );
+            } else {
+                googleAnalyticsIDEditor.element.classList.add(
+                    "CBUIStringEditor_error"
+                );
+            }
+        }
+        /* createGoogleAnalyticsIDEditorElement_validate() */
+
+    }
+    /* createGoogleAnalyticsIDEditorElement() */
 
 })();
