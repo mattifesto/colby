@@ -479,14 +479,23 @@ final class CBSitePreferences {
     }
 
 
+
     /**
      * @return string
-     *  Returns an empty string if unset for legacy reasons.
+     *
+     *      Returns an empty string if unset.
      */
-    static function googleTagManagerID() {
+    static function googleTagManagerID(
+    ): string {
         $model = CBSitePreferences::model();
-        return empty($model->googleTagManagerID) ? '' : $model->googleTagManagerID;
+
+        return CBModel::valueToString(
+            $model,
+            'googleTagManagerID'
+        );
     }
+    /* googleTagManagerID() */
+
 
 
     /**
