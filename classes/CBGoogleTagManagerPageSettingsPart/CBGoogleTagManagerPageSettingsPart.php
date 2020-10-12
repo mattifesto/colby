@@ -11,6 +11,15 @@ final class CBGoogleTagManagerPageSettingsPart {
      */
     static function CBPageSettings_renderHeadElementHTML(
     ): void {
+        $currentUserIsAnAdministrator = CBUserGroup::userIsMemberOfUserGroup(
+            ColbyUser::getCurrentUserCBID(),
+            'CBAdministratorsUserGroup'
+        );
+
+        if ($currentUserIsAnAdministrator) {
+            return;
+        }
+
         $googleTagManagerID = CBSitePreferences::googleTagManagerID();
 
         $isUniversalAnalyticsID = preg_match(
@@ -57,6 +66,15 @@ final class CBGoogleTagManagerPageSettingsPart {
      */
     static function CBPageSettings_renderPreContentHTML(
     ): void {
+        $currentUserIsAnAdministrator = CBUserGroup::userIsMemberOfUserGroup(
+            ColbyUser::getCurrentUserCBID(),
+            'CBAdministratorsUserGroup'
+        );
+
+        if ($currentUserIsAnAdministrator) {
+            return;
+        }
+
         $googleTagManagerID = CBSitePreferences::googleTagManagerID();
 
         $isUniversalAnalyticsID = preg_match(
