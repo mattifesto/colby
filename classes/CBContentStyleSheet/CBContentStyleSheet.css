@@ -77,13 +77,19 @@
  *      compressed vertical margins.
  */
 .CBContentStyleSheet dd,
-.CBContentStyleSheet dd p,
 .CBContentStyleSheet dt,
+.CBContentStyleSheet li {
+    margin-bottom: 1em;
+    margin-top: 1em;
+}
+
+
+
+.CBContentStyleSheet dd p,
 .CBContentStyleSheet dt p,
-.CBContentStyleSheet li,
 .CBContentStyleSheet li p {
-    margin-bottom: 0.75em;
-    margin-top: 0.75em;
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
 }
 
 
@@ -92,14 +98,22 @@
     font-weight: bold;
 }
 
-/**
- * 2017_11_30 A rare use of left an right margins because the border box should
- * be inset relative to the parent element. This allows the dd element to look
- * like a sub-element of its preceding dt element.
- */
+
+
+.CBContentStyleSheet dt + dd {
+    margin-top: -0.5em;
+}
+
+
+
+.CBContentStyleSheet dd + dt {
+    margin-top: 2em;
+}
+
+
+
 .CBContentStyleSheet dd {
-    margin-left: 1.0em;
-    margin-right: 1.0em;
+    color: var(--CBTextColor2);
 }
 
 
