@@ -2,18 +2,24 @@
 
 final class CBUI {
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
+    static function CBHTMLOutput_CSSURLs(
+    ) {
         return [
-            Colby::flexpath(__CLASS__, 'v641.css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v648.css',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
 
 
 

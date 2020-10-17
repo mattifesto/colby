@@ -37,6 +37,30 @@ a.CBUI_action {
 
 
 
+.CBUI_backgroundColor1 {
+    background-color: var(--CBBackgroundColor1);
+}
+
+
+
+.CBUI_backgroundColor2 {
+    background-color: var(--CBBackgroundColor2);
+}
+
+
+
+.CBUI_backgroundColor3 {
+    background-color: var(--CBBackgroundColor3);
+}
+
+
+
+.CBUI_border_rounded {
+    border-radius: 10px;
+}
+
+
+
 /**
  * 2019_02_23
  *
@@ -687,12 +711,23 @@ a.CBUI_sectionItem {
 }
 
 
-/**
- * 2019_06_25
- */
+
+.CBUI_textColor1 {
+    color: var(--CBTextColor1);
+}
+
+
+
 .CBUI_textColor2 {
     color: var(--CBTextColor2);
 }
+
+
+
+.CBUI_textColor3 {
+    color: var(--CBTextColor3);
+}
+
 
 
 /**
