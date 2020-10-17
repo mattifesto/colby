@@ -1,8 +1,92 @@
 --- h1
+Text Colors On Background Color 1
+---
+
+--- CBUI_backgroundColor1 CBUI_border_rounded CBUI_padding_half
+    --- p CBUI_textColor1
+    Tom gave up the brush with reluctance in his face, but alacrity in his
+    heart. And while the late steamer Big Missouri worked and sweated in the
+    sun, the retired artist sat on a barrel in the shade close by, dangled his
+    legs, munched his apple, and planned the slaughter of more innocents.
+    ---
+
+    --- p CBUI_textColor2
+    Tom gave up the brush with reluctance in his face, but alacrity in his
+    heart. And while the late steamer Big Missouri worked and sweated in the
+    sun, the retired artist sat on a barrel in the shade close by, dangled his
+    legs, munched his apple, and planned the slaughter of more innocents.
+    ---
+
+    --- p CBUI_textColor3
+    Tom gave up the brush with reluctance in his face, but alacrity in his
+    heart. And while the late steamer Big Missouri worked and sweated in the
+    sun, the retired artist sat on a barrel in the shade close by, dangled his
+    legs, munched his apple, and planned the slaughter of more innocents.
+    ---
+---
+
+--- h1
+Text Colors On Background Color 2
+---
+
+--- CBUI_backgroundColor2 CBUI_border_rounded CBUI_padding_half
+    --- p CBUI_textColor1
+    Tom gave up the brush with reluctance in his face, but alacrity in his
+    heart. And while the late steamer Big Missouri worked and sweated in the
+    sun, the retired artist sat on a barrel in the shade close by, dangled his
+    legs, munched his apple, and planned the slaughter of more innocents.
+    ---
+
+    --- p CBUI_textColor2
+    Tom gave up the brush with reluctance in his face, but alacrity in his
+    heart. And while the late steamer Big Missouri worked and sweated in the
+    sun, the retired artist sat on a barrel in the shade close by, dangled his
+    legs, munched his apple, and planned the slaughter of more innocents.
+    ---
+
+    --- p CBUI_textColor3
+    Tom gave up the brush with reluctance in his face, but alacrity in his
+    heart. And while the late steamer Big Missouri worked and sweated in the
+    sun, the retired artist sat on a barrel in the shade close by, dangled his
+    legs, munched his apple, and planned the slaughter of more innocents.
+    ---
+---
+
+--- h1
+Text Colors On Background Color 3
+---
+
+Note: Background Color 3 is usually used as an image background color, not a
+text background color.
+
+--- CBUI_backgroundColor3 CBUI_border_rounded CBUI_padding_half
+    --- p CBUI_textColor1
+    Tom gave up the brush with reluctance in his face, but alacrity in his
+    heart. And while the late steamer Big Missouri worked and sweated in the
+    sun, the retired artist sat on a barrel in the shade close by, dangled his
+    legs, munched his apple, and planned the slaughter of more innocents.
+    ---
+
+    --- p CBUI_textColor2
+    Tom gave up the brush with reluctance in his face, but alacrity in his
+    heart. And while the late steamer Big Missouri worked and sweated in the
+    sun, the retired artist sat on a barrel in the shade close by, dangled his
+    legs, munched his apple, and planned the slaughter of more innocents.
+    ---
+
+    --- p CBUI_textColor3
+    Tom gave up the brush with reluctance in his face, but alacrity in his
+    heart. And while the late steamer Big Missouri worked and sweated in the
+    sun, the retired artist sat on a barrel in the shade close by, dangled his
+    legs, munched his apple, and planned the slaughter of more innocents.
+    ---
+---
+
+--- h1
 Heading Elements
 ---
 
---- Documentation_CBContentStyleSheet_example
+--- CBUI_backgroundColor2 CBUI_border_rounded CBUI_padding_half
     --- div
         --- h1
         Heading 1
@@ -86,28 +170,35 @@ Heading Elements
 Dictionary Lists
 ---
 
---- Documentation_CBContentStyleSheet_example
+--- CBUI_backgroundColor2 CBUI_border_rounded CBUI_padding_half
     --- div
         --- dl
             --- dt
-            term 1
+            The boy
             ---
             --- dd
-            definition 1
+            ran around and stopped within a foot or two of the flower, and then
+            shaded his eyes with his hand and began to look down street as if he
+            had discovered something of interest going on in that direction.
             ---
             --- dt
-            term 2
+            Presently
             ---
             --- dd
-            definition 1
+            he picked up a straw and began trying to balance it on his nose,
+            with his head tilted far back;
             ---
             --- dd
-            definition 2
+            and as he moved from side to side, in
+            his efforts, he edged nearer and nearer toward the pansy;
             ---
             --- dd
-            definition 3 paragraph 1
+            finally his bare foot rested upon it,
 
-            definition 3 paragraph 2
+            his pliant toes closed upon it,
+
+            and he hopped away with the treasure and disappeared round the
+            corner.
             ---
         ---
     ---
@@ -119,7 +210,7 @@ Dictionary Lists
 Unordered and Ordered Lists
 ---
 
---- Documentation_CBContentStyleSheet_example
+--- CBUI_backgroundColor2 CBUI_border_rounded CBUI_padding_half
     --- div
         --- ul
             one

@@ -29,23 +29,16 @@ final class Documentation_CBContentStyleSheet {
     /**
      * @return void
      */
-    static function CBAdmin_render(): void {
-        CBHTMLOutput::pageInformation()->title = 'CBContentStyleSheet Documentation';
+    static function CBAdmin_render(
+    ): void {
+        CBHTMLOutput::pageInformation()->title = (
+            'CBContentStyleSheet Documentation'
+        );
 
         $CSS = <<<EOT
 
             main.CBUIRoot {
                 background-color: var(--CBBackgroundColor);
-            }
-
-            /**
-             * An inner div should be included when using this class to show the
-             * verticaly margins of the content.
-             */
-            .Documentation_CBContentStyleSheet_example {
-                background-color: hsl(0, 0%, 90%);
-                border: 2px solid hsl(0, 0%, 85%);
-                margin: 1em 0 5em;
             }
 
         EOT;
