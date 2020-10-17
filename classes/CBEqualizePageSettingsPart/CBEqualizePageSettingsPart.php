@@ -13,7 +13,7 @@ final class CBEqualizePageSettingsPart {
     ): void {
         $CSSURL = Colby::flexpath(
             __CLASS__,
-            'v646.css',
+            'v648.css',
             cbsysurl()
         );
 

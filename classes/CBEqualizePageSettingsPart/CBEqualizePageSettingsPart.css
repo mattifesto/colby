@@ -50,19 +50,19 @@ html {
 
 
 .CBDarkTheme {
-    --CBBackgroundColor: hsl(0, 0%, 10%);
+    --CBBackgroundColor1: hsl(0, 0%, 10%);
+    --CBBackgroundColor2: hsl(0, 0%, 15%);
+    --CBBackgroundColor3: hsl(0, 0%, 20%);
+
     --CBBackgroundOffsetColor: hsl(0, 0%, 15%);
     --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.05);
-    --CBTextColor: hsla(0, 0%, 100%, 0.9);
+
+    --CBTextColor1: hsla(0, 0%, 100%, 0.9);
     --CBTextColor2: hsla(0, 0%, 100%, 0.6);
     --CBTextColor3: hsla(0, 0%, 100%, 0.3);
+
     --CBLineColor: hsla(0, 0%, 100%, 0.3); /* @deprecated use CBTextColors */
     --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
-
-    /* @deprecated use CBUIBackgroundColor */
-    --CBBackgroundColor2: hsl(0, 0%, 15%);
-
-    --CBUIBackgroundColor: hsl(0, 0%, 15%);
 
     /**
      * CBUIBorderColor is not translucent because it needs to be the same color
@@ -72,28 +72,35 @@ html {
 
     --CBErrorBackgroundColor: hsl(0, 25%, 15%);
 
-    background-color: hsl(0, 0%, 10%); /* IE11s */
-    background-color: var(--CBBackgroundColor);
-    color: hsla(0, 0%, 100%, 0.7); /* IE11 */
-    color: var(--CBTextColor);
+    background-color: var(--CBBackgroundColor1);
+    color: var(--CBTextColor1);
+
+    /* @deprecated use --CBBackgroundColor1 */
+    --CBBackgroundColor: hsl(0, 0%, 10%);
+
+    /* deprecated use --CBTextColor1 */
+    --CBTextColor: hsla(0, 0%, 100%, 0.9);
+
+    /* @deprecated use --CBBackgroundColor2 */
+    --CBUIBackgroundColor: hsl(0, 0%, 15%);
 }
 
 
 
 .CBLightTheme {
-    --CBBackgroundColor: hsl(0, 0%, 100%);
+    --CBBackgroundColor1: hsl(0, 0%, 100%);
+    --CBBackgroundColor2: hsl(0, 0%, 95%);
+    --CBBackgroundColor3: hsl(0, 0%, 90%);
+
     --CBBackgroundOffsetColor: hsl(0, 0%, 97%);
     --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.8);
-    --CBTextColor: hsla(0, 0%, 0%, 0.9);
+
+    --CBTextColor1: hsla(0, 0%, 0%, 0.9);
     --CBTextColor2: hsla(0, 0%, 0%, 0.6);
     --CBTextColor3: hsla(0, 0%, 0%, 0.3);
+
     --CBLineColor: hsla(0, 0%, 0%, 0.3); /* @deprecated use CBTextColors */
     --CBTextColorForLinks: hsla(210, 80%, 50%, 0.9);
-
-    /* @deprecated use CBUIBackgroundColor */
-    --CBBackgroundColor2: hsl(0, 0%, 95%);
-
-    --CBUIBackgroundColor: hsl(0, 0%, 95%);
 
     /**
      * CBUIBorderColor is not translucent because it needs to be the same color
@@ -103,10 +110,17 @@ html {
 
     --CBErrorBackgroundColor: hsl(0, 75%, 95%);
 
-    background-color: hsl(0, 0%, 100%); /* IE11 */
-    background-color: var(--CBBackgroundColor);
-    color: hsla(0, 0%, 0%, 0.9); /* IE11 */
-    color: var(--CBTextColor);
+    background-color: var(--CBBackgroundColor1);
+    color: var(--CBTextColor1);
+
+    /* @deprecated use --CBBackgroundColor1 */
+    --CBBackgroundColor: hsl(0, 0%, 100%);
+
+    /* @deprecated use --CBTextColor1 */
+    --CBTextColor: hsla(0, 0%, 0%, 0.9);
+
+    /* @deprecated use --CBBackgroundColor2 */
+    --CBUIBackgroundColor: hsl(0, 0%, 95%);
 }
 
 
@@ -127,7 +141,6 @@ a {
  * The body element is rendered by CBHTMLOutput. These styles enable the footer
  * to be at the bottom of pages with short content.
  */
-
 body {
 
     /* the body must be at least as tall as the viewport */
@@ -143,6 +156,8 @@ body {
     /* position absolutely positioned elements relative to the body */
     position: relative;
 }
+
+
 
 /**
  * The body element should usually have 3 children. The header, the main
@@ -162,22 +177,25 @@ body > * {
     flex: none;
 }
 
-main {
-    /* IE11 */
-    display: block;
-}
+
 
 a:link, a:active, a:focus, a:hover {
     outline: none;
 }
 
+
+
 a img {
     border: none;
 }
 
+
+
 code, pre {
     font-family: var(--CBMonospaceFontFamily);
 }
+
+
 
 /**
  * @NOTE 2018_09_12
