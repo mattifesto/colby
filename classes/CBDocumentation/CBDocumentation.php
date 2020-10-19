@@ -220,50 +220,45 @@ final class CBDocumentation_ClassListView {
 
         ?>
 
-        <div class="CBDocumentation_ClassListView CBUI_view_outer">
-            <div class="CBUI_view_inner_text CBContentStyleSheet">
-                <div class="CBUI_title1">
-                    Classes
+        <div class="CBDocumentation_container">
+            <div class="CBUI_title1">
+                Classes
+            </div>
+
+            <?php
+
+            sort($classNames);
+
+            foreach ($classNames as $className) {
+                $classDocumentationURL = (
+                    '/admin/' .
+                    '?c=CBAdmin_CBDocumentationForClass' .
+                    '&className=' .
+                    urlencode(
+                        $className
+                    )
+                );
+
+                ?>
+
+                <div>
+                    <a href="<?= $classDocumentationURL ?>">
+                        <?= cbhtml($className) ?>
+                    </a>
                 </div>
 
-                <dl>
-                    <?php
+                <?php
 
-                    sort($classNames);
+                CBView::render(
+                    (object)[
+                        'className' => 'CBDocumentation_DeveloperView',
+                        'targetClassName' => $className,
+                    ]
+                );
+            }
 
-                    foreach ($classNames as $className) {
-                        $descriptionFilepath = Colby::findFile(
-                            "classes/{$className}/{$className}_" .
-                            'CBDocumentation_description.cbmessage'
-                        );
+            ?>
 
-                        ?>
-
-                        <dt><?= cbhtml($className) ?>
-
-                        <?php
-
-                        CBView::render(
-                            (object)[
-                                'className' => 'CBDocumentation_DeveloperView',
-                                'targetClassName' => $className,
-                            ]
-                        );
-
-
-                        if ($descriptionFilepath === null) {
-                        } else {
-                            echo '<dd>';
-
-                            echo CBMessageMarkup::messageToHTML(
-                                file_get_contents($descriptionFilepath)
-                            );
-                        }
-                    }
-
-                    ?>
-                </dl>
-            </div>
         </div>
 
         <?php
