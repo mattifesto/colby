@@ -52,6 +52,16 @@ final class CBAdmin_CBDocumentationForClass {
             ]
         );
 
+        $functionName = "{$className}::CBAdmin_CBDocumentationForClass_render";
+
+        if (is_callable($functionName)) {
+            call_user_func(
+                $functionName
+            );
+
+            return;
+        }
+
         $descriptionFilepath = Colby::findFile(
             "classes/{$className}/{$className}_" .
             'CBDocumentation_description.cbmessage'
@@ -64,7 +74,9 @@ final class CBAdmin_CBDocumentationForClass {
 
             EOT;
         } else {
-            $cbmessage = file_get_contents($descriptionFilepath);
+            $cbmessage = file_get_contents(
+                $descriptionFilepath
+            );
         }
 
         CBView::renderSpec(
