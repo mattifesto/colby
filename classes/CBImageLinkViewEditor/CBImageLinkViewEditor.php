@@ -2,14 +2,20 @@
 
 final class CBImageLinkViewEditor {
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+    /* -- CBHTMLOutput interfaces -- */
+
+
 
     /**
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v609.js', cbsysurl())
+            Colby::flexpath(
+                __CLASS__,
+                'v651.js',
+                cbsysurl()
+            )
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */

@@ -27,7 +27,7 @@ var CBImageLinkViewEditor = {
      *
      * @return  Element
      */
-    createEditor: function (args) {
+    CBUISpecEditor_createEditorElement: function (args) {
         let spec = CBModel.valueAsModel(args, "spec");
 
         if (spec === undefined) {
@@ -245,7 +245,7 @@ var CBImageLinkViewEditor = {
         }
         /* createEditor_updateDimensions() */
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
 
 
     /**
