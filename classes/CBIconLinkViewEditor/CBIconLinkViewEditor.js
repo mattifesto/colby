@@ -180,7 +180,12 @@ var CBIconLinkViewEditor = {
             args.specChangedCallback();
         }
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
+
+
+
+    /* -- CBUISpec interfaces -- */
+
 
 
     /**
@@ -206,5 +211,6 @@ var CBIconLinkViewEditor = {
         return undefined;
     },
     /* CBUISpec_toDescription() */
+
 };
 /* CBIconLinkViewEditor */
