@@ -18,7 +18,10 @@ var CBView = {
      *      }
      */
     create: function (model) {
-        let callable = CBModel.classFunction(model, "CBView_create");
+        let callable = CBModel.getClassFunction(
+            model,
+            "CBView_create"
+        );
 
         if (callable === undefined) {
             throw new Error(
