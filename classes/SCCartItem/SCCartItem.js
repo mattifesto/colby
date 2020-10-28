@@ -134,7 +134,7 @@ var SCCartItem = {
      * @return Element
      */
     createCheckoutViewElement: function (cartItemModel) {
-        let callable = CBModel.classFunction(
+        let callable = CBModel.getClassFunction(
             cartItemModel,
             "SCCartItem_createCheckoutViewElement"
         );
@@ -159,7 +159,7 @@ var SCCartItem = {
      * @return Element
      */
     createOrderViewElement: function (cartItemModel) {
-        let callable = CBModel.classFunction(
+        let callable = CBModel.getClassFunction(
             cartItemModel,
             "SCCartItem_createOrderViewElement"
         );
@@ -234,7 +234,7 @@ var SCCartItem = {
     getIsNotAvailable(
         cartItemModel
     ) {
-        let callable = CBModel.classFunction(
+        let callable = CBModel.getClassFunction(
             cartItemModel,
             "SCCartItem_getIsNotAvailable"
         );
@@ -260,7 +260,7 @@ var SCCartItem = {
      * @return int|undefined
      */
     getMaximumQuantity: function (cartItemModel) {
-        let callable = CBModel.classFunction(
+        let callable = CBModel.getClassFunction(
             cartItemModel,
             "SCCartItem_getMaximumQuantity"
         );
@@ -511,7 +511,7 @@ var SCCartItem = {
      *      not available an empty string will be returned.
      */
     getSourceURL: function (cartItemModel) {
-        let callable = CBModel.classFunction(
+        let callable = CBModel.getClassFunction(
             cartItemModel,
             "SCCartItem_getSourceURL"
         );
@@ -617,7 +617,7 @@ var SCCartItem = {
     getTitle(
         cartItemSpec
     ) {
-        let callable = CBModel.classFunction(
+        let callable = CBModel.getClassFunction(
             cartItemSpec,
             "SCCartItem_getTitle"
         );
@@ -726,7 +726,7 @@ var SCCartItem = {
      * @return undefined
      */
     setQuantity: function (cartItemSpec, quantity) {
-        let callable = CBModel.classFunction(
+        let callable = CBModel.getClassFunction(
             cartItemSpec,
             "SCCartItem_setQuantity"
         );
@@ -823,7 +823,7 @@ var SCCartItem = {
         cartItemModelA,
         cartItemModelB
     ) {
-        let callable = CBModel.classFunction(
+        let callable = CBModel.getClassFunction(
             cartItemModelA,
             "SCCartItem_specsRepresentTheSameProduct"
         );

@@ -59,7 +59,7 @@ final class SCCartItem {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v644.js',
+                'v652.js',
                 scliburl()
             ),
         ];
