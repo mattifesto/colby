@@ -20,7 +20,10 @@ var CBModelTests = {
         };
 
         {
-            let badfunction = CBModel.classFunction(model, "badfunction");
+            let badfunction = CBModel.getClassFunction(
+                model,
+                "badfunction"
+            );
 
             if (badfunction !== undefined) {
                 return {
@@ -31,7 +34,10 @@ var CBModelTests = {
         }
 
         {
-            let undefinedfunction = CBModel.classFunction(model, "undefinedfunction");
+            let undefinedfunction = CBModel.getClassFunction(
+                model,
+                "undefinedfunction"
+            );
 
             if (undefinedfunction !== undefined) {
                 return {
@@ -42,7 +48,10 @@ var CBModelTests = {
         }
 
         {
-            let goodfunction = CBModel.classFunction(model, "goodfunction");
+            let goodfunction = CBModel.getClassFunction(
+                model,
+                "goodfunction"
+            );
 
             if (typeof goodfunction !== "function") {
                 return {

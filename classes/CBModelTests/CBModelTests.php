@@ -11,7 +11,7 @@ final class CBModelTests {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v455.1.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v652.js', cbsysurl()),
         ];
     }
 
