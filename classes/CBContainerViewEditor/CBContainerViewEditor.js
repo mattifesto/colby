@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBContainerViewEditor */
 /* globals
+    CBAjax,
     CBImage,
     CBModel,
     CBUI,
@@ -11,7 +12,6 @@
     CBUISpec,
     CBUISpecArrayEditor,
     CBUIStringEditor,
-    Colby,
 
     CBContainerViewEditor_addableClassNames,
 */
@@ -448,7 +448,7 @@ var CBContainerViewEditor = {
              * @return undefined
              */
             function createImageEditorElement_chosen() {
-                Colby.callAjaxFunction(
+                CBAjax.call(
                     "CBImages",
                     "upload",
                     {},
