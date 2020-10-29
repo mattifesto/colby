@@ -2,11 +2,11 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBAjax,
     CBException,
     CBModel,
     CBUI,
     CBUIPanel,
-    Colby,
 */
 
 
@@ -62,7 +62,7 @@
         buttonElement.addEventListener(
             "click",
             function () {
-                Colby.callAjaxFunction(
+                CBAjax.call(
                     "CBDeveloperUserSettingsManager",
                     "switchToUser",
                     {
