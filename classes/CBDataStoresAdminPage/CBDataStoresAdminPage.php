@@ -83,7 +83,7 @@ final class CBDataStoresAdminPage {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v610.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v653.js', cbsysurl()),
         ];
     }
 
@@ -94,6 +94,7 @@ final class CBDataStoresAdminPage {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBAjax',
             'CBUI',
             'CBUINavigationView',
             'CBUIPanel',

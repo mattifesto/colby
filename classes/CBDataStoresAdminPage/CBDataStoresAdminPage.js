@@ -2,6 +2,7 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBAjax,
     CBUI,
     CBUINavigationView,
     CBUIPanel,
@@ -42,7 +43,7 @@
         }
 
 
-        Colby.callAjaxFunction(
+        CBAjax.call(
             "CBDataStoresAdminPage",
             "fetchData"
         ).then(
@@ -92,7 +93,7 @@
             buttonElement.addEventListener(
                 "click",
                 function () {
-                    Colby.callAjaxFunction(
+                    CBAjax.call(
                         "CBDataStoresFinderTask",
                         "restart"
                     ).then(
