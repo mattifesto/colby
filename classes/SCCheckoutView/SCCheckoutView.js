@@ -921,7 +921,9 @@ var SCCheckoutView = {
                                     name: SCCartItem.getTitle(orderItem),
                                     category: orderItem.groupTitle,
                                     price: CBConvert.centsToDollars(
-                                        SCCartItem.getPriceInCents(orderItem)
+                                        SCCartItem.getSubtotalInCents(
+                                            orderItem
+                                        )
                                     ),
                                     quantity: SCCartItem.getQuantity(orderItem),
                                 }
