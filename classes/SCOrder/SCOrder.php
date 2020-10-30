@@ -1231,7 +1231,9 @@ final class SCOrder {
             function ($subtotalInCents, $itemSpec) {
                 return (
                     $subtotalInCents +
-                    SCCartItem::getPriceInCents($itemSpec)
+                    SCCartItem::getSubtotalInCents(
+                        $itemSpec
+                    )
                 );
             },
             0
