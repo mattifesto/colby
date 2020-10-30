@@ -248,7 +248,9 @@
                 function (accumulatedSubtotalInCents, currentCartItemSpec) {
                     return (
                         accumulatedSubtotalInCents +
-                        SCCartItem.getPriceInCents(currentCartItemSpec)
+                        SCCartItem.getSubtotalInCents(
+                            currentCartItemSpec
+                        )
                     );
                 },
                 0
