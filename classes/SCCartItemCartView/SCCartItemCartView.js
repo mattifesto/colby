@@ -628,7 +628,9 @@ var SCCartItemCartView = {
             subtotalElement.textContent = (
                 "$" +
                 CBConvert.centsToDollars(
-                    SCCartItem.getPriceInCents(cartItemModel)
+                    SCCartItem.getSubtotalInCents(
+                        cartItemModel
+                    )
                 )
             );
         }
