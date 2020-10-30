@@ -891,7 +891,9 @@ final class SCCartItem {
                     (
                         "Subtotal: $" .
                         CBConvert::centsToDollars(
-                            SCCartItem::getPriceInCents($cartItemModel)
+                            SCCartItem::getSubtotalInCents(
+                                $cartItemModel
+                            )
                         )
                     ),
                 ]
@@ -948,7 +950,9 @@ final class SCCartItem {
 
                 echo 'Subtotal: $',
                     CBConvert::centsToDollars(
-                        SCCartItem::getPriceInCents($cartItemModel)
+                        SCCartItem::getSubtotalInCents(
+                            $cartItemModel
+                        )
                     ),
                     "\n\n";
 
