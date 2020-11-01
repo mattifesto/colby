@@ -2,12 +2,12 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBAjax,
     CBException,
     CBModel,
     CBUI,
     CBUIPanel,
     CBUIStringEditor,
-    Colby,
 */
 
 
@@ -72,7 +72,7 @@
 
         fullNameEditor.title = "Full Name";
 
-        Colby.callAjaxFunction(
+        CBAjax.call(
             "CBFullNameUserSettingsManager",
             "fetchFullName",
             {
@@ -148,7 +148,7 @@
 
         fullNameEditor.title = "Full Name (saving...)";
 
-        Colby.callAjaxFunction(
+        CBAjax.call(
             "CBFullNameUserSettingsManager",
             "updateFullName",
             {
