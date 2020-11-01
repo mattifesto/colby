@@ -2,6 +2,7 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBAjax,
     CBException,
     CBModel,
     CBUI,
@@ -125,7 +126,7 @@
         );
 
 
-        Colby.callAjaxFunction(
+        CBAjax.call(
             "CBFacebookAccountUserSettingsManager",
             "fetchTargetUserData",
             {
