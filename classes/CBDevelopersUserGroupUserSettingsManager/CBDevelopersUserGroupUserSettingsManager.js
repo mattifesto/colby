@@ -2,12 +2,12 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBAjax,
     CBException,
     CBModel,
     CBUI,
     CBUIBooleanSwitchPart,
     CBUIPanel,
-    Colby,
 */
 
 
@@ -67,7 +67,7 @@
 
         elements[5].textContent = "CBDevelopersUserGroup";
 
-        Colby.callAjaxFunction(
+        CBAjax.call(
             "CBDevelopersUserGroupUserSettingsManager",
             "fetchTargetUserData",
             {
@@ -127,7 +127,7 @@
             confirm.then(
                 function (wasConfirmed) {
                     if (wasConfirmed) {
-                        return Colby.callAjaxFunction(
+                        return CBAjax.call(
                             "CBUserGroup",
                             ajaxFunctionName,
                             {
