@@ -89,7 +89,7 @@ final class CBEmailAddressUserSettingsManager {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v611.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v655.js', cbsysurl()),
         ];
     }
 
@@ -100,6 +100,7 @@ final class CBEmailAddressUserSettingsManager {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBAjax',
             'CBException',
             'CBModel',
             'CBUI',

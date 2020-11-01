@@ -2,6 +2,7 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBAjax,
     CBException,
     CBModel,
     CBUI,
@@ -78,7 +79,7 @@
             emailAddressElement
         );
 
-        Colby.callAjaxFunction(
+        CBAjax.call(
             "CBEmailAddressUserSettingsManager",
             "fetchTargetUserData",
             {
@@ -200,7 +201,7 @@
          * @return undefined
          */
         function addEmailAddress() {
-            Colby.callAjaxFunction(
+            CBAjax.call(
                 "CBUser",
                 "addEmailAddress",
                 {
@@ -335,7 +336,7 @@
          * @return undefined
          */
         function changeEmailAddress() {
-            Colby.callAjaxFunction(
+            CBAjax.call(
                 "CBUser",
                 "changeEmailAddress",
                 {
