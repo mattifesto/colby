@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBGitHistoryAdmin */
 /* global
+    CBAjax,
     CBUI,
     CBUIExpander,
     CBUINavigationView,
@@ -134,7 +135,7 @@ var CBGitHistoryAdmin = {
                 submodule: submoduleSelector.value,
             };
 
-            Colby.callAjaxFunction(
+            CBAjax.call(
                 "CBGitHistoryAdmin",
                 "fetch",
                 args

@@ -103,7 +103,7 @@ final class CBGitHistoryAdmin {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v612.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v655.js', cbsysurl()),
         ];
     }
 
@@ -128,6 +128,7 @@ final class CBGitHistoryAdmin {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBAjax',
             'CBUI',
             'CBUIExpander',
             'CBUINavigationView',
