@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBImagesAdmin */
 /* global
+    CBAjax,
     CBImage,
     CBUI,
     CBUIPanel,
@@ -47,7 +48,7 @@ var CBImagesAdmin = {
             let sectionItem = CBUISectionItem4.create();
 
             sectionItem.callback = function () {
-                Colby.callAjaxFunction(
+                CBAjax.call(
                     "CBImageVerificationTask",
                     "startForAllImages"
                 ).then(
@@ -150,7 +151,7 @@ var CBImagesAdmin = {
      * @return Promise
      */
     fetchImages: function (args) {
-        let promise = Colby.callAjaxFunction(
+        let promise = CBAjax.call(
             "CBImagesAdmin",
             "fetchImages"
         ).then(
