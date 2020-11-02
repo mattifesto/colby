@@ -3,6 +3,7 @@
 /* jshint esnext: true */
 /* exported CBImagesTests */
 /* global
+    CBAjax,
     CBDataStore,
     CBTestAdmin,
     Colby,
@@ -27,7 +28,7 @@ var CBImagesTests = {
      * @return Promise
      */
     CBTest_deleteByID: function () {
-        let promise = Colby.callAjaxFunction(
+        let promise = CBAjax.call(
             "CBModels",
             "deleteByID",
             {
@@ -138,7 +139,7 @@ var CBImagesTests = {
      * @return Promise
      */
     CBTest_upload: function () {
-        let promise = Colby.callAjaxFunction(
+        let promise = CBAjax.call(
             "CBImages",
             "upload",
             {},

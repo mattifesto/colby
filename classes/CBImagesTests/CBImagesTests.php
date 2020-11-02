@@ -11,7 +11,7 @@ final class CBImagesTests {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v580.1.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v656.js', cbsysurl()),
         ];
     }
 
@@ -22,6 +22,7 @@ final class CBImagesTests {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBAjax',
             'CBDataStore',
             'Colby',
 
