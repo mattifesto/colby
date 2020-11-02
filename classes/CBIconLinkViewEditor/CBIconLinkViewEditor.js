@@ -3,13 +3,13 @@
 /* jshint esversion: 6 */
 /* exported CBIconLinkViewEditor */
 /* globals
+    CBAjax,
     CBImage,
     CBModel,
     CBUI,
     CBUIBooleanEditor,
     CBUIImageChooser,
     CBUIStringEditor,
-    Colby,
 */
 
 
@@ -154,7 +154,7 @@ var CBIconLinkViewEditor = {
          * @return undefined
          */
         function handleImageChosen(chooserArgs) {
-            CBIconLinkViewEditor.promise = Colby.callAjaxFunction(
+            CBIconLinkViewEditor.promise = CBAjax.call(
                 "CBImages",
                 "upload",
                 {},
