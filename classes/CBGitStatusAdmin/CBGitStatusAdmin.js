@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBGitStatusAdmin */
 /* global
+    CBAjax,
     CBUI,
     CBUIExpander,
     CBUIPanel,
@@ -58,7 +59,7 @@ var CBGitStatusAdmin = {
                 timeoutID = undefined;
             }
 
-            Colby.callAjaxFunction(
+            CBAjax.call(
                 "CBGitStatusAdmin",
                 "fetchStatus"
             ).then(
