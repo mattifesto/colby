@@ -13,7 +13,7 @@ final class CBImageLinkViewEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v651.js',
+                'v656.js',
                 cbsysurl()
             )
         ];
@@ -27,6 +27,7 @@ final class CBImageLinkViewEditor {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBAjax',
             'CBImage',
             'CBModel',
             'CBUI',
@@ -34,7 +35,6 @@ final class CBImageLinkViewEditor {
             'CBUIImageChooser',
             'CBUIPanel',
             'CBUIStringEditor',
-            'Colby',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
