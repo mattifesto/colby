@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBMaintenance */
 /* global
+    CBAjax,
     Colby,
 */
 
@@ -62,7 +63,7 @@ var CBMaintenance = {
          */
         function go() {
             if (active) {
-                return Colby.callAjaxFunction(
+                return CBAjax.call(
                     "CBMaintenance",
                     "lock",
                     {
@@ -85,7 +86,7 @@ var CBMaintenance = {
         function unlock() {
             active = false;
 
-            return Colby.callAjaxFunction(
+            return CBAjax.call(
                 "CBMaintenance",
                 "unlock",
                 {
