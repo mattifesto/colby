@@ -100,9 +100,22 @@ final class CBLog {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v462.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v657.js', cbsysurl()),
         ];
     }
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_requiredClassNames(
+    ): array {
+        return [
+            'CBAjax',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
 
 
 

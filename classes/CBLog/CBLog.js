@@ -3,7 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBLog */
 /* global
-    Colby,
+    CBAjax,
 */
 
 var CBLog = {
@@ -14,7 +14,7 @@ var CBLog = {
      * @return Promise -> int
      */
     fetchMostRecentSerial: function (processID) {
-        return Colby.callAjaxFunction(
+        return CBAjax.call(
             "CBLog",
             "fetchMostRecentSerial",
             {
