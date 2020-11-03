@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBLogAdminPage */
 /* globals
+    CBAjax,
     CBModel,
     CBUI,
     CBUIExpander,
@@ -114,7 +115,7 @@ var CBLogAdminPage = {
          * @return undefined
          */
         function handleArgsChanged() {
-            Colby.callAjaxFunction(
+            CBAjax.call(
                 "CBLog",
                 "fetchEntries",
                 args
