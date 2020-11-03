@@ -2,6 +2,7 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBAjax,
     CBArtworkElement,
     CBImage,
     CBMessageMarkup,
@@ -131,7 +132,7 @@
             return;
         }
 
-        Colby.callAjaxFunction(
+        CBAjax.call(
             "CBModelInspector",
             "fetchModelData",
             {
@@ -439,7 +440,7 @@
                         "Deleting model..."
                     );
 
-                    Colby.callAjaxFunction(
+                    CBAjax.call(
                         "CBModels",
                         "deleteByID",
                         {
@@ -671,14 +672,14 @@
         }
 
         chooser.chosen = function (args) {
-            Colby.callAjaxFunction(
+            CBAjax.call(
                 "CBImages",
                 "upload",
                 undefined,
                 args.file
             ).then(
                 function (imageSpec) {
-                    return Colby.callAjaxFunction(
+                    return CBAjax.call(
                         "CBModelToCBImageAssociation",
                         "replaceImageID",
                         {
@@ -944,7 +945,7 @@
              * @return undefined
              */
             function revert() {
-                Colby.callAjaxFunction(
+                CBAjax.call(
                     "CBModels",
                     "revert",
                     {
