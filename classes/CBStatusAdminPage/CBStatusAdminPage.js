@@ -2,6 +2,7 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBAjax,
     CBModel,
     CBUI,
     CBUIMessagePart,
@@ -53,7 +54,7 @@
             statusTextElement.textContent = "fetching issues...";
         }
 
-        Colby.callAjaxFunction(
+        CBAjax.call(
             "CBStatusAdminPage",
             "fetchMessages"
         ).then(
