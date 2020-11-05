@@ -13,7 +13,7 @@ final class CBSitePreferencesEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v646.js',
+                'v659.js',
                 cbsysurl()
             ),
         ];
@@ -27,6 +27,7 @@ final class CBSitePreferencesEditor {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBAjax',
             'CBImage',
             'CBModel',
             'CBUI',
@@ -35,7 +36,6 @@ final class CBSitePreferencesEditor {
             'CBUIPanel',
             'CBUISpecArrayEditor',
             'CBUIStringEditor',
-            'Colby',
 
             /**
              * The CBSitePreferences model stores CBKeyValuePair models in the

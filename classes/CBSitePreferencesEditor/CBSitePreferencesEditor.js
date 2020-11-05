@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBSitePreferencesEditor */
 /* globals
+    CBAjax,
     CBImage,
     CBModel,
     CBUI,
@@ -11,7 +12,6 @@
     CBUIPanel,
     CBUISpecArrayEditor,
     CBUIStringEditor,
-    Colby,
 */
 
 
@@ -362,7 +362,7 @@
          * @return undefined
          */
         function createEditor_handleImageChosen() {
-            Colby.callAjaxFunction(
+            CBAjax.call(
                 "CBImages",
                 "upload",
                 {},
