@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBTasks2Admin */
 /* global
+    CBAjax,
     CBModel,
     CBUI,
     CBUIBooleanSwitchPart,
@@ -213,7 +214,7 @@ var CBTasks2Admin = {
 
                     taskIsCurrentlyRunning = true;
 
-                    Colby.callAjaxFunction(
+                    CBAjax.call(
                         "CBTasks2",
                         "runSpecificTask",
                         {
@@ -330,7 +331,7 @@ var CBTasks2Admin = {
          * @return undefined
          */
         function fetchStatus() {
-            Colby.callAjaxFunction(
+            CBAjax.call(
                 "CBTasks2",
                 "fetchStatus"
             ).then(
