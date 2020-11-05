@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBModelsImportAdmin */
 /* global
+    CBAjax,
     CBMaintenance,
     CBModelImporter,
     CBModelImporter_processID,
@@ -70,7 +71,7 @@ var CBModelsImportAdmin = {
             CBMaintenance.transaction(
                 "CBModelsImportAdmin Import",
                 function () {
-                    return Colby.callAjaxFunction(
+                    return CBAjax.call(
                         "CBModelsImportAdmin",
                         "uploadDataFile",
                         { },
