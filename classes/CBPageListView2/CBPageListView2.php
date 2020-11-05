@@ -110,7 +110,7 @@ final class CBPageListView2 {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v624.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v658.js', cbsysurl()),
         ];
     }
 
@@ -139,6 +139,7 @@ final class CBPageListView2 {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBAjax',
             'CBArtworkElement',
             'CBConvert',
             'CBImage',

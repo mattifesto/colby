@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBPageListView2 */
 /* global
+    CBAjax,
     CBArtworkElement,
     CBConvert,
     CBImage,
@@ -56,7 +57,7 @@ var CBPageListView2 = {
             pagesContainerElement = state.pagesContainerElement;
         }
 
-        Colby.callAjaxFunction(
+        CBAjax.call(
             "CBPageListView2",
             "fetchPages",
             {
