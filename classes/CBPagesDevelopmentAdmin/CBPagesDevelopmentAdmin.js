@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBPagesDevelopmentAdmin */
 /* global
+    CBAjax,
     CBModel,
     CBUI,
     CBUIPanel,
@@ -34,7 +35,7 @@
             let sectionItem = CBUISectionItem4.create();
 
             sectionItem.callback = function () {
-                Colby.callAjaxFunction(
+                CBAjax.call(
                     "CBPageVerificationTask",
                     "startForAllPages"
                 ).then(
