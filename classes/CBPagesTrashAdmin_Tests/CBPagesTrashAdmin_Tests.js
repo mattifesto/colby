@@ -3,9 +3,9 @@
 /* jshint esversion: 8 */
 /* exported CBPagesTrashAdmin_Tests */
 /* global
+    CBAjax,
     CBException,
     CBTest,
-    Colby,
 */
 
 
@@ -19,7 +19,7 @@ var CBPagesTrashAdmin_Tests = {
             let actualSourceCBID = "initial";
             let expectedSourceCBID = "initial";
 
-            await Colby.callAjaxFunction(
+            await CBAjax.call(
                 "CBPagesTrashAdmin",
                 "fetchPages"
             ).catch(
@@ -44,7 +44,7 @@ var CBPagesTrashAdmin_Tests = {
             let actualSourceCBID = "initial";
             let expectedSourceCBID = "initial";
 
-            await Colby.callAjaxFunction(
+            await CBAjax.call(
                 "CBPagesTrashAdmin",
                 "recoverPage",
                 {
