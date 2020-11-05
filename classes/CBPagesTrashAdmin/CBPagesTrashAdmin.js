@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBPagesTrashAdmin */
 /* global
+    CBAjax,
     CBUI,
     CBUIPanel,
     Colby,
@@ -36,7 +37,7 @@ var CBPagesTrashAdmin = {
             CBUI.createHalfSpace()
         );
 
-        Colby.callAjaxFunction(
+        CBAjax.call(
             "CBPagesTrashAdmin",
             "fetchPages"
         ).then(
@@ -79,7 +80,7 @@ var CBPagesTrashAdmin = {
                     recoverCommand.addEventListener(
                         "click",
                         function () {
-                            Colby.callAjaxFunction(
+                            CBAjax.call(
                                 "CBPagesTrashAdmin",
                                 "recoverPage",
                                 {
@@ -109,7 +110,7 @@ var CBPagesTrashAdmin = {
                     deleteCommand.addEventListener(
                         "click",
                         function () {
-                            Colby.callAjaxFunction(
+                            CBAjax.call(
                                 "CBModels",
                                 "deleteByID",
                                 {
