@@ -3,10 +3,10 @@
 /* jshint esversion: 6 */
 /* exported CBTest */
 /* global
+    CBAjax,
     CBConvert,
     CBMessageMarkup,
     CBModel,
-    Colby,
 */
 
 var CBTest = {
@@ -24,7 +24,7 @@ var CBTest = {
             testName: CBModel.valueToString(args, "test.name"),
         };
 
-        let promise = Colby.callAjaxFunction(
+        let promise = CBAjax.call(
             "CBTest",
             "run",
             testArgs
