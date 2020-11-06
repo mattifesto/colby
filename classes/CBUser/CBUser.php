@@ -289,7 +289,7 @@ final class CBUser {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v584.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v660.js', cbsysurl()),
         ];
     }
 
@@ -300,8 +300,8 @@ final class CBUser {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBAjax',
             'CBErrorHandler',
-            'Colby',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

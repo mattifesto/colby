@@ -3,8 +3,8 @@
 /* jshint esversion: 6 */
 /* exported CBUser */
 /* global
+    CBAjax,
     CBErrorHandler,
-    Colby,
 */
 
 
@@ -15,7 +15,7 @@ var CBUser = {
      * @return Promise -> undefined
      */
     signOut() {
-        let promise = Colby.callAjaxFunction(
+        let promise = CBAjax.call(
             "CBUser",
             "signOut"
         ).catch(
