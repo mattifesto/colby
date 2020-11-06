@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBViewPageInformationEditor */
 /* globals
+    CBAjax,
     CBConvert,
     CBImage,
     CBModel,
@@ -198,7 +199,7 @@ var CBViewPageInformationEditor = {
                     );
 
                     if (wasConfirmed) {
-                        Colby.callAjaxFunction(
+                        CBAjax.call(
                             "CBPages",
                             "moveToTrash",
                             {
@@ -671,7 +672,7 @@ var CBViewPageInformationEditor = {
          * @return undefined
          */
         function createEditor_handleImageChosen() {
-            Colby.callAjaxFunction(
+            CBAjax.call(
                 "CBImages",
                 "upload",
                 {},
