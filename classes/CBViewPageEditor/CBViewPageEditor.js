@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBViewPageEditor */
 /* global
+    CBAjax,
     CBImage,
     CBModel,
     CBUI,
@@ -244,7 +245,7 @@ var CBViewPageEditor = {
                 "Are you sure you want to use this page as the front page?"
             )
         ) {
-            Colby.callAjaxFunction(
+            CBAjax.call(
                 "CBSitePreferences",
                 "setFrontPageID",
                 {

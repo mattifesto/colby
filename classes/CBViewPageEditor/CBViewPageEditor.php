@@ -11,7 +11,7 @@ final class CBViewPageEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v589.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v661.js', cbsysurl()),
         ];
     }
 
@@ -55,6 +55,7 @@ final class CBViewPageEditor {
         return array_merge(
             $classNamesForEditors,
             [
+                'CBAjax',
                 'CBImage',
                 'CBModel',
                 'CBUI',
