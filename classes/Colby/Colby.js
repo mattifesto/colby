@@ -581,7 +581,7 @@ var Colby = {
             error
         );
 
-        let promise = Colby.callAjaxFunction(
+        let promise = CBAjax.call(
             "CBJavaScript",
             "reportError",
             {
@@ -725,7 +725,7 @@ var Colby = {
                             processID: Colby.CBTasks2_processID,
                         };
 
-                        Colby.callAjaxFunction(
+                        CBAjax.call(
                             "CBTasks2",
                             "runNextTask",
                             args
