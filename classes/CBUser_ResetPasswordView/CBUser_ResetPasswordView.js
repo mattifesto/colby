@@ -2,6 +2,7 @@
 /* jshint strict: global */
 /* jshint esversion: 8 */
 /* global
+    CBAjax,
     CBUI,
     CBUIPanel,
     CBUIStringEditor,
@@ -298,7 +299,7 @@
         resolve
     ) {
         try {
-            let response = await Colby.callAjaxFunction(
+            let response = await CBAjax.call(
                 "CBUser_PotentialPassword",
                 "create",
                 {
@@ -339,7 +340,7 @@
         oneTimePassword,
         resolve
     ) {
-        let response = await Colby.callAjaxFunction(
+        let response = await CBAjax.call(
             "CBUser_PotentialPassword",
             "verify",
             {

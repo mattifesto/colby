@@ -11,7 +11,7 @@ final class CBUser_ResetPasswordView {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v626.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v661.js', cbsysurl()),
         ];
     }
 
@@ -22,6 +22,7 @@ final class CBUser_ResetPasswordView {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBAjax',
             'CBUI',
             'CBUIPanel',
             'CBUIStringEditor',
