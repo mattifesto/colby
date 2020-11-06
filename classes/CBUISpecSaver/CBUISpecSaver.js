@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBModel */
 /* globals
+    CBAjax,
     CBException,
     CBModel,
     CBUIPanel,
@@ -222,7 +223,7 @@ var CBUISpecSaver = {
          * @return Promise
          */
         function request() {
-            return Colby.callAjaxFunction(
+            return CBAjax.call(
                 "CBModels",
                 "save",
                 {

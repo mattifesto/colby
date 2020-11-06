@@ -7,7 +7,7 @@ final class CBUISpecSaver {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v572.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v660.js', cbsysurl()),
         ];
     }
 
@@ -18,6 +18,7 @@ final class CBUISpecSaver {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBAjax',
             'CBException',
             'CBModel',
             'CBUIPanel',
