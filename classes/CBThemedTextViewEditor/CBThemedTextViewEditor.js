@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBThemedTextViewEditor */
 /* globals
+    CBAjax,
     CBUI,
     CBUIBooleanEditor,
     CBUINavigationView,
@@ -12,7 +13,6 @@
     CBUISpecEditor,
     CBUIStringEditor,
     CBUIStringsPart,
-    Colby,
 */
 
 var CBThemedTextViewEditor = {
@@ -36,7 +36,7 @@ var CBThemedTextViewEditor = {
 
                 CBUISpecClipboard.specs = [spec];
 
-                return Colby.callAjaxFunction(
+                return CBAjax.call(
                     "CBThemedTextView",
                     "convertToCBMessageView",
                     spec

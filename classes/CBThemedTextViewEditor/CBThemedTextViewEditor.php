@@ -18,7 +18,7 @@ final class CBThemedTextViewEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v612.js', cbsysurl()),
+            Colby::flexpath(__CLASS__, 'v660.js', cbsysurl()),
         ];
     }
 
@@ -29,6 +29,7 @@ final class CBThemedTextViewEditor {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBAjax',
             'CBUI',
             'CBUIBooleanEditor',
             'CBUINavigationView',
@@ -38,7 +39,6 @@ final class CBThemedTextViewEditor {
             'CBUISpecEditor',
             'CBUIStringEditor',
             'CBUIStringsPart',
-            'Colby',
         ];
     }
 
