@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBUIProcessStatus */
 /* global
+    CBAjax,
     CBConvert,
     CBLog,
     CBUIExpander,
@@ -138,7 +139,7 @@ var CBUIProcessStatus = {
                 processID: processID,
             };
 
-            Colby.callAjaxFunction(
+            CBAjax.call(
                 "CBLog",
                 "fetchEntries",
                 ajaxargs
@@ -188,7 +189,7 @@ var CBUIProcessStatus = {
              * @return Promise
              */
             function fetchTaskStatus() {
-                return Colby.callAjaxFunction(
+                return CBAjax.call(
                     "CBTasks2",
                     "fetchStatus",
                     {
