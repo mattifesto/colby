@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported ColbyTests */
 /* global
+    CBAjax,
     CBModel,
     CBTest,
     CBUIPanel,
@@ -108,7 +109,7 @@ var ColbyTests = {
     CBTest_displayAndReportError: function () {
         let testDidPass = false;
 
-        return Colby.callAjaxFunction(
+        return CBAjax.call(
             "ColbyTests",
             "requestWithPHPError"
         ).catch(
