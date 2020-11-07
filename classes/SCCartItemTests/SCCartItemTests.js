@@ -9,10 +9,10 @@
 /* exported SCCartItemTests_SubtotalCartItem1 */
 /* exported SCCartItemTests_UnitPriceCartItem1 */
 /* global
+    CBAjax,
     CBException,
     CBModel,
     CBTest,
-    Colby,
     SCCartItem,
 
     SCCartItemTests_getMaximumQuantityTestCases,
@@ -125,7 +125,7 @@ var SCCartItemTests = {
             unitPriceInCents: 1000,
         };
 
-        return Colby.callAjaxFunction(
+        return CBAjax.call(
             "SCProductTests",
             "installTestProducts"
         ).then(
@@ -136,7 +136,7 @@ var SCCartItemTests = {
             }
         ).then(
             function (actualResult) {
-                return Colby.callAjaxFunction(
+                return CBAjax.call(
                     "SCProductTests",
                     "uninstallTestProducts"
                 ).then(
@@ -444,12 +444,12 @@ var SCCartItemTests = {
             },
         ];
 
-        return Colby.callAjaxFunction(
+        return CBAjax.call(
             "SCProductTests",
             "installTestProducts"
         ).then(
             function () {
-                return Colby.callAjaxFunction(
+                return CBAjax.call(
                     "SCCartItem",
                     "updateSpecs",
                     {
@@ -459,7 +459,7 @@ var SCCartItemTests = {
             }
         ).then(
             function (updatedCartItemSpecs) {
-                return Colby.callAjaxFunction(
+                return CBAjax.call(
                     "SCProductTests",
                     "uninstallTestProducts"
                 ).then(
