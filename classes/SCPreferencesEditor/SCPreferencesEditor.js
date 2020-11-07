@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported SCPreferencesEditor */
 /* global
+    CBAjax,
     CBException,
     CBModel,
     CBUI,
@@ -340,7 +341,7 @@ var SCPreferencesEditor = {
              * @return undefined
              */
             function closure_generate(orderKindClassName) {
-                Colby.callAjaxFunction(
+                CBAjax.call(
                     "SCOrderKind",
                     "generateDefaultOrderKindClass",
                     {

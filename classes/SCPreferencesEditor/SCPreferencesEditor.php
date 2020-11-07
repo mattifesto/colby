@@ -7,7 +7,7 @@ final class SCPreferencesEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v118.js', scliburl()),
+            Colby::flexpath(__CLASS__, 'v662.js', scliburl()),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -41,6 +41,7 @@ final class SCPreferencesEditor {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBAjax',
             'CBException',
             'CBModel',
             'CBUI',
