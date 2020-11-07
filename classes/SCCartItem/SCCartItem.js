@@ -3,11 +3,11 @@
 /* jshint esversion: 6 */
 /* exported SCCartItem */
 /* global
+    CBAjax,
     CBConvert,
     CBException,
     CBModel,
     CBView,
-    Colby,
 */
 
 
@@ -187,7 +187,7 @@ var SCCartItem = {
      * @return Promise -> object
      */
     fetchUpdatedCartItemSpec: function (originalCartItemSpec) {
-        return Colby.callAjaxFunction(
+        return CBAjax.call(
             "SCCartItem",
             "updateSpecs",
             {

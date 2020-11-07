@@ -59,7 +59,7 @@ final class SCCartItem {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v652.js',
+                'v662.js',
                 scliburl()
             ),
         ];
@@ -73,11 +73,11 @@ final class SCCartItem {
      */
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
+            'CBAjax',
             'CBConvert',
             'CBException',
             'CBModel',
             'CBView',
-            'Colby',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
