@@ -156,7 +156,7 @@ final class SCOrderInspector {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v612.js', scliburl()),
+            Colby::flexpath(__CLASS__, 'v662.js', scliburl()),
         ];
     }
 
@@ -255,6 +255,7 @@ final class SCOrderInspector {
 
         return array_merge(
             [
+                'CBAjax',
                 'CBContentStyleSheet',
                 'CBConvert',
                 'CBMessageMarkup',

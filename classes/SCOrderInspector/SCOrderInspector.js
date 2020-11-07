@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported SCOrderInspector */
 /* global
+    CBAjax,
     CBConvert,
     CBMessageMarkup,
     CBModel,
@@ -224,7 +225,7 @@ var SCOrderInspector = {
         addButtonElement.addEventListener(
             "click",
             function () {
-                Colby.callAjaxFunction(
+                CBAjax.call(
                     "SCOrder",
                     "addNote",
                     {
@@ -984,7 +985,7 @@ var SCOrderInspector = {
                             'disabled'
                         );
 
-                        Colby.callAjaxFunction(
+                        CBAjax.call(
                             "SCOrder",
                             "capture",
                             {
@@ -1072,7 +1073,7 @@ var SCOrderInspector = {
 
                 changeInProgress = true;
 
-                Colby.callAjaxFunction(
+                CBAjax.call(
                     "SCOrderInspector",
                     "setIsArchived",
                     {
@@ -1112,7 +1113,7 @@ var SCOrderInspector = {
             buttonElement.addEventListener(
                 "click",
                 function () {
-                    Colby.callAjaxFunction(
+                    CBAjax.call(
                         "SCOrder",
                         "sendEmail",
                         {
