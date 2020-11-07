@@ -22,7 +22,7 @@ final class SCCheckoutView {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v654.js', scliburl()),
+            Colby::flexpath(__CLASS__, 'v662.js', scliburl()),
         ];
     }
 
@@ -48,6 +48,7 @@ final class SCCheckoutView {
 
         return array_merge(
             [
+                'CBAjax',
                 'CBConvert',
                 'CBMessageMarkup',
                 'CBModel',

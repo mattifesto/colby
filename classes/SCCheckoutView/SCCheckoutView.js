@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported SCCheckoutView */
 /* global
+    CBAjax,
     CBConvert,
     CBMessageMarkup,
     CBModel,
@@ -35,7 +36,7 @@ var SCCheckoutView = {
      * @return Promise
      */
     createOrder: function () {
-        let promise = Colby.callAjaxFunction(
+        let promise = CBAjax.call(
             "SCOrder",
             "create",
             {
@@ -705,7 +706,7 @@ var SCCheckoutView = {
             "Please wait while your payment is processed..."
         );
 
-        let promise = Colby.callAjaxFunction(
+        let promise = CBAjax.call(
             "SCOrder",
             "payWithNet30",
             {
@@ -869,7 +870,7 @@ var SCCheckoutView = {
          * @return Promise
          */
         function payWithStripe_step2ChargeCard(createTokenResponse) {
-            let promise = Colby.callAjaxFunction(
+            let promise = CBAjax.call(
                 "SCOrder",
                 "charge",
                 {
