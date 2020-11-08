@@ -2,6 +2,7 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBAjax,
     CBConvert,
     CBErrorHandler,
     CBMessageMarkup,
@@ -47,7 +48,7 @@
         if (originalCartItemSpecs.length === 0) {
             renderEmptyCart();
         } else {
-            Colby.callAjaxFunction(
+            CBAjax.call(
                 "SCCartItem",
                 "updateSpecs",
                 {

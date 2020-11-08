@@ -22,7 +22,7 @@ final class SCShoppingCartView {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v654.js', scliburl()),
+            Colby::flexpath(__CLASS__, 'v663.js', scliburl()),
         ];
     }
 
@@ -48,6 +48,7 @@ final class SCShoppingCartView {
 
         return array_merge(
             [
+                'CBAjax',
                 'CBConvert',
                 'CBErrorHandler',
                 'CBMessageMarkup',
