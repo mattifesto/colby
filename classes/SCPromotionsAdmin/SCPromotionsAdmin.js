@@ -2,6 +2,7 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBAjax,
     CBModel,
     CBUI,
     CBUINavigationView,
@@ -243,7 +244,7 @@
      * @return undefined
      */
     function fetchAndRenderPromotionList() {
-        Colby.callAjaxFunction(
+        CBAjax.call(
             "SCPromotionsTable",
             "fetchSummaries"
         ).then(
