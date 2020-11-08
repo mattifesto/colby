@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported SCPromotionEditor */
 /* global
+    CBAjax,
     CBConvert,
     CBModel,
     CBUI,
@@ -10,7 +11,6 @@
     CBUIStringEditor,
     CBUISpecEditor,
     CBUIUnixTimestampEditor,
-    Colby,
 */
 
 
@@ -165,7 +165,7 @@
                     ).then(
                         function (didConfirm) {
                             if (didConfirm) {
-                                return Colby.callAjaxFunction(
+                                return CBAjax.call(
                                     "CBModels",
                                     "deleteByID",
                                     {

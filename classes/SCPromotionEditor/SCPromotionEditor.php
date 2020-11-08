@@ -11,7 +11,7 @@ final class SCPromotionEditor {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v616.js', scliburl()),
+            Colby::flexpath(__CLASS__, 'v663.js', scliburl()),
         ];
     }
 
@@ -44,6 +44,7 @@ final class SCPromotionEditor {
         return array_merge(
             $requiredClassNames,
             [
+                'CBAjax',
                 'CBConvert',
                 'CBModel',
                 'CBUI',
@@ -51,7 +52,6 @@ final class SCPromotionEditor {
                 'CBUISpecEditor',
                 'CBUIStringEditor',
                 'CBUIUnixTimestampEditor',
-                'Colby',
             ]
         );
     }
