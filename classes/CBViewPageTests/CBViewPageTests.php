@@ -12,6 +12,10 @@ final class CBViewPageTests {
     static function CBTest_getTests(): array {
         return [
             (object)[
+                'name' => 'CBViewPage_getFrameSearchText',
+                'type' => 'server',
+            ],
+            (object)[
                 'name' => 'general',
                 'type' => 'server',
             ],
@@ -30,6 +34,103 @@ final class CBViewPageTests {
 
 
     /* -- tests -- -- -- -- -- */
+
+
+
+    /**
+     * @return object
+     */
+    static function CBTest_CBViewPage_getFrameSearchText(
+    ): stdClass {
+        $testCaseModels = [
+
+            (object)[
+                'viewPageModel' => (object)[
+                    'className' => 'CBViewPage',
+                ],
+                'expectedSearchText' => 'CBViewPage',
+            ],
+
+            (object)[
+                'viewPageModel' => (object)[
+                    'className' => 'CBViewPage',
+                    'frameClassName' => 'CBViewPageTests_PageFrame',
+                ],
+                'expectedSearchText' => CBConvert::stringToCleanLine(<<<EOT
+
+                    CBViewPageTests_PageFrame frame search text CBViewPage
+
+                EOT),
+            ],
+
+            (object)[
+                'viewPageModel' => (object)[
+                    'className' => 'CBViewPage',
+                    'frameClassName' => 'CBViewPageTests_PageFrame',
+                    'layout' => (object)[
+                        'className' => 'CBViewPageTests_PageLayout',
+                    ],
+                ],
+                'expectedSearchText' => CBConvert::stringToCleanLine(<<<EOT
+
+                    CBViewPageTests_PageFrame frame search text CBViewPage
+
+                EOT),
+            ],
+
+            (object)[
+                'viewPageModel' => (object)[
+                    'className' => 'CBViewPage',
+                    'layout' => (object)[
+                        'className' => 'CBViewPageTests_PageLayout',
+                    ],
+                ],
+                'expectedSearchText' => CBConvert::stringToCleanLine(<<<EOT
+
+                    CBViewPageTests_PageLayout CBViewPage
+
+                EOT),
+            ],
+
+        ];
+
+        for (
+            $index = 0;
+            $index < count ($testCaseModels);
+            $index += 1
+        ) {
+            $currentTestCaseModel = $testCaseModels[$index];
+
+            $currentViewPageModel = CBModel::valueAsModel(
+                $currentTestCaseModel,
+                'viewPageModel'
+            );
+
+            $actualSearchText = CBModel::toSearchText(
+                $currentViewPageModel
+            );
+
+            $expectedSearchText = CBModel::valueToString(
+                $currentTestCaseModel,
+                'expectedSearchText'
+            );
+
+            if ($actualSearchText !== $expectedSearchText) {
+                return CBTest::resultMismatchFailure(
+                    "text case model index {$index}",
+                    $actualSearchText,
+                    $expectedSearchText
+                );
+            }
+        }
+
+        /* done */
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_CBViewPage_getFrameSearchText() */
 
 
 
@@ -270,6 +371,7 @@ final class CBViewPageTests {
             ],
             'publishedByUserCBID' => ColbyUser::getCurrentUserCBID(),
             'sections' => CBViewTests::testSubviewUpgradedSpecs(),
+            'CBViewPage_versionDate' => '2020_11_11',
         ];
 
         if ($actualUpgradedSpec != $expectedUpgradedSpec) {
@@ -294,6 +396,7 @@ final class CBViewPageTests {
             'className' => 'CBViewPage',
             'classNameForSettings' => 'CBViewPageTests_PageSettings',
             'sections' => [],
+            'CBViewPage_versionDate' => '2020_11_11',
         ];
 
         if ($actualUpgradedSpec != $expectedUpgradedSpec) {
@@ -322,6 +425,7 @@ final class CBViewPageTests {
             'classNameForSettings' => 'CBViewPageTests_PageSettings',
             'publishedByUserCBID' => $publishedByUserCBID,
             'sections' => [],
+            'CBViewPage_versionDate' => '2020_11_11',
         ];
 
         if ($actualUpgradedSpec != $expectedUpgradedSpec) {
@@ -340,5 +444,19 @@ final class CBViewPageTests {
         ];
     }
     /* CBTest_upgrade() */
+
+}
+
+
+
+/**
+ *
+ */
+final class CBViewPageTests_PageFrame {
+
+    static function CBViewPage_getFrameSearchText(
+    ): string {
+        return 'frame search text';
+    }
 
 }
