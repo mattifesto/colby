@@ -232,18 +232,58 @@ final class CBViewPage {
         $strings = [
             $title,
             $description,
-            CBModel::toSearchText(
-                CBModel::value(
-                    $model,
-                    'layout'
-                )
-            ),
         ];
 
-        $publicationTimeStamp = CBModel::valueAsInt(
+        $frameClassName = CBModel::valueToString(
             $model,
-            'publicationTimeStamp'
+            'frameClassName'
         );
+
+        if ($frameClassName !== '') {
+            array_push(
+                $strings,
+                $frameClassName
+            );
+
+            $function = "{$frameClassName}::CBViewPage_getFrameSearchText";
+
+            if (is_callable($function)) {
+                $searchText = call_user_func(
+                    $function
+                );
+
+                array_push(
+                    $strings,
+                    $searchText
+                );
+            }
+        }
+
+
+        /**
+         * @deprecated 2020_11_09
+         *
+         *      ViewPage layouts have been deprecated. When they are completely
+         *      removed the else block below can also be removed.
+         */
+        else {
+            $viewPageLayouModel = CBModel::valueAsModel(
+                $model,
+                'layout'
+            );
+
+            if ($viewPageLayouModel !== null) {
+                $searchText = CBModel::toSearchText(
+                    $viewPageLayouModel
+                );
+
+                array_push(
+                    $strings,
+                    $searchText
+                );
+            }
+        }
+
 
         CBViewPage::initializePageInformation($model);
 
@@ -270,15 +310,27 @@ final class CBViewPage {
     static function CBModel_upgrade(
         stdClass $spec
     ): stdClass {
+
+        /**
+         * @NOTE 2020_11_11
+         *
+         *      The way search text is generated for CBViewPage models was
+         *      altered so all existing pages should be rebuilt.
+         */
+        $spec->CBViewPage_versionDate = '2020_11_11';
+
+
         if ($image = CBModel::valueAsObject($spec, 'image')) {
             $spec->image = CBImage::fixAndUpgrade($image);
         }
+
 
         if ($layout = CBModel::valueAsModel($spec, 'layout')) {
             $spec->layout = CBModel::upgrade($layout);
         } else {
             unset($spec->layout);
         }
+
 
         $spec->sections = array_values(
             array_filter(
@@ -288,6 +340,7 @@ final class CBViewPage {
                 )
             )
         );
+
 
         /**
          * @NOTE 2018_04_13
