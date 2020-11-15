@@ -646,28 +646,6 @@ final class Colby {
         if (file_exists($filepath)) {
             include_once($filepath);
         }
-
-
-        /**
-         * 2014.08.26
-         *  This check was added because if magic quotes are enabled bugs that
-         *  are difficult to investigate will appear. Once PHP versions less
-         *  than 5.4 are unacceptable, this code can be removed.
-         */
-
-        if (get_magic_quotes_runtime() || get_magic_quotes_gpc()) {
-            $mqr = get_magic_quotes_runtime();
-            $mqr = var_export($mqr, true);
-            $mqg = get_magic_quotes_gpc();
-            $mqg = var_export($mqg, true);
-
-            throw new RuntimeException(
-                "Magic quotes are enabled on this server: " .
-                "magic_quotes_runtime={$mqr}, magic_quotes_gpc={$mqg}. " .
-                "Add the line 'php_flag magic_quotes_gpc off' to the " .
-                ".htaccess file."
-            );
-        }
     }
     /* initialize() */
 
