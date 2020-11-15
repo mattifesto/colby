@@ -7,6 +7,27 @@ final class CBPHPAdmin {
 
 
     /**
+     * @return [string]
+     */
+    static function CBAdmin_getIssueCBMessages(
+    ): array {
+        if (PHP_VERSION_ID < 70400) {
+            return [
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    Upgrade the PHP version used by this web server to 7.4.
+
+                EOT),
+            ];
+        } else {
+            return [];
+        }
+    }
+    /* CBAdmin_getIssueMessages() */
+
+
+
+    /**
      * @return string
      */
     static function CBAdmin_getUserGroupClassName(): string {
