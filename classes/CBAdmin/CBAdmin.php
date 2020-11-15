@@ -184,10 +184,10 @@ final class CBAdmin {
 
 
     /**
-     * Classes can implement the CBAdmin_getIssueCBMessages() interface to provide
-     * system issue messages if needed. Messages should only be returned if
-     * something needs to be adjusted by a developer, administrator, or user. If
-     * everything is okay, no messages should be returned.
+     * Classes can implement the CBAdmin_getIssueCBMessages() interface to
+     * provide system issue messages if needed. Messages should only be returned
+     * if something needs to be adjusted by a developer, administrator, or user.
+     * If everything is okay, no messages should be returned.
      *
      * @return [string]
      *
