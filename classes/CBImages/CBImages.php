@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * @deprecated 2020_11_15
+ *
+ *      The table named CBImages is most likely not necessary as any use could
+ *      be replaced with a query using the CBModels and CBModelVersions tables.
+ *
+ *      Slowly remove uses of the CBImages table and update this comment if any
+ *      required uses of the table exist. If they do, rename the table to
+ *      something like CBImageTable so uses can be found more easily.
+ */
 class CBImages {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
@@ -552,6 +562,7 @@ class CBImages {
      */
     static function URIToCBImage(string $URI): ?stdClass {
         $dataStoreID = CBDataStore::URIToID($URI);
+
 
         if (CBImages::isInstance($dataStoreID)) {
             return CBImages::makeModelForID($dataStoreID);
