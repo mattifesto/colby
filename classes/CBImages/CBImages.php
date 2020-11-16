@@ -693,6 +693,14 @@ class CBImages {
                 'width' => $size[0],
             ];
 
+            /**
+             * @NOTE 2020_11_15
+             *
+             *      We force this save because we may be resaving the model for
+             *      the original image. This code could probably be changed to
+             *      better handle this without resaving the model.
+             */
+
             CBModels::save(
                 [$spec],
                 /* force: */ true
