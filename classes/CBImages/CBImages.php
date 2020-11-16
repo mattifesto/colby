@@ -573,15 +573,16 @@ class CBImages {
             $imageURI
         );
 
-        $imageModel = CBModels::fetchModelByIDNullable(
-            $imageCBID
-        );
+        if (!empty($imageCBID)) {
+            $imageModel = CBModels::fetchModelByIDNullable(
+                $imageCBID
+            );
 
-        if ($imageModel !== null) {
-            if ($imageModel->className === 'CBImage') {
+            if (
+                $imageModel !== null &&
+                $imageModel->className === 'CBImage'
+            ) {
                 return $imageModel;
-            } else {
-                return null;
             }
         }
 
@@ -601,47 +602,79 @@ class CBImages {
          *      or if it should be moved somewhere else or to new functions.
          */
 
-
-        if (CBImages::isInstance($imageCBID)) {
-            return CBImages::makeModelForID($imageCBID);
-        }
-
-        $filepath = CBDataStore::URIToFilepath(
-            $imageURI
+        $originalImageFilepath = CBImages::IDToOriginalFilepath(
+            $imageCBID
         );
 
-        if (empty($filepath)) {
+        if (empty($originalImageFilepath)) {
+            $importedImageFilepath = CBDataStore::URIToFilepath(
+                $imageURI
+            );
+        } else {
+            $importedImageFilepath = $originalImageFilepath;
+        }
+
+        if (empty($importedImageFilepath)) {
             return null;
         }
 
-        $size = CBImage::getimagesize($filepath);
-        $spec = null;
+        $size = CBImage::getimagesize(
+            $importedImageFilepath
+        );
+
+        if ($size === false) {
+            $imageHasValidExtension = false;
+        } else {
+            $imageHasValidExtension = in_array(
+                $size[2],
+                [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG]
+            );
+        }
 
         if (
             $size === false ||
-            !in_array(
-                $size[2],
-                [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG]
-            )
+            !$imageHasValidExtension
         ) {
-            throw new Exception(
-                'The file specified is either not a an image or has a file ' .
-                'format that is not supported.'
+            $imageURLAsCBMessage = CBMessage::stringToMessage(
+                $imageURI
             );
+
+            $importedImageFilepathAsCBMessage = CBMessage::stringToMessage(
+                $importedImageFilepath
+            );
+
+            CBLog::log(
+                (object)[
+                    'message' => <<<EOT
+
+                        The URL "{$imageURLAsCBMessage}" does not have a CBImage
+                        model and the original image file
+                        "{$importedImageFilepathAsCBMessage}" was found in the
+                        data store but this file is not a valid image file.
+
+                    EOT,
+                    'modelID' => $imageCBID,
+                    'severity' => 3,
+                    'sourceClassName' => __CLASS__,
+                    'sourceID' => 'dc09fcf204e9f0c1c741198fd9cfe30e1822ebcb',
+                ]
+            );
+
+            return null;
         }
 
         Colby::query('START TRANSACTION');
 
         try {
-
-            $timestamp = time();
-
             $extension = image_type_to_extension(
                 /* type: */ $size[2],
                 /* include dot: */ false
             );
 
-            $ID = sha1_file($filepath);
+            $ID = sha1_file(
+                $importedImageFilepath
+            );
+
             $filename = "original";
             $basename = "{$filename}.{$extension}";
 
@@ -660,17 +693,23 @@ class CBImages {
                 'width' => $size[0],
             ];
 
-            CBModels::save([$spec], /* force: */ true);
+            CBModels::save(
+                [$spec],
+                /* force: */ true
+            );
+
             CBDataStore::makeDirectoryForID($ID);
-            copy($filepath, $destinationFilepath);
+
+            copy(
+                $importedImageFilepath,
+                $destinationFilepath
+            );
+
             Colby::query('COMMIT');
-
         } catch (Throwable $exception) {
-
             Colby::query('ROLLBACK');
 
             throw $exception;
-
         }
 
         return $spec;
