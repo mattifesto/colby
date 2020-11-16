@@ -552,12 +552,18 @@ class CBImages {
 
 
     /**
-     * This function will return a CBImage model for an image URI. If the URI is
-     * a local image file that is not a CBImage, the image will be imported.
+     * References to images should be stored as CBImage models not URLs. If the
+     * caller has only a URL, they can pass it to this function to convert it to
+     * an CBImage model to use at that moment or hopefully instead to upgrade
+     * the source to store the CBImage model instead of the image URL.
      *
-     * @return ?model
+     * @return object|null
      *
-     *      If the URI does not represent a CBImage, is not local, or can't be
+     *      This function will return a CBImage model for an image URL. If the
+     *      URL is a local image file that doesn't yet have a CBImage model, one
+     *      will be created.
+     *
+     *      If the URL does not represent an image, is not local, or can't be
      *      imported for other reasons then null will be returned.
      */
     static function URIToCBImage(
@@ -566,6 +572,35 @@ class CBImages {
         $imageCBID = CBDataStore::URIToID(
             $imageURI
         );
+
+        $imageModel = CBModels::fetchModelByIDNullable(
+            $imageCBID
+        );
+
+        if ($imageModel !== null) {
+            if ($imageModel->className === 'CBImage') {
+                return $imageModel;
+            } else {
+                return null;
+            }
+        }
+
+
+        /**
+         * @NOTE 2020_11_15
+         *
+         *      On this day the logic of this function is being clarified.
+         *
+         *      Because Colby didn't always save models for images, if there is
+         *      no model, this function will check for historical reasons
+         *      whether there is an actual image file in the data store. If
+         *      there is an image file, a CBImage model will be created, saved,
+         *      and returned.
+         *
+         *      At this moment I don't know when or if this logic can be removed
+         *      or if it should be moved somewhere else or to new functions.
+         */
+
 
         if (CBImages::isInstance($imageCBID)) {
             return CBImages::makeModelForID($imageCBID);
