@@ -184,9 +184,23 @@ final class CBPageVerificationTask {
                     }
                 }
             } else {
-                $imageID = CBModel::value($imageValue, 'ID');
+                $imageID = CBModel::valueAsCBID(
+                    $imageValue,
+                    'ID'
+                );
 
-                if (!CBImages::isInstance($imageID)) {
+                if ($imageID === null) {
+                    $imageModel = null;
+                } else {
+                    $imageModel = CBModels::fetchModelByIDNullable(
+                        $imageID
+                    );
+                }
+
+                if (
+                    $imageModel === null ||
+                    $imageModel->className !== 'CBImage'
+                ) {
                     $imageValueAsMessage = CBMessageMarkup::stringToMarkup(
                         CBConvert::valueToPrettyJSON($imageValue)
                     );
