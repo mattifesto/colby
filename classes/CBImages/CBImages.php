@@ -563,12 +563,12 @@ class CBImages {
     static function URIToCBImage(
         string $imageURI
     ): ?stdClass {
-        $dataStoreID = CBDataStore::URIToID(
+        $imageCBID = CBDataStore::URIToID(
             $imageURI
         );
 
-        if (CBImages::isInstance($dataStoreID)) {
-            return CBImages::makeModelForID($dataStoreID);
+        if (CBImages::isInstance($imageCBID)) {
+            return CBImages::makeModelForID($imageCBID);
         }
 
         $filepath = CBDataStore::URIToFilepath(
