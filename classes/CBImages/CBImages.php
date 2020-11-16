@@ -90,12 +90,15 @@ class CBImages {
 
 
     /**
-     * @param {hex160} $ID
+     * @param CBID $ID
      *
-     * @return {string} | false
-     *  The original image filepath or false if the image doesn't exist
+     * @return string|false
+     *
+     *      The original image filepath or false if the image doesn't exist
      */
-    static function IDToOriginalFilepath($ID) {
+    static function IDToOriginalFilepath(
+        $ID
+    ) {
         $filepaths = glob(
             $s = CBDataStore::filepath(
                 [
@@ -111,34 +114,7 @@ class CBImages {
             return $filepaths[0];
         }
     }
-
-
-
-    /**
-     * This function determines in an ID is a valid CBImage ID.
-     *
-     * @param mixed $ID
-     *
-     * @return bool
-     */
-    static function isInstance($ID): bool {
-        if (!CBID::valueIsCBID($ID)) {
-            return false;
-        }
-
-        $IDAsSQL = CBID::toSQL($ID);
-        $SQL = <<<EOT
-
-            SELECT COUNT(*)
-            FROM `CBImages`
-            WHERE `ID` = {$IDAsSQL}
-
-        EOT;
-
-        return boolval(
-            CBDB::SQLToValue($SQL)
-        );
-    }
+    /* IDToOriginalFilepath() */
 
 
 
