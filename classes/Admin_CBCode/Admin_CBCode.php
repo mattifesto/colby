@@ -362,6 +362,20 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBModels::fetchModelByIDNullable().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => 'CBImages::isInstance\(',
+                    'severity' => 3,
+                    'title' => 'CBImages::isInstance()',
+                ],
+
+
+
+                (object)[
                     'regex' => 'SCCartItem_getPriceInCents',
                     'severity' => 3,
                     'title' => 'SCCartItem_getPriceInCents',
