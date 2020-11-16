@@ -552,7 +552,7 @@ class CBImages {
 
 
     /**
-     * This function will return a CBImage spec for an image URI. If the URI is
+     * This function will return a CBImage model for an image URI. If the URI is
      * a local image file that is not a CBImage, the image will be imported.
      *
      * @return ?model
@@ -560,15 +560,20 @@ class CBImages {
      *      If the URI does not represent a CBImage, is not local, or can't be
      *      imported for other reasons then null will be returned.
      */
-    static function URIToCBImage(string $URI): ?stdClass {
-        $dataStoreID = CBDataStore::URIToID($URI);
-
+    static function URIToCBImage(
+        string $imageURI
+    ): ?stdClass {
+        $dataStoreID = CBDataStore::URIToID(
+            $imageURI
+        );
 
         if (CBImages::isInstance($dataStoreID)) {
             return CBImages::makeModelForID($dataStoreID);
         }
 
-        $filepath = CBDataStore::URIToFilepath($URI);
+        $filepath = CBDataStore::URIToFilepath(
+            $imageURI
+        );
 
         if (empty($filepath)) {
             return null;
