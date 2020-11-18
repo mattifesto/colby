@@ -172,8 +172,16 @@ var CBUIProcessStatus = {
                     entries.forEach(
                         function (entry) {
                             if (entry.severity <= logEntryMinimumSeverity) {
-                                let expander = CBUIExpander.create(entry);
-                                entriesElement.appendChild(expander.element);
+                                let expander = CBUIExpander.create();
+                                expander.severity = entry.severity;
+                                expander.timestamp = entry.timestamp;
+                                expander.title = "Log Entry";
+                                expander.message = entry.message;
+
+                                entriesElement.appendChild(
+                                    expander.element
+                                );
+
                                 expander.element.scrollIntoView();
                             }
                         }

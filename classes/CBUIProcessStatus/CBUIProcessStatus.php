@@ -12,14 +12,22 @@ final class CBUIProcessStatus {
     }
 
 
+
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function CBHTMLOutput_JavaScriptURLs(
+    ) {
         return [
-            Colby::flexpath(__CLASS__, 'v660.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v667.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -35,4 +43,6 @@ final class CBUIProcessStatus {
             'Colby',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
+
 }
