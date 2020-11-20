@@ -435,25 +435,6 @@ var Colby = {
 
 
     /**
-     * @deprecated 2020_04_18
-     *
-     *      Use CBAjax.call() or CBAjax.fetchResponse() for transitional
-     *      purposes.
-     */
-    fetchAjaxResponse(
-        URL,
-        data
-    ) {
-        return CBAjax.fetchResponse(
-            URL,
-            data
-        );
-    },
-    /* fetchAjaxResponse() */
-
-
-
-    /**
      * @return bool
      */
     localStorageIsSupported: function () {
