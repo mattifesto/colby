@@ -6,7 +6,6 @@
 
     window.CBAjax = {
         call,
-        fetchResponse, /* deprecated */
     };
 
 
@@ -91,8 +90,8 @@
             URL === ""
         ) {
             throw TypeError(
-                "CBAjax.fetchResponse() was called with an invalid URL " +
-                " parameter value of: " +
+                "fetchResponse() was called with an invalid URL " +
+                "parameter value of: " +
                 JSON.stringify(URL)
             );
         }

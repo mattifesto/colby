@@ -11,9 +11,14 @@ final class CBAjax {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v605.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v668.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
