@@ -362,6 +362,40 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'filetype' => 'js',
+                    'regex' => 'Colby\.fetchAjaxResponse',
+                    'severity' => 3,
+                    'title' => 'Colby.fetchAjaxResponse()',
+
+                    'cbmessage' => <<<EOT
+
+                        Use CBAjax.call().
+
+                    EOT,
+
+                    'errorStartDate' => '2020/11/19',
+                    'warningStartDate' => '2020/04/18',
+                ],
+
+
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'CBAjax\.fetchResponse',
+                    'severity' => 3,
+                    'title' => 'CBAjax.fetchResponse()',
+
+                    'cbmessage' => <<<EOT
+
+                        Use CBAjax.call().
+
+                    EOT,
+
+                    'errorStartDate' => '2020/11/19',
+                    'warningStartDate' => '2020/04/18',
+                ],
+
+
+                (object)[
                     'cbmessage' => <<<EOT
 
                         Use CBModels::fetchModelByIDNullable().
@@ -1206,40 +1240,6 @@ final class Admin_CBCode {
                     'cbmessage' => <<<EOT
 
                         Use CBAjax.call().
-
-                    EOT,
-
-                    'warningStartDate' => '2020/04/18',
-                ],
-
-
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => 'Colby\.fetchAjaxResponse',
-                    'severity' => 4,
-                    'title' => 'Colby.fetchAjaxResponse()',
-
-                    'cbmessage' => <<<EOT
-
-                        Use CBAjax.call(). During the transition to CBAjax
-                        CBAjax.fetchResponse() is available, but deprecated.
-
-                    EOT,
-
-                    'warningStartDate' => '2020/04/18',
-                ],
-
-
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => 'CBAjax\.fetchResponse',
-                    'severity' => 4,
-                    'title' => 'CBAjax.fetchResponse()',
-
-                    'cbmessage' => <<<EOT
-
-                        Use CBAjax.call(). The CBAjax.fetchResponse() only
-                        exists for transitional reasons.
 
                     EOT,
 
