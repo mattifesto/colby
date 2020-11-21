@@ -75,53 +75,6 @@ final class CBUsers {
 
 
     /**
-     * @deprecated 2019_08_29
-     *
-     *      This function was created as deprecated. It exists to support
-     *      testing of upgrades from user numeric IDs to user CBIDs. When user
-     *      numeric IDs go away completely, this function can be removed.
-     *
-     * @param CBID $userCBID
-     *
-     * @return int
-     *
-     *      This function will throw an exception if the $userCBID parameter
-     *      does not represent an actual user.
-     */
-    static function forTesting_userCBIDtoUserNumericID(
-        string $userCBID
-    ): int {
-        $userCBIDAsSQL = CBID::toSQL($userCBID);
-
-        $SQL = <<<EOT
-
-            SELECT      id
-
-            FROM        ColbyUsers
-
-            WHERE       hash = {$userCBIDAsSQL}
-
-        EOT;
-
-        $userNumericID = CBConvert::valueAsInt(
-            CBDB::SQLToValue($SQL)
-        );
-
-        if ($userNumericID === null) {
-            throw new CBExceptionWithValue(
-                'The userCBID parameter does not represent an actual user.',
-                $userCBID,
-                '0c2a5d93283b730cf3baa4919a561123a4a33183'
-            );
-        }
-
-        return $userNumericID;
-    }
-    /* forTesting_userCBIDtoUserNumericID() */
-
-
-
-    /**
      * @deprecated use CBUserGroup models
      *
      * @return void
