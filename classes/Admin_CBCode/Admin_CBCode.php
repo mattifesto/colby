@@ -362,6 +362,22 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'regex' => 'forTesting_userCBIDtoUserNumericID',
+                    'severity' => 3,
+                    'title' => 'CBUsers::forTesting_userCBIDtoUserNumericID()',
+
+                    'cbmessage' => <<<EOT
+
+                        Remove all uses of numeric user IDs.
+
+                    EOT,
+
+                    'errorStartDate' => '2020/11/20',
+                    'warningStartDate' => '2020/04/15',
+                ],
+
+
+                (object)[
                     'filetype' => 'js',
                     'regex' => 'Colby\.fetchAjaxResponse',
                     'severity' => 3,
@@ -1244,21 +1260,6 @@ final class Admin_CBCode {
                     EOT,
 
                     'warningStartDate' => '2020/04/18',
-                ],
-
-
-                (object)[
-                    'regex' => 'forTesting_userCBIDtoUserNumericID',
-                    'severity' => 4,
-                    'title' => 'CBUsers::forTesting_userCBIDtoUserNumericID()',
-
-                    'cbmessage' => <<<EOT
-
-                        Remove all uses of numeric user IDs.
-
-                    EOT,
-
-                    'warningStartDate' => '2020/04/15',
                 ],
 
 
