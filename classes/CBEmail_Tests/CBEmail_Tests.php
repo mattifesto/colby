@@ -13,7 +13,7 @@ final class CBEmail_Tests {
         return [
             (object)[
                 'name' => 'sendCBMessage',
-                'type' => 'interactive_server',
+                'type' => 'server',
             ]
         ];
     }
@@ -28,7 +28,8 @@ final class CBEmail_Tests {
     /**
      * @return object
      */
-    static function CBTest_sendCBMessage(): stdClass {
+    static function CBTest_sendCBMessage(
+    ): stdClass {
         $currentUserCBID = ColbyUser::getCurrentUserCBID();
 
         if ($currentUserCBID === null) {
