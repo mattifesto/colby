@@ -928,6 +928,13 @@ final class SCOrder {
 
 
     /**
+     * @NOTE 2020_11_21
+     *
+     *      This function does almost no verification of values. It will build a
+     *      model that doesn't have any values at all. It's time to very
+     *      carefully start requiring certain values to be set in a way that
+     *      doesn't risk causing error for existing order models.
+     *
      * @param object $spec
      *
      * @return object
