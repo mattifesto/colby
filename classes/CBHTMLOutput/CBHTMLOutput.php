@@ -312,13 +312,17 @@ final class CBHTMLOutput {
      *
      * @return void
      */
-    static function handleException(Throwable $error): void {
+    static function handleException(
+        Throwable $error
+    ): void {
         try {
-            CBErrorHandler::report($error);
+            CBErrorHandler::report(
+                $error
+            );
 
             $classNameForPageSettings = (
                 CBHTMLOutput::classNameForPageSettings()
-            );
+            ) ?? '';
 
             /**
              * A page may have already been partially rendered so reset
