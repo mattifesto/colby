@@ -431,7 +431,37 @@ final class Colby {
     /**
      * @return void
      */
-    static function handleError($errno, $errstr, $errfile, $errline) {
+    static function handleError(
+        $errno,
+        $errstr,
+        $errfile,
+        $errline
+    ) {
+        /**
+         * @NOTE 2020_11_21
+         *
+         *      A tenet of the Mattifesto method is to report and fix all
+         *      errors, warnings, and other issues as soon as they show up.
+         *      Today we ran into a situation where Swiftmailer calls a
+         *      deprecated function using an "at sign" or @ meaning to ignore
+         *      errors if the function produces and error. In this case, it
+         *      actually produces a warning because it is deprecated.
+         *
+         *      It is NOT part of the Mattifesto method to interrupt the
+         *      development process if someone has used an "at sign" even though
+         *      the Colby development rules heavily discourage such use.
+         *
+         *      The "at sign" is generally used for bizarre and necessary corner
+         *      cases and is valid in those situations.
+         *
+         *      When the "at sign" is used, error_reporting() will return 0 in
+         *      this function and when that happens we just do nothing and
+         *      return. This will allow execution to continue uninterrupted.
+         */
+        if (error_reporting() === 0) {
+            return;
+        }
+
         $severity = 2;
 
         throw new ErrorException(
@@ -442,6 +472,7 @@ final class Colby {
             $errline
         );
     }
+    /* handleError() */
 
 
 
