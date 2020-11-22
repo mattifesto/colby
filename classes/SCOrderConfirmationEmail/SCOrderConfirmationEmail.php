@@ -282,7 +282,11 @@ class SCOrderConfirmationEmail {
         );
 
         $CBContentStyleSheet = file_get_contents(
-            Colby::flexpath('CBContentStyleSheet', 'css', cbsysurl())
+            Colby::flexpath(
+                'CBContentStyleSheet',
+                'css',
+                cbsysdir()
+            )
         );
 
         try {
