@@ -1,1 +1,8 @@
-This class implements CBAdmin interfaces to render the documentation admin page.
+This class implements CBAdmin interfaces to render the documentation index page
+for the entire website.
+
+To create documentation for a class see the documentation for
+(CBAdmin_CBDocumentationForClass (a
+/admin/?c=CBAdmin_CBDocumentationForClass&className=CBAdmin_CBDocumentationForClass))
+which implements CBAdmin interfaces to render the documentation for a single
+class.
