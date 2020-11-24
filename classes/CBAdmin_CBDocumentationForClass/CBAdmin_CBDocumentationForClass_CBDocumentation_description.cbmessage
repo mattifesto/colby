@@ -1,0 +1,22 @@
+--- h1
+How To Create Documentation For A Class
+---
+
+--- h2
+Simple Method
+---
+
+In your class directory, create a file named:
+
+--- pre
+<className>_CBDocumentation_description.cbmessage
+---
+
+
+--- h2
+Custom Method
+---
+
+Implement the (CBAdmin_CBDocumentationForClass_render\(\) (code)) interface on
+your class and render whatever you want. You can render views or use
+(CBHTMLOutput (code)) functions to include classes, CSS, or JavaScript files.
