@@ -1,0 +1,56 @@
+This class and the (CBUserSettingsManagerCatalog (code)) class facilitate
+creating classes that will present user interface to adjust settings or
+preferences related to a user that will appear on the user's account page.
+
+--- h2
+Creating a user settings manager
+---
+
+(Step (b))
+
+Create a class named (CBUserSettingsManager_<description> (code)), for instance
+(CBUserSettingsManager_shippingAddressManager (code)) to display, edit, and
+manage the user interface.
+
+(Step (b))
+
+Implement the (CBUserSettingsManager_currentUserCanViewForTargetUser\(\) (code))
+interface in your class which will determine which users are allowed to see the
+user interface.
+
+Options:
+
+--- ul
+Most user settings managers allow users in the CBAdministratorsUserGroup to see
+the user interface for any user.
+
+Some user settings managers allow users to see the user interface for their own
+user account.
+
+You can do whatever you want in this function, so there a plenty of custom
+options available.
+---
+
+(Step (b))
+
+Implement the (CBInstall_install\(\) (code)) interface in your class to call the
+(CBUserSettingsManagerCatalog:::installUserSettingsManager\(\) (code)) function
+to add your class to the catalog of user settings manager classes.
+
+(Step (b))
+
+Create a JavaScript file for your class and implement the
+(CBUserSettingsManager_createElement\(\) (code)) interface to return the element
+that contains the main user interface for your user settings manager.
+
+(Step (b))
+
+Implement the (CBHTMLOutput_JavaScriptURLs\(\) (code)) interface in your class
+to and return the URL for the JavaScript file you just created.
+
+(Step (b))
+
+Manually update the site on the (update admin page (a
+/admin/?c=CBAdminPageForUpdate)) so that the (CBInstall_install\(\) (code))
+interface is called and your class is added to the (CBUserSettingsManagerCatalog
+(code)).
