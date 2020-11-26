@@ -362,6 +362,22 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'regex' => 'userNumericIDsToUserCBIDs',
+                    'severity' => 3,
+                    'title' => 'CBUsers::userNumericIDsToUserCBIDs()',
+
+                    'cbmessage' => <<<EOT
+
+                        Remove all uses of numeric user IDs.
+
+                    EOT,
+
+                    'errorStartDate' => '2020/11/25',
+                    'warningStartDate' => '2020/04/15',
+                ],
+
+
+                (object)[
                     'regex' => 'forTesting_userCBIDtoUserNumericID',
                     'severity' => 3,
                     'title' => 'CBUsers::forTesting_userCBIDtoUserNumericID()',
@@ -1260,21 +1276,6 @@ final class Admin_CBCode {
                     EOT,
 
                     'warningStartDate' => '2020/04/18',
-                ],
-
-
-                (object)[
-                    'regex' => 'userNumericIDsToUserCBIDs',
-                    'severity' => 4,
-                    'title' => 'CBUsers::userNumericIDsToUserCBIDs()',
-
-                    'cbmessage' => <<<EOT
-
-                        Remove all uses of numeric user IDs.
-
-                    EOT,
-
-                    'warningStartDate' => '2020/04/15',
                 ],
 
 
