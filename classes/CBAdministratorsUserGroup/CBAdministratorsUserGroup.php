@@ -9,7 +9,9 @@ final class CBAdministratorsUserGroup {
     /**
      * @return void
      */
-    static function CBInstall_install(): void {
+    static function
+    CBInstall_install(
+    ): void {
         $groupCBID = CBUserGroup::userGroupClassNameToCBID(
             __CLASS__
         );
@@ -22,45 +24,6 @@ final class CBAdministratorsUserGroup {
                 'userGroupClassName' => __CLASS__,
             ]
         );
-
-        $tableName = 'ColbyUsersWhoAreAdministrators';
-
-        $SQL = <<<EOT
-
-            SELECT  COUNT(*)
-
-            FROM    information_schema.TABLES
-
-            WHERE   TABLE_SCHEMA = DATABASE() AND
-                    TABLE_NAME = '{$tableName}'
-
-        EOT;
-
-        $count = CBConvert::valueAsInt(
-            CBDB::SQLToValue($SQL)
-        );
-
-        if ($count === 0) {
-            return;
-        }
-
-        $SQL = <<<EOT
-
-            SELECT  userID
-
-            FROM    {$tableName}
-
-        EOT;
-
-        $userNumericIDs = CBDB::SQLToArrayOfNullableStrings($SQL);
-
-        $userCBIDs = CBUsers::userNumericIDsToUserCBIDs($userNumericIDs);
-
-        CBUserGroup::addUsers(__CLASS__, $userCBIDs);
-
-        Colby::query(
-            "DROP TABLE {$tableName}"
-        );
     }
     /* CBInstall_install() */
 
@@ -69,10 +32,13 @@ final class CBAdministratorsUserGroup {
     /**
      * @return [string]
      */
-    static function CBInstall_requiredClassNames(): array {
+    static function
+    CBInstall_requiredClassNames(
+    ): array {
         return [
             'CBUsers'
         ];
     }
+    /* CBInstall_requiredClassNames() */
 
 }
