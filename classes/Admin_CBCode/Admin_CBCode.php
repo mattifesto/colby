@@ -1217,6 +1217,38 @@ final class Admin_CBCode {
 
                 (object)[
                     'filetype' => 'js',
+                    'regex' => 'Colby\.browserIsSupported',
+                    'severity' => 4,
+                    'title' => 'Colby.browserIsSupported',
+
+                    'cbmessage' => <<<EOT
+
+                        Use CBErrorHandler.currentBrowserIsSupported.
+
+                    EOT,
+
+                    'warningStartDate' => '2020/11/26',
+                ],
+
+
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'Colby\.errorToCBJavaScriptErrorModel',
+                    'severity' => 4,
+                    'title' => 'Colby.errorToCBJavaScriptErrorModel()',
+
+                    'cbmessage' => <<<EOT
+
+                        Use CBErrorHandler.errorToCBJavaScriptErrorModel().
+
+                    EOT,
+
+                    'warningStartDate' => '2020/11/26',
+                ],
+
+
+                (object)[
+                    'filetype' => 'js',
                     'regex' => 'CBModel\.classFunction',
                     'severity' => 4,
                     'title' => 'CBModel.classFunction()',
