@@ -27,11 +27,14 @@ final class CBErrorHandler {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
-            'Colby',
+            'CBAjax',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 
 
 

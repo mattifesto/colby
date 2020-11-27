@@ -3,7 +3,8 @@
 /* jshint esversion: 6 */
 /* exported CBErrorHandler */
 /* global
-    Colby,
+    CBAjax,
+    console,
 */
 
 
@@ -16,25 +17,170 @@
  * @NOTE 2020_04_16
  *
  *      This class should not have any user interface functionality.
- *
- * @NOTE 2020_04_25, 2020_07_06
- *
- *      The plan:
- *
- *      1. This class will require CBAjax.
- *
- *      2. The Colby.js error reporting code will be moved to this class and
- *      Colby.js functions will call it while its functions are deprecated.
- *
- *      2a. Colby.browserIsSupported functionality will move to this class or
- *      a class something like CBBrowser.
  */
-
 (function () {
 
+    /**
+     * @NOTE 2019_06_14
+     *
+     *      Browsers must natively support Promises. This requirement makes
+     *      Internet Explorer 11 an unsupported browser.
+     *
+     * @NOTE 2020_11_26
+     *
+     *      The currentBrowserIsSupported functionality has been moving slowly
+     *      to lower level classes. It may seem a bit odd here, but this is the
+     *      lowest level class that requires the functionality. If it becomes
+     *      necessary in the future, this functionality could move to a new
+     *      class that focuses on browser issues, maybe with a name like
+     *      CBBrowser.
+     */
+    let currentBrowserIsSupported = false;
+
+    if (
+        typeof Promise !== "undefined" &&
+        Promise.toString().indexOf("[native code]") !== -1
+    ) {
+        currentBrowserIsSupported = true;
+    } else {
+        window.alert(
+            "The web browser you are using is no longer supported by this " +
+            "website. Use a recent version a regularly maintained browser " +
+            "such as Chrome, Edge, Firefox, or Safari."
+        );
+    }
+
+
+
     window.CBErrorHandler = {
+        errorToCBJavaScriptErrorModel,
         report,
+
+        get currentBrowserIsSupported() {
+            return currentBrowserIsSupported;
+        },
     };
+
+
+
+    /**
+     * Converts an error object to a CBJavaScriptError model.
+     *
+     * Properties:
+     *
+     *      Safari          Firefox         Chrome
+     *      ------          -------         ------
+     *      column          columnNumber    no
+     *      line            lineNumber      no
+     *      sourceURL       fileName        no
+     *
+     * History:
+     *
+     *      An initial goal was to stringify and Error object and send it to an
+     *      ajax function. But when an Error object is stringified it doesn't
+     *      serialize all of its properties.
+     *
+     *      Additional information that is not contained in the Error object is
+     *      added to the model returned by this function.
+     *
+     *      The ErrorEvent object passed to the listener of the "error" event
+     *      has some standardized properties that are similar, but not all
+     *      errors are handled by an error event listener. The "stack" property
+     *      actually contains all the data but has a different format on Chrome
+     *      browsers.
+     *
+     * @param Error error
+     *
+     * @return object (CBJavaScriptError)
+     */
+    function errorToCBJavaScriptErrorModel(
+        error
+    ) {
+        let errorDetails = errorToErrorDetails(
+            error
+        );
+
+        return {
+            className: 'CBJavaScriptError',
+            column: errorDetails.columnNumber,
+            line: errorDetails.lineNumber,
+            message: error.message,
+            pageURL: location.href,
+            sourceURL: errorDetails.sourceURL,
+            stack: error.stack,
+        };
+
+
+
+        /* -- closures -- -- -- -- -- */
+
+
+
+        /**
+         * @param Error error
+         *
+         * @return object
+         *
+         *      {
+         *          sourceURL: string
+         *          lineNumber: int
+         *          columnNumber: int
+         *      }
+         */
+        function errorToErrorDetails(
+            error
+        ) {
+            let errorDetails = {};
+
+            /* Safari */
+            if (error.line !== undefined) {
+                errorDetails.sourceURL = error.sourceURL;
+                errorDetails.lineNumber = error.line;
+                errorDetails.columnNumber = error.column;
+            }
+
+            /* Firefox */
+            else if (error.lineNumber !== undefined) {
+                errorDetails.sourceURL = error.fileName;
+                errorDetails.lineNumber = error.lineNumber;
+                errorDetails.columnNumber = error.columnNumber;
+            }
+
+            /* Chrome */
+            else if (typeof error.stack === "string") {
+                let stackLines = error.stack.split("\n");
+
+                /**
+                 * The first line is the error message, the second is the code
+                 * location.
+                 */
+                if (stackLines.length < 2) {
+                    return errorDetails;
+                }
+
+                let stackLine = stackLines[1];
+
+                let matches = stackLine.match(
+                    /at (.*):([0-9]+):([0-9]+)$/
+                );
+
+                if (matches === null) {
+                    return errorDetails;
+                }
+
+                errorDetails.sourceURL = matches[1];
+                errorDetails.lineNumber = matches[2];
+                errorDetails.columnNumber = matches[3];
+            }
+
+            return errorDetails;
+        }
+        /* errorToLineNumber() */
+
+    }
+    /* errorToCBJavaScriptErrorModel() */
+
+
 
     /**
      * Use this function to report an error to the server.
@@ -66,9 +212,37 @@
    report(
        error
    ) {
-       return Colby.reportError(
+       if (!currentBrowserIsSupported) {
+           return;
+       }
+
+       if (error.ajaxResponse) { // Filter out Ajax errors
+           return;
+       }
+
+       let errorModel = errorToCBJavaScriptErrorModel(
            error
        );
+
+       let promise = CBAjax.call(
+           "CBJavaScript",
+           "reportError",
+           {
+               errorModel,
+           }
+       ).catch(
+           function (error) {
+               console.log(
+                   "CBErrorHandler.reportError() Ajax request failed."
+               );
+
+               console.log(
+                   error.message
+               );
+           }
+       );
+
+       return promise;
    }
    /* report() */
 
