@@ -1217,13 +1217,31 @@ final class Admin_CBCode {
 
                 (object)[
                     'filetype' => 'js',
+                    'regex' => (
+                        'CBErrorHandler\.currentBrowserIsSupported(?!\()'
+                    ),
+                    'severity' => 4,
+                    'title' => 'CBErrorHandler.currentBrowserIsSupported',
+
+                    'cbmessage' => <<<EOT
+
+                        Use CBErrorHandler.getCurrentBrowserIsSupported().
+
+                    EOT,
+
+                    'warningStartDate' => '2020/11/27',
+                ],
+
+
+                (object)[
+                    'filetype' => 'js',
                     'regex' => 'Colby\.browserIsSupported',
                     'severity' => 4,
                     'title' => 'Colby.browserIsSupported',
 
                     'cbmessage' => <<<EOT
 
-                        Use CBErrorHandler.currentBrowserIsSupported.
+                        Use CBErrorHandler.getCurrentBrowserIsSupported().
 
                     EOT,
 
