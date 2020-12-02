@@ -1,0 +1,30 @@
+--- h1
+Models vs Object Return Values
+---
+
+--- blockquote
+    2020_12_01
+
+    This topic needs to be fleshed out, completed, and expanded upon.
+---
+
+Models JSON serializable objects. At their core they have only properties. At
+certain times a model may have unserializable functions for various reasons but
+those are not important for this topic.
+
+Even though models have properties, the property values should be retrieved
+through functions that properly know how to interpret those property values. The
+functions may account for interfaces or deprecated property names or other
+issues.
+
+If you return an object that is NOT a model that has property values, those
+value should be exposed through functions, potentially anonymous functions,
+rather than through properties. This will result in errors if the user of the
+object has a typo.
+
+Every potential property value is set on a model, so there are no "invalid"
+property names.
+
+Function names are unique, can be easily search for, and deprecated. Model
+property names are not unique, and are managed only by the CBModel interfaces
+such as CBModel_build() and CBModel_upgrade().
