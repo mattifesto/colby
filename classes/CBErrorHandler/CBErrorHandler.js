@@ -54,8 +54,19 @@
 
     window.CBErrorHandler = {
         errorToCBJavaScriptErrorModel,
+        getCurrentBrowserIsSupported,
         report,
 
+        /**
+         * @deprecated 2020_11_27
+         *
+         *      This property has been replaced by
+         *      getCurrentBrowserIsSupported() because functions are better than
+         *      properties in situation like this because accessing the wrong
+         *      propery name will return undefined but accessing the wrong
+         *      function will produce an error. We want to make sure typos will
+         *      produce an error.
+         */
         get currentBrowserIsSupported() {
             return currentBrowserIsSupported;
         },
@@ -180,6 +191,16 @@
     }
     /* errorToCBJavaScriptErrorModel() */
 
+
+
+    /**
+     * @return bool
+     */
+    function
+    getCurrentBrowserIsSupported() {
+        return currentBrowserIsSupported;
+    }
+    /* getCurrentBrowserIsSupported() */
 
 
     /**

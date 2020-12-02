@@ -15,7 +15,7 @@ final class CBErrorHandler {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v673.js',
+                'v674.js',
                 cbsysurl()
             ),
         ];
