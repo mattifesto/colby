@@ -29,49 +29,8 @@ final class CBAjax {
     /**
      * This function should only be called by the ColbyRequest class.
      *
-     * This function creates an object with the following properties as its
-     * response to the request.
-     *
-     *      {
-     *          className: "CBAjax"
-     *
-     *              This may not be the appropriate class name for an Ajax
-     *              function call response. Think about it and update this
-     *              comment.
-     *
-     *          message: string
-     *
-     *              This property will only be set if there is an issue with the
-     *              Ajax function call.
-     *
-     *          sourceCBID: CBID|null
-     *
-     *              developers only
-     *
-     *          stackTrace: string
-     *
-     *              developers only
-     *
-     *          userMustLogIn: bool
-     *
-     *              This will be set to true if the user group class name is not
-     *              CBPublicUserGroup and the user is not currently logged in.
-     *
-     *          value: mixed
-     *
-     *              This will be set to the value returned by the CBAjax
-     *              function if the CBAjax interfaces are implemented, the user
-     *              has permission to call the Ajax function, and nothing goes
-     *              wrong.
-     *
-     *          wasSuccessful: bool
-     *
-     *              This will be set to true only if the call to the Ajax
-     *              function completes with no issues. Otherwise it will be
-     *              false. It is an indicator of whether the Ajax function call
-     *              was successful not an indicator of whether the resulting
-     *              value is positive or negative.
-     *      }
+     * This function creates a CBAjaxResponse model as as its response to the
+     * request. See the CBAjaxResponse class for more information.
      *
      * @return void
      */
@@ -83,7 +42,7 @@ final class CBAjax {
         );
 
         $response = (object)[
-            'className' => 'CBAjax',
+            'className' => 'CBAjaxResponse',
             'message' => '',
             'wasSuccessful' => false,
         ];
@@ -100,17 +59,19 @@ final class CBAjax {
         $functionName = $ajaxArguments->functionName;
         $functionArguments = $ajaxArguments->functionArguments;
 
-        $function = (
-            $functionClassName .
-            "::CBAjax_{$functionName}"
-        );
+        $interfaceName = "CBAjax_{$functionName}";
 
-        if (!is_callable($function)) {
+        $callable = "{$functionClassName}::{$interfaceName}";
+
+        if (!is_callable($callable)) {
             throw new CBExceptionWithValue(
-                (
-                    'The Ajax interface was not implemented ' .
-                    'for this Ajax function call.'
-                ),
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The Ajax interface {$interfaceName}() has not been
+                    implemented on the {$functionClassName} class to implement
+                    the requested Ajax function call.
+
+                EOT),
                 $ajaxArguments,
                 '35ea28899f1335170ec7ec9b42a134c875037a5f'
             );
@@ -160,7 +121,11 @@ final class CBAjax {
 
                 $response->userMustLogIn = true;
 
-                echo json_encode($response);
+                echo json_encode(
+                    CBModel::build(
+                        $response
+                    )
+                );
 
                 return;
             } else {
@@ -187,20 +152,28 @@ final class CBAjax {
                     '596da90f52ad2590f67d65e885d6d5e85ca590dd'
                 );
 
-                echo json_encode($response);
+                echo json_encode(
+                    CBModel::build(
+                        $response
+                    )
+                );
 
                 return;
             }
         }
 
         $response->value = call_user_func(
-            $function,
+            $callable,
             $functionArguments
         );
 
         $response->wasSuccessful = true;
 
-        echo json_encode($response);
+        echo json_encode(
+            CBModel::build(
+                $response
+            )
+        );
     }
     /* handleCallAjaxFunctionRequest() */
 
@@ -220,7 +193,7 @@ final class CBAjax {
         CBErrorHandler::report($error);
 
         $response = (object)[
-            'className' => 'CBAjax',
+            'className' => 'CBAjaxResponse',
 
             'wasSuccessful' => false,
 
@@ -254,7 +227,11 @@ final class CBAjax {
             $response->stackTrace = Colby::exceptionStackTrace($error);
         }
 
-        echo json_encode($response);
+        echo json_encode(
+            CBModel::build(
+                $response
+            )
+        );
     }
     /* handleCallAjaxFunctionRequest_handleError() */
 
