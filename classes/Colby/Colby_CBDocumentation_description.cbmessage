@@ -28,3 +28,23 @@ property names.
 Function names are unique, can be easily search for, and deprecated. Model
 property names are not unique, and are managed only by the CBModel interfaces
 such as CBModel_build() and CBModel_upgrade().
+
+--- h1
+Global Function vs Implementation Function Naming
+---
+
+The file (CBUIPanel.js (code)) declares the global object (CBUIPanel (code))
+which has a property named (displayError2\(\) (code)) that is a function. This
+function is implemented by a function named (CBUIPanel_displayError2\(\) (code))
+in the IIFE.
+
+External calls to the function will be written as (CBUIPanel.displayError2\(\)
+(code)) and calls within the IIFE will be written as
+(CBUIPanel_displayError2\(\) (code)).
+
+When we are searching for uses of this function we can search for the regular
+expression (CBUIPanel[\._]displayError2 (code)).
+
+Calls to functions on global objects should always include the global object
+variable and the function name on the same line to support simple searches, such
+as those used by the code admin tool.
