@@ -1215,6 +1215,28 @@ final class Admin_CBCode {
 
 
 
+                /* -- warnings -- -- -- -- -- */
+
+
+
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => (
+                        'CBUIPanel\.hide\('
+                    ),
+                    'severity' => 4,
+                    'title' => 'CBUIPanel.hide()',
+
+                    'cbmessage' => <<<EOT
+
+                        Use CBUIPanel_hidePanelWithContentElement()
+
+                    EOT,
+
+                    'warningStartDate' => '2020/12/02',
+                ],
+
+
                 (object)[
                     'filetype' => 'js',
                     'regex' => (
