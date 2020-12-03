@@ -13,33 +13,6 @@
 */
 
 
-/**
- * This file will create a CBUIPanel global variable (a property on the window
- * object) that can be used to display panels with messages and custom buttons.
- *
- * This is the documentation for the API of the CBUIPanel object.
- *
- *      {
- *          function confirmText(textContent) -> Promise -> bool
- *
- *          function displayAjaxResponse(ajaxResponse)
- *
- *          function displayAndReportError(error)
- *
- *          function displayBusyText(textContent) -> object
- *
- *          function displayCBMessage(cbmessage, buttonTextContent)
- *          -> Promise -> undefined
- *
- *          function displayElement(contentElement)
- *
- *          function displayError(error)
- *
- *          function displayText(textContent, buttonTextContent)
- *          -> Promise -> undefined
- *      }
- */
-
 (function () {
 
     Colby.afterDOMContentLoaded(
@@ -52,20 +25,43 @@
      * @return undefined
      */
     function afterDOMContentLoaded() {
-        let api = {
+        window.CBUIPanel = {
             confirmText: init_confirmText,
-            displayAjaxResponse: init_displayAjaxResponse,
-            displayAndReportError,
+            displayAjaxResponse: CBUIPanel_displayAjaxResponse, /* deprecated */
+            displayAjaxResponse2: CBUIPanel_displayAjaxResponse2,
+            displayAndReportError: CBUIPanel_displayAndReportError,
             displayBusyText: init_displayBusyText,
             displayCBMessage: init_displayCBMessage,
             displayElement: init_displayElement,
-            displayError,
-            displayText: init_displayText,
+            displayError: CBUIPanel_displayError, /* deprecated */
+            displayError2: CBUIPanel_displayError2,
+            displayText: CBUIPanel_displayText, /* deprecated */
+            displayText2: CBUIPanel_displayText2,
+            hidePanelWithContentElement: CBUIPanel_hidePanelWithContentElement,
         };
-
-        window.CBUIPanel = api;
     }
     /* afterDOMContentLoaded() */
+
+
+
+    /**
+     * This function will hide a panel containing the contentElement parameter.
+     * If there is no panel containing the contentElement, this function will do
+     * nothing.
+     *
+     * @param Element contentElement
+     *
+     * @return undefined
+     */
+    function
+    CBUIPanel_hidePanelWithContentElement(
+        contentElement
+    ) {
+        if (typeof contentElement.CBUIPanel_hidePanel === "function") {
+            contentElement.CBUIPanel_hidePanel();
+        }
+    }
+    /* CBUIPanel_hidePanelWithContentElement() */
 
 
 
@@ -89,7 +85,9 @@
         return promise;
 
 
+
         /* -- closures -- -- -- -- -- */
+
 
 
         /**
@@ -102,8 +100,12 @@
             try {
                 cancel = function () {
                     try {
-                        element.CBUIPanel.hide();
+                        CBUIPanel_hidePanelWithContentElement(
+                            element
+                        );
+
                         promise.CBUIPanel = undefined;
+
                         resolve(false);
                     } catch (error) {
                         reject(error);
@@ -112,8 +114,12 @@
 
                 confirm = function () {
                     try {
-                        element.CBUIPanel.hide();
+                        CBUIPanel_hidePanelWithContentElement(
+                            element
+                        );
+
                         promise.CBUIPanel = undefined;
+
                         resolve(true);
                     } catch (error) {
                         reject(error);
@@ -298,9 +304,36 @@
     /**
      * @param object ajaxResponse
      *
+     *      A CBAjaxResponse model.
+     *
      * @return Promise -> undefined
      */
-    async function init_displayAjaxResponse(
+    async function
+    CBUIPanel_displayAjaxResponse(
+        ajaxResponse
+    ) {
+        return CBUIPanel_displayAjaxResponse2(
+            ajaxResponse
+        ).CBUIPanel_getClosePromise();
+    }
+    /* CBUIPanel_displayAjaxResponse() */
+
+
+
+    /**
+     * @param object ajaxResponse
+     *
+     *      A CBAjaxResponse model.
+     *
+     * @return object
+     *
+     *      {
+     *          CBUIPanel_getClosePromise: function -> Promise -> undefined
+     *          CBUIPanel_close: function -> undefined
+     *      }
+     */
+    function
+    CBUIPanel_displayAjaxResponse2(
         ajaxResponse
     ) {
         let resolve;
@@ -312,6 +345,7 @@
         );
 
         let element = CBUI.createElement();
+
 
         /* message */
         {
@@ -327,6 +361,7 @@
             );
         }
         /* message */
+
 
         /* button */
         {
@@ -350,10 +385,7 @@
             } else {
                 buttonElement = init_createButtonElement(
                     {
-                        callback: function () {
-                            element.CBUIPanel.hide();
-                            resolve();
-                        },
+                        callback: CBUIPanel_close,
                         title: "OK",
                     }
                 );
@@ -364,6 +396,7 @@
             );
         }
         /* button */
+
 
         if (ajaxResponse.stackTrace) {
             let titleElement = CBUI.createElement(
@@ -405,13 +438,35 @@
         }
         /* stack trace */
 
+
         init_displayElement(
             element
         );
 
-        return promise;
+        return {
+            CBUIPanel_close,
+
+            CBUIPanel_getClosePromise: function () {
+                return promise;
+            },
+        };
+
+
+
+        /**
+         * @return undefined
+         */
+        function CBUIPanel_close() {
+            CBUIPanel_hidePanelWithContentElement(
+                element
+            );
+
+            resolve();
+        }
+        /* CBUIPanel_close() */
+
     }
-    /* init_displayAjaxResponse() */
+    /* CBUIPanel_displayAjaxResponse2() */
 
 
 
@@ -479,7 +534,10 @@
             init_createButtonElement(
                 {
                     callback: function () {
-                        element.CBUIPanel.hide();
+                        CBUIPanel_hidePanelWithContentElement(
+                            element
+                        );
+
                         resolve();
                     },
                     title: buttonTextContent,
@@ -502,36 +560,83 @@
      *
      * @return undefined
      */
-    function init_displayElement(contentElement) {
-        if (contentElement.CBUIPanel !== undefined) {
+    function
+    init_displayElement(
+        contentElement
+    ) {
+        if (contentElement.CBUIPanel_hidePanel !== undefined) {
+            let message = CBConvert.stringToCleanLine(`
+
+                The contentElement argument is already being displayed.
+
+            `);
+
             throw CBException.withError(
-                Error(
-                    CBConvert.stringToCleanLine(`
-
-                        The contentElement argument is already being displayed.
-
-                    `)
-                ),
+                Error(message),
                 "",
                 "44a2f3c7d22095385de52b49193dea07b004fee3"
             );
         }
 
-        let panelElement = init_createPanelElement(contentElement);
+        let panelElement = init_createPanelElement(
+            contentElement
+        );
 
-        document.body.appendChild(panelElement);
+        document.body.appendChild(
+            panelElement
+        );
 
-        contentElement.CBUIPanel = {
-            hide: function CBUIPanel_hide() {
-                document.body.removeChild(panelElement);
-
-                contentElement.parentElement.removeChild(
-                    contentElement
-                );
-
-                contentElement.CBUIPanel = undefined;
+        /**
+         * @deprecated 2020_12_02
+         *
+         *      THe CBUIPanel property on content elements has been deprecated
+         *      and replaced by the global function
+         *      CBUIPanel_hidePanelWithContentElement().
+         */
+        Object.defineProperty(
+            contentElement,
+            "CBUIPanel",
+            {
+                configurable: true,
+                enumerable: false,
+                value: {
+                    hide: CBUIPanel_hidePanel,
+                },
+                writable: false,
             }
-        };
+        );
+
+
+        Object.defineProperty(
+            contentElement,
+            "CBUIPanel_hidePanel",
+            {
+                configurable: true,
+                enumerable: false,
+                value: CBUIPanel_hidePanel,
+                writable: false,
+            }
+        );
+
+
+
+        /**
+         * @return undefined
+         */
+        function CBUIPanel_hidePanel() {
+            document.body.removeChild(
+                panelElement
+            );
+
+            contentElement.parentElement.removeChild(
+                contentElement
+            );
+
+            delete contentElement.CBUIPanel;
+            delete contentElement.CBUIPanel_hidePanel;
+        }
+        /* CBUIPanel_hidePanel() */
+
     }
     /* init_displayElement() */
 
@@ -542,24 +647,13 @@
      *
      * @return Promise -> undefined
      */
-    async function displayError(
+    async function
+    CBUIPanel_displayError(
         error
     ) {
-        if (!Colby.browserIsSupported) {
-            return;
-        }
-
-        if (error.ajaxResponse) {
-            return init_displayAjaxResponse(
-                error.ajaxResponse
-            );
-        } else {
-            return init_displayText(
-                Colby.errorToMessage(
-                    error
-                )
-            );
-        }
+        return CBUIPanel_displayError2(
+            error
+        ).CBUIPanel_getClosePromise();
     }
     /* displayError() */
 
@@ -568,14 +662,53 @@
     /**
      * @param Error error
      *
-     * @return Promise -> undefined
+     * @return object
+     *
+     *      {
+     *          CBUIPanel_getClosePromise: function -> Promise -> undefined
+     *          CBUIPanel_close: function -> undefined
+     *      }
      */
-    function displayAndReportError(
+    function
+    CBUIPanel_displayError2(
         error
     ) {
-        CBErrorHandler.report(error);
+        if (!CBErrorHandler.getCurrentBrowserIsSupported()) {
+            return;
+        }
 
-        return displayError(error);
+        if (error.ajaxResponse) {
+            return CBUIPanel_displayAjaxResponse2(
+                error.ajaxResponse
+            );
+        } else {
+            return CBUIPanel_displayText2(
+                Colby.errorToMessage(
+                    error
+                )
+            );
+        }
+    }
+    /* CBUIPanel_displayError2() */
+
+
+
+    /**
+     * @param Error error
+     *
+     * @return Promise -> undefined
+     */
+    function
+    CBUIPanel_displayAndReportError(
+        error
+    ) {
+        CBErrorHandler.report(
+            error
+        );
+
+        return CBUIPanel_displayError(
+            error
+        );
     }
     /* displayAndReportError() */
 
@@ -591,7 +724,35 @@
      *
      *      The promise resolves when the user clicks the OK button.
      */
-    async function init_displayText(
+    async function
+    CBUIPanel_displayText(
+        textContent,
+        buttonTextContent
+    ) {
+        return CBUIPanel_displayText2(
+            textContent,
+            buttonTextContent
+        ).CBUIPanel_getClosePromise();
+    }
+    /* displayText() */
+
+
+
+    /**
+     * @param string textContent
+     * @param string buttonTextContent
+     *
+     *      The default value for this parameter is "OK".
+     *
+     * @return object
+     *
+     *      {
+     *          CBUIPanel_getClosePromise: function -> Promise -> undefined
+     *          CBUIPanel_close: function -> undefined
+     *      }
+     */
+    function
+    CBUIPanel_displayText2(
         textContent,
         buttonTextContent
     ) {
@@ -620,10 +781,7 @@
         element.appendChild(
             init_createButtonElement(
                 {
-                    callback: function () {
-                        element.CBUIPanel.hide();
-                        resolve();
-                    },
+                    callback: CBUIPanel_close,
                     title: buttonTextContent,
                 }
             )
@@ -633,8 +791,29 @@
             element
         );
 
-        return promise;
+        return {
+            CBUIPanel_close,
+
+            CBUIPanel_getClosePromise: function () {
+                return promise;
+            },
+        };
+
+
+
+        /**
+         * @return undefined
+         */
+        function CBUIPanel_close() {
+            CBUIPanel_hidePanelWithContentElement(
+                element
+            );
+
+            resolve();
+        }
+        /* CBUIPanel_close() */
+
     }
-    /* init_displayText() */
+    /* CBUIPanel_displayText2() */
 
 })();
