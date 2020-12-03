@@ -1,6 +1,6 @@
 "use strict";
 /* jshint strict: global */
-/* jshint esversion: 6 */
+/* jshint esversion: 8 */
 /* exported CBUIPanel_Tests */
 /* global
     CBConvert,
@@ -184,6 +184,105 @@ var CBUIPanel_Tests = {
 
 
     /**
+     * @return Promise -> object
+     */
+    CBTest_displayAjaxResponse_threeTimes:
+    async function () {
+        let ajaxResponses = [
+            {
+                message: "1/3 | CBTest_displayAjaxResponse_threeTimes",
+            },
+            {
+                message: "2/3 | CBTest_displayAjaxResponse_threeTimes",
+            },
+            {
+                message: "3/3 | CBTest_displayAjaxResponse_threeTimes",
+            },
+        ];
+
+        for (
+            let index = 0;
+            index < ajaxResponses.length;
+            index += 1
+        ) {
+            let ajaxResponse = ajaxResponses[index];
+
+            let controller = CBUIPanel.displayAjaxResponse2(
+                ajaxResponse
+            );
+
+            await zeroTimeout();
+
+            controller.CBUIPanel_close();
+        }
+
+        return {
+            succeeded: true,
+        };
+
+
+
+        /**
+         * @return Promise -> undefined
+         */
+        function zeroTimeout() {
+            return new Promise(
+                function (resolve) {
+                    setTimeout(resolve, 1000);
+                }
+            );
+        }
+        /* zeroTimeout() */
+
+    },
+    /* CBTest_displayAjaxResponse_threeTimes() */
+
+
+
+    /**
+     * @return Promise -> object
+     */
+    CBTest_displayAjaxResponse_threeTimes_interactive:
+    async function () {
+        let ajaxResponses = [
+            {
+                message: (
+                    "1/3 | CBTest_displayAjaxResponse_threeTimes_interactive"
+                ),
+            },
+            {
+                message: (
+                    "2/3 | CBTest_displayAjaxResponse_threeTimes_interactive"
+                ),
+            },
+            {
+                message: (
+                    "3/3 | CBTest_displayAjaxResponse_threeTimes_interactive"
+                ),
+            },
+        ];
+
+        for (
+            let index = 0;
+            index < ajaxResponses.length;
+            index += 1
+        ) {
+            let ajaxResponse = ajaxResponses[index];
+
+            await CBUIPanel.displayAjaxResponse(
+                ajaxResponse
+            );
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_displayAjaxResponse_threeTimes_interactive() */
+
+
+
+    /**
      * @return object
      */
     CBTest_displayElement_alreadyDisplayedError: function() {
@@ -260,19 +359,86 @@ var CBUIPanel_Tests = {
     /* CBTest_displayElementThreeTimes() */
 
 
+
     /**
-     * @return object
+     * @return Promise -> object
      */
-    CBTest_displayError: function () {
-        CBUIPanel.displayError(
-            TypeError("This is an example error.")
-        );
+    CBTest_displayError:
+    async function () {
+        let errors = [
+            Error("Error 1 | CBTest_displayError"),
+            Error("Error 2 | CBTest_displayError"),
+            Error("Error 3 | CBTest_displayError"),
+        ];
+
+        for (
+            let index = 0;
+            index < errors.length;
+            index += 1
+        ) {
+            let error = errors[index];
+
+            let controller = CBUIPanel.displayError2(
+                error
+            );
+
+            await zeroTimeout();
+
+            controller.CBUIPanel_close();
+        }
+
+        return {
+            succeeded: true,
+        };
+
+
+
+        /**
+         * @return Promise -> undefined
+         */
+        function zeroTimeout() {
+            return new Promise(
+                function (resolve) {
+                    setTimeout(resolve, 1000);
+                }
+            );
+        }
+        /* zeroTimeout() */
+
+    },
+    /* CBTest_displayError() */
+
+
+
+    /**
+     * @return Promise -> object
+     */
+    CBTest_displayError_interactive:
+    async function () {
+        let errors = [
+            Error("Error 1 | CBTest_displayError"),
+            Error("Error 2 | CBTest_displayError"),
+            Error("Error 3 | CBTest_displayError"),
+        ];
+
+        for (
+            let index = 0;
+            index < errors.length;
+            index += 1
+        ) {
+            let error = errors[index];
+
+            await CBUIPanel.displayError2(
+                error
+            ).CBUIPanel_getClosePromise();
+        }
 
         return {
             succeeded: true,
         };
     },
-    /* CBTest_displayError() */
+    /* CBTest_displayError_interactive() */
+
 
 
     /**

@@ -10,7 +10,11 @@ final class CBUIPanel_Tests {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v578.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v674.js',
+                cbsysurl()
+            ),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -20,7 +24,9 @@ final class CBUIPanel_Tests {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'CBConvert',
             'CBModel',
@@ -55,6 +61,13 @@ final class CBUIPanel_Tests {
                 'type' => 'interactive',
             ],
             (object)[
+                'name' => 'displayAjaxResponse_threeTimes',
+            ],
+            (object)[
+                'name' => 'displayAjaxResponse_threeTimes_interactive',
+                'type' => 'interactive',
+            ],
+            (object)[
                 'name' => 'displayElement_alreadyDisplayedError',
                 'title' => 'CBUIPanel.displayElement() already displayed error',
             ],
@@ -65,7 +78,9 @@ final class CBUIPanel_Tests {
             ],
             (object)[
                 'name' => 'displayError',
-                'title' => 'CBUIPanel.displayError()',
+            ],
+            (object)[
+                'name' => 'displayError_interactive',
                 'type' => 'interactive',
             ],
             (object)[
