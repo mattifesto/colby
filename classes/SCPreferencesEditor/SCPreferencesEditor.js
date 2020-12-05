@@ -324,7 +324,9 @@ var SCPreferencesEditor = {
                 cancelActionElement.addEventListener(
                     "click",
                     function () {
-                        element.CBUIPanel.hide();
+                        CBUIPanel.hidePanelWithContentElement(
+                            element
+                        );
                     }
                 );
 

@@ -2,15 +2,26 @@
 
 final class SCPreferencesEditor {
 
+    /* -- CBHTMLOutput interfaces -- */
+
+
+
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v662.js', scliburl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.js',
+                scliburl()
+            ),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
@@ -36,6 +47,7 @@ final class SCPreferencesEditor {
     /* CBHTMLOutput_JavaScriptVariables() */
 
 
+
     /**
      * @return [string]
      */
@@ -51,4 +63,5 @@ final class SCPreferencesEditor {
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
+
 }
