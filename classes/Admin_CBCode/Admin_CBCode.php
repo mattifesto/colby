@@ -1229,7 +1229,7 @@ final class Admin_CBCode {
 
                     'cbmessage' => <<<EOT
 
-                        Use CBUIPanel_hidePanelWithContentElement()
+                        Use CBUIPanel.hidePanelWithContentElement()
 
                     EOT,
 
