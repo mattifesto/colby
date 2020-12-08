@@ -4,16 +4,23 @@ final class CBProcess {
 
     private static $processID = null;
 
+
+
     /**
      * @return null
      */
     static function clearID() {
         if (CBProcess::$processID === null) {
-            throw new RuntimeException('The process ID is not set.');
+            throw new RuntimeException(
+                'The process ID is not set.'
+            );
         } else {
             CBProcess::$processID = null;
         }
     }
+    /* clearID() */
+
+
 
     /**
      * @return hex160
@@ -21,6 +28,9 @@ final class CBProcess {
     static function ID() {
         return CBProcess::$processID;
     }
+    /* ID() */
+
+
 
     /**
      * @NOTE
@@ -36,14 +46,24 @@ final class CBProcess {
      */
     static function setID($processID) {
         if (CBProcess::$processID !== null) {
-            throw new RuntimeException('A process ID has already been set.');
+            throw new RuntimeException(
+                'A process ID has already been set.'
+            );
         }
 
         if (!CBID::valueIsCBID($processID)) {
-            $processIDAsJSON = json_encode($processID);
-            throw new InvalidArgumentException("The provided value is not a valid process ID: {$processIDAsJSON}");
+            $processIDAsJSON = json_encode(
+                $processID
+            );
+
+            throw new InvalidArgumentException(
+                'The provided value is not a valid process ID: ' .
+                $processIDAsJSON
+            );
         }
 
         CBProcess::$processID = $processID;
     }
+    /* setID() */
+
 }
