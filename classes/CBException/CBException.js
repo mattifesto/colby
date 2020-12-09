@@ -4,9 +4,9 @@
 /* exported CBException */
 /* global
     CBConvert,
+    CBErrorHandler,
     CBMessageMarkup,
     CBModel,
-    Colby,
 */
 
 var CBException = {
@@ -97,7 +97,7 @@ var CBException = {
              * Use CBErrorHandler.reportError() only after CBErrorHandler does
              * not depend on CBUIPanel.
              */
-            Colby.reportError(
+            CBErrorHandler.report(
                 Error(
                     CBConvert.stringToCleanLine(`
 

@@ -71,12 +71,13 @@
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(
+    static function
+    CBHTMLOutput_JavaScriptURLs(
     ): array {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v644.js',
+                'v675.js',
                 cbsysurl()
             ),
         ];
@@ -91,9 +92,9 @@
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBConvert',
+            'CBErrorHandler',
             'CBMessageMarkup',
             'CBModel',
-            'Colby',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
