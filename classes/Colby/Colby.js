@@ -77,7 +77,7 @@ var Colby = {
      * @return undefined
      */
     afterDOMContentLoaded: function (callback) {
-        if (!CBErrorHandler.currentBrowserIsSupported) {
+        if (!CBErrorHandler.getCurrentBrowserIsSupported()) {
             return;
         }
 
@@ -967,7 +967,7 @@ var Colby = {
             configurable: true,
             enumerable: false,
             get: function () {
-                return CBErrorHandler.currentBrowserIsSupported;
+                return CBErrorHandler.getCurrentBrowserIsSupported();
             },
         }
     );

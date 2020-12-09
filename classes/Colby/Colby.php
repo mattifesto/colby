@@ -53,11 +53,13 @@ final class Colby {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ) {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v673.js',
+                'v675.js',
                 cbsysurl()
             ),
         ];
