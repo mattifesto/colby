@@ -10,11 +10,19 @@
     CBUIPanel,
     CBUIStringEditor,
     Colby,
+    SCPreferences,
 
     SCPreferencesEditor_defaultOrderKindClassName,
 */
 
-var SCPreferencesEditor = {
+
+(function () {
+
+    window.SCPreferencesEditor = {
+        CBUISpecEditor_createEditorElement,
+    };
+
+
 
     /**
      * @param args object
@@ -26,7 +34,9 @@ var SCPreferencesEditor = {
      *
      * @return Element
      */
-    CBUISpecEditor_createEditorElement: function (args) {
+    function CBUISpecEditor_createEditorElement(
+        args
+    ) {
         let spec = CBModel.valueAsObject(
             args,
             "spec"
@@ -206,18 +216,29 @@ var SCPreferencesEditor = {
         /* email section */
 
         element.appendChild(
+            createSendOrderNotificationsToEmailAddressesEditor(
+                spec,
+                callback
+            )
+        );
+
+        element.appendChild(
             CBUISpecEditor_createEditorElement_createOrderKindSectionElement()
         );
 
         return element;
 
 
+
         /* -- closures -- -- -- -- -- */
+
+
 
         /**
          * @return Element
          */
-        function CBUISpecEditor_createEditorElement_createOrderKindSectionElement() {
+        function
+        CBUISpecEditor_createEditorElement_createOrderKindSectionElement() {
             let sectionContainerElement = CBUI.createElement(
                 "CBUI_sectionContainer"
             );
@@ -363,6 +384,69 @@ var SCPreferencesEditor = {
             /* closure_generate() */
         }
         /* CBUISpecEditor_createEditorElement_createOrderKindSectionElement() */
-    },
+    }
     /* CBUISpecEditor_createEditorElement() */
-};
+
+
+
+    /**
+     * @param object spec
+     * @param function specChangedCallback
+     *
+     * @return element
+     */
+    function
+    createSendOrderNotificationsToEmailAddressesEditor(
+        spec,
+        specChangedCallback
+    ) {
+        let elements = CBUI.createElementTree(
+            "SCPreferencesEditor_sendOrderNotificationsToEmailAddresses",
+            "CBUI_title1"
+        );
+
+        let rootElement = elements[0];
+
+        elements[1].textContent = (
+            "Send Order Notifications To Email Addresses (use CSV format)"
+        );
+
+        elements = CBUI.createElementTree(
+            "CBUI_sectionContainer",
+            "CBUI_section"
+        );
+
+        rootElement.appendChild(
+            elements[0]
+        );
+
+        let sectionElement = elements[1];
+
+        {
+            let stringEditor = CBUIStringEditor.create();
+            stringEditor.title = "Email Addresses";
+
+            stringEditor.value = (
+                SCPreferences.getOrderNotificationsEmailAddressesCSV(
+                    spec
+                )
+            );
+
+            stringEditor.changed = function () {
+                spec.orderNotificationsEmailAddressesCSV = (
+                    stringEditor.value
+                );
+
+                specChangedCallback();
+            };
+
+            sectionElement.appendChild(
+                stringEditor.element
+            );
+        }
+
+        return rootElement;
+    }
+    /* createSendOrderNotificationsToEmailAddressesEditor() */
+
+})();
