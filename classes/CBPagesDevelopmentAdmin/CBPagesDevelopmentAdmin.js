@@ -4,6 +4,7 @@
 /* exported CBPagesDevelopmentAdmin */
 /* global
     CBAjax,
+    CBErrorHandler,
     CBModel,
     CBUI,
     CBUIPanel,
@@ -47,7 +48,7 @@
                 ).catch(
                     function (error) {
                         CBUIPanel.displayError(error);
-                        Colby.reportError(error);
+                        CBErrorHandler.report(error);
                     }
                 );
             };

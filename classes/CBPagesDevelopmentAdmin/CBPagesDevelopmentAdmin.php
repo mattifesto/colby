@@ -43,11 +43,18 @@ final class CBPagesDevelopmentAdmin {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ) {
         return [
-            Colby::flexpath(__CLASS__, 'v658.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -96,6 +103,7 @@ final class CBPagesDevelopmentAdmin {
     static function CBHTMLOutput_requiredClassNames() {
         return [
             'CBAjax',
+            'CBErrorHandler',
             'CBModel',
             'CBUI',
             'CBUIExpander',
