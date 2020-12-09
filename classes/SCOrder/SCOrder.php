@@ -1420,7 +1420,7 @@ final class SCOrder {
 
         return ob_get_clean();
     }
-        /* createOrderInformationHTML() */
+    /* createOrderInformationHTML() */
 
 
 
@@ -1527,6 +1527,24 @@ final class SCOrder {
         }
     }
     /* currentSalesTaxRate() */
+
+
+
+    /**
+     * @param object $orderModel
+     *
+     * @return string
+     */
+    static function
+    getShippingAddressFullName(
+        stdClass $orderModel
+    ): string {
+        return CBModel::valueToString(
+            $orderModel,
+            'shipOrderToFullName'
+        );
+    }
+    /* getShippingAddressFullName() */
 
 
 
