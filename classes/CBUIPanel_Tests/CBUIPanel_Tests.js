@@ -303,7 +303,9 @@ var CBUIPanel_Tests = {
             );
         }
 
-        contentElement.CBUIPanel.hide();
+        CBUIPanel.hidePanelWithContentElement(
+            contentElement
+        );
 
         if (actualSourceID !== expectedSourceID) {
             return CBTest.resultMismatchFailure(
@@ -330,7 +332,8 @@ var CBUIPanel_Tests = {
     /**
      * @return object
      */
-    CBTest_displayElementThreeTimes: function () {
+    CBTest_displayElementThreeTimes_interactive(
+    ) {
         display("one", "red");
         display("two", "green");
         display("three", "blue");
@@ -339,9 +342,17 @@ var CBUIPanel_Tests = {
             succeeded: true,
         };
 
+
+
         /* -- closures -- -- -- -- -- */
 
-        function display(text, color) {
+
+
+        function
+        display(
+            text,
+            color
+        ) {
             let contentElement = CBUI.createElement();
             contentElement.style.backgroundColor = color;
             contentElement.textContent = text;
@@ -349,12 +360,18 @@ var CBUIPanel_Tests = {
             contentElement.addEventListener(
                 "click",
                 function clickEventListener() {
-                    contentElement.CBUIPanel.hide();
+                    CBUIPanel.hidePanelWithContentElement(
+                        contentElement
+                    );
                 }
             );
 
-            CBUIPanel.displayElement(contentElement);
+            CBUIPanel.displayElement(
+                contentElement
+            );
         }
+        /* display() */
+
     },
     /* CBTest_displayElementThreeTimes() */
 

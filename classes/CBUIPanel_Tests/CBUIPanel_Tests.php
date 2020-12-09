@@ -5,14 +5,17 @@ final class CBUIPanel_Tests {
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
 
+
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v674.js',
+                'v675.js',
                 cbsysurl()
             ),
         ];
@@ -72,8 +75,7 @@ final class CBUIPanel_Tests {
                 'title' => 'CBUIPanel.displayElement() already displayed error',
             ],
             (object)[
-                'name' => 'displayElementThreeTimes',
-                'title' => 'CBUIPanel.displayElement() three times',
+                'name' => 'displayElementThreeTimes_interactive',
                 'type' => 'interactive',
             ],
             (object)[
