@@ -176,6 +176,23 @@ var CBModel = {
 
     /**
      * @param object model
+     *
+     * @return CBID|undefined
+     */
+    getCBID(
+        model
+    ) {
+        return CBModel.valueAsCBID(
+            model,
+            'ID'
+        );
+    },
+    /* getCBID() */
+
+
+
+    /**
+     * @param object model
      * @param string functionName
      *
      * @return function|undefined
