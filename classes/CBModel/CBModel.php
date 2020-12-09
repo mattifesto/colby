@@ -177,6 +177,24 @@ final class CBModel {
 
     /**
      * @param object $model
+     *
+     * @return CBID|null
+     */
+    static function
+    getCBID(
+        stdClass $model
+    ): ?string {
+        return CBModel::valueAsCBID(
+            $model,
+            'ID'
+        );
+    }
+    /* getCBID() */
+
+
+
+    /**
+     * @param object $model
      * @param string $functionName
      *
      * @return callable|null
