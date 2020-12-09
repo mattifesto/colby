@@ -39,6 +39,10 @@ class SCOrderConfirmationEmail {
             $messageAsHTMLDocument
         );
 
+        SCOrderConfirmationEmail::sendNotificationEmails(
+            $model
+        );
+
         /**
          * Update the order document to indicate that the email was sent.
          */
@@ -480,6 +484,78 @@ class SCOrderConfirmationEmail {
         return ob_get_clean();
     }
     /* messageText() */
+
+
+
+    /**
+     * @param object $orderModel
+     *
+     * @return void
+     */
+    private static function
+    sendNotificationEmails(
+        $orderModel
+    ): void {
+        try {
+            $preferencesModel = CBModelCache::fetchModelByID(
+                SCPreferences::getModelCBID()
+            );
+
+            $orderNotificationsEmailAddresses = (
+                SCPreferences::getOrderNotificationsEmailAddresses(
+                    $preferencesModel
+                )
+            );
+
+            $orderCBID = CBModel::getCBID(
+                $orderModel
+            );
+
+            if ($orderCBID === null) {
+                throw new CBExceptionWithValue(
+                    'This order model has an invalid CBID.',
+                    $orderModel,
+                    'b3646dd6eff0e6b2083beffcf7f712ee3934d8c8'
+                );
+            }
+
+            $orderPageURL = (
+                cbsiteurl() .
+                '/admin/?c=SCOrderInspector&ID=' .
+                $orderCBID
+            );
+
+            $shippingAddressFullName = SCOrder::getShippingAddressFullName(
+                $orderModel
+            );
+
+            $subject = "New Order ({$shippingAddressFullName})";
+
+            $cbmessage = <<<EOT
+
+                A new order has been processesed:
+
+                (View Order > (a {$orderPageURL}))
+
+            EOT;
+
+            foreach (
+                $orderNotificationsEmailAddresses as $emailAddress
+            ) {
+                CBEmail::sendCBMessage(
+                    $emailAddress,
+                    $emailAddress,
+                    $subject,
+                    $cbmessage
+                );
+            }
+        } catch (Throwable $throwable) {
+            CBErrorHandler::report(
+                $throwable
+            );
+        }
+    }
+    /* sendNotificationEmails() */
 
 
 
