@@ -10,6 +10,42 @@ final class SCPreferences {
 
 
 
+    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
+        return [
+            Colby::flexpath(
+                __CLASS__,
+                'v675.1.js',
+                cbsysurl()
+            ),
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
+        return [
+            'CBModel',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
+
+
+
     /* -- CBInstall interfaces -- -- -- -- -- */
 
 
@@ -49,51 +85,83 @@ final class SCPreferences {
     /**
      * @param object $spec
      *
-     * @return stdClass
+     *      {
+     *          orderNotificationsEmailAddressesCSV: string
+     *      }
+     *
+     * @return object
+     *
+     *      {
+     *          orderNotificationsEmailAddresses: [string]
+     *      }
      */
-    static function CBModel_build(
+    static function
+    CBModel_build(
         stdClass $spec
     ): stdClass {
+        $orderNotificationsEmailAddresses = (
+            SCPreferences::stringToArrayOfEmailAddresses(
+                SCPreferences::getOrderNotificationsEmailAddressesCSV(
+                    $spec
+                )
+            )
+        );
+
         return (object)[
             'cartItemCartViewClassNames' => CBModel::valueToArray(
                 $spec,
                 'cartItemCartViewClassNames'
             ),
+
             'cartItemCheckoutViewClassNames' => CBModel::valueToArray(
                 $spec,
                 'cartItemCheckoutViewClassNames'
             ),
+
             'cartItemClassNames' => CBModel::valueToArray(
                 $spec,
                 'cartItemClassNames'
             ),
+
             'cartItemOrderViewClassNames' => CBModel::valueToArray(
                 $spec,
                 'cartItemOrderViewClassNames'
             ),
+
             'defaultOrderKindClassName' => trim(
                 CBModel::valueToString($spec, 'defaultOrderKindClassName')
             ),
+
             'sendingEmailAddress' => trim(
                 CBModel::valueToString($spec, 'sendingEmailAddress')
             ),
+
             'sendingEmailName' => trim(
                 CBModel::valueToString($spec, 'sendingEmailName')
             ),
+
             'SMTPServerHostname' => trim(
                 CBModel::valueToString($spec, 'SMTPServerHostname')
             ),
+
             'SMTPServerPort' => trim(
                 CBModel::valueToString($spec, 'SMTPServerPort')
             ),
+
             'SMTPServerSecurity' => trim(
                 CBModel::valueToString($spec, 'SMTPServerSecurity')
             ),
+
             'SMTPServerUsername' => trim(
                 CBModel::valueToString($spec, 'SMTPServerUsername')
             ),
+
             'SMTPServerPassword' => trim(
                 CBModel::valueToString($spec, 'SMTPServerPassword')
+            ),
+
+            'orderNotificationsEmailAddresses' => (
+                $orderNotificationsEmailAddresses
             ),
         ];
     }
@@ -114,6 +182,53 @@ final class SCPreferences {
             'be64c47012a0a49e1bed962979c67918c02caad6'
         );
     }
+
+
+
+    /**
+     * @param object $spec
+     *
+     *      This function should only be used on models because the value
+     *      returned does not exist on specs.
+     *
+     * @return [string]
+     *
+     *      Returns an array of email addresses that should receive
+     *      notifications about new orders.
+     */
+    static function
+    getOrderNotificationsEmailAddresses(
+        stdClass $model
+    ): array {
+        return CBModel::valueToArray(
+            $model,
+            'orderNotificationsEmailAddresses'
+        );
+    }
+    /* getOrderNotificationsEmailAddresses() */
+
+
+
+    /**
+     * @param object $spec
+     *
+     *      This function should only be used on specs because build converts
+     *      this property into a different property on a model.
+     *
+     * @return string
+     *
+     *      Returns a string that is a CSV of email addresses.
+     */
+    static function
+    getOrderNotificationsEmailAddressesCSV(
+        stdClass $spec
+    ): string {
+        return CBModel::valueToString(
+            $spec,
+            'orderNotificationsEmailAddressesCSV'
+        );
+    }
+    /* getOrderNotificationsEmailAddressesCSV() */
 
 
 
@@ -291,5 +406,47 @@ final class SCPreferences {
         CBModelUpdater::save($updater);
     }
     /* installCartItemOrderViewClass() */
+
+
+
+    /**
+     * @param string $csvOfEmailAddresses
+     *
+     * @return [string]
+     */
+    private static function
+    stringToArrayOfEmailAddresses(
+        string $csvOfEmailAddresses
+    ): array {
+        /**
+         * The function str_getcsv() will return [null] for an empty string so
+         * we detect the empty string before calling that function.
+         */
+        if ($csvOfEmailAddresses === '') {
+            return [];
+        }
+
+        $arrayOfEmailAddresses = str_getcsv(
+            $csvOfEmailAddresses
+        );
+
+        $arrayOfEmailAddresses = array_map(
+            function (
+                string $potentialEmailAddress
+            ) {
+                return CBConvert::valueAsEmail(
+                    $potentialEmailAddress
+                );
+            },
+            $arrayOfEmailAddresses
+        );
+
+        $arrayOfEmailAddresses = array_filter(
+            $arrayOfEmailAddresses
+        );
+
+        return array_values($arrayOfEmailAddresses);
+    }
+    /* stringToArrayOfEmailAddresses() */
 
 }
