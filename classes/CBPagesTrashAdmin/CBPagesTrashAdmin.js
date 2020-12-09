@@ -4,6 +4,7 @@
 /* exported CBPagesTrashAdmin */
 /* global
     CBAjax,
+    CBErrorHandler,
     CBUI,
     CBUIPanel,
     Colby,
@@ -47,7 +48,7 @@ var CBPagesTrashAdmin = {
         ).catch(
             function (error) {
                 CBUIPanel.displayError(error);
-                Colby.reportError(error);
+                CBErrorHandler.report(error);
             }
         );
 
@@ -95,7 +96,7 @@ var CBPagesTrashAdmin = {
                             ).catch(
                                 function (error) {
                                     CBUIPanel.displayError(error);
-                                    Colby.reportError(error);
+                                    CBErrorHandler.report(error);
                                 }
                             );
                         }
@@ -129,7 +130,7 @@ var CBPagesTrashAdmin = {
                             ).catch(
                                 function (error) {
                                     CBUIPanel.displayError(error);
-                                    Colby.reportError(error);
+                                    CBErrorHandler.report(error);
                                 }
                             );
                         }

@@ -134,9 +134,15 @@ final class CBPagesTrashAdmin {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ) {
         return [
-            Colby::flexpath(__CLASS__, 'v658.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.js',
+                cbsysurl()
+            ),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -149,6 +155,7 @@ final class CBPagesTrashAdmin {
     static function CBHTMLOutput_requiredClassNames() {
         return [
             'CBAjax',
+            'CBErrorHandler',
             'CBUI',
             'CBUIPanel',
             'Colby',
