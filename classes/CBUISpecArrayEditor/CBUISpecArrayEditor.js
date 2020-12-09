@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBUISpecArrayEditor */
 /* global
+    CBErrorHandler,
     CBException,
     CBUI,
     CBUICommandPart,
@@ -16,7 +17,6 @@
     CBUISpecEditor,
     CBUIThumbnailPart,
     CBUITitleAndDescriptionPart,
-    Colby,
 */
 
 
@@ -81,7 +81,7 @@ var CBUISpecArrayEditor = {
             ).catch(
                 function (error) {
                     CBUIPanel.displayError(error);
-                    Colby.reportError(error);
+                    CBErrorHandler.report(error);
                 }
             );
 

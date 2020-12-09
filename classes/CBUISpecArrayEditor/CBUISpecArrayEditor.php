@@ -20,11 +20,18 @@ final class CBUISpecArrayEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ) {
         return [
-            Colby::flexpath(__CLASS__, 'v601.js', cbsysurl())
+            Colby::flexpath(
+                __CLASS__,
+                'v675.js',
+                cbsysurl()
+            )
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -33,6 +40,7 @@ final class CBUISpecArrayEditor {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CBErrorHandler',
             'CBException',
             'CBUI',
             'CBUICommandPart',
@@ -46,7 +54,6 @@ final class CBUISpecArrayEditor {
             'CBUISpecEditor',
             'CBUIThumbnailPart',
             'CBUITitleAndDescriptionPart',
-            'Colby',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
