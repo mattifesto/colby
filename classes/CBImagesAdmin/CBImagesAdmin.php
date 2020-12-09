@@ -117,9 +117,15 @@ class CBImagesAdmin {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ) {
         return [
-            Colby::flexpath(__CLASS__, 'v656.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.js',
+                cbsysurl()
+            ),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -132,6 +138,7 @@ class CBImagesAdmin {
     static function CBHTMLOutput_requiredClassNames() {
         return [
             'CBAjax',
+            'CBErrorHandler',
             'CBImage',
             'CBUI',
             'CBUIPanel',

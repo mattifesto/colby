@@ -4,6 +4,7 @@
 /* exported CBImagesAdmin */
 /* global
     CBAjax,
+    CBErrorHandler,
     CBImage,
     CBUI,
     CBUIPanel,
@@ -60,7 +61,7 @@ var CBImagesAdmin = {
                 ).catch(
                     function (error) {
                         CBUIPanel.displayError(error);
-                        Colby.reportError(error);
+                        CBErrorHandler.report(error);
                     }
                 );
             };
@@ -167,7 +168,7 @@ var CBImagesAdmin = {
         ).catch(
             function (error) {
                 CBUIPanel.displayError(error);
-                Colby.reportError(error);
+                CBErrorHandler.report(error);
             }
         );
 
