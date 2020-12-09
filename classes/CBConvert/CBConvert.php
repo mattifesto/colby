@@ -536,12 +536,19 @@ final class CBConvert {
     static function valueAsEmail(
         /* mixed */ $value
     ): ?string {
-        $email = CBConvert::valueToString(
-            $value
+        $emailAddress = trim(
+            CBConvert::valueToString(
+                $value
+            )
         );
 
-        if (preg_match('/^\S+@\S+\.\S+$/', $email)) {
-            return $email;
+        if (
+            preg_match(
+                '/^\S+@\S+\.\S+$/',
+                $emailAddress
+            )
+        ) {
+            return $emailAddress;
         } else {
             return null;
         }
