@@ -44,7 +44,9 @@
     function handleError(
         errorEvent
     ) {
-        Colby.reportError(errorEvent.error);
+        CBErrorHandler.report(
+            errorEvent.error
+        );
     }
     /* handleError() */
 
@@ -409,7 +411,9 @@ var Colby = {
      *      Use CBErrorHandler.report()
      */
     report: function (error) {
-        Colby.reportError(error);
+        CBErrorHandler.report(
+            error
+        );
     },
 
 
@@ -428,7 +432,9 @@ var Colby = {
      *          ...
      *      ).catch(
      *          function (error) {
-     *              Colby.reportError(error);
+     *              CBErrorHandler.report(
+     *                  error
+     *              );
      *          }
      *      );
      *
@@ -592,7 +598,9 @@ var Colby = {
                             function (error) {
                                 promise = undefined;
 
-                                Colby.reportError(error);
+                                CBErrorHandler.report(
+                                    error
+                                );
                             }
                         );
 
