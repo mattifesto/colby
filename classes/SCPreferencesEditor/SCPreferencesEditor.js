@@ -4,12 +4,12 @@
 /* exported SCPreferencesEditor */
 /* global
     CBAjax,
+    CBErrorHandler,
     CBException,
     CBModel,
     CBUI,
     CBUIPanel,
     CBUIStringEditor,
-    Colby,
     SCPreferences,
 
     SCPreferencesEditor_defaultOrderKindClassName,
@@ -377,7 +377,10 @@
                 ).catch(
                     function (error) {
                         CBUIPanel.displayError(error);
-                        Colby.reportError(error);
+
+                        CBErrorHandler.report(
+                            error
+                        );
                     }
                 );
             }

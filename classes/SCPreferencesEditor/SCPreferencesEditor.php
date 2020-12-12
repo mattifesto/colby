@@ -15,7 +15,7 @@ final class SCPreferencesEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.1.js',
+                'v675.2.js',
                 scliburl()
             ),
         ];
@@ -54,12 +54,12 @@ final class SCPreferencesEditor {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBAjax',
+            'CBErrorHandler',
             'CBException',
             'CBModel',
             'CBUI',
             'CBUIPanel',
             'CBUIStringEditor',
-            'Colby',
             'SCPreferences',
         ];
     }
