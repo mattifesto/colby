@@ -4,10 +4,10 @@
 /* exported CBModel */
 /* globals
     CBAjax,
+    CBErrorHandler,
     CBException,
     CBModel,
     CBUIPanel,
-    Colby,
 */
 
 var CBUISpecSaver = {
@@ -114,7 +114,9 @@ var CBUISpecSaver = {
             promises
         ).catch(
             function (error) {
-                Colby.reportError(error);
+                CBErrorHandler.report(
+                    error
+                );
             }
         ).then(
             function () {

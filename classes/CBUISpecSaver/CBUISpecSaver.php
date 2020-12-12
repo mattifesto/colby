@@ -2,14 +2,25 @@
 
 final class CBUISpecSaver {
 
+    /* -- CBHTMLOutput interfaces -- */
+
+
+
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v660.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.2.js',
+                scliburl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -19,10 +30,10 @@ final class CBUISpecSaver {
     static function CBHTMLOutput_requiredClassNames() {
         return [
             'CBAjax',
+            'CBErrorHandler',
             'CBException',
             'CBModel',
             'CBUIPanel',
-            'Colby',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
