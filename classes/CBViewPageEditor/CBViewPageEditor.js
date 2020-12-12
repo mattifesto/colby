@@ -4,13 +4,13 @@
 /* exported CBViewPageEditor */
 /* global
     CBAjax,
+    CBErrorHandler,
     CBImage,
     CBModel,
     CBUI,
     CBUIPanel,
     CBUISpecArrayEditor,
     CBViewPageInformationEditor,
-    Colby,
 
     CBViewPageEditor_addableClassNames,
     CBViewPageEditor_currentFrontPageID,
@@ -258,7 +258,10 @@ var CBViewPageEditor = {
             ).catch(
                 function (error) {
                     CBUIPanel.displayError(error);
-                    Colby.reportError(error);
+
+                    CBErrorHandler.report(
+                        error
+                    );
                 }
             );
         }

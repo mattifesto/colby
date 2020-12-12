@@ -9,11 +9,18 @@ final class CBViewPageEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v661.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.2.js',
+                scliburl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -56,13 +63,13 @@ final class CBViewPageEditor {
             $classNamesForEditors,
             [
                 'CBAjax',
+                'CBErrorHandler',
                 'CBImage',
                 'CBModel',
                 'CBUI',
                 'CBUIPanel',
                 'CBUISpecArrayEditor',
                 'CBViewPageInformationEditor',
-                'Colby',
             ]
         );
     }
