@@ -5,6 +5,7 @@
 /* global
     CBAjax,
     CBConvert,
+    CBErrorHandler,
     CBMessageMarkup,
     CBModel,
     CBUI,
@@ -782,7 +783,9 @@ var SCCheckoutView = {
 
             panel.hide();
 
-            Colby.reportError(error);
+            CBErrorHandler.report(
+                error
+            );
 
             CBUIPanel.displayText(
                 error.message
@@ -969,7 +972,9 @@ var SCCheckoutView = {
 
             panel.hide();
 
-            Colby.reportError(error);
+            CBErrorHandler.report(
+                error
+            );
 
             CBUIPanel.displayText(
                 error.message
