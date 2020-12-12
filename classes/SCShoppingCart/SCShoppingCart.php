@@ -21,11 +21,18 @@ final class SCShoppingCart {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v625.js', scliburl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.2.js',
+                scliburl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -44,6 +51,7 @@ final class SCShoppingCart {
 
         return array_merge(
             [
+                'CBErrorHandler',
                 'CBModel',
                 'CBModels',
                 'CBUIPanel',

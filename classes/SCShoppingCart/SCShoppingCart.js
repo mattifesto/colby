@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported SCShoppingCart */
 /* global
+    CBErrorHandler,
     CBModel,
     CBModels,
     CBUIPanel,
@@ -298,7 +299,9 @@
         }
 
         if (!cartWasSavedFromAnotherSession) {
-            Colby.reportError(error);
+            CBErrorHandler.report(
+                error
+            );
         }
 
         /**
