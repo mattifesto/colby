@@ -13,7 +13,7 @@ var CBModelsPreferencesEditor = {
      *
      * @return Element
      */
-    createEditor : function(args) {
+    CBUISpecEditor_createEditorElement: function(args) {
         var element = document.createElement("section");
         element.className = "CBModelsPreferencesEditor";
 
@@ -25,10 +25,10 @@ var CBModelsPreferencesEditor = {
         var item = CBUI.createSectionItem();
 
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Class Names of Editable Models",
-            propertyName : "classNamesOfEditableModels",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Class Names of Editable Models",
+            propertyName: "classNamesOfEditableModels",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
         element.appendChild(section);
@@ -37,4 +37,6 @@ var CBModelsPreferencesEditor = {
 
         return element;
     },
+    /* CBUISpecEditor_createEditorElement() */
+
 };
