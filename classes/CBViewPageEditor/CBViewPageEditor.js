@@ -88,7 +88,7 @@ var CBViewPageEditor = {
             );
 
             editorContainer.appendChild(
-                CBViewPageInformationEditor.createEditor(
+                CBViewPageInformationEditor.CBViewPageEditor_createEditor(
                     {
                         handleTitleChanged: handleTitleChanged,
                         makeFrontPageCallback: makeFrontPageCallback,

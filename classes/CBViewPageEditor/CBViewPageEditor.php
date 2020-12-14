@@ -15,8 +15,8 @@ final class CBViewPageEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.2.js',
-                scliburl()
+                'v675.3.js',
+                cbsysurl()
             ),
         ];
     }
