@@ -168,6 +168,7 @@ var CBLinkView1Editor = {
         }
         /* createEditor_handleImageRemoved() */
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
+
 };
 /* CBLinkView1Editor */

@@ -9,11 +9,19 @@ final class CBLinkView1Editor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v657.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.3.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
 
 
     /**
