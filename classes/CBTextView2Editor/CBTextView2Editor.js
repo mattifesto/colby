@@ -21,7 +21,7 @@ var CBTextView2Editor = {
      *
      * @return Element
      */
-    createEditor: function (args) {
+    CBUISpecEditor_createEditorElement: function (args) {
         var section, item;
         var element = CBUI.createElement("CBTextView2Editor");
 
@@ -215,7 +215,7 @@ var CBTextView2Editor = {
         /* createEditor_convert() */
 
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
 
 
     /**
