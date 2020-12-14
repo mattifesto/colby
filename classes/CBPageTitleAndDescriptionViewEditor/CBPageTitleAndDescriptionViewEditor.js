@@ -5,7 +5,9 @@
 /* globals
     CBUI,
     CBUIBooleanEditor,
-    CBUIStringEditor */
+    CBUIStringEditor,
+*/
+
 
 var CBPageTitleAndDescriptionViewEditor = {
 
@@ -15,7 +17,7 @@ var CBPageTitleAndDescriptionViewEditor = {
      *
      * @return Element
      */
-    createEditor : function (args) {
+    CBUISpecEditor_createEditorElement: function (args) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBPageTitleAndDescriptionViewEditor";
@@ -27,10 +29,10 @@ var CBPageTitleAndDescriptionViewEditor = {
         /* showPublicationDate */
         item = CBUI.createSectionItem();
         item.appendChild(CBUIBooleanEditor.create({
-            labelText : "Show Publication Date",
-            propertyName : "showPublicationDate",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Show Publication Date",
+            propertyName: "showPublicationDate",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
         element.appendChild(section);
@@ -53,10 +55,10 @@ var CBPageTitleAndDescriptionViewEditor = {
 
         item = CBUI.createSectionItem();
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "CSS Class Names",
-            propertyName : "CSSClassNames",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "CSS Class Names",
+            propertyName: "CSSClassNames",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
         element.appendChild(section);
@@ -69,10 +71,10 @@ var CBPageTitleAndDescriptionViewEditor = {
         item = CBUI.createSectionItem();
 
         item.appendChild(CBUIStringEditor.createEditor({
-            labelText : "Local CSS Template",
-            propertyName : "stylesTemplate",
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Local CSS Template",
+            propertyName: "stylesTemplate",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         }).element);
         section.appendChild(item);
         element.appendChild(section);
@@ -81,4 +83,6 @@ var CBPageTitleAndDescriptionViewEditor = {
 
         return element;
     },
+    /* CBUISpecEditor_createEditorElement() */
+
 };
