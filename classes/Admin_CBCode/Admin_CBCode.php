@@ -1367,20 +1367,21 @@ final class Admin_CBCode {
                 ],
 
 
-                /**
-                 * 2020_02_15 (warning)
-                 */
                 (object)[
+                    'args' => (
+                        '--js ' .
+                        '--ignore-file=match:CBUIStringEditor.js '
+                    ),
                     'cbmessage' => <<<EOT
 
                         Replace createEditor() with
                         CBUISpecEditor_createEditorElement().
 
                     EOT,
-                    'filetype' => 'js',
                     'regex' => ' createEditor\W',
                     'severity' => 4,
                     'title' => 'CBUISpecEditor createEditor() interface',
+                    'warningStartDate' => '2020/02/15',
                 ],
 
 
