@@ -5,9 +5,20 @@ final class CBPagesPreferencesEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [Colby::flexpath(__CLASS__, 'v423.js', cbsysurl())];
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
+        return [
+            Colby::flexpath(
+                __CLASS__,
+                'v675.3.js',
+                cbsysurl()
+            ),
+        ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+
 
     /**
      * @return [string]

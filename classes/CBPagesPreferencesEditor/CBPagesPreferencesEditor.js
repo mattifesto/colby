@@ -18,7 +18,7 @@ var CBPagesPreferencesEditor = {
      *
      * @return Element
      */
-    createEditor: function(args) {
+    CBUISpecEditor_createEditorElement: function(args) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBPagesPreferencesEditor";
@@ -26,9 +26,9 @@ var CBPagesPreferencesEditor = {
         element.appendChild(CBUI.createHalfSpace());
 
         var properties = [
-            { name : "supportedViewClassNames", labelText : "Supported View Class Names" },
-            { name : "deprecatedViewClassNames", labelText : "Deprecated View Class Name" },
-            { name : "classNamesForLayouts", labelText : "Class Names for Layouts" },
+            { name: "supportedViewClassNames", labelText: "Supported View Class Names" },
+            { name: "deprecatedViewClassNames", labelText: "Deprecated View Class Name" },
+            { name: "classNamesForLayouts", labelText: "Class Names for Layouts" },
         ];
 
         section = CBUI.createSection();
@@ -36,10 +36,10 @@ var CBPagesPreferencesEditor = {
         properties.forEach(function (property) {
             item = CBUI.createSectionItem();
             item.appendChild(CBUIStringEditor.createEditor({
-                labelText           : property.labelText,
-                propertyName        : property.name,
-                spec                : args.spec,
-                specChangedCallback : args.specChangedCallback,
+                labelText: property.labelText,
+                propertyName: property.name,
+                spec: args.spec,
+                specChangedCallback: args.specChangedCallback,
             }).element);
             section.appendChild(item);
         });
@@ -49,4 +49,6 @@ var CBPagesPreferencesEditor = {
 
         return element;
     },
+    /* CBUISpecEditor_createEditorElement() */
+
 };
