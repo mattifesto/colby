@@ -23,7 +23,7 @@ var CBYouTubeViewEditor = {
      *
      * @return Element
      */
-    createEditor: function (args) {
+    CBViewPageEditor_createEditor: function (args) {
         let spec = args.spec;
         let specChangedCallback = args.specChangedCallback;
 
@@ -187,7 +187,7 @@ var CBYouTubeViewEditor = {
 
         return element;
     },
-    /* createEditor() */
+    /* CBViewPageEditor_createEditor() */
 
 
 
