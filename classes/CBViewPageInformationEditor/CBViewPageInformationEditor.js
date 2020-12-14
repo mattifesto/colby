@@ -33,6 +33,12 @@
 
 
 
+/**
+ * @deprecated 2020_12_14
+ *
+ *      All of the code in this class belongs in the CBViewPageEditor class.
+ *      This is not an editor of a CBViewPageInformation spec.
+ */
 var CBViewPageInformationEditor = {
 
     /**
@@ -47,7 +53,7 @@ var CBViewPageInformationEditor = {
      *
      * @return Element
      */
-    createEditor(
+    CBViewPageEditor_createEditor(
         args
     ) {
         let handleTitleChanged = args.handleTitleChanged;
@@ -636,7 +642,8 @@ var CBViewPageInformationEditor = {
             sectionContainerElement.appendChild(sectionElement);
 
             /**
-             * The imageChooser variable is declared in createEditor()
+             * The imageChooser variable is declared at the beginning of
+             * CBViewPageEditor_createEditor().
              */
 
             imageChooser = CBUIImageChooser.create();
@@ -726,7 +733,7 @@ var CBViewPageInformationEditor = {
         /* createEditor_handlePageThumbnailChanged() */
 
     },
-    /* createEditor() */
+    /* CBViewPageEditor_createEditor() */
 
 };
 /* CBViewPageInformationEditor */

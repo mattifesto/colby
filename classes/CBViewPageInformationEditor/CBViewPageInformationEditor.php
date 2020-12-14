@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @deprecated 2020_12_14
+ *
+ *      All of the code in this class belongs in the CBViewPageEditor class.
+ *      This is not an editor of a CBViewPageInformation spec.
+ */
 final class CBViewPageInformationEditor {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
@@ -9,9 +15,15 @@ final class CBViewPageInformationEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v661.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.3.js',
+                cbsysurl()
+            ),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
