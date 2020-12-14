@@ -78,7 +78,7 @@ var CBThemedTextViewEditor = {
      *
      * @return Element
      */
-    createEditor: function(args) {
+    CBUISpecEditor_createEditorElement: function(args) {
         var element = document.createElement("div");
         element.className = "CBThemedTextViewEditor";
 
@@ -220,7 +220,7 @@ var CBThemedTextViewEditor = {
 
         return element;
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
 
 
 
