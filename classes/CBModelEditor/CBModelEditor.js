@@ -20,25 +20,6 @@ var CBModelEditor = {
     /**
      * @param object spec
      *
-     * @return Element
-     */
-    createEditor: function (args) {
-        var element = document.createElement("pre");
-
-        element.textContent = JSON.stringify(
-            args.spec,
-            null,
-            4
-        );
-
-        return element;
-    },
-    /* createEditor() */
-
-
-    /**
-     * @param object spec
-     *
      * @return undefined
      */
     renderEditorForSpec: function (spec) {
