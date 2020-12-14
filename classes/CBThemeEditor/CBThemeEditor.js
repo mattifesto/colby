@@ -3,7 +3,9 @@
 /* exported CBThemeEditor */
 /* global
     CBUI,
-    CBUIStringEditor */
+    CBUIStringEditor,
+*/
+
 
 var CBThemeEditor = {
 
@@ -13,15 +15,15 @@ var CBThemeEditor = {
      *
      * @return Element
      */
-    createEditor : function (args) {
+    CBUISpecEditor_createEditorElement: function (args) {
         var section, item, editor;
         var element = document.createElement("div");
         element.className = "CBThemeEditor";
         var properties = [
-            { name : "title", labelText : "Title" },
-            { name : "classNameForKind", labelText : "Class Name for Kind" },
-            { name : "classNameForTheme", labelText : "Class Name for Theme" },
-            { name : "description", labelText : "Description" },
+            { name: "title", labelText: "Title" },
+            { name: "classNameForKind", labelText: "Class Name for Kind" },
+            { name: "classNameForTheme", labelText: "Class Name for Theme" },
+            { name: "description", labelText: "Description" },
         ];
 
         element.appendChild(CBUI.createHalfSpace());
@@ -32,10 +34,10 @@ var CBThemeEditor = {
             item = CBUI.createSectionItem();
 
             item.appendChild(CBUIStringEditor.createEditor({
-                labelText           : property.labelText,
-                propertyName        : property.name,
-                spec                : args.spec,
-                specChangedCallback : args.specChangedCallback,
+                labelText: property.labelText,
+                propertyName: property.name,
+                spec: args.spec,
+                specChangedCallback: args.specChangedCallback,
             }).element);
 
             section.appendChild(item);
@@ -45,10 +47,10 @@ var CBThemeEditor = {
 
         item = CBUI.createSectionItem();
         editor = CBUIStringEditor.createEditor({
-            labelText           : "Styles",
-            propertyName        : "styles",
-            spec                : args.spec,
-            specChangedCallback : args.specChangedCallback,
+            labelText: "Styles",
+            propertyName: "styles",
+            spec: args.spec,
+            specChangedCallback: args.specChangedCallback,
         });
 
         item.appendChild(editor.element);
@@ -62,8 +64,8 @@ var CBThemeEditor = {
         button.textContent = "Add Style";
 
         button.addEventListener("click", CBThemeEditor.handleAddStyle.bind(undefined, {
-            spec : args.spec,
-            updateValueCallback : editor.updateValueCallback,
+            spec: args.spec,
+            updateValueCallback: editor.updateValueCallback,
         }));
 
         item.appendChild(button);
@@ -74,6 +76,9 @@ var CBThemeEditor = {
 
         return element;
     },
+    /* CBUISpecEditor_createEditorElement() */
+
+
 
     /**
      * @param object args.spec
@@ -81,7 +86,7 @@ var CBThemeEditor = {
      *
      * @return  undefined
      */
-    handleAddStyle : function(args) {
+    handleAddStyle: function(args) {
         var styles = args.spec.styles ? args.spec.styles.trim() : "";
         var pre = (styles !== "") ? "\n\n" : "";
         styles = styles.replace(/[\s]*$/, pre + "view {\n\n}");
