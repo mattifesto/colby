@@ -15,7 +15,7 @@ var CBKeyValuePairEditor = {
      *
      * @return Element
      */
-    createEditor: function (args) {
+    CBUISpecEditor_createEditorElement: function (args) {
         var item;
         var element = document.createElement("div");
         element.className = "CBKeyValuePairEditor";
@@ -49,7 +49,7 @@ var CBKeyValuePairEditor = {
 
         return element;
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
 
 
     /**
