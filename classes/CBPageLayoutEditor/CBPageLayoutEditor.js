@@ -21,7 +21,7 @@ var CBPageLayoutEditor = {
      *
      * @return Element
      */
-    createEditor: function (args) {
+    CBUISpecEditor_createEditorElement: function (args) {
         let section, item;
         let element = CBUI.createElement("CBPageLayoutEditor");
 
@@ -187,7 +187,7 @@ var CBPageLayoutEditor = {
 
         return element;
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
 
 
     /**
