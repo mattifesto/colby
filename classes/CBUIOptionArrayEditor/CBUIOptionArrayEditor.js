@@ -31,17 +31,23 @@ var CBUIOptionArrayEditor = {
      *          function updateValueCallback,
      *      }
      */
-    createEditor: function (args) {
+    CBUISpecEditor_createEditorElement: function (args) {
         var element = document.createElement("div");
         element.className = "CBUIOptionArrayEditor";
 
-        element.addEventListener("click", CBUIOptionArrayEditor.handleElementClicked.bind(undefined, {
-            element : element,
-            propertyName : args.propertyName,
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-            value : args.value,
-        }));
+        element.addEventListener(
+            "click",
+            CBUIOptionArrayEditor.handleElementClicked.bind(
+                undefined,
+                {
+                    element: element,
+                    propertyName: args.propertyName,
+                    spec: args.spec,
+                    specChangedCallback: args.specChangedCallback,
+                    value: args.value,
+                }
+            )
+        );
 
         var array = args.spec[args.propertyName];
 
@@ -50,9 +56,12 @@ var CBUIOptionArrayEditor = {
         }
 
         return {
-            element : element,
+            element: element,
         };
     },
+    /* CBUISpecEditor_createEditorElement() */
+
+
 
     /**
      * @NOTE 2017.12.23
@@ -70,7 +79,7 @@ var CBUIOptionArrayEditor = {
      *          value: mixed
      *      }
      */
-    handleElementClicked : function (args) {
+    handleElementClicked: function (args) {
         var array = args.spec[args.propertyName];
 
         if (array === undefined) {
