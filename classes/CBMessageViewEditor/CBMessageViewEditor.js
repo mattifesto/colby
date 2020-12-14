@@ -20,7 +20,7 @@ var CBMessageViewEditor = {
      *
      * @return Element
      */
-    createEditor: function (args) {
+    CBUISpecEditor_createEditorElement: function (args) {
         var section, item;
         var element = document.createElement("div");
         element.className = "CBMessageViewEditor";
@@ -90,7 +90,8 @@ var CBMessageViewEditor = {
 
         return element;
     },
-    /* createEditor() */
+    /* CBUISpecEditor_createEditorElement() */
+
 
 
     /**
@@ -114,4 +115,5 @@ var CBMessageViewEditor = {
         return undefined;
     },
     /* CBUISpec_toDescription() */
+
 };
