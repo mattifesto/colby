@@ -16,9 +16,12 @@
 */
 
 
-var CBArtworkViewEditor = {
+(function () {
 
-    /* -- CBUISpecEditor interfaces -- -- -- -- -- */
+    window.CBArtworkViewEditor = {
+        CBUISpecEditor_createEditorElement,
+        CBUISpec_toDescription,
+    };
 
 
 
@@ -32,6 +35,7 @@ var CBArtworkViewEditor = {
      *
      * @return Element
      */
+    function
     CBUISpecEditor_createEditorElement(
         args
     ) {
@@ -60,14 +64,10 @@ var CBArtworkViewEditor = {
         item = CBUI.createSectionItem();
 
         item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Alternative Text",
-                    propertyName: "alternativeText",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
+            createAlternativeTextEditorElement(
+                spec,
+                specChangedCallback
+            )
         );
 
         sectionElement.appendChild(item);
@@ -300,12 +300,9 @@ var CBArtworkViewEditor = {
             args.specChangedCallback();
         }
         /* createEditor_handleImageRemoved() */
-    },
+
+    }
     /* CBUISpecEditor_createEditorElement() */
-
-
-
-    /* -- CBUISpec interfaces -- -- -- -- -- */
 
 
 
@@ -314,7 +311,10 @@ var CBArtworkViewEditor = {
      *
      * @return string|undefined
      */
-    CBUISpec_toDescription: function (spec) {
+    function
+    CBUISpec_toDescription(
+        spec
+    ) {
         let alternativeText = CBModel.valueToString(
             spec,
             "alternativeText"
@@ -345,8 +345,34 @@ var CBArtworkViewEditor = {
         } else {
             return cbmessage;
         }
-    },
+    }
     /* CBUISpec_toDescription() */
 
-};
-/* CBArtworkViewEditor */
+
+
+    /**
+     * @return Element
+     */
+    function
+    createAlternativeTextEditorElement(
+        spec,
+        specChangedCallback
+    ) {
+        let stringEditor = CBUIStringEditor.create();
+        stringEditor.title = "Alternative Text";
+
+        stringEditor.value = CBModel.valueToString(
+            spec,
+            "alternativeText"
+        );
+
+        stringEditor.changed = function () {
+            spec.alternativeText = stringEditor.value;
+            specChangedCallback();
+        };
+
+        return stringEditor.element;
+    }
+    /* createAlternativeTextEditor() */
+
+})();
