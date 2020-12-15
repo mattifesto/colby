@@ -1444,7 +1444,8 @@ final class Admin_CBCode {
                 (object)[
                     'cbmessage' => <<<EOT
 
-                        Use CBUIStringEditor.create().
+                        Use CBUIStringEditor.create() or
+                        CBUIStringEditor2.create().
 
                     EOT,
                     'filetype' => 'js',
