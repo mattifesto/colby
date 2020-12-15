@@ -1,7 +1,6 @@
 "use strict";
 /* jshint strict: global */
 /* jshint esversion: 6 */
-/* exported CBContainerView2Editor */
 /* globals
     CBAjax,
     CBImage,
@@ -18,56 +17,82 @@
 
 
 
-var CBContainerView2Editor = {
+(function () {
 
-    /* -- CBUISpecEditor interfaces -- -- -- -- -- */
+    window.CBContainerView2Editor = {
+        CBUISpecEditor_createEditorElement,
+        CBUISpec_toDescription,
+        CBUISpec_toThumbnailURL,
+    };
 
 
 
     /**
-     * @param object args.spec
-     * @param function args.specChangedCallback
+     * @param object args
+     *
+     *      {
+     *          spec: object,
+     *          specChangedCallback: function,
+     *      }
      *
      * @return Element
      */
+    function
     CBUISpecEditor_createEditorElement(
         args
     ) {
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
+
         var section, item;
         var element = document.createElement("div");
         element.className = "CBContainerView2Editor";
 
-        element.appendChild(CBUI.createHalfSpace());
+        element.appendChild(
+            CBUI.createHalfSpace()
+        );
 
         section = CBUI.createSection();
 
         let imageChooser = CBUIImageChooser.create();
-        imageChooser.src = CBImage.toURL(args.spec.image, "rw960");
 
-        imageChooser.chosen = function (chooserArgs) {
-            CBContainerView2Editor.promise = CBAjax.call(
+        imageChooser.src = CBImage.toURL(
+            spec.image,
+            "rw960"
+        );
+
+        imageChooser.chosen = function (
+            chooserArgs
+        ) {
+            CBAjax.call(
                 "CBImages",
                 "upload",
                 {},
                 chooserArgs.file
             ).then(
                 function (imageModel) {
-                    args.spec.image = imageModel;
-                    imageChooser.src = CBImage.toURL(imageModel, "rw960");
+                    spec.image = imageModel;
 
-                    args.specChangedCallback();
+                    imageChooser.src = CBImage.toURL(
+                        imageModel,
+                        "rw960"
+                    );
+
+                    specChangedCallback();
                 }
             ).catch(
                 function (error) {
-                    CBUIPanel.displayAndReportError(error);
+                    CBUIPanel.displayAndReportError(
+                        error
+                    );
                 }
             );
         };
 
         imageChooser.removed = function () {
-            args.spec.image = undefined;
+            spec.image = undefined;
 
-            args.specChangedCallback();
+            specChangedCallback();
         };
 
         item = CBUI.createSectionItem();
@@ -85,8 +110,8 @@ var CBContainerView2Editor = {
                 {
                     labelText: "Title",
                     propertyName: "title",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
+                    spec: spec,
+                    specChangedCallback: specChangedCallback,
                 }
             ).element
         );
@@ -98,15 +123,15 @@ var CBContainerView2Editor = {
 
         /* subviews */
         {
-            if (args.spec.subviews === undefined) {
-                args.spec.subviews = [];
+            if (spec.subviews === undefined) {
+                spec.subviews = [];
             }
 
             let editor = CBUISpecArrayEditor.create(
                 {
                     addableClassNames: CBContainerView2Editor_addableClassNames,
-                    specs: args.spec.subviews,
-                    specsChangedCallback: args.specChangedCallback,
+                    specs: spec.subviews,
+                    specsChangedCallback: specChangedCallback,
                 }
             );
 
@@ -148,8 +173,8 @@ var CBContainerView2Editor = {
                 {
                     labelText: "CSS Class Names",
                     propertyName: "CSSClassNames",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
+                    spec: spec,
+                    specChangedCallback: specChangedCallback,
                 }
             ).element
         );
@@ -170,8 +195,8 @@ var CBContainerView2Editor = {
                 {
                     labelText: "Local CSS Template",
                     propertyName: "localCSSTemplate",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
+                    spec: spec,
+                    specChangedCallback: specChangedCallback,
                 }
             ).element
         );
@@ -184,12 +209,8 @@ var CBContainerView2Editor = {
         );
 
         return element;
-    },
+    }
     /* CBUISpecEditor_createEditorElement() */
-
-
-
-    /* -- CBUISpec interfaces -- -- -- -- -- */
 
 
 
@@ -198,7 +219,10 @@ var CBContainerView2Editor = {
      *
      * @return string|undefined
      */
-    CBUISpec_toDescription: function (spec) {
+    function
+    CBUISpec_toDescription(
+        spec
+    ) {
         let title = CBModel.valueToString(spec, "title").trim();
 
         if (title !== "") {
@@ -216,7 +240,7 @@ var CBContainerView2Editor = {
                 }
             }
         }
-    },
+    }
     /* CBUISpec_toDescription() */
 
 
@@ -226,7 +250,10 @@ var CBContainerView2Editor = {
      *
      * @return string|undefined
      */
-    CBUISpec_toThumbnailURL: function (spec) {
+    function
+    CBUISpec_toThumbnailURL(
+        spec
+    ) {
         if (spec.image) {
             return CBImage.toURL(
                 spec.image,
@@ -245,8 +272,7 @@ var CBContainerView2Editor = {
                 }
             }
         }
-    },
+    }
     /* CBUISpec_toThumbnailURL() */
 
-};
-/* CBContainerView2Editor */
+})();
