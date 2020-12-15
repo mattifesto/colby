@@ -10,7 +10,7 @@
     CBUIPanel,
     CBUISpec,
     CBUISpecArrayEditor,
-    CBUIStringEditor,
+    CBUIStringEditor2,
 
     CBContainerView2Editor_addableClassNames,
 */
@@ -100,26 +100,34 @@
         section.appendChild(item);
 
         element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
 
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
+        /* title */
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Title",
-                    propertyName: "title",
-                    spec: spec,
-                    specChangedCallback: specChangedCallback,
-                }
-            ).element
-        );
+            element.appendChild(
+                elements[0]
+            );
 
-        section.appendChild(item);
+            let sectionElement = elements[1];
+            let stringEditor = CBUIStringEditor2.create();
 
-        element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
+            stringEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
+                spec,
+                "title",
+                "Title",
+                specChangedCallback
+            );
+
+            sectionElement.appendChild(
+                stringEditor.CBUIStringEditor2_getElement()
+            );
+        }
+        /* title */
+
 
         /* subviews */
         {
@@ -141,72 +149,84 @@
             element.appendChild(CBUI.createHalfSpace());
         }
 
+
+        /* CSSClassNames */
+        {
+            element.appendChild(
+                CBUI.createSectionHeader(
+                    {
+                        paragraphs: [
+                            `
+                            Supported Class Names:
+                            `,`
+                            flow: Flow subviews from left to right and wrap into new
+                            lines. Center each line of children. Example scenario:
+                            displaying a collection of images.
+                            `,`
+                            hero1: Present the view as a full window view. The
+                            minimum height is the window height. The background
+                            image will always cover the entire view which will hide
+                            some of the edges of the image depending on the shape of
+                            the window.
+                            `
+                       ],
+                    }
+                )
+            );
+
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
+
+            element.appendChild(
+                elements[0]
+            );
+
+            let sectionElement = elements[1];
+            let stringEditor = CBUIStringEditor2.create();
+
+            stringEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
+                spec,
+                "CSSClassNames",
+                "CSS Class Names",
+                specChangedCallback
+            );
+
+            sectionElement.appendChild(
+                stringEditor.CBUIStringEditor2_getElement()
+            );
+        }
         /* CSSClassNames */
 
-        element.appendChild(
-            CBUI.createSectionHeader(
-                {
-                    paragraphs: [
-                        `
-                        Supported Class Names:
-                        `,`
-                        flow: Flow subviews from left to right and wrap into new
-                        lines. Center each line of children. Example scenario:
-                        displaying a collection of images.
-                        `,`
-                        hero1: Present the view as a full window view. The
-                        minimum height is the window height. The background
-                        image will always cover the entire view which will hide
-                        some of the edges of the image depending on the shape of
-                        the window.
-                        `
-                   ],
-                }
-            )
-        );
-
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "CSS Class Names",
-                    propertyName: "CSSClassNames",
-                    spec: spec,
-                    specChangedCallback: specChangedCallback,
-                }
-            ).element
-        );
-
-        section.appendChild(item);
-
-        element.appendChild(section);
 
         /* localCSSTemplate */
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        element.appendChild(CBUI.createHalfSpace());
+            element.appendChild(
+                elements[0]
+            );
 
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
+            let sectionElement = elements[1];
+            let stringEditor = CBUIStringEditor2.create();
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Local CSS Template",
-                    propertyName: "localCSSTemplate",
-                    spec: spec,
-                    specChangedCallback: specChangedCallback,
-                }
-            ).element
-        );
+            stringEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
+                spec,
+                "localCSSTemplate",
+                "Local CSS Template",
+                specChangedCallback
+            );
 
-        section.appendChild(item);
-        element.appendChild(section);
+            sectionElement.appendChild(
+                stringEditor.CBUIStringEditor2_getElement()
+            );
+        }
+        /* localCSSTemplate */
 
-        element.appendChild(
-            CBUI.createHalfSpace()
-        );
 
         return element;
     }

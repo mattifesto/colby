@@ -52,7 +52,7 @@ final class CBContainerView2Editor {
             'CBUIPanel',
             'CBUISpec',
             'CBUISpecArrayEditor',
-            'CBUIStringEditor',
+            'CBUIStringEditor2',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
