@@ -34,24 +34,6 @@ final class CBEmail {
             );
         }
 
-        /**
-         * @NOTE 2020_02_22
-         *
-         *      The COLBY_EMAIL constants are all deprecated.
-         */
-        if (defined('COLBY_EMAIL_SMTP_SERVER')) {
-            array_push(
-                $cbmessages,
-                <<<EOT
-
-                    The COLBY_EMAIL_SMTP_SERVER constant is defined. Don't
-                    define it and instead enter the email sender information in
-                    the CBEmailSender model.
-
-                EOT
-            );
-        }
-
         return $cbmessages;
     }
     /* CBAdmin_getIssueMessages() */
@@ -226,21 +208,9 @@ final class CBEmail {
         }
 
         if ($cbemailsender === null) {
-            if (!defined('COLBY_EMAIL_SMTP_SERVER')) {
-                throw new CBException(
-                    'The system email has not been configured.'
-                );
-            }
-
-            $cbemailsender = (object)[
-                'SMTPServerHostname' => COLBY_EMAIL_SMTP_SERVER,
-                'SMTPServerPort' => COLBY_EMAIL_SMTP_PORT,
-                'SMTPServerSecurity' => COLBY_EMAIL_SMTP_SECURITY,
-                'SMTPServerUsername' => COLBY_EMAIL_SMTP_USER,
-                'SMTPServerPassword' => COLBY_EMAIL_SMTP_PASSWORD,
-                'sendingEmailAddress' => COLBY_EMAIL_SENDER,
-                'sendingEmailFullName' => COLBY_EMAIL_SENDER_NAME,
-            ];
+            throw new CBException(
+                'The system email has not been configured.'
+            );
         }
 
         $SMTPTransport = Swift_SmtpTransport::newInstance(
