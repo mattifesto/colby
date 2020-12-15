@@ -38,11 +38,11 @@
 }
 
 .CBUIExpander_toggle::before {
-    content: "▼";
+    content: "▶";
 }
 
 .CBUIExpander.expanded .CBUIExpander_toggle::before {
-    content: "▲";
+    transform: rotate(90deg);
 }
 
 .CBUIExpander.severity7 .CBUIExpander_toggle {
