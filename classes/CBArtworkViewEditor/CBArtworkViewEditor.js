@@ -12,7 +12,6 @@
     CBUIImageChooser,
     CBUIPanel,
     CBUISelector,
-    CBUIStringEditor,
     CBUIStringEditor2,
 */
 
@@ -172,50 +171,13 @@
             renderImageOnlyEditor.element
         );
 
-        /* CSSClassNames */
-
         element.appendChild(
-            CBUI.createHalfSpace()
-        );
-
-        element.appendChild(
-            CBUI.createSectionHeader(
-                {
-                    paragraphs: [
-                        `
-                            Supported Class Names:
-                        `,
-                        `
-                            left: Align the caption text to the left.
-                        `,
-                        `
-                            right: Align the caption text to the right.
-                        `,
-                   ],
-                }
+            createCSSClassNamesEditorElement(
+                spec,
+                specChangedCallback
             )
         );
 
-        sectionElement = CBUI.createSection();
-
-        item = CBUI.createSectionItem();
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "CSS Class Names",
-                    propertyName: "CSSClassNames",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
-
-        sectionElement.appendChild(item);
-        element.appendChild(sectionElement);
-
-        element.appendChild(
-            CBUI.createHalfSpace()
-        );
 
         /* set thumbnail */
 
@@ -389,5 +351,65 @@
         return stringEditor.CBUIStringEditor2_getElement();
     }
     /* createAlternativeTextEditor() */
+
+
+
+    /**
+     * @return Element
+     */
+    function
+    createCSSClassNamesEditorElement(
+        spec,
+        specChangedCallback
+    ) {
+        let element = CBUI.createElement(
+            "CBArtworkViewEditor_CSSClassNamesEditor"
+        );
+
+        element.appendChild(
+            CBUI.createSectionHeader(
+                {
+                    paragraphs: [
+                        `
+                            Supported Class Names:
+                        `,
+                        `
+                            left: Align the caption text to the left.
+                        `,
+                        `
+                            right: Align the caption text to the right.
+                        `,
+                   ],
+                }
+            )
+        );
+
+        let elements = CBUI.createElementTree(
+            "CBUI_sectionContainer",
+            "CBUI_section"
+        );
+
+        element.appendChild(
+            elements[0]
+        );
+
+        let sectionElement = elements[1];
+
+        let stringEditor = CBUIStringEditor2.create();
+
+        stringEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
+            spec,
+            "CSSClassNames",
+            "CSS Class Names",
+            specChangedCallback
+        );
+
+        sectionElement.appendChild(
+            stringEditor.CBUIStringEditor2_getElement()
+        );
+
+        return element;
+    }
+    /* createCSSClassNamesEditorElement() */
 
 })();

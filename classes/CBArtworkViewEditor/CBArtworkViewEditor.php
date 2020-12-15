@@ -38,7 +38,6 @@ final class CBArtworkViewEditor {
             'CBUIImageChooser',
             'CBUIPanel',
             'CBUISelector',
-            'CBUIStringEditor',
             'CBUIStringEditor2',
         ];
     }
