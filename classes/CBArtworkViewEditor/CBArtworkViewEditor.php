@@ -39,6 +39,7 @@ final class CBArtworkViewEditor {
             'CBUIPanel',
             'CBUISelector',
             'CBUIStringEditor',
+            'CBUIStringEditor2',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

@@ -13,6 +13,7 @@
     CBUIPanel,
     CBUISelector,
     CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 
@@ -61,49 +62,28 @@
         item.appendChild(imageChooser.element);
         sectionElement.appendChild(item);
 
-        item = CBUI.createSectionItem();
 
-        item.appendChild(
+        /* alternative text */
+
+        sectionElement.appendChild(
             createAlternativeTextEditorElement(
                 spec,
                 specChangedCallback
             )
         );
 
-        sectionElement.appendChild(item);
-
 
         /* captionAsCBMessage, captionAsMarkdown */
-        {
-            let propertyName;
-            let title;
 
-            let captionAsMarkdown = CBModel.valueToString(
-                args.spec,
-                "captionAsMarkdown"
-            );
+        sectionElement.appendChild(
+            createCaptionEditorElement(
+                spec,
+                specChangedCallback
+            )
+        );
 
-            if (captionAsMarkdown.trim() === "") {
-                title = "Caption (cbmessage)";
-                propertyName = "captionAsCBMessage";
-            } else {
-                title = "Caption (markdown)";
-                propertyName = "captionAsMarkdown";
-            }
 
-            let stringEditor = CBUIStringEditor.createEditor(
-                {
-                    labelText: title,
-                    propertyName: propertyName,
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            );
-
-            sectionElement.appendChild(stringEditor.element);
-        }
-        /* captionAsCBMessage, captionAsMarkdown */
-
+        /* maximum display width */
 
         item = CBUI.createSectionItem();
         item.appendChild(
@@ -358,20 +338,55 @@
         spec,
         specChangedCallback
     ) {
-        let stringEditor = CBUIStringEditor.create();
-        stringEditor.title = "Alternative Text";
+        let stringEditor = CBUIStringEditor2.create();
 
-        stringEditor.value = CBModel.valueToString(
+        stringEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
             spec,
-            "alternativeText"
+            "alternativeText",
+            "Alternative Text",
+            specChangedCallback
         );
 
-        stringEditor.changed = function () {
-            spec.alternativeText = stringEditor.value;
-            specChangedCallback();
-        };
+        return stringEditor.CBUIStringEditor2_getElement();
+    }
+    /* createAlternativeTextEditor() */
 
-        return stringEditor.element;
+
+
+    /**
+     * @return Element
+     */
+    function
+    createCaptionEditorElement(
+        spec,
+        specChangedCallback
+    ) {
+        let propertyName;
+        let title;
+
+        let captionAsMarkdown = CBModel.valueToString(
+            spec,
+            "captionAsMarkdown"
+        );
+
+        if (captionAsMarkdown.trim() === "") {
+            title = "Caption (cbmessage)";
+            propertyName = "captionAsCBMessage";
+        } else {
+            title = "Caption (markdown)";
+            propertyName = "captionAsMarkdown";
+        }
+
+        let stringEditor = CBUIStringEditor2.create();
+
+        stringEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
+            spec,
+            propertyName,
+            title,
+            specChangedCallback
+        );
+
+        return stringEditor.CBUIStringEditor2_getElement();
     }
     /* createAlternativeTextEditor() */
 
