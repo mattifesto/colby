@@ -1215,8 +1215,21 @@ final class Admin_CBCode {
 
 
 
-                /* -- warnings -- -- -- -- -- */
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'deprecatedGroupName',
+                    'severity' => 4,
+                    'title' => 'deprecatedGroupName',
 
+                    'cbmessage' => <<<EOT
+
+                        All references to the old user group names should be
+                        removed.
+
+                    EOT,
+
+                    'warningStartDate' => '2020/12/16',
+                ],
 
 
                 (object)[
