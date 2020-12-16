@@ -79,6 +79,27 @@ final class CBModel {
 
 
     /**
+     * @param string $className
+     *
+     * @return bool
+     *
+     *      Returns true if the class is a model class.
+     */
+    static function
+    classIsModel(
+        string $className
+    ): bool {
+        $functionName = "{$className}::CBModel_build";
+
+        return is_callable(
+            $functionName
+        );
+    }
+    /* classIsModel() */
+
+
+
+    /**
      * This function returns a copy of the $spec parameter.
      *
      * Copies of model specs are further processed by model classes that
