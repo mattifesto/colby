@@ -9,8 +9,9 @@ final class CBUI {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs(
-    ) {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array {
         return [
             Colby::flexpath(
                 __CLASS__,
@@ -26,11 +27,18 @@ final class CBUI {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v589.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.5.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 

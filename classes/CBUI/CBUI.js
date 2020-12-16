@@ -366,7 +366,9 @@ var CBUI = {
 
 
     /**
-     * @deprecated use CBUISection.create()
+     * @deprecated 2020_12_15
+     *
+     *      Use CBUI.createElement() with the "CBUI_section" class name.
      *
      * @return Element
      */
@@ -423,18 +425,31 @@ var CBUI = {
 
         return element;
     },
+    /* createSectionHeader() */
 
 
 
     /**
+     * @deprecated 2020_12_15
+     *
+     *      Use CBUI.createElement(
+     *          "CBUISectionItem"
+     *      );
+     *
+     * @NOTE
+     *
+     *      I think CBUISectionItem may be derecated also and replaced by
+     *      CBUI_sectionItem. Needs nore investigation.
+     *
      * @return Element
      */
-    createSectionItem : function () {
+    createSectionItem: function () {
         var element = document.createElement("div");
         element.className = "CBUISectionItem";
 
         return element;
     },
+    /* createSectionItem() */
 
 
 
@@ -459,7 +474,7 @@ var CBUI = {
      *          setThumbnailURI: function
      *      }
      */
-    createSectionItem2 : function () {
+    createSectionItem2: function () {
         var element = CBUI.createSectionItem();
         element.classList.add("CBUISectionItem2");
         var thumbnailElement = document.createElement("div");
