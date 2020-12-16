@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBUISpecEditor */
 /* global
+    CBConvert,
     CBDefaultEditor,
     CBException,
     CBModel,
@@ -104,17 +105,40 @@ var CBUISpecEditor = {
         if (createEditorElementInterface === undefined) {
             if (useStrict) {
                 throw Error(
-                    `The ${functionName}() interface has not been ` +
-                    `implemented on the ${globalVariableName} object`
+                    CBConvert.stringToCleanLine(`
+                        The ${functionName}() interface has not been implemented
+                        on the ${globalVariableName} object.
+                    `)
                 );
             } else {
-                /* deprecated */
+
+                /**
+                 * @deprecated
+                 *
+                 *      This else block can be removed in version 676, and use strict
+                 *      should be assumed to be true.
+                 */
+
                 createEditorElementInterface = CBModel.valueAsFunction(
                     editorObject,
                     "createEditor"
                 );
-            }
 
+                /**
+                 * If there is an editor object and it hasn't implemented any
+                 * CBUISpecEditor interface then that is an error because
+                 * there's no point in creating an editor object without
+                 * implementing an editor creation interface.
+                 */
+
+                 throw Error(
+                    CBConvert.stringToCleanLine(`
+                        No CBUISpecEditor interface has been implemented on the
+                        ${globalVariableName} object.
+                    `)
+                 );
+
+            }
         }
 
         let editorElement;
@@ -133,5 +157,6 @@ var CBUISpecEditor = {
         };
     },
     /* create() */
+
 };
 /* CBUISpecEditor */
