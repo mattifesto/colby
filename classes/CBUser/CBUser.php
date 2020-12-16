@@ -405,14 +405,10 @@ final class CBUser {
      *
      * @return object
      */
-    static function CBModel_build(
+    static function
+    CBModel_build(
         stdClass $spec
     ): stdClass {
-        $userNumericID = CBModel::valueAsInt(
-            $spec,
-            'userNumericID'
-        );
-
 
         /* email */
 
@@ -541,8 +537,6 @@ final class CBUser {
             'passwordHash' => $passwordHash,
 
             'title' => $title,
-
-            'userNumericID' => $userNumericID,
         ];
     }
     /* CBModel_build() */
@@ -558,18 +552,6 @@ final class CBUser {
         stdClass $originalSpec
     ): stdClass {
         $upgradedSpec = CBModel::clone($originalSpec);
-
-
-        /* userID -> userNumericID */
-
-        if (
-            !isset($upgradedSpec->userNumericID)
-        ) {
-            $upgradedSpec->userNumericID = CBModel::valueAsInt(
-                $upgradedSpec,
-                'userID'
-            );
-        }
 
 
         /* remove userID property */
