@@ -9,11 +9,18 @@ final class CBContainerViewEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v653.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.5.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -45,7 +52,7 @@ final class CBContainerViewEditor {
             'CBUISelector',
             'CBUISpec',
             'CBUISpecArrayEditor',
-            'CBUIStringEditor',
+            'CBUIStringEditor2',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

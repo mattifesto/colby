@@ -11,7 +11,7 @@
     CBUISelector,
     CBUISpec,
     CBUISpecArrayEditor,
-    CBUIStringEditor,
+    CBUIStringEditor2,
 
     CBContainerViewEditor_addableClassNames,
 */
@@ -96,46 +96,51 @@ var CBContainerViewEditor = {
     CBUISpecEditor_createEditorElement(
         args
     ) {
-        var section, item;
-        var element = document.createElement("div");
-        element.className = "CBContainerViewEditor";
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
 
-        var HREFSectionItem = CBUI.createSectionItem();
+        let elements = CBUI.createElementTree(
+            "CBContainerViewEditor",
+            "CBUI_sectionContainer",
+            "CBUI_section"
+        );
+
+        let element = elements[0];
+        let sectionElement = elements[2];
+        let item;
+
+        let HREFSectionItemElement = CBUI.createElement(
+            "CBUISectionItem"
+        );
 
         var tagNameChangedCallback =
         CBContainerViewEditor.handleTagNameChanged.bind(
             undefined,
             {
-                HREFSectionItem: HREFSectionItem,
-                spec: args.spec,
-                specChangedCallback: args.specChangedCallback,
+                HREFSectionItem: HREFSectionItemElement,
+                spec: spec,
+                specChangedCallback: specChangedCallback,
             }
         );
 
         tagNameChangedCallback();
 
-        element.appendChild(
-            CBUI.createHalfSpace()
-        );
-
-        /* section */
-        section = CBUI.createSection();
 
         /* title */
-        item = CBUI.createSectionItem();
+        {
+            let stringEditor = CBUIStringEditor2.create();
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Title",
-                    propertyName: "title",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
+            stringEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
+                spec,
+                "title",
+                "Title",
+                specChangedCallback
+            );
 
-        section.appendChild(item);
+            sectionElement.appendChild(
+                stringEditor.CBUIStringEditor2_getElement()
+            );
+        }
 
         /* tagName */
         item = CBUI.createSectionItem();
@@ -195,62 +200,70 @@ var CBContainerViewEditor = {
                     labelText: "Type",
                     options: options,
                     propertyName: "tagName",
-                    spec: args.spec,
+                    spec: spec,
                     specChangedCallback: tagNameChangedCallback,
                 }
             ).element
         );
 
-        section.appendChild(item);
+        sectionElement.appendChild(item);
 
         /* HREF */
-        item = HREFSectionItem;
+        {
+            let sectionItemElement = HREFSectionItemElement;
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "URL",
-                    propertyName: "HREF",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
+            sectionElement.appendChild(
+                sectionItemElement
+            );
 
-        section.appendChild(item);
+            let stringEditor = CBUIStringEditor2.create();
+
+            stringEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
+                spec,
+                "HREF",
+                "URL",
+                specChangedCallback
+            );
+
+            sectionItemElement.appendChild(
+                stringEditor.CBUIStringEditor2_getElement()
+            );
+        }
+
 
         /* backgroundColor */
-        item = CBUI.createSectionItem();
+        {
+            let stringEditor = CBUIStringEditor2.create();
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Background Color",
-                    propertyName: "backgroundColor",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
+            stringEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
+                spec,
+                "backgroundColor",
+                "Background Color",
+                specChangedCallback
+            );
 
-        section.appendChild(item);
-        element.appendChild(section);
+            sectionElement.appendChild(
+                stringEditor.CBUIStringEditor2_getElement()
+            );
+        }
+        /* backgroundColor */
+
 
         /* subviews */
         element.appendChild(
             CBUI.createHalfSpace()
         );
 
-        if (args.spec.subviews === undefined) {
-            args.spec.subviews = [];
+        if (spec.subviews === undefined) {
+            spec.subviews = [];
         }
 
         {
             let editor = CBUISpecArrayEditor.create(
                 {
                     addableClassNames: CBContainerViewEditor_addableClassNames,
-                    specs: args.spec.subviews,
-                    specsChangedCallback: args.specChangedCallback,
+                    specs: spec.subviews,
+                    specsChangedCallback: specChangedCallback,
                 }
             );
 
@@ -346,45 +359,60 @@ var CBContainerViewEditor = {
             )
         );
 
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "CSS Class Names",
-                    propertyName: "CSSClassNames",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
+            element.appendChild(
+                elements[0]
+            );
 
-        section.appendChild(item);
-        element.appendChild(section);
+            let sectionElement = elements[1];
+            let stringEditor = CBUIStringEditor2.create();
+
+            stringEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
+                spec,
+                "CSSClassNames",
+                "CSS Class Names",
+                specChangedCallback
+            );
+
+            sectionElement.appendChild(
+                stringEditor.CBUIStringEditor2_getElement()
+            );
+        }
+        /* CSSClassNames */
+
 
         /* local CSS template */
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        element.appendChild(CBUI.createHalfSpace());
+            element.appendChild(
+                elements[0]
+            );
 
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
+            let sectionElement = elements[1];
+            let stringEditor = CBUIStringEditor2.create();
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Styles Template",
-                    propertyName: "stylesTemplate",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
+            stringEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
+                spec,
+                "stylesTemplate",
+                "Styles Template",
+                specChangedCallback
+            );
 
-        section.appendChild(item);
-        element.appendChild(section);
+            sectionElement.appendChild(
+                stringEditor.CBUIStringEditor2_getElement()
+            );
+        }
+        /* local CSS template */
 
-        element.appendChild(CBUI.createHalfSpace());
 
         return element;
 
@@ -423,20 +451,20 @@ var CBContainerViewEditor = {
          * @return Element
          */
         function createImageEditorElement(propertyName) {
-            var section = CBUI.createSection();
+            var sectionElement = CBUI.createSection();
 
             let imageChooser = CBUIImageChooser.create();
             imageChooser.chosen = createImageEditorElement_chosen;
             imageChooser.removed = createImageEditorElement_removed;
-            imageChooser.src = imageToURL(args.spec[propertyName]);
-            imageChooser.caption = imageToSize(args.spec[propertyName]);
+            imageChooser.src = imageToURL(spec[propertyName]);
+            imageChooser.caption = imageToSize(spec[propertyName]);
 
             var item = CBUI.createSectionItem();
 
             item.appendChild(imageChooser.element);
-            section.appendChild(item);
+            sectionElement.appendChild(item);
 
-            return section;
+            return sectionElement;
 
 
 
@@ -455,11 +483,11 @@ var CBContainerViewEditor = {
                     imageChooser.file
                 ).then(
                     function (imageModel) {
-                        args.spec[propertyName] = imageModel;
+                        spec[propertyName] = imageModel;
                         imageChooser.src = imageToURL(imageModel);
                         imageChooser.caption = imageToSize(imageModel);
 
-                        args.specChangedCallback();
+                        specChangedCallback();
                     }
                 );
             }
@@ -471,8 +499,8 @@ var CBContainerViewEditor = {
              * @return undefined
              */
             function createImageEditorElement_removed() {
-                args.spec[propertyName] = undefined;
-                args.specChangedCallback();
+                spec[propertyName] = undefined;
+                specChangedCallback();
             }
             /* createImageEditorElement_removed() */
 
