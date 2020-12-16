@@ -8,7 +8,7 @@
     CBUI,
     CBUIPanel,
     CBUISelector,
-    CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 var CBYouTubeViewEditor = {
@@ -23,7 +23,7 @@ var CBYouTubeViewEditor = {
      *
      * @return Element
      */
-    CBViewPageEditor_createEditor: function (args) {
+    CBUISpecEditor_createEditorElement: function (args) {
         let spec = args.spec;
         let specChangedCallback = args.specChangedCallback;
 
@@ -39,17 +39,21 @@ var CBYouTubeViewEditor = {
         /* video id */
         {
             let timeoutID;
-            let videoIDEditor = CBUIStringEditor.create();
+            let videoIDEditor = CBUIStringEditor2.create();
 
             sectionElement.appendChild(
-                videoIDEditor.element
+                videoIDEditor.CBUIStringEditor2_getElement()
             );
 
-            videoIDEditor.title = "Video ID";
+            videoIDEditor.CBUIStringEditor2_setTitle(
+                "Video ID or URL"
+            );
 
-            videoIDEditor.value = CBModel.valueToString(
-                spec,
-                "videoID"
+            videoIDEditor.CBUIStringEditor2_setValue(
+                CBModel.valueToString(
+                    spec,
+                    "videoID"
+                )
             );
 
             /**
@@ -62,73 +66,81 @@ var CBYouTubeViewEditor = {
              *      Also, this sort of "wait one second then do" is a common
              *      pattern that needs to be solidified and documented.
              */
-            videoIDEditor.changed = function () {
-                videoIDEditor.title = "Video ID (checking)";
-
-                if (timeoutID !== undefined) {
-                    window.clearTimeout(
-                        timeoutID
+            videoIDEditor.CBUIStringEditor2_setChangedEventListener(
+                function () {
+                    videoIDEditor.CBUIStringEditor2_setTitle(
+                        "Video ID (checking)"
                     );
-                }
 
-                timeoutID = window.setTimeout(
-                    check,
-                    1000
-                );
+                    if (timeoutID !== undefined) {
+                        window.clearTimeout(
+                            timeoutID
+                        );
+                    }
 
-                /**
-                 * @return undefined
-                 */
-                function check() {
-                    timeoutID = undefined;
+                    timeoutID = window.setTimeout(
+                        check,
+                        1000
+                    );
 
-                    CBAjax.call(
-                        "CBYouTubeViewEditor",
-                        "checkVideoID",
-                        {
-                            suggestedValue: videoIDEditor.value,
-                        }
-                    ).then(
-                        function (response) {
-                            if (response.isValid) {
-                                spec.videoID = response.videoID;
-                                videoIDEditor.title = "Video ID (accepted)";
+                    /**
+                     * @return undefined
+                     */
+                    function check() {
+                        timeoutID = undefined;
 
-                                specChangedCallback();
-                            } else {
-                                spec.videoID = undefined;
-                                videoIDEditor.title = "Video ID (not valid)";
+                        CBAjax.call(
+                            "CBYouTubeViewEditor",
+                            "checkVideoID",
+                            {
+                                suggestedValue: videoIDEditor.value,
                             }
-                        }
-                    ).catch(
-                        function (error) {
-                            CBUIPanel.displayAndReportError(
-                                error
-                            );
-                        }
-                    );
+                        ).then(
+                            function (response) {
+                                if (response.isValid) {
+                                    spec.videoID = response.videoID;
+
+                                    videoIDEditor.CBUIStringEditor2_setTitle(
+                                        "Video ID (accepted)"
+                                    );
+
+                                    specChangedCallback();
+                                } else {
+                                    spec.videoID = undefined;
+
+                                    videoIDEditor.CBUIStringEditor2_setTitle(
+                                        "Video ID (not valid)"
+                                    );
+                                }
+                            }
+                        ).catch(
+                            function (error) {
+                                CBUIPanel.displayAndReportError(
+                                    error
+                                );
+                            }
+                        );
+                    }
                 }
-            };
+            );
         }
         /* video id */
 
 
         /* caption */
         {
-            let item = CBUI.createSectionItem();
+            let stringEditor = CBUIStringEditor2.create();
 
-            item.appendChild(
-                CBUIStringEditor.createEditor(
-                    {
-                        labelText: "Caption",
-                        propertyName: "captionAsMessage",
-                        spec: args.spec,
-                        specChangedCallback: args.specChangedCallback,
-                    }
-                ).element
+            stringEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
+                spec,
+                "captionAsMessage",
+                "Caption",
+                specChangedCallback
             );
 
-            sectionElement.appendChild(item);
+            sectionElement.appendChild(
+                stringEditor.CBUIStringEditor2_getElement()
+            );
         }
         /* caption */
 

@@ -110,7 +110,7 @@ final class CBYouTubeViewEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.3.js',
+                'v675.5.js',
                 cbsysurl()
             ),
         ];
@@ -129,7 +129,7 @@ final class CBYouTubeViewEditor {
             'CBUI',
             'CBUIPanel',
             'CBUISelector',
-            'CBUIStringEditor',
+            'CBUIStringEditor2',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
