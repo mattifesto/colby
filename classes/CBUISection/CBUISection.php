@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @deprecated 2020_12_15
+ *
+ *      Use CBUI.createElement() with the "CBUI_section" class name.
+ */
 final class CBUISection {
 
     /**
