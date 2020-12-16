@@ -554,11 +554,6 @@ final class CBUser {
         $upgradedSpec = CBModel::clone($originalSpec);
 
 
-        /* remove userID property */
-
-        unset($upgradedSpec->userID);
-
-
         /* facebook.id -> facebookUserID */
 
         if (
