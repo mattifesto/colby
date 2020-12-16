@@ -5,6 +5,8 @@
 /* global
     CBTest,
     CBUISpecEditor,
+
+    CBUISpecEditor_Tests_editableModelClassNames,
 */
 
 var CBUISpecEditor_Tests = {
@@ -12,55 +14,25 @@ var CBUISpecEditor_Tests = {
     /**
      * @return object
      */
-    CBTest_wellKnownModels: function () {
-        let specs = [
-            {
-                className: "CBArtworkView",
-                image: 5,
-            },
-            {
-                className: "CBBackgroundView",
-                image: 5,
-            },
-            {
-                className: "CBContainerView",
-                smallImage: 5,
-            },
-            {
-                className: "CBContainerView2",
-                image: 5,
-            },
-            {
-                className: "CBIconLinkView",
-                image: 5,
-            },
-            {
-                className: "CBLinkView1",
-                image: 5,
-            },
-            {
-                className: "CBMenuView",
-            },
-            /* uses installed admin menu */
-            {
-                className: "CBMenuView",
-                menuID: "3924c0a0581171f86f0708bfa799a3d8c34bd390",
-                selectedItemName: "help",
-            },
-            {
-                className: "CBPageListView2",
-            },
-            {
-                className: "CBSitePreferences",
-                imageForIcon: 5,
-            },
-            {
-                className: "CBViewPage",
-                image: 5,
-            },
-        ];
+    CBTest_allModelEditors: function () {
+        let specs = [];
 
-        for (let index = 0; index < specs.length; index += 1) {
+        CBUISpecEditor_Tests_editableModelClassNames.forEach(
+            function (editableModelClassName) {
+                specs.push(
+                    {
+                        ID: "0000111122223333444455556666777788889999",
+                        className: editableModelClassName,
+                    }
+                );
+            }
+        );
+
+        for (
+            let index = 0;
+            index < specs.length;
+            index += 1
+        ) {
             let spec = specs[index];
             let editor = CBUISpecEditor.create(
                 {
@@ -75,7 +47,7 @@ var CBUISpecEditor_Tests = {
                     `spec at index ${index}`,
                     spec,
                     `
-                        This spec did not product an editor element.
+                        This spec did not produce an editor element.
                     `
                 );
             }
@@ -86,6 +58,7 @@ var CBUISpecEditor_Tests = {
             succeeded: true,
         };
     },
-    /* CBTest_wellKnownModels() */
+    /* CBTest_allModelEditors() */
+
 };
 /* CBUISpecEditor_Tests */

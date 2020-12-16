@@ -4,46 +4,62 @@ final class CBUISpecEditor_Tests {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
+
+
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v477.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.5.js',
+                cbsysurl()
+            ),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
 
 
+
     /**
-     * @TODO 2019_05_27
-     *
-     *      Eventually we want to have all model editors registered and fetch
-     *      them here by using an API.
-     *
+     * @return [[<name>, <value>]]
+     */
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array {
+        return [
+            [
+                'CBUISpecEditor_Tests_editableModelClassNames',
+                CBUISpecEditor_Tests::fetchEditableModelClassNames()
+            ],
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptVariables() */
+
+
+
+    /**
      * @return [string]
      */
     static function CBHTMLOutput_requiredClassNames() {
-        return [
-            'CBTest',
-            'CBUISpecEditor',
-
-            'CBArtworkViewEditor',
-            'CBBackgroundViewEditor',
-            'CBContainerViewEditor',
-            'CBContainerView2Editor',
-            'CBIconLinkViewEditor',
-            'CBLinkView1',
-            'CBMenuViewEditor',
-            'CBPageListView2Editor',
-            'CBSitePreferencesEditor',
-            'CBViewPageEditor',
-        ];
+        return array_merge(
+            [
+                'CBTest',
+                'CBUISpecEditor',
+            ],
+            CBUISpecEditor_Tests::fetchModelEditorClassNames()
+        );
     }
     /* CBHTMLOutput_requiredClassNames() */
 
 
+
     /* -- CBTest interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return [object]
@@ -51,11 +67,95 @@ final class CBUISpecEditor_Tests {
     static function CBTest_getTests(): array {
         return [
             (object)[
-                'title' => 'CBUISpecEditor tests for well-known models',
-                'name' => 'wellKnownModels',
+                'name' => 'allModelEditors',
             ],
         ];
     }
     /* CBTest_getTests() */
+
+
+
+    /* -- functions -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    private static function
+    fetchEditableModelClassNames(
+    ): array {
+        static $editableModelClassNames = [];
+
+        if (
+            empty($editableModelClassNames)
+        ) {
+            $editableModelClassNames = CBLibrary::getAllClassDirectoryNames();
+
+            $editableModelClassNames = array_filter(
+                $editableModelClassNames,
+                function (
+                    $className
+                ) {
+                    return (
+                        CBModel::classIsModel(
+                            $className
+                        )
+
+                        &&
+
+                        CBUISpecEditor::modelClassNameToEditorClassName(
+                            $className
+                        )
+                    );
+                }
+            );
+
+            $editableModelClassNames = array_values(
+                $editableModelClassNames
+            );
+        }
+
+        return $editableModelClassNames;
+    }
+    /* getEditableModelClassNames() */
+
+
+
+    /**
+     * @return [string]
+     */
+    private static function
+    fetchModelEditorClassNames(
+    ): array {
+        static $modelEditorClassNames = [];
+
+        if (
+            empty($modelEditorClassNames)
+        ) {
+            $editableModelClassNames = (
+                CBUISpecEditor_Tests::fetchEditableModelClassNames()
+            );
+
+            $modelEditorClassNames = array_map(
+                function (
+                    $editableModelClassName
+                ) {
+                    return CBUISpecEditor::modelClassNameToEditorClassName(
+                        $editableModelClassName
+                    );
+                },
+                $editableModelClassNames
+            );
+
+            $modelEditorClassNames = array_values(
+                $modelEditorClassNames
+            );
+        }
+
+        return $modelEditorClassNames;
+    }
+    /* getModelEditorClassNames() */
+
 }
 /* CBUISpecEditor_Tests */
