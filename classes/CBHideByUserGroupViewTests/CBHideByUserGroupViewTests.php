@@ -42,7 +42,6 @@ final class CBHideByUserGroupViewTests {
             'className' => 'CBHideByUserGroupView',
             'hideFromMembers' => false,
             'hideFromNonmembers' => false,
-            'groupName' => null,
             'subviews' => CBViewTests::testSubviewModels(),
             'userGroupClassName' => null,
         ];
@@ -116,104 +115,6 @@ final class CBHideByUserGroupViewTests {
                 'expectedUpgradedSpec' => (object)[
                     'className' => 'CBHideByUserGroupView',
                     'subviews' => [],
-                ],
-            ],
-            (object)[
-                'name' => 'invalid group name',
-
-                'originalSpec' => (object)[
-                    'className' => 'CBHideByUserGroupView',
-                    'groupName' => '  $  ',
-                ],
-
-                'expectedUpgradedSpec' => (object)[
-                    'className' => 'CBHideByUserGroupView',
-                    'subviews' => [],
-                ],
-            ],
-            (object)[
-                'name' => 'white space around group name',
-
-                'originalSpec' => (object)[
-                    'className' => 'CBHideByUserGroupView',
-                    'groupName' => '  Administrators  ',
-                ],
-
-                'expectedUpgradedSpec' => (object)[
-                    'className' => 'CBHideByUserGroupView',
-                    'subviews' => [],
-                    'userGroupClassName' => 'CBAdministratorsUserGroup',
-                ],
-            ],
-            (object)[
-                'name' => 'public',
-
-                'originalSpec' => (object)[
-                    'className' => 'CBHideByUserGroupView',
-                    'groupName' => 'Public',
-                ],
-
-                'expectedUpgradedSpec' => (object)[
-                    'className' => 'CBHideByUserGroupView',
-                    'subviews' => [],
-                    'userGroupClassName' => 'CBPublicUserGroup',
-                ],
-            ],
-            (object)[
-                'name' => 'simple upgrade administrators',
-
-                'originalSpec' => (object)[
-                    'className' => 'CBHideByUserGroupView',
-                    'groupName' => 'Administrators',
-                ],
-
-                'expectedUpgradedSpec' => (object)[
-                    'className' => 'CBHideByUserGroupView',
-                    'subviews' => [],
-                    'userGroupClassName' => 'CBAdministratorsUserGroup'
-                ],
-            ],
-            (object)[
-                'name' => 'simple upgrade developers',
-
-                'originalSpec' => (object)[
-                    'className' => 'CBHideByUserGroupView',
-                    'groupName' => 'Developers',
-                ],
-
-                'expectedUpgradedSpec' => (object)[
-                    'className' => 'CBHideByUserGroupView',
-                    'subviews' => [],
-                    'userGroupClassName' => 'CBDevelopersUserGroup'
-                ],
-            ],
-            (object)[
-                'name' => 'both properties set',
-
-                'originalSpec' => (object)[
-                    'className' => 'CBHideByUserGroupView',
-                    'groupName' => 'Administrators',
-                    'userGroupClassName' => 'CBDevelopersUserGroup',
-                ],
-
-                'expectedUpgradedSpec' => (object)[
-                    'className' => 'CBHideByUserGroupView',
-                    'subviews' => [],
-                    'userGroupClassName' => 'CBDevelopersUserGroup',
-                ],
-            ],
-            (object)[
-                'name' => 'old property set to user group class name',
-
-                'originalSpec' => (object)[
-                    'className' => 'CBHideByUserGroupView',
-                    'groupName' => 'CBDevelopersUserGroup',
-                ],
-
-                'expectedUpgradedSpec' => (object)[
-                    'className' => 'CBHideByUserGroupView',
-                    'subviews' => [],
-                    'userGroupClassName' => 'CBDevelopersUserGroup'
                 ],
             ],
         ];
