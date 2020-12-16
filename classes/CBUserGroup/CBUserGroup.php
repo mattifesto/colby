@@ -288,11 +288,6 @@ final class CBUserGroup {
         }
 
         return (object)[
-            'deprecatedGroupName' => CBModel::valueAsName(
-                $spec,
-                'deprecatedGroupName'
-            ),
-
             'userGroupClassName' => $userGroupClassName,
 
             'title' => $userGroupClassName,
@@ -459,44 +454,6 @@ final class CBUserGroup {
         );
     }
     /* currentUserIsMemberOfUserGroup() */
-
-
-
-    /**
-     * @param string $deprecatedGroupName
-     *
-     * @return string|null
-     */
-    static function deprecatedGroupNameToUserGroupClassName(
-        string $deprecatedGroupName
-    ): ?string {
-        if ($deprecatedGroupName === 'Public') {
-            return 'CBPublicUserGroup';
-        }
-
-        $userGroupClassName = null;
-        $userGroupModels = CBUserGroup::fetchAllUserGroupModels();
-
-        foreach ($userGroupModels as $userGroupModel) {
-            $userGroupDeprecatedGroupName = CBModel::valueAsName(
-                $userGroupModel,
-                'deprecatedGroupName'
-            );
-
-            if (
-                $deprecatedGroupName ===
-                $userGroupDeprecatedGroupName
-            ) {
-                $userGroupClassName = CBModel::valueAsName(
-                    $userGroupModel,
-                    'userGroupClassName'
-                );
-            }
-        }
-
-        return $userGroupClassName;
-    }
-    /* deprecatedGroupNameToUserGroupClassName() */
 
 
 
