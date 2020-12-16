@@ -1664,11 +1664,6 @@ final class Admin_CBCode {
                  * 2019_11_28 (warning)
                  */
                 (object)[
-                    'args' => (
-                        '--ignore-file=match:CBUsers_Tests.php ' .
-                        '--ignore-file=match:ColbyUser_Tests.php ' .
-                        '--ignore-file=match:SCOrder_Tests.php '
-                    ),
                     'cbmessage' => <<<EOT
 
                         The userNumericID property in the CBUser spec is
@@ -1679,7 +1674,7 @@ final class Admin_CBCode {
 
                     EOT,
                     'filetype' => 'php',
-                    'regex' => 'userNumericID(?!sTo)',
+                    'regex' => 'userNumericID',
                     'severity' => 4,
                     'title' => 'userNumericID',
                 ],
