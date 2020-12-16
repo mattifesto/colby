@@ -20,7 +20,6 @@ final class CBDevelopersUserGroup {
             (object)[
                 'ID' => $groupCBID,
                 'className' => 'CBUserGroup',
-                'deprecatedGroupName' => 'Developers',
                 'userGroupClassName' => __CLASS__,
             ]
         );
