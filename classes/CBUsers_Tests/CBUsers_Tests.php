@@ -33,20 +33,9 @@ final class CBUsers_Tests {
         $originalSpecs = [
             (object)[
                 'className' => 'CBUser',
-                'userID' => 100,
             ],
             (object)[
                 'className' => 'CBUser',
-                'userNumericID' => 101,
-                'userID' => 99,
-            ],
-            (object)[
-                'className' => 'CBUser',
-                'userNumericID' => 102,
-            ],
-            (object)[
-                'className' => 'CBUser',
-                'userNumericID' => 103,
                 'facebook' => (object)[
                     'name' => 'Bob',
                     'id' => '503',
@@ -54,7 +43,6 @@ final class CBUsers_Tests {
             ],
             (object)[
                 'className' => 'CBUser',
-                'userNumericID' => 104,
                 'facebook' => (object)[
                     'name' => 'Bob',
                     'id' => '99',
@@ -67,31 +55,16 @@ final class CBUsers_Tests {
         $upgradedSpecs = [
             (object)[
                 'className' => 'CBUser',
-                'userNumericID' => 100,
                 'facebookUserID' => null,
                 'facebookName' => '',
             ],
             (object)[
                 'className' => 'CBUser',
-                'userNumericID' => 101,
-                'facebookUserID' => null,
-                'facebookName' => '',
-            ],
-            (object)[
-                'className' => 'CBUser',
-                'userNumericID' => 102,
-                'facebookUserID' => null,
-                'facebookName' => '',
-            ],
-            (object)[
-                'className' => 'CBUser',
-                'userNumericID' => 103,
                 'facebookUserID' => 503,
                 'facebookName' => 'Bob',
             ],
             (object)[
                 'className' => 'CBUser',
-                'userNumericID' => 104,
                 'facebookUserID' => 504,
                 'facebookName' => 'Chet',
             ],
