@@ -228,7 +228,10 @@ var CBUIPanel_Tests = {
         function zeroTimeout() {
             return new Promise(
                 function (resolve) {
-                    setTimeout(resolve, 1000);
+                    setTimeout(
+                        resolve,
+                        100
+                    );
                 }
             );
         }
@@ -416,7 +419,10 @@ var CBUIPanel_Tests = {
         function zeroTimeout() {
             return new Promise(
                 function (resolve) {
-                    setTimeout(resolve, 1000);
+                    setTimeout(
+                        resolve,
+                        100
+                    );
                 }
             );
         }

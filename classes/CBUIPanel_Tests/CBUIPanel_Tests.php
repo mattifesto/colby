@@ -15,7 +15,7 @@ final class CBUIPanel_Tests {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.js',
+                'v675.5.js',
                 cbsysurl()
             ),
         ];
