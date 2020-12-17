@@ -15,7 +15,7 @@ final class CBKeyValuePairEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.3.js',
+                'v675.7.js',
                 cbsysurl()
             ),
         ];
@@ -27,11 +27,14 @@ final class CBKeyValuePairEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'CBUI',
-            'CBUIStringEditor',
+            'CBUIStringEditor2',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 
 }

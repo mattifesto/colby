@@ -4,7 +4,7 @@
 /* exported CBKeyValuePairEditor */
 /* global
     CBUI,
-    CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 var CBKeyValuePairEditor = {
@@ -16,40 +16,42 @@ var CBKeyValuePairEditor = {
      * @return Element
      */
     CBUISpecEditor_createEditorElement: function (args) {
-        var item;
-        var element = document.createElement("div");
-        element.className = "CBKeyValuePairEditor";
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
 
-        element.appendChild(CBUI.createHalfSpace());
+        let elements = CBUI.createElementTree(
+            "CBKeyValuePairEditor",
+            "CBUI_sectionContainer",
+            "CBUI_section"
+        );
 
-        var section = CBUI.createSection();
+        let element = elements[0];
+        let sectionElement = elements[2];
 
         /* key */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText: "Key",
-            propertyName: "key",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
+        sectionElement.appendChild(
+            CBUIStringEditor2.createObjectPropertyEditorElement(
+                spec,
+                "key",
+                "Key",
+                specChangedCallback
+            )
+        );
 
         /* value */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText: "Value As JSON",
-            propertyName: "valueAsJSON",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
-
-        element.appendChild(CBUI.createHalfSpace());
+        sectionElement.appendChild(
+            CBUIStringEditor2.createObjectPropertyEditorElement(
+                spec,
+                "valueAsJSON",
+                "Value As JSON",
+                specChangedCallback
+            )
+        );
 
         return element;
     },
     /* CBUISpecEditor_createEditorElement() */
+
 
 
     /**
