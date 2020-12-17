@@ -11,6 +11,7 @@
 
     window.CBUIStringEditor2 = {
         create,
+        createObjectPropertyEditorElement,
     };
 
 
@@ -143,5 +144,39 @@
 
     }
     /* create() */
+
+
+
+    /**
+     * This function can be useful to reduce the amount of code needed when you
+     * need an object property editor and don't need access to the
+     * CBUIStringEditor2 object.
+     *
+     * @param object targetObject
+     * @param string targetPropertyName
+     * @param string title
+     * @param function changedEventListener
+     *
+     * @return Element
+     */
+    function
+    createObjectPropertyEditorElement(
+        targetObject,
+        targetPropertyName,
+        title,
+        changedEventListener
+    ) {
+        let stringEditor = create();
+
+        stringEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
+            targetObject,
+            targetPropertyName,
+            title,
+            changedEventListener
+        );
+
+        return stringEditor.CBUIStringEditor2_getElement();
+    }
+    /* createObjectPropertyEditorElement() */
 
 })();
