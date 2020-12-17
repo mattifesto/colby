@@ -15,7 +15,7 @@ final class CBMenuEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.3.js',
+                'v675.7.js',
                 cbsysurl()
             ),
         ];
@@ -27,13 +27,16 @@ final class CBMenuEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'CBMenuItemEditor',
             'CBUI',
             'CBUISpecArrayEditor',
-            'CBUIStringEditor',
+            'CBUIStringEditor2',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 
 }
