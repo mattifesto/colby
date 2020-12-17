@@ -4,7 +4,7 @@
 /* exported CBSitePreferencesEditor */
 /* globals
     CBUI,
-    CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 
@@ -43,19 +43,19 @@
         let sectionElement = elements[2];
 
         sectionElement.appendChild(
-            CBUIStringEditor.createSpecPropertyEditorElement(
-                "Facebook App ID",
+            CBUIStringEditor2.createObjectPropertyEditorElement(
                 spec,
                 "appID",
+                "Facebook App ID",
                 specChangedCallback
             )
         );
 
         sectionElement.appendChild(
-            CBUIStringEditor.createSpecPropertyEditorElement(
-                "Facebook App Secret",
+            CBUIStringEditor2.createObjectPropertyEditorElement(
                 spec,
                 "appSecret",
+                "Facebook App Secret",
                 specChangedCallback
             )
         );
