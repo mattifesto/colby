@@ -802,9 +802,12 @@ final class CBPageVerificationTaskTests {
     /**
      * @return object
      */
-    private static function specWithDeprecatedAndUnsupportedViews(): stdClass {
+    private static function
+    specWithDeprecatedAndUnsupportedViews(
+    ): stdClass {
         return (object)[
             'className' => 'CBViewPage',
+            'classNameForSettings' => 'CBPageSettingsForResponsivePages',
             'title' => (
                 'Test Page for CBTest_unsupportedViews() in ' .
                 'CBPageVerificationTaskTests'
