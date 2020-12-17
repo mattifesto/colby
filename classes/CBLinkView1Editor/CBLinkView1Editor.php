@@ -15,7 +15,7 @@ final class CBLinkView1Editor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.3.js',
+                'v675.7.js',
                 cbsysurl()
             ),
         ];
@@ -36,7 +36,7 @@ final class CBLinkView1Editor {
             'CBUI',
             'CBUIImageChooser',
             'CBUISelector',
-            'CBUIStringEditor',
+            'CBUIStringEditor2',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

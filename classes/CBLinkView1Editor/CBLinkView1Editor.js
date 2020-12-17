@@ -10,9 +10,8 @@
     CBUI,
     CBUIImageChooser,
     CBUISelector,
-    CBUIStringEditor,
+    CBUIStringEditor2,
 */
-
 
 
 var CBLinkView1Editor = {
@@ -64,76 +63,84 @@ var CBLinkView1Editor = {
             );
         }
 
-        var section, item;
-        let element = CBUI.createElement("CBLinkView1Editor");
+        let elements = CBUI.createElementTree(
+            "CBLinkView1Editor",
+            "CBUI_sectionContainer",
+            "CBUI_section"
+        );
 
-        element.appendChild(CBUI.createHalfSpace());
-
-        section = CBUI.createSection();
+        let element = elements[0];
+        let sectionElement = elements[2];
 
         let imageChooser = CBUIImageChooser.create();
         imageChooser.chosen = createEditor_handleImageChosen;
         imageChooser.removed = createEditor_handleImageRemoved;
 
-        imageChooser.src = CBImage.toURL(spec.image, "rw960");
+        imageChooser.src = CBImage.toURL(
+            spec.image,
+            "rw960"
+        );
 
-        item = CBUI.createSectionItem();
-        item.appendChild(imageChooser.element);
-        section.appendChild(item);
+        let sectionItemElement = CBUI.createSectionItem();
 
-        element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
+        sectionItemElement.appendChild(
+            imageChooser.element
+        );
 
-        section = CBUI.createSection();
+        sectionElement.appendChild(
+            sectionItemElement
+        );
 
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText: "Title",
-            propertyName: "title",
-            spec: spec,
-            specChangedCallback: specChangedCallback,
-        }).element);
-        section.appendChild(item);
+        sectionElement.appendChild(
+            CBUIStringEditor2.createObjectPropertyEditorElement(
+                spec,
+                "title",
+                "Title",
+                specChangedCallback
+            )
+        );
 
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText: "Description",
-            propertyName: "description",
-            spec: spec,
-            specChangedCallback: specChangedCallback,
-        }).element);
-        section.appendChild(item);
+        sectionElement.appendChild(
+            CBUIStringEditor2.createObjectPropertyEditorElement(
+                spec,
+                "description",
+                "Description",
+                specChangedCallback
+            )
+        );
 
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText: "URL",
-            propertyName: "URL",
-            spec: spec,
-            specChangedCallback: specChangedCallback,
-        }).element);
-        section.appendChild(item);
+        sectionElement.appendChild(
+            CBUIStringEditor2.createObjectPropertyEditorElement(
+                spec,
+                "URL",
+                "URL",
+                specChangedCallback
+            )
+        );
 
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUISelector.create({
-            labelText: "Size",
-            options: [
-                {title: "Small", value: "small"},
-                {title: "Medium", value: undefined},
-                {title: "Large", value: "large"},
-            ],
-            propertyName: "size",
-            spec: spec,
-            specChangedCallback: specChangedCallback,
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
-
-        element.appendChild(CBUI.createHalfSpace());
+        sectionElement.appendChild(
+            CBUISelector.create(
+                {
+                    labelText: "Size",
+                    options: [
+                        {title: "Small", value: "small"},
+                        {title: "Medium", value: undefined},
+                        {title: "Large", value: "large"},
+                    ],
+                    propertyName: "size",
+                    spec: spec,
+                    specChangedCallback: specChangedCallback,
+                }
+            ).element
+        );
 
         return element;
 
 
+
         /* -- closures -- -- -- -- -- */
+
+
 
         /**
          * @param object chooserArgs
@@ -159,6 +166,7 @@ var CBLinkView1Editor = {
         /* createEditor_handleImageChosen() */
 
 
+
         /**
          * @return undefined
          */
@@ -167,6 +175,7 @@ var CBLinkView1Editor = {
             specChangedCallback();
         }
         /* createEditor_handleImageRemoved() */
+
     },
     /* CBUISpecEditor_createEditorElement() */
 
