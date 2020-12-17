@@ -7,34 +7,6 @@ final class CBPageSettings {
 
 
     /**
-     * @deprecated
-     *
-     *      This function was designed to get the default page settings class
-     *      name to be used when rendering a page that didn't have the page
-     *      settings class name property set on its model.
-     *
-     *      While not completely enforced (2019_11_18), a CBViewPage model is no
-     *      longer allowed to be built without its "classNameForSettings"
-     *      property set.
-     *
-     *      This function and its interface are used to upgrade older CBViewPage
-     *      models at at this point that task has been finished on all known
-     *      sites for many months if not years.
-     *
-     * @return ?string
-     */
-    static function defaultClassName(): ?string {
-        if (is_callable($function = 'CBPageSettings_defaultClassName::get')) {
-            return call_user_func($function);
-        }
-
-        return null;
-    }
-    /* defaultClassName() */
-
-
-
-    /**
      * @param [string] $pageSettingsClassNames
      *
      * @return [string]
