@@ -5,6 +5,7 @@
 /* global
     CBUI,
     CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 
@@ -40,10 +41,10 @@ var CBEmailSenderEditor = {
         let sectionElement = elements[2];
 
         sectionElement.appendChild(
-            CBUIStringEditor.createSpecPropertyEditorElement(
-                "Title",
+            CBUIStringEditor2.createObjectPropertyEditorElement(
                 spec,
                 "title",
+                "Title",
                 specChangedCallback
             )
         );
@@ -60,37 +61,37 @@ var CBEmailSenderEditor = {
         );
 
         sectionElement.appendChild(
-            CBUIStringEditor.createSpecPropertyEditorElement(
-                "SMTP Server Hostname",
+            CBUIStringEditor2.createObjectPropertyEditorElement(
                 spec,
                 "SMTPServerHostname",
+                "SMTP Server Hostname",
                 specChangedCallback
             )
         );
 
         sectionElement.appendChild(
-            CBUIStringEditor.createSpecPropertyEditorElement(
-                "SMTP Server Port",
+            CBUIStringEditor2.createObjectPropertyEditorElement(
                 spec,
                 "SMTPServerPort",
+                "SMTP Server Port",
                 specChangedCallback
             )
         );
 
         sectionElement.appendChild(
-            CBUIStringEditor.createSpecPropertyEditorElement(
-                "SMTP Server Security",
+            CBUIStringEditor2.createObjectPropertyEditorElement(
                 spec,
                 "SMTPServerSecurity",
+                "SMTP Server Security",
                 specChangedCallback
             )
         );
 
         sectionElement.appendChild(
-            CBUIStringEditor.createSpecPropertyEditorElement(
-                "SMTP Server Username",
+            CBUIStringEditor2.createObjectPropertyEditorElement(
                 spec,
                 "SMTPServerUsername",
+                "SMTP Server Username",
                 specChangedCallback
             )
         );
@@ -108,19 +109,19 @@ var CBEmailSenderEditor = {
         );
 
         sectionElement.appendChild(
-            CBUIStringEditor.createSpecPropertyEditorElement(
-                "Sending Email Address",
+            CBUIStringEditor2.createObjectPropertyEditorElement(
                 spec,
                 "sendingEmailAddress",
+                "Sending Email Address",
                 specChangedCallback
             )
         );
 
         sectionElement.appendChild(
-            CBUIStringEditor.createSpecPropertyEditorElement(
-                "Sending Email Full Name",
+            CBUIStringEditor2.createObjectPropertyEditorElement(
                 spec,
                 "sendingEmailFullName",
+                "Sending Email Full Name",
                 specChangedCallback
             )
         );

@@ -9,11 +9,18 @@ final class CBEmailSenderEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v565.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.7.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -24,6 +31,7 @@ final class CBEmailSenderEditor {
         return [
             'CBUI',
             'CBUIStringEditor',
+            'CBUIStringEditor2',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
