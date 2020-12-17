@@ -56,17 +56,37 @@ final class CBViewPage {
      *
      * @return object
      */
-    static function CBModel_build($spec) {
+    static function
+    CBModel_build(
+        stdClass $spec
+    ) {
+        $classNameForSettings = CBModel::valueAsName(
+            $spec,
+            'classNameForSettings'
+        );
+
+        if ($classNameForSettings === null) {
+            throw new CBExceptionWithValue(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    This CBViewPage spec does not have a valid
+                    "classNameForSettings" property value. A CBViewPage spec
+                    must have a valid "classNameForSettings" property value to
+                    be built into a model.
+
+                EOT),
+                $spec,
+                'c0a955387d1cf7c82bd0662c06916102646aaf54'
+            );
+        }
+
         $model = (object)[
             'classNameForKind' => CBModel::valueToString(
                 $spec,
                 'classNameForKind'
             ),
 
-            'classNameForSettings' => CBModel::valueToString(
-                $spec,
-                'classNameForSettings'
-            ),
+            'classNameForSettings' => $classNameForSettings,
 
             'description' => trim(
                 CBModel::valueToString(
@@ -341,57 +361,6 @@ final class CBViewPage {
             )
         );
 
-
-        /**
-         * @NOTE 2018_04_13
-         *
-         *      This upgrade exists to help sites update all of the page specs
-         *      because soon the classNameForSettings property will be required.
-         */
-        if (empty($spec->classNameForSettings)) {
-            $title = CBMessageMarkup::stringToMarkup(
-                CBModel::valueToString($spec, 'title')
-            );
-
-            $defaultPageSettingsClassName = CBPageSettings::defaultClassName();
-
-            if (empty($defaultPageSettingsClassName)) {
-                $severity = 4;
-                $sourceCBID = 'b2eb6c71db6f1f6c0520de62f44dbff06df9295d';
-
-                $message = <<<EOT
-
-                    The (classNameForSettings (code)) property is not set on the
-                    spec for the page with the title "{$title}".
-
-                    (CBPageSettings::defaultClassName\(\) (code)) returns
-                    (null (code)) so the spec can't be upgraded.
-
-                EOT;
-            } else {
-                $spec->classNameForSettings = $defaultPageSettingsClassName;
-
-                $severity = 4;
-                $sourceCBID = 'c63254dafb46aaf3bd689553c9d699c5a9e62062';
-
-                $message = <<<EOT
-
-                    The (classNameForSettings (code)) property has been set to
-                    "{$defaultPageSettingsClassName}" because is was not set on
-                    the spec for the page with the title "{$title}".
-
-                EOT;
-            }
-
-            CBLog::log(
-                (object)[
-                    'message' => $message,
-                    'severity' => $severity,
-                    'sourceClassName' => __CLASS__,
-                    'sourceID' => $sourceCBID,
-                ]
-            );
-        }
 
         /* done */
 
@@ -693,7 +662,10 @@ final class CBViewPage {
      *
      * @return void
      */
-    private static function initializePageInformation(stdClass $model): void {
+    private static function
+    initializePageInformation(
+        stdClass $model
+    ): void {
         $pageInformation = CBHTMLOutput::pageInformation();
 
         if (empty($model->isPublished)) {
