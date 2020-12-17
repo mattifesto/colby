@@ -4,7 +4,7 @@
 /* exported CBMenuItemEditor */
 /* global
     CBUI,
-    CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 
@@ -41,36 +41,30 @@ var CBMenuItemEditor = {
         let sectionElement = elements[2];
 
         sectionElement.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Name",
-                    propertyName: "name",
-                    spec: spec,
-                    specChangedCallback: specChangedCallback
-                }
-            ).element
+            CBUIStringEditor2.createObjectPropertyEditorElement(
+                spec,
+                "name",
+                "Name",
+                specChangedCallback
+            )
         );
 
         sectionElement.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Text",
-                    propertyName: "text",
-                    spec: spec,
-                    specChangedCallback: specChangedCallback
-                }
-            ).element
+            CBUIStringEditor2.createObjectPropertyEditorElement(
+                spec,
+                "text",
+                "Text",
+                specChangedCallback
+            )
         );
 
         sectionElement.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "URL",
-                    propertyName: "URL",
-                    spec: spec,
-                    specChangedCallback: specChangedCallback
-                }
-            ).element
+            CBUIStringEditor2.createObjectPropertyEditorElement(
+                spec,
+                "URL",
+                "URL",
+                specChangedCallback
+            )
         );
 
         return element;
