@@ -362,6 +362,23 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'filetype' => 'php',
+                    'regex' => 'classNameForPageSettings\(',
+                    'severity' => 3,
+                    'title' => 'CBHTMLOutput::classNameForPageSettings()',
+
+                    'cbmessage' => <<<EOT
+
+                        Use CBHTMLOutput::getClassNameForPageSettings().
+
+                    EOT,
+
+                    'errorStartDate' => '2020/12/16',
+                    'warningStartDate' => '2020/12/16',
+                ],
+
+
+                (object)[
                     'regex' => 'userNumericIDsToUserCBIDs',
                     'severity' => 3,
                     'title' => 'CBUsers::userNumericIDsToUserCBIDs()',
@@ -1213,6 +1230,22 @@ final class Admin_CBCode {
 
                 /* -- warnings -- -- -- -- -- */
 
+
+
+                (object)[
+                    'filetype' => 'php',
+                    'regex' => 'CBPageSettings_defaultClassName',
+                    'severity' => 4,
+                    'title' => 'CBPageSettings_defaultClassName',
+
+                    'cbmessage' => <<<EOT
+
+                        This class is no longer used and should be removed.
+
+                    EOT,
+
+                    'warningStartDate' => '2020/12/16',
+                ],
 
 
                 (object)[
