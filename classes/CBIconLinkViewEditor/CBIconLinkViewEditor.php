@@ -9,13 +9,15 @@ final class CBIconLinkViewEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v656.js',
+                'v675.7.js',
                 cbsysurl()
-            )
+            ),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
@@ -25,7 +27,9 @@ final class CBIconLinkViewEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'CBAjax',
             'CBImage',
@@ -33,7 +37,7 @@ final class CBIconLinkViewEditor {
             'CBUI',
             'CBUIBooleanEditor',
             'CBUIImageChooser',
-            'CBUIStringEditor',
+            'CBUIStringEditor2',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

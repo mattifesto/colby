@@ -9,7 +9,7 @@
     CBUI,
     CBUIBooleanEditor,
     CBUIImageChooser,
-    CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 
@@ -33,6 +33,8 @@ var CBIconLinkViewEditor = {
     CBUISpecEditor_createEditorElement(
         args
     ) {
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
         var section, item;
         var element = document.createElement("div");
         element.className = "CBIconLinkViewEditor";
@@ -40,64 +42,42 @@ var CBIconLinkViewEditor = {
         element.appendChild(CBUI.createHalfSpace());
 
         section = CBUI.createSection();
-        item = CBUI.createSectionItem();
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Text",
-                    propertyName: "text",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
+        section.appendChild(
+            CBUIStringEditor2.createObjectPropertyEditorElement(
+                spec,
+                "text",
+                "Text",
+                specChangedCallback
+            )
         );
 
-        section.appendChild(item);
-
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Text Color",
-                    propertyName: "textColor",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
+        section.appendChild(
+            CBUIStringEditor2.createObjectPropertyEditorElement(
+                spec,
+                "textColor",
+                "Text Color",
+                specChangedCallback
+            )
         );
 
-        section.appendChild(item);
-
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Alternative Text",
-                    propertyName: "alternativeText",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
+        section.appendChild(
+            CBUIStringEditor2.createObjectPropertyEditorElement(
+                spec,
+                "alternativeText",
+                "Alternative Text",
+                specChangedCallback
+            )
         );
 
-        section.appendChild(item);
-
-        item = CBUI.createSectionItem();
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "URL",
-                    propertyName: "URL",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
+        section.appendChild(
+            CBUIStringEditor2.createObjectPropertyEditorElement(
+                spec,
+                "URL",
+                "URL",
+                specChangedCallback
+            )
         );
-
-        section.appendChild(item);
 
         item = CBUI.createSectionItem();
         item.appendChild(
@@ -148,7 +128,10 @@ var CBIconLinkViewEditor = {
         return element;
 
 
+
         /* -- closures -- -- -- -- -- */
+
+
 
         /**
          * @return undefined
