@@ -589,7 +589,7 @@ final class CBHTMLOutput {
             CBHTMLOutput::reset();
 
             CBPageSettings::renderErrorPage(
-                CBHTMLOutput::getClassNameForPageSettings(),
+                CBHTMLOutput::getClassNameForPageSettings() ?? '',
                 $throwable
             );
         }
