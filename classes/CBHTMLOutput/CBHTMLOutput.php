@@ -168,7 +168,7 @@ final class CBHTMLOutput {
      * Call this function before you start rendering the content of the body
      * element. When you are finished, call CBHTMLOutput::render().
      *
-     * @NOTE 2019_07_06, 2019_12_09
+     * @TODO 2019_07_06, 2019_12_09
      *
      *      CBHTMLOutput may move away from begin(), reset(), and render() to a
      *      function where the caller passes a render callback as a parameter.
@@ -222,34 +222,6 @@ final class CBHTMLOutput {
 
 
     /**
-     * @deprecated 2018_04_12
-     *
-     *      This function will be removed because the only supported way of
-     *      specifying page settings is to set the classNameForPageSettings
-     *      property on CBHTMLOutput::pageInformation().
-     *
-     * This function calculates the current class name of the class to be used
-     * for page settings.
-     *
-     * @return ?string
-     */
-    static function classNameForPageSettings(): ?string {
-        $className = CBModel::valueToString(
-            CBHTMLOutput::$pageInformation,
-            'classNameForPageSettings'
-        );
-
-        if (empty($className)) {
-            $className = CBPageSettings::defaultClassName(); /* deprecated */
-        }
-
-        return $className;
-    }
-    /* classNameForPageSettings() */
-
-
-
-    /**
      * @return null
      */
     static function exportConstant($name) {
@@ -295,6 +267,34 @@ final class CBHTMLOutput {
 
 
     /**
+     * @TODO 2020_12_16
+     *
+     *      Before this function was created, all page information was set onto
+     *      the object returned by CBHTMLOutput::pageInformation(). By current
+     *      standards, that is not a good way of doing things.
+     *
+     *      All properties allowed on the CBHTMLOutput::pageInformation() object
+     *      should have get and set functions added to this class and then
+     *      CBHTMLOutput::pageInformation() should be removed.
+     *
+     * @return ?string
+     *
+     *      This function returns the current class name of the class to be used
+     *      for page settings if one has been set; otherwise null.
+     */
+    static function
+    getClassNameForPageSettings(
+    ): ?string {
+        return CBModel::valueAsName(
+            CBHTMLOutput::$pageInformation,
+            'classNameForPageSettings'
+        );
+    }
+    /* getClassNameForPageSettings() */
+
+
+
+    /**
      * @return bool
      */
     static function getIsActive(): bool {
@@ -321,7 +321,7 @@ final class CBHTMLOutput {
             );
 
             $classNameForPageSettings = (
-                CBHTMLOutput::classNameForPageSettings()
+                CBHTMLOutput::getClassNameForPageSettings()
             ) ?? '';
 
             /**
@@ -331,7 +331,7 @@ final class CBHTMLOutput {
             CBHTMLOutput::reset();
 
             /**
-             * @NOTE 2019_12_09
+             * @TODO 2019_12_09
              *
              *      CBPageSettings is an odd place to call to render an error
              *      page. In the future investigate this and either change or
@@ -465,7 +465,7 @@ final class CBHTMLOutput {
 
         ob_start();
 
-        if ($className = CBHTMLOutput::classNameForPageSettings()) {
+        if ($className = CBHTMLOutput::getClassNameForPageSettings()) {
             $pageSettingsClassNames = CBPageSettings::requiredClassNames(
                 [
                     $className,
@@ -557,7 +557,7 @@ final class CBHTMLOutput {
 
 
     /**
-     * @NOTE 2019_08_04
+     * @TODO 2019_08_04
      *
      *      THIS FUNCTION IS UNDER DEVELOPMENT, DO NOT USE OUTSIDE OF
      *      DEVELOPMENT OR TESTING SCENARIOS
@@ -589,7 +589,7 @@ final class CBHTMLOutput {
             CBHTMLOutput::reset();
 
             CBPageSettings::renderErrorPage(
-                CBHTMLOutput::classNameForPageSettings(),
+                CBHTMLOutput::getClassNameForPageSettings(),
                 $throwable
             );
         }
@@ -779,7 +779,7 @@ final class CBHTMLOutput {
         CBHTMLOutput::$styleSheets = [];
 
         /**
-         * @NOTE 2017_08_02
+         * @TODO 2017_08_02
          *
          *      Colby was added by default to requiredClassNames to smooth the
          *      transition of moving the Colby JavaScript and CSS files into the
