@@ -1,9 +1,12 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBModelsPreferencesEditor */
 /* global
     CBUI,
-    CBUIStringEditor */
+    CBUIStringEditor2
+*/
+
 
 var CBModelsPreferencesEditor = {
 
@@ -13,27 +16,31 @@ var CBModelsPreferencesEditor = {
      *
      * @return Element
      */
-    CBUISpecEditor_createEditorElement: function(args) {
-        var element = document.createElement("section");
-        element.className = "CBModelsPreferencesEditor";
+    CBUISpecEditor_createEditorElement: function(
+        args
+    ) {
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
 
-        element.appendChild(CBUI.createHalfSpace());
+        let elements = CBUI.createElementTree(
+            "CBModelsPreferencesEditor",
+            "CBUI_sectionContainer",
+            "CBUI_section"
+        );
 
-        var section = CBUI.createSection();
+        let element = elements[0];
+        let sectionElement =  elements[2];
 
         /* classNamesOfEditableModels */
-        var item = CBUI.createSectionItem();
 
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText: "Class Names of Editable Models",
-            propertyName: "classNamesOfEditableModels",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
-
-        element.appendChild(CBUI.createHalfSpace());
+        sectionElement.appendChild(
+            CBUIStringEditor2.createObjectPropertyEditorElement(
+                spec,
+                "classNamesOfEditableModels",
+                "Class Names of Editable Models",
+                specChangedCallback
+            )
+        );
 
         return element;
     },
