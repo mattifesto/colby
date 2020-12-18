@@ -13,7 +13,7 @@
     CBUINavigationView,
     CBUIPanel,
     CBUISectionItem4,
-    CBUIStringEditor,
+    CBUIStringEditor2,
     CBUIStringsPart,
     Colby,
 
@@ -57,22 +57,19 @@
 
         {
             let sectionElement = CBUI.createSection();
-            let sectionItemElement = CBUI.createSectionItem();
 
-            sectionItemElement.appendChild(
-                CBUIStringEditor.createEditor(
-                    {
-                        labelText: "ID",
-                        propertyName: "ID",
-                        spec: spec,
-                        specChangedCallback: IDDidChangeCallback,
-                    }
-                ).element
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "ID",
+                    "ID",
+                    IDDidChangeCallback
+                )
             );
 
-            sectionElement.appendChild(sectionItemElement);
-
-            navigationHomeElement.appendChild(sectionElement);
+            navigationHomeElement.appendChild(
+                sectionElement
+            );
 
             navigationHomeElement.appendChild(
                 CBUI.createHalfSpace()
