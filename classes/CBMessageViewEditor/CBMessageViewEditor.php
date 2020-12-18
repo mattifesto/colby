@@ -15,7 +15,7 @@ final class CBMessageViewEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.3.js',
+                'v675.7.js',
                 cbsysurl()
             ),
         ];
@@ -27,12 +27,15 @@ final class CBMessageViewEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'CBMessageMarkup',
             'CBUI',
-            'CBUIStringEditor',
+            'CBUIStringEditor2',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 
 }

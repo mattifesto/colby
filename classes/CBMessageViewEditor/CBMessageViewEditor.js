@@ -5,7 +5,7 @@
 /* global
     CBMessageMarkup,
     CBUI,
-    CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 var CBMessageViewEditor = {
@@ -21,72 +21,100 @@ var CBMessageViewEditor = {
      * @return Element
      */
     CBUISpecEditor_createEditorElement: function (args) {
-        var section, item;
-        var element = document.createElement("div");
-        element.className = "CBMessageViewEditor";
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
 
-        element.appendChild(CBUI.createHalfSpace());
+        let element;
 
-        section = CBUI.createSection();
+        {
+            let elements = CBUI.createElementTree(
+                "CBMessageViewEditor",
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText: "Content (Message Markup)",
-            propertyName: "markup",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
+            element = elements[0];
+
+            let sectionElement = elements[2];
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "markup",
+                    "Content (Message Markup)",
+                    specChangedCallback
+                )
+            );
+        }
+
 
         /* CSSClassNames */
 
-        element.appendChild(CBUI.createHalfSpace());
-        element.appendChild(CBUI.createSectionHeader({
-            paragraphs: [
-                `
-                View Specific CSS Class Names:
-                `,`
-                "custom": disable the default view styles.
-                `,`
-                Supported CSS Class Names:
-                `,`
-                "CBLightTheme": light background and dark text.
-                `,`
-                "CBDarkTheme": dark background and light text.
-                `
-            ],
-        }));
+        element.appendChild(
+            CBUI.createSectionHeader(
+                {
+                    paragraphs: [
+                        `
+                        View Specific CSS Class Names:
+                        `,`
+                        "custom": disable the default view styles.
+                        `,`
+                        Supported CSS Class Names:
+                        `,`
+                        "CBLightTheme": light background and dark text.
+                        `,`
+                        "CBDarkTheme": dark background and light text.
+                        `
+                    ],
+                }
+            )
+        );
 
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText: "CSS Class Names",
-            propertyName: "CSSClassNames",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
+            element.appendChild(
+                elements[0]
+            );
+
+            let sectionElement = elements[1];
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "CSSClassNames",
+                    "CSS Class Names",
+                    specChangedCallback
+                )
+            );
+        }
 
         /* localCSSTemplate */
 
-        element.appendChild(CBUI.createHalfSpace());
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        section = CBUI.createSection();
+            element.appendChild(
+                elements[0]
+            );
 
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText: "CSS Template",
-            propertyName: "CSSTemplate",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
+            let sectionElement = elements[1];
 
-        element.appendChild(CBUI.createHalfSpace());
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "CSSTemplate",
+                    "CSS Template",
+                    specChangedCallback
+                )
+            );
+        }
 
         return element;
     },
