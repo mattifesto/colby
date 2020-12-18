@@ -6,7 +6,7 @@
     CBModel,
     CBUI,
     CBUISelector,
-    CBUIStringEditor,
+    CBUIStringEditor2,
 
     CBMenuViewEditor_menuItemOptionsByMenuID,
     CBMenuViewEditor_menuOptions,
@@ -33,6 +33,9 @@ var CBMenuViewEditor = {
     CBUISpecEditor_createEditorElement(
         args
     ) {
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
+
         var section, item;
         var element = document.createElement("div");
         element.className = "CBMenuViewEditor";
@@ -50,10 +53,10 @@ var CBMenuViewEditor = {
                     labelText: "Menu",
                     options: CBMenuViewEditor_menuOptions,
                     propertyName: "menuID",
-                    spec: args.spec,
+                    spec: spec,
                     specChangedCallback: function () {
                         updateMenuItemSelectorOptions();
-                        args.specChangedCallback();
+                        specChangedCallback();
                     },
                 }
             ).element
@@ -67,8 +70,8 @@ var CBMenuViewEditor = {
             {
                 labelText: "Selected Item",
                 propertyName: "selectedItemName",
-                spec: args.spec,
-                specChangedCallback: args.specChangedCallback,
+                spec: spec,
+                specChangedCallback: specChangedCallback,
             }
         );
 
@@ -105,21 +108,17 @@ var CBMenuViewEditor = {
         );
 
         section = CBUI.createSection();
-        item = CBUI.createSectionItem();
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "CSS Class Names",
-                    propertyName: "CSSClassNames",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
-
-        section.appendChild(item);
         element.appendChild(section);
+
+        section.appendChild(
+            CBUIStringEditor2.createObjectPropertyEditorElement(
+                spec,
+                "CSSClassNames",
+                "CSS Class Names",
+                specChangedCallback
+            )
+        );
 
         element.appendChild(
             CBUI.createHalfSpace()
@@ -138,14 +137,15 @@ var CBMenuViewEditor = {
         function updateMenuItemSelectorOptions() {
             var options = [];
 
-            if (args.spec.menuID) {
+            if (spec.menuID) {
                 options = CBMenuViewEditor_menuItemOptionsByMenuID[
-                    args.spec.menuID
+                    spec.menuID
                 ];
             }
 
             menuItemSelector.updateOptionsCallback(options);
         }
+
     },
     /* CBUISpecEditor_createEditorElement() */
 
