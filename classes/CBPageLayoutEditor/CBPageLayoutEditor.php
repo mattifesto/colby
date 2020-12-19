@@ -30,7 +30,6 @@ final class CBPageLayoutEditor {
             'CBModel',
             'CBUI',
             'CBUIBooleanEditor',
-            'CBUIStringEditor',
             'CBUIStringEditor2',
         ];
     }

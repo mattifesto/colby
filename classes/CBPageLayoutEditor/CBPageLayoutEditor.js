@@ -6,7 +6,6 @@
     CBModel,
     CBUI,
     CBUIBooleanEditor,
-    CBUIStringEditor,
     CBUIStringEditor2,
 */
 
@@ -27,7 +26,6 @@ var CBPageLayoutEditor = {
     ) {
         let spec = args.spec;
         let specChangedCallback = args.specChangedCallback;
-        let item;
 
         let element = CBUI.createElement(
             "CBPageLayoutEditor"
@@ -178,25 +176,38 @@ var CBPageLayoutEditor = {
                 propertiesAsJSON: propertiesAsJSON
             };
 
-            sectionElement.appendChild(
-                CBUIStringEditor.createEditor(
-                    {
-                        labelText: "Custom Layout Properties",
-                        propertyName: "propertiesAsJSON",
-                        spec: propertiesSpec,
+            let sectionItemElement = CBUI.createElement(
+                "CBUI_sectionItem"
+            );
 
-                        specChangedCallback:
-                        CBPageLayoutEditor.propertiesChanged.bind(
-                            undefined,
+            sectionElement.appendChild(
+                sectionItemElement
+            );
+
+            let stringEditorElement = (
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    propertiesSpec,
+                    "propertiesAsJSON",
+                    "Custom Layout Properties",
+                    function () {
+                        CBPageLayoutEditor.propertiesChanged(
                             {
                                 propertiesSpec: propertiesSpec,
-                                sectionItem: item,
-                                spec: args.spec,
-                                specChangedCallback: args.specChangedCallback,
+                                sectionItem: sectionItemElement,
+                                spec: spec,
+                                specChangedCallback: specChangedCallback,
                             }
-                        ),
+                        );
                     }
-                ).element
+                )
+            );
+
+            stringEditorElement.classList.add(
+                "CBUI_flexGrow"
+            );
+
+            sectionItemElement.appendChild(
+                stringEditorElement
             );
         }
         /* custom layout */
