@@ -27,7 +27,7 @@ var CBPageLayoutEditor = {
     ) {
         let spec = args.spec;
         let specChangedCallback = args.specChangedCallback;
-        let section, item;
+        let item;
 
         let element = CBUI.createElement(
             "CBPageLayoutEditor"
@@ -136,10 +136,6 @@ var CBPageLayoutEditor = {
         /* custom layout */
 
         element.appendChild(
-            CBUI.createHalfSpace()
-        );
-
-        element.appendChild(
             CBUI.createSectionHeader(
                 {
                     text: "Custom Layout",
@@ -147,65 +143,64 @@ var CBPageLayoutEditor = {
             )
         );
 
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Custom Layout Class Name",
-                    propertyName: "customLayoutClassName",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
+            element.appendChild(
+                elements[0]
+            );
 
-        section.appendChild(item);
+            let sectionElement = elements[1];
 
-        var propertiesAsJSON = "{\n\n}";
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "customLayoutClassName",
+                    "Custom Layout Class Name",
+                    specChangedCallback
+                )
+            );
 
-        if (typeof args.spec.customLayoutProperties === "object") {
-            propertiesAsJSON = JSON.stringify(
-                args.spec.customLayoutProperties,
-                undefined,
-                2
+            var propertiesAsJSON = "{\n\n}";
+
+            if (typeof args.spec.customLayoutProperties === "object") {
+                propertiesAsJSON = JSON.stringify(
+                    args.spec.customLayoutProperties,
+                    undefined,
+                    2
+                );
+            }
+
+            var propertiesSpec = {
+                propertiesAsJSON: propertiesAsJSON
+            };
+
+            sectionElement.appendChild(
+                CBUIStringEditor.createEditor(
+                    {
+                        labelText: "Custom Layout Properties",
+                        propertyName: "propertiesAsJSON",
+                        spec: propertiesSpec,
+
+                        specChangedCallback:
+                        CBPageLayoutEditor.propertiesChanged.bind(
+                            undefined,
+                            {
+                                propertiesSpec: propertiesSpec,
+                                sectionItem: item,
+                                spec: args.spec,
+                                specChangedCallback: args.specChangedCallback,
+                            }
+                        ),
+                    }
+                ).element
             );
         }
+        /* custom layout */
 
-        var propertiesSpec = {
-            propertiesAsJSON: propertiesAsJSON
-        };
-
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Custom Layout Properties",
-                    propertyName: "propertiesAsJSON",
-                    spec: propertiesSpec,
-
-                    specChangedCallback:
-                    CBPageLayoutEditor.propertiesChanged.bind(
-                        undefined,
-                        {
-                            propertiesSpec: propertiesSpec,
-                            sectionItem: item,
-                            spec: args.spec,
-                            specChangedCallback: args.specChangedCallback,
-                        }
-                    ),
-                }
-            ).element
-        );
-
-        section.appendChild(item);
-        element.appendChild(section);
-
-        element.appendChild(
-            CBUI.createHalfSpace()
-        );
 
         return element;
     },
