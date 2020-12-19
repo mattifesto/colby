@@ -5,7 +5,7 @@
 /* global
     CBModel,
     CBUI,
-    CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 
@@ -31,7 +31,6 @@ var CBPageListView2Editor = {
     ) {
         let spec = args.spec;
         let specChangedCallback = args.specChangedCallback;
-        var section, item;
 
         let elements = CBUI.createElementTree(
             "CBPageListView2Editor",
@@ -42,40 +41,23 @@ var CBPageListView2Editor = {
         let element = elements[0];
         let sectionElement = elements[2];
 
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Class Name for Kind",
-                    propertyName: "classNameForKind",
-                    spec: spec,
-                    specChangedCallback: specChangedCallback,
-                }
-            ).element
+        sectionElement.appendChild(
+            CBUIStringEditor2.createObjectPropertyEditorElement(
+                spec,
+                "classNameForKind",
+                "Class Name for Kind",
+                specChangedCallback
+            )
         );
 
         sectionElement.appendChild(
-            item
+            CBUIStringEditor2.createObjectPropertyEditorElement(
+                spec,
+                "maximumPageCount",
+                "Maximum Page Count",
+                specChangedCallback
+            )
         );
-
-        let maximumPageCountEditor = CBUIStringEditor.create();
-        maximumPageCountEditor.title = "Maximum Page Count";
-
-        maximumPageCountEditor.value = CBModel.valueToString(
-            spec,
-            "maximumPageCount"
-        );
-
-        maximumPageCountEditor.changed = function () {
-            spec.maximumPageCount = maximumPageCountEditor.value;
-            specChangedCallback();
-        };
-
-        sectionElement.appendChild(
-            maximumPageCountEditor.element
-        );
-
 
         /* CSSClassNames */
 
@@ -102,27 +84,28 @@ var CBPageListView2Editor = {
             )
         );
 
-        section = CBUI.createSection();
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        item = CBUI.createSectionItem();
+            element.appendChild(
+                elements[0]
+            );
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "CSS Class Names",
-                    propertyName: "CSSClassNames",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
+            let sectionElement = elements[1];
 
-        section.appendChild(item);
-        element.appendChild(section);
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "CSSClassNames",
+                    "CSS Class Names",
+                    specChangedCallback
+                )
+            );
 
-        element.appendChild(
-            CBUI.createHalfSpace()
-        );
+        }
 
         return element;
     },

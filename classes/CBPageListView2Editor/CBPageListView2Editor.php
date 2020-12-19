@@ -9,22 +9,31 @@ final class CBPageListView2Editor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v624.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.7.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'CBModel',
             'CBUI',
-            'CBUIStringEditor'
+            'CBUIStringEditor2'
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
