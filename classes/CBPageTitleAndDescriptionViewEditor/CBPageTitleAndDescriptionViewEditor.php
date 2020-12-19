@@ -29,7 +29,7 @@ final class CBPageTitleAndDescriptionViewEditor {
         return [
             'CBUI',
             'CBUIBooleanEditor',
-            'CBUIStringEditor',
+            'CBUIStringEditor2',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

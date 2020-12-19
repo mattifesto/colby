@@ -5,7 +5,7 @@
 /* globals
     CBUI,
     CBUIBooleanEditor,
-    CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 
@@ -22,8 +22,6 @@ var CBPageTitleAndDescriptionViewEditor = {
     ) {
         let spec = args.spec;
         let specChangedCallback = args.specChangedCallback;
-        var section, item;
-
         let element;
 
         {
@@ -64,35 +62,49 @@ var CBPageTitleAndDescriptionViewEditor = {
             ],
         }));
 
-        section = CBUI.createSection();
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText: "CSS Class Names",
-            propertyName: "CSSClassNames",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
+            element.appendChild(
+                elements[0]
+            );
 
-        /* localCSSTemplate (uses stylesTemplate property on this view) */
+            let sectionElement = elements[1];
 
-        element.appendChild(CBUI.createHalfSpace());
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "CSSClassNames",
+                    "CSS Class Names",
+                    specChangedCallback
+                )
+            );
+        }
 
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        item.appendChild(CBUIStringEditor.createEditor({
-            labelText: "Local CSS Template",
-            propertyName: "stylesTemplate",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
+            element.appendChild(
+                elements[0]
+            );
 
-        element.appendChild(CBUI.createHalfSpace());
+            let sectionElement = elements[1];
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "stylesTemplate",
+                    "Local CSS Template",
+                    specChangedCallback
+                )
+            );
+        }
 
         return element;
     },
