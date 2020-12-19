@@ -28,6 +28,7 @@ var CBPageLayoutEditor = {
         let spec = args.spec;
         let specChangedCallback = args.specChangedCallback;
         let section, item;
+
         let element = CBUI.createElement(
             "CBPageLayoutEditor"
         );
@@ -80,50 +81,57 @@ var CBPageLayoutEditor = {
 
 
         /* local CSS */
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        element.appendChild(
-            CBUI.createHalfSpace()
-        );
+            element.appendChild(
+                elements[0]
+            );
 
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
+            let sectionElement = elements[1];
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Local CSS Template",
-                    propertyName: "localCSSTemplate",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "localCSSTemplate",
+                    "Local CSS Template",
+                    specChangedCallback
+                )
+            );
+        }
+        /* local CSS */
 
-        section.appendChild(item);
-        element.appendChild(section);
 
         /* is article */
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section",
+                "CBUI_sectionItem"
+            );
 
-        element.appendChild(
-            CBUI.createHalfSpace()
-        );
+            element.appendChild(
+                elements[0]
+            );
 
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
+            let sectionItemElement = elements[2];
 
-        item.appendChild(
-            CBUIBooleanEditor.create(
-                {
-                    labelText: "Page Content is an Article",
-                    propertyName: "isArticle",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
+            sectionItemElement.appendChild(
+                CBUIBooleanEditor.create(
+                    {
+                        labelText: "Page Content is an Article",
+                        propertyName: "isArticle",
+                        spec: args.spec,
+                        specChangedCallback: args.specChangedCallback,
+                    }
+                ).element
+            );
+        }
+        /* is article */
 
-        section.appendChild(item);
-        element.appendChild(section);
 
         /* custom layout */
 
