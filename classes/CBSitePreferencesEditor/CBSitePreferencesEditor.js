@@ -11,7 +11,7 @@
     CBUIImageChooser,
     CBUIPanel,
     CBUISpecArrayEditor,
-    CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 
@@ -42,52 +42,42 @@
     ) {
         let spec = args.spec;
         let specChangedCallback = args.specChangedCallback;
+        let element;
 
-        let section, item;
+        {
+            let elements = CBUI.createElementTree(
+                "CBSitePreferencesEditor",
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        let element = document.createElement("div");
-        element.className = "CBSitePreferencesEditor";
+            element = elements[0];
 
-        element.appendChild(CBUI.createHalfSpace());
+            let sectionElement = elements[2];
 
-        section = CBUI.createSection();
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "siteName",
+                    "Site Name",
+                    specChangedCallback
+                )
+            );
 
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Site Name",
-                    propertyName: "siteName",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
-
-        section.appendChild(item);
-
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Administrator Email Addresses",
-                    propertyName: "administratorEmails",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
-
-        section.appendChild(item);
-
-        element.appendChild(section);
-
-        element.appendChild(CBUI.createHalfSpace());
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "administratorEmails",
+                    "Administrator Email Addresses",
+                    specChangedCallback
+                )
+            );
+        }
 
 
         /* -- website icon section -- -- -- -- -- */
+
+        let imageChooser;
 
         {
             let sectionTitleElement = CBUI.createElement("CBUI_title1");
@@ -95,25 +85,31 @@
             element.appendChild(sectionTitleElement);
 
             sectionTitleElement.textContent = "Website Icon";
+
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
+
+            element.appendChild(
+                elements[0]
+            );
+
+            let sectionElement = elements[1];
+
+            imageChooser = CBUIImageChooser.create();
+            imageChooser.chosen = createEditor_handleImageChosen;
+            imageChooser.removed = createEditor_handleImageRemoved;
+
+            imageChooser.src = CBImage.toURL(
+                spec.imageForIcon,
+                "rw960"
+            );
+
+            sectionElement.appendChild(
+                imageChooser.element
+            );
         }
-
-        section = CBUI.createSection();
-
-        element.appendChild(section);
-
-        /* image chooser for website icon */
-
-        let imageChooser = CBUIImageChooser.create();
-        imageChooser.chosen = createEditor_handleImageChosen;
-        imageChooser.removed = createEditor_handleImageRemoved;
-
-        imageChooser.src = CBImage.toURL(args.spec.imageForIcon, "rw960");
-
-        item = CBUI.createSectionItem();
-        item.appendChild(imageChooser.element);
-        section.appendChild(item);
-
-        element.appendChild(CBUI.createHalfSpace());
 
 
         /* -- developer settings section -- -- -- -- -- */
@@ -126,151 +122,77 @@
             sectionTitleElement.textContent = "Developer Settings";
         }
 
-        section = CBUI.createSection();
-
-        element.appendChild(section);
-
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIBooleanEditor.create(
-                {
-                    labelText: "This is a Development Website",
-                    propertyName: "debug",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
-
-        section.appendChild(item);
-
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIBooleanEditor.create(
-                {
-                    labelText: "Disallow Robots",
-                    propertyName: "disallowRobots",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
-
-        section.appendChild(item);
-
-
-        /* google analytics */
-
-        section.appendChild(
-            createGoogleAnalyticsIDEditorElement(
-                spec,
-                specChangedCallback
-            )
-        );
-
-
-        /* default page settings class name */
-
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: (
-                        "Default Class Name for Page Settings (deprecated)"
-                    ),
-                    propertyName: "defaultClassNameForPageSettings",
-                    spec,
-                    specChangedCallback,
-                }
-            ).element
-        );
-
-        section.appendChild(item);
-
-
-        /* on demand resize operations */
-
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "On Demand Image Resize Operations (deprecated)",
-                    propertyName: "onDemandImageResizeOperations",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
-
-        section.appendChild(item);
-
-        /* path */
-
         {
-            section.appendChild(
-                CBUIStringEditor.createEditor(
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
+
+            element.appendChild(
+                elements[0]
+            );
+
+            let sectionElement = elements[1];
+
+            sectionElement.appendChild(
+                CBUIBooleanEditor.create(
                     {
-                        labelText: "path",
-                        propertyName: "path",
+                        labelText: "This is a Development Website",
+                        propertyName: "debug",
                         spec: args.spec,
                         specChangedCallback: args.specChangedCallback,
                     }
                 ).element
             );
+
+            sectionElement.appendChild(
+                CBUIBooleanEditor.create(
+                    {
+                        labelText: "Disallow Robots",
+                        propertyName: "disallowRobots",
+                        spec: args.spec,
+                        specChangedCallback: args.specChangedCallback,
+                    }
+                ).element
+            );
+
+            sectionElement.appendChild(
+                createGoogleAnalyticsIDEditorElement(
+                    spec,
+                    specChangedCallback
+                )
+            );
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "onDemandImageResizeOperations",
+                    "On Demand Image Resize Operations (deprecated)",
+                    specChangedCallback
+                )
+            );
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "path",
+                    "Path",
+                    specChangedCallback
+                )
+            );
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "slackWebhookURL",
+                    "Slack Webhook URL",
+                    specChangedCallback
+                )
+            );
         }
-
-        /* Slack */
-
-        section.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Slack Webhook URL",
-                    propertyName: "slackWebhookURL",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
 
 
         /* -- social section -- -- -- -- -- */
-
-        section = CBUI.createSection();
-
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Facebook URL",
-                    propertyName: "facebookURL",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
-
-        section.appendChild(item);
-
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor({
-                    labelText: "Twitter URL",
-                    propertyName: "twitterURL",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
-
-        section.appendChild(item);
-
-        element.appendChild(CBUI.createHalfSpace());
 
         {
             let socialTitleElement = CBUI.createElement(
@@ -279,46 +201,42 @@
 
             socialTitleElement.textContent = "Social";
 
-            element.appendChild(socialTitleElement);
+            element.appendChild(
+                socialTitleElement
+            );
+
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
+
+            element.appendChild(
+                elements[0]
+            );
+
+            let sectionElement = elements[1];
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "facebookURL",
+                    "Facebook URL",
+                    specChangedCallback
+                )
+            );
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "twitterURL",
+                    "Twitter URL",
+                    specChangedCallback
+                )
+            );
         }
 
-        element.appendChild(section);
 
         /* Google reCAPTCHA */
-
-        section = CBUI.createSection();
-
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Site Key",
-                    propertyName: "reCAPTCHASiteKey",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
-
-        section.appendChild(item);
-
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Secret Key",
-                    propertyName: "reCAPTCHASecretKey",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
-
-        section.appendChild(item);
-
-        element.appendChild(CBUI.createHalfSpace());
 
         {
             let recaptchaTitleElement = CBUI.createElement(
@@ -327,11 +245,39 @@
 
             recaptchaTitleElement.textContent = "Google reCAPTCHA";
 
-            element.appendChild(recaptchaTitleElement);
-        }
+            element.appendChild(
+                recaptchaTitleElement
+            );
 
-        element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
+
+            element.appendChild(
+                elements[0]
+            );
+
+            let sectionElement = elements[1];
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "reCAPTCHASiteKey",
+                    "Site Key",
+                    specChangedCallback
+                )
+            );
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "reCAPTCHASecretKey",
+                    "Secret Key",
+                    specChangedCallback
+                )
+            );
+        }
 
         /* custom values */
         {
@@ -412,27 +358,31 @@
         spec,
         specChangedCallback
     ) {
-        let googleAnalyticsIDEditor = CBUIStringEditor.create();
+        let IDEditor = CBUIStringEditor2.create();
 
-        googleAnalyticsIDEditor.title = (
+        IDEditor.CBUIStringEditor2_setTitle(
             "Google Analytics ID | Google Tag Manager ID"
         );
 
-        googleAnalyticsIDEditor.value = CBModel.valueToString(
-            spec,
-            "googleTagManagerID"
+        IDEditor.CBUIStringEditor2_setValue(
+            CBModel.valueToString(
+                spec,
+                "googleTagManagerID"
+            )
         );
 
         createGoogleAnalyticsIDEditorElement_validate();
 
-        googleAnalyticsIDEditor.changed = function () {
-            spec.googleTagManagerID = googleAnalyticsIDEditor.value;
+        IDEditor.CBUIStringEditor2_setChangedEventListener(
+            function () {
+                spec.googleTagManagerID = IDEditor.CBUIStringEditor2_getValue();
 
-            createGoogleAnalyticsIDEditorElement_validate();
-            specChangedCallback();
-        };
+                createGoogleAnalyticsIDEditorElement_validate();
+                specChangedCallback();
+            }
+        );
 
-        return googleAnalyticsIDEditor.element;
+        return IDEditor.CBUIStringEditor2_getElement();
 
 
 
@@ -440,17 +390,17 @@
          * @return undefined
          */
         function createGoogleAnalyticsIDEditorElement_validate() {
-            let value = googleAnalyticsIDEditor.value.trim();
+            let value = IDEditor.CBUIStringEditor2_getValue().trim();
 
             if (
                 /^(UA-|GTM-)/.test(value) ||
                 value === ""
             ) {
-                googleAnalyticsIDEditor.element.classList.remove(
+                IDEditor.CBUIStringEditor2_getElement().classList.remove(
                     "CBUIStringEditor_error"
                 );
             } else {
-                googleAnalyticsIDEditor.element.classList.add(
+                IDEditor.CBUIStringEditor2_getElement().classList.add(
                     "CBUIStringEditor_error"
                 );
             }
