@@ -1,9 +1,10 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBPagesPreferencesEditor */
 /* global
     CBUI,
-    CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 var CBPagesPreferencesEditor = {
@@ -18,34 +19,54 @@ var CBPagesPreferencesEditor = {
      *
      * @return Element
      */
-    CBUISpecEditor_createEditorElement: function(args) {
-        var section, item;
-        var element = document.createElement("div");
-        element.className = "CBPagesPreferencesEditor";
+    CBUISpecEditor_createEditorElement: function(
+        args
+    ) {
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
+        let element;
+        let sectionElement;
 
-        element.appendChild(CBUI.createHalfSpace());
+        {
+            let elements = CBUI.createElementTree(
+                "CBPagesPreferencesEditor",
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        var properties = [
-            { name: "supportedViewClassNames", labelText: "Supported View Class Names" },
-            { name: "deprecatedViewClassNames", labelText: "Deprecated View Class Name" },
-            { name: "classNamesForLayouts", labelText: "Class Names for Layouts" },
+            element = elements[0];
+            sectionElement = elements[2];
+        }
+
+        let properties = [
+            {
+                name: "supportedViewClassNames",
+                labelText: "Supported View Class Names"
+            },
+            {
+                name: "deprecatedViewClassNames",
+                labelText: "Deprecated View Class Name"
+            },
+            {
+                name: "classNamesForLayouts",
+                labelText: "Class Names for Layouts"
+            },
         ];
 
-        section = CBUI.createSection();
-
-        properties.forEach(function (property) {
-            item = CBUI.createSectionItem();
-            item.appendChild(CBUIStringEditor.createEditor({
-                labelText: property.labelText,
-                propertyName: property.name,
-                spec: args.spec,
-                specChangedCallback: args.specChangedCallback,
-            }).element);
-            section.appendChild(item);
-        });
-
-        element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
+        properties.forEach(
+            function (
+                property
+            ) {
+                sectionElement.appendChild(
+                    CBUIStringEditor2.createObjectPropertyEditorElement(
+                        spec,
+                        property.name,
+                        property.labelText,
+                        specChangedCallback
+                    )
+                );
+            }
+        );
 
         return element;
     },

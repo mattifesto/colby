@@ -11,7 +11,7 @@ final class CBPagesPreferencesEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.3.js',
+                'v675.7.js',
                 cbsysurl()
             ),
         ];
@@ -23,7 +23,14 @@ final class CBPagesPreferencesEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
-        return ['CBUI', 'CBUIStringEditor'];
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
+        return [
+            'CBUI',
+            'CBUIStringEditor2',
+        ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
+
 }
