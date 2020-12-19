@@ -7,6 +7,7 @@
     CBUI,
     CBUIBooleanEditor,
     CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 var CBPageLayoutEditor = {
@@ -21,9 +22,15 @@ var CBPageLayoutEditor = {
      *
      * @return Element
      */
-    CBUISpecEditor_createEditorElement: function (args) {
+    CBUISpecEditor_createEditorElement: function (
+        args
+    ) {
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
         let section, item;
-        let element = CBUI.createElement("CBPageLayoutEditor");
+        let element = CBUI.createElement(
+            "CBPageLayoutEditor"
+        );
 
         element.appendChild(
             CBUI.createHalfSpace()
@@ -46,24 +53,31 @@ var CBPageLayoutEditor = {
             )
         );
 
+
+        /* CSS class names */
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
+
+            element.appendChild(
+                elements[0]
+            );
+
+            let sectionElement = elements[1];
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "CSSClassNames",
+                    "CSS Class Names",
+                    specChangedCallback
+                )
+            );
+        }
         /* CSS class names */
 
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "CSS Class Names",
-                    propertyName: "CSSClassNames",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
-
-        section.appendChild(item);
-        element.appendChild(section);
 
         /* local CSS */
 

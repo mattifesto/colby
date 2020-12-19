@@ -11,7 +11,7 @@ final class CBPageLayoutEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.3.js',
+                'v675.7.js',
                 cbsysurl()
             ),
         ];
@@ -23,13 +23,17 @@ final class CBPageLayoutEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'CBModel',
             'CBUI',
             'CBUIBooleanEditor',
-            'CBUIStringEditor'
+            'CBUIStringEditor',
+            'CBUIStringEditor2',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 
 }
