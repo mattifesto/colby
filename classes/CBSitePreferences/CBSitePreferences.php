@@ -253,8 +253,10 @@ final class CBSitePreferences {
     ): stdClass {
 
         /**
-         * 2018.04.11 Remove unused property
-         * Can be removed after run on every site
+         * 2020_12_19
+         *
+         *      The last use of this property was removed in version 675 so this
+         *      code can be removed in version 677.
          */
         if (isset($spec->defaultClassNameForPageSettings)) {
             unset($spec->defaultClassNameForPageSettings);
