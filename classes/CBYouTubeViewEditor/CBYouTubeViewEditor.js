@@ -93,7 +93,9 @@ var CBYouTubeViewEditor = {
                             "CBYouTubeViewEditor",
                             "checkVideoID",
                             {
-                                suggestedValue: videoIDEditor.value,
+                                suggestedValue: (
+                                    videoIDEditor.CBUIStringEditor2_getValue()
+                                ),
                             }
                         ).then(
                             function (response) {

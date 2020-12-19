@@ -110,7 +110,7 @@ final class CBYouTubeViewEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.5.js',
+                'v675.6.1.js',
                 cbsysurl()
             ),
         ];
