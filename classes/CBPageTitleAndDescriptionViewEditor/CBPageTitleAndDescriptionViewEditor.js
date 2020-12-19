@@ -17,25 +17,38 @@ var CBPageTitleAndDescriptionViewEditor = {
      *
      * @return Element
      */
-    CBUISpecEditor_createEditorElement: function (args) {
+    CBUISpecEditor_createEditorElement: function (
+        args
+    ) {
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
         var section, item;
-        var element = document.createElement("div");
-        element.className = "CBPageTitleAndDescriptionViewEditor";
 
-        element.appendChild(CBUI.createHalfSpace());
+        let element;
 
-        section = CBUI.createSection();
+        {
+            let elements = CBUI.createElementTree(
+                "CBPageTitleAndDescriptionViewEditor",
+                "CBUI_sectionContainer",
+                "CBUI_section",
+                "CBUI_sectionItem"
+            );
 
-        /* showPublicationDate */
-        item = CBUI.createSectionItem();
-        item.appendChild(CBUIBooleanEditor.create({
-            labelText: "Show Publication Date",
-            propertyName: "showPublicationDate",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        }).element);
-        section.appendChild(item);
-        element.appendChild(section);
+            element = elements[0];
+
+            let sectionItem = elements[3];
+
+            sectionItem.appendChild(
+                CBUIBooleanEditor.create(
+                    {
+                        labelText: "Show Publication Date",
+                        propertyName: "showPublicationDate",
+                        spec: spec,
+                        specChangedCallback: specChangedCallback,
+                    }
+                ).element
+            );
+        }
 
         /* CSSClassNames */
 
