@@ -11,6 +11,7 @@
     CBUISpecClipboard,
     CBUISpecEditor,
     CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 var CBTextView2Editor = {
@@ -21,27 +22,27 @@ var CBTextView2Editor = {
      *
      * @return Element
      */
-    CBUISpecEditor_createEditorElement: function (args) {
+    CBUISpecEditor_createEditorElement: function (
+        args
+    ) {
+        let spec = args.spec;
+        let specChangedCallback = args.specChangedCallback;
         var section, item;
-        var element = CBUI.createElement("CBTextView2Editor");
+        let element;
 
-        /* convert to CBMessageView */
         {
-            let sectionContainerElement = CBUI.createElement(
-                "CBUI_sectionContainer"
-            );
-
-            element.appendChild(sectionContainerElement);
-
-            let sectionElement = CBUI.createElement(
-                "CBUI_section"
-            );
-
-            sectionContainerElement.appendChild(sectionElement);
-
-            let actionElement = CBUI.createElement(
+            let elements = CBUI.createElementTree(
+                "CBTextView2Editor",
+                "CBUI_sectionContainer",
+                "CBUI_section",
                 "CBUI_action"
             );
+
+            element = elements[0];
+
+            /* convert to CBMessageView */
+
+            let actionElement = elements[3];
 
             actionElement.textContent = "Convert to CBMessageView";
 
@@ -49,39 +50,31 @@ var CBTextView2Editor = {
                 "click",
                 createEditor_convert
             );
-
-            sectionElement.appendChild(actionElement);
         }
-        /* convert to CBMessageView */
 
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        element.appendChild(
-            CBUI.createHalfSpace()
-        );
+            element.appendChild(
+                elements[0]
+            );
 
-        section = CBUI.createSection();
+            let sectionElement = elements[1];
 
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Content (CommonMark)",
-                    propertyName: "contentAsCommonMark",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
-
-        section.appendChild(item);
-        element.appendChild(section);
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "contentAsCommonMark",
+                    "Content (CommonMark)",
+                    specChangedCallback
+                )
+            );
+        }
 
         /* CSSClassNames */
-
-        element.appendChild(
-            CBUI.createHalfSpace()
-        );
 
         element.appendChild(
             CBUI.createSectionHeader(

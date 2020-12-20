@@ -14,7 +14,7 @@ final class CBTextView2Editor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.3.js',
+                'v675.7.js',
                 cbsysurl()
             ),
         ];
@@ -26,7 +26,9 @@ final class CBTextView2Editor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+     static function
+     CBHTMLOutput_requiredClassNames(
+     ): array {
         return [
             'CBAjax',
             'CBModel',
@@ -36,6 +38,7 @@ final class CBTextView2Editor {
             'CBUISpecClipboard',
             'CBUISpecEditor',
             'CBUIStringEditor',
+            'CBUIStringEditor2',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
