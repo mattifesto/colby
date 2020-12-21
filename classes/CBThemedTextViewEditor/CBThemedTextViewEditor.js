@@ -8,12 +8,11 @@
     CBUIBooleanEditor,
     CBUINavigationView,
     CBUIPanel,
-    CBUISectionItem4,
     CBUISpecClipboard,
     CBUISpecEditor,
     CBUIStringEditor,
-    CBUIStringsPart,
 */
+
 
 var CBThemedTextViewEditor = {
 
@@ -73,40 +72,43 @@ var CBThemedTextViewEditor = {
 
 
     /**
-     * @param object spec
-     * @param function specChangedCallback
+     * @param object args
+     *
+     *      {
+     *          CBUISpecEditor_getSpec() -> object
+     *          CBUISpecEditor_getSpecChangedCallback() -> function
+     *      }
      *
      * @return Element
      */
-    CBUISpecEditor_createEditorElement: function(args) {
-        var element = document.createElement("div");
-        element.className = "CBThemedTextViewEditor";
-
-        element.appendChild(CBUI.createHalfSpace());
+    CBUISpecEditor_createEditorElement: function(
+        args
+    ) {
+        let spec = args.CBUISpecEditor_getSpec();
+        let specChangedCallback = args.CBUISpecEditor_getSpecChangedCallback();
+        let element;
 
         {
-            let sectionElement = CBUI.createSection();
+            let elements = CBUI.createElementTree(
+                "CBThemedTextViewEditor",
+                "CBUI_container1",
+                "CBUI_button1"
+            );
 
-            {
-                let sectionItem = CBUISectionItem4.create();
-                sectionItem.callback = function () {
+            element = elements[0];
+
+            let buttonElement = elements[2];
+            buttonElement.textContent = "Convert to CBMessageView";
+
+            buttonElement.addEventListener(
+                "click",
+                function () {
                     CBThemedTextViewEditor.convertToCBMessageView(
-                        args.spec,
-                        args.specChangedCallback
+                        spec,
+                        specChangedCallback
                     );
-                };
-
-                let stringsPart = CBUIStringsPart.create();
-                stringsPart.string1 = "Convert to CBMessageView";
-
-                stringsPart.element.classList.add("action");
-
-                sectionItem.appendPart(stringsPart);
-                sectionElement.appendChild(sectionItem.element);
-            }
-
-            element.appendChild(sectionElement);
-            element.appendChild(CBUI.createHalfSpace());
+                }
+            );
         }
 
         {
