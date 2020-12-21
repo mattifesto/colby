@@ -5,17 +5,6 @@ final class CBThemedTextViewEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
-        ];
-    }
-
-
-
-    /**
-     * @return [string]
-     */
     static function
     CBHTMLOutput_JavaScriptURLs(
     ): array {
