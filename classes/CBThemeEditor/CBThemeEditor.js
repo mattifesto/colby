@@ -1,95 +1,134 @@
 "use strict";
 /* jshint strict: global */
+/* jshint esversion: 6 */
 /* exported CBThemeEditor */
 /* global
+    CBModel,
     CBUI,
-    CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 
 var CBThemeEditor = {
 
     /**
-     * @param object spec
-     * @param function specChangedCallback
+     * @param object args
+     *
+     *      {
+     *          CBUISpecEditor_getSpec() -> object
+     *          CBUISpecEditor_getSpecChangedCallback() -> function
+     *      }
      *
      * @return Element
      */
-    CBUISpecEditor_createEditorElement: function (args) {
-        var section, item, editor;
-        var element = document.createElement("div");
-        element.className = "CBThemeEditor";
-        var properties = [
-            { name: "title", labelText: "Title" },
-            { name: "classNameForKind", labelText: "Class Name for Kind" },
-            { name: "classNameForTheme", labelText: "Class Name for Theme" },
-            { name: "description", labelText: "Description" },
-        ];
+    CBUISpecEditor_createEditorElement: function (
+        args
+    ) {
+        let spec = args.CBUISpecEditor_getSpec();
+        let specChangedCallback = args.CBUISpecEditor_getSpecChangedCallback();
+        let element, sectionElement;
 
-        element.appendChild(CBUI.createHalfSpace());
+        {
+            let elements = CBUI.createElementTree(
+                "CBThemeEditor",
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        section = CBUI.createSection();
+            element = elements[0];
 
-        properties.forEach(function (property) {
-            item = CBUI.createSectionItem();
+            sectionElement = elements[2];
 
-            item.appendChild(CBUIStringEditor.createEditor({
-                labelText: property.labelText,
-                propertyName: property.name,
-                spec: args.spec,
-                specChangedCallback: args.specChangedCallback,
-            }).element);
+            let properties = [
+                {
+                    name: "title",
+                    labelText: "Title"
+                },
+                {
+                    name: "classNameForKind",
+                    labelText: "Class Name for Kind"
+                },
+                {
+                    name: "classNameForTheme",
+                    labelText: "Class Name for Theme"
+                },
+                {
+                    name: "description",
+                    labelText: "Description"
+                },
+            ];
 
-            section.appendChild(item);
-        });
+            properties.forEach(
+                function (
+                    property
+                ) {
+                    sectionElement.appendChild(
+                        CBUIStringEditor2.createObjectPropertyEditorElement(
+                            spec,
+                            property.name,
+                            property.labelText,
+                            specChangedCallback
+                        )
+                    );
+                }
+            );
+        }
 
         // styles
+        {
+            let stylesEditor = CBUIStringEditor2.create();
 
-        item = CBUI.createSectionItem();
-        editor = CBUIStringEditor.createEditor({
-            labelText: "Styles",
-            propertyName: "styles",
-            spec: args.spec,
-            specChangedCallback: args.specChangedCallback,
-        });
+            stylesEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
+                spec,
+                "styles",
+                "Styles",
+                specChangedCallback
+            );
 
-        item.appendChild(editor.element);
-        section.appendChild(item);
+            sectionElement.appendChild(
+                stylesEditor.CBUIStringEditor2_getElement()
+            );
 
-        // add style
+            // add style
 
-        item = CBUI.createSectionItem();
-        item.classList.add("button");
-        var button = document.createElement("div");
-        button.textContent = "Add Style";
+            let elements = CBUI.createElementTree(
+                "CBUI_container1",
+                "CBUI_button1"
+            );
 
-        button.addEventListener("click", CBThemeEditor.handleAddStyle.bind(undefined, {
-            spec: args.spec,
-            updateValueCallback: editor.updateValueCallback,
-        }));
+            element.appendChild(
+                elements[0]
+            );
 
-        item.appendChild(button);
-        section.appendChild(item);
+            let buttonElement = elements[1];
+            buttonElement.textContent = "Add Style";
 
-        element.appendChild(section);
-        element.appendChild(CBUI.createHalfSpace());
+            buttonElement.addEventListener(
+                "click",
+                function () {
+                    let styles = CBModel.valueToString(
+                        spec,
+                        "styles"
+                    ).trim();
+
+                    let pre = (styles !== "") ? "\n\n" : "";
+
+                    spec.styles = styles.replace(
+                        /[\s]*$/,
+                        pre + "view {\n\n}"
+                    );
+
+                    stylesEditor.CBUIStringEditor2_setValue(
+                        spec.styles
+                    );
+
+                    specChangedCallback();
+                }
+            );
+        }
 
         return element;
     },
     /* CBUISpecEditor_createEditorElement() */
 
-
-
-    /**
-     * @param object args.spec
-     * @param function args.updateValueCallback
-     *
-     * @return  undefined
-     */
-    handleAddStyle: function(args) {
-        var styles = args.spec.styles ? args.spec.styles.trim() : "";
-        var pre = (styles !== "") ? "\n\n" : "";
-        styles = styles.replace(/[\s]*$/, pre + "view {\n\n}");
-        args.updateValueCallback.call(undefined, styles);
-    },
 };
