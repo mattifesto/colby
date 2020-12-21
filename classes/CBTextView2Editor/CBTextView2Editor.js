@@ -10,7 +10,6 @@
     CBUIPanel,
     CBUISpecClipboard,
     CBUISpecEditor,
-    CBUIStringEditor,
     CBUIStringEditor2,
 */
 
@@ -27,7 +26,6 @@ var CBTextView2Editor = {
     ) {
         let spec = args.spec;
         let specChangedCallback = args.specChangedCallback;
-        var section, item;
         let element;
 
         {
@@ -104,56 +102,57 @@ var CBTextView2Editor = {
             )
         );
 
-        section = CBUI.createSection();
-        item = CBUI.createSectionItem();
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "CSS Class Names",
-                    propertyName: "CSSClassNames",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
+            element.appendChild(
+                elements[0]
+            );
 
-        section.appendChild(item);
-        element.appendChild(section);
+            let sectionElement = elements[1];
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "CSSClassNames",
+                    "CSS Class Names",
+                    specChangedCallback
+                )
+            );
+        }
 
         /* localCSSTemplate */
+        {
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-        element.appendChild(
-            CBUI.createHalfSpace()
-        );
+            element.appendChild(
+                elements[0]
+            );
 
-        section = CBUI.createSection();
+            let sectionElement = elements[1];
 
-        item = CBUI.createSectionItem();
-
-        item.appendChild(
-            CBUIStringEditor.createEditor(
-                {
-                    labelText: "Local CSS Template",
-                    propertyName: "localCSSTemplate",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }
-            ).element
-        );
-
-        section.appendChild(item);
-        element.appendChild(section);
-
-        element.appendChild(
-            CBUI.createHalfSpace()
-        );
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "localCSSTemplate",
+                    "Local CSS Template",
+                    specChangedCallback
+                )
+            );
+        }
 
         return element;
 
 
 
         /* -- closures -- -- -- -- -- */
+
 
 
         /**
@@ -211,6 +210,7 @@ var CBTextView2Editor = {
     /* CBUISpecEditor_createEditorElement() */
 
 
+
     /**
      * @param object spec
      *
@@ -225,5 +225,6 @@ var CBTextView2Editor = {
         return (content === "") ? undefined : content;
     },
     /* CBUISpec_toDescription() */
+
 };
 /* CBTextView2Editor */

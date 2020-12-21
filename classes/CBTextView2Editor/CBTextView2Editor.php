@@ -37,7 +37,6 @@ final class CBTextView2Editor {
             'CBUIPanel',
             'CBUISpecClipboard',
             'CBUISpecEditor',
-            'CBUIStringEditor',
             'CBUIStringEditor2',
         ];
     }
