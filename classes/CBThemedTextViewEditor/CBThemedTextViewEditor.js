@@ -10,7 +10,6 @@
     CBUIPanel,
     CBUISpecClipboard,
     CBUISpecEditor,
-    CBUIStringEditor,
     CBUIStringEditor2,
 */
 
@@ -144,83 +143,91 @@ var CBThemedTextViewEditor = {
         }
 
         {
-            let section = CBUI.createSection();
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-            {
-                let item = CBUI.createSectionItem();
-                item.appendChild(CBUIStringEditor.createEditor({
-                    labelText: "URL",
-                    propertyName: "URL",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }).element);
-                section.appendChild(item);
-            }
+            element.appendChild(
+                elements[0]
+            );
 
-            element.appendChild(section);
-            element.appendChild(CBUI.createHalfSpace());
+            let sectionElement = elements[1];
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "URL",
+                    "URL",
+                    specChangedCallback
+                )
+            );
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "titleColor",
+                    "Title Color",
+                    specChangedCallback
+                )
+            );
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "contentColor",
+                    "Content Color",
+                    specChangedCallback
+                )
+            );
         }
 
+
         {
-            let section = CBUI.createSection();
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-            /* titleColor */
-            {
-                let item = CBUI.createSectionItem();
-                item.appendChild(CBUIStringEditor.createEditor({
-                    labelText: "Title Color",
-                    propertyName: "titleColor",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }).element);
-                section.appendChild(item);
-            }
+            element.appendChild(
+                elements[0]
+            );
 
-            /* contentColor */
-            {
-                let item = CBUI.createSectionItem();
-                item.appendChild(CBUIStringEditor.createEditor({
-                    labelText: "Content Color",
-                    propertyName: "contentColor",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }).element);
-                section.appendChild(item);
-            }
+            let sectionElement = elements[1];
 
-            /* center */
-            {
-                let item = CBUI.createSectionItem();
-                item.appendChild(CBUIBooleanEditor.create({
-                    labelText: "Center",
-                    propertyName: "center",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }).element);
-                section.appendChild(item);
-            }
-
-            element.appendChild(section);
-            element.appendChild(CBUI.createHalfSpace());
+            sectionElement.appendChild(
+                CBUIBooleanEditor.create(
+                    {
+                        labelText: "Center",
+                        propertyName: "center",
+                        spec: args.spec,
+                        specChangedCallback: args.specChangedCallback,
+                    }
+                ).element
+            );
         }
 
+
         {
-            let section = CBUI.createSection();
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-            {
-                let item = CBUI.createSectionItem();
+            element.appendChild(
+                elements[0]
+            );
 
-                item.appendChild(CBUIStringEditor.createEditor({
-                    labelText: "Styles Template",
-                    propertyName: "stylesTemplate",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }).element);
-                section.appendChild(item);
-            }
+            let sectionElement = elements[1];
 
-            element.appendChild(section);
-            element.appendChild(CBUI.createHalfSpace());
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "stylesTemplate",
+                    "Styles Template",
+                    specChangedCallback
+                )
+            );
         }
 
         return element;

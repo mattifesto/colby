@@ -45,7 +45,6 @@ final class CBThemedTextViewEditor {
             'CBUIPanel',
             'CBUISpecClipboard',
             'CBUISpecEditor',
-            'CBUIStringEditor',
             'CBUIStringEditor2',
         ];
     }
