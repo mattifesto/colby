@@ -11,6 +11,7 @@
     CBUISpecClipboard,
     CBUISpecEditor,
     CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 
@@ -112,32 +113,34 @@ var CBThemedTextViewEditor = {
         }
 
         {
-            let section = CBUI.createSection();
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
 
-            {
-                let item = CBUI.createSectionItem();
-                item.appendChild(CBUIStringEditor.createEditor({
-                    labelText: "Title",
-                    propertyName: "titleAsMarkaround",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }).element);
-                section.appendChild(item);
-            }
+            element.appendChild(
+                elements[0]
+            );
 
-            {
-                let item = CBUI.createSectionItem();
-                item.appendChild(CBUIStringEditor.createEditor({
-                    labelText: "Content",
-                    propertyName: "contentAsMarkaround",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
-                }).element);
-                section.appendChild(item);
-            }
+            let sectionElement = elements[1];
 
-            element.appendChild(section);
-            element.appendChild(CBUI.createHalfSpace());
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "titleAsMarkaround",
+                    "Title",
+                    specChangedCallback
+                )
+            );
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "contentAsMarkaround",
+                    "Content",
+                    specChangedCallback
+                )
+            );
         }
 
         {

@@ -46,6 +46,7 @@ final class CBThemedTextViewEditor {
             'CBUISpecClipboard',
             'CBUISpecEditor',
             'CBUIStringEditor',
+            'CBUIStringEditor2',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
