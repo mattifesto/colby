@@ -15,7 +15,7 @@ final class CBUISpecEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.5.js',
+                'v675.7.js',
                 cbsysurl()
             ),
         ];

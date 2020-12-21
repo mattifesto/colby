@@ -146,8 +146,17 @@ var CBUISpecEditor = {
         if (createEditorElementInterface) {
             editorElement = createEditorElementInterface(
                 {
-                    spec,
-                    specChangedCallback,
+                    spec, /* @deprecated 2020_12_20 */
+
+                    specChangedCallback, /* @deprecated 2020_12_20 */
+
+                    CBUISpecEditor_getSpec() {
+                        return spec;
+                    },
+
+                    CBUISpecEditor_getSpecChangedCallback() {
+                        return specChangedCallback;
+                    },
                 }
             );
         }
