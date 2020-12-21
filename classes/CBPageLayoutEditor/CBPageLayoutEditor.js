@@ -15,8 +15,8 @@ var CBPageLayoutEditor = {
      * @param object args
      *
      *      {
-     *          spec: object
-     *          specChangedCallback: function
+     *          CBUISpecEditor_getSpec() -> object
+     *          CBUISpecEditor_getSpecChangedCallback() -> function
      *      }
      *
      * @return Element
@@ -24,8 +24,8 @@ var CBPageLayoutEditor = {
     CBUISpecEditor_createEditorElement: function (
         args
     ) {
-        let spec = args.spec;
-        let specChangedCallback = args.specChangedCallback;
+        let spec = args.CBUISpecEditor_getSpec();
+        let specChangedCallback = args.CBUISpecEditor_getSpecChangedCallback();
 
         let element = CBUI.createElement(
             "CBPageLayoutEditor"
