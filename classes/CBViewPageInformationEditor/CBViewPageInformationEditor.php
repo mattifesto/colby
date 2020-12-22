@@ -21,7 +21,7 @@ final class CBViewPageInformationEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.3.js',
+                'v675.7.js',
                 cbsysurl()
             ),
         ];
@@ -87,6 +87,7 @@ final class CBViewPageInformationEditor {
             'CBUISelector',
             'CBUISpecPropertyEditor',
             'CBUIStringEditor',
+            'CBUIStringEditor2',
             'CBUIStringsPart',
             'CBUIUnixTimestampEditor',
             'Colby',

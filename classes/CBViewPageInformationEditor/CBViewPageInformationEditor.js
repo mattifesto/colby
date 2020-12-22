@@ -16,6 +16,7 @@
     CBUISelector,
     CBUISpecPropertyEditor,
     CBUIStringEditor,
+    CBUIStringEditor2,
     CBUIStringsPart,
     CBUIUnixTimestampEditor,
     Colby,
@@ -309,28 +310,17 @@ var CBViewPageInformationEditor = {
 
             sectionContainerElement.appendChild(sectionElement);
 
-            /* title */
-            {
-                let item = CBUI.createSectionItem();
-
-                item.appendChild(
-                    CBUIStringEditor.createEditor(
-                        {
-                            labelText: "Title",
-                            propertyName: 'title',
-                            spec: spec,
-                            specChangedCallback: function () {
-                                handleTitleChanged();
-                                specChangedCallback();
-                            },
-                        }
-                    ).element
-                );
-
-                sectionElement.appendChild(item);
-            }
-            /* title */
-
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "title",
+                    "Title",
+                    function () {
+                        handleTitleChanged();
+                        specChangedCallback();
+                    }
+                )
+            );
 
             /* description */
             {
@@ -354,13 +344,13 @@ var CBViewPageInformationEditor = {
 
             /* editors */
 
-            var URIEditor = CBUIStringEditor.createEditor(
-                {
-                    labelText: "URI",
-                    propertyName: "URI",
-                    spec: spec,
-                    specChangedCallback: specChangedCallback,
-                }
+            let URIEditor2 = CBUIStringEditor2.create();
+
+            URIEditor2.CBUIStringEditor2_initializeObjectPropertyEditor(
+                spec,
+                "URI",
+                "URI",
+                specChangedCallback
             );
 
             var publicationDateEditor = CBUIUnixTimestampEditor.create(
@@ -382,17 +372,19 @@ var CBViewPageInformationEditor = {
                         propertyName: "isPublished",
                         spec: spec,
                         specChangedCallback: function () {
-                            var URI = CBModel.valueToString(
-                                spec,
-                                "URI"
-                            ).trim();
-
                             if (spec.isPublished) {
+                                let URI = CBModel.valueToString(
+                                    spec,
+                                    "URI"
+                                ).trim();
+
                                 if (URI === "") {
-                                    URIEditor.updateValueCallback(
-                                        Colby.textToURI(
-                                            spec.title
-                                        )
+                                    spec.URI = Colby.textToURI(
+                                        spec.title
+                                    );
+
+                                    URIEditor2.CBUIStringEditor2_setValue(
+                                        spec.URI
                                     );
                                 }
 
@@ -421,33 +413,14 @@ var CBViewPageInformationEditor = {
             /* is published */
 
 
-
-            /* publication timestamp */
-            {
-                let item = CBUI.createSectionItem();
-
-                item.appendChild(
-                    publicationDateEditor.element
-                );
-
-                sectionElement.appendChild(item);
-            }
-            /* publication timestamp */
+            sectionElement.appendChild(
+                publicationDateEditor.element
+            );
 
 
-
-            /* URI */
-            {
-                let item = CBUI.createSectionItem();
-
-                item.appendChild(
-                    URIEditor.element
-                );
-
-                sectionElement.appendChild(item);
-            }
-            /* URI */
-
+            sectionElement.appendChild(
+                URIEditor2.CBUIStringEditor2_getElement()
+            );
 
 
             /* published by */
