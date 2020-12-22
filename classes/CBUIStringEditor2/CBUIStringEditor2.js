@@ -75,6 +75,7 @@
             CBUIStringEditor2_getValue,
             CBUIStringEditor2_initializeObjectPropertyEditor,
             CBUIStringEditor2_setChangedEventListener,
+            CBUIStringEditor2_setInputType,
             CBUIStringEditor2_setName,
             CBUIStringEditor2_setPlaceholderText,
             CBUIStringEditor2_setTitle,
