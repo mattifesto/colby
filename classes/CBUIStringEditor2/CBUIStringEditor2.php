@@ -26,6 +26,23 @@ final class CBUIStringEditor2 {
      * @return [string]
      */
     static function
+    CBHTMLOutput_CSSURLs() {
+        return [
+            Colby::flexpath(
+                __CLASS__,
+                'v675.7.css',
+                cbsysurl()
+            ),
+        ];
+    }
+    /* CBHTMLOutput_CSSURLs() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
     CBHTMLOutput_JavaScriptURLs(
     ): array {
         return [
@@ -49,8 +66,9 @@ final class CBUIStringEditor2 {
         return [
             'CBConvert',
             'CBException',
+            'CBID',
             'CBModel',
-            'CBUIStringEditor',
+            'CBUI',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

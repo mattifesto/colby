@@ -1,15 +1,15 @@
-"use strict";
-/* jshint strict: global */
 /* jshint esversion: 6 */
 /* globals
     CBConvert,
     CBException,
+    CBID,
     CBModel,
-    CBUIStringEditor,
+    CBUI,
 */
 
 
 (function () {
+    "use strict";
 
     window.CBUIStringEditor2 = {
         create,
@@ -24,17 +24,73 @@
     function
     create(
     ) {
-        let stringEditor = CBUIStringEditor.create();
+        let elements = CBUI.createElementTree(
+            "CBUIStringEditor2",
+            "CBUIStringEditor2_container",
+            [
+                "CBUIStringEditor2_label",
+                "label"
+            ]
+        );
+
+        let element = elements[0];
+        let containerElement = elements[1];
+        let labelElement = elements[2];
+        let inputElement;
+
+        let currentExternalChangedEventListener;
+
+        let inputElementCBID = CBID.generateRandomCBID();
+        labelElement.htmlFor = inputElementCBID;
+
+        CBUIStringEditor2_setInputType(
+            "CBUIStringEditor2_inputType_textarea"
+        );
+
+
+        /**
+         * @TODO 2015_09_24
+         *
+         *      We have two timeouts because there is a bug in Safari where the
+         *      height is not calculated correctly the first time. The first
+         *      height is close which is why we keep both calls. Remove the
+         *      second timeout once the bug has been fixed.
+         */
+
+        window.setTimeout(
+            CBUIStringEditor2_resize,
+            0
+        );
+
+        window.setTimeout(
+            CBUIStringEditor2_resize,
+            1000
+        );
+
 
         return {
+            CBUIStringEditor2_focus,
             CBUIStringEditor2_getElement,
+            CBUIStringEditor2_getName,
             CBUIStringEditor2_getValue,
             CBUIStringEditor2_initializeObjectPropertyEditor,
             CBUIStringEditor2_setChangedEventListener,
+            CBUIStringEditor2_setName,
             CBUIStringEditor2_setPlaceholderText,
             CBUIStringEditor2_setTitle,
             CBUIStringEditor2_setValue,
         };
+
+
+
+        /**
+         * @return undefined
+         */
+        function
+        CBUIStringEditor2_focus(
+        ) {
+            inputElement.focus();
+        }
 
 
 
@@ -44,7 +100,7 @@
         function
         CBUIStringEditor2_getElement(
         ) {
-            return stringEditor.element;
+            return element;
         }
         /* CBUIStringEditor2_getElement() */
 
@@ -54,11 +110,42 @@
          * @return string
          */
         function
+        CBUIStringEditor2_getName(
+        ) {
+            return inputElement.name;
+        }
+        /* CBUIStringEditor2_getName() */
+
+
+
+        /**
+         * @return string
+         */
+        function
         CBUIStringEditor2_getValue(
         ) {
-            return stringEditor.value;
+            return inputElement.value;
         }
         /* CBUIStringEditor2_getValue() */
+
+
+
+        /**
+         * This function is always set as the only "input" event listener on the
+         * inputElement.
+         *
+         * @return undefined
+         */
+        function
+        CBUIStringEditor2_handleInputEvent(
+        ) {
+            CBUIStringEditor2_resize();
+
+            if (typeof currentExternalChangedEventListener === "function") {
+                currentExternalChangedEventListener();
+            }
+        }
+        /* CBUIStringEditor2_handleInputEvent() */
 
 
 
@@ -119,17 +206,137 @@
 
 
         /**
+         * @return undefined
+         */
+        function CBUIStringEditor2_resize() {
+            inputElement.style.height = "0";
+            inputElement.style.height = inputElement.scrollHeight + "px";
+        }
+        /* CBUIStringEditor2_resize() */
+
+
+
+        /**
          * @param function listener
          *
          * @return undefined
          */
         function
         CBUIStringEditor2_setChangedEventListener(
-            listener
+            changedEventListener
         ) {
-            stringEditor.changed = listener;
+            currentExternalChangedEventListener = changedEventListener;
         }
         /* CBUIStringEditor2_setChangedEventListener() */
+
+
+
+        /**
+         * @param string inputType
+         *
+         * @return undefined
+         */
+        function
+        CBUIStringEditor2_setInputType(
+            inputType
+        ) {
+            let newInputElement;
+
+            switch (inputType) {
+                case "CBUIStringEditor2_inputType_textarea":
+
+                    newInputElement = CBUI.createElement(
+                        "CBUIStringEditor2_input",
+                        "textarea"
+                    );
+
+                    break;
+
+                case "CBUIStringEditor2_inputType_text":
+
+                    newInputElement = CBUI.createElement(
+                        "CBUIStringEditor2_input",
+                        "input"
+                    );
+
+                    newInputElement.type = "text";
+
+                    break;
+
+                case "CBUIStringEditor2_inputType_password":
+
+                    newInputElement = CBUI.createElement(
+                        "CBUIStringEditor2_input",
+                        "input"
+                    );
+
+                    newInputElement.type = "password";
+
+                    break;
+
+                default:
+
+                    throw CBException.withValueRelatedError(
+                        Error(
+                            CBConvert.stringToCleanLine(`
+
+                                The input type "${inputType}" is not supported
+                                by CBUIStringEditor2_setInputType().
+
+                            `)
+                        ),
+                        inputType,
+                        "dc24edbf4a8e45cdcf009b9b1e74de09a7728888"
+                    );
+            }
+
+            if (inputElement !== undefined) {
+                newInputElement.value = inputElement.value;
+                newInputElement.placeholder = inputElement.placeholder;
+
+                inputElement.id = "";
+
+                inputElement.removeEventListener(
+                    "input",
+                    CBUIStringEditor2_handleInputEvent
+                );
+
+                inputElement.replaceWith(
+                    newInputElement
+                );
+            } else {
+                containerElement.appendChild(
+                    newInputElement
+                );
+            }
+
+            newInputElement.id = inputElementCBID;
+
+            newInputElement.addEventListener(
+                "input",
+                CBUIStringEditor2_handleInputEvent
+            );
+
+            inputElement = newInputElement;
+        }
+        /* CBUIStringEditor2_setInputType() */
+
+
+
+        /**
+         * @param string value
+         *
+         * @return undefined
+         */
+        function
+        CBUIStringEditor2_setName(
+            value
+        ) {
+            inputElement.name = CBConvert.valueToString(
+                value
+            );
+        }
+        /* CBUIStringEditor2_setName() */
 
 
 
@@ -142,10 +349,8 @@
         CBUIStringEditor2_setPlaceholderText(
             value
         ) {
-            stringEditor.CBUIStringEditor_setPlaceholderText(
-                CBConvert.valueToString(
-                    value
-                )
+            inputElement.placeholder = CBConvert.valueToString(
+                value
             );
         }
         /* CBUIStringEditor2_setPlaceholderText() */
@@ -161,7 +366,9 @@
         CBUIStringEditor2_setTitle(
             title
         ) {
-            stringEditor.title = title;
+            labelElement.textContent = CBConvert.valueToString(
+                title
+            );
         }
         /* CBUIStringEditor2_setTitle() */
 
@@ -176,7 +383,9 @@
         CBUIStringEditor2_setValue(
             value
         ) {
-            stringEditor.value = value;
+            inputElement.value = value;
+
+            CBUIStringEditor2_resize();
         }
         /* CBUIStringEditor2_setValue() */
 

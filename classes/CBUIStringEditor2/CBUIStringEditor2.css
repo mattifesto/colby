@@ -1,0 +1,66 @@
+/**
+ * @NOTE 2020_01_08
+ *
+ *      The control uses a container element to render focus borders so that the
+ *      root element can have separate borders applied by situation. This allows
+ *      CBUIStringEditor2 elements to be used as direct children of CBUI_section
+ *      elements.
+ */
+
+.CBUIStringEditor2_container {
+    box-sizing: border-box;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    padding: 3px 10px;
+}
+
+
+
+/**
+ * Use JavaScript to add and remove the CBUIStringEditor_error from a
+ * CBUIStringEditor2 element to provide a visual indication of whether the value
+ * is valid or invalid.
+ */
+.CBUIStringEditor2.CBUIStringEditor2_error {
+    background-color: var(--CBErrorBackgroundColor);
+}
+
+
+
+.CBUIStringEditor2:focus-within .CBUIStringEditor2_container {
+    border-left: 5px solid Highlight;
+    border-right: 5px solid Highlight;
+    padding: 3px 5px;
+}
+
+.CBUIStringEditor2 label {
+    color: var(--CBTextColor2);
+}
+
+.CBUIStringEditor2 input,
+.CBUIStringEditor2 textarea {
+    background-color: transparent;
+    border: none;
+    color: inherit;
+    font: inherit;
+    line-height: 1.4;
+    min-height: 1.4em; /* 1 */
+    outline: none;
+    padding: 0;
+    resize: none;
+}
+
+/*  Note 1:
+
+    Setting the line height and min-height is important because of an odd edge
+    case. If a CBUIStringEditor is added as display: none, and then is set to
+    display: block the textarea will have no height if min-height isn't set. By
+    setting the line-height and min-height we can guarantee the heights are the
+    same.
+
+    There is still uncertainty regarding fractional pixels. The `font-size`
+    property seems to truncate calculated values but height does not. However
+    it's undercertain and unlikely that height would not truncte the value.
+
+ */
