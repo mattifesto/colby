@@ -30,7 +30,6 @@ final class CBEmailSenderEditor {
     static function CBHTMLOutput_requiredClassNames(): array {
         return [
             'CBUI',
-            'CBUIStringEditor',
             'CBUIStringEditor2',
         ];
     }

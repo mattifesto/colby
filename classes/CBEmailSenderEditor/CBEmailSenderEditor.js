@@ -4,7 +4,6 @@
 /* exported CBEmailSenderEditor */
 /* global
     CBUI,
-    CBUIStringEditor,
     CBUIStringEditor2,
 */
 
@@ -96,17 +95,26 @@ var CBEmailSenderEditor = {
             )
         );
 
-        sectionElement.appendChild(
-            CBUIStringEditor.createSpecPropertyEditorElement(
-                "SMTP Server Password",
+
+        {
+            let passwordEditor = CBUIStringEditor2.create();
+
+            passwordEditor.CBUIStringEditor2_setInputType(
+                "CBUIStringEditor2_inputType_password"
+            );
+
+            passwordEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
                 spec,
                 "SMTPServerPassword",
-                specChangedCallback,
-                {
-                    inputType: "password",
-                }
-            )
-        );
+                "SMTP Server Password",
+                specChangedCallback
+            );
+
+            sectionElement.appendChild(
+                passwordEditor.CBUIStringEditor2_getElement()
+            );
+        }
+
 
         sectionElement.appendChild(
             CBUIStringEditor2.createObjectPropertyEditorElement(
