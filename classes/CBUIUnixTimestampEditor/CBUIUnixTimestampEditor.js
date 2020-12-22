@@ -2,8 +2,9 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* global
+    CBConvert,
     CBModel,
-    CBUIStringEditor,
+    CBUIStringEditor2,
 */
 
 
@@ -45,20 +46,23 @@ var CBUIUnixTimestampEditor = {
 
         var dateStringSpec = {};
 
-        var dateStringEditor = CBUIStringEditor.createEditor(
-            {
-                labelText,
-                placeholderText: "YYYY/MM/DD HH:MM AM",
-                propertyName: "value",
-                spec: dateStringSpec,
-                specChangedCallback: dateStringSpecChanged,
-            }
+        let dateStringEditor2 = CBUIStringEditor2.create();
+
+        dateStringEditor2.CBUIStringEditor2_initializeObjectPropertyEditor(
+            dateStringSpec,
+            "value",
+            labelText,
+            dateStringSpecChanged
+        );
+
+        dateStringEditor2.CBUIStringEditor2_setPlaceholderText(
+            "YYYY/MM/DD HH:MM AM"
         );
 
         refresh();
 
         return {
-            element: dateStringEditor.element,
+            element: dateStringEditor2.CBUIStringEditor2_getElement(),
             refresh,
         };
 
@@ -72,7 +76,10 @@ var CBUIUnixTimestampEditor = {
          * @return undefined
          */
         function dateStringSpecChanged() {
-            dateStringEditor.element.style.backgroundColor = "";
+            {
+                let element = dateStringEditor2.CBUIStringEditor2_getElement();
+                element.style.backgroundColor = "";
+            }
 
             var unixTimestamp;
 
@@ -84,9 +91,11 @@ var CBUIUnixTimestampEditor = {
                 );
 
                 if (unixTimestamp === undefined) {
-                    dateStringEditor.element.style.backgroundColor = (
-                        "hsl(0, 100%, 95%)"
+                    let element = (
+                        dateStringEditor2.CBUIStringEditor2_getElement()
                     );
+
+                    element.style.backgroundColor = "hsl(0, 100%, 95%)";
 
                     return;
                 }
@@ -113,7 +122,11 @@ var CBUIUnixTimestampEditor = {
                 dateStringSpec.value = undefined;
             }
 
-            dateStringEditor.refresh();
+            dateStringEditor2.CBUIStringEditor2_setValue(
+                CBConvert.valueToString(
+                    dateStringSpec.value
+                )
+            );
         }
         /* refresh() */
 
