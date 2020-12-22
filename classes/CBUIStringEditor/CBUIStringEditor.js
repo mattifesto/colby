@@ -3,6 +3,7 @@
 /* jshint esversion: 6 */
 /* exported CBUIStringEditor */
 /* global
+    CBConvert,
     CBModel,
     CBUI,
     Colby,
@@ -75,6 +76,7 @@
      * @return object
      *
      *      {
+     *          CBUIStringEditor_setPlaceholderText(value) -> void
      *          changed: function (get, set)
      *          element: Element (readonly)
      *
@@ -85,6 +87,7 @@
      *          name: string (get, set)
      *          title: string (get, set)
      *          value: string (get, set)
+     *
      *      }
      */
     function create(
@@ -182,6 +185,8 @@
 
         let api = {
 
+            CBUIStringEditor_setPlaceholderText,
+
             get changed() {
                 return changed;
             },
@@ -231,12 +236,30 @@
 
 
         /**
+         * @param string value
+         *
+         * @return undefined
+         */
+        function CBUIStringEditor_setPlaceholderText(
+            value
+        ) {
+            input.placeholder = CBConvert.valueToString(
+                value
+            );
+        }
+        /* CBUIStringEditor_setPlaceholderText() */
+
+
+
+        /**
          * @return undefined
          */
         function resize() {
             input.style.height = "0";
             input.style.height = input.scrollHeight + "px";
         }
+        /* resize() */
+
     }
     /* create() */
 
