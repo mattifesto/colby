@@ -5,6 +5,7 @@
 /* global
     CBAjax,
     CBErrorHandler,
+    CBID,
 */
 
 
@@ -365,42 +366,14 @@ var Colby = {
 
 
     /**
-     * This method generates a random hex string representing a 160-bit number
-     * which is the same length as a SHA-1 hash and can be used as a unique ID.
+     * @deprecated 2020_12_21
+     *
+     *      Use CBID.generateRandomCBID()
      *
      * @return hex160
      */
     random160: function () {
-        var i;
-        var randomNumbers;
-
-        if (
-            typeof Uint16Array !== undefined &&
-            window.crypto &&
-            window.crypto.getRandomValues
-        ) {
-            randomNumbers = new Uint16Array(10);
-
-            window.crypto.getRandomValues(randomNumbers);
-        } else {
-            randomNumbers = [];
-
-            for (i = 0; i < 10; i++) {
-                var uint16 = Math.floor(Math.random() * 0xffff);
-
-                randomNumbers.push(uint16);
-            }
-        }
-
-        var random160 = "";
-
-        for (i = 0; i < 10; i++) {
-            var hex = randomNumbers[i].toString(16);
-            hex = "0000".substr(0, 4 - hex.length) + hex;
-            random160 = random160 + hex;
-        }
-
-        return random160;
+        return CBID.generateRandomCBID();
     },
 
 
