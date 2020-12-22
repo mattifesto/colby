@@ -86,7 +86,6 @@ final class CBViewPageInformationEditor {
             'CBUISectionItem4',
             'CBUISelector',
             'CBUISpecPropertyEditor',
-            'CBUIStringEditor',
             'CBUIStringEditor2',
             'CBUIStringsPart',
             'CBUIUnixTimestampEditor',

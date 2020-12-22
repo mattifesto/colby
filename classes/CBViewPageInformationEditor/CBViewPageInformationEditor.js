@@ -15,7 +15,6 @@
     CBUISectionItem4,
     CBUISelector,
     CBUISpecPropertyEditor,
-    CBUIStringEditor,
     CBUIStringEditor2,
     CBUIStringsPart,
     CBUIUnixTimestampEditor,
@@ -322,24 +321,14 @@ var CBViewPageInformationEditor = {
                 )
             );
 
-            /* description */
-            {
-                let item = CBUI.createSectionItem();
-
-                item.appendChild(
-                    CBUIStringEditor.createEditor(
-                        {
-                            labelText: "Description",
-                            propertyName: 'description',
-                            spec: spec,
-                            specChangedCallback: specChangedCallback,
-                        }
-                    ).element
-                );
-
-                sectionElement.appendChild(item);
-            }
-            /* description */
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "description",
+                    "Description",
+                    specChangedCallback
+                )
+            );
 
 
             /* editors */
@@ -533,7 +522,6 @@ var CBViewPageInformationEditor = {
                 selector.value = spec.frameClassName;
                 selector.onchange = function () {
                     spec.frameClassName = selector.value;
-                    specChangedCallback();
                 };
 
                 let options = [
@@ -562,24 +550,15 @@ var CBViewPageInformationEditor = {
 
 
             /* selected main menu item name */
-            {
-                let sectionItemElement = CBUI.createSectionItem();
-                let stringEditor = CBUIStringEditor.create();
-                stringEditor.title = "Selected Main Menu Item Name";
 
-                if (spec.selectedMainMenuItemName !== undefined) {
-                    stringEditor.value = spec.selectedMainMenuItemName;
-                }
-
-                stringEditor.changed = function () {
-                    spec.selectedMainMenuItemName = stringEditor.value;
-                    specChangedCallback();
-                };
-
-                sectionItemElement.appendChild(stringEditor.element);
-                sectionElement.appendChild(sectionItemElement);
-            }
-            /* selected main menu item name */
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "selectedMainMenuItemName",
+                    "Selected Main Menu Item Name",
+                    specChangedCallback
+                )
+            );
 
             return sectionContainerElement;
         }
