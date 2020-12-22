@@ -31,7 +31,7 @@ final class CBUIStringEditor2 {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.4.js',
+                'v675.7.js',
                 cbsysurl()
             ),
         ];
@@ -47,6 +47,8 @@ final class CBUIStringEditor2 {
     CBHTMLOutput_requiredClassNames(
     ): array {
         return [
+            'CBConvert',
+            'CBException',
             'CBModel',
             'CBUIStringEditor',
         ];

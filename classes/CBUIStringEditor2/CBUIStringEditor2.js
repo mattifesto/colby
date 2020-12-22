@@ -2,6 +2,8 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* globals
+    CBConvert,
+    CBException,
     CBModel,
     CBUIStringEditor,
 */
@@ -29,6 +31,7 @@
             CBUIStringEditor2_getValue,
             CBUIStringEditor2_initializeObjectPropertyEditor,
             CBUIStringEditor2_setChangedEventListener,
+            CBUIStringEditor2_setPlaceholderText,
             CBUIStringEditor2_setTitle,
             CBUIStringEditor2_setValue,
         };
@@ -74,6 +77,22 @@
             title,
             changedEventListener
         ) {
+            {
+                let value = CBConvert.valueAsObject(
+                    targetObject
+                );
+
+                if (value === undefined) {
+                    throw CBException.withValueRelatedError(
+                        Error(
+                            "The \"targetObject\" parameter is not an object."
+                        ),
+                        targetObject,
+                        "96982049e6bbdbb3160376f2c98c884ea8f4c6ea"
+                    );
+                }
+            }
+
             CBUIStringEditor2_setTitle(
                 title
             );
@@ -111,6 +130,25 @@
             stringEditor.changed = listener;
         }
         /* CBUIStringEditor2_setChangedEventListener() */
+
+
+
+        /**
+         * @param function listener
+         *
+         * @return undefined
+         */
+        function
+        CBUIStringEditor2_setPlaceholderText(
+            value
+        ) {
+            stringEditor.CBUIStringEditor_setPlaceholderText(
+                CBConvert.valueToString(
+                    value
+                )
+            );
+        }
+        /* CBUIStringEditor2_setPlaceholderText() */
 
 
 
