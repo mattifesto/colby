@@ -878,40 +878,21 @@ final class CBViewPage {
 
 
     /**
-     * Use this function to get the array of selected menu item names. The first
-     * name is for the selected main menu item, the second name is for the
-     * selected secondary menu item, etc.
+     * @deprecated 2020_12_22
      *
-     * This function handles the transition between the deprecated
-     * 'selectedMainMenuItemName' property and its replacement, the
-     * 'selectedMenuItemNames' property.
+     *      Use CBViewPage::getSelectedMenuItemNamesArray()
      *
      * @param object $model
      *
      * @return [string]
      */
-    static function selectedMenuItemNames(stdClass $model): array {
-        $selectedMenuItemNames = CBModel::valueToArray(
-            $model,
-            'selectedMenuItemNames'
+    static function
+    selectedMenuItemNames(
+        stdClass $viewPageModel
+    ): array {
+        return CBViewPage::getSelectedMenuItemNamesArray(
+            $viewPageModel
         );
-
-        if (empty($selectedMenuItemNames)) {
-            $selectedMainMenuItemName = trim(
-                CBModel::valueToString(
-                    $model,
-                    'selectedMainMenuItemName'
-                )
-            );
-
-            if (empty($selectedMainMenuItemName)) {
-                return [];
-            } else {
-                return [$selectedMainMenuItemName];
-            }
-        }
-
-        return $selectedMenuItemNames;
     }
     /* selectedMenuItemNames() */
 
