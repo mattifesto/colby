@@ -63,6 +63,43 @@ final class CBHTMLOutput {
     private static $requiredClassNames;
     private static $styleSheets;
 
+
+    /* -- accessors -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    getSelectedMenuItemNamesArray(
+    ): array {
+        return CBModel::valueToArray(
+            CBHTMLOutput::$pageInformation,
+            'selectedMenuItemNames'
+        );
+    }
+    /* getSelectedMenuItemNamesArray() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    setSelectedMenuItemNamesArray(
+        $value
+    ): void {
+        CBHTMLOutput::$pageInformation->selectedMenuItemNames = $value;
+    }
+    /* getSelectedMenuItemNamesArray() */
+
+
+
+    /* -- functions -- */
+
+
+
     /**
      * @param string|empty $CSSURL
      *
