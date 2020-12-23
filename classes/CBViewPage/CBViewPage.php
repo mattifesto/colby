@@ -327,9 +327,42 @@ final class CBViewPage {
      *
      * @return object
      */
-    static function CBModel_upgrade(
+    static function
+    CBModel_upgrade(
         stdClass $spec
     ): stdClass {
+
+        /**
+         * @NOTE 2020_12_22 version 675
+         *
+         *      The selectedMainMenuItemName propery has been partially
+         *      deprecated for a while now but the implementation of the
+         *      deprecation was wonky. Now things are cleaned up and we can
+         *      implement full removal of the property.
+         */
+
+        $selectedMainMenuItemName = trim(
+            CBModel::valueToString(
+                $spec,
+                'selectedMainMenuItemName'
+            )
+        );
+
+        if ($selectedMainMenuItemName !== '') {
+            $selectedMenuItemNames = trim(
+                CBModel::valueToString(
+                    $spec,
+                    'selectedMenuItemNames'
+                )
+            );
+
+            if ($selectedMenuItemNames === '') {
+                $spec->selectedMenuItemNames = $spec->selectedMainMenuItemName;
+            }
+        }
+
+        unset($spec->selectedMainMenuItemName);
+
 
         /**
          * @NOTE 2020_11_11
@@ -337,6 +370,7 @@ final class CBViewPage {
          *      The way search text is generated for CBViewPage models was
          *      altered so all existing pages should be rebuilt.
          */
+
         $spec->CBViewPage_versionDate = '2020_11_11';
 
 
