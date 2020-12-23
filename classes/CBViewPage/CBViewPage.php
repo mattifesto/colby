@@ -846,15 +846,17 @@ final class CBViewPage {
 
                 'publishedTimestamp' => $publishedTimestamp,
 
-                'selectedMenuItemNames' => CBViewPage::selectedMenuItemNames(
-                    $model
-                ),
-
                 'title' => CBModel::valueToString(
                     $model,
                     'title'
                 ),
             ]
+        );
+
+        CBHTMLOutput::setSelectedMenuItemNamesArray(
+            CBViewPage::getSelectedMenuItemNamesArray(
+                $model
+            )
         );
     }
     /* initializePageInformation() */
