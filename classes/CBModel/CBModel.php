@@ -74,7 +74,144 @@ final class CBModel {
 
 
 
-    /* -- functions -- -- -- -- -- */
+    /* -- accessors -- */
+
+
+
+    /**
+     * @param object $model
+     *
+     * @return CBID|null
+     */
+    static function
+    getCBID(
+        stdClass $model
+    ): ?string {
+        return CBModel::valueAsCBID(
+            $model,
+            'ID'
+        );
+    }
+    /* getCBID() */
+
+
+
+    /**
+     * @param object $spec
+     * @param CBID $CBID
+     *
+     * @return void
+     */
+    static function
+    setCBID(
+        stdClass $spec,
+        string $CBID
+    ): void {
+        if (!CBID::valueIsCBID($CBID)) {
+            throw new CBExceptionWithValue(
+                'The CBID provided is not valid.',
+                $CBID,
+                '05f35925a3654b8fd52f0df5c4b6f6e1e0adf6e4'
+            );
+        }
+
+        $spec->ID = $CBID;
+    }
+    /* setCBID() */
+
+
+
+    /**
+     * @param object $model
+     *
+     * @return string
+     */
+    static function
+    getClassName(
+        stdClass $model
+    ): string {
+        return CBModel::valueToString(
+            $model,
+            'className'
+        );
+    }
+    /* getClassName() */
+
+
+
+    /**
+     * @param object $spec
+     * @param string $className
+     *
+     * @return void
+     */
+    static function
+    setClassName(
+        stdClass $spec,
+        string $className
+    ): void {
+        $classNameAsName = CBConvert::valueAsName(
+            $className
+        );
+
+        if ($classNameAsName === null) {
+            throw new CBExceptionWithValue(
+                'The class name must be a valid Colby name value.',
+                $className,
+                '7f5a08b9d4d548d3e6972a2e683929f3e4877f73'
+            );
+        }
+
+        $spec->className = $className;
+    }
+    /* setClassName() */
+
+
+
+    /**
+     * @param object $model
+     *
+     * @return int|null
+     */
+    static function
+    getVersion(
+        stdClass $model
+    ): ?int {
+        return CBModel::valueAsInt(
+            $model,
+            'version'
+        );
+    }
+    /* getVersion() */
+
+
+
+    /**
+     * @param object $spec
+     * @param int $version
+     *
+     * @return void
+     */
+    static function
+    setVersion(
+        stdClass $spec,
+        string $version
+    ): void {
+        if ($version < 1) {
+            throw new CBExceptionWithValue(
+                'The version must be greater than zero.',
+                $version,
+                '3dab363ac045c3568fb66f574eb7d31ef2079de1'
+            );
+        }
+
+        $spec->version = $version;
+    }
+    /* setVersion() */
+
+
+
+    /* -- functions -- */
 
 
 
@@ -200,24 +337,6 @@ final class CBModel {
         return null;
     }
     /* findModelInArrayByPropertyValue() */
-
-
-
-    /**
-     * @param object $model
-     *
-     * @return CBID|null
-     */
-    static function
-    getCBID(
-        stdClass $model
-    ): ?string {
-        return CBModel::valueAsCBID(
-            $model,
-            'ID'
-        );
-    }
-    /* getCBID() */
 
 
 
