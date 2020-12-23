@@ -689,6 +689,35 @@ final class CBViewPage {
 
 
     /**
+     * @param object $viewPageSpec
+     * @param string $pageSettingsClassName
+     *
+     * @return void
+     */
+    static function
+    setPageSettingsClassName(
+        stdClass $viewPageSpec,
+        string $pageSettingsClassName
+    ): void {
+        $classNameAsName = CBConvert::valueAsName(
+            $pageSettingsClassName
+        );
+
+        if ($classNameAsName === null) {
+            throw new CBExceptionWithValue(
+                'The class name must be a valid Colby name value.',
+                $pageSettingsClassName,
+                '7f5a08b9d4d548d3e6972a2e683929f3e4877f73'
+            );
+        }
+
+        $viewPageSpec->classNameForSettings = $pageSettingsClassName;
+    }
+    /* setPageSettingsClassName() */
+
+
+
+    /**
      * @param object $viewPageModel
      *
      *      This function works with a spec or model.
@@ -786,7 +815,55 @@ final class CBViewPage {
 
 
 
-    /* -- functions -- -- -- -- -- */
+    /**
+     * @param object $viewPageSpec
+     * @param object $imageSpec
+     *
+     * @return void
+     */
+    static function
+    setThumbnailImage(
+        stdClass $viewPageSpec,
+        stdClass $imageSpec
+    ): void {
+        $imageSpecClassName = CBModel::getClassName(
+            $imageSpec
+        );
+
+        if ($imageSpecClassName !== 'CBImage') {
+            throw new CBExceptionWithValue(
+                'The thumbnail image spec must have the class name "CBImage"',
+                $imageSpec,
+                '6548606092a44ab7dbc7a68ccaba1c12bc8e98f3'
+            );
+        }
+
+        $viewPageSpec->image = $imageSpec;
+
+        unset($viewPageSpec->thumbnailURL);
+    }
+    /* setThumbnailImage() */
+
+
+
+    /**
+     * @param object $viewPageSpec
+     * @param object $title
+     *
+     * @return void
+     */
+    static function
+    setTitle(
+        stdClass $viewPageSpec,
+        string $title
+    ): void {
+        $viewPageSpec->title = $title;
+    }
+    /* setTitle() */
+
+
+
+    /* -- functions -- */
 
 
 
