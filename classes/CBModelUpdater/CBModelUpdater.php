@@ -50,19 +50,22 @@ final class CBModelUpdater {
      * @return object
      *
      *      {
-     *          original: ?model
+     *          original: object|null
      *
      *              The spec as it exists in the database currently. Do not
      *              modify this value.
      *
-     *          working: model
+     *          working: object
      *
      *              The original spec merged with the provided updates object.
      *              Make further modificatons to this object before calling
      *              CBModelUpdater::save().
      *      }
      */
-    static function fetch(stdClass $updates): stdClass {
+    static function
+    fetch(
+        stdClass $updates
+    ): stdClass {
         $ID = CBModel::valueAsID($updates, 'ID');
         $originalSpec = CBModels::fetchSpecByIDNullable($ID);
 
@@ -80,6 +83,56 @@ final class CBModelUpdater {
         ];
     }
     /* fetch() */
+
+
+
+    /**
+     * @param CBID $CBID
+     *
+     * @return object
+     *
+     *      {
+     *          CBModelUpdater_getSpec() -> object
+     *          CBModelUpdater_save() -> void
+     *      }
+     */
+    static function fetchByCBID(
+        string $CBID
+    ): stdClass {
+        $workingSpec = null;
+        $originalSpec = CBModels::fetchSpecByCBID(
+            $CBID
+        );
+
+        if (!empty($originalSpec)) {
+            $workingSpec = CBModel::clone(
+                $originalSpec
+            );
+        }
+
+        $CBModelUpdater_getSpec = function() use (
+            $workingSpec
+        ): ?stdClass {
+            return $workingSpec;
+        };
+
+        $CBModelUpdater_save = function() use (
+            $originalSpec,
+            $workingSpec
+        ): void {
+            if ($workingSpec != $originalSpec) {
+                CBModels::save(
+                    $workingSpec
+                );
+            }
+        };
+
+        return (object)[
+            'CBModelUpdater_getSpec' => $CBModelUpdater_getSpec,
+            'CBModelUpdater_save' => $CBModelUpdater_save,
+        ];
+    }
+    /* fetchByCBID() */
 
 
 
