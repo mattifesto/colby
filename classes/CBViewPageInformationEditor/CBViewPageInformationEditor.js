@@ -554,8 +554,8 @@ var CBViewPageInformationEditor = {
             sectionElement.appendChild(
                 CBUIStringEditor2.createObjectPropertyEditorElement(
                     spec,
-                    "selectedMainMenuItemName",
-                    "Selected Main Menu Item Name",
+                    "selectedMenuItemNames",
+                    "Selected Menu Item Names",
                     specChangedCallback
                 )
             );
