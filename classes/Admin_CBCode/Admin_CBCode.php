@@ -288,6 +288,7 @@ final class Admin_CBCode {
             default:
 
                 $searchCommand .= ' --css --js --php';
+
                 break;
         }
 
@@ -1742,6 +1743,93 @@ final class Admin_CBCode {
                     'severity' => 4,
                     'title' => 'deprecated user group names',
                 ],
+
+
+
+                /* -- notices -- */
+
+
+
+                (object)[
+                    'regex' => 'CBViewPage::selectedMenuItemNames\(',
+                    'severity' => 5,
+                    'title' => 'CBViewPage::selectedMenuItemNames()',
+
+                    'cbmessage' => <<<EOT
+
+                        This function is odd and out of place, use the accessors
+                        instead:
+
+                        --- ul
+                        CBViewPage::getSelectedMenuItemNames()
+
+                        CBViewPage::getSelectedMenuItemNamesArray()
+
+                        CBViewPage::setSelectedMenuItemNames()
+                        ---
+
+                    EOT,
+
+                    'noticeStartDate' => '2020/12/22',
+                    'noticeversion' => 675,
+                ],
+
+
+                (object)[
+                    'regex' => 'CBHTMLOutput::pageInformation\(',
+                    'severity' => 5,
+                    'title' => 'CBHTMLOutput::pageInformation()',
+
+                    'cbmessage' => <<<EOT
+
+                        This function allows random information to be set to the
+                        CBHTMLOutput class with no control. It should be
+                        replaced with individual property accessors on the
+                        CBHTMLOutput class.
+
+                    EOT,
+
+                    'noticeStartDate' => '2020/12/22',
+                    'noticeversion' => 675,
+                ],
+
+
+                (object)[
+                    'args' => '--ignore-file=match:CBViewPage.php',
+                    'regex' => '(?<!\$)selectedMainMenuItemName',
+                    'severity' => 5,
+                    'title' => 'selectedMainMenuItemName',
+
+                    'cbmessage' => <<<EOT
+
+                        This property name is deprecated on the CBViewPage
+                        class. It should also be replaced with a function
+                        accessor on the CBHTMLOutput class.
+
+                    EOT,
+
+                    'noticeStartDate' => '2020/12/22',
+                    'noticeversion' => 675,
+                ],
+
+
+                (object)[
+                    'regex' => 'selectedMenuItemNames',
+                    'severity' => 5,
+                    'title' => 'selectedMenuItemNames',
+
+                    'cbmessage' => <<<EOT
+
+                        This property name is deprecated on the CBViewPage
+                        class. It should also be replaced with a function
+                        accessor on the CBHTMLOutput class.
+
+                    EOT,
+
+                    'noticeStartDate' => '2020/12/22',
+                ],
+
+
             ]
         );
     }

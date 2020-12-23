@@ -1,7 +1,7 @@
-.Admin_CBCode .CBUIExpander.severity5 {
+.Admin_CBCode .CBUIExpander.severity6 {
     display: none;
 }
 
-.Admin_CBCode.Admin_CBCode_showSearchesWithNoResults .CBUIExpander.severity5 {
+.Admin_CBCode.Admin_CBCode_showSearchesWithNoResults .CBUIExpander.severity6 {
     display: block;
 }

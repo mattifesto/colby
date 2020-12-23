@@ -166,7 +166,7 @@
         );
 
         if (searchResults.length === 0) {
-            expander.severity = 5;
+            expander.severity = 6;
             searchResults = "";
         } else {
             expander.severity = search.severity || 3;
