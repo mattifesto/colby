@@ -27,6 +27,10 @@ final class CBViewPageTests {
                 'name' => 'upgrade',
                 'type' => 'server',
             ],
+            (object)[
+                'name' => 'upgradeSelectedMainMenuItemName',
+                'type' => 'server',
+            ],
         ];
     }
     /* CBTest_getTests() */
@@ -444,6 +448,92 @@ final class CBViewPageTests {
         ];
     }
     /* CBTest_upgrade() */
+
+
+
+    /**
+     * @return object
+     */
+    static function
+    CBTest_upgradeSelectedMainMenuItemName(
+    ): stdClass {
+        $tests = [
+
+            (object)[
+                'spec' => (object)[
+                    'className' => 'CBViewPage',
+                ],
+                'expectedSelectedMenuItemNames' => '',
+            ],
+
+            (object)[
+                'spec' => (object)[
+                    'className' => 'CBViewPage',
+                    'selectedMainMenuItemName' => 'blog',
+                ],
+                'expectedSelectedMenuItemNames' => 'blog',
+            ],
+
+            (object)[
+                'spec' => (object)[
+                    'className' => 'CBViewPage',
+                    'selectedMainMenuItemName' => 'blog',
+                    'selectedMenuItemNames' => 'main test'
+                ],
+                'expectedSelectedMenuItemNames' => 'main test',
+            ],
+
+        ];
+
+        for (
+            $index = 0;
+            $index < count($tests);
+            $index += 1
+        ) {
+            $test = $tests[$index];
+            $originalSpec = $test->spec;
+
+            $upgradedSpec = CBModel::upgrade(
+                $originalSpec
+            );
+
+            $actualSelectedMenuItemNames = CBModel::valueToString(
+                $upgradedSpec,
+                'selectedMenuItemNames'
+            );
+
+            if (
+                $actualSelectedMenuItemNames !==
+                $test->expectedSelectedMenuItemNames
+            ) {
+                return CBTest::resultMismatchFailure(
+                    "selectedMenuItemNames, test index {$index}",
+                    $actualSelectedMenuItemNames,
+                    $test->expectedSelectedMenuItemNames
+                );
+            }
+
+            if (
+                isset($upgradedSpec->selectedMainMenuItemName)
+            ) {
+                return CBTest::valueIssueFailure(
+                    "selectedMainMenuItemName, test index {$index}",
+                    $upgradedSpec,
+                    <<<EOT
+
+                        The "selectedMainMenuItemName" property should not be
+                        set on an upgraded CBViewPage spec.
+
+                    EOT,
+                );
+            }
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_upgradeSelectedMainMenuItemName() */
 
 }
 
