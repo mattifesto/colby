@@ -297,6 +297,21 @@ final class CBTest {
 
 
     /**
+     * @return CBID
+     *
+     *      You can and should use this CBID to create a temporary model during
+     *      a test but you must always delete the model by the end of the test.
+     */
+    static function
+    getTemporaryModelCBID(
+    ): string {
+        return '0000111122223333444455556666777788889999';
+    }
+    /* getTemporaryModelCBID() */
+
+
+
+    /**
      * @return [object]
      *
      *      {
