@@ -48,27 +48,16 @@ final class SCProduct {
             $mainArtworkImageModel->ID
         );
 
-        $productPageCBID = SCProduct::productIDToProductPageID(
-            $productModel->ID
-        );
-
-        if ($productPageCBID === null) {
-            return;
-        }
-
-        CBModelUpdater::update(
-            (object)[
-                'ID' => $productPageCBID,
-                'image' => $mainArtworkImageModel,
-                'thumbnailURL' => null,
-            ]
+        SCProduct::updateProductPageThumbnail(
+            $productModel,
+            $mainArtworkImageModel
         );
     }
     /* CBArtworkCollection_UpdatedTask_notify() */
 
 
 
-    /* -- CBModel interfaces -- -- -- -- -- */
+    /* -- CBModel interfaces -- */
 
 
 
@@ -391,5 +380,58 @@ final class SCProduct {
         );
     }
     /* productCodeToProductPageURL() */
+
+
+
+    /**
+     * @param object $productModel
+     *
+     *      This is the model for the product, not the spec.
+     *
+     * @param object $imageModel
+     *
+     * @return void
+     */
+    private static function
+    updateProductPageThumbnail(
+        $productModel,
+        $imageModel
+    ): void {
+        $productPageCBID = SCProduct::productIDToProductPageID(
+            CBModel::getCBID(
+                $productModel
+            )
+        );
+
+        $updater = CBModelUpdater::fetchByCBID(
+            $productPageCBID
+        );
+
+        $productPageSpec = ($updater->CBModelUpdater_getSpec)();
+
+        /* some products don't have pages */
+
+        if ($productPageSpec === null) {
+            return;
+        }
+
+        $productPageClassName = CBModel::getClassName(
+            $productPageSpec
+        );
+
+        /* this function only knows how to update a CBViewPage */
+
+        if ($productPageClassName !== 'CBViewPage') {
+            return;
+        }
+
+        CBViewPage::setThumbnailImage(
+            $productPageSpec,
+            $mainArtworkImageModel
+        );
+
+        ($updater->CBModelUpdater_save)();
+    }
+    /* updateProductPageThumbnail() */
 
 }
