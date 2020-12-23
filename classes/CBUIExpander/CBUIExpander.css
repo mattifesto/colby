@@ -50,11 +50,11 @@
 }
 
 .CBUIExpander.severity6 .CBUIExpander_toggle {
-    /* uses default color */
+    /* use inherited background color */
 }
 
 .CBUIExpander.severity5 .CBUIExpander_toggle {
-    background-color: hsl(120, 50%, 40%); /* green */
+    background-color: hsl(50, 100%, 50%); /* yellow */
 }
 
 .CBUIExpander.severity4 .CBUIExpander_toggle {

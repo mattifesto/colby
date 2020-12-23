@@ -15,7 +15,7 @@ final class CBUIExpander {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.4.css',
+                'v675.7.css',
                 cbsysurl()
             ),
         ];
