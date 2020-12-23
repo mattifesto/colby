@@ -106,8 +106,10 @@ var CBUISpecEditor = {
             if (useStrict) {
                 throw Error(
                     CBConvert.stringToCleanLine(`
+
                         The ${functionName}() interface has not been implemented
                         on the ${globalVariableName} object.
+
                     `)
                 );
             } else {
@@ -115,8 +117,8 @@ var CBUISpecEditor = {
                 /**
                  * @deprecated
                  *
-                 *      This else block can be removed in version 676, and use strict
-                 *      should be assumed to be true.
+                 *      This else block can be removed in version 676, and use
+                 *      strict should be assumed to be true.
                  */
 
                 createEditorElementInterface = CBModel.valueAsFunction(
@@ -133,8 +135,10 @@ var CBUISpecEditor = {
 
                  throw Error(
                     CBConvert.stringToCleanLine(`
+
                         No CBUISpecEditor interface has been implemented on the
                         ${globalVariableName} object.
+
                     `)
                  );
 
