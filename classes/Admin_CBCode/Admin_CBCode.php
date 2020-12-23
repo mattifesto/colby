@@ -1751,6 +1751,38 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'regex' => 'CBModels::fetchSpecByIDNullable\(',
+                    'severity' => 5,
+                    'title' => 'CBModels::fetchSpecByIDNullable()',
+
+                    'cbmessage' => <<<EOT
+
+                        Use CBModels::fetchSpecByCBID()
+
+                    EOT,
+
+                    'noticeStartDate' => '2020/12/23',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
+                    'regex' => 'CBModels::fetchSpecByID\(',
+                    'severity' => 5,
+                    'title' => 'CBModels::fetchSpecByID()',
+
+                    'cbmessage' => <<<EOT
+
+                        Use CBModels::fetchSpecByCBID()
+
+                    EOT,
+
+                    'noticeStartDate' => '2020/12/23',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
                     'regex' => 'CBViewPage::selectedMenuItemNames\(',
                     'severity' => 5,
                     'title' => 'CBViewPage::selectedMenuItemNames()',
@@ -1771,7 +1803,7 @@ final class Admin_CBCode {
                     EOT,
 
                     'noticeStartDate' => '2020/12/22',
-                    'noticeversion' => 675,
+                    'noticeVersion' => 675,
                 ],
 
 
@@ -1790,12 +1822,15 @@ final class Admin_CBCode {
                     EOT,
 
                     'noticeStartDate' => '2020/12/22',
-                    'noticeversion' => 675,
+                    'noticeVersion' => 675,
                 ],
 
 
                 (object)[
-                    'args' => '--ignore-file=match:CBViewPage.php',
+                    'args' => (
+                        '--ignore-file=match:CBViewPage.php ' .
+                        '--ignore-file=match:CBViewPageTests.php'
+                    ),
                     'regex' => '(?<!\$)selectedMainMenuItemName',
                     'severity' => 5,
                     'title' => 'selectedMainMenuItemName',
@@ -1809,7 +1844,7 @@ final class Admin_CBCode {
                     EOT,
 
                     'noticeStartDate' => '2020/12/22',
-                    'noticeversion' => 675,
+                    'noticeVersion' => 675,
                 ],
 
 
