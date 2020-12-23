@@ -725,14 +725,45 @@ final class CBModels {
 
 
     /**
-     * @deprecated use fetchSpecByIDNullable()
+     * @param CBID $CBID
+     *
+     * @return object|null
+     */
+    static function
+    fetchSpecByCBID(
+        string $CBID
+    ): ?stdClass {
+        $specCBIDs = [$CBID];
+
+        $specs = CBModels::fetchSpecsByID(
+            $specCBIDs
+        );
+
+        if (empty($specs)) {
+            return null;
+        } else {
+            return $specs[$CBID];
+        }
+    }
+    /* fetchSpecByCBID() */
+
+
+
+    /**
+     * @deprecated notice version 675
+     *
+     *      Use CBModels::fetchSpecByCBID()
      *
      * @param ID $ID
      * @param [<arg> => <value>] $args
      *
      * @return model|false
      */
-    static function fetchSpecByID($ID, $args = []) {
+    static function
+    fetchSpecByID(
+        $ID,
+        $args = []
+    ) {
         $specs = CBModels::fetchSpecsByID([$ID], $args);
 
         if (empty($specs)) {
@@ -746,29 +777,21 @@ final class CBModels {
 
 
     /**
-     * @NOTE 2018_07_15
+     * @deprecated 2020_12_23 notice version 675
      *
-     *      This function is a transition function to move callers away from
-     *      fetchSpecByID() which returns false if there is no model found.
+     *      Use CBModels::fetchSpecByCBID()
      *
-     *      The fetchSpecByID() function was created before PHP 7 and the
-     *      introduction of nullable return types.
+     * @param CBID $CBID
      *
-     *      Eventually, this function will be deprecated and fetchSpecByID()
-     *      will be reintroduced returning a nullable object.
-     *
-     * @param ID $ID
-     *
-     * @return ?model
+     * @return object|null
      */
-    static function fetchSpecByIDNullable(string $ID): ?stdClass {
-        $specs = CBModels::fetchSpecsByID([$ID]);
-
-        if (empty($specs)) {
-            return null;
-        } else {
-            return $specs[$ID];
-        }
+    static function
+    fetchSpecByIDNullable(
+        string $CBID
+    ): ?stdClass {
+        return CBModels::fetchSpecByCBID(
+            $CBID
+        );
     }
     /* fetchSpecByIDNullable() */
 
