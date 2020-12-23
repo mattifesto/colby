@@ -684,6 +684,108 @@ final class CBViewPage {
 
 
 
+    /* -- accessors -- */
+
+
+
+    /**
+     * @param object $viewPageModel
+     *
+     *      This function works with a spec or model.
+     *
+     * @return string
+     *
+     *      Returns the exact string set using
+     *      CBViewPage::setSelectedMenuItemNames(). This string is supposed to
+     *      contain zero or more valid names, but is not validated.
+     *
+     * @TODO 2020_12_22
+     *
+     *      In a future version this model will be altered to use only the
+     *      CBViewPage_selectedMenuItemNames property. That property will be
+     *      a string on both the spec and the model.
+     */
+    static function
+    getSelectedMenuItemNames(
+        stdClass $viewPageModel
+    ): string {
+        if (
+            isset($viewPageModel->selectedMenuItemNames) &&
+            is_array($viewPageModel->selectedMenuItemNames)
+        ) {
+            return implode(
+                ' ',
+                $viewPageModel->selectedMenuItemNames
+            );
+        }
+
+        $value = CBModel::valueToString(
+            $viewPageModel,
+            'selectedMenuItemNames'
+        );
+
+        if ($value !== '') {
+            return $value;
+        }
+
+        $value = CBModel::valueToString(
+            $viewPageModel,
+            'selectedMainMenuItemName'
+        );
+
+        return $value;
+    }
+    /* getSelectedMenuItemNames() */
+
+
+
+    /**
+     * @param object $viewPageModel
+     *
+     *      This function works with a spec or model, although it would rarely
+     *      make any sense to use it on a spec.
+     *
+     * @return [string]
+     *
+     *      If all of the menu item names are not valid names this function will
+     *      return an empty array.
+     */
+    static function
+    getSelectedMenuItemNamesArray(
+        stdClass $viewPageModel
+    ): array {
+        return CBConvert::valueAsNames(
+            CBViewPage::getSelectedMenuItemNames(
+                $viewPageModel
+            )
+        ) ?? [];
+    }
+    /* getSelectedMenuItemNamesArray() */
+
+
+
+    /**
+     * @param $viewPageSpec
+     *
+     *      This function is only intended to be used with a spec.
+     *
+     * @param string $value
+     *
+     *      This should be a spec or comma separated string of valid names.
+     *
+     * @return void
+     */
+    static function
+    setSelectedMenuItemNames(
+        stdClass $viewPageSpec,
+        string $value
+    ): void {
+        $viewPageSpec->selectedMenuItemNames = $value;
+    }
+    /* setSelectedMenuItemNames() */
+
+
+
     /* -- functions -- -- -- -- -- */
 
 
