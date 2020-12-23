@@ -226,11 +226,20 @@
         );
 
         /**
-         * TODO: we are creating a spec editor inside another spec editor
-         * the APIs aren't optimized for this
-         * CBModelEditor has code that is like what we need
-         * but this should probably have an api to do this exactly
-         * this won't save right now
+         * @TODO 2020_12_22
+         *
+         *      Previously exisint note: We are creating a spec editor inside
+         *      another spec editor the APIs aren't optimized for this
+         *      CBModelEditor has code that is like what we need but this should
+         *      probably have an API to do this exactly this won't save right
+         *      now.
+         *
+         *      I'm leaving the above note because I don't fully understand it.
+         *      Things will "save" so I'm not sure what the last sentence means.
+         *      However, there is a huge issue with the fact that this is an
+         *      asynchronous function which is called inside a non-asynchronous
+         *      context and the call to CBUISpecEditor.create() below causes an
+         *      untracked error when running tests. There is a bug in github.
          */
         let artworkCollectionEditor = CBUISpecEditor.create(
             {
