@@ -77,7 +77,7 @@
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.js',
+                'v675.8.js',
                 cbsysurl()
             ),
         ];
@@ -89,12 +89,13 @@
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'CBConvert',
             'CBErrorHandler',
             'CBMessageMarkup',
-            'CBModel',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

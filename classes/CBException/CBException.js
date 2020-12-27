@@ -1,30 +1,39 @@
 "use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBException */
+/* jshint
+    esversion: 6,
+    strict: global,
+    undef: true,
+    unused: true
+*/
 /* global
     CBConvert,
     CBErrorHandler,
     CBMessageMarkup,
-    CBModel,
 */
+
 
 var CBException = {
 
     /**
-     * @return string
+     * @param Error error
+     *
+     * @return cbmessage
      */
-    errorToExtendedMessage: function (error) {
-        let cbmessage = CBModel.valueToString(
-            error,
-            'CBException.extendedMessage'
-        );
+    errorToExtendedMessage: function (
+        error
+    ) {
+        let cbmessage = "";
+
+        if (error.CBException) {
+            cbmessage = CBConvert.valueToString(
+                error.CBException.extendedMessage
+            );
+        }
 
         if (cbmessage === "") {
             return CBMessageMarkup.stringToMessage(
-                CBModel.valueToString(
-                    error,
-                    "message"
+                CBConvert.valueToString(
+                    error.message
                 )
             );
         }
@@ -43,10 +52,15 @@ var CBException = {
     errorToSourceCBID(
         error
     ) {
-        return CBModel.valueAsCBID(
-            error,
-            "CBException.sourceCBID"
-        );
+        let sourceCBID;
+
+        if (error.CBException) {
+            sourceCBID = CBConvert.valueAsCBID(
+                error.CBException.sourceCBID
+            );
+        }
+
+        return sourceCBID;
     },
     /* errorToSourceCBID() */
 
