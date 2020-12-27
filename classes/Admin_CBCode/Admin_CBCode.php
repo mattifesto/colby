@@ -1751,6 +1751,21 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'regex' => 'CBUISpecSaver',
+                    'severity' => 5,
+                    'title' => 'CBUISpecSaver',
+                    'cbmessage' => <<<EOT
+
+                        Use CBSpecSaver
+
+                    EOT,
+
+                    'noticeStartDate' => '2020/12/25',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
                     'regex' => 'CBModels::fetchSpecByIDNullable\(',
                     'severity' => 5,
                     'title' => 'CBModels::fetchSpecByIDNullable()',
