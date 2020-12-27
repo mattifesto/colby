@@ -87,10 +87,10 @@ final class SCProductEditor {
             'CBAjax',
             'CBErrorHandler',
             'CBModel',
+            'CBSpecSaver',
             'CBUI',
             'CBUIPanel',
             'CBUISpecEditor',
-            'CBUISpecSaver',
 
             'CBArtworkCollectionEditor',
         ];
