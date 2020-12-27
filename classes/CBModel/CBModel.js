@@ -8,6 +8,56 @@
 
 var CBModel = {
 
+    /* -- accessors -- */
+
+
+
+    /**
+     * @param object model
+     *
+     * @return int|undefined
+     */
+    getVersion(
+        model
+    ) {
+        return CBModel.valueAsInt(
+            model,
+            'version'
+        );
+    },
+    /* getVersion() */
+
+
+
+    /**
+     * @param object spec
+     * @param int version
+     *
+     * @return undefined
+     */
+    setVersion(
+        spec,
+        version
+    ) {
+        let versionAsInt = CBConvert.valueAsInt(
+            version
+        );
+
+        if (
+            versionAsInt === undefined ||
+            versionAsInt < 1
+        ) {
+            throw Error(
+                "The version must be greater than zero."
+            );
+        }
+
+        spec.version = versionAsInt;
+    },
+    /* setVersion() */
+
+
+
     /* -- functions -- -- -- -- -- */
 
 
