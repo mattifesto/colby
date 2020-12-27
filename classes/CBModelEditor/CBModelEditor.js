@@ -1,13 +1,17 @@
 "use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
+/* jshint
+    esversion: 6,
+    strict: global,
+    undef: true,
+    unused: true
+*/
 /* exported CBModelEditor */
 /* global
+    CBSpecSaver,
     CBUI,
     CBUINavigationView,
     CBUIPanel,
     CBUISpecEditor,
-    CBUISpecSaver,
     Colby,
 
     CBModelEditor_originalSpec,
@@ -22,7 +26,11 @@ var CBModelEditor = {
      *
      * @return undefined
      */
-    renderEditorForSpec: function (spec) {
+    renderEditorForSpec: function (
+        spec
+    ) {
+        let mostRecentSavePromise;
+
         var main = document.getElementsByTagName("main")[0];
         main.textContent = null;
 
@@ -31,11 +39,8 @@ var CBModelEditor = {
             CBModelEditor_originalSpec.ID
         );
 
-        var specSaver = CBUISpecSaver.create(
-            {
-                rejectedCallback: CBModelEditor.saveWasRejected,
-                spec: spec,
-            }
+        let specSaver2 = CBSpecSaver.create(
+            spec
         );
 
         var navigationView = CBUINavigationView.create();
@@ -44,8 +49,31 @@ var CBModelEditor = {
 
         let specEditor = CBUISpecEditor.create(
             {
-                spec: spec,
-                specChangedCallback: specSaver.specChangedCallback,
+                spec,
+
+                specChangedCallback: function () {
+                    let savePromise = specSaver2.CBSpecSaver_save();
+
+                    if (savePromise !== mostRecentSavePromise) {
+                        mostRecentSavePromise = savePromise;
+
+                        savePromise.catch(
+                            function (error) {
+                                CBUIPanel.displayAndReportError(
+                                    error
+                                );
+                            }
+                        ).finally(
+                            function () {
+                                if (savePromise === mostRecentSavePromise) {
+                                    mostRecentSavePromise = undefined;
+                                }
+                            }
+                        );
+                    }
+                },
+                /* specChangedCallback */
+
             }
         );
 
@@ -68,28 +96,6 @@ var CBModelEditor = {
     },
     /* renderEditorForSpec() */
 
-
-    /**
-     * @param Error error
-     *
-     * @return Promise (rejected)
-     */
-    saveWasRejected: function (error) {
-        if (error.ajaxResponse) {
-            CBUIPanel.displayAjaxResponse(error.ajaxResponse);
-        } else {
-            CBUIPanel.displayText(
-                error.message ||
-                (
-                    "CBModelEditor.saveWasRejected(): " +
-                    "No error message was provided."
-                )
-            );
-        }
-
-        return Promise.reject(error);
-    },
-    /* saveWasRejected() */
 };
 
 

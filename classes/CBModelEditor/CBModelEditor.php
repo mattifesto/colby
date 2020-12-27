@@ -93,11 +93,11 @@ class CBModelEditor {
         );
 
         return [
+            'CBSpecSaver',
             'CBUI',
             'CBUINavigationView',
             'CBUIPanel',
             'CBUISpecEditor',
-            'CBUISpecSaver',
             'Colby',
             $specEditorClassName,
         ];
