@@ -9,8 +9,9 @@ var CBEvent = {
      * @return object
      *
      *      {
-     *          addListener: function
-     *          dispatch: function
+     *          addListener() -> undefined
+     *          dispatch(value) -> undefined
+     *          removeListener() -> undefined
      *      }
      */
     create: function () {
