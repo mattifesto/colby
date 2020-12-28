@@ -95,7 +95,37 @@ var CBUISpecEditor = {
             );
         }
 
-        let functionName = "CBUISpecEditor_createEditorElement";
+        let editorElement;
+
+        let functionName = "CBUISpecEditor_createEditorElement2";
+
+        let callable = CBModel.valueAsFunction(
+            editorObject,
+            functionName
+        );
+
+        if (callable !== undefined) {
+            editorElement = callable(
+                spec,
+                specChangedCallback
+            );
+        }
+
+        if (editorElement !== undefined) {
+            return {
+                element: editorElement,
+            };
+        }
+
+        /**
+         * @deprecated 2020_12_28 version 675
+         *
+         *      The following code supports the
+         *      CBUISpecEditor_createEditorElement() and createEditor()
+         *      interfaces both of which have been deprecated.
+         */
+
+        functionName = "CBUISpecEditor_createEditorElement";
 
         let createEditorElementInterface = CBModel.valueAsFunction(
             editorObject,
@@ -144,8 +174,6 @@ var CBUISpecEditor = {
 
             }
         }
-
-        let editorElement;
 
         if (createEditorElementInterface) {
             editorElement = createEditorElementInterface(
