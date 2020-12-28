@@ -1422,7 +1422,7 @@ final class Admin_CBCode {
                     'cbmessage' => <<<EOT
 
                         Replace createEditor() with
-                        CBUISpecEditor_createEditorElement().
+                        CBUISpecEditor_createEditorElement2().
 
                     EOT,
                     'regex' => ' createEditor\W',
@@ -1751,6 +1751,21 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'regex' => 'CBUISpecEditor_createEditorElement(?!2)',
+                    'severity' => 5,
+                    'title' => 'CBUISpecEditor_createEditorElement()',
+                    'cbmessage' => <<<EOT
+
+                        Implement CBUISpecEditor_createEditorElement2().
+
+                    EOT,
+
+                    'noticeStartDate' => '2020/12/28',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
                     'regex' => 'CBUI.createSectionItem\(',
                     'severity' => 5,
                     'title' => 'CBUI.createSectionItem()',
@@ -1765,7 +1780,6 @@ final class Admin_CBCode {
                     'noticeStartDate' => '2020/12/28',
                     'noticeVersion' => 675,
                 ],
-
 
 
                 (object)[
