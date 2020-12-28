@@ -211,6 +211,39 @@ class CBModelEditor {
                 $suggestedSpecAsJSON
             );
 
+            if (
+                CBConvert::valueAsModel($originalSpec) === null
+            ) {
+                $jsonError = json_last_error();
+
+                if ($jsonError === JSON_ERROR_NONE) {
+                    throw new CBExceptionWithValue(
+                        CBConvert::stringToCleanLine(<<<EOT
+
+                            The suggestedSpecAsJSON query variable did not
+                            produce a spec.
+
+                        EOT),
+                        $suggestedSpecAsJSON,
+                        '2902a29b44e238ffefeabe2de91ea3a0cf2b9ba9'
+                    );
+                } else {
+                    $jsonErrorMessage = json_last_error_msg();
+
+                    throw new CBExceptionWithValue(
+                        CBConvert::stringToCleanLine(<<<EOT
+
+                            Decoding the suggestedSpecAsJSON query variable
+                            produced the error with the message:
+                            {$jsonErrorMessage}
+
+                        EOT),
+                        $suggestedSpecAsJSON,
+                        'c21639036f4af60f052ec7d12bbc311373514899'
+                    );
+                }
+            }
+
             $originalSpec->ID = $ID;
 
             unset($originalSpec->version);
