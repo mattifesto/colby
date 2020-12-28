@@ -1751,6 +1751,39 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'regex' => 'CBUI.createSectionItem\(',
+                    'severity' => 5,
+                    'title' => 'CBUI.createSectionItem()',
+                    'cbmessage' => <<<EOT
+
+                        In most existing uses of this function a section item is
+                        no longer necessary (if there is only one element in a
+                        section). Otherwise, use the CSS class CBUI_sectionItem.
+
+                    EOT,
+
+                    'noticeStartDate' => '2020/12/28',
+                    'noticeVersion' => 675,
+                ],
+
+
+
+                (object)[
+                    'regex' => 'CBUI.createSection\(',
+                    'severity' => 5,
+                    'title' => 'CBUI.createSection()',
+                    'cbmessage' => <<<EOT
+
+                        Use the CSS class CBUI_section.
+
+                    EOT,
+
+                    'noticeStartDate' => '2020/12/28',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
                     'regex' => 'CBUISpecSaver',
                     'severity' => 5,
                     'title' => 'CBUISpecSaver',
