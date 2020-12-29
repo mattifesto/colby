@@ -863,6 +863,23 @@ final class CBViewPage {
 
 
 
+    /**
+     * @param object $viewPageSpec
+     * @param array $viewSpecs
+     *
+     * @return void
+     */
+    static function
+    setViews(
+        stdClass $viewPageSpec,
+        array $viewSpecs
+    ): void {
+        $viewPageSpec->sections = $viewSpecs;
+    }
+    /* setViews() */
+
+
+
     /* -- functions -- */
 
 
