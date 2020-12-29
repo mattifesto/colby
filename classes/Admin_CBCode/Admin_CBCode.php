@@ -1751,6 +1751,21 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'regex' => 'CBPageLayout',
+                    'severity' => 5,
+                    'title' => 'CBPageLayout',
+                    'cbmessage' => <<<EOT
+
+                        Use CBPageFrame.
+
+                    EOT,
+
+                    'noticeStartDate' => '2020/12/29',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
                     'regex' => 'CBUISpecEditor_createEditorElement(?!2)',
                     'severity' => 5,
                     'title' => 'CBUISpecEditor_createEditorElement()',
