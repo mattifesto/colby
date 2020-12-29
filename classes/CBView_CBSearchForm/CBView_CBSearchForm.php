@@ -1,17 +1,21 @@
 <?php
 
-final class CBSearchFormView {
+final class CBView_CBSearchForm {
 
     /* -- CBHTMLOutput interfaces -- */
 
 
 
-    static function CBHTMLOutput_CSSURLs(
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_CSSURLs(
     ): array {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v643.css',
+                'v675.9.css',
                 cbsysurl()
             ),
         ];
@@ -23,13 +27,33 @@ final class CBSearchFormView {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(
+    static function
+    CBHTMLOutput_requiredClassNames(
     ): array {
         return [
             'CBUI',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
+
+
+
+    /* -- CBModel interfaces -- */
+
+
+
+    /**
+     * @param object $viewSpec
+     *
+     * @return object
+     */
+    static function
+    CBModel_build(
+        $viewSpec
+    ): stdClass {
+        return (object)[];
+    }
+    /* CBModel_build() */
 
 
 
@@ -61,7 +85,7 @@ final class CBSearchFormView {
 
         ?>
 
-        <div class="CBSearchFormView CBUI_view">
+        <div class="CBView_CBSearchForm CBUI_view">
             <form
                 action="/search/"
                 class="CBUI_viewContent <?= $formClass ?>"

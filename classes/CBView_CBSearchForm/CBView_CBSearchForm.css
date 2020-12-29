@@ -1,4 +1,8 @@
-.CBSearchFormView > form > div {
+.CBView_CBSearchForm {
+    background-color: var(--CBBackgroundOffsetColor);
+}
+
+.CBView_CBSearchForm > form > div {
     align-items: center;
     box-sizing: border-box;
     display: flex;
@@ -6,7 +10,7 @@
     padding: 40px 20px;
 }
 
-.CBSearchFormView > form input[type=text] {
+.CBView_CBSearchForm > form input[type=text] {
     box-sizing: border-box;
     font-family: inherit;
     font-size: inherit;
