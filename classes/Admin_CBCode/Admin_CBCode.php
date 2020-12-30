@@ -1417,7 +1417,8 @@ final class Admin_CBCode {
                 (object)[
                     'args' => (
                         '--js ' .
-                        '--ignore-file=match:CBUIStringEditor.js '
+                        '--ignore-file=match:CBUIStringEditor.js ' .
+                        '--ignore-file=match:CBUISpecEditor.js '
                     ),
                     'cbmessage' => <<<EOT
 
@@ -1766,6 +1767,9 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'args' => (
+                        '--ignore-file=match:CBUISpecEditor.js '
+                    ),
                     'regex' => 'CBUISpecEditor_createEditorElement(?!2)',
                     'severity' => 5,
                     'title' => 'CBUISpecEditor_createEditorElement()',
