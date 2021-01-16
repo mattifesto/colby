@@ -57,11 +57,15 @@ final class CBModelUpdater_Tests {
 
         /* test */
 
-        $testName = "model doesn't exist test";
+        $testName = "model is version 0";
 
-        if ($spec !== null) {
+        $version = CBModel::getVersion(
+            $spec
+        );
+
+        if ($version !== 0) {
             return CBTest::valueIssueFailure(
-                "{$testName}: The spec should be null.",
+                "{$testName}: The spec version should be 0.",
                 $spec
             );
         }
