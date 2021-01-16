@@ -245,7 +245,9 @@ final class Admin_CBCode {
                 'ack',
                 '--heading',
                 // '--underline', (enable only if ack v3 is available)
-                "--match '{$searchModel->regex}'",
+                '--match',
+                escapeshellarg($searchModel->regex),
+                //"--match '{$searchModel->regex}'",
                 '--ignore-dir=data',
 
                 /**
@@ -1749,6 +1751,21 @@ final class Admin_CBCode {
 
                 /* -- notices -- */
 
+
+
+                (object)[
+                    'regex' => "(->ID|'ID'|\"ID\")",
+                    'severity' => 5,
+                    'title' => 'CBModel ID Property',
+                    'cbmessage' => <<<EOT
+
+                        Use CBModel::getCBID() or CBModel::setCBID().
+
+                    EOT,
+
+                    'noticeStartDate' => '2021/01/15',
+                    'noticeVersion' => 675,
+                ],
 
 
                 (object)[
