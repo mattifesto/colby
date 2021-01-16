@@ -9,11 +9,18 @@ final class SCStripeTests {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v87.js', scliburl())
+            Colby::flexpath(
+                __CLASS__,
+                'v675.10.js',
+                cbsysurl()
+            )
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -54,31 +61,52 @@ final class SCStripeTests {
 
     /* -- tests -- -- -- -- -- */
 
+
+
     /**
      * @return object
      */
-    static function CBTest_transaction(): stdClass {
-        $stripePreferencesModel = CBModelCache::fetchModelByID(SCStripePreferences::ID());
-        $publishableStripeAPIKey = CBModel::valueToString($stripePreferencesModel, 'testPublishableKey');
-        $secretStripeAPIKey = CBModel::valueToString($stripePreferencesModel, 'testSecretKey');
+    static function
+    CBTest_transaction(
+    ): stdClass {
+        $stripePreferencesModel = CBModelCache::fetchModelByID(
+            SCStripePreferences::ID()
+        );
 
-        if (empty($publishableStripeAPIKey) || empty($secretStripeAPIKey)) {
+        $publishableStripeAPIKey = CBModel::valueToString(
+            $stripePreferencesModel,
+            'testPublishableKey'
+        );
+
+        $secretStripeAPIKey = CBModel::valueToString(
+            $stripePreferencesModel,
+            'testSecretKey'
+        );
+
+        if (
+            empty($publishableStripeAPIKey) ||
+            empty($secretStripeAPIKey)
+        ) {
             return (object)[
                 'succeeded' => true,
                 'message' => 'Tests not run, there are no test API keys set.',
             ];
         }
 
-        $result = SCStripe::call((object)[
-            'apiURL' => 'https://api.stripe.com/v1/tokens',
-            'apiKey' => $publishableStripeAPIKey,
-            'apiArgs' => (object)[
-                'card[number]' => '4242 4242 4242 4242',
-                'card[exp_year]' => '2020',
-                'card[exp_month]' => '12',
-                'card[cvc]' => '123',
-            ],
-        ]);
+        $nextYear = date("Y") + 1;
+
+        $result = SCStripe::call(
+            (object)[
+                'apiURL' => 'https://api.stripe.com/v1/tokens',
+                'apiKey' => $publishableStripeAPIKey,
+                'apiArgs' => (object)[
+                    'card[number]' => '4242 4242 4242 4242',
+                    'card[exp_year]' => $nextYear,
+                    'card[exp_month]' => '12',
+                    'card[cvc]' => '123',
+                ],
+            ]
+        );
 
         $token = CBModel::valueToString($result, 'id');
 
@@ -97,7 +125,7 @@ final class SCStripeTests {
                 --- pre\n{$resultAsMessage}
                 ---
 
-EOT;
+            EOT;
 
             return (object)[
                 'succeeded' => false,
@@ -105,17 +133,19 @@ EOT;
             ];
         }
 
-        $result = SCStripe::call((object)[
-            'apiURL' => 'https://api.stripe.com/v1/charges',
-            'apiKey' => $secretStripeAPIKey,
-            'apiArgs' => (object)[
-                'amount' => '2000',
-                'capture' => 'false',
-                'currency' => 'usd',
-                'source' => $token,
-                'description' => __METHOD__,
-            ],
-        ]);
+        $result = SCStripe::call(
+            (object)[
+                'apiURL' => 'https://api.stripe.com/v1/charges',
+                'apiKey' => $secretStripeAPIKey,
+                'apiArgs' => (object)[
+                    'amount' => '2000',
+                    'capture' => 'false',
+                    'currency' => 'usd',
+                    'source' => $token,
+                    'description' => __METHOD__,
+                ],
+            ]
+        );
 
         $chargeID = CBModel::valueToString($result, 'id');
         $object = CBModel::valueToString($result, 'object');
@@ -152,7 +182,7 @@ EOT;
                 --- pre\n{$resultAsMessage}
                 ---
 
-EOT;
+            EOT;
 
             return (object)[
                 'succeeded' => false,
@@ -161,13 +191,16 @@ EOT;
         }
 
         $URL = "https://api.stripe.com/v1/charges/{$chargeID}/capture";
-        $result = SCStripe::call((object)[
-            'apiURL' => $URL,
-            'apiKey' => $secretStripeAPIKey,
-            'apiArgs' => (object)[
-                'amount' => '1000',
-            ],
-        ]);
+
+        $result = SCStripe::call(
+            (object)[
+                'apiURL' => $URL,
+                'apiKey' => $secretStripeAPIKey,
+                'apiArgs' => (object)[
+                    'amount' => '1000',
+                ],
+            ]
+        );
 
         $chargeID2 = CBModel::valueToString($result, 'id');
         $captured = CBModel::valueToBool($result, 'captured');
@@ -200,7 +233,7 @@ EOT;
                 --- pre\n{$resultAsMessage}
                 ---
 
-EOT;
+            EOT;
 
             return (object)[
                 'succeeded' => false,
@@ -212,4 +245,6 @@ EOT;
             'succeeded' => true,
         ];
     }
+    /* CBTest_transaction() */
+
 }

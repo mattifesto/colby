@@ -23,16 +23,20 @@ var SCStripeTests = {
             };
         }
 
-        return SCStripe.call({
-            apiURL: "https://api.stripe.com/v1/tokens",
-            apiKey: SCStripe_testPublishableKey,
-            apiArgs: {
-                "card[number]": " 4242 4242 4242 4242 ",
-                "card[exp_month]": "12",
-                "card[exp_year]": "2020",
-                "card[cvc]": "123",
-            },
-        }).then(function (response) {
+        let nextYear = (new Date()).getFullYear() + 1;
+
+        return SCStripe.call(
+            {
+                apiURL: "https://api.stripe.com/v1/tokens",
+                apiKey: SCStripe_testPublishableKey,
+                apiArgs: {
+                    "card[number]": " 4242 4242 4242 4242 ",
+                    "card[exp_month]": "12",
+                    "card[exp_year]": nextYear,
+                    "card[cvc]": "123",
+                },
+            }
+        ).then(function (response) {
             let id = CBModel.valueToString(response, 'id');
 
             if (id.match(/^tok_/)) {
