@@ -27,6 +27,18 @@ final class CBModelUpdater {
 
 
     /**
+     * @deprecated 2021_01_15
+     *
+     *      This method is deprecated because it forces you to use the 'ID'
+     *      property directly. The 'ID' property has been deprecated and
+     *      replaced by the CBModel::get|setCBID() accessors.
+     *
+     *      This function also promotes the use of direct property access which
+     *      is not safe in the context of general use cases for the function.
+     *
+     *      Use CBModelUpdater::fetchByCBID().
+     *
+     *
      * The purpose of this function is to fetch and apply updates to a model.
      * Callers of this function are using it to make even further updates that
      * can't be made with a simple merge of objects.
@@ -93,6 +105,11 @@ final class CBModelUpdater {
      *
      *      {
      *          CBModelUpdater_getSpec() -> object
+     *
+     *              If the model exists a clone of its spec will be returned. If
+     *              the model does not exist, a spec with only its CBID property
+     *              set will be returned.
+     *
      *          CBModelUpdater_save() -> void
      *      }
      */
@@ -100,22 +117,41 @@ final class CBModelUpdater {
         string $CBID
     ): stdClass {
         $workingSpec = null;
+
         $originalSpec = CBModels::fetchSpecByCBID(
             $CBID
         );
 
-        if (!empty($originalSpec)) {
+        if ($originalSpec === null) {
+            $workingSpec = (object)[];
+
+            CBModel::setCBID(
+                $workingSpec,
+                $CBID
+            );
+        } else {
             $workingSpec = CBModel::clone(
                 $originalSpec
             );
         }
 
+
+
+        /**
+         * @return object
+         */
         $CBModelUpdater_getSpec = function() use (
             $workingSpec
-        ): ?stdClass {
+        ): stdClass {
             return $workingSpec;
         };
+        /* CBModelUpdater_getSpec() */
 
+
+
+        /**
+         * @return void
+         */
         $CBModelUpdater_save = function() use (
             $originalSpec,
             $workingSpec
@@ -126,6 +162,9 @@ final class CBModelUpdater {
                 );
             }
         };
+        /* CBModelUpdater_save() */
+
+
 
         return (object)[
             'CBModelUpdater_getSpec' => $CBModelUpdater_getSpec,
