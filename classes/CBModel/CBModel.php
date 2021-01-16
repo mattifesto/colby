@@ -268,12 +268,30 @@ final class CBModel {
      *      The returned model will always be a different object than $spec
      *      argument.
      */
-    static function copy(stdClass $spec, string $ID): ?stdClass {
+    static function
+    copy(
+        stdClass $spec,
+        string $ID
+    ): ?stdClass {
         $spec = CBConvert::valueAsModel($spec);
 
         if ($spec === null) {
             return null;
         }
+
+        /**
+         * @deprecated 2021_01_15
+         *
+         *      This function is acting as if the "title" property is an
+         *      official property of all models. It was at one time but no
+         *      longer is, the "title" property should be handled by classes
+         *      that implement the CBModel_prepareCopy() interface and support a
+         *      "title" property.
+         *
+         *      Potentially deprecate the CBModel_prepareCopy() interface and
+         *      replace it with the CBModel_prepareCopy2() interface to enforce
+         *      this change.
+         */
 
         $className = CBModel::valueToString($spec, 'className');
         $title = trim(CBModel::valueToString($spec, 'title'));
@@ -289,6 +307,7 @@ final class CBModel {
 
         return $copy;
     }
+    /* copy() */
 
 
 
@@ -507,10 +526,14 @@ final class CBModel {
      *      Any CBID generation must be done for a spec before it is used with
      *      this function.
      *
-     *      @NOTE
-     *      Since title is such a commonly used property, this function will
-     *      perform a basic transfer of title from the spec to the model if the
-     *      model produced doesn't have a title set.
+     *      @deprecated 2018_12_21 (edited 2021_01_15)
+     *
+     *          This function is setting the "title" property on the model even
+     *          though the "title" property is not an official property of all
+     *          models. To resolve this we may need to replace the interface
+     *          CBModel_build() with CBModel_build2(). This sound drastic, but
+     *          this is exactly how this exact type of scenario should be
+     *          resolved.
      *
      * @param object $spec
      *
@@ -620,7 +643,7 @@ final class CBModel {
             }
 
             /**
-             * @NOTE 2018_12_21
+             * @deprecated 2018_12_21
              *
              *      This code is deprecated. It infers that if the spec has its
              *      "title" property set that the "title" property is a valid
