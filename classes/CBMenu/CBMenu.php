@@ -2,6 +2,171 @@
 
 final class CBMenu {
 
+    /* -- CBModel interfaces -- */
+
+
+
+    /**
+     * @param object $spec
+     *
+     *      {
+     *          items: ?[model]
+     *          title: ?string
+     *          titleURI: ?string
+     *      }
+     *
+     * @return object|null
+     */
+    static function
+    CBModel_build(
+        stdClass $spec
+    ): ?stdClass {
+        $model = (object)[
+
+            'title' => trim(
+                CBModel::valueToString(
+                    $spec,
+                    'title'
+                )
+            ),
+
+            'titleURI' => trim(
+                CBModel::valueToString(
+                    $spec,
+                    'titleURI'
+                )
+            ),
+
+        ];
+
+        /* items */
+
+        $model->items = [];
+
+        $itemSpecs = CBModel::valueToArray(
+            $spec,
+            'items'
+        );
+
+        foreach ($itemSpecs as $itemSpec) {
+            $itemModel = CBModel::build(
+                $itemSpec
+            );
+
+            array_push(
+                $model->items,
+                $itemModel
+            );
+        }
+
+        return $model;
+    }
+    /* CBModel_build() */
+
+
+
+    /**
+     * @param object $spec
+     *
+     * @return object
+     */
+    static function
+    CBModel_upgrade(
+        stdClass $spec
+    ): stdClass {
+        $spec->items = array_values(
+            array_filter(
+                array_map(
+                    'CBModel::upgrade',
+                    CBModel::valueToArray($spec, 'items')
+                )
+            )
+        );
+
+        return $spec;
+    }
+    /* CBModel_upgrade() */
+
+
+
+    /* -- accessors -- */
+
+
+
+    /**
+     * @param object $menuSpec
+     *
+     * @return string
+     */
+    static function
+    getTitle(
+        stdClass $menuSpec
+    ): string {
+        return CBModel::valueToString(
+            $menuSpec,
+            'title'
+        );
+    }
+    /* getTitle() */
+
+
+
+    /**
+     * @param object $menuSpec
+     * @param string $title
+     *
+     * @return void
+     */
+    static function
+    setTitle(
+        stdClass $menuSpec,
+        string $title
+    ): void {
+        $menuSpec->title = $title;
+    }
+    /* getTitle() */
+
+
+
+    /**
+     * @param object $menuSpec
+     *
+     * @return string
+     */
+    static function
+    getTitleURL(
+        stdClass $menuSpec
+    ): string {
+        return CBModel::valueToString(
+            $smenuSpecpec,
+            'titleURI'
+        );
+    }
+    /* getTitle() */
+
+
+
+    /**
+     * @param object $menuSpec
+     * @param string $title
+     *
+     * @return void
+     */
+    static function
+    setTitleURL(
+        stdClass $menuSpec,
+        string $titleURL
+    ): void {
+        $menuSpec->titleURI = $titleURL;
+    }
+    /* getTitle() */
+
+
+
+    /* -- functions -- */
+
+
+
     /**
      * If an item with the same name as the provided item already exists in the
      * menu, the provided item will replace that item. If no item with the same
@@ -26,50 +191,7 @@ final class CBMenu {
         $menu->items = $items;
     }
 
-    /**
-     * @param model $spec
-     *
-     *      {
-     *          items: ?[model]
-     *          title: ?string
-     *          titleURI: ?string
-     *      }
-     *
-     * @return ?model
-     */
-    static function CBModel_build(stdClass $spec): ?stdClass {
-        $model = (object)[
-            'title' => trim(CBModel::valueToString($spec, 'title')),
-            'titleURI' => trim(CBModel::valueToString($spec, 'titleURI')),
-        ];
 
-        /* items */
-
-        $model->items = [];
-        $itemSpecs = CBModel::valueToArray($spec, 'items');
-
-        foreach ($itemSpecs as $itemSpec) {
-            if ($itemModel = CBModel::build($itemSpec)) {
-                $model->items[] = $itemModel;
-            }
-        }
-
-        return $model;
-    }
-
-    /**
-     * @param model $spec
-     *
-     * @return model
-     */
-    static function CBModel_upgrade(stdClass $spec): stdClass {
-        $spec->items = array_values(array_filter(array_map(
-            'CBModel::upgrade',
-            CBModel::valueToArray($spec, 'items')
-        )));
-
-        return $spec;
-    }
 
     /**
      * If an item with the provided name exists in the menu it will be removed.
@@ -108,4 +230,5 @@ final class CBMenu {
 
         return null;
     }
+
 }
