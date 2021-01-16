@@ -174,16 +174,19 @@ final class CBModel {
     /**
      * @param object $model
      *
-     * @return int|null
+     * @return int
+     *
+     *      This function returns an integer greater than or equal to 0. A
+     *      version of 0 means this is a spec that has never been saved.
      */
     static function
     getVersion(
         stdClass $model
-    ): ?int {
+    ): int {
         return CBModel::valueAsInt(
             $model,
             'version'
-        );
+        ) ?? 0;
     }
     /* getVersion() */
 
@@ -193,16 +196,18 @@ final class CBModel {
      * @param object $spec
      * @param int $version
      *
+     *      The value of this parameter must be greater than or equal to 0.
+     *
      * @return void
      */
     static function
     setVersion(
         stdClass $spec,
-        string $version
+        int $version
     ): void {
-        if ($version < 1) {
+        if ($version < 0) {
             throw new CBExceptionWithValue(
-                'The version must be greater than zero.',
+                'The version must be greater than or equal to zero.',
                 $version,
                 '3dab363ac045c3568fb66f574eb7d31ef2079de1'
             );
