@@ -31,7 +31,9 @@ final class CBMessageView {
     /**
      * @return void
      */
-    static function CBInstall_install(): void {
+    static function
+    CBInstall_install(
+    ): void {
         CBViewCatalog::installView(
             __CLASS__
         );
@@ -39,10 +41,13 @@ final class CBMessageView {
     /* CBInstall_install() */
 
 
+
     /**
      * @return [string]
      */
-    static function CBInstall_requiredClassNames(): array {
+    static function
+    CBInstall_requiredClassNames(
+    ): array {
         return [
             'CBViewCatalog',
         ];
@@ -50,23 +55,43 @@ final class CBMessageView {
     /* CBInstall_requiredClassNames() */
 
 
+
     /* -- CBModel interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param object $spec
      *
      * @return ?object
      */
-    static function CBModel_build(stdClass $spec): ?stdClass {
+    static function
+    CBModel_build(
+        stdClass $spec
+    ): ?stdClass {
         $model = (object)[
+
             'html' => CBMessageMarkup::markupToHTML(
-                CBModel::valueToString($spec, 'markup')
+                CBModel::valueToString(
+                    $spec,
+                    'markup'
+                )
             ),
 
-            'markup' => CBModel::valueToString($spec, 'markup'),
+            'markup' => CBModel::valueToString(
+                $spec,
+                'markup'
+            ),
 
-            'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
+            'CSSClassNames' => CBModel::valueToNames(
+                $spec,
+                'CSSClassNames'
+            ),
+
         ];
+        /* $model */
+
+
 
         /**
          * Using local styles.
@@ -84,7 +109,10 @@ final class CBMessageView {
          * Step 3: Get the CSS template.
          */
         $CSSTemplate = trim(
-            CBModel::valueToString($spec, 'CSSTemplate')
+            CBModel::valueToString(
+                $spec,
+                'CSSTemplate'
+            )
         );
 
         /**
@@ -100,18 +128,30 @@ final class CBMessageView {
     /* CBModel_build() */
 
 
+
     /**
      * @param object $model
      *
      * @return string
      */
-    static function CBModel_toSearchText(stdClass $model) {
+    static function
+    CBModel_toSearchText(
+        stdClass $model
+    ) {
         if (isset($model->markup)) {
-            return CBMessageMarkup::markupToText($model->markup);
+            return CBMessageMarkup::markupToText(
+                $model->markup
+            );
         } else {
             return '';
         }
     }
+    /* CBModel_toSearchText() */
+
+
+
+    /* -- CBView interfaces -- */
+
 
 
     /**
@@ -119,23 +159,34 @@ final class CBMessageView {
      *
      * @return void
      */
-    static function CBView_render(stdClass $model): void {
+    static function
+    CBView_render(
+        stdClass $model
+    ): void {
         if (empty($model->html)) {
             echo '<!-- CBMessageView with no content. -->';
             return;
         }
 
-        $CSSClassNames = CBModel::valueToArray($model, 'CSSClassNames');
+        $CSSClassNames = CBModel::valueToArray(
+            $model,
+            'CSSClassNames'
+        );
 
         if (!in_array('custom', $CSSClassNames)) {
             $CSSClassNames[] = 'CBMessageView_default';
             $CSSClassNames[] = 'CBContentStyleSheet';
         }
 
-        array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
+        array_walk(
+            $CSSClassNames,
+            'CBHTMLOutput::requireClassName'
+        );
 
         if (!empty($model->CSS)) {
-            CBHTMLOutput::addCSS($model->CSS);
+            CBHTMLOutput::addCSS(
+                $model->CSS
+            );
         }
 
         ?>
@@ -148,4 +199,6 @@ final class CBMessageView {
 
         <?php
     }
+    /* CBView_render() */
+
 }
