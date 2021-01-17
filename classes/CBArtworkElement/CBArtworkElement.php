@@ -78,12 +78,27 @@ final class CBArtworkElement {
     /**
      * @param object|array $args
      *
-     *      passing arguments in an array is deprecated
+     *      @TODO 2021_01_11
+     *
+     *          Passing arguments in an array is deprecated. We may want to
+     *          deprecate this function and replace it with render2() to enforce
+     *          that change. Also consider switching to named arguments, a
+     *          feature that only works in PHP >= 8.
      *
      *      {
      *          URL: string
      *
      *              The URL for the image.
+     *
+     *              @TODO 2021_01_11
+     *
+     *                  If the image URL is empty we render an img element with
+     *                  no URL which is a bit odd. Determine and document the
+     *                  desired behavior for an empty image URL.
+     *
+     *                  For now, if you don't want an odd img element rendered,
+     *                  check for an empty image URL before calling this
+     *                  function and choose your own alternative action.
      *
      *          aspectRatioWidth: number (default: 1)
      *          aspectRatioHeight: number (default: 1)
@@ -106,8 +121,12 @@ final class CBArtworkElement {
      *
      * @return void
      */
-    static function render($args): void {
-        CBHTMLOutput::requireClassName('CBArtworkElement');
+    static function render(
+        $args
+    ): void {
+        CBHTMLOutput::requireClassName(
+            'CBArtworkElement'
+        );
 
         if (is_array($args)) {
             $args = (object)$args;
