@@ -201,4 +201,52 @@ final class CBMessageView {
     }
     /* CBView_render() */
 
+
+
+    /* -- accessors -- */
+
+
+
+    /**
+     * @param object $messageViewSpec
+     * @param string $cbmessage
+     *
+     * @return void
+     */
+    static function setCBMessage(
+        stdClass $messageViewSpec,
+        string $cbmessage
+    ): void {
+        $messageViewSpec->markup = $cbmessage;
+    }
+    /* setCBMessage() */
+
+
+
+    /**
+     * @param object $messageViewSpec
+     * @param string $CSSClassNames
+     *
+     * @return void
+     */
+    static function setCSSClassNames(
+        stdClass $messageViewSpec,
+        string $CSSClassNames
+    ): void {
+        $names = CBConvert::valueAsNames(
+            $CSSClassNames
+        );
+
+        if ($names === null) {
+            throw new CBExceptionWithValue(
+                'The CSSClassNames argument contains invalid characters.',
+                $CSSClassNames,
+                'd552ac0969d116603c4a7cf210831ef853a9fe0c'
+            );
+        }
+
+        $messageViewSpec->CSSClassNames = $CSSClassNames;
+    }
+    /* setCSSClassNames() */
+
 }
