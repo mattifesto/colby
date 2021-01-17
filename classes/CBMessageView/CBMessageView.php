@@ -2,17 +2,31 @@
 
 final class CBMessageView {
 
+    /* -- CBHTMLOutput interfaces -- */
+
+
+
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ) {
         return [
-            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'css',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
+
 
 
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
