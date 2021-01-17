@@ -17,7 +17,7 @@ final class CBView_CBSearchResults {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.9.css',
+                'v675.10.css',
                 cbsysurl()
             ),
         ];
@@ -70,105 +70,201 @@ final class CBView_CBSearchResults {
 
         ?>
 
-        <section class="CBView_CBSearchResults">
+        <div class="CBView_CBSearchResults CBUI_view">
+            <div class="CBUI_viewContent">
 
-            <?php
+                <?php
 
-            $searchClause = CBPages::searchClauseFromString(
-                $searchQuery
-            );
-
-            if (empty($searchClause)) {
-                $summaries = [];
-            } else {
-                $SQL = <<<END
-
-                    SELECT      keyValueData
-                    FROM        ColbyPages
-                    WHERE       published IS NOT NULL AND
-                                {$searchClause}
-                    ORDER BY    published
-
-                END;
-
-                $summaries = CBDB::SQLToArray(
-                    $SQL,
-                    [
-                        'valueIsJSON' => true,
-                    ]
+                $searchClause = CBPages::searchClauseFromString(
+                    $searchQuery
                 );
-            }
 
-            if (count($summaries) > 0) {
-                foreach ($summaries as $model) {
-                    $URI = CBModel::valueToString(
-                        $model,
-                        'URI'
+                if (empty($searchClause)) {
+                    $summaries = [];
+                } else {
+                    $SQL = <<<END
+
+                        SELECT      keyValueData
+                        FROM        ColbyPages
+                        WHERE       published IS NOT NULL AND
+                                    {$searchClause}
+                        ORDER BY    published
+
+                    END;
+
+                    $pagesKeyValueData = CBDB::SQLToArray(
+                        $SQL,
+                        [
+                            'valueIsJSON' => true,
+                        ]
                     );
+                }
 
-                    $URL = cbsiteurl() . "/{$URI}/";
+                if (count($pagesKeyValueData) > 0) {
+                    foreach ($pagesKeyValueData as $pageKeyValueData) {
+                        CBView_CBSearchResults::renderResult(
+                            $pageKeyValueData
+                        );
+                    }
+                }
 
-                    $title = CBModel::valueToString(
-                        $model,
-                        'title'
-                    );
+                ?>
 
-                    $description = CBModel::valueToString(
-                        $model,
-                        'description'
-                    );
+            </div>
+        </div>
 
-                    $imageURL = CBImage::valueToFlexpath(
-                        $model,
-                        'image',
-                        'rl320',
-                        cbsiteurl()
-                    );
+        <?php
+    }
+    /* CBView_render() */
+
+
+
+    /* -- functions -- */
+
+
+
+    /**
+     * @param object $pageKeyValueData
+     *
+     * @return void
+     */
+    private static function
+    renderResult(
+        stdClass $pageKeyValueData
+    ): void {
+        $URI = CBModel::valueToString(
+            $pageKeyValueData,
+            'URI'
+        );
+
+        $URL = cbsiteurl() . "/{$URI}/";
+
+        $title = CBModel::valueToString(
+            $pageKeyValueData,
+            'title'
+        );
+
+        $description = CBModel::valueToString(
+            $pageKeyValueData,
+            'description'
+        );
+
+        $imageURL = CBImage::valueToFlexpath(
+            $pageKeyValueData,
+            'image',
+            'rl320',
+            cbsiteurl()
+        );
+
+        if (empty($imageURL)) {
+            $imageURL = CBModel::valueToString(
+                $pageKeyValueData,
+                'thumbnailURL'
+            );
+        }
+
+        ?>
+
+        <article class="CBView_CBSearchResults_result CBUI_view">
+            <div class="CBView_CBSearchResults_resultContent CBUI_viewContent">
+
+                <a
+                    class="CBView_CBSearchResults_thumbnail"
+                    href="<?= $URL ?>"
+                >
+
+                    <?php
 
                     if (empty($imageURL)) {
-                        $imageURL = CBModel::valueToString(
-                            $model,
-                            'thumbnailURL'
+                        CBArtworkElement::render(
+                            [
+                                'aspectRatioWidth' => 1,
+                                'aspectRatioHeight' => 1,
+                                'maxWidth' => '150',
+                                'URL' => $imageURL,
+                            ]
+                        );
+                    } else {
+                        CBArtworkElement::render(
+                            [
+                                'aspectRatioWidth' => 1,
+                                'aspectRatioHeight' => 1,
+                                'maxWidth' => '150',
+                                'URL' => $imageURL,
+                            ]
                         );
                     }
 
                     ?>
 
-                    <article class="CBView_CBSearchResults_result">
-                        <div class="CBView_CBSearchResults_thumbnail">
-                            <?php
+                </a>
 
-                            CBArtworkElement::render(
-                                [
-                                    'aspectRatioWidth' => 1,
-                                    'aspectRatioHeight' => 1,
-                                    'maxWidth' => '150',
-                                    'URL' => $imageURL,
-                                ]
-                            );
+                <?php
 
-                            ?>
-                        </div>
-                        <div class="text">
-                            <h1>
-                                <a href="<?= $URL ?>"><?= cbhtml($title) ?></a>
-                            </h1>
-                            <div>
-                                <p><?= cbhtml($description) ?>
-                            </div>
-                        </div>
-                    </article>
+                CBView_CBSearchResults::renderText(
+                    $title,
+                    $description,
+                    $URL
+                );
 
-                    <?php
-                }
-            }
+                ?>
 
-            ?>
-
-        </section>
+            </div>
+        </article>
 
         <?php
     }
-    /* CBView_render() */
+    /* renderResult() */
+
+
+
+    /**
+     * @param string $title
+     * @param string $description
+     * @param string $URL
+     *
+     * @return void
+     */
+    static function
+    renderText(
+        string $title,
+        string $description,
+        string $URL
+    ): void {
+        $titleAsCBMessage = cbmessage($title);
+        $descriptionAsCBMessage = cbmessage($description);
+
+        $cbmessage = <<<EOT
+
+            --- h3
+            ({$titleAsCBMessage} (a {$URL}))
+            ---
+
+            {$descriptionAsCBMessage}
+
+        EOT;
+
+        $messageViewSpec = (object)[];
+
+        CBModel::setClassName(
+            $messageViewSpec,
+            'CBMessageView'
+        );
+
+        CBMessageView::setCBMessage(
+            $messageViewSpec,
+            $cbmessage
+        );
+
+        CBMessageView::setCSSClassNames(
+            $messageViewSpec,
+            'custom CBView_CBSearchResults_text'
+        );
+
+        CBView::renderSpec(
+            $messageViewSpec
+        );
+    }
+    /* renderText() */
 
 }
