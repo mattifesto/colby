@@ -99,6 +99,7 @@ final class CBView_CBSearchForm {
                     <input
                         type="submit"
                         value="Search Now"
+                        class="CBUI_button1"
                     >
                 </div>
             </form>
