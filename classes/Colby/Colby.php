@@ -928,7 +928,9 @@ final class Colby {
  *      Returns the site URL with no trailing slash.
  */
 function cbsiteurl() {
-    if (defined('CBSiteURL')) {
+    if (php_sapi_name() === 'cli') {
+        return '';
+    } else if (defined('CBSiteURL')) {
         return CBSiteURL;
     } else if (defined('COLBY_SITE_URL')) { // @deprecated
         return COLBY_SITE_URL;
