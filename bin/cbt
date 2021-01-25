@@ -1,0 +1,42 @@
+#!/usr/bin/php
+<?php
+
+include_once __DIR__ . '/../init.php';
+
+$arg1 = (
+    count($argv) > 1 ?
+    $argv[1] :
+    ''
+);
+
+$commandClassName = null;
+$functionName = null;
+
+preg_match(
+    '/^([a-z][a-z-]*[a-z])$/',
+    $arg1,
+    $matches
+);
+
+if (isset($matches[1])) {
+    $command = str_replace(
+        '-',
+        '_',
+        $matches[1]
+    );
+
+    $commandClassName = "CBTCommand_{$command}";
+    $functionName = "{$commandClassName}::cbt_execute";
+} else {
+    echo "invalid command\n";
+    exit(1);
+}
+
+if (is_callable($functionName)) {
+    call_user_func(
+        $functionName
+    );
+} else {
+    echo "unknown command\n";
+    exit(1);
+}
