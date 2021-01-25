@@ -24,20 +24,25 @@ error_reporting(E_ALL | E_STRICT);
 
 
 /**
- * These constants are set but shouldn't be used. Use the cbsitedir() and
- * cbsysdir() functions instead.
- */
-
-define(
-    'CBSiteDirectory',
-    realpath($_SERVER['DOCUMENT_ROOT'])
-);
-
-/**
+ * @NOTE 2021_01_24
+ *
+ *      This function used to return realpath($_SERVER['DOCUMENT_ROOT']), but
+ *      the value of DOCUMENT_ROOT when loaded by terminal does not necessarily
+ *      have that same value as it does when loaded by a web server. Colby is
+ *      always contained in a folder named "colby" in the site directory so
+ *      returning the parent directory of the directory containing this file
+ *      will be the correct value in all cases.
+ *
  * @return string
  */
 function cbsitedir() {
-    return CBSiteDirectory;
+    static $cbsitedir = null;
+
+    if ($cbsitedir === null) {
+        $cbsitedir = dirname(__DIR__);
+    }
+
+    return $cbsitedir;
 }
 
 /**
@@ -47,11 +52,26 @@ function cbsysdir() {
     return __DIR__;
 }
 
-/* deprecated */
+
+
+/**
+ * @deprecated 2021_01_24
+ *
+ *      The definition of CBSiteDirectory and COLBY_SITE_DIRECTORY should be
+ *      removed in version 676.
+ */
+
+define(
+    'CBSiteDirectory',
+    cbsitedir()
+);
+
 define(
     'COLBY_SITE_DIRECTORY',
-    CBSiteDirectory
+    cbsitedir()
 );
+
+
 
 $websiteVersionFilepath = cbsitedir() . '/version.php';
 
