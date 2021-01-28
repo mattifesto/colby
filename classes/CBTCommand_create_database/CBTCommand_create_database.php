@@ -21,7 +21,7 @@ final class CBTCommand_create_database {
         }
 
         $strings = CBDB::SQLToArrayOfNullableStrings(
-            "show databases;"
+            "select CURRENT_USER();"
         );
 
         $databaseName = $argv[2];
