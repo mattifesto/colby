@@ -62,15 +62,13 @@ a.CBUI_action {
 
 
 /**
- * 2019_02_23
+ * The class styles an element to look like a button which can be used instead
+ * of a link style for high priority user interface items that don't cause
+ * navigation.
  *
- *      The class styles an element to look like a button which can be used
- *      instead of a link style for high priority user interface items.
+ * This class will work properly on <input type="submit"> elements.
  *
- * 2020_02_03
- *
- *      Styles were added to make sure that <input type="submit"> elements with
- *      this class name will look the same as div elements.
+ * CBUI_button1 elements are often children of CBUI_container1 elements.
  */
 .CBUI_button1 {
     display: inline-flex;

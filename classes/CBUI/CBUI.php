@@ -15,7 +15,7 @@ final class CBUI {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v648.css',
+                'v675.12.css',
                 cbsysurl()
             ),
         ];
