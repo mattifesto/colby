@@ -49,8 +49,6 @@
         );
 
         if (CBAdminPageForUpdate_isDevelopmentWebsite) {
-            /* backup, pull colby, and update */
-
             navigationPaneElement.appendChild(
                 createPullColbySectionElement()
             );
@@ -59,131 +57,10 @@
                 createFullUpdateSectionElement()
             );
         }
-        /* backup, pull website, and update */
 
-
-        /* individual actions */
-        {
-            let elements = CBUI.createElementTree(
-                "CBUI_sectionContainer",
-                "CBUI_section"
-            );
-
-            navigationPaneElement.appendChild(
-                elements[0]
-            );
-
-            let sectionElement = elements[1];
-
-            /* backup only */
-            {
-                let actionElement = CBUI.createElement(
-                    "CBUI_action"
-                );
-
-                sectionElement.appendChild(
-                    actionElement
-                );
-
-                actionElement.textContent = "Backup Database";
-
-                actionElement.addEventListener(
-                    "click",
-                    function () {
-                        task(
-                            "Backup Database",
-                            function () {
-                                return promiseToBackupDatabase();
-                            }
-                        );
-                    }
-                );
-            }
-            /* backup only */
-
-
-            /* pull colby or pull website */
-            if (CBAdminPageForUpdate_isDevelopmentWebsite) {
-                let actionElement = CBUI.createElement(
-                    "CBUI_action"
-                );
-
-                sectionElement.appendChild(
-                    actionElement
-                );
-
-                actionElement.textContent = "Pull Colby";
-
-                actionElement.addEventListener(
-                    "click",
-                    function () {
-                        task(
-                            "Pull Colby",
-                            function () {
-                                return promiseToPullColby();
-                            }
-                        );
-                    }
-                );
-            } else {
-                let actionElement = CBUI.createElement(
-                    "CBUI_action"
-                );
-
-                sectionElement.appendChild(
-                    actionElement
-                );
-
-                actionElement.textContent = "Pull Website";
-
-                actionElement.addEventListener(
-                    "click",
-                    function () {
-                        task(
-                            "Pull Website",
-                            function () {
-                                return promiseToPullWebsite();
-                            }
-                        );
-                    }
-                );
-            }
-            /* pull colby or pull website */
-
-
-            /* update only */
-            {
-                let actionElement = CBUI.createElement(
-                    "CBUI_action"
-                );
-
-                sectionElement.appendChild(
-                    actionElement
-                );
-
-                actionElement.textContent = "Update Site";
-
-                actionElement.addEventListener(
-                    "click",
-                    function () {
-                        task(
-                            "Update Site",
-                            function () {
-                                return promiseToUpdateSite();
-                            }
-                        );
-                    }
-                );
-            }
-            /* update only */
-
-
-            sectionElement.appendChild(
-                CBAdmin_CreateBranchPane.createElement()
-            );
-
-        }
-        /* individual actions */
+        navigationPaneElement.appendChild(
+            createIndividualActionsSectionElement()
+        );
 
 
         /* output element */
@@ -245,6 +122,134 @@
         return elements[0];
     }
     /* createFullUpdateSectionElement() */
+
+
+
+    /**
+     * This function creates a section containing individual actions for backup,
+     * pull colby, and update website.
+     */
+    function
+    createIndividualActionsSectionElement(
+    ) {
+        let elements = CBUI.createElementTree(
+            "CBUI_sectionContainer",
+            "CBUI_section"
+        );
+
+        let sectionElement = elements[1];
+
+
+        /* backup only */
+        {
+            let actionElement = CBUI.createElement(
+                "CBUI_action"
+            );
+
+            sectionElement.appendChild(
+                actionElement
+            );
+
+            actionElement.textContent = "Backup Database";
+
+            actionElement.addEventListener(
+                "click",
+                function () {
+                    task(
+                        "Backup Database",
+                        function () {
+                            return promiseToBackupDatabase();
+                        }
+                    );
+                }
+            );
+        }
+        /* backup only */
+
+
+        /* pull colby or pull website */
+        if (CBAdminPageForUpdate_isDevelopmentWebsite) {
+            let actionElement = CBUI.createElement(
+                "CBUI_action"
+            );
+
+            sectionElement.appendChild(
+                actionElement
+            );
+
+            actionElement.textContent = "Pull Colby";
+
+            actionElement.addEventListener(
+                "click",
+                function () {
+                    task(
+                        "Pull Colby",
+                        function () {
+                            return promiseToPullColby();
+                        }
+                    );
+                }
+            );
+        } else {
+            let actionElement = CBUI.createElement(
+                "CBUI_action"
+            );
+
+            sectionElement.appendChild(
+                actionElement
+            );
+
+            actionElement.textContent = "Pull Website";
+
+            actionElement.addEventListener(
+                "click",
+                function () {
+                    task(
+                        "Pull Website",
+                        function () {
+                            return promiseToPullWebsite();
+                        }
+                    );
+                }
+            );
+        }
+        /* pull colby or pull website */
+
+
+        /* update only */
+        {
+            let actionElement = CBUI.createElement(
+                "CBUI_action"
+            );
+
+            sectionElement.appendChild(
+                actionElement
+            );
+
+            actionElement.textContent = "Update Site";
+
+            actionElement.addEventListener(
+                "click",
+                function () {
+                    task(
+                        "Update Site",
+                        function () {
+                            return promiseToUpdateSite();
+                        }
+                    );
+                }
+            );
+        }
+        /* update only */
+
+
+        sectionElement.appendChild(
+            CBAdmin_CreateBranchPane.createElement()
+        );
+
+        return elements[0];
+    }
+    /* createIndividualActionsSectionElement() */
 
 
 
