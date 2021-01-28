@@ -204,11 +204,13 @@ final class CBAdminPageForUpdate {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v645.js',
+                'v675.12.js',
                 cbsysurl()
             ),
         ];

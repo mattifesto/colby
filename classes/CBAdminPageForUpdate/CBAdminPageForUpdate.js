@@ -55,43 +55,8 @@
                 createPullColbySectionElement()
             );
         } else {
-            /* backup, pull website, and update */
-
-            let elements = CBUI.createElementTree(
-                "CBUI_sectionContainer",
-                "CBUI_section",
-                "CBUI_action"
-            );
-
             navigationPaneElement.appendChild(
-                elements[0]
-            );
-
-            let actionElement = elements[2];
-            actionElement.textContent = "Backup, Pull Website, and Update";
-
-            actionElement.addEventListener(
-                "click",
-                function () {
-                    task(
-                        "Backup, Pull Website, and Update",
-                        function () {
-                            return Promise.resolve().then(
-                                function () {
-                                    return promiseToBackupDatabase();
-                                }
-                            ).then (
-                                function () {
-                                    return promiseToPullWebsite();
-                                }
-                            ).then(
-                                function () {
-                                    return promiseToUpdateSite();
-                                }
-                            );
-                        }
-                    );
-                }
+                createFullUpdateSectionElement()
             );
         }
         /* backup, pull website, and update */
@@ -233,6 +198,53 @@
         return;
     }
     /* afterDOMContentLoaded() */
+
+
+
+    /**
+     * This function creates a single button that is used to fully update
+     * non-development websites. It will not be shown on development websites.
+     *
+     * @return Element
+     */
+    function
+    createFullUpdateSectionElement(
+    ) {
+        let elements = CBUI.createElementTree(
+            "CBUI_container1",
+            "CBUI_button1"
+        );
+
+        let buttonElement = elements[1];
+        buttonElement.textContent = "Backup, Pull Website, and Update";
+
+        buttonElement.addEventListener(
+            "click",
+            function () {
+                task(
+                    "Backup, Pull Website, and Update",
+                    function () {
+                        return Promise.resolve().then(
+                            function () {
+                                return promiseToBackupDatabase();
+                            }
+                        ).then (
+                            function () {
+                                return promiseToPullWebsite();
+                            }
+                        ).then(
+                            function () {
+                                return promiseToUpdateSite();
+                            }
+                        );
+                    }
+                );
+            }
+        );
+
+        return elements[0];
+    }
+    /* createFullUpdateSectionElement() */
 
 
 
