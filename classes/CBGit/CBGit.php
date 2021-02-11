@@ -140,8 +140,12 @@ final class CBGit {
 
     /**
      * @return [string]
+     *
+     *      Returns an array of paths relative to the document root containing
+     *      submodules.
      */
-    static function submodules(
+    static function
+    submodules(
     ): array {
         $pwd = getcwd();
 
@@ -151,21 +155,18 @@ final class CBGit {
 
         try {
             exec(
-                'git submodule--helper list',
-                $submodules
+                (
+                    'git submodule foreach ' .
+                    '--recursive --quiet ' .
+                    "'echo \$displaypath'"
+                ),
+                $relativeSubmodulePaths
             );
         } finally {
             chdir($pwd);
         }
 
-        return array_map(
-            function ($item) {
-                $columns = preg_split('/\s/', $item);
-
-                return $columns[3];
-            },
-            $submodules
-        );
+        return $relativeSubmodulePaths;
     }
     /* submodules() */
 
