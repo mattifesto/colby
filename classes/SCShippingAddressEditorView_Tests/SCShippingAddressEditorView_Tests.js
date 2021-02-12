@@ -1,22 +1,26 @@
 "use strict";
 /* jshint strict: global */
-/* jshint esversion: 6 */
 /* exported SCShippingAddressEditorView_Tests */
 /* global
     CBTest,
-    SCShippingAddressEditorView,
+    SCShippingAddress,
 */
 
 var SCShippingAddressEditorView_Tests = {
 
     /**
+     * @NOTE 2021_02_11
+     *
+     *      The function this test originally tested has been replaced and this
+     *      test should maybe move to SCShippingAddress tests.
+     *
      * @return object
      */
-    CBTest_storedShippingAddressModel: function () {
+    CBTest_storedShippingAddressModel(
+    ) {
         let caughtError;
 
-        let originalShippingAddressModel =
-        SCShippingAddressEditorView.storedShippingAddressModel();
+        let originalShippingAddressModel = SCShippingAddress.fetchLocalSpec();
 
         {
             let isValid =
@@ -41,8 +45,7 @@ var SCShippingAddressEditorView_Tests = {
             );
 
             {
-                let shippingAddressModel =
-                SCShippingAddressEditorView.storedShippingAddressModel();
+                let shippingAddressModel = SCShippingAddress.fetchLocalSpec();
 
                 let isValid =
                 SCShippingAddressEditorView_Tests.shippingAddressModelIsValid(
@@ -68,8 +71,7 @@ var SCShippingAddressEditorView_Tests = {
             );
 
             {
-                let shippingAddressModel =
-                SCShippingAddressEditorView.storedShippingAddressModel();
+                let shippingAddressModel = SCShippingAddress.fetchLocalSpec();
 
                 let isValid =
                 SCShippingAddressEditorView_Tests.shippingAddressModelIsValid(
@@ -93,8 +95,7 @@ var SCShippingAddressEditorView_Tests = {
             );
 
             {
-                let shippingAddressModel =
-                SCShippingAddressEditorView.storedShippingAddressModel();
+                let shippingAddressModel = SCShippingAddress.fetchLocalSpec();
 
                 let isValid =
                 SCShippingAddressEditorView_Tests.shippingAddressModelIsValid(
