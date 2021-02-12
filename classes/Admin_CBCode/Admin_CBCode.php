@@ -365,6 +365,47 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'filetype' => 'js',
+                    'regex' => (
+                        'SCShippingAddressEditorView\.storedShippingAddressModel\('
+                    ),
+                    'severity' => 3,
+                    'title' => (
+                        'SCShippingAddressEditorView.storedShippingAddressModel()'
+                    ),
+
+                    'cbmessage' => <<<EOT
+
+                        This function was replaced by
+                        SCShippingAddress.fetchLocalSpec().
+
+                    EOT,
+
+                    'errorStartDate' => '2021/02/11',
+                ],
+
+
+
+                (object)[
+                    'filetype' => 'js',
+                    'regex' => 'SCShippingAddressEditorView\.defaultModel\(',
+                    'severity' => 3,
+                    'title' => 'SCShippingAddressEditorView.defaultModel()',
+
+                    'cbmessage' => <<<EOT
+
+                        This function was replaced by
+                        SCShippingAddress.fetchLocalSpec() and
+                        SCShippingAddressEditorView.getDefaultCountryCBID().
+
+                    EOT,
+
+                    'errorStartDate' => '2021/02/11',
+                ],
+
+
+
+                (object)[
                     'filetype' => 'php',
                     'regex' => 'classNameForPageSettings\(',
                     'severity' => 3,
