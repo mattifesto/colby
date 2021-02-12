@@ -1,8 +1,6 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported SCShippingAddressEditorView */
 /* global
+    SCShippingAddressEditorView,
+
     CBEvent,
     CBModel,
     CBUI,
@@ -20,9 +18,12 @@
 
 
 
-(function (){
+(function () {
+    "use strict";
 
-    Colby.afterDOMContentLoaded(afterDOMContentLoaded);
+    Colby.afterDOMContentLoaded(
+        afterDOMContentLoaded
+    );
 
 
 
@@ -58,7 +59,6 @@
 
 
 
-    let SCShippingAddressEditorView =
     window.SCShippingAddressEditorView = {
 
         /**
