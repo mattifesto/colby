@@ -54,7 +54,7 @@ final class CBModel {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.8.js',
+                'v675.13.js',
                 cbsysurl()
             ),
         ];
@@ -71,6 +71,7 @@ final class CBModel {
     ): array {
         return [
             'CBConvert',
+            'CBException',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

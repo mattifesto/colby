@@ -1,14 +1,59 @@
 "use strict";
 /* jshint strict: global */
-/* jshint esversion: 6 */
 /* exported CBModel */
 /* global
     CBConvert,
+    CBException,
 */
 
 var CBModel = {
 
     /* -- accessors -- */
+
+
+
+    /**
+     * @param object model
+     *
+     * @return string
+     */
+    getClassName(
+        model
+    ) {
+        return CBModel.valueToString(
+            model,
+            "className"
+        );
+    },
+    /* getClassName() */
+
+
+
+    /**
+     * @param object spec
+     * @param string className
+     *
+     * @return undefined
+     */
+    setClassName(
+        spec,
+        className
+    ) {
+        let classNameAsName = CBConvert.valueAsName(
+            className
+        );
+
+        if (classNameAsName === undefined) {
+            throw CBException.withValueRelatedError(
+                Error("The className argument is not a valid name."),
+                className,
+                "ecacffe5c64fec1b315a629c5b5128b8343f6698"
+            );
+        }
+
+        spec.className = classNameAsName;
+    },
+    /* setClassName() */
 
 
 
