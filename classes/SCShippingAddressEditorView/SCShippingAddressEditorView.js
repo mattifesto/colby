@@ -3,7 +3,6 @@
 /* jshint esversion: 6 */
 /* exported SCShippingAddressEditorView */
 /* global
-    CBConvert,
     CBEvent,
     CBModel,
     CBUI,
@@ -14,6 +13,7 @@
     CBUIStringEditor,
     CBUIStringsPart,
     Colby,
+    SCShippingAddress,
 
     SCShippingAddressEditorView_countryOptions,
 */
@@ -37,35 +37,20 @@
      * @return undefined
      */
     function afterDOMContentLoaded() {
-        var shippingAddressModel = (
-            SCShippingAddressEditorView.storedShippingAddressModel()
+        let shippingAddressSpec = SCShippingAddress.fetchLocalSpec();
+
+        let countryCBID = SCShippingAddress.getCountryCBID(
+            shippingAddressSpec
         );
 
-        if (shippingAddressModel === undefined) {
-            shippingAddressModel = SCShippingAddressEditorView.defaultModel();
-        } else {
-            let countryValue = shippingAddressModel.country;
-
-            /**
-             * @NOTE 2018_11_07
-             *
-             *      The country code values "US" and "" have been converted to
-             *      the value undefined so that the United States is the default
-             *      country for an empty model. The change below will update
-             *      existing shipping addresses with the new value.
-             *
-             * @NOTE 2018_12_17
-             *
-             *      The country property of the shipping address model has moved
-             *      to using a specific default value approach. Once all sites
-             *      have adjusted this entire else block can be removed.
-             */
-            if (countryValue === "US" || countryValue === "") {
-                shippingAddressModel.country = undefined;
-            }
+        if (countryCBID === undefined) {
+            SCShippingAddress.setCountryCBID(
+                shippingAddressSpec,
+                SCShippingAddressEditorView.getDefaultCountryCBID()
+            );
         }
 
-        SCShippingAddressEditorView.model = shippingAddressModel;
+        SCShippingAddressEditorView.model = shippingAddressSpec;
 
         SCShippingAddressEditorView.display();
     }
@@ -86,38 +71,6 @@
          * This property will be initialialized to an object value by init().
          */
         model: undefined,
-
-
-
-        /**
-         * This function creates a fresh shipping address model with any default
-         * property values set.
-         *
-         * @return object
-         */
-        defaultModel() {
-            let defaultCountryOption = (
-                SCShippingAddressEditorView_countryOptions.find(
-                    function (option) {
-                        return CBModel.valueToBool(
-                            option,
-                            "isDefault"
-                        );
-                    }
-                )
-            );
-
-            let defaultCountryOptionValue;
-
-            if (typeof defaultCountryOption === "object") {
-                defaultCountryOptionValue = defaultCountryOption.value;
-            }
-
-            return {
-                country: defaultCountryOptionValue,
-            };
-        },
-        /* defaultModel() */
 
 
 
@@ -331,14 +284,21 @@
                                 "address form?"
                             )
                         ) {
-                            SCShippingAddressEditorView.model = (
-                                SCShippingAddressEditorView.defaultModel()
+                            let newShippingAddressSpec = {};
+
+                            CBModel.setClassName(
+                                newShippingAddressSpec,
+                                "SCShippingAddress"
                             );
 
-                            /**
-                             * Update cached model variable.
-                             */
-                            model = SCShippingAddressEditorView.model;
+                            SCShippingAddress.setCountryCBID(
+                                newShippingAddressSpec,
+                                SCShippingAddressEditorView.getDefaultCountryCBID()
+                            );
+
+                            model =
+                            SCShippingAddressEditorView.model =
+                            newShippingAddressSpec;
 
                             valuesForAllFieldsWereUpdated();
                             SCShippingAddressEditorView.modelWasUpdated();
@@ -753,40 +713,40 @@
 
 
         /**
-         * @return undefined
+         * @return CBID
          */
-        modelWasUpdated() {
-            try {
-                localStorage.setItem(
-                    "shippingAddress",
-                    JSON.stringify(SCShippingAddressEditorView.model)
-                );
-            } catch (e) {
+        getDefaultCountryCBID() {
+            let defaultCountryOption = (
+                SCShippingAddressEditorView_countryOptions.find(
+                    function (option) {
+                        return CBModel.valueToBool(
+                            option,
+                            "isDefault"
+                        );
+                    }
+                )
+            );
+
+            if (typeof defaultCountryOption === "object") {
+                return defaultCountryOption.value;
+            } else {
                 return undefined;
             }
         },
-        /* modelWasUpdated() */
+        /* getDefaultCountryCBID() */
+
 
 
         /**
-         * @return object|undefined
+         * @return undefined
          */
-        storedShippingAddressModel() {
-            try {
-                let shippingAddressModelAsJSON = localStorage.getItem(
-                    "shippingAddress"
-                );
-
-                let shippingAddressModel = JSON.parse(
-                    shippingAddressModelAsJSON
-                );
-
-                return CBConvert.valueAsObject(shippingAddressModel);
-            } catch (error) {
-                return undefined;
-            }
+        modelWasUpdated(
+        ) {
+            SCShippingAddress.saveLocalSpec(
+                SCShippingAddressEditorView.model
+            );
         },
-        /* storedShippingAddressModel() */
+        /* modelWasUpdated() */
 
     };
     /*  SCShippingAddressEditorView */

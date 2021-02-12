@@ -20,11 +20,18 @@ final class SCShippingAddressEditorView {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v147.js', scliburl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.13.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -63,9 +70,10 @@ final class SCShippingAddressEditorView {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
-            'CBConvert',
             'CBEvent',
             'CBModel',
             'CBUI',
@@ -75,6 +83,7 @@ final class SCShippingAddressEditorView {
             'CBUISelector',
             'CBUIStringEditor',
             'CBUIStringsPart',
+            'SCShippingAddress',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
