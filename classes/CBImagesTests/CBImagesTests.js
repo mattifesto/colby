@@ -1,6 +1,5 @@
 "use strict";
 /* jshint strict: global */
-/* jshint esnext: true */
 /* exported CBImagesTests */
 /* global
     CBAjax,
