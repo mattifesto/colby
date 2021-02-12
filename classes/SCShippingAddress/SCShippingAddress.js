@@ -10,6 +10,8 @@
     window.SCShippingAddress = {
         getCountryCBID: SCShippingAddress_getCountryCBID,
         setCountryCBID: SCShippingAddress_setCountryCBID,
+        getSpecialInstructions: SCShippingAddress_getSpecialInstructions,
+        setSpecialInstructions: SCShippingAddress_setSpecialInstructions,
 
         fetchLocalSpec: SCShippingAddress_fetchLocalSpec,
         saveLocalSpec: SCShippingAddress_saveLocalSpec,
@@ -22,16 +24,16 @@
 
 
     /**
-     * @param object model
+     * @param object shippingAddressModel
      *
      * @return CBID|undefined
      */
     function
     SCShippingAddress_getCountryCBID(
-        model
+        shippingAddressModel
     ) {
         return CBModel.valueAsCBID(
-            model,
+            shippingAddressModel,
             "country"
         );
     }
@@ -40,31 +42,74 @@
 
 
     /**
-     * @param object spec
-     * @param CBID countryCBID
+     * @param object shippingAddressSpec
+     * @param CBID|undefined countryCBID
      *
      * @return undefined
      */
     function
     SCShippingAddress_setCountryCBID(
-        spec,
+        shippingAddressSpec,
         countryCBID
     ) {
-        let countryCBIDAsCBID = CBConvert.valueAsCBID(
-            countryCBID
-        );
+        let countryCBIDAsCBID;
 
-        if (countryCBIDAsCBID === undefined) {
-            throw CBException.withValueRelatedError(
-                Error("The countryCBID argument is not a valid CBID."),
-                countryCBID,
-                "c5e80126a16eb8a0a561d9cf3b6af6972a497ea4"
+        if (countryCBID !== undefined) {
+            countryCBIDAsCBID = CBConvert.valueAsCBID(
+                countryCBID
             );
+
+            if (countryCBIDAsCBID === undefined) {
+                throw CBException.withValueRelatedError(
+                    Error("The countryCBID argument is not a valid CBID."),
+                    countryCBID,
+                    "c5e80126a16eb8a0a561d9cf3b6af6972a497ea4"
+                );
+            }
         }
 
-        spec.country = countryCBIDAsCBID;
+        shippingAddressSpec.country = countryCBIDAsCBID;
     }
     /* SCShippingAddress_setCountryCBID() */
+
+
+
+    /**
+     * @param object shippingAddressModel
+     *
+     * @return string
+     */
+    function
+    SCShippingAddress_getSpecialInstructions(
+        shippingAddressModel
+    ) {
+        return CBModel.valueToString(
+            shippingAddressModel,
+            "special-instructions"
+        );
+    }
+    /* SCShippingAddress_getSpecialInstructions() */
+
+
+
+    /**
+     * @param object shippingAddressSpec
+     * @param string specialInstructions
+     *
+     * @return undefined
+     */
+    function
+    SCShippingAddress_setSpecialInstructions(
+        shippingAddressSpec,
+        specialInstructions
+    ) {
+        let specialInstructionsString = CBConvert.valueToString(
+            specialInstructions
+        );
+
+        shippingAddressSpec["special-instructions"] = specialInstructionsString;
+    }
+    /* SCShippingAddress_setSpecialInstructions() */
 
 
 
