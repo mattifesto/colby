@@ -138,7 +138,8 @@
          *          columnNumber: int
          *      }
          */
-        function errorToErrorDetails(
+        function
+        errorToErrorDetails(
             error
         ) {
             let errorDetails = {};
@@ -172,21 +173,21 @@
                 let stackLine = stackLines[1];
 
                 let matches = stackLine.match(
-                    /at (.*):([0-9]+):([0-9]+)$/
+                    /at (.*) \((.+):([0-9]+):([0-9]+)\)$/
                 );
 
                 if (matches === null) {
                     return errorDetails;
                 }
 
-                errorDetails.sourceURL = matches[1];
-                errorDetails.lineNumber = matches[2];
-                errorDetails.columnNumber = matches[3];
+                errorDetails.sourceURL = matches[2];
+                errorDetails.lineNumber = matches[3];
+                errorDetails.columnNumber = matches[4];
             }
 
             return errorDetails;
         }
-        /* errorToLineNumber() */
+        /* errorToErrorDetails() */
 
     }
     /* errorToCBJavaScriptErrorModel() */
