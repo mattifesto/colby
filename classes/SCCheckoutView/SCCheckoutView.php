@@ -26,7 +26,7 @@ final class SCCheckoutView {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.2.js',
+                'v675.13.js',
                 scliburl()
             ),
         ];
@@ -67,6 +67,7 @@ final class SCCheckoutView {
                 'CBUIStringEditor',
                 'CBUIStringsPart',
                 'SCCartItem',
+                'SCShippingAddress',
                 'SCShoppingCart',
                 'SCStripe',
 
