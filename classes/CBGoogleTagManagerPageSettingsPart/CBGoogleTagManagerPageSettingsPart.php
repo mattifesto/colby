@@ -9,15 +9,26 @@ final class CBGoogleTagManagerPageSettingsPart {
     /**
      * @return void
      */
-    static function CBPageSettings_renderHeadElementHTML(
+    static function
+    CBPageSettings_renderHeadElementHTML(
     ): void {
-        $currentUserIsAnAdministrator = CBUserGroup::userIsMemberOfUserGroup(
-            ColbyUser::getCurrentUserCBID(),
-            'CBAdministratorsUserGroup'
-        );
 
-        if ($currentUserIsAnAdministrator) {
-            return;
+        /**
+         * If the site is NOT a development website and the user is an
+         * administrator, don't send Google Analytics events for the current
+         * page.
+         */
+        if (CBSitePreferences::getIsDevelopmentWebsite() !== true) {
+            $currentUserIsAnAdministrator = (
+                CBUserGroup::userIsMemberOfUserGroup(
+                    ColbyUser::getCurrentUserCBID(),
+                    'CBAdministratorsUserGroup'
+                )
+            );
+
+            if ($currentUserIsAnAdministrator) {
+                return;
+            }
         }
 
         $googleTagManagerID = CBSitePreferences::googleTagManagerID();
