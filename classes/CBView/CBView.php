@@ -358,7 +358,8 @@ final class CBView {
      *
      * @return void
      */
-    static function renderSpec(
+    static function
+    renderSpec(
         stdClass $viewSpec
     ): void {
         try {
@@ -378,7 +379,7 @@ final class CBView {
                         'An exception was thrown when rendering ' .
                         'a view with this spec.'
                     ),
-                    $viewModel,
+                    $viewSpec,
                     'da871db8b36e6fb4f1ec74f5abaf24f8ccf8aac4'
                 )
             );
