@@ -2,16 +2,24 @@
 
 final class CBPageSettingsForAdminPages {
 
+    /* -- CBPageSettings interfaces -- */
+
+
+
     /**
      * @return [string]
      */
-    static function CBPageSettings_htmlElementClassNames(): array {
+    static function
+    CBPageSettings_htmlElementClassNames(
+    ): array {
         return [
             'CBPageSettingsForAdminPages',
             'CBLightTheme',
             'CBStyleSheet',
         ];
     }
+    /* CBPageSettings_htmlElementClassNames() */
+
 
 
     /**
@@ -19,7 +27,10 @@ final class CBPageSettingsForAdminPages {
      *
      * @return void
      */
-    static function CBPageSettings_renderErrorPage(Throwable $throwable): void {
+    static function
+    CBPageSettings_renderErrorPage(
+        Throwable $throwable
+    ): void {
         $spec = (object)[
             'className' => 'CBViewPage',
             'classNameForSettings' => 'CBPageSettingsForAdminPages',
@@ -39,15 +50,22 @@ final class CBPageSettingsForAdminPages {
         CBPage::renderSpec($spec);
         CBExceptionView::popThrowable();
     }
+    /* CBPageSettings_renderErrorPage() */
+
 
 
     /**
      * @return [string]
      */
-    static function CBPageSettings_requiredClassNames(): array {
+    static function
+    CBPageSettings_requiredClassNames(
+    ): array {
         return [
             'CBEqualizePageSettingsPart',
+            'CBGoogleTagManagerPageSettingsPart',
             'CBResponsiveViewportPageSettingsPart',
         ];
     }
+    /* CBPageSettings_requiredClassNames() */
+
 }
