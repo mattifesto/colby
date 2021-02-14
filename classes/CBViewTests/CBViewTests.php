@@ -13,27 +13,22 @@ final class CBViewTests {
         return [
             (object)[
                 'name' => 'filterSubviews',
-                'title' => 'CBView::filterSubviews()',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'getAndSetSubviews',
-                'title' => 'CBView::getAndSetSubviews()',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'render',
-                'title' => 'CBView::render()',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'renderSpec',
-                'title' => 'CBView::renderSpec()',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'toSubviews',
-                'title' => 'CBView::toSubviews()',
                 'type' => 'server',
             ],
         ];
@@ -322,6 +317,61 @@ final class CBViewTests {
         }
 
 
+
+        /**
+         * This test tests two things:
+         *
+         *      1. Rendering a view spec with no class name when test mode is
+         *      NOT active should succeed but produce two log entries.
+         *
+         *      2. The source CBID of the secong log entry should be
+         *      'da871db8b36e6fb4f1ec74f5abaf24f8ccf8aac4'.
+         */
+
+        ob_start();
+
+        try {
+            $logEntries = CBLog::buffer(
+                function () {
+                    $viewSpec = (object)[];
+
+                    CBView::renderSpec($viewSpec);
+                }
+            );
+
+            $actualCountOfLogEntries = count($logEntries);
+            $expectedCountOfLogEntries = 2;
+
+            if ($actualCountOfLogEntries !== $expectedCountOfLogEntries) {
+                return CBTest::resultMismatchFailure(
+                    'no class name: count of log entires',
+                    $actualCountOfLogEntries,
+                    $expectedCountOfLogEntries
+                );
+            }
+
+            $logEntry = $logEntries[1];
+
+            $actualLogEntrySourceCBID = CBLogEntry::getSourceCBID(
+                $logEntry
+            );
+
+            $expectedLogEntrySourceCBID = (
+                'da871db8b36e6fb4f1ec74f5abaf24f8ccf8aac4'
+            );
+
+            if ($actualLogEntrySourceCBID !== $expectedLogEntrySourceCBID) {
+                return CBTest::resultMismatchFailure(
+                    'no class name: log entry source CBID',
+                    $actualLogEntrySourceCBID,
+                    $expectedLogEntrySourceCBID
+                );
+            }
+        } catch (Throwable $error) {
+            throw $error;
+        } finally {
+            ob_end_clean();
+        }
 
         return (object)[
             'succeeded' => true,
