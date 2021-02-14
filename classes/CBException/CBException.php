@@ -198,7 +198,7 @@
     function getSourceCBID(): ?string {
         return $this->sourceCBID;
     }
-    /* getSourceID() */
+    /* getSourceCBID() */
 
 
 
