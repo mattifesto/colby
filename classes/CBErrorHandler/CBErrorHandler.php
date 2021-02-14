@@ -333,6 +333,9 @@ final class CBErrorHandler {
                     'sourceClassName' => __CLASS__,
                     'message' => $errorReportAsCBMessage,
                     'severity' => 3,
+                    'sourceID' => CBException::throwableToSourceCBID(
+                        $throwable
+                    ),
                 ]
             );
         } catch (Throwable $ignoredError) {
