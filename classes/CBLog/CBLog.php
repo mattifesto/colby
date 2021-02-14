@@ -367,6 +367,14 @@ final class CBLog {
      *          sourceID: ?ID
      *          timestamp: int
      *      }
+     *
+     * @NOTE 2021_02_14
+     *
+     *      There is now a CBLogEntry model class. Properties on a log entry
+     *      should be read and written using the accessors on this class.
+     *
+     *      This function should potentially be moved to another function that
+     *      accepts a CBLogEntry parameter.
      */
     static function entries($args = null) {
         $whereAsSQL = [];
@@ -590,11 +598,16 @@ final class CBLog {
 
 
     /**
-     * @NOTE 2019_12_11
+     * @param object $args
      *
      *      This function now only accepts a prepared entry as its parameter.
      *
      * @return void
+     *
+     * @NOTE 2021_02_14
+     *
+     *      This function can probably be changed to only accept official
+     *      CBLogEntry specs or models as its parameter.
      */
     private static function logForReals(
         stdClass $args
@@ -613,15 +626,15 @@ final class CBLog {
 
         /* sourceID */
 
-        $sourceID = CBModel::valueAsCBID(
-            $args,
-            'sourceID'
+        $sourceCBID = CBLogEntry::getSourceCBID(
+            $args
         );
 
-        $sourceIDAsSQL =
-        CBID::valueIsCBID($sourceID) ?
-        CBID::toSQL($sourceID) :
-        'NULL';
+        $sourceCBIDAsSQL = (
+            $sourceCBID === null ?
+            'NULL' :
+            CBID::toSQL($sourceCBID)
+        );
 
 
         /* severity */
@@ -695,7 +708,7 @@ final class CBLog {
                 {$processIDAsSQL},
                 {$severityAsSQL},
                 {$sourceClassNameAsSQL},
-                {$sourceIDAsSQL},
+                {$sourceCBIDAsSQL},
                 {$timestampAsSQL}
             )
 
@@ -775,6 +788,11 @@ final class CBLog {
      * @param object $args
      *
      * @return object
+     *
+     * @NOTE 2021_02_14
+     *
+     *      There is now a CBLogEntry model class. Properties on a log entry
+     *      should be read and written using the accessors on this class.
      */
     private static function prepareEntry(
         stdClass $args
@@ -922,10 +940,13 @@ final class CBLog {
 
             'sourceClassName' => $entrySourceClassName,
 
-            'sourceID' => $sourceID,
-
             'timestamp' => $timestamp,
         ];
+
+        CBLogEntry::setSourceCBID(
+            $preparedEntry,
+            $sourceID
+        );
 
         return $preparedEntry;
     }
