@@ -397,7 +397,9 @@
      *      individual test fails because every test reports its own errors
      *      so that every test will run even if a test before it fails.
      */
-    async function runJavaScriptTests() {
+    async function
+    runJavaScriptTests(
+    ) {
         for (
             let index = 0;
             index < CBTestAdmin_tests.length;
@@ -410,7 +412,11 @@
                 "type"
             );
 
-            if (type === "interactive" || type === "interactive_server") {
+            if (
+                type === "CBTest_type_interactive_client" ||
+                type === "interactive" || /* @deprecated 2021_02_13 */
+                type === "interactive_server"
+            ) {
                 continue;
             }
 
