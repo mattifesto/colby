@@ -486,7 +486,19 @@ final class CBTest {
                         $type = 'client';
                     }
 
-                    $test->title = "{$test->testClassName} | {$name} | {$type}";
+                    $titlePart1 = $test->testClassName;
+
+                    $result = preg_match(
+                        '/^CBTest_(.+)$/',
+                        $titlePart1,
+                        $matches
+                    );
+
+                    if ($result === 1) {
+                        $titlePart1 = $matches[1];
+                    }
+
+                    $test->title = "{$titlePart1} | {$name} | {$type}";
                 }
             }
             /* for */
