@@ -336,6 +336,37 @@ final class CBModel {
 
 
     /**
+     * @param string|null $className
+     * @param CBID|null $CBID
+     */
+    static function
+    createSpec(
+        ?string $className = null,
+        ?string $CBID = null
+    ): stdClass {
+        $spec = (object)[];
+
+        if ($className !== null) {
+            CBModel::setClassName(
+                $spec,
+                $className
+            );
+        }
+
+        if ($CBID !== null) {
+            CBModel::setCBID(
+                $spec,
+                $CBID
+            );
+        }
+
+        return $spec;
+    }
+    /* createSpec() */
+
+
+
+    /**
      * Returns the the first model found with the specified property value.
      *
      * @param [object] $models
