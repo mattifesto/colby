@@ -1795,6 +1795,91 @@ final class Admin_CBCode {
 
 
                 (object)[
+                    'cbmessage' => <<<EOT
+
+                        Change code to use this class in an object-oriented
+                        manner.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => "CBModelUpdater::fetch\(",
+                    'severity' => 5,
+                    'title' => 'CBModelUpdater::fetch()',
+
+                    'noticeStartDate' => '2021/02/15',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Change code to use this class in an object-oriented
+                        manner.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => "CBModelUpdater::fetchByCBID\(",
+                    'severity' => 5,
+                    'title' => 'CBModelUpdater::fetchByCBID()',
+
+                    'noticeStartDate' => '2021/02/15',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Change code to use this class in an object-oriented
+                        manner.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => "CBModelUpdater::save\(",
+                    'severity' => 5,
+                    'title' => 'CBModelUpdater::save()',
+
+                    'noticeStartDate' => '2021/02/15',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Change code to use this class in an object-oriented
+                        manner.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => "CBModelUpdater::update\(",
+                    'severity' => 5,
+                    'title' => 'CBModelUpdater::update()',
+
+                    'noticeStartDate' => '2021/02/15',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Matt is figuring out the future way of doing this exact
+                        operation.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => "CBModelUpdater::updateIfExists\(",
+                    'severity' => 5,
+                    'title' => 'CBModelUpdater::updateIfExists()',
+
+                    'noticeStartDate' => '2021/02/15',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
                     'regex' => "(->ID|'ID'|\"ID\")",
                     'severity' => 5,
                     'title' => 'CBModel ID Property',
