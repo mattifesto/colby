@@ -1,0 +1,11 @@
+{
+    /**
+     * Colby Content Management System
+     * Version 675.13
+     */
+
+    "browser": true,
+    "esversion": 6,
+    "undef": true,
+    "unused": true
+}
