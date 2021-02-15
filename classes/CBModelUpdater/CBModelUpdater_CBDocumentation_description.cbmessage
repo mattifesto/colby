@@ -1,0 +1,23 @@
+This class exists to standardize and facilitate updates to models that may be
+repetitive and not require actually saving the model. This kind of change often
+happens in an installation function where the first install creates the model
+and each future install just ensures that it's still there.
+
+There are other times when you want to make updates to a model that may already
+be in place where this class is useful.
+
+If you know that you are definitely going to create or modify a model this class
+may not be as useful.
+
+Benefits of using this class:
+
+--- ul
+The class unifies the first time creation and later update experiences.
+
+The class improves performance by avoiding saving models and the related
+potential side effects.
+---
+
+(2021_02_15 (b))((br)) The code that uses this class is currently undergoing a
+transition to using the object oriented version from the previous static
+function version.

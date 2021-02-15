@@ -1,6 +1,20 @@
 <?php
 
+/**
+ * See documentation.
+ *
+ * @NOTE 2012_02_15
+ *
+ *      This class is in transition from using primarily static functions to an
+ *      object-oriented from. The static methods will soon be deprecated after
+ *      a trial period.
+ */
 final class CBModelUpdater {
+
+    private $originalSpec;
+    private $workingSpec;
+
+
 
     /* -- CBInstall interfaces -- -- -- -- -- */
 
@@ -27,7 +41,85 @@ final class CBModelUpdater {
 
 
     /**
+     * @param string $CBID
+     */
+    function
+    __construct(
+        string $CBID
+    ) {
+        $this->workingSpec = null;
+
+        $this->originalSpec = CBModels::fetchSpecByCBID(
+            $CBID
+        );
+
+        if ($this->originalSpec === null) {
+            $this->workingSpec = (object)[];
+
+            CBModel::setCBID(
+                $this->workingSpec,
+                $CBID
+            );
+        } else {
+            $this->workingSpec = CBModel::clone(
+                $this->originalSpec
+            );
+        }
+    }
+    /* __construct() */
+
+
+
+    /**
+     * @return object
+     */
+    function
+    getSpec(
+    ): stdClass {
+        return $this->workingSpec;
+    }
+    /* getSpec() */
+
+
+
+    /**
+     * @TODO 2021_02_15
+     *
+     *      This method will be renamed to "save" one the static "save" function
+     *      is fully deprecated and removed.
+     *
+     * @return void
+     */
+    function
+    save2(
+    ): void {
+        if ($this->workingSpec != $this->originalSpec) {
+            CBModels::save(
+                $this->workingSpec
+            );
+
+            $version = CBModel::getVersion(
+                $this->workingSpec
+            );
+
+            CBModel::setVersion(
+                $this->workingSpec,
+                $version + 1,
+            );
+
+            $this->originalSpec = CBModel::clone(
+                $this->workingSpec
+            );
+        }
+    }
+    /* save() */
+
+
+
+    /**
      * @deprecated 2021_01_15
+     *
+     *      Change code to use this class in an object-oriented manner.
      *
      *      This method is deprecated because it forces you to use the 'ID'
      *      property directly. The 'ID' property has been deprecated and
@@ -99,6 +191,10 @@ final class CBModelUpdater {
 
 
     /**
+     * @deprecated 2021_02_15
+     *
+     *      Change code to use this class in an object-oriented manner.
+     *
      * @param CBID $CBID
      *
      * @return object
@@ -176,6 +272,10 @@ final class CBModelUpdater {
 
 
     /**
+     * @deprecated 2012_02_15
+     *
+     *      Change code to use this class in an object-oriented manner.
+     *
      * @param object $updater
      *
      * @return void
@@ -194,7 +294,9 @@ final class CBModelUpdater {
 
 
     /**
-     * This function will create or updated the target model.
+     * @deprecated 2012_02_15
+     *
+     *      Change code to use this class in an object-oriented manner.
      *
      * @param object $updates
      *
@@ -212,6 +314,15 @@ final class CBModelUpdater {
 
 
     /**
+     * @TODO 2012_02_15
+     *
+     *      This is an interesting function. I'm not entirely sure at this
+     *      moment how to accomplish it the right way. It's core problem is
+     *      that it accepts updates as a partial spec.
+     *
+     *      This may not be so bad in some ways if property names aren't
+     *      referenced and the function becomes more like "merge if exists".
+     *
      * This function will only update the target model if it already exists.
      *
      * @param object $updates
