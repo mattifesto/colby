@@ -1,0 +1,3 @@
+This view is shown on documentation pages for classes that currently have no
+documentation. For developers, it displays a button offering to create a simple
+documentation file.
