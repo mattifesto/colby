@@ -19,7 +19,11 @@ final class CBLibrary {
         foreach (Colby::$libraryDirectories as $libraryDirectory) {
             $directory = (
                 cbsitedir() .
-                '/' .
+                (
+                    $libraryDirectory === '' ?
+                    '' :
+                    '/'
+                ) .
                 $libraryDirectory .
                 '/classes/' .
                 $className
