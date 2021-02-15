@@ -491,7 +491,7 @@ final class Admin_CBCode {
                 (object)[
                     'cbmessage' => <<<EOT
 
-                        Use CBModels::fetchModelByIDNullable().
+                        Use CBModels::fetchModelByCBID().
 
                     EOT,
                     'filetype' => 'php',
@@ -934,7 +934,7 @@ final class Admin_CBCode {
                     'severity' => 3,
                     'title' => (
                         'Replace use of ColbyUser::fetchUserDataByHash() ' .
-                        'with CBModels::fetchModelByIDNullable().'
+                        'with CBModels::fetchModelByCBID().'
                     ),
                 ],
 
@@ -1792,6 +1792,38 @@ final class Admin_CBCode {
 
                 /* -- notices -- */
 
+
+
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBModels::fetchModelByCBID()
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => "CBModels::fetchModelByID\(",
+                    'severity' => 5,
+                    'title' => 'CBModels::fetchModelByID()',
+
+                    'noticeStartDate' => '2021/02/15',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
+                    'cbmessage' => <<<EOT
+
+                        Use CBModels::fetchModelByCBID()
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => "CBModels::fetchModelByIDNullable\(",
+                    'severity' => 5,
+                    'title' => 'CBModels::fetchModelByIDNullable()',
+
+                    'noticeStartDate' => '2021/02/15',
+                    'noticeVersion' => 675,
+                ],
 
 
                 (object)[
