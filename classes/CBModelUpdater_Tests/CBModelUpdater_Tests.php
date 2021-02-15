@@ -20,6 +20,11 @@ final class CBModelUpdater_Tests {
             ],
 
             (object)[
+                'name' => 'objectOrientedMultiSave',
+                'type' => 'server',
+            ],
+
+            (object)[
                 'name' => 'updateIfExists',
                 'type' => 'server',
             ],
@@ -180,6 +185,78 @@ final class CBModelUpdater_Tests {
         ];
     }
     /* CBTest_fetchByCBID() */
+
+
+
+    /**
+     * @return object
+     */
+    static function
+    CBTest_objectOrientedMultiSave(
+    ): stdClass {
+        $CBID = '056936c040c40fbad3932cd95fbaa5851f0be730';
+
+        CBModels::deleteByID(
+            $CBID
+        );
+
+        $modelUpdater = new CBModelUpdater(
+            $CBID
+        );
+
+        CBModel::setClassName(
+            $modelUpdater->getSpec(),
+            'CBMessageView'
+        );
+
+        CBMessageView::setCBMessage(
+            $modelUpdater->getSpec(),
+            'message 1'
+        );
+
+        $modelUpdater->save2();
+
+        CBMessageView::setCBMessage(
+            $modelUpdater->getSpec(),
+            'message 2'
+        );
+
+        $modelUpdater->save2();
+
+        CBMessageView::setCBMessage(
+            $modelUpdater->getSpec(),
+            'message 3'
+        );
+
+        $modelUpdater->save2();
+
+        $messageViewModel = CBModels::fetchModelByCBID(
+            $CBID
+        );
+
+        $actualCBMessage = CBMessageView::getCBMessage(
+            $messageViewModel
+        );
+
+        $expectedCBMessage = 'message 3';
+
+        if ($actualCBMessage !== $expectedCBMessage) {
+            return CBTest::resultMismatchFailure(
+                'updateIfExists',
+                $actualCBMessage,
+                $expectedCBMessage
+            );
+        }
+
+        CBModels::deleteByID(
+            $CBID
+        );
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_objectOrientedMultiSave() */
 
 
 
