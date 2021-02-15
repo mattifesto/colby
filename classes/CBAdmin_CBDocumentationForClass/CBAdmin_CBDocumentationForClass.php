@@ -68,24 +68,94 @@ final class CBAdmin_CBDocumentationForClass {
         );
 
         if ($descriptionFilepath === null) {
-            $cbmessage = <<<EOT
-
-                There is no documentation for this class.
-
-            EOT;
+            CBAdmin_CBDocumentationForClass::renderNoDocumentation(
+                $className
+            );
         } else {
-            $cbmessage = file_get_contents(
+            CBAdmin_CBDocumentationForClass::renderDescriptionFile(
                 $descriptionFilepath
             );
         }
-
-        CBView::renderSpec(
-            (object)[
-                'className' => 'CBMessageView',
-                'markup' => $cbmessage,
-            ]
-        );
     }
     /* CBAdmin_render() */
+
+
+
+    /* -- functions -- */
+
+
+
+    /**
+     * @param string $descriptionFilepath
+     *
+     * @return void
+     */
+    private static function
+    renderDescriptionFile(
+        string $descriptionFilepath
+    ): void {
+        $messageViewSpec = CBModel::createSpec(
+            'CBMessageView'
+        );
+
+        $cbmessage = file_get_contents(
+            $descriptionFilepath
+        );
+
+        CBMessageView::setCBMessage(
+            $messageViewSpec,
+            $cbmessage
+        );
+
+        CBView::renderSpec(
+            $messageViewSpec
+        );
+    }
+    /* renderDescriptionFile() */
+
+
+
+    /**
+     * @param string $targetClassName
+     *
+     * @return void
+     */
+    private static function
+    renderNoDocumentation(
+        string $targetClassName
+    ): void {
+        $messageViewSpec = CBModel::createSpec(
+            'CBMessageView'
+        );
+
+        $cbmessage = <<<EOT
+
+            There is no documentation for this class.
+
+        EOT;
+
+        CBMessageView::setCBMessage(
+            $messageViewSpec,
+            $cbmessage
+        );
+
+        CBView::renderSpec(
+            $messageViewSpec
+        );
+
+        $developerView = CBModel::createSpec(
+            'CBView_CBDocumentationDeveloper'
+        );
+
+        CBView_CBDocumentationDeveloper::setTargetClassName(
+            $developerView,
+            $targetClassName
+        );
+
+        CBView::renderSpec(
+            $developerView
+        );
+    }
+    /* renderNoDocumentation() */
 
 }
