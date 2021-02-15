@@ -208,12 +208,31 @@ final class CBMessageView {
 
 
     /**
+     * @param object $messageViewModel
+     *
+     * @return string
+     */
+    static function
+    getCBMessage(
+        stdClass $messageViewModel
+    ): string {
+        return CBModel::valueToString(
+            $messageViewModel,
+            'markup'
+        );
+    }
+    /* getCBMessage() */
+
+
+
+    /**
      * @param object $messageViewSpec
      * @param string $cbmessage
      *
      * @return void
      */
-    static function setCBMessage(
+    static function
+    setCBMessage(
         stdClass $messageViewSpec,
         string $cbmessage
     ): void {
