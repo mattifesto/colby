@@ -12,11 +12,3 @@ main.CBDocumentation {
     justify-content: center;
     height: 44px;
 }
-
-.CBDocumentation_DeveloperView_error {
-    border-color: hsl(30, 100%, 50%);
-    border-style: dashed;
-    border-width: 2px;
-    box-sizing: border-box;
-    padding: 10px;
-}
