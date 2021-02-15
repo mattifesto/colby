@@ -430,7 +430,30 @@ final class CBModels {
 
 
     /**
-     * @deprecated use fetchModelByIDNullable()
+     * @param string $CBID
+     *
+     * @return object|null
+     */
+    static function
+    fetchModelByCBID(
+        string $CBID
+    ): ?stdClass {
+        $models = CBModels::fetchModelsByID(
+            [$CBID]
+        );
+
+        if (empty($models)) {
+            return null;
+        } else {
+            return $models[$CBID];
+        }
+    }
+    /* fetchModelByCBID() */
+
+
+
+    /**
+     * @deprecated use fetchModelByCBID()
      *
      * @param ID $ID
      *
@@ -450,29 +473,16 @@ final class CBModels {
 
 
     /**
-     * @NOTE 2018.06.20
-     *
-     *      This function is a transition function to move callers away from
-     *      fetchModelByID() which returns false if there is no model found.
-     *
-     *      The fetchModelByID() function was created before PHP 7 and the
-     *      introduction of nullable return types.
-     *
-     *      Eventually, this function will be deprecated and fetchModelByID()
-     *      will be reintroduced returning a nullable object.
+     * @deprecated use fetchModelByCBID()
      *
      * @param ID $ID
      *
      * @return ?model
      */
     static function fetchModelByIDNullable(string $ID): ?stdClass {
-        $models = CBModels::fetchModelsByID([$ID]);
-
-        if (empty($models)) {
-            return null;
-        } else {
-            return $models[$ID];
-        }
+        return CBModels::fetchModelByCBID(
+            $ID
+        );
     }
     /* fetchModelByIDNullable() */
 
