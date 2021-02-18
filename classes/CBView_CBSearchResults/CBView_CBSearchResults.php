@@ -39,7 +39,13 @@ final class CBView_CBSearchResults {
     CBModel_build(
         $viewSpec
     ): stdClass {
-        return (object)[];
+        return (object)[
+            'CBView_CBSearchResults_searchQuery' => (
+                CBView_CBSearchResults::getSearchQuery(
+                    $viewSpec
+                )
+            ),
+        ];
     }
     /* CBModel_build() */
 
@@ -59,10 +65,27 @@ final class CBView_CBSearchResults {
         stdClass $viewModel
     ): void {
         $searchQuery = trim(
-            cb_query_string_value(
-                'search-for'
+            CBView_CBSearchResults::getSearchQuery(
+                $viewModel
             )
         );
+
+        /**
+         * @NOTE 2021_02_17
+         *
+         *      I don't love that this view directly accesses the query
+         *      variable. At some point look at this situation in detail and
+         *      determine if that is the correct way of doing things and if so,
+         *      document here.
+         */
+
+        if ($searchQuery === '') {
+            $searchQuery = trim(
+                cb_query_string_value(
+                    'search-for'
+                )
+            );
+        }
 
         if ($searchQuery === '') {
             return;
@@ -80,7 +103,7 @@ final class CBView_CBSearchResults {
                 );
 
                 if (empty($searchClause)) {
-                    $summaries = [];
+                    $pagesKeyValueData = [];
                 } else {
                     $SQL = <<<END
 
@@ -116,6 +139,45 @@ final class CBView_CBSearchResults {
         <?php
     }
     /* CBView_render() */
+
+
+
+    /* -- accessors -- */
+
+
+
+    /**
+     * @param object $viewSpec
+     *
+     * @return string
+     */
+    static function
+    getSearchQuery(
+        stdClass $viewSpec
+    ): string {
+        return CBModel::valueToString(
+            $viewSpec,
+            'CBView_CBSearchResults_searchQuery'
+        );
+    }
+    /* getSearchQuery() */
+
+
+
+    /**
+     * @param object $viewSpec
+     * @param string $searchQuery
+     *
+     * @return void
+     */
+    static function
+    setSearchQuery(
+        stdClass $viewSpec,
+        string $searchQuery
+    ): void {
+        $viewSpec->CBView_CBSearchResults_searchQuery = $searchQuery;
+    }
+    /* setSearchQuery() */
 
 
 
