@@ -62,7 +62,11 @@
         convertJavaScriptTestToFunction(test) {
             let type = CBModel.valueToString(test, "type");
 
-            if (type === "server" || type === "interactive_server") {
+            if (
+                type === "CBTest_type_server" ||
+                type === "server" || /* @deprecated */
+                type === "interactive_server"
+            ) {
                 let callable = CBModel.valueAsFunction(
                     CBTest,
                     "runServerTest"

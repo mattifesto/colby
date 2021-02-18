@@ -61,7 +61,7 @@ final class CBTestAdmin {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.13.js',
+                'v675.14.js',
                 cbsysurl()
             ),
         ];
