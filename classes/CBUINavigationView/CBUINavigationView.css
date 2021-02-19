@@ -1,7 +1,6 @@
 .CBUINavigationView > .container > .CBUIHeader {
     -webkit-backdrop-filter: blur(3px);
-    xposition: -webkit-sticky;
-    xposition: sticky;
-    xtop: 0px;
+    position: sticky;
+    top: 0px;
     xz-index: 500;
 }

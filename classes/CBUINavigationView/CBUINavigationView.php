@@ -9,11 +9,18 @@ final class CBUINavigationView {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs(): array {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v360.css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.14.css',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
 
 
 
