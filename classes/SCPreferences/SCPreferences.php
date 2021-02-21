@@ -128,8 +128,10 @@ final class SCPreferences {
                 'cartItemOrderViewClassNames'
             ),
 
-            'defaultOrderKindClassName' => trim(
-                CBModel::valueToString($spec, 'defaultOrderKindClassName')
+            'defaultOrderKindClassName' => (
+                SCPreferences::getDefaultOrderKindClassName(
+                    $spec
+                )
             ),
 
             'sendingEmailAddress' => trim(
@@ -166,6 +168,60 @@ final class SCPreferences {
         ];
     }
     /* CBModel_build() */
+
+
+
+    /* -- accessors -- */
+
+
+
+    /**
+     * @param object $model
+     *
+     * @return string
+     */
+    static function
+    getDefaultOrderKindClassName(
+        stdClass $model
+    ): string {
+        return CBModel::valueToString(
+            $model,
+            'defaultOrderKindClassName'
+        );
+    }
+    /* getDefaultOrderKindClassName() */
+
+
+
+    /**
+     * @param object $spec
+     * @param string $defaultOrderKindClassName
+     *
+     * @return void
+     */
+    static function
+    setDefaultOrderKindClassName(
+        stdClass $spec,
+        string $defaultOrderKindClassName
+    ): void {
+        if ($defaultOrderKindClassName !== '') {
+            if (!CBConvert::valueIsName($defaultOrderKindClassName)) {
+                throw new CBExceptionWithValue(
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        The "defaultOrderKindClassName" argument is not a valid
+                        name.
+
+                    EOT),
+                    $defaultOrderKindClassName,
+                    'df45242393f540a527549376f1df1a12b378b99b'
+                );
+            }
+        }
+
+        $spec->defaultOrderKindClassName = $defaultOrderKindClassName;
+    }
+    /* getDefaultOrderKindClassName() */
 
 
 
