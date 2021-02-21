@@ -9,13 +9,19 @@ final class CLASSNAME {
     /**
      * @return void
      */
-    static function CBInstall_configure(): void {
-        CBModelUpdater::update(
-            (object)[
-                'ID' => SCPreferences::getModelCBID(),
-                'defaultOrderKindClassName' => __CLASS__,
-            ]
+    static function
+    CBInstall_configure(
+    ): void {
+        $updater = new CBModelUpdater(
+            SCPreferences::getModelCBID()
         );
+
+        SCPreferences::setDefaultOrderKindClassName(
+            $updater->getSpec(),
+            __CLASS__
+        );
+
+        $updater->save2();
     }
     /* CBInstall_configure() */
 
@@ -30,7 +36,8 @@ final class CLASSNAME {
      *
      * @return string
      */
-    static function SCOrderKind_countryCodeToCountryName(
+    static function
+    SCOrderKind_countryCodeToCountryName(
         string $countryCode
     ): string {
         $matches = array_filter(
@@ -63,7 +70,8 @@ final class CLASSNAME {
     /**
      * @return [object]
      */
-    static function SCOrderKind_countryOptions() {
+    static function
+    SCOrderKind_countryOptions() {
         return [
             (object)[
                 'isDefault' => true,
@@ -81,7 +89,8 @@ final class CLASSNAME {
      *
      * @return string
      */
-    static function SCOrderKind_countryOptionValueToCountryCode(
+    static function
+    SCOrderKind_countryOptionValueToCountryCode(
         string $countyOptionValue
     ): string {
         $matches = array_filter(
@@ -117,7 +126,8 @@ final class CLASSNAME {
     /**
      * @return string
      */
-    static function SCOrderKind_defaultShippingMethod(): string {
+    static function
+    SCOrderKind_defaultShippingMethod(): string {
         return 'Flat Rate Shipping';
     }
 
@@ -128,7 +138,8 @@ final class CLASSNAME {
      *
      * @return int
      */
-    static function SCOrderKind_salesTaxInCents(
+    static function
+    SCOrderKind_salesTaxInCents(
         stdClass $orderSpec
     ): int {
         return 0;
@@ -141,7 +152,8 @@ final class CLASSNAME {
      *
      * @return int
      */
-    static function SCOrderKind_shippingChargeInCents(
+    static function
+    SCOrderKind_shippingChargeInCents(
         stdClass $orderSpec
     ): int {
         return 0;
