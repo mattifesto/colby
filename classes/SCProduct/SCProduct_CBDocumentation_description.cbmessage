@@ -1,0 +1,57 @@
+The SCProduct class is a model class. Each model represents a single product for
+sale on the website. Products are added and modified by importing a CSV file
+containing one or more products.
+
+To get started quickly, create a spreadsheet with the following columns:
+
+--- h2
+Required Columns
+---
+
+--- dl
+
+--- dt
+className
+---
+Set to "SCProduct" for product rows.
+
+--- dt
+productCode
+---
+Each row should have a product code that is a valid name (A-Z a-z 0-9 _).
+
+--- dt
+priceInCents
+---
+Each row should have a integer priceInCents value of 0 or greater.
+
+
+---
+
+--- h2
+Optional Columns
+---
+
+--- dl
+
+--- dt
+hasPage
+---
+If the value of this column is set to a truthy value, a product page will be
+created for the product.
+
+--- dt
+groupNames
+---
+A comma separated list of group names. Each name must be a valid Colby name
+value.
+
+If there is an SCProductGroup model that has this name, the product will become
+associated with that group.
+
+--- dt
+title
+---
+The name of the product.
+
+---
