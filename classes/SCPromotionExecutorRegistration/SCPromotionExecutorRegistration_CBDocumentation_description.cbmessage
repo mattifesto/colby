@@ -1,0 +1,23 @@
+SCPromotionExecutorRegistration is a model class. Each model with this class
+represents a promotion executor registered with the website. When a user creates
+a new promotion, they will choose from promotion executors represented by this
+set of models.
+
+When you create a promotion executor class, you should implement either
+CBInstall_install() or CBInstall_configure() in which you will create or update
+your SCPromotionExecutorRegistration model for your class.
+
+This method of registering promotion executors is different from the method of
+registering views in CBViewCatalog.
+
+The SCPromotionExecutorRegistration method is newer but the two methods are
+currently being compared to see which is better to go forward with in the
+future.
+
+The CBViewCatalog method uses a method in which all views are deregistered at
+the beginning of the website update process. So if a class disappears in an
+update it will no longer be registered as a view.
+
+SCPromotionExecutorRegistration models currently exist until removed, which may
+be a negative. One way to solve this would be to delete all
+SCPromotionExecutorRegistration models at the beginning of the install process.
