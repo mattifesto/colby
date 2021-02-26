@@ -628,11 +628,13 @@ final class CBModel {
                 );
             } else {
                 throw new CBExceptionWithValue(
-                    (
-                        'This spec can\'t be built because ' .
-                        "the CBModel_build() interface has not been " .
-                        "implementedon the {$className} class."
-                    ),
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        This spec can't be built because the CBModel_build()
+                        interface has not been implemented by the {$className}
+                        class.
+
+                    EOT),
                     $spec,
                     'a92922e1bcf4fe374b54a2b45bd59403f2214faa'
                 );
