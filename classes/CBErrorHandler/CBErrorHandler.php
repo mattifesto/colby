@@ -376,5 +376,61 @@ final class CBErrorHandler {
     }
     /* report() */
 
+
+
+    /**
+     * The purpose of this function is to generate plain text information to
+     * help developers debug and fix issues with the website.
+     *
+     * @param Throwable $rootThrowable
+     *
+     * @return string
+     *
+     *      This function returns plain text containing a collection of plain
+     *      text stack traces starting with the stack trace for the $throwable
+     *      argument followed by the stack traces for each previous error.
+     */
+    static function
+    throwableToPlainTextIteratedStackTrace(
+        Throwable $throwable
+    ): string {
+        try {
+            $plainTextIteratedStackTrace = '';
+            $currentThrowable = $throwable;
+            $index = 0;
+
+            while ($currentThrowable && $index < 10) {
+                if ($index > 0) {
+                    $plainTextIteratedStackTrace .= "\n\n\n";
+                }
+
+                $plainTextIteratedStackTrace .= (
+                    "----- Exception Index {$index} -----\n\n"
+                );
+
+                $plainTextIteratedStackTrace .= (
+                    CBConvert::throwableToStackTrace(
+                        $currentThrowable
+                    )
+                );
+
+                $currentThrowable = $currentThrowable->getPrevious();
+                $index += 1;
+            }
+
+            return $plainTextIteratedStackTrace;
+        } catch (
+            Throwable $ignoredError
+        ) {
+            return <<<EOT
+
+                The CBErrorHandler::throwableToPlainTextIteratedStackTrace()
+                threw an error.
+
+            EOT;
+        }
+    }
+    /* throwableToPlainTextIteratedStackTrace() */
+
 }
 /* CBErrorHandler */
