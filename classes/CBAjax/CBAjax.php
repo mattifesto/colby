@@ -224,7 +224,11 @@ final class CBAjax {
         );
 
         if ($isDeveloper) {
-            $response->stackTrace = Colby::exceptionStackTrace($error);
+            $response->stackTrace = (
+                CBErrorHandler::throwableToPlainTextIteratedStackTrace(
+                    $error
+                )
+            );
         }
 
         echo json_encode(
