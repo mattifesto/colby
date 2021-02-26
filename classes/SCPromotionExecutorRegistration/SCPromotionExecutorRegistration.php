@@ -47,4 +47,65 @@ final class SCPromotionExecutorRegistration {
     }
     /* CBModel_build() */
 
+
+
+    /* -- accessors -- */
+
+
+
+    /**
+     * @param object $promotionExecutorRegistrationSpec
+     * @param string $cbmessage
+     *
+     * @return void
+     */
+    static function
+    setDescriptionCBMessage(
+        stdClass $promotionExecutorRegistrationSpec,
+        string $cbmessage
+    ): void {
+        $promotionExecutorRegistrationSpec->descriptionCBMessage = (
+            $cbmessage
+        );
+    }
+    /* setDescriptionCBMessage() */
+
+
+
+    /**
+     * @param object $promotionExecutorRegistrationSpec
+     * @param string $executorClassName
+     *
+     * @return void
+     */
+    static function
+    setExecutorClassName(
+        stdClass $promotionExecutorRegistrationSpec,
+        string $executorClassName
+    ): void {
+        $promotionExecutorRegistrationSpec->executorClassName = (
+            $executorClassName
+        );
+    }
+    /* setExecutorClassName() */
+
+
+
+    /**
+     * @param object $promotionExecutorRegistrationSpec
+     * @param string $title
+     *
+     * @return void
+     */
+    static function
+    setTitle(
+        stdClass $promotionExecutorRegistrationSpec,
+        string $title
+    ): void {
+        $promotionExecutorRegistrationSpec->title = (
+            $title
+        );
+    }
+    /* setTitle() */
+
 }
