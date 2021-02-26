@@ -113,8 +113,16 @@ final class SCPromotion {
      * @param object $orderSpec
      *
      * @return object
+     *
+     * @TODO 2021_02_22
+     *
+     *      This function should test that each promotion is currently active
+     *      before it is applied. This is already effectively happening via the
+     *      way the promotions are queried for orders, but that does not affect
+     *      other calls to this function.
      */
-    static function apply(
+    static function
+    apply(
         stdClass $promotionModel,
         stdClass $orderSpec
     ): stdClass {
@@ -122,20 +130,15 @@ final class SCPromotion {
             $orderSpec
         );
 
-        $executorModel = CBModel::valueAsModel(
+        $promotionExecutorModel = CBModel::valueAsModel(
             $promotionModel,
             'executor'
         );
 
-        $functionName = "{$executorModel->className}::CBPromotion_apply";
-
-        if (is_callable($functionName)) {
-            $orderSpec = call_user_func(
-                $functionName,
-                $executorModel,
-                $orderSpec
-            );
-        }
+        $orderSpec = SCPromotionExecutor::apply(
+            $promotionExecutorModel,
+            $orderSpec
+        );
 
         return $orderSpec;
     }
