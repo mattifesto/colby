@@ -1797,6 +1797,23 @@ final class Admin_CBCode {
                 (object)[
                     'cbmessage' => <<<EOT
 
+                        Colby::exceptionStackTrace() includes information that
+                        can be provided by CBErrorHandler and CBRequest.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => "Colby::exceptionStackTrace\(",
+                    'severity' => 5,
+                    'title' => 'Colby::exceptionStackTrace()',
+
+                    'noticeStartDate' => '2021/02/25',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
+                    'cbmessage' => <<<EOT
+
                         Use CBModels::fetchModelByCBID()
 
                     EOT,
