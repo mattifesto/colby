@@ -137,8 +137,9 @@ var CBUISpecEditor = {
                 throw Error(
                     CBConvert.stringToCleanLine(`
 
-                        The ${functionName}() interface has not been implemented
-                        on the ${globalVariableName} object.
+                        The CBUISpecEditor_createEditorElement2() interface has
+                        not been implemented on the ${globalVariableName}
+                        object.
 
                     `)
                 );
