@@ -1,0 +1,6 @@
+SCPromotion is a model class. Each model of this class represents a promotion
+that exists for the website. A promotion has a begin timestamp, an end
+timestamp, and an executor model.
+
+The executor model is a model for a class that implements SCPromotionExecutor
+interfaces to apply the promotion to the order spec.
