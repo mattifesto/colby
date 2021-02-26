@@ -397,11 +397,24 @@ final class CBConvert {
 
 
     /**
+     * @NOTE 2021_02_25
+     *
+     *      This function is the main function to call to convert a single error
+     *      into a plain text stack trace for that error only. If you want to
+     *      iterate through previous errors you will either do so manually or
+     *      call CBErrorHandler::throwableToPlainTextIteratedStackTrace().
+     *
+     *      This function should probably be moved to CBErrorHandler. Functions
+     *      dealing with errors should not be in code that's used frequently.
+     *
      * @param Throwable $throwable
      *
      * @return string
      */
-    static function throwableToStackTrace(Throwable $throwable) {
+    static function
+    throwableToStackTrace(
+        Throwable $throwable
+    ) {
         try {
             $lines = [];
             $trace = $throwable->getTrace();
