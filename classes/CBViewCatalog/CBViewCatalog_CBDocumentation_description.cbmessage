@@ -1,0 +1,7 @@
+CBViewCatalog is a singleton model class. The model is recreated every time the
+website is updated and views are required to implement either a CBInstall
+interface to register and potentially become available to users editing pages.
+
+CBViewCatalog performs a similar function to SCPromotionExecutorRegistration but
+in a different way. The two method are currently being compared to see which is
+the better way to more forward with.
