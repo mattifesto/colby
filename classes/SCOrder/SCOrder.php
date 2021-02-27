@@ -698,7 +698,11 @@ final class SCOrder {
             $preparedSpec
         );
 
-        if ($preparedSpec->orderSubtotalInCents < $minimumSubtotalInCents) {
+        $subtotalInCents = SCOrder::getSubtotalInCents(
+            $preparedSpec
+        );
+
+        if ($subtotalInCents < $minimumSubtotalInCents) {
             $minimumSubtotalInDollars = CBConvert::centsToDollars(
                 $minimumSubtotalInCents
             );
@@ -1092,9 +1096,8 @@ final class SCOrder {
 
             'orderItems' => $cartItemModels,
 
-            'orderSubtotalInCents' => CBModel::valueAsInt(
-                $spec,
-                'orderSubtotalInCents'
+            'orderSubtotalInCents' => SCOrder::getSubtotalInCents(
+                $spec
             ),
 
             'orderShippingMethod' => CBModel::valueToString(
@@ -1221,6 +1224,61 @@ final class SCOrder {
 
 
 
+    /* -- accessors -- */
+
+
+
+    /**
+     * @see documentation
+     *
+     * @param object $orderModel
+     *
+     * @return int|null
+     */
+    static function
+    getSubtotalInCents(
+        stdClass $orderModel
+    ): ?int {
+        return CBModel::valueAsInt(
+            $orderModel,
+            'orderSubtotalInCents'
+        );
+    }
+    /* getSubtotalInCents() */
+
+
+
+    /**
+     * @see documentation
+     *
+     * @param object $orderSpec
+     *
+     * @return int|null
+     */
+    static function
+    setSubtotalInCents(
+        stdClass $orderSpec,
+        int $subtotalInCents
+    ): void {
+        if ($subtotalInCents < 0) {
+            throw new CBExceptionWithValue(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The subtotalInCents argument must be greater than or equal
+                    to zero.
+
+                EOT),
+                $subtotalInCents,
+                '3a02bab165d07b85ffa5fbdebf72612dede4a524'
+            );
+        }
+
+        $orderSpec->orderSubtotalInCents = $subtotalInCents;
+    }
+    /* getSubtotalInCents() */
+
+
+
     /* -- functions ---------- */
 
 
@@ -1230,7 +1288,8 @@ final class SCOrder {
      *
      * @return int
      */
-    static function calculateSubtotalInCents(
+    static function
+    calculateSubtotalInCents(
         array $cartItemModels
     ): int {
         return array_reduce(
@@ -1429,13 +1488,16 @@ final class SCOrder {
      *
      * @return string
      */
-    static function createSummaryHTML(
+    static function
+    createSummaryHTML(
         stdClass $orderModel
     ): string {
-        $orderSubtotalInCents = $orderModel->orderSubtotalInCents;
+        $subtotalInCents = SCOrder::getSubtotalInCents(
+            $orderModel
+        );
 
         $orderSubtotalInDollars = CBConvert::centsToDollars(
-            $orderSubtotalInCents
+            $subtotalInCents
         );
 
         $orderShippingChargeInCents = $orderModel->orderShippingChargeInCents;
@@ -1598,6 +1660,8 @@ final class SCOrder {
      *
      *      Calculating the order subtotal.
      *
+     *      Applying promotions.
+     *
      *      Calculating the order sales tax.
      *
      *      Calculating the order shipping cost.
@@ -1642,10 +1706,13 @@ final class SCOrder {
             'orderItems'
         );
 
-        $preparedOrderSpec->orderSubtotalInCents = (
-            SCOrder::calculateSubtotalInCents(
-                $orderCartItemSpecs
-            )
+        $subtotalInCents = SCOrder::calculateSubtotalInCents(
+            $orderCartItemSpecs
+        );
+
+        SCOrder::setSubtotalInCents(
+            $preparedOrderSpec,
+            $subtotalInCents
         );
 
 
@@ -1696,7 +1763,7 @@ final class SCOrder {
         /* orderTotalInCents */
 
         $preparedOrderSpec->orderTotalInCents = (
-            $preparedOrderSpec->orderSubtotalInCents +
+            $subtotalInCents +
             $preparedOrderSpec->orderShippingChargeInCents +
             $preparedOrderSpec->orderSalesTaxInCents
         );
