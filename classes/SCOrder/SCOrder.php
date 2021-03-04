@@ -240,9 +240,8 @@ final class SCOrder {
             'orderRowId'
         );
 
-        $orderTotalInCents = CBModel::valueAsInt(
+        $orderTotalInCents = SCOrder::getTotalInCents(
             $model,
-            'orderTotalInCents'
         );
 
         $shipOrderToFullName = CBModel::valueToString(
@@ -1148,14 +1147,12 @@ final class SCOrder {
                 $spec
             ),
 
-            'orderSalesTaxInCents' => CBModel::valueAsInt(
-                $spec,
-                'orderSalesTaxInCents'
+            'orderSalesTaxInCents' => SCOrder::getSalesTaxInCents(
+                $spec
             ),
 
-            'orderTotalInCents' => CBModel::valueAsInt(
-                $spec,
-                'orderTotalInCents'
+            'orderTotalInCents' => SCOrder::getTotalInCents(
+                $spec
             ),
 
             'orderRowId' => CBModel::valueAsInt(
@@ -1282,7 +1279,7 @@ final class SCOrder {
             'SCOrder_discountInCents'
         ) ?? 0;
     }
-    /* getSubtotalDiscountInCents() */
+    /* getDiscountInCents() */
 
 
 
@@ -1310,6 +1307,24 @@ final class SCOrder {
         $orderSpec->SCOrder_discountInCents = $discountInCents;
     }
     /* setDiscountInCents() */
+
+
+
+    /**
+     * @param object $orderModel
+     *
+     * @return int
+     */
+    static function
+    getSalesTaxInCents(
+        stdClass $orderModel
+    ): int {
+        return CBModel::valueAsInt(
+            $orderModel,
+            'orderSalesTaxInCents'
+        ) ?? 0;
+    }
+    /* getSalesTaxInCents() */
 
 
 
@@ -1373,8 +1388,9 @@ final class SCOrder {
      * @see documentation
      *
      * @param object $orderSpec
+     * @param int $subtotalInCents
      *
-     * @return int|null
+     * @return void
      */
     static function
     setSubtotalInCents(
@@ -1383,7 +1399,42 @@ final class SCOrder {
     ): void {
         $orderSpec->orderSubtotalInCents = $subtotalInCents;
     }
-    /* getSubtotalInCents() */
+    /* setSubtotalInCents() */
+
+
+
+    /**
+     * @param object $orderModel
+     *
+     * @return int|null
+     */
+    static function
+    getTotalInCents(
+        stdClass $orderModel
+    ): ?int {
+        return CBModel::valueAsInt(
+            $orderModel,
+            'orderTotalInCents'
+        );
+    }
+    /* getTotalInCents() */
+
+
+
+    /**
+     * @param object $orderSpec
+     * @param int $totalInCents
+     *
+     * @return void
+     */
+    static function
+    setTotalInCents(
+        stdClass $orderSpec,
+        int $totalInCents
+    ): void {
+        $orderSpec->orderTotalInCents = $totalInCents;
+    }
+    /* setTotalInCents() */
 
 
 
@@ -1658,7 +1709,9 @@ final class SCOrder {
             $orderSalesTaxInCents
         );
 
-        $orderTotalInCents = $orderModel->orderTotalInCents;
+        $orderTotalInCents = SCOrder::getTotalInCents(
+            $orderModel
+        );
 
         $orderTotalInDollars = CBConvert::centsToDollars(
             $orderTotalInCents
@@ -1756,13 +1809,16 @@ final class SCOrder {
      *      The return object is use by the checkout page display order
      *      information to the user and report the order data to analytics.
      */
-    static function orderToCheckoutInformation(
+    static function
+    orderToCheckoutInformation(
         stdClass $orderModel
     ): stdClass {
         return (object)[
             'orderRowId' => $orderModel->orderRowId,
 
-            'orderTotalInCents' => $orderModel->orderTotalInCents,
+            'orderTotalInCents' => SCOrder::getTotalInCents(
+                $orderModel
+            ),
 
             'orderShippingChargeInCents' => (
                 $orderModel->orderShippingChargeInCents
@@ -1912,17 +1968,22 @@ final class SCOrder {
         );
 
 
-        /* orderTotalInCents */
+        /* order total */
 
         $discountInCents = SCOrder::getDiscountInCents(
             $preparedOrderSpec
         );
 
-        $preparedOrderSpec->orderTotalInCents = (
+        $totalInCents = (
             $subtotalInCents -
             $discountInCents +
             $preparedOrderSpec->orderShippingChargeInCents +
             $preparedOrderSpec->orderSalesTaxInCents
+        );
+
+        SCOrder::setTotalInCents(
+            $preparedOrderSpec,
+            $totalInCents
         );
 
 
