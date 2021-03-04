@@ -1233,6 +1233,89 @@ final class SCOrder {
      *
      * @param object $orderModel
      *
+     * @return int
+     */
+    static function
+    getDiscountInCents(
+        stdClass $orderModel
+    ): int {
+        return CBModel::valueAsInt(
+            $orderModel,
+            'SCOrder_discountInCents'
+        ) ?? 0;
+    }
+    /* getSubtotalDiscountInCents() */
+
+
+
+    /**
+     * @see documentation
+     *
+     * @param object $orderSpec
+     * @param int $discountInCents
+     *
+     * @return void
+     */
+    static function
+    setDiscountInCents(
+        stdClass $orderSpec,
+        int $discountInCents
+    ): void {
+        if ($discountInCents < 0) {
+            throw new CBExceptionWithValue(
+                'The discountInCents argument is less than zero.',
+                $discountInCents,
+                'f1d5480e71078985acf7efd3d5c0bd66f4ac4016'
+            );
+        }
+
+        $orderSpec->SCOrder_discountInCents = $discountInCents;
+    }
+    /* setDiscountInCents() */
+
+
+
+    /**
+     * @param object $orderModel
+     *
+     * @return string
+     */
+    static function
+    getShippingAddressFullName(
+        stdClass $orderModel
+    ): string {
+        return CBModel::valueToString(
+            $orderModel,
+            'shipOrderToFullName'
+        );
+    }
+    /* getShippingAddressFullName() */
+
+
+
+    /**
+     * @param object $orderModel
+     *
+     * @return int
+     */
+    static function
+    getShippingChargeInCents(
+        stdClass $orderModel
+    ): int {
+        return CBModel::valueAsInt(
+            $orderModel,
+            'orderShippingChargeInCents'
+        ) ?? 0;
+    }
+    /* getShippingChargeInCents() */
+
+
+
+    /**
+     * @see documentation
+     *
+     * @param object $orderModel
+     *
      * @return int|null
      */
     static function
@@ -1589,24 +1672,6 @@ final class SCOrder {
         }
     }
     /* currentSalesTaxRate() */
-
-
-
-    /**
-     * @param object $orderModel
-     *
-     * @return string
-     */
-    static function
-    getShippingAddressFullName(
-        stdClass $orderModel
-    ): string {
-        return CBModel::valueToString(
-            $orderModel,
-            'shipOrderToFullName'
-        );
-    }
-    /* getShippingAddressFullName() */
 
 
 
