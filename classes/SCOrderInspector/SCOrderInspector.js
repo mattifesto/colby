@@ -24,6 +24,7 @@
     SCOrderInspector_emailText,
     SCOrderInspector_model,
     SCOrderInspector_orderID,
+    SCOrderInspector_orderSummaryCBMessage,
     SCOrderInspector_originalIsArchived,
     SCOrderInspector_userIsADeveloper,
     SCOrderInspector_wholesaleCustomerModel,
@@ -268,135 +269,88 @@ var SCOrderInspector = {
     },
     /* createNotesElement() */
 
+
+
     /**
      * @return Element
      */
     createOverviewElement: function () {
         let element = CBUI.createElement();
 
-        let titleElement = CBUI.createElement("CBUI_title1");
-        titleElement.textContent = "Overview";
+        {
+            let containerElement = CBUI.createElement();
 
-        element.appendChild(titleElement);
+            let orderNumber = CBModel.valueAsInt(
+                SCOrderInspector_model,
+                "orderRowId"
+            ) || 0;
 
-        let sectionContainerElement = CBUI.createElement(
-            "CBUI_sectionContainer"
-        );
-
-        element.appendChild(sectionContainerElement);
-
-        let sectionElement = CBUI.createElement(
-            "CBUI_section"
-        );
-
-        sectionContainerElement.appendChild(sectionElement);
-
-        sectionElement.appendChild(
-            createOverviewElement_createKeyValueElement(
-                "Order Number",
-                CBModel.valueAsInt(
-                    SCOrderInspector_model,
-                    "orderRowId"
-                ) || 0
-            )
-        );
-
-        sectionElement.appendChild(
-            createOverviewElement_createKeyValueElement(
-                "Order Date",
-                Colby.dateToLocaleString(
-                    new Date(
-                        CBModel.valueAsInt(
-                            SCOrderInspector_model,
-                            "orderCreated"
-                        ) * 1000
-                    ),
-                    {
-                        compact: true,
-                    }
-                )
-            )
-        );
-
-        sectionElement.appendChild(
-            createOverviewElement_createKeyValueElement(
-                "Subtotal",
-                CBConvert.centsToDollars(
+            let orderDate = Colby.dateToLocaleString(
+                new Date(
                     CBModel.valueAsInt(
                         SCOrderInspector_model,
-                        "orderSubtotalInCents"
-                    ) || 0
-                )
-            )
-        );
-
-        sectionElement.appendChild(
-            createOverviewElement_createKeyValueElement(
-                "Shipping",
-                CBConvert.centsToDollars(
-                    CBModel.valueAsInt(
-                        SCOrderInspector_model,
-                        "orderShippingChargeInCents"
-                    ) || 0
-                )
-            )
-        );
-
-        sectionElement.appendChild(
-            createOverviewElement_createKeyValueElement(
-                "Sales Tax",
-                CBConvert.centsToDollars(
-                    CBModel.valueAsInt(
-                        SCOrderInspector_model,
-                        "orderSalesTaxInCents"
-                    ) || 0
-                )
-            )
-        );
-
-        sectionElement.appendChild(
-            createOverviewElement_createKeyValueElement(
-                "Total",
-                CBConvert.centsToDollars(
-                    CBModel.valueAsInt(
-                        SCOrderInspector_model,
-                        "orderTotalInCents"
-                    ) || 0
-                )
-            )
-        );
-
-        return element;
-
-
-        /* -- closures -- -- -- -- -- */
-
-        /**
-         * @param string key
-         * @param string value
-         *
-         * @return Element
-         */
-        function createOverviewElement_createKeyValueElement(key, value) {
-            let sectionItemElement = CBUI.createElement(
-                "CBUI_container_leftAndRight"
+                        "orderCreated"
+                    ) * 1000
+                ),
+                {
+                    compact: true,
+                }
             );
 
-            let keyElement = CBUI.createElement("CBUI_textColor2");
-            keyElement.textContent = key;
+            let cbmessage = `
 
-            sectionItemElement.appendChild(keyElement);
+                --- CBUI_title1
+                Overview
+                ---
 
-            let valueElement = CBUI.createElement();
-            valueElement.textContent = value;
+                --- CBUI_sectionContainer
+                    --- CBUI_section
+                        --- CBUI_container_leftAndRight
+                            --- CBUI_textColor2
+                                Order Number
+                            ---
+                            --- value
+                                ${orderNumber}
+                            ---
+                        ---
+                        --- CBUI_container_leftAndRight
+                            --- CBUI_textColor2
+                                Order Date
+                            ---
+                            --- value
+                                ${orderDate}
+                            ---
+                        ---
+                    ---
+                ---
 
-            sectionItemElement.appendChild(valueElement);
+            `;
 
-            return sectionItemElement;
+            containerElement.innerHTML = CBMessageMarkup.messageToHTML(
+                cbmessage
+            );
+
+            element.appendChild(
+                containerElement
+            );
         }
-        /* createOverviewElement_createKeyValueElement() */
+
+        {
+            let summaryElement = CBUI.createElement();
+
+            summaryElement.innerHTML = CBMessageMarkup.messageToHTML(
+                SCOrderInspector_orderSummaryCBMessage
+            );
+
+            element.appendChild(
+                summaryElement
+            );
+        }
+
+        return element;
     },
     /* createOverviewElement() */
+
 
 
     /**

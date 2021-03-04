@@ -154,11 +154,18 @@ final class SCOrderInspector {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v662.js', scliburl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.14.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -192,6 +199,12 @@ final class SCOrderInspector {
                 [
                     'SCOrderInspector_emailText',
                     SCOrderConfirmationEmail::messageText($model),
+                ],
+                [
+                    'SCOrderInspector_orderSummaryCBMessage',
+                    SCOrder::toSummaryCBMesssage(
+                        $model
+                    ),
                 ],
             ];
         } else {
