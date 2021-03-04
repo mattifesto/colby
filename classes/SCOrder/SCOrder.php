@@ -988,6 +988,45 @@ final class SCOrder {
             $noteSpecs
         );
 
+        $subtotalInCents = SCOrder::getSubtotalInCents(
+            $spec
+        );
+
+        if (
+            $subtotalInCents === null ||
+            $subtotalInCents < 0
+        ) {
+            throw new CBExceptionWithValue(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The subtotal for this SCOrder spec is either unset or less
+                    than zero.
+
+                EOT),
+                $spec,
+                '3a02bab165d07b85ffa5fbdebf72612dede4a524'
+            );
+        }
+
+        $discountInCents = SCOrder::getDiscountInCents(
+            $spec
+        );
+
+        if (
+            $discountInCents < 0 ||
+            $discountInCents > $subtotalInCents
+        ) {
+            throw new CBExceptionWithValue(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The discount for this SCOrder spec is either less than zero
+                    or greater than the subtotal.
+
+                EOT),
+                $spec,
+                '4879dfa5d33619796aa081a7d41499b729a79318'
+            );
+        }
 
         return (object)[
             'kindClassName' => CBModel::valueToString(
@@ -1096,18 +1135,17 @@ final class SCOrder {
 
             'orderItems' => $cartItemModels,
 
-            'orderSubtotalInCents' => SCOrder::getSubtotalInCents(
-                $spec
-            ),
+            'orderSubtotalInCents' => $subtotalInCents,
+
+            'SCOrder_discountInCents' => $discountInCents,
 
             'orderShippingMethod' => CBModel::valueToString(
                 $spec,
                 'orderShippingMethod'
             ),
 
-            'orderShippingChargeInCents' => CBModel::valueAsInt(
-                $spec,
-                'orderShippingChargeInCents'
+            'orderShippingChargeInCents' => SCOrder::getShippingChargeInCents(
+                $spec
             ),
 
             'orderSalesTaxInCents' => CBModel::valueAsInt(
@@ -1343,19 +1381,6 @@ final class SCOrder {
         stdClass $orderSpec,
         int $subtotalInCents
     ): void {
-        if ($subtotalInCents < 0) {
-            throw new CBExceptionWithValue(
-                CBConvert::stringToCleanLine(<<<EOT
-
-                    The subtotalInCents argument must be greater than or equal
-                    to zero.
-
-                EOT),
-                $subtotalInCents,
-                '3a02bab165d07b85ffa5fbdebf72612dede4a524'
-            );
-        }
-
         $orderSpec->orderSubtotalInCents = $subtotalInCents;
     }
     /* getSubtotalInCents() */
@@ -1389,6 +1414,36 @@ final class SCOrder {
         );
     }
     /* calculateSubtotalInCents() */
+
+
+
+    /**
+     * @param object $orderModel
+     *
+     * @return int
+     */
+    static function
+    calculateTaxableAmountInCents(
+        stdClass $orderModel
+    ): int {
+        $subtotalInCents = SCOrder::getSubtotalInCents(
+            $orderModel
+        ) ?? 0;
+
+        $discountInCents = SCOrder::getDiscountInCents(
+            $orderModel
+        );
+
+        $shippingChargeInCents = SCOrder::getShippingChargeInCents(
+            $orderModel
+        );
+
+        return max(
+            $subtotalInCents - $discountInCents + $shippingChargeInCents,
+            0
+        );
+    }
+    /* calculateTaxableAmountInCents() */
 
 
 
@@ -1583,6 +1638,14 @@ final class SCOrder {
             $subtotalInCents
         );
 
+        $discountInCents = SCOrder::getDiscountInCents(
+            $orderModel
+        );
+
+        $discountInDollars = CBConvert::centsToDollars(
+            $discountInCents
+        );
+
         $orderShippingChargeInCents = $orderModel->orderShippingChargeInCents;
 
         $orderShippingChargeInDollars = CBConvert::centsToDollars(
@@ -1610,6 +1673,16 @@ final class SCOrder {
                 <th style="width: 200px;">Subtotal</th>
                 <td class="total"><?= $orderSubtotalInDollars; ?></td>
             </tr>
+
+            <?php if ($discountInCents > 0) { ?>
+
+                <tr>
+                    <th>Discount</th>
+                    <td class="total"><?= $discountInDollars ?></td>
+                </tr>
+
+            <?php } ?>
+
             <tr>
                 <th>Shipping</th>
                 <td class="total"><?= $orderShippingChargeInDollars; ?></td>
@@ -1805,6 +1878,20 @@ final class SCOrder {
         );
 
 
+        /* promotions */
+
+        $promotionModels = (
+            SCPromotionsTable::fetchCachedActivePromotionModels()
+        );
+
+        foreach ($promotionModels as $promotionModel) {
+            $preparedOrderSpec = SCPromotion::apply(
+                $promotionModel,
+                $preparedOrderSpec
+            );
+        }
+
+
         /* orderShippingChargeInCents */
 
         $preparedOrderSpec->orderShippingChargeInCents = (
@@ -1827,25 +1914,16 @@ final class SCOrder {
 
         /* orderTotalInCents */
 
+        $discountInCents = SCOrder::getDiscountInCents(
+            $preparedOrderSpec
+        );
+
         $preparedOrderSpec->orderTotalInCents = (
-            $subtotalInCents +
+            $subtotalInCents -
+            $discountInCents +
             $preparedOrderSpec->orderShippingChargeInCents +
             $preparedOrderSpec->orderSalesTaxInCents
         );
-
-
-        /* promotions */
-
-        $promotionModels = (
-            SCPromotionsTable::fetchCachedActivePromotionModels()
-        );
-
-        foreach ($promotionModels as $promotionModel) {
-            $preparedOrderSpec = SCPromotion::apply(
-                $promotionModel,
-                $preparedOrderSpec
-            );
-        }
 
 
         /* done */
