@@ -1,0 +1,129 @@
+SCOrder is a model class. An SCOrder model represents a single order made on
+the website.
+
+An SCOrder is prepared right before payment is made. It records certain
+financial amounts for historical purposes that can't be recalculated later.
+Examples are the subtotal, discount, shipping, sales tax, etc. Once the
+order is complete, all numbers are final and will not be recalculated, or at
+least they can't be recalculated using the original method.
+
+An order is adjusted in some ways over time to add notes to the order, set the
+payment capture amount, whether the order is archived, and maybe eventually
+support manual adjustments to items and prices.
+
+
+--- h2
+Order Summary
+---
+
+subtotal - discount + shipping + sales tax = total
+
+--- h2
+Accessors
+---
+
+--- dl
+
+--- dt
+getDiscountInCents()
+---
+
+This accessor will return 0 if a discount has not been set.
+
+This is the single place in SCOrder for an entire order discount. As Colby moves
+forward multiple discounts may be supported.
+
+
+--- dt
+setDiscountInCents()
+---
+
+This accessor sets the discount with little validation. When an order is built
+the discount will be confirmed to be greater than or equal to 0 and less than
+the order subtotal.
+
+
+--- dt
+getSubtotalInCents()
+---
+
+If the order subtotal has been set, this function will return an integer greater
+than or equal to zero; if not, null is returned.
+
+The value of this property is currently defined as the sum of the subtotals of
+all of the cart items in the order. This property will reflect individual cart
+item discounts but will not reflect any whole order discounts.
+
+It's debatable whether this is the correct value for a subtotal but this value
+is used for historical purposes.
+
+
+--- dt
+setSubtotalInCents()
+---
+
+The (subtotalInCents (code)) argument value must be greater than or equal to
+zero.
+
+This property is meant to be set only by internal order processes so setting it
+will either have no effect or be destructive.
+
+
+--- dt
+getTaxableAmountInCents()
+---
+This returns the amount that should be the basis for sales tax. This is:
+
+subtotal
+- discount
++ shipping charge
+
+---
+
+
+
+
+--- h2
+Functions
+---
+
+--- dl
+
+--- dt
+calculateSubtotalInCents()
+---
+This calls SCCartItem::getSubtotalInCents() on all the items in the orderItems
+array and returns the sum of these values.
+
+---
+
+
+
+
+
+
+--- h2
+Model Properties
+---
+
+--- dl
+
+--- dt
+orderItems
+---
+This property holds an array of SCCartItem models.
+
+--- dt
+orderSubtotalInCents
+---
+This is set to the value of SCOrder::calculateSubtotalInCents().
+
+
+
+--- dt
+SCOrder_discountInCents
+---
+This is an amount that will be subtracted from the orderSubtotalInCents if a
+promotion has determined that a discount is appropriate.
+
+---
