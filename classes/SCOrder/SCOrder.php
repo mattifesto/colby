@@ -212,7 +212,10 @@ final class SCOrder {
      *
      * @return object
      */
-    static function CBAjax_charge(stdClass $args): stdClass {
+    static function
+    CBAjax_charge(
+        stdClass $args
+    ): stdClass {
         $orderID = CBModel::valueAsID(
             $args,
             'orderID'
@@ -225,7 +228,9 @@ final class SCOrder {
 
         $response = (object)[];
 
-        $model = CBModels::fetchModelByIDNullable($orderID);
+        $model = CBModels::fetchModelByCBID(
+            $orderID
+        );
 
         if ($model === null) {
             throw new CBExceptionWithValue(
@@ -779,7 +784,10 @@ final class SCOrder {
     /**
      * @return object
      */
-    static function CBAjax_payWithNet30(stdClass $args): stdClass {
+    static function
+    CBAjax_payWithNet30(
+        stdClass $args
+    ): stdClass {
         $orderID = CBModel::valueAsCBID(
             $args,
             'orderID'
@@ -793,7 +801,9 @@ final class SCOrder {
             );
         }
 
-        $model = CBModels::fetchModelByIDNullable($orderID);
+        $model = CBModels::fetchModelByCBID(
+            $orderID
+        );
 
         if (empty($model)) {
             throw new CBException(
@@ -830,17 +840,30 @@ final class SCOrder {
             );
         }
 
-        $spec = CBModels::fetchSpecByIDNullable($orderID);
+        $spec = CBModels::fetchSpecByID(
+            $orderID
+        );
+
+
+        /**
+         * @TODO 2021_02_27
+         *
+         *      I'm pretty sure using subtotal here is wrong but I'm not sure of
+         *      the correct amount. I think there may be the idea that wholesale
+         *      buyers have to pay for shipping immediately. But this still
+         *      doesn't take into account any order discount.
+         */
+
+        $subtotalInCents = SCOrder::getSubtotalInCents(
+            $model
+        );
 
         CBModel::merge(
             $spec,
             (object)[
                 'orderPaymentMethod' => 'Net30',
                 'orderPaymentAuthorized' => time(),
-                'orderPaymentAuthorizedAmountInCents' => CBModel::valueAsInt(
-                    $model,
-                    'orderSubtotalInCents'
-                ),
+                'orderPaymentAuthorizedAmountInCents' => $subtotalInCents,
             ]
         );
 
