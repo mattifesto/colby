@@ -177,35 +177,74 @@ class SCOrderConfirmationEmail {
 
             <?php
 
-            $orderSubtotalInDollars = CBConvert::centsToDollars(
-                CBModel::valueAsInt($model, 'orderSubtotalInCents')
+            $subtotalInCents = SCOrder::getSubtotalInCents(
+                $model
             );
 
+            $orderSubtotalInDollars = CBConvert::centsToDollars(
+                $subtotalInCents
+            );
+
+            $discountInCents = SCOrder::getDiscountInCents(
+                $model
+            );
+
+            $discountCBMessage = '';
+
+            if ($discountInCents > 0) {
+                $discountInDollars = CBConvert::centsToDollars(
+                    $discountInCents
+                );
+
+                $adjustedSubtotalInCents = $subtotalInCents - $discountInCents;
+
+                $adjustedSubtotalInDollars = CBConvert::centsToDollars(
+                    $adjustedSubtotalInCents
+                );
+
+                $discountCBMessage = <<<EOT
+                    Discount: - \${$discountInDollars}
+                    ((br))
+                    (Adjusted Subtotal (b)): \${$adjustedSubtotalInDollars}
+                    ((br))
+                EOT;
+            }
+
             $orderShippingChargeInDollars = CBConvert::centsToDollars(
-                CBModel::valueAsInt($model, 'orderShippingChargeInCents')
+                SCOrder::getShippingChargeInCents(
+                    $model
+                )
             );
 
             $orderSalesTaxInDollars = CBConvert::centsToDollars(
-                CBModel::valueAsInt($model, 'orderSalesTaxInCents')
+                SCOrder::getSalesTaxInCents(
+                    $model
+                )
             );
 
             $orderTotalInDollars = CBConvert::centsToDollars(
-                CBModel::valueAsInt($model, 'orderTotalInCents')
+                SCOrder::getTotalInCents(
+                    $model
+                )
             );
 
-            $message = <<<EOT
+            $cbmessage = <<<EOT
 
-                (Order Subtotal (b)): \${$orderSubtotalInDollars}
+                (Order Summary (b))
+
+                (Subtotal (b)): \${$orderSubtotalInDollars}
+                ((br)) {$discountCBMessage}
+                Shipping: + \${$orderShippingChargeInDollars}
                 ((br))
-                (Shipping (b)): \${$orderShippingChargeInDollars}
-                ((br))
-                (Sales Tax (b)): \${$orderSalesTaxInDollars}
+                Sales Tax: + \${$orderSalesTaxInDollars}
                 ((br))
                 (Order Total (b)): \${$orderTotalInDollars}
 
             EOT;
 
-            echo CBMessageMarkup::messageToHTML($message);
+            echo CBMessageMarkup::messageToHTML(
+                $cbmessage
+            );
 
             ?>
 
