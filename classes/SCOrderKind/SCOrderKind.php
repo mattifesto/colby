@@ -410,6 +410,8 @@ final class SCOrderKind {
 
 
     /**
+     * @see documentation
+     *
      * @return [string]
      */
     static function orderToCBMessages(
@@ -439,12 +441,29 @@ final class SCOrderKind {
 
 
     /**
+     * @TODO 2021_02_22
+     *
+     *      Replace this function with a new function named
+     *      calculateSalesTaxInCents() that gets the order kind class name
+     *      from the spec.
+     *
+     *      Actually, I feel like this function should be simpler too. It should
+     *      get the taxable amount instead of the whole order. This function is
+     *      called while we are preparing the order so the order will be in an
+     *      odd state at the time this function is called. It would be best not
+     *      to expect this function to be able to call functions with the order
+     *      during that time. (It needs the address too... hmmm...)
+     *
      * @param string $orderKindClassName
      * @param object $orderSpec
      *
      * @return int
+     *
+     *      This function returns the amount of sales tax that should be charged
+     *      for the order spec given.
      */
-    static function salesTaxInCents(
+    static function
+    salesTaxInCents(
         string $orderKindClassName,
         stdClass $orderSpec
     ): int {

@@ -1,0 +1,12 @@
+--- h2
+Functions
+---
+
+--- dl
+    --- dt
+    orderToCBMessages( $orderModel ): [string]
+    ---
+    This function allows an order kind to provide messages to customers. One
+    example is if an order qualifies for free shipping, the message saying
+    so would be provided by this function.
+---
