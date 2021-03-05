@@ -35,31 +35,18 @@ SCPromotionExecutor {
     ): stdClass {
         $callable = CBModel::getClassFunction(
             $promotionExecutorModel,
-            'SCPromotionExecutor_apply'
+            'CBPromotion_apply' /* @deprecated 2021_03_02 */
         );
 
-        if ($callable === null) {
-            $callable = CBModel::getClassFunction(
+        if ($callable !== null) {
+            $orderSpec = call_user_func(
+                $callable,
                 $promotionExecutorModel,
-                'CBPromotion_apply' /* @deprecated */
+                $orderSpec
             );
         }
 
-        if ($callable === null) {
-            throw new CBExceptionWithValue(
-                CBConvert::stringToCleanLine(<<<EOT
-
-                    The class of this promotion executor model has not
-                    implemented SCPromotionExecutor_apply().
-
-                EOT),
-                $promotionExecutorModel,
-                'd50f0aac4115a42fb43589d045a7a44e79ff0773'
-            );
-        }
-
-        $orderSpec = call_user_func(
-            $callable,
+        $orderSpec = SCPromotionExecutor::applyOrderDiscountPromotion(
             $promotionExecutorModel,
             $orderSpec
         );
@@ -67,5 +54,60 @@ SCPromotionExecutor {
         return $orderSpec;
     }
     /* apply() */
+
+
+
+    /**
+     * @param object $promotionExecutorModel
+     * @param object $orderSpec
+     *
+     * @return object
+     */
+    private static function
+    applyOrderDiscountPromotion(
+        stdClass $originalPromotionExecutorModel,
+        stdClass $originalOrderSpec
+    ): stdClass {
+        $orderSpec = $originalOrderSpec;
+
+        $callable = CBModel::getClassFunction(
+            $originalPromotionExecutorModel,
+            'SCPromotionExecutor_generateOrderDiscountOffer'
+        );
+
+        if ($callable !== null) {
+            $offerSpec = call_user_func(
+                $callable,
+                CBModel::clone($originalPromotionExecutorModel),
+                CBModel::clone($orderSpec)
+            );
+
+            if ($offerSpec !== null) {
+                $offerModel = CBModel::build(
+                    $offerSpec
+                );
+
+                $offerDiscountInCents = (
+                    SCPromotionOffer_CBOrderDiscount::getDiscountInCents(
+                        $offerModel
+                    )
+                );
+
+                $originalOrderDisountInCents = SCOrder::getDiscountInCents(
+                    $originalOrderSpec
+                );
+
+                if ($offerDiscountInCents > $originalOrderDisountInCents) {
+                    SCOrder::setDiscountInCents(
+                        $orderSpec,
+                        $offerDiscountInCents
+                    );
+                }
+            }
+        }
+
+        return $orderSpec;
+    }
+    /* applyOrderDiscountPromotion() */
 
 }
