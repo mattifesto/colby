@@ -215,11 +215,27 @@
 
                 /* order summary */
 
-                element.appendChild(
-                    createOrderSummaryElement(
-                        response.orderSummaryHTML
-                    )
-                );
+                {
+                    let containerElement = CBUI.createElement();
+
+                    let cbmessage = `
+
+                        --- CBUI_title1
+                        Order Summary
+                        ---
+
+                        ${response.SCOrder_create_orderSummaryCBMessage}
+
+                    `;
+
+                    containerElement.innerHTML = CBMessageMarkup.messageToHTML(
+                        cbmessage
+                    );
+
+                    element.appendChild(
+                        containerElement
+                    );
+                }
 
 
                 /* order CBMessages */
@@ -336,44 +352,6 @@
                 return;
             }
             /* createNet30PaymentForm() */
-
-
-
-            /**
-             * @closure in createOrder()
-             *
-             * @return undefined
-             */
-            function createOrderSummaryElement(orderSummaryHTML) {
-                let element = document.createElement("div");
-
-                let titleElement = CBUI.createElement(
-                    "CBUI_title1"
-                );
-
-                titleElement.textContent = "Order Summary";
-
-                element.appendChild(
-                    titleElement
-                );
-
-                let section = CBUISection.create();
-
-                element.appendChild(section.element);
-
-                let sectionItem = document.createElement("div");
-                sectionItem.className = "SCCheckoutView_orderSummary";
-                sectionItem.innerHTML = orderSummaryHTML;
-
-                section.element.appendChild(sectionItem);
-
-                element.appendChild(
-                    CBUI.createHalfSpace()
-                );
-
-                return element;
-            }
-            /* createOrderSummaryElement() */
 
 
 

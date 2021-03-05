@@ -26,8 +26,8 @@ final class SCCheckoutView {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.13.js',
-                scliburl()
+                'v675.14.js',
+                cbsysurl()
             ),
         ];
     }
