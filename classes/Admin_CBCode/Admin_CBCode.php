@@ -1797,6 +1797,22 @@ final class Admin_CBCode {
                 (object)[
                     'cbmessage' => <<<EOT
 
+                        Use SCOrder::toSummaryCBMesssage().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => "SCOrder::createSummaryHTML\(",
+                    'severity' => 5,
+                    'title' => 'SCOrder::createSummaryHTML()',
+
+                    'noticeStartDate' => '2021/03/24',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
+                    'cbmessage' => <<<EOT
+
                         Colby::exceptionStackTrace() includes information that
                         can be provided by CBErrorHandler and CBRequest.
 
