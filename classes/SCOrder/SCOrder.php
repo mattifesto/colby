@@ -730,8 +730,10 @@ final class SCOrder {
 
             $response->orderArchiveId = $orderID;
 
-            $response->orderSummaryHTML = SCOrder::createSummaryHTML(
-                $orderModel
+            $response->SCOrder_create_orderSummaryCBMessage = (
+                SCOrder::toSummaryCBMesssage(
+                    $orderModel
+                )
             );
 
             $response->orderCBMessages = SCOrderKind::orderToCBMessages(
@@ -1673,6 +1675,10 @@ final class SCOrder {
 
 
     /**
+     * @deprecated 2021_03_04
+     *
+     *      Use SCOrder::toSummaryCBMesssage().
+     *
      * @param object $orderModel
      *
      * @return string
@@ -2038,6 +2044,138 @@ final class SCOrder {
         return $orderKindClassName;
     }
     /* prepareOrderKindClassName() */
+
+
+
+    /**
+     * @param object $orderModel
+     *
+     * @return string
+     */
+    static function
+    toSummaryCBMesssage(
+        stdClass $orderModel
+    ): string {
+        $cbmessage = '';
+
+        $subtotalInCents = SCOrder::getSubtotalInCents(
+            $orderModel
+        );
+
+        $subtotalInDollars = CBConvert::centsToDollars(
+            $subtotalInCents
+        );
+
+        $discountInCents = SCOrder::getDiscountInCents(
+            $orderModel
+        );
+
+        $shippingChargeInCents = SCOrder::getShippingChargeInCents(
+            $orderModel
+        );
+
+        $shippingChargeInDollars = CBConvert::centsToDollars(
+            $shippingChargeInCents
+        );
+
+        $salesTaxInCents = SCOrder::getSalesTaxInCents(
+            $orderModel
+        );
+
+        $salesTaxInDollars = CBConvert::centsToDollars(
+            $salesTaxInCents
+        );
+
+        $totalInCents = SCOrder::getTotalInCents(
+            $orderModel
+        );
+
+        $totalInDollars = CBConvert::centsToDollars(
+            $totalInCents
+        );
+
+        $cbmessage .= <<<EOT
+
+            --- CBUI_sectionContainer
+                --- CBUI_section
+                    --- CBUI_container_leftAndRight
+                        --- CBUI_textColor2
+                            Subtotal
+                        ---
+                        --- value
+                            $subtotalInDollars
+                        ---
+                    ---
+
+        EOT;
+
+        if ($discountInCents > 0) {
+            $discountInDollars = CBConvert::centsToDollars(
+                $discountInCents
+            );
+
+            $adjustedSubtotalInCents = $subtotalInCents - $discountInCents;
+
+            $adjustedSubtotalInDollars = CBConvert::centsToDollars(
+                $adjustedSubtotalInCents
+            );
+
+            $cbmessage .= <<<EOT
+
+                --- CBUI_container_leftAndRight
+                    --- CBUI_textColor2
+                        Discount
+                    ---
+                    --- value
+                        - {$discountInDollars}
+                    ---
+                ---
+                --- CBUI_container_leftAndRight
+                    --- CBUI_textColor2
+                        Adjusted Subtotal
+                    ---
+                    --- value
+                        {$adjustedSubtotalInDollars}
+                    ---
+                ---
+
+            EOT;
+        }
+
+        $cbmessage .= <<<EOT
+
+                    --- CBUI_container_leftAndRight
+                        --- CBUI_textColor2
+                            Shipping
+                        ---
+                        --- value
+                            + {$shippingChargeInDollars}
+                        ---
+                    ---
+                    --- CBUI_container_leftAndRight
+                        --- CBUI_textColor2
+                            Sales Tax
+                        ---
+                        --- value
+                            + {$salesTaxInDollars}
+                        ---
+                    ---
+                    --- CBUI_container_leftAndRight
+                        --- CBUI_textColor2
+                            Total
+                        ---
+                        --- value
+                            {$totalInDollars}
+                        ---
+                    ---
+                ---
+            ---
+
+        EOT;
+
+        return $cbmessage;
+    }
+    /* toSummaryCBMesssage() */
 
 
 
