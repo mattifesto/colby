@@ -1892,11 +1892,25 @@ final class SCOrder {
      *      Calculating the order total.
      *
      * @param object $orderSpec
+     * @param array|null $promotionModels
+     *
+     *      If this argument is null, its default value, this function will
+     *      fetch the list of active promotions. If not, this function will use
+     *      the array of promotion models provided.
+     *
+     *      @NOTE 2021_03_06
+     *
+     *          The behavior should probably be changed to always require the
+     *          promotion models to be provided when they are wanted so that the
+     *          function's result is more likely to be completely determined by
+     *          its arguments.
      *
      * @return object
      */
-    static function prepare(
-        stdClass $originalOrderSpec
+    static function
+    prepare(
+        stdClass $originalOrderSpec,
+        ?array $promotionModels = null
     ): stdClass {
         $preparedOrderSpec = CBModel::clone(
             $originalOrderSpec
@@ -1965,9 +1979,11 @@ final class SCOrder {
 
         /* promotions */
 
-        $promotionModels = (
-            SCPromotionsTable::fetchCachedActivePromotionModels()
-        );
+        if ($promotionModels === null) {
+            $promotionModels = (
+                SCPromotionsTable::fetchCachedActivePromotionModels()
+            );
+        }
 
         foreach ($promotionModels as $promotionModel) {
             $preparedOrderSpec = SCPromotion::apply(
