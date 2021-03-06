@@ -36,32 +36,44 @@ final class SCOrder_Tests {
     /**
      * @return object
      */
-    static function CBTest_build(): stdClass {
+    static function
+    CBTest_build(
+    ): stdClass {
         /* -- test -- -- -- -- -- */
 
         $testTitle = 'Two Valid Notes';
         $actualNoteCount = null;
         $expectedNoteCount = 2;
 
-        $orderModel = CBModel::build(
-            (object)[
-                'className' => 'SCOrder',
-                'notes' => [
-                    (object)[
-                        'className' => 'CBNote',
-                        'text' => 'Note 1',
-                        'timestamp' => time(),
-                    ],
-                    (object)[
-                        'className' => 'CBNote',
-                        'text' => 'Note 2',
-                        'timestamp' => time(),
-                    ],
-                ]
-            ]
+        $orderSpec = CBModel::createSpec(
+            'SCOrder'
         );
 
-        $actualNoteCount = count($orderModel->notes);
+        SCOrder::setSubtotalInCents(
+            $orderSpec,
+            100
+        );
+
+        $orderSpec->notes = [
+            (object)[
+                'className' => 'CBNote',
+                'text' => 'Note 1',
+                'timestamp' => time(),
+            ],
+            (object)[
+                'className' => 'CBNote',
+                'text' => 'Note 2',
+                'timestamp' => time(),
+            ],
+        ];
+
+        $orderModel = CBModel::build(
+            $orderSpec
+        );
+
+        $actualNoteCount = count(
+            $orderModel->notes
+        );
 
         if ($actualNoteCount !== $expectedNoteCount) {
             return CBTest::resultMismatchFailure(
