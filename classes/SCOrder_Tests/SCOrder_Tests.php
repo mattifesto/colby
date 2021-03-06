@@ -123,13 +123,18 @@ final class SCOrder_Tests {
     /**
      * @return object
      */
-    static function CBTest_prepare(): stdClass {
+    static function
+    CBTest_prepare(
+    ): stdClass {
         $spec = (object)[
             'className' => 'SCOrder',
             'kindClassName' => 'SCOrder_Tests_OrderKind1',
         ];
 
-        $preparedSpec = SCOrder::prepare($spec);
+        $preparedSpec = SCOrder::prepare(
+            $spec,
+            [] /* promotion models */
+        );
 
 
         /* orderShippingMethod */
