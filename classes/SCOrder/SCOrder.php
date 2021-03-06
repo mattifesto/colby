@@ -574,12 +574,15 @@ final class SCOrder {
 
 
         /**
-         * This function is only called for live orders. For other orders, the
-         * code will set the "isWholesale" property value to whatever the code
-         * wants it to be.
+         * SCOrderKind::liveOrderIsWholesale() is only called for live orders.
+         * For other orders, the code will set the property value to whatever
+         * the code wants it to be.
          */
-        $spec->isWholesale = SCOrderKind::liveOrderIsWholesale(
-            $spec
+        SCOrder::setIsWholesale(
+            $spec,
+            SCOrderKind::liveOrderIsWholesale(
+                $spec
+            )
         );
 
 
@@ -1070,9 +1073,8 @@ final class SCOrder {
                 'orderCreatedYearMonth'
             ),
 
-            'isWholesale' => CBModel::valueToBool(
-                $spec,
-                'isWholesale'
+            'isWholesale' => SCOrder::getIsWholesale(
+                $spec
             ),
 
             'customerHash' => CBModel::valueAsID(
@@ -1321,17 +1323,44 @@ final class SCOrder {
         stdClass $orderSpec,
         int $discountInCents
     ): void {
-        if ($discountInCents < 0) {
-            throw new CBExceptionWithValue(
-                'The discountInCents argument is less than zero.',
-                $discountInCents,
-                'f1d5480e71078985acf7efd3d5c0bd66f4ac4016'
-            );
-        }
-
         $orderSpec->SCOrder_discountInCents = $discountInCents;
     }
     /* setDiscountInCents() */
+
+
+
+    /**
+     * @param object $orderModel
+     *
+     * @return bool
+     */
+    static function
+    getIsWholesale(
+        stdClass $orderModel
+    ): int {
+        return CBModel::valueToBool(
+            $orderModel,
+            'isWholesale'
+        );
+    }
+    /* getIsWholesale() */
+
+
+
+    /**
+     * @param object $orderSpec
+     * @param bool $isWholesale
+     *
+     * @return void
+     */
+    static function
+    setIsWholesale(
+        stdClass $orderSpec,
+        bool $isWholesale
+    ): void {
+        $orderSpec->isWholesale = $isWholesale;
+    }
+    /* setIsWholesale() */
 
 
 
