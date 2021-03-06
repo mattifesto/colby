@@ -39,8 +39,11 @@ final class SCOrderConfirmationEmailTests {
             'kindClassName' => 'SCOrderConfirmationEmailTests_OrderKind1',
         ];
 
+        $promotionModels = [];
+
         $testOrderPreparedSpec = SCOrder::prepare(
-            $testOrderSpec
+            $testOrderSpec,
+            $promotionModels
         );
 
         $testOrderModel = CBModel::build(
