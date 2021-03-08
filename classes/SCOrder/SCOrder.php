@@ -970,7 +970,8 @@ final class SCOrder {
      *
      * @return object
      */
-    static function CBModel_build(
+    static function
+    CBModel_build(
         stdClass $spec
     ): stdClass {
         $cartItemSpecs = CBModel::valueToArray(
@@ -1040,14 +1041,12 @@ final class SCOrder {
         );
 
         if (
-            $discountInCents < 0 ||
-            $discountInCents > $subtotalInCents
+            $discountInCents < 0
         ) {
             throw new CBExceptionWithValue(
                 CBConvert::stringToCleanLine(<<<EOT
 
-                    The discount for this SCOrder spec is either less than zero
-                    or greater than the subtotal.
+                    The discount for this SCOrder spec less than zero.
 
                 EOT),
                 $spec,
@@ -1894,52 +1893,20 @@ final class SCOrder {
 
 
 
+
+
+
+
     /**
-     * This function takes a spec and performs actions on it to make it a valid
-     * SCOrder spec. Unlike build(), which can be called repeatedly, prepare()
-     * should only be called once per spec.
-     *
-     * This function is very similar to the SCCartItem::update() function. It is
-     * under consideration to formalize this pattern and add prepare() and the
-     * CBModel_prepare() interface to the CBModel class.
-     *
-     * The build process is resonsible for validating specs. This function is
-     * not guaranteed to return a valid SCOrder spec.
-     *
-     * This function is responsible for:
-     *
-     *      Updating (preparing) the cart item specs.
-     *
-     *      Calculating the order subtotal.
-     *
-     *      Applying promotions.
-     *
-     *      Calculating the order sales tax.
-     *
-     *      Calculating the order shipping cost.
-     *
-     *      Calculating the order total.
+     * @see documentation
      *
      * @param object $orderSpec
-     * @param array|null $promotionModels
-     *
-     *      If this argument is null, its default value, this function will
-     *      fetch the list of active promotions. If not, this function will use
-     *      the array of promotion models provided.
-     *
-     *      @NOTE 2021_03_06
-     *
-     *          The behavior should probably be changed to always require the
-     *          promotion models to be provided when they are wanted so that the
-     *          function's result is more likely to be completely determined by
-     *          its arguments.
      *
      * @return object
      */
     static function
     prepare(
-        stdClass $originalOrderSpec,
-        ?array $promotionModels = null
+        stdClass $originalOrderSpec
     ): stdClass {
         $preparedOrderSpec = CBModel::clone(
             $originalOrderSpec
@@ -1956,7 +1923,7 @@ final class SCOrder {
         /**
          * @TODO 2020_05_31
          *
-         *      This should use Colby::prepare() on each cart item spec in the
+         *      This should use CBModel::prepare() on each cart item spec in the
          *      future.
          */
 
@@ -2008,11 +1975,9 @@ final class SCOrder {
 
         /* promotions */
 
-        if ($promotionModels === null) {
-            $promotionModels = (
-                SCPromotionsTable::fetchCachedActivePromotionModels()
-            );
-        }
+        $promotionModels = (
+            SCPromotionsTable::fetchCachedActivePromotionModels()
+        );
 
         foreach ($promotionModels as $promotionModel) {
             $preparedOrderSpec = SCPromotion::apply(
@@ -2048,9 +2013,13 @@ final class SCOrder {
             $preparedOrderSpec
         );
 
+        $adjustedSubtotalInCents = max(
+            $subtotalInCents - $discountInCents,
+            0
+        );
+
         $totalInCents = (
-            $subtotalInCents -
-            $discountInCents +
+            $adjustedSubtotalInCents +
             $preparedOrderSpec->orderShippingChargeInCents +
             $preparedOrderSpec->orderSalesTaxInCents
         );
