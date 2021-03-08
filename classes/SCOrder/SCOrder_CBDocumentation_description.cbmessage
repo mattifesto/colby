@@ -88,13 +88,49 @@ Functions
 ---
 
 --- dl
+    --- dt
+    calculateSubtotalInCents()
+    ---
+    This calls SCCartItem::getSubtotalInCents() on all the items in the orderItems
+    array and returns the sum of these values.
 
---- dt
-calculateSubtotalInCents()
----
-This calls SCCartItem::getSubtotalInCents() on all the items in the orderItems
-array and returns the sum of these values.
+    --- dt
+    prepare(
+        object $originalOrderSpec
+    ): object
+    ---
+    This function takes a spec and performs actions on it to make it a valid
+    SCOrder spec. Unlike build(), which can be called repeatedly, prepare()
+    should only be called once per spec.
 
+    This function is very similar to the SCCartItem::update() function. It is
+    under consideration to formalize this pattern and add prepare() and the
+    CBModel_prepare() interface to the CBModel class.
+
+    The build process is resonsible for validating specs. This function is not
+    guaranteed to return a valid SCOrder spec.
+
+    This function is responsible for:
+
+    --- ul
+        Updating (preparing) the cart item specs.
+
+        Calculating the order subtotal.
+
+        Applying promotions.
+
+        Calculating the order sales tax.
+
+        Calculating the order shipping cost.
+
+        Calculating the order total.
+    ---
+
+    This function gets the list of active promotions by calling
+    SCPromotionsTable::fetchCachedActivePromotionModels(). If you want to set
+    specific promotion models call the function
+    SCPromotionsTable::setCachedActivePromotionModels() before calling this
+    function.
 ---
 
 
