@@ -1,6 +1,7 @@
 <?php
 
-final class SCPromotion_Tests {
+final class
+SCPromotion_Tests {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
@@ -28,7 +29,9 @@ final class SCPromotion_Tests {
     /**
      * @return object
      */
-    static function CBTest_general(): stdClass {
+    static function
+    CBTest_general(
+    ): stdClass {
         $promotionCBID = 'd918a66dec8e39311ae5bf496e2c8d74ba8f9353';
 
 
