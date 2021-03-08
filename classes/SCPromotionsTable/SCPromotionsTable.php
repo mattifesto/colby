@@ -100,11 +100,14 @@ final class SCPromotionsTable {
 
 
     /**
+     * This is called from SCPromotion::CBModels_willDelete().
+     *
      * @param CBID $CBID
      *
      * @return void
      */
-    static function deletePromotionByCBID(
+    static function
+    deletePromotionByCBID(
         string $CBID
     ): void {
         $CBIDAsSQL = CBID::toSQL($CBID);
@@ -150,13 +153,13 @@ final class SCPromotionsTable {
 
 
     /**
-     * The array of promotion models is cached the first time this function is
-     * called. There is not currently a function to clear the cache. If a need
-     * exists for such a function add it to this class.
+     * @see documentation
      *
      * @return [object]
      */
-    static function fetchCachedActivePromotionModels(): array {
+    static function
+    fetchCachedActivePromotionModels(
+    ): array {
         $cachedActivePromotionModels = (
             SCPromotionsTable::$cachedActivePromotionModels
         );
@@ -184,11 +187,14 @@ final class SCPromotionsTable {
 
 
     /**
+     * This is called from SCPromotion::CBModels_willSave().
+     *
      * @param object $promotionModel
      *
      * @return void
      */
-    static function insertPromotion(
+    static function
+    insertPromotion(
         stdClass $promotionModel
     ): void {
         $promotionCBID = CBModel::valueAsCBID(
@@ -248,5 +254,24 @@ final class SCPromotionsTable {
         Colby::query($SQL);
     }
     /* insertPromotion() */
+
+
+
+    /**
+     * @see documentation
+     *
+     * @param array|null $activePromotionModels
+     *
+     * @return void
+     */
+    static function
+    setCachedActivePromotionModels(
+        ?array $activePromotionModels
+    ): void {
+        SCPromotionsTable::$cachedActivePromotionModels = (
+            $activePromotionModels
+        );
+    }
+    /* setCachedActivePromotionModels() */
 
 }
