@@ -1,0 +1,23 @@
+--- h2
+Functions
+---
+
+--- dl
+    --- dt
+    fetchCachedActivePromotionModels(): array
+    ---
+    If the cachedActivePromotionModels is set to null, this function will set
+    the cachedActivePromotionModels to an array fetched from the database. If
+    the cachedActivePromotionModels is not set to null it will be returned.
+
+    --- dt
+    setCachedActivePromotionModels(
+        array|null $activePromotionModels
+    ): void
+    ---
+    This function sets cachedActivePromotionModels. Passing null as the
+    activePromotionModels argument effectively unsets the value.
+
+    Usually to get the value code should call the
+    fetchCachedActivePromotionModels() function.
+---
