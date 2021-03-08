@@ -20,6 +20,10 @@ final class SCOrder_Tests {
                 'type' => 'server',
             ],
             (object)[
+                'name' => 'prepare_negativeDiscount',
+                'type' => 'server',
+            ],
+            (object)[
                 'name' => 'prepareOrderKind',
                 'type' => 'server',
             ],
@@ -219,6 +223,55 @@ final class SCOrder_Tests {
         ];
     }
     /* CBTest_prepare() */
+
+
+
+    /**
+     * @return object
+     */
+    static function
+    CBTest_prepare_negativeDiscount(
+    ): stdClass {
+        $orderSpec = CBModel::createSpec(
+            'SCOrder'
+        );
+
+        SCOrder::setDiscountInCents(
+            $orderSpec,
+            -500
+        );
+
+        SCPromotionsTable::setCachedActivePromotionModels(
+            []
+        );
+
+        $preparedOrderSpec = SCOrder::prepare(
+            $orderSpec
+        );
+
+        SCPromotionsTable::setCachedActivePromotionModels(
+            null
+        );
+
+        $preparedDiscountInCents = SCOrder::getDiscountInCents(
+            $preparedOrderSpec
+        );
+
+        $expectedDiscountInCents = -500;
+
+        if ($preparedDiscountInCents !== $expectedDiscountInCents) {
+            return CBTest::resultMismatchFailure(
+                'negative discount',
+                $preparedDiscountInCents,
+                $expectedDiscountInCents
+            );
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_prepare_negativeDiscount() */
 
 
 
