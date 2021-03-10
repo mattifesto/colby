@@ -1,0 +1,18 @@
+--- h2
+JavaScript Functions
+---
+
+--- dl
+    --- dt
+    createDollarsInCentsPropertyEditorElement(
+        object targetObject
+        string targetPropertyName,
+        string title,
+        function changedEventListener
+    ): Element
+    ---
+
+    This function creates an editor for a property that should have an integer
+    value of greater than or equal to zero that representing a dollar amount
+    expressed in cents.
+---
