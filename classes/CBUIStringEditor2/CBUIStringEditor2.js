@@ -13,6 +13,7 @@
 
     window.CBUIStringEditor2 = {
         create,
+        createDollarsInCentsPropertyEditorElement,
         createObjectPropertyEditorElement,
     };
 
@@ -392,6 +393,92 @@
 
     }
     /* create() */
+
+
+
+    /**
+     * @param object targetObject
+     * @param string targetPropertyName
+     * @param string title
+     * @param function changedEventListener
+     *
+     * @return Element
+     */
+    function
+    createDollarsInCentsPropertyEditorElement(
+        targetObject,
+        targetPropertyName,
+        title,
+        changedEventListener
+    ) {
+        let previousPropertyValue = CBModel.valueAsInt(
+            targetObject,
+            targetPropertyName
+        );
+
+        if (
+            previousPropertyValue === undefined ||
+            previousPropertyValue < 0
+        ) {
+            previousPropertyValue = 0;
+        }
+
+        let stringEditor = create();
+
+        stringEditor.CBUIStringEditor2_setTitle(
+            title
+        );
+
+        stringEditor.CBUIStringEditor2_setValue(
+            CBConvert.centsToDollars(
+                previousPropertyValue
+            )
+        );
+
+        let stringEditorElement = stringEditor.CBUIStringEditor2_getElement();
+
+        stringEditor.CBUIStringEditor2_setChangedEventListener(
+            function () {
+                let newPropertyValue = 0;
+                let stringValueIsValid = true;
+
+                let stringValue = (
+                    stringEditor.CBUIStringEditor2_getValue().trim()
+                );
+
+                if (stringValue !== "") {
+                    newPropertyValue = CBConvert.dollarsAsCents(
+                        stringValue
+                    );
+
+                    if (newPropertyValue === undefined) {
+                        stringValueIsValid = false;
+                    }
+
+                }
+
+                if (stringValueIsValid) {
+                    stringEditorElement.classList.remove(
+                        "CBUIStringEditor2_error"
+                    );
+
+                    if (newPropertyValue !== previousPropertyValue) {
+                        previousPropertyValue = newPropertyValue;
+                        targetObject[targetPropertyName] = newPropertyValue;
+
+                        changedEventListener();
+                    }
+                } else {
+                    stringEditorElement.classList.add(
+                        "CBUIStringEditor2_error"
+                    );
+                }
+            }
+        );
+
+        return stringEditorElement;
+    }
+    /* createDollarsInCentsPropertyEditorElement() */
 
 
 

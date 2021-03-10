@@ -48,7 +48,7 @@ final class CBUIStringEditor2 {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.7.js',
+                'v675.14.js',
                 cbsysurl()
             ),
         ];
