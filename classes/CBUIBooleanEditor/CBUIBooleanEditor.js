@@ -4,7 +4,7 @@
 /**
  * @deprecated 2018_03_09
  *
- *      Use CBUI_container_topAndBottom and CBUIBooleanSwitchPart.
+ *      Use CBUIBooleanEditor2.createObjectPropertyEditorElement()
  */
 var CBUIBooleanEditor = {
 
@@ -32,11 +32,14 @@ var CBUIBooleanEditor = {
     create: function (args) {
         var element = document.createElement("div");
         element.className = "CBUIBooleanEditor";
+
         var label = document.createElement("div");
         label.className = "label";
         label.textContent = args.labelText || "";
+
         var slider = document.createElement("div");
         slider.className = "slider";
+
         var button = document.createElement("div");
         button.className = "button";
 
@@ -44,19 +47,28 @@ var CBUIBooleanEditor = {
         element.appendChild(label);
         element.appendChild(slider);
 
-        var updateInterfaceCallback = CBUIBooleanEditor.updateInterface.bind(undefined, {
-            propertyName : args.propertyName,
-            sliderElement : slider,
-            spec : args.spec,
-        });
+        var updateInterfaceCallback = CBUIBooleanEditor.updateInterface.bind(
+            undefined,
+            {
+                propertyName : args.propertyName,
+                sliderElement : slider,
+                spec : args.spec,
+            }
+        );
 
-        slider.addEventListener("click", CBUIBooleanEditor.handleSliderClicked.bind(undefined, {
-            propertyName : args.propertyName,
-            spec : args.spec,
-            specChangedCallback : args.specChangedCallback,
-            updateInterfaceCallback : updateInterfaceCallback,
-            valueShouldChangeCallback : args.valueShouldChangeCallback,
-        }));
+        slider.addEventListener(
+            "click",
+            CBUIBooleanEditor.handleSliderClicked.bind(
+                undefined,
+                {
+                    propertyName : args.propertyName,
+                    spec : args.spec,
+                    specChangedCallback : args.specChangedCallback,
+                    updateInterfaceCallback : updateInterfaceCallback,
+                    valueShouldChangeCallback : args.valueShouldChangeCallback,
+                }
+            )
+        );
 
         updateInterfaceCallback();
 
@@ -64,6 +76,9 @@ var CBUIBooleanEditor = {
             element : element,
         };
     },
+    /* create() */
+
+
 
     /**
      * @param string args.propertyName
@@ -94,6 +109,9 @@ var CBUIBooleanEditor = {
         args.specChangedCallback();
         args.updateInterfaceCallback();
     },
+    /* handleSliderClicked() */
+
+
 
     /**
      * @param string args.propertyName
@@ -111,4 +129,6 @@ var CBUIBooleanEditor = {
             args.sliderElement.classList.remove("true");
         }
     },
+    /* updateInterface() */
+
 };

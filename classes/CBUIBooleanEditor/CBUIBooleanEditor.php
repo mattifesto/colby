@@ -1,7 +1,9 @@
 <?php
 
 /**
- * @deprecated 2018_03_09 use CBUIStringsPart and CBUIBooleanSwitchPart
+ * @deprecated 2018_03_09
+ *
+ *      Use CBUIBooleanEditor2
  */
 final class CBUIBooleanEditor {
 
@@ -16,15 +18,24 @@ final class CBUIBooleanEditor {
     /* CBHTMLOutput_CSSURLs() */
 
 
+
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v485.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.14.js',
+                cbsysurl()
+            ),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
+
 
     /**
      * @return [string]
@@ -34,5 +45,6 @@ final class CBUIBooleanEditor {
             'CBUI',
         ];
     }
+
 }
 /* CBUIBooleanEditor */
