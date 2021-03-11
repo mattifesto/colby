@@ -1336,7 +1336,7 @@ final class SCOrder {
     static function
     getIsWholesale(
         stdClass $orderModel
-    ): int {
+    ): bool {
         return CBModel::valueToBool(
             $orderModel,
             'isWholesale'
