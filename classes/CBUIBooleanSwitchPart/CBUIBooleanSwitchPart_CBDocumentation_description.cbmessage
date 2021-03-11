@@ -1,0 +1,4 @@
+This class renders the switch part of a boolean editor. It needs to be replaced
+with CBUIBooleanSwitchPart2, matching the style of CBUIStringEditor2, because
+its API does not use unique words as function names so individual functions are
+nearly impossible to deprecate.
