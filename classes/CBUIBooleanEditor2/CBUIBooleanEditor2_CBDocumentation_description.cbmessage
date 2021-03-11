@@ -1,0 +1,25 @@
+This class was created on March 11, 2020 to match the style of CBUIStringEditor2
+and provide an updated version of CBUIBooleanEditor.
+
+It currently does not have a create() function, but that will be added
+eventually.
+
+--- h2
+JavaScript Functions
+---
+
+--- dl
+
+    --- dt
+    createObjectPropertyEditorElement(
+        object targetObject,
+        string targetPropertyName,
+        string title,
+        function changedEventListener
+    ): Element
+    ---
+
+    This function is a quick way to create a boolean property editor element for
+    an object property.
+
+---
