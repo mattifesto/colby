@@ -847,18 +847,8 @@ final class SCOrder {
             $orderID
         );
 
-
-        /**
-         * @TODO 2021_02_27
-         *
-         *      I'm pretty sure using subtotal here is wrong but I'm not sure of
-         *      the correct amount. I think there may be the idea that wholesale
-         *      buyers have to pay for shipping immediately. But this still
-         *      doesn't take into account any order discount.
-         */
-
-        $subtotalInCents = SCOrder::getSubtotalInCents(
-            $model
+        $orderTotalInCents = SCOrder::getTotalInCents(
+            $model,
         );
 
         CBModel::merge(
@@ -866,7 +856,7 @@ final class SCOrder {
             (object)[
                 'orderPaymentMethod' => 'Net30',
                 'orderPaymentAuthorized' => time(),
-                'orderPaymentAuthorizedAmountInCents' => $subtotalInCents,
+                'orderPaymentAuthorizedAmountInCents' => $orderTotalInCents,
             ]
         );
 
