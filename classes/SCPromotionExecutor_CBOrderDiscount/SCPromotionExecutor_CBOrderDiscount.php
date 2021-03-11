@@ -105,13 +105,37 @@ SCPromotionExecutor_CBOrderDiscount {
     SCPromotionExecutor_generateOrderDiscountOffer(
         stdClass $promotionExecutorModel,
         stdClass $orderSpec
-    ): stdClass {
-        $offerSpec = CBModel::createSpec(
-            'SCPromotionOffer_CBOrderDiscount'
+    ): ?stdClass {
+        $promotionIsForWholesaleOrders = (
+            SCPromotionExecutor_CBOrderDiscount::getIsWholesale(
+                $promotionExecutorModel
+            )
+        );
+
+        $orderIsWholesale = SCOrder::getIsWholesale(
+            $orderSpec
+        );
+
+        if ($promotionIsForWholesaleOrders !== $orderIsWholesale) {
+            return null;
+        }
+
+        $promotionMinimumSubtotalInCents = (
+            SCPromotionExecutor_CBOrderDiscount::getMinimumSubtotalInCents(
+                $promotionExecutorModel
+            )
         );
 
         $orderSubtotalInCents = SCOrder::getSubtotalInCents(
             $orderSpec
+        );
+
+        if ($orderSubtotalInCents < $promotionMinimumSubtotalInCents) {
+            return null;
+        }
+
+        $offerSpec = CBModel::createSpec(
+            'SCPromotionOffer_CBOrderDiscount'
         );
 
         $percentDiscount = (
@@ -147,7 +171,7 @@ SCPromotionExecutor_CBOrderDiscount {
     static function
     getIsWholesale(
         stdClass $promotionExecutorModel
-    ): float {
+    ): bool {
         return CBModel::valueToBool(
             $promotionExecutorModel,
             'SCPromotionExecutor_CBOrderDiscount_isWholesale'
@@ -188,7 +212,7 @@ SCPromotionExecutor_CBOrderDiscount {
     ): int {
         return CBModel::valueAsInt(
             $promotionExecutorModel,
-            'SCPromotionExecutor_CBOrderDiscount_percentDiscount'
+            'SCPromotionExecutor_CBOrderDiscount_minimumSubtotalInCents'
         ) ?? 0;
     }
     /* getMinimumSubtotalInCents() */
