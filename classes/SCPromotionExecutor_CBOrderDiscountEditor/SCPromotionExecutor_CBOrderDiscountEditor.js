@@ -2,6 +2,7 @@
     CBConvert,
     CBModel,
     CBUI,
+    CBUIBooleanEditor2,
     CBUIStringEditor2,
 */
 
@@ -46,6 +47,15 @@
                 spec,
                 "SCPromotionExecutor_CBOrderDiscount_minimumSubtotalInCents",
                 "Minimum Subtotal",
+                specChangedCallback
+            )
+        );
+
+        sectionElement.appendChild(
+            CBUIBooleanEditor2.createObjectPropertyEditorElement(
+                spec,
+                "SCPromotionExecutor_CBOrderDiscount_isWholesale",
+                "Promotion Is For Wholesale Orders",
                 specChangedCallback
             )
         );

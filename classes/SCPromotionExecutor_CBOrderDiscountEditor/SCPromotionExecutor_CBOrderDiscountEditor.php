@@ -35,6 +35,7 @@ SCPromotionExecutor_CBOrderDiscountEditor {
             'CBConvert',
             'CBModel',
             'CBUI',
+            'CBUIBooleanEditor2',
             'CBUIStringEditor2',
         ];
     }
