@@ -88,7 +88,7 @@ SCPromotionExecutor {
                 );
 
                 $offerDiscountInCents = (
-                    SCPromotionOffer_CBOrderDiscount::getDiscountInCents(
+                    SCOrderDiscountOffer::getDiscountInCents(
                         $offerModel
                     )
                 );
