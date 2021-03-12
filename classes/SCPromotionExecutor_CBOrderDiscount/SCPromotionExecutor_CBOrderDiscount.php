@@ -135,7 +135,7 @@ SCPromotionExecutor_CBOrderDiscount {
         }
 
         $offerSpec = CBModel::createSpec(
-            'SCPromotionOffer_CBOrderDiscount'
+            'SCOrderDiscountOffer'
         );
 
         $percentDiscount = (
@@ -148,7 +148,7 @@ SCPromotionExecutor_CBOrderDiscount {
             $orderSubtotalInCents * ($percentDiscount / 100)
         );
 
-        SCPromotionOffer_CBOrderDiscount::setDiscountInCents(
+        SCOrderDiscountOffer::setDiscountInCents(
             $offerSpec,
             $discountInCents
         );
