@@ -1,7 +1,7 @@
 <?php
 
 final class
-SCPromotionOffer_CBOrderDiscount {
+SCOrderDiscountOffer {
 
     /* -- CBModel interfaces -- */
 
@@ -18,14 +18,14 @@ SCPromotionOffer_CBOrderDiscount {
     ): stdClass {
         $offerModel = (object)[];
 
-        SCPromotionOffer::setCBMessage(
+        SCOrderDiscountOffer::setCBMessage(
             $offerModel,
-            SCPromotionOffer::getCBMessage(
+            SCOrderDiscountOffer::getCBMessage(
                 $offerSpec
             )
         );
 
-        $discountInCents = SCPromotionOffer_CBOrderDiscount::getDiscountInCents(
+        $discountInCents = SCOrderDiscountOffer::getDiscountInCents(
             $offerSpec
         );
 
@@ -34,7 +34,7 @@ SCPromotionOffer_CBOrderDiscount {
                 CBConvert::stringToCleanLine(<<<EOT
 
                     The discount in cents on this
-                    SCPromotionOffer_CBOrderDiscount spec is not valid.
+                    SCOrderDiscountOffer spec is not valid.
 
                 EOT),
                 $offerSpec,
@@ -42,7 +42,7 @@ SCPromotionOffer_CBOrderDiscount {
             );
         }
 
-        SCPromotionOffer_CBOrderDiscount::setDiscountInCents(
+        SCOrderDiscountOffer::setDiscountInCents(
             $offerModel,
             $discountInCents
         );
@@ -60,6 +60,41 @@ SCPromotionOffer_CBOrderDiscount {
     /**
      * @param object $offerModel
      *
+     * @return string
+     */
+    static function
+    getCBMessage(
+        stdClass $offerModel
+    ): string {
+        return CBModel::valueToString(
+            $offerModel,
+            'SCOrderDiscountOffer_cbmessage'
+        );
+    }
+    /* getCBMessage() */
+
+
+
+    /**
+     * @param object $offerSpec
+     * @param string $cbmessage
+     *
+     * @return void
+     */
+    static function
+    setCBMessage(
+        stdClass $offerSpec,
+        string $cbmessage
+    ): void {
+        $offerSpec->SCOrderDiscountOffer_cbmessage = $cbmessage;
+    }
+    /* setCBMessage() */
+
+
+
+    /**
+     * @param object $offerModel
+     *
      * @return int
      */
     static function
@@ -68,7 +103,7 @@ SCPromotionOffer_CBOrderDiscount {
     ): int {
         $discountInCents = CBModel::valueAsInt(
             $offerModel,
-            'SCPromotionOffer_CBOrderDiscount_discountInCents'
+            'SCOrderDiscountOffer_discountInCents'
         ) ?? 0;
 
         return max(
@@ -81,8 +116,6 @@ SCPromotionOffer_CBOrderDiscount {
 
 
     /**
-     * @see documentation
-     *
      * @param object $offerSpec
      * @param int $discountInCents
      *
@@ -93,7 +126,7 @@ SCPromotionOffer_CBOrderDiscount {
         stdClass $offerSpec,
         int $discountInCents
     ): void {
-        $offerSpec->SCPromotionOffer_CBOrderDiscount_discountInCents = (
+        $offerSpec->SCOrderDiscountOffer_discountInCents = (
             $discountInCents
         );
     }
