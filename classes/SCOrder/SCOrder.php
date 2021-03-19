@@ -481,30 +481,6 @@ final class SCOrder {
 
         /* SCOrder spec */
 
-        /**
-         * kind class name
-         *
-         * Since this function generates an order spec, it uses the default
-         * order kind class name every time. In the future it is likely that a
-         * spec will be delivered to this function with the 'kindClassName'
-         * property potentially filled in already.
-         */
-
-        $orderKindClassName = CBModel::valueAsName(
-            CBModelCache::fetchModelByID(
-                SCPreferences::ID()
-            ),
-            'defaultOrderKindClassName'
-        );
-
-        if ($orderKindClassName === null) {
-            throw new CBException(
-                'This website has no default order kind class name.',
-                '',
-                '0419febee3e06731f6be19e7917b0bb30e44bbad'
-            );
-        }
-
         /* generate order ID */
 
         $orderID = CBID::generateRandomCBID();
@@ -514,7 +490,6 @@ final class SCOrder {
         $spec = (object)[
             'ID' => $orderID,
             'className' => 'SCOrder',
-            'kindClassName' => $orderKindClassName,
             'orderCreated' => $time,
             'orderCreatedYearMonth' => gmdate('Ym', $time),
 
@@ -560,6 +535,38 @@ final class SCOrder {
                 'special-instructions'
             ),
         ];
+
+
+
+        /**
+         * order kind class name
+         *
+         * Since this function generates an order spec, it uses the default
+         * order kind class name every time. In the future it is likely that a
+         * spec will be delivered to this function with its order kind class
+         * name property alreadt set.
+         */
+
+        $orderKindClassName = CBModel::valueAsName(
+            CBModelCache::fetchModelByID(
+                SCPreferences::ID()
+            ),
+            'defaultOrderKindClassName'
+        );
+
+        if ($orderKindClassName === null) {
+            throw new CBException(
+                'This website has no default order kind class name.',
+                '',
+                '0419febee3e06731f6be19e7917b0bb30e44bbad'
+            );
+        }
+
+
+        SCOrder::setKindClassName(
+            $orderKindClassName
+        );
+
 
 
         /**
@@ -1044,12 +1051,7 @@ final class SCOrder {
             );
         }
 
-        return (object)[
-            'kindClassName' => CBModel::valueToString(
-                $spec,
-                'kindClassName'
-            ),
-
+        $model = (object)[
             'notes' => $noteModels,
 
             'orderCreated' => CBModel::valueAsInt(
@@ -1226,6 +1228,23 @@ final class SCOrder {
                 'orderArchivedByUserCBID'
             ),
         ];
+
+
+        /**
+         * @NOTE 2021_03_19
+         *
+         *      For historical reasons the order kind class name is allowed to
+         *      be unset.
+         */
+        SCOrder::setKindClassName(
+            $model,
+            SCOrder::getKindClassName(
+                $spec
+            )
+        );
+
+
+        return $model;
     }
     /* CBModel_build() */
 
@@ -1350,6 +1369,45 @@ final class SCOrder {
         $orderSpec->isWholesale = $isWholesale;
     }
     /* setIsWholesale() */
+
+
+
+    /**
+     * @see documentation
+     *
+     * @param object $orderModel
+     *
+     * @return string
+     */
+    static function
+    getKindClassName(
+        stdClass $orderModel
+    ): string {
+        return CBModel::valueAsName(
+            $orderModel,
+            'kindClassName'
+        ) ?? '';
+    }
+    /* getKindClassName() */
+
+
+
+    /**
+     * @see documentation
+     *
+     * @param object $orderSpec
+     * @param string $kindClassName
+     *
+     * @return void
+     */
+    static function
+    setKindClassName(
+        stdClass $orderSpec,
+        string $kindClassName
+    ): void {
+        $orderSpec->kindClassName = $kindClassName;
+    }
+    /* setKindClassName() */
 
 
 
@@ -1939,10 +1997,13 @@ final class SCOrder {
         );
 
 
-        /* kindClassName */
+        /* order kind class name */
 
-        $preparedOrderSpec->kindClassName = SCOrder::prepareOrderKindClassName(
-            $preparedOrderSpec
+        SCOrder::setKindClassName(
+            $preparedOrderSpec,
+            SCOrder::prepareOrderKindClassName(
+                $preparedOrderSpec
+            )
         );
 
 
@@ -1952,13 +2013,15 @@ final class SCOrder {
          * @NOTE 2018_12_15
          *
          *      Eventually, if a site allows it, the shipping method may be
-         *      chosen by the user with options specified by the kindClassName
+         *      chosen by the user with options specified by the order kind
          *      class.
          */
 
         $preparedOrderSpec->orderShippingMethod = (
             SCOrderKind::defaultShippingMethod(
-                $preparedOrderSpec->kindClassName
+                SCOrder::getKindClassName(
+                    $preparedOrderSpec
+                )
             )
         );
 
@@ -1981,7 +2044,9 @@ final class SCOrder {
 
         $preparedOrderSpec->orderShippingChargeInCents = (
             SCOrderKind::shippingChargeInCents(
-                $preparedOrderSpec->kindClassName,
+                SCOrder::getKindClassName(
+                    $preparedOrderSpec
+                ),
                 $preparedOrderSpec
             )
         );
@@ -1991,7 +2056,9 @@ final class SCOrder {
 
         $preparedOrderSpec->orderSalesTaxInCents = (
             SCOrderKind::salesTaxInCents(
-                $preparedOrderSpec->kindClassName,
+                SCOrder::getKindClassName(
+                    $preparedOrderSpec
+                ),
                 $preparedOrderSpec
             )
         );
@@ -2037,15 +2104,15 @@ final class SCOrder {
      *
      * @return string
      */
-    private static function prepareOrderKindClassName(
+    private static function
+    prepareOrderKindClassName(
         stdClass $orderSpec
     ): string {
-        $orderKindClassName = CBModel::valueAsName(
-            $orderSpec,
-            'kindClassName'
+        $orderKindClassName = SCOrder::getKindClassName(
+            $orderSpec
         );
 
-        if ($orderKindClassName === null) {
+        if ($orderKindClassName === '') {
             $orderKindClassName = CBModel::valueAsName(
                 CBModelCache::fetchModelByID(
                     SCPreferences::ID()
@@ -2057,9 +2124,9 @@ final class SCOrder {
                 throw new CBExceptionWithValue(
                     CBConvert::stringToCleanLine(<<<EOT
 
-                        The original SCOrder spec has an invalid "kindClassName"
-                        property value and this website has no default order
-                        kind class name.
+                        The original SCOrder spec has an invalid order kind
+                        class name and this website has no default order kind
+                        class name.
 
                     EOT),
                     $orderSpec,
