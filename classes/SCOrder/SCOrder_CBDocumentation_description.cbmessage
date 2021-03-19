@@ -24,59 +24,86 @@ Accessors
 
 --- dl
 
---- dt
-getDiscountInCents()
----
+    --- dt
+    getDiscountInCents()
+    ---
 
-This accessor will return 0 if a discount has not been set.
+    This accessor will return 0 if a discount has not been set.
 
-This is the single place in SCOrder for an entire order discount. As Colby moves
-forward multiple discounts may be supported.
-
-
---- dt
-setDiscountInCents()
----
-
-This accessor sets the discount with little validation. When an order is built
-the discount will be confirmed to be greater than or equal to 0 and less than
-the order subtotal.
+    This is the single place in SCOrder for an entire order discount. As Colby
+    moves forward multiple discounts may be supported.
 
 
---- dt
-getSubtotalInCents()
----
+    --- dt
+    setDiscountInCents()
+    ---
 
-If the order subtotal has been set, this function will return an integer greater
-than or equal to zero; if not, null is returned.
-
-The value of this property is currently defined as the sum of the subtotals of
-all of the cart items in the order. This property will reflect individual cart
-item discounts but will not reflect any whole order discounts.
-
-It's debatable whether this is the correct value for a subtotal but this value
-is used for historical purposes.
+    This accessor sets the discount with little validation. When an order is
+    built the discount will be confirmed to be greater than or equal to 0 and
+    less than the order subtotal.
 
 
---- dt
-setSubtotalInCents()
----
 
-The (subtotalInCents (code)) argument value must be greater than or equal to
-zero.
+    --- dt
+    getKindClassName(
+    ): string|null
+    ---
 
-This property is meant to be set only by internal order processes so setting it
-will either have no effect or be destructive.
+    Returns the order kind class name. If the order kind class name is not set
+    or not a valid Colby name then an empty string will be returned.
+
+    The order kind class implements SCOrderKind interfaces to perform various
+    tasks for an order such as calculating sales tax and shipping costs.
+
+    For historical reasons the order kind class name is allowed to be unset. In
+    the future, the concept may be reimplemented to either remove this property
+    from the SCOrder model or migrate to a different property with more strict
+    rules.
+
+    --- dt
+    setKindClassName(
+        string $kindClassName
+    ): void
+    ---
+
+    Set the order kind class name for the order.
 
 
---- dt
-getTaxableAmountInCents()
----
-This returns the amount that should be the basis for sales tax. This is:
 
-subtotal
-- discount
-+ shipping charge
+    --- dt
+    getSubtotalInCents()
+    ---
+
+    If the order subtotal has been set, this function will return an integer
+    greater than or equal to zero; if not, null is returned.
+
+    The value of this property is currently defined as the sum of the subtotals
+    of all of the cart items in the order. This property will reflect individual
+    cart item discounts but will not reflect any whole order discounts.
+
+    It's debatable whether this is the correct value for a subtotal but this
+    value is used for historical purposes.
+
+
+    --- dt
+    setSubtotalInCents()
+    ---
+
+    The (subtotalInCents (code)) argument value must be greater than or equal to
+    zero.
+
+    This property is meant to be set only by internal order processes so setting
+    it will either have no effect or be destructive.
+
+
+    --- dt
+    getTaxableAmountInCents()
+    ---
+    This returns the amount that should be the basis for sales tax. This is:
+
+    subtotal
+    - discount
+    + shipping charge
 
 ---
 
