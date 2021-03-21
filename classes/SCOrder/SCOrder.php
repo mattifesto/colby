@@ -564,6 +564,7 @@ final class SCOrder {
 
 
         SCOrder::setKindClassName(
+            $spec,
             $orderKindClassName
         );
 
