@@ -236,6 +236,11 @@ final class SCOrder_Tests {
             'SCOrder'
         );
 
+        SCOrder::setKindClassName(
+            $orderSpec,
+            'SCOrder_Tests_OrderKind1'
+        );
+
         SCOrder::setDiscountInCents(
             $orderSpec,
             -500
