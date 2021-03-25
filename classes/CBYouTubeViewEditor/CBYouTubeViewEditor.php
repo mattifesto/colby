@@ -51,6 +51,37 @@ final class CBYouTubeViewEditor {
             $originalURL = "https://www.youtube.com/watch?v={$suggestedValue}";
         }
 
+        $regex = (
+            '%' .
+            '(' .
+                '?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|' .
+                '(?:v|e(?:mbed)?)/|' .
+                '.*[?&]v=)|' .
+                'youtu\.be/' .
+            ')' .
+            '([^"&?/\s]{11})' .
+            '%i'
+        );
+
+        if (
+            preg_match(
+                $regex,
+                $originalURL,
+                $matches
+            )
+        ) {
+            return (object)[
+                'isValid' => true,
+                'videoID' => $matches[1],
+            ];
+        }
+
+        /**
+         * @NOTE 2021_03_25
+         *
+         *      This code is most likely not necessary.
+         */
+
         try {
             $redirectURL = CBCurl::fetchRedirectURL(
                 $originalURL
