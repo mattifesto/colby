@@ -200,12 +200,6 @@ final class SCOrderInspector {
                     'SCOrderInspector_emailText',
                     SCOrderConfirmationEmail::messageText($model),
                 ],
-                [
-                    'SCOrderInspector_orderSummaryCBMessage',
-                    SCOrder::toSummaryCBMesssage(
-                        $model
-                    ),
-                ],
             ];
         } else {
             $variables = [
@@ -237,6 +231,12 @@ final class SCOrderInspector {
                     [
                         'SCOrderInspector_wholesaleCustomerModel',
                         SCOrderInspector::fetchWholesaleCustomerModel(
+                            $model
+                        ),
+                    ],
+                    [
+                        'SCOrderInspector_orderSummaryCBMessage',
+                        SCOrder::toSummaryCBMesssage(
                             $model
                         ),
                     ],
