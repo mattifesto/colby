@@ -100,7 +100,10 @@ CBTCommand_status {
             empty($currentBranch) ||
             empty($currentTrackecBranch)
         ) {
-            echo "current branch or track branch not valid";
+            array_push(
+                $output,
+                '  ** current branch or tracking branch not valid **'
+            );
         } else {
             $range = "{$currentTrackecBranch}..{$currentBranch}";
 
