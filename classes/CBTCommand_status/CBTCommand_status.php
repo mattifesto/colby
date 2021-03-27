@@ -74,6 +74,16 @@ CBTCommand_status {
         );
 
         exec(
+            'git describe',
+            $output
+        );
+
+        array_push(
+            $output,
+            ''
+        );
+
+        exec(
             'git status --porcelain',
             $output
         );
