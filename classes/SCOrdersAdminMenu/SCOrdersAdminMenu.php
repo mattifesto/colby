@@ -62,11 +62,14 @@ final class SCOrdersAdminMenu {
     /**
      * @return [string]
      */
-    static function CBInstall_requiredClassNames(): array {
+    static function
+    CBInstall_requiredClassNames(
+    ): array {
         return [
-            'CBAdminMenu'
+            'CBModelsAdminMenu'
         ];
     }
+    /* CBInstall_requiredClassNames() */
 
 
 
