@@ -1,10 +1,11 @@
 "use strict";
 /* jshint strict: global */
-/* jshint esversion: 6 */
 /* exported CBUINavigationView */
 /* global
+    CBModel,
     CBUI,
 */
+
 
 /**
  * A navigator is a user interface control that navigates between panels of user
@@ -222,6 +223,7 @@ var CBUINavigationView = {
         /* navigate() */
 
 
+
         /**
          * closure
          *
@@ -236,7 +238,9 @@ var CBUINavigationView = {
          *
          * @return undefined
          */
-        function replace(item) {
+        function replace(
+            item
+        ) {
             if (level === undefined) {
                 navigate(item);
 
@@ -270,30 +274,97 @@ var CBUINavigationView = {
 
             window.scrollTo(0, 0);
         }
+        /* replace() */
+
+
 
         /**
+         * @NOTE 2021_03_31
+         *
+         * When CBUINavigationView.navigate() is called, an item is added to the
+         * state.items array and history.pushState() is called with an object
+         * that has a level property that refers to the index of the state.items
+         * array that that current virtual "page" refers to. We use this
+         * strategy to be able to use that back and forward arrows in the
+         * browser. However, if the user presses the back arrow so many times
+         * that they go back to the previous actual page and then press the
+         * forward arrow to come back to the current actual page the state
+         * variable is reset.
+         *
+         * If they press the forward arrow again we will no longer have the
+         * state necessary to render the UI that was once rendered for that
+         * virtual page. When that happens we replace the state for that virtual
+         * page to a state with the level 0 instead of crashing and the state
+         * will start rebuilding itself if they navigate further on the current
+         * actual page again.
+         *
          * @param object state
          *
          * @return undefined
          */
-        function handlePopState(event) {
-            level = event.state.level;
+        function
+        handlePopState(
+            popStateEvent
+        ) {
+            let stateEventLevel = CBModel.valueAsInt(
+                popStateEvent.state,
+                "level"
+            );
 
-            renderLevel(level);
+            let stateItems = CBModel.valueToArray(
+                state,
+                "items"
+            );
+
+            if (stateItems.length < 1) {
+                throw new Error("TODO");
+            }
+
+            if (
+                stateEventLevel === undefined ||
+                stateEventLevel < 0
+            ) {
+                level = 0;
+            } else if (stateEventLevel >= stateItems.length) {
+                level = stateItems.length - 1;
+
+                history.replaceState(
+                    {
+                        level,
+                    },
+                    `has been reset to level ${level}`
+                );
+            } else {
+                level = stateEventLevel;
+            }
+
+            renderLevel(
+                level
+            );
         }
+        /* handlePopState() */
+
+
 
         /**
          * @param int level
          *
          * @return undefined
          */
-        function renderLevel(level) {
+        function renderLevel(
+            level
+        ) {
             let containerElement = state.items[level].containerElement;
 
             element.textContent = null;
             element.appendChild(containerElement);
         }
+        /* renderLevel() */
+
     },
+    /* create() */
+
+
 
     /**
      * @param object item
