@@ -1,13 +1,14 @@
 <?php
 
-final class CBInstall {
+final class
+CBInstall {
 
     /**
      * In theory all databases created should have these setting by default, but
      * most likely they will not because hosted MySQL servers have different
      * defaults for various reasons.
      *
-     * @NOTE 2018.08.07
+     * @NOTE 2018_08_07
      *
      *      This code, in one form or another, has existed in Colby from very
      *      early versions. However, all created tables should explicitly
@@ -16,36 +17,46 @@ final class CBInstall {
      *
      * @return void
      */
-    private static function alterDatabase(): void {
+    private static function
+    alterDatabase(
+    ): void {
         $SQL = <<<EOT
 
             ALTER DATABASE
             DEFAULT CHARSET=utf8mb4
             COLLATE=utf8mb4_unicode_520_ci
 
-EOT;
+        EOT;
 
         Colby::query($SQL);
     }
+    /* alterDatabase() */
+
+
 
     /**
-     * @NOTE 2018.08.07
+     * @NOTE 2021_04_03
      *
      *      This function is currently called from:
      *
-     *          colby/setup/install-database.php
+     *          (
+     *              handle,admin.php ||
+     *              CBAdminPageForUpdate::CBAjax_update()
+     *          ) ->
+     *          CBAdminPageForUpdate::update() ->
+     *          <website|colby>/setup/update.php ->
+     *          CBInstall::install()
      *
-     *      which is included by:
      *
-     *          <website|colby>/setup/update.php
-     *
-     *      The "install-database.php" and "update.php" files are deprecated.
-     *      Implementing CBInstall interfaces is the now one and only way of
-     *      performing installation tasks.
+     *      The "setup/update.php" file is deprecated. Implementing CBInstall
+     *      interfaces is the now one and only way of performing installation
+     *      tasks.
      *
      * @return void
      */
-    static function install(): void {
+    static function
+    install(
+    ): void {
         CBInstall::alterDatabase();
 
         $allClassNames = CBAdmin::fetchClassNames();
@@ -82,28 +93,44 @@ EOT;
         $installableClassNames = array_filter(
             $allClassNames,
             function ($className) {
-                return is_callable("{$className}::CBInstall_install") ||
-                       is_callable("{$className}::CBInstall_requiredClassNames");
+                return (
+                    is_callable("{$className}::CBInstall_install") ||
+                    is_callable("{$className}::CBInstall_requiredClassNames")
+                );
             }
         );
 
-        $installableClassNames = CBRequiredClassNamesResolver::resolveRequiredClassNames(
-            $installableClassNames,
-            ['CBInstall_requiredClassNames']
+        $installableClassNames = (
+            CBRequiredClassNamesResolver::resolveRequiredClassNames(
+                $installableClassNames,
+                [
+                    'CBInstall_requiredClassNames'
+                ]
+            )
         );
 
         /* CBInstall_install */
-        foreach ($installableClassNames as $className) {
-            if (is_callable($function = "{$className}::CBInstall_install")) {
-                $function();
+        foreach (
+            $installableClassNames as $className
+        ) {
+            $functionName = "{$className}::CBInstall_install";
+
+            if (is_callable($functionName)) {
+                $functionName();
             }
         }
 
         /* CBInstall_configure */
-        foreach ($allClassNames as $className) {
-            if (is_callable($function = "{$className}::CBInstall_configure")) {
-                $function();
+        foreach (
+            $allClassNames as $className
+        ) {
+            $functionName = "{$className}::CBInstall_configure";
+
+            if (is_callable($functionName)) {
+                $functionName();
             }
         }
     }
+    /* install() */
+
 }
