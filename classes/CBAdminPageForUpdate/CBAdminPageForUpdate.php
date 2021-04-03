@@ -500,11 +500,21 @@ final class CBAdminPageForUpdate {
     /**
      * @return void
      */
-    static function update(): void {
-        include Colby::findFile('setup/update.php');
-        CBLog::addMessage('System', 5, 'The system was updated.');
+    static function
+    update(
+    ): void {
+        include Colby::findFile(
+            'setup/update.php'
+        );
+
+        CBLog::addMessage(
+            'System',
+            5,
+            'The system was updated.'
+        );
 
         CBAdminPageForUpdate::$installationIsRequired = false;
     }
+    /* update() */
 
 }
