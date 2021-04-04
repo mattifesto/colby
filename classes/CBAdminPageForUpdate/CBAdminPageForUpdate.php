@@ -57,40 +57,12 @@ final class CBAdminPageForUpdate {
     /**
      * @return string
      */
-    static function CBAjax_backupDatabase_getUserGroupClassName(): string {
-        return 'CBDevelopersUserGroup';
-    }
-
-
-
-    /**
-     * @return object
-     */
-    static function CBAjax_createDevelopmentBranch(
-    ): stdClass {
-        return (object)[
-            'succeeded' => 'true',
-            'cbmessage' => <<<EOT
-
-                (2020_10_06 (b))
-
-                This request doesn't currently do anything.
-
-            EOT,
-        ];
-    }
-    /* CBAjax_createDevelopmentBranch() */
-
-
-
-    /**
-     * @return string
-     */
-    static function CBAjax_createDevelopmentBranch_getUserGroupClassName(
+    static function
+    CBAjax_backupDatabase_getUserGroupClassName(
     ): string {
         return 'CBDevelopersUserGroup';
     }
-    /* CBAjax_createDevelopmentBranch_getUserGroupClassName() */
+    /* CBAjax_backupDatabase_getUserGroupClassName() */
 
 
 
@@ -210,7 +182,7 @@ final class CBAdminPageForUpdate {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.12.js',
+                'v675.21.js',
                 cbsysurl()
             ),
         ];

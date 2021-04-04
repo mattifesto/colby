@@ -1,6 +1,3 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 8 */
 /* globals
     CBAjax,
     CBMaintenance,
@@ -12,13 +9,11 @@
     Colby,
 
     CBAdminPageForUpdate_isDevelopmentWebsite,
-
-    CBAdmin_CreateBranchPane,
 */
 
 
-
 (function() {
+    "use strict";
 
     let taskIsRunning = false;
     let outputElement;
@@ -242,10 +237,6 @@
         }
         /* update only */
 
-
-        sectionElement.appendChild(
-            CBAdmin_CreateBranchPane.createElement()
-        );
 
         return elements[0];
     }
@@ -479,93 +470,3 @@
     /* promiseToUpdateSite() */
 
 })();
-
-
-
-/* CBAdmin_CreateBranchPane */
-(function () {
-
-    window.CBAdmin_CreateBranchPane = {
-        createElement,
-    };
-
-
-
-    /**
-     * @return Element
-     */
-    function createElement() {
-        let actionElement = CBUI.createElement(
-            "CBUI_action"
-        );
-
-        actionElement.textContent = "Create Development Branch >";
-
-        actionElement.addEventListener(
-            "click",
-            function () {
-                showPane();
-            }
-        );
-
-        return actionElement;
-    }
-    /* createElement() */
-
-
-
-    /**
-     * @return undefined
-     */
-    function showPane() {
-        let elements = CBUI.createElementTree(
-            "CBAdmin_CreateBranchPane",
-            "CBUI_container1",
-            "CBUI_button1"
-        );
-
-        {
-            let isWorking = false;
-            let buttonElement = elements[2];
-            buttonElement.textContent = "Create Development Branch";
-
-            buttonElement.addEventListener(
-                "click",
-                async function () {
-                    if (isWorking) {
-                        return;
-                    }
-
-                    isWorking = true;
-
-                    try {
-                        let response = await CBAjax.call(
-                            "CBAdminPageForUpdate",
-                            "createDevelopmentBranch"
-                        );
-
-                        CBUIPanel.displayCBMessage(
-                            response.cbmessage
-                        );
-                    } catch (error) {
-                        CBUIPanel.displayAndReportError(
-                            error
-                        );
-                    } finally {
-                        isWorking = false;
-                    }
-                }
-            );
-        }
-
-        CBUINavigationView.navigate(
-            {
-                element: elements[0],
-                title: "Create Development Branch",
-            }
-        );
-    }
-    /* showPane() */
-
-})();
-/* CBAdmin_CreateBranchPane */
