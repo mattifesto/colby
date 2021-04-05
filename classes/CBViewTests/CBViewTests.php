@@ -331,6 +331,8 @@ final class CBViewTests {
         ob_start();
 
         try {
+            CBSlack::disable();
+
             $logEntries = CBLog::buffer(
                 function () {
                     $viewSpec = (object)[];
@@ -370,6 +372,8 @@ final class CBViewTests {
         } catch (Throwable $error) {
             throw $error;
         } finally {
+            CBSlack::enable();
+
             ob_end_clean();
         }
 
