@@ -124,12 +124,13 @@ final class CBGit {
      *
      * @return void
      */
-    static function pull(
+    static function
+    pull(
         array &$output,
         &$exitCode
     ): void {
         CBGit::exec(
-            'git pull',
+            'git pull --ff-only',
             $output,
             $exitCode
         );
