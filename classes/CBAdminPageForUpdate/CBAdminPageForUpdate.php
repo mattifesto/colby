@@ -104,7 +104,9 @@ final class CBAdminPageForUpdate {
     /**
      * @return object
      */
-    static function CBAjax_pullColby(): stdClass {
+    static function
+    CBAjax_pullColby(
+    ): stdClass {
         $originalDirectory = getcwd();
 
         if ($originalDirectory === false) {
@@ -122,15 +124,18 @@ final class CBAdminPageForUpdate {
             '',
         ];
 
-        chdir($colbyDirectory);
+        chdir(
+            $colbyDirectory
+        );
 
-        CBExec::exec(
-            'git pull',
+        CBGit::pull(
             $output,
             $exitCode
         );
 
-        chdir($originalDirectory);
+        chdir(
+            $originalDirectory
+        );
 
         return (object)[
             'output' => implode("\n", $output),
@@ -144,9 +149,12 @@ final class CBAdminPageForUpdate {
     /**
      * @return string
      */
-    static function CBAjax_pullColby_getUserGroupClassName(): string {
+    static function
+    CBAjax_pullColby_getUserGroupClassName(
+    ): string {
         return 'CBDevelopersUserGroup';
     }
+    /* CBAjax_pullColby_getUserGroupClassName() */
 
 
 
