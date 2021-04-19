@@ -1,7 +1,3 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBDatabaseAdmin */
 /* global
     CBUI,
     Colby,
@@ -10,6 +6,7 @@
 */
 
 (function () {
+    "use strict";
 
     Colby.afterDOMContentLoaded(
         afterDOMContentLoaded
@@ -20,7 +17,9 @@
     /**
      * @return undefined
      */
-    function afterDOMContentLoaded() {
+    function
+    afterDOMContentLoaded(
+    ) {
         CBDatabaseAdmin_tableMetadataList.sort(
             function (a, b) {
                 let aval = Number(a.tableSizeInMB);
@@ -76,7 +75,11 @@
                 );
 
                 tableNameElement.textContent = tableMetadata.tableName;
-                tableSizeElement.textContent = `${tableMetadata.tableSizeInMB} MB`;
+
+                tableSizeElement.textContent = (
+                    `${tableMetadata.rowCount} rows, ` +
+                    `${tableMetadata.tableSizeInMB} MB`
+                );
             }
         );
     }

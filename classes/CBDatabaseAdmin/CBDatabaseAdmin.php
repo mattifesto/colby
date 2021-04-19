@@ -42,7 +42,9 @@ final class CBDatabaseAdmin {
     /**
      * @return [[name, value]]
      */
-    static function CBHTMLOutput_JavaScriptVariables(): array {
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array {
         return [
             [
                 'CBDatabaseAdmin_tableMetadataList',
@@ -57,11 +59,18 @@ final class CBDatabaseAdmin {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v631.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.23.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -119,6 +128,12 @@ final class CBDatabaseAdmin {
 
     /**
      * @return [object]
+     *
+     *      {
+     *          table_name: string
+     *          tableSizeInMB: number
+     *          rowCount: int
+     *      }
      */
     private static function fetchTableMetadataList(): array {
         $SQL = <<<EOT
@@ -133,7 +148,26 @@ final class CBDatabaseAdmin {
 
         EOT;
 
-        return CBDB::SQLToObjects($SQL);
+        $metadataForAllTables = CBDB::SQLToObjects(
+            $SQL
+        );
+
+        foreach ($metadataForAllTables as $metadataForOneTable) {
+            $SQL = <<<EOT
+
+                SELECT
+                    COUNT(*)
+                FROM
+                    {$metadataForOneTable->tableName}
+
+            EOT;
+
+            $metadataForOneTable->rowCount = CBDB::SQLToValue2(
+                $SQL
+            );
+        }
+
+        return $metadataForAllTables;
     }
     /* fetchTableMetadataList() */
 
