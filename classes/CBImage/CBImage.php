@@ -285,20 +285,35 @@ final class CBImage {
      * width and height for images that are rotated via the Orientation EXIF
      * property.
      *
-     * @return [int => mixed]
+     * @return [int => mixed]|false
      */
-    static function getimagesize($filepath) {
-        $data = getimagesize($filepath);
+    static function
+    getimagesize(
+        string $filepath
+    ) {
+        $data = getimagesize(
+            $filepath
+        );
+
+        if (!is_array($data)) {
+            return false;
+        }
 
         if ($data[2] == IMG_JPEG) {
-            $exif = CBImage::exif_read_data($filepath);
+            $exif = CBImage::exif_read_data(
+                $filepath
+            );
 
-            $orientation =
-            empty($exif['Orientation']) ?
-            1 :
-            $exif['Orientation'];
+            $orientation = (
+                empty($exif['Orientation']) ?
+                1 :
+                $exif['Orientation']
+            );
 
-            if ($orientation == 6 || $orientation == 9) {
+            if (
+                $orientation == 6 ||
+                $orientation == 9
+            ) {
                 $width = $data[0];      // store width
                 $data[0] = $data[1];    // set width to height
                 $data[1] = $width;      // set height to width
