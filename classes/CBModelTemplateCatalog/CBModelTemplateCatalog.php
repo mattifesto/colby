@@ -8,6 +8,8 @@ final class CBModelTemplateCatalog {
      */
     static $testID = null;
 
+
+
     /**
      * @return void
      */
@@ -22,6 +24,7 @@ final class CBModelTemplateCatalog {
     }
 
 
+
     /**
      * @return [string]
      */
@@ -32,12 +35,15 @@ final class CBModelTemplateCatalog {
     }
 
 
+
     /**
      * @param object $spec
      *
      * @return object
      */
-    static function CBModel_build(stdClass $spec): stdClass {
+    static function CBModel_build(
+        stdClass $spec
+    ): stdClass {
         return (object)[
             'livePageTemplateClassName' => CBModel::valueToString(
                 $spec,
@@ -50,6 +56,12 @@ final class CBModelTemplateCatalog {
             ),
         ];
     }
+    /* CBModel_build() */
+
+
+
+    /* -- functions -- */
+
 
 
     /**
@@ -69,7 +81,10 @@ final class CBModelTemplateCatalog {
      *      page on this site. The spec will be merged with the updates provided
      *      before being returned.
      */
-    static function fetchLivePageTemplate(?stdClass $updates = null): stdClass {
+    static function
+    fetchLivePageTemplate(
+        ?stdClass $updates = null
+    ): stdClass {
         $model = CBModels::fetchModelByID(
             CBModelTemplateCatalog::ID()
         );
@@ -86,6 +101,7 @@ final class CBModelTemplateCatalog {
         } else {
             $spec =  (object)[
                 'className' => 'CBViewPage',
+                'classNameForSettings' => 'CBPageSettingsForResponsivePages',
             ];
         }
 
@@ -98,10 +114,12 @@ final class CBModelTemplateCatalog {
     /* fetchLivePageTemplate() */
 
 
+
     /**
      * @return [string]
      */
-    static function fetchTemplateClassNamesByTargetClassName(
+    static function
+    fetchTemplateClassNamesByTargetClassName(
         string $targetClassName
     ): array {
         $model = CBModels::fetchModelByID(
@@ -113,6 +131,8 @@ final class CBModelTemplateCatalog {
             "templates.{$targetClassName}"
         );
     }
+    /* fetchTemplateClassNamesByTargetClassName() */
+
 
 
     /**
@@ -124,6 +144,7 @@ final class CBModelTemplateCatalog {
             'a50a379457147244325e3c512dadd5fac26daf11'
         );
     }
+
 
 
     /**
