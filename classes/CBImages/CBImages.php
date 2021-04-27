@@ -456,11 +456,19 @@ class CBImages {
      *          width: int
      *      }
      */
-    private static function uploadImageWithName(string $name): stdClass {
-        CBImages::verifyUploadedFile($name);
+    private static function
+    uploadImageWithName(
+        string $name
+    ): stdClass {
+        CBImages::verifyUploadedFile(
+            $name
+        );
 
         $temporaryFilepath = $_FILES[$name]['tmp_name'];
-        $size = CBImage::getimagesize($temporaryFilepath);
+
+        $size = CBImage::getimagesize(
+            $temporaryFilepath
+        );
 
         if (
             $size === false ||
@@ -479,10 +487,11 @@ class CBImages {
 
         try {
 
-            $timestamp =
-            isset($_POST['timestamp']) ?
-            $_POST['timestamp'] :
-            time();
+            $timestamp = (
+                isset($_POST['timestamp']) ?
+                $_POST['timestamp'] :
+                time()
+            );
 
             $extension = image_type_to_extension(
                 /* type: */ $size[2],
