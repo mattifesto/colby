@@ -70,7 +70,7 @@ final class SCProductEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.7.js',
+                'v675.26.js',
                 cbsysurl()
             ),
         ];
