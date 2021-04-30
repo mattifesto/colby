@@ -409,9 +409,8 @@ final class CBModel {
         stdClass $model,
         string $functionName
     ): ?callable {
-        $className = CBModel::valueToString(
+        $className = CBModel::getClassName(
             $model,
-            'className'
         );
 
         if ($className === '') {
