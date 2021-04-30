@@ -122,7 +122,7 @@ final class CBModelTemplateCatalog {
     fetchTemplateClassNamesByTargetClassName(
         string $targetClassName
     ): array {
-        $model = CBModels::fetchModelByID(
+        $model = CBModels::fetchModelByCBID(
             CBModelTemplateCatalog::ID()
         );
 
