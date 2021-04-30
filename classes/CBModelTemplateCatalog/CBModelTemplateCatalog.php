@@ -85,7 +85,7 @@ final class CBModelTemplateCatalog {
     fetchLivePageTemplate(
         ?stdClass $updates = null
     ): stdClass {
-        $model = CBModels::fetchModelByID(
+        $model = CBModels::fetchModelByCBID(
             CBModelTemplateCatalog::ID()
         );
 
