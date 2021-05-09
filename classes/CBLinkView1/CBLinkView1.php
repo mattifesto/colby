@@ -95,27 +95,33 @@ final class CBLinkView1 {
         $URL = CBModel::value($model, 'URL', '');
 
         switch ($size) {
+
             case 'small':
+
                 $imageURL = CBDataStore::flexpath(
                     $image->ID,
                     "rw480.{$image->extension}",
-                    CBSiteURL
+                    cbsiteurl()
                 );
                 $imageWidth = 240;
                 break;
+
             case 'large':
+
                 $imageURL = CBDataStore::flexpath(
                     $image->ID,
                     "rw960.{$image->extension}",
-                    CBSiteURL
+                    cbsiteurl()
                 );
                 $imageWidth = 480;
                 break;
+
             default:
+
                 $imageURL = CBDataStore::flexpath(
                     $image->ID,
                     "rw640.{$image->extension}",
-                    CBSiteURL
+                    cbsiteurl()
                 );
                 $imageWidth = 320;
                 $size = 'medium';
