@@ -926,39 +926,79 @@ final class Colby {
 
 
 /**
- * NOTE: 2017_03_19
+ * For web scenarios this function returns the "current" root site URL in the
+ * following form:
  *
- *      Any code wanting the site URL should call this function to get it.
- *      Most of this time this function will return the value of the
- *      CBSiteURL constant. However, this constant should never be used
- *      directly. The implementation may change in the future.
+ *      http[s]://some.domain
  *
- *      A constant is currently used because if the user can edit this
- *      property and enters it incorrectly the website will stop working
- *      with very little recourse because the editor will no longer reload.
+ * Whenever code is constructing a URL it should call this function.
  *
- *      As other options become more reliable, or other constants provide
- *      more flexibility, this function's implementation will change.
+ * For sites that support multiple domains by having multiple Apache virtual
+ * hosts this function will return a site URL matching the page currently being
+ * viewed. Stable production websites should set the
+ * CBSettings_redirectToPrimaryDomain constant to a truthy value in
+ * colby-configuration.php which will make this function return a primary domain
+ * site URL in all web scenarios.
+ *
+ * For command line scenarios this function returns an empty string.
+ *
+ * NOTE: 2017_03_19, 2021_05_08
+ *
+ *      CBSiteURL constant (allowed)
+ *
+ *      This function is one of the very few places that uses this constant and
+ *      the uses are not flagged because they are followed by the word "allowed"
+ *      on the same line. This constant should not be used in most other code.
+ *
+ *      A constant is used instead of a user (developer) editable model because
+ *      if a user can edit this property and enters it incorrectly the website
+ *      will stop working with very little recourse because the editor will no
+ *      longer reload.
  *
  * @return string
  *
- *      Returns the site URL with no trailing slash.
+ *      Returns the root site URL with no trailing slash.
  */
-function cbsiteurl() {
+function
+cbsiteurl(
+) {
+    /**
+     * If this function is called from a process initiated from the comman line
+     * interface there is conceptually no site URL so an empty string is
+     * returned.
+     */
     if (php_sapi_name() === 'cli') {
         return '';
-    } else if (defined('CBSiteURL')) {
-        return CBSiteURL;
-    } else if (defined('COLBY_SITE_URL')) { // @deprecated
-        return COLBY_SITE_URL;
-    } else {
-        return (
-            empty($_SERVER['HTTPS']) ?
-            'http://' :
-            'https://'
-        ) . $_SERVER['SERVER_NAME'];
     }
+
+
+    /**
+     * When production sites are in working order and stable they will be set up
+     * to always redirect all traffic to the primary domain. Secondary domains
+     * are used for a production website while the website is moving to another
+     * web server to guarantee developers access to the website on a specific
+     * web server.
+     */
+    if (
+        defined('CBSettings_redirectToPrimaryDomain') &&
+        CBSettings_redirectToPrimaryDomain
+    ) {
+        if (defined('CBSiteURL')) { /* allowed */
+            return CBSiteURL; /* allowed */
+        }
+
+        if (defined('COLBY_SITE_URL')) { // @deprecated
+            return COLBY_SITE_URL;
+        }
+    }
+
+    return (
+        empty($_SERVER['HTTPS']) ?
+        'http://' :
+        'https://'
+    ) . $_SERVER['SERVER_NAME'];
 }
+/* cbsiteurl() */
 
 
 
