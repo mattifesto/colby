@@ -1794,6 +1794,35 @@ final class Admin_CBCode {
 
 
 
+                /**
+                 * @NOTE 2021_05_08
+                 *
+                 *      This code search will eventually be altered to produce
+                 *      errors and after that should be kept as long as the
+                 *      CBSiteURL constant exists.
+                 */
+                (object)[
+                    'args' => (
+                        '--ignore-file=match:colby-configuration.php '
+                    ),
+                    'CBCodeSearch_CBID' => (
+                        '665424a10b299d2668723c528c2d2d9bd53dc152'
+                    ),
+                    'cbmessage' => <<<EOT
+
+                        Use cbsiteurl().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => '\bCBSiteURL\b(?!.*\ballowed\b)',
+                    'severity' => 5,
+                    'title' => 'CBSiteURL',
+
+                    'noticeStartDate' => '2021/05/08',
+                    'noticeVersion' => 675,
+                ],
+
+
                 (object)[
                     'cbmessage' => <<<EOT
 
