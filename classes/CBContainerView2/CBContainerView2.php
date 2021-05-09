@@ -119,19 +119,36 @@ final class CBContainerView2 {
     }
 
 
+
     /* -- CBView interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param model $model
      *
      * @return void
      */
-    static function CBView_render(stdClass $model): void {
-        $CSSClassNames = CBModel::valueToArray($model, 'CSSClassNames');
+    static function
+    CBView_render(
+        stdClass $model
+    ): void {
+        $CSSClassNames = CBModel::valueToArray(
+            $model,
+            'CSSClassNames'
+        );
 
-        array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
+        array_walk(
+            $CSSClassNames,
+            'CBHTMLOutput::requireClassName'
+        );
 
-        $CSSClassNames = cbhtml(implode(' ', $CSSClassNames));
+        $CSSClassNames = cbhtml(
+            implode(
+                ' ',
+                $CSSClassNames
+            )
+        );
 
         if (empty($model->image)) {
             $backgroundImageDeclaration = '';
@@ -142,39 +159,52 @@ final class CBContainerView2 {
                 CBDataStore::flexpath(
                     $image->ID,
                     "original.{$image->extension}",
-                    CBSiteURL
+                    cbsiteurl()
                 )
             );
 
-            $backgroundImageDeclaration =
-            "background-image: url('{$imageURLAsHTML}')";
+            $backgroundImageDeclaration = (
+                "background-image: url('{$imageURLAsHTML}')"
+            );
         }
 
-        $subviews = CBModel::valueToArray($model, 'subviews');
+        $subviews = CBModel::valueToArray(
+            $model,
+            'subviews'
+        );
 
         if (!empty($model->localCSS)) {
             $styleSheet = <<<EOT
 
-/* CBContainerView2 */
+            /* CBContainerView2 */
 
-{$model->localCSS}
+            {$model->localCSS}
 
-EOT;
+            EOT;
 
-            CBHTMLOutput::addCSS($styleSheet);
+            CBHTMLOutput::addCSS(
+                $styleSheet
+            );
         }
 
         ?>
 
-        <div class="CBContainerView2 <?=
-            $CSSClassNames
-        ?>" style="<?=
-            $backgroundImageDeclaration
-        ?>">
-            <?php array_walk($subviews, 'CBView::render') ?>
+        <div
+            class="CBContainerView2 <?= $CSSClassNames ?>"
+            style="<?= $backgroundImageDeclaration ?>"
+        >
+            <?php
+
+            array_walk(
+                $subviews,
+                'CBView::render'
+            )
+
+            ?>
         </div>
 
         <?php
     }
     /* CBView_render() */
+
 }
