@@ -10,6 +10,7 @@
     CBUIExpander,
     Colby,
 
+    Admin_CBCode_CBCodeSearch_CBID,
     Admin_CBCode_searches,
 */
 
@@ -50,9 +51,22 @@
             index += 1
         ) {
             try {
-                let search = Admin_CBCode_searches[index];
+                let codeSearchModel = Admin_CBCode_searches[index];
 
-                await doSearch(search, index);
+                if (
+                    Admin_CBCode_CBCodeSearch_CBID !== "" &&
+                    (
+                        Admin_CBCode_CBCodeSearch_CBID !==
+                        codeSearchModel.CBCodeSearch_CBID
+                    )
+                ) {
+                    continue;
+                }
+
+                await doSearch(
+                    codeSearchModel,
+                    index
+                );
             } catch (error) {
                 CBErrorHandler.displayAndReport(error);
 
@@ -213,9 +227,27 @@
             "command"
         );
 
+        let searchCBID = CBModel.valueAsCBID(
+            search,
+            'CBCodeSearch_CBID'
+        );
+
+        let searchOnlyForThisCodeCBMessage = "";
+
+        if (searchCBID !== undefined) {
+            searchOnlyForThisCodeCBMessage = `
+
+                Search only for this code: (link (a
+                /admin/?c=Admin_CBCode&CBCodeSearch_CBID=${searchCBID}))
+
+            `;
+        }
+
         expander.message = `
 
             ${searchCBMessage}
+
+            ${searchOnlyForThisCodeCBMessage}
 
             (Search Command (b))
 
