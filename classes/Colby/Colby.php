@@ -546,8 +546,12 @@ final class Colby {
      *
      *      <system directory>/function.php has been included
      *                              (<system directory>/init.php)
+     *
+     * @return void
      */
-    static function initialize() {
+    static function
+    initialize(
+    ): void {
 
         /**
          * Library directories are relative paths from the site directory. So
@@ -656,17 +660,26 @@ final class Colby {
          *      during CBLog::addMessage() was reported because the syntax error
          *      was placed before the database constants are set causing the
          *      function to fail writing to the database. This is fine.
-         *
-         * This file defines CBSiteURL.
          */
 
         $filepath = cbsitedir() . '/colby-configuration.php';
 
-        if (file_exists($filepath)) {
-            include_once($filepath);
-            define('CBSiteIsConfigured', true);
+        if (
+            file_exists($filepath)
+        ) {
+            include_once(
+                $filepath
+            );
+
+            define(
+                'CBSiteIsConfigured',
+                true
+            );
         } else {
-            define('CBSiteIsConfigured', false);
+            define(
+                'CBSiteIsConfigured',
+                false
+            );
         }
 
 
@@ -686,8 +699,12 @@ final class Colby {
 
         $filepath = cbsitedir() . '/site-configuration.php';
 
-        if (file_exists($filepath)) {
-            include_once($filepath);
+        if (
+            file_exists($filepath)
+        ) {
+            include_once(
+                $filepath
+            );
         }
     }
     /* initialize() */
