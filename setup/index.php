@@ -637,7 +637,7 @@ class ColbyInstaller {
         <?php
 
         define(
-            'CBSiteURL',
+            'CBSiteURL', /* allowed */
             'https://{$siteDomainName}'
         );
 
