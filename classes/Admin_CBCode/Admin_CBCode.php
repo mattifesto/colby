@@ -122,14 +122,23 @@ final class Admin_CBCode {
     /**
      * @return [[<name>, <value>]]
      */
-    static function CBHTMLOutput_JavaScriptVariables() {
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array {
         return [
             [
                 'Admin_CBCode_searches',
                 Admin_CBCode::searches(),
             ],
+            [
+                'Admin_CBCode_CBCodeSearch_CBID',
+                cb_query_string_value(
+                    'CBCodeSearch_CBID'
+                ),
+            ],
         ];
     }
+    /* CBHTMLOutput_JavaScriptVariables() */
 
 
 
