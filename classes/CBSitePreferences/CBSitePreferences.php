@@ -773,12 +773,20 @@ final class CBSitePreferences {
     }
 
 
+
     /**
      * @return string
      */
-    static function siteDomainName() {
-        return explode('//', CBSiteURL)[1];
+    static function
+    siteDomainName(
+    ): string {
+        return explode(
+            '//',
+            cbsiteurl()
+        )[1];
     }
+    /* siteDomainName() */
+
 
 
     /**
