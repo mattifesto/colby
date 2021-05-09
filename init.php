@@ -35,7 +35,9 @@ error_reporting(E_ALL | E_STRICT);
  *
  * @return string
  */
-function cbsitedir() {
+function
+cbsitedir(
+) {
     static $cbsitedir = null;
 
     if ($cbsitedir === null) {
@@ -44,13 +46,19 @@ function cbsitedir() {
 
     return $cbsitedir;
 }
+/* cbsitedir() */
+
+
 
 /**
  * @return string
  */
-function cbsysdir() {
+function
+cbsysdir(
+) {
     return __DIR__;
 }
+/* cbsysdir() */
 
 
 
