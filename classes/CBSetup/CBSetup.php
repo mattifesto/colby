@@ -200,7 +200,7 @@ final class CBSetup {
         <?php
 
         define(
-            'CBSiteURL',
+            'CBSiteURL', /* allowed */
             'https://{$websiteHostname}'
         );
 
