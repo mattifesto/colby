@@ -1812,6 +1812,7 @@ final class Admin_CBCode {
                  */
                 (object)[
                     'args' => (
+                        '--ignore-file=match:CBConfiguration.php ' .
                         '--ignore-file=match:colby-configuration.php '
                     ),
                     'CBCodeSearch_CBID' => (
