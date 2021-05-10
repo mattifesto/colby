@@ -85,6 +85,8 @@ final class ColbyRequest {
      * Most sites will call this method from /index.php to handle requests in
      * the standard way by doing one of the following:
      *
+     *      Redirect to a URL using the primary domain.
+     *
      *      Handle Ajax request.
      *
      *      Search for the appropriate handler file and load it.
@@ -97,7 +99,15 @@ final class ColbyRequest {
      *
      * @return void
      */
-    static function handleRequest(): void {
+    static function
+    handleRequest(
+    ): void {
+        if (
+            CBConfiguration::secondaryDomainsShouldRedirectToPrimaryDomain()
+        ) {
+            CBRequest::redirectSecondaryDomainsToPrimaryDomain();
+        }
+
         $canonicalEncodedPath = '';
         $countOfStubs = count(ColbyRequest::$decodedStubs);
         $function = null;
