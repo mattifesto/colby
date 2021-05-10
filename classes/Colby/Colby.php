@@ -926,42 +926,28 @@ final class Colby {
 
 
 /**
- * For web scenarios this function returns the "current" root site URL in the
- * following form:
+ * For web scenarios this function returns the root website URL using the same
+ * domain as the current request in the following form:
  *
- *      http[s]://some.domain
+ *      http[s]://<request domain>
  *
- * Whenever code is constructing a URL it should call this function.
+ * Whenever code is constructing a URL for the website it should call this
+ * function.
  *
- * For sites that support multiple domains by having multiple Apache virtual
- * hosts this function will return a site URL matching the page currently being
- * viewed. Stable production websites should set the
- * CBSettings_redirectToPrimaryDomain constant to a truthy value in
- * colby-configuration.php which will make this function return a primary domain
- * site URL in all web scenarios.
+ * @NOTE 2021_05_09
  *
- * For command line scenarios this function returns an empty string.
- *
- * NOTE: 2017_03_19, 2021_05_08
- *
- *      CBSiteURL constant (allowed)
- *
- *      This function is one of the very few places that uses this constant and
- *      the uses are not flagged because they are followed by the word "allowed"
- *      on the same line. This constant should not be used in most other code.
- *
- *      A constant is used instead of a user (developer) editable model because
- *      if a user can edit this property and enters it incorrectly the website
- *      will stop working with very little recourse because the editor will no
- *      longer reload.
+ *      This function underwent some large changes when support for secondary
+ *      domains was added. In some ways that support made this function less
+ *      compelling.
  *
  * @return string
  *
- *      Returns the root site URL with no trailing slash.
+ *      Returns either the root site URL with no trailing slash or an empty
+ *      string.
  */
 function
 cbsiteurl(
-) {
+): string {
     /**
      * If this function is called from a process initiated from the comman line
      * interface there is conceptually no site URL so an empty string is
@@ -969,27 +955,6 @@ cbsiteurl(
      */
     if (php_sapi_name() === 'cli') {
         return '';
-    }
-
-
-    /**
-     * When production sites are in working order and stable they will be set up
-     * to always redirect all traffic to the primary domain. Secondary domains
-     * are used for a production website while the website is moving to another
-     * web server to guarantee developers access to the website on a specific
-     * web server.
-     */
-    if (
-        defined('CBSettings_redirectToPrimaryDomain') &&
-        CBSettings_redirectToPrimaryDomain
-    ) {
-        if (defined('CBSiteURL')) { /* allowed */
-            return CBSiteURL; /* allowed */
-        }
-
-        if (defined('COLBY_SITE_URL')) { // @deprecated
-            return COLBY_SITE_URL;
-        }
     }
 
     return (
