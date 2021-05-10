@@ -69,6 +69,38 @@ final class CBRequest {
         $path = implode('/', $stubs);
         return "/{$path}/";
     }
+    /* decodedPathToCanonicalEncodedPath() */
+
+
+
+    /**
+     * @return void
+     */
+    static function
+    redirectSecondaryDomainsToPrimaryDomain(
+    ): void {
+        $requestDomain = $_SERVER['SERVER_NAME'];
+        $primaryDomain = CBConfiguration::primaryDomain();
+
+        if ($requestDomain !== $primaryDomain) {
+            $primaryDomainURL = (
+                'https://' .
+                $primaryDomain .
+                $_SERVER['REQUEST_URI']
+            );
+
+            header(
+                'Location: ' . $primaryDomainURL,
+                true,
+                301
+            );
+
+            exit;
+        }
+    }
+    /* redirectSecondaryDomainsToPrimaryDomain() */
+
+
 
     /**
      * @return string
