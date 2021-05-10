@@ -1805,6 +1805,25 @@ final class Admin_CBCode {
 
                 (object)[
                     'CBCodeSearch_CBID' => (
+                        '9d6720771e71d4f8c395c74e9b2b03d3232290bb'
+                    ),
+                    'cbmessage' => <<<EOT
+
+                        Use CBDataStore::URLToCBID().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => '\bCBDataStore::URIToID\(',
+                    'severity' => 5,
+                    'title' => 'CBDataStore::URIToID()',
+
+                    'noticeStartDate' => '2021/05/09',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
+                    'CBCodeSearch_CBID' => (
                         '56c8fa978373245e71f9a4e95ee2339cd4317474'
                     ),
                     'cbmessage' => <<<EOT
