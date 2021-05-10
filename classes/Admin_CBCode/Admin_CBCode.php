@@ -1803,6 +1803,25 @@ final class Admin_CBCode {
 
 
 
+                (object)[
+                    'CBCodeSearch_CBID' => (
+                        '065a8c8ae46481530591718981f5b31647feb91b'
+                    ),
+                    'cbmessage' => <<<EOT
+
+                        Use CBConfiguration::primaryDomain().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => '\bCBSitePreferences::siteDomainName\(',
+                    'severity' => 5,
+                    'title' => 'CBSitePreferences::siteDomainName()',
+
+                    'noticeStartDate' => '2021/05/09',
+                    'noticeVersion' => 675,
+                ],
+
+
                 /**
                  * @NOTE 2021_05_08
                  *
