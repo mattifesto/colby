@@ -551,10 +551,11 @@ class CBImages {
      *      If the URL does not represent an image, is not local, or can't be
      *      imported for other reasons then null will be returned.
      */
-    static function URIToCBImage(
+    static function
+    URIToCBImage(
         string $imageURI
     ): ?stdClass {
-        $imageCBID = CBDataStore::URIToID(
+        $imageCBID = CBDataStore::URLToCBID(
             $imageURI
         );
 
