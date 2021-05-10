@@ -1805,6 +1805,26 @@ final class Admin_CBCode {
 
                 (object)[
                     'CBCodeSearch_CBID' => (
+                        '56c8fa978373245e71f9a4e95ee2339cd4317474'
+                    ),
+                    'cbmessage' => <<<EOT
+
+                        Use cbsiteurl() in most cases, and possibly CBSiteURL in
+                        only very specific system approved cases.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => '\bCOLBY_SITE_URL\b',
+                    'severity' => 5,
+                    'title' => 'COLBY_SITE_URL',
+
+                    'noticeStartDate' => '2021/05/09',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
+                    'CBCodeSearch_CBID' => (
                         'e8e21c025f8177c552891a19b001a28b2c2876f0'
                     ),
                     'cbmessage' => <<<EOT
