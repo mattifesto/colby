@@ -246,6 +246,35 @@ final class CBDataStore {
 
 
     /**
+     * This function will return the CBID contained in any string that has a
+     * valid "/data/.../" data store path. This includes URLs and file system
+     * paths.
+     *
+     * @param string $dataStoreURL
+     *
+     * @return CBID|null
+     */
+    static function
+    URLToCBID(
+        string $dataStoreURL
+    ): ?string {
+        $pattern = (
+            '%/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/%'
+        );
+
+        $matchWasFound = preg_match(
+            $pattern,
+            $dataStoreURL,
+            $matches
+        );
+
+        if ($matchWasFound) {
+            return "{$matches[1]}{$matches[2]}{$matches[3]}";
+        }
+
+        return null;
+    }
+    /* URLToCBID() */
 
 
 
