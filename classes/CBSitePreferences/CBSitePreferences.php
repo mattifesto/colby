@@ -780,15 +780,14 @@ final class CBSitePreferences {
 
 
     /**
+     * @deprecated use CBConfiguration::primaryDomain();
+     *
      * @return string
      */
     static function
     siteDomainName(
     ): string {
-        return explode(
-            '//',
-            cbsiteurl()
-        )[1];
+        return CBConfiguration::primaryDomain();
     }
     /* siteDomainName() */
 
