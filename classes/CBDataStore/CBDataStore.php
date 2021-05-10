@@ -234,6 +234,17 @@ final class CBDataStore {
     }
 
     /**
+
+
+
+    /**
+     * @deprecated use CBDataStore::URLToCBID()
+     *
+     *      It is not generally possible to determine if a data store referenced
+     *      by a URL was intended to reference a data store specific to the
+     *      current site. In specific cases where it may be possible be this
+     *      function does not do it properly anyway.
+     *
      * Detects whether the URI represents a local data store and returns the
      * data store ID. The data store does not have to exist for the function to
      * return the ID.
@@ -297,4 +308,5 @@ final class CBDataStore {
         return false;
     }
     /* URIToID() */
+
 }
