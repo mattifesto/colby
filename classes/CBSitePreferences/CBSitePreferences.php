@@ -763,14 +763,19 @@ final class CBSitePreferences {
 
         CBModels::save($spec);
     }
+    /* setFrontPageID() */
+
 
 
     /**
      * @deprecated use cbsitedir()
      */
-    static function siteDirectory() {
+    static function
+    siteDirectory(
+    ) {
         return cbsitedir();
     }
+    /* siteDirectory() */
 
 
 
