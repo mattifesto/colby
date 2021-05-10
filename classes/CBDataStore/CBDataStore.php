@@ -170,6 +170,8 @@ final class CBDataStore {
         return $flexpath;
     }
 
+
+
     /**
      * @deprecated use CBDataStore::create()
      *
@@ -178,6 +180,8 @@ final class CBDataStore {
     static function makeDirectoryForID($ID) {
         CBDataStore::create($ID);
     }
+
+
 
     /**
      * @deprecated use CBDataStore::flexpath()
@@ -201,6 +205,8 @@ final class CBDataStore {
         }
     }
 
+
+
     /**
      * This function takes a URI and converts it to a filepath if the file can
      * be confirmed to exist.
@@ -215,7 +221,10 @@ final class CBDataStore {
      *
      * @return ?string
      */
-    static function URIToFilepath(string $URI): ?string {
+    static function
+    URIToFilepath(
+        string $URI
+    ): ?string {
         $path = parse_url($URI, PHP_URL_PATH);
 
         if (empty($path)) {
@@ -232,6 +241,9 @@ final class CBDataStore {
 
         return null;
     }
+    /* URIToFilepath() */
+
+
 
     /**
 
