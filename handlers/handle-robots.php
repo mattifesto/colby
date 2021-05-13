@@ -7,7 +7,17 @@ Sitemap: <?= cbsiteurl() . '/sitemap.xml' ?>
 
 <?php
 
-if (CBSitePreferences::disallowRobots()) { ?>
+/**
+ * Robots are not allowed if they are disabled in site preferences or if the
+ * request domain is not the primary domain.
+ */
+
+if (
+    CBSitePreferences::disallowRobots() ||
+    CBRequest::requestDomain() !== CBConfiguration::primaryDomain()
+) {
+
+?>
 
 User-agent: *
 Disallow: /
