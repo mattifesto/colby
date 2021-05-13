@@ -11,6 +11,11 @@ CBConfiguration {
          *      other than https is supported, which it isn't, or that one could
          *      specify more than just a domain, which one can't.
          *
+         * @NOTE
+         *
+         *      Use CBRequest::requestDomain() to get the domain used by the
+         *      current request which may be a secondary domain.
+         *
          * @return string
          */
         static function
@@ -18,7 +23,7 @@ CBConfiguration {
         ): string {
             return explode(
                 '//',
-                CBSiteURL 
+                CBSiteURL
             )[1];
         }
         /* primaryDomain() */
