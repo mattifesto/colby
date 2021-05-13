@@ -79,7 +79,7 @@ final class CBRequest {
     static function
     redirectSecondaryDomainsToPrimaryDomain(
     ): void {
-        $requestDomain = $_SERVER['SERVER_NAME'];
+        $requestDomain = CBRequest::requestDomain();
         $primaryDomain = CBConfiguration::primaryDomain();
 
         if ($requestDomain !== $primaryDomain) {
@@ -99,6 +99,26 @@ final class CBRequest {
         }
     }
     /* redirectSecondaryDomainsToPrimaryDomain() */
+
+
+
+    /**
+     * Returns the domain used by the current request which may be the primary
+     * domain or a secondary domain.
+     *
+     * @NOTE
+     *
+     *      Use CBConfiguration::primaryDomain() to get the primary domain which
+     *      may or may not match the request domain.
+     *
+     * @return string
+     */
+    static function
+    requestDomain (
+    ): string {
+        return $_SERVER['SERVER_NAME'];
+    }
+    /* requestDomain() */
 
 
 
