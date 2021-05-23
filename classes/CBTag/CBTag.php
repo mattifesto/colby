@@ -14,7 +14,12 @@ final class CBTag {
      *
      * @return void
      */
-    static function add(string $ID, string $associationKey, array $tags): void {
+    static function
+    add(
+        string $ID,
+        string $associationKey,
+        array $tags
+    ): void {
         foreach ($tags as $tag) {
             CBModelAssociations::add(
                 $ID,
@@ -23,13 +28,19 @@ final class CBTag {
             );
         }
     }
+    /* add() */
+
+
 
     /**
      * @param object $spec
      *
      * @return ?object
      */
-    static function CBModel_build(stdClass $spec): ?stdClass {
+    static function
+    CBModel_build(
+        stdClass $spec
+    ): ?stdClass {
         $tag = CBModel::valueToString($spec, 'title');
         $ID = CBModel::valueAsID($spec, 'ID');
 
@@ -44,7 +55,7 @@ final class CBTag {
                 --- pre\n{$specAsJSON}
                 ---
 
-EOT;
+            EOT;
 
             CBLog::log((object)[
                 'message' => $message,
@@ -61,13 +72,19 @@ EOT;
             'title' => $tag,
         ];
     }
+    /* CBModel_build() */
+
+
 
     /**
      * @param [string]
      *
      * @return void
      */
-    static function create(array $tags): void {
+    static function
+    create(
+        array $tags
+    ): void {
         foreach ($tags as $tag) {
             CBModelUpdater::update(
                 (object)[
@@ -78,6 +95,9 @@ EOT;
             );
         }
     }
+    /* create() */
+
+
 
     /**
      * @param ID $ID
@@ -86,7 +106,12 @@ EOT;
      *
      * @return void
      */
-    static function delete(string $ID, string $associationKey, array $tags): void {
+    static function
+    delete(
+        string $ID,
+        string $associationKey,
+        array $tags
+    ): void {
         foreach ($tags as $tag) {
             CBModelAssociations::delete(
                 $ID,
@@ -95,6 +120,9 @@ EOT;
             );
         }
     }
+    /* delete() */
+
+
 
     /**
      * @param string $associationKey
@@ -102,7 +130,11 @@ EOT;
      *
      * @return [ID]
      */
-    static function fetchModelIDs(string $associationKey, $tag): array {
+    static function
+    fetchModelIDs(
+        string $associationKey,
+        $tag
+    ): array {
         return array_map(
             function ($association) {
                 return $association->ID;
@@ -114,6 +146,9 @@ EOT;
             )
         );
     }
+    /* fetchModelIDs() */
+
+
 
     /**
      * Generate a tag ID with which an MCProductOption model will be associated.
@@ -122,7 +157,14 @@ EOT;
      *
      * @return ID
      */
-    static function tagToID(string $tag): string {
-        return sha1("94ece6500fcaafedf25690262b45da0ec2d8c5b0 {$tag}");
+    static function
+    tagToID(
+        string $tag
+    ): string {
+        return sha1(
+            "94ece6500fcaafedf25690262b45da0ec2d8c5b0 {$tag}"
+        );
     }
+    /* fetchModelIDs() */
+
 }
