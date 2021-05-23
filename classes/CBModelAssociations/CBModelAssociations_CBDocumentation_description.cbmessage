@@ -15,6 +15,8 @@ Organically, the shape and nature of the CBModelAssociations table was developed
 and more serious thought was given to the simplicity vs. complexity of such a
 table and why the table was a necessary part of Colby.
 
+
+
 --- h1
 About
 ---
@@ -28,6 +30,8 @@ obviously won't exist.
 The table has an ID column and an associatedID column, however the association
 flows in both directions and neither column, at this point, is considered
 always represent a more dominant or primary model.
+
+
 
 --- h1
 Reasons for this table
@@ -59,3 +63,28 @@ Reasons for this table
     around this topic develop.
 
 ---
+
+
+--- h1
+Bidirectional Association
+---
+
+Currently there is theoretically no performance difference between fetching the
+associated CBID for the primary CBID or fetching the primary CBID for the
+associated CBID. The terms primary and associated only exist to provide names to
+the two CBIDs.
+
+However, the APIs and the language around associations favors fetching the
+associated CBIDs when given the primary CBIDs.
+
+But in many use cases both directions are required. Tags are a good
+example. In the case of tags the tagged model CBID would be the primary CBID and
+the tag model CBID would be the associated CBID. Getting the tagged model CBIDs
+for a tag CBID would be just as common as getting the tag CBIDs for a tagged
+model CBID.
+
+There's a possibility that using unidirectional associations and using two
+associations when "bidirectional" associations required might help in some way.
+There has not been any research done on this though. If there is and it turns
+out that unidirectional is better, the CBModelAssociations class should be
+replaced with a unidirectional CBModelAssociations2 or something like that.
