@@ -1,34 +1,7 @@
 <?php
 
 /**
- * @NOTE 2019_01_23
- *
- *      Changes have recently been made to the associations table to optimize it
- *      for "bi-directional" associations. However, now I think that the
- *      associated item or items should always be stored in the "associatedID"
- *      column of the table.
- *
- *      If you have a "bi-directional" association this would actually be
- *      expressed by creating two associations.
- *
- *      1. CBTag_CBViewPage
- *
- *          This association is created to get all the pages associated with a
- *          given tag.
- *
- *      2. CBViewPage_CBTag
- *
- *          This association is created to get all the tags associated with a
- *          given page.
- *
- *      This may clean up the APIs associated with this class because they no
- *      longer have to try to support "bi-directional" access.
- *
- *          // good
- *          CBModelAssociations::fetchAssociatedModel()
- *
- *          // not needed
- *          CBModelAssociations::fetchPrimaryModel()
+ * @see documentation
  */
 final class CBModelAssociations {
 
