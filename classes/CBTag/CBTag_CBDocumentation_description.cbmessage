@@ -1,0 +1,46 @@
+--- dl
+
+
+
+    --- dt
+    stringToNormalizedTag\( ((br)) string $originalString ((br)) \) -> string
+    ---
+    This function will convert any string into a normalized tag for use in cases
+    where you need to clean up a string given that can't be modified by live
+    user action. If the tag has no acceptable tag characters an empty string
+    will be returned.
+
+    This function is intended to change over time to include or exclude
+    characters.
+
+    The function has the following process:
+
+    --- ul
+
+        The string is converted to lowercase.
+
+        Characters are removed that are not:
+
+        --- ul
+            in the unicode lowercase letter class
+
+            numbers
+
+            the underscore character
+        ---
+    ---
+
+
+
+    --- dt
+    tagToID\( ((br)) string $tag ((br)) \) -> CBID
+    ---
+    This function will turn literally any string into a tag CBID, including a
+    string of four spaces, or a string with carriage returns. A CBTag is allowed
+    to be any string but callers and implementers should choose to curate their
+    tags by using a function like ( CBTag::stringToNormalizedTag\(\) (code)) to
+    make tags more rational for real world use cases.
+
+
+
+---
