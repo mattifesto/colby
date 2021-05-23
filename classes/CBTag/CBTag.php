@@ -5,7 +5,8 @@
  * simple string with a model. The association key will be used to differentiate
  * between different contexts of tags.
  */
-final class CBTag {
+final class
+CBTag {
 
     /**
      * @param ID $ID
