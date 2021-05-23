@@ -4,6 +4,9 @@
  * A tag should be associated with a model whenever you want to associate a
  * simple string with a model. The association key will be used to differentiate
  * between different contexts of tags.
+ *
+ * A tag can literally be any string but you may want to limit the strings
+ * allowed for various contexts.
  */
 final class
 CBTag {
@@ -152,7 +155,34 @@ CBTag {
 
 
     /**
-     * Generate a tag ID with which an MCProductOption model will be associated.
+     * @see documenation
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    static function
+    stringToNormalizedTag(
+        string $originalString
+    ): string {
+        $normalizedTag = mb_strtolower(
+            $originalString
+        );
+
+        $normalizedTag = preg_replace(
+            '/[^\p{Ll}0-9_]/u',
+            '',
+            $normalizedTag
+        );
+
+        return $normalizedTag;
+    }
+    /* stringToNormalizedTag() */
+
+
+
+    /**
+     * @see documenation
      *
      * @param string $tag
      *
@@ -166,6 +196,6 @@ CBTag {
             "94ece6500fcaafedf25690262b45da0ec2d8c5b0 {$tag}"
         );
     }
-    /* fetchModelIDs() */
+    /* tagToID() */
 
 }
