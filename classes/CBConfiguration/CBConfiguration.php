@@ -1,7 +1,16 @@
 <?php
 
+/**
+ * @deprecated 2021_05_29
+ *
+ *      This class is moving to CB_Configuration.
+ */
 final class
 CBConfiguration {
+
+        /* -- functions -- */
+
+
 
         /**
          * @TODO 2021_05_09
