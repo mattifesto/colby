@@ -114,6 +114,42 @@ CBTCommand_update_configuration {
 
     /**
      * @return string
+     */
+    static function
+    askForPrimaryAdministratorEmailAddress(
+    ): string {
+        echo <<<EOT
+
+        The primary administrator email address will be used in the
+        configuration files for the Apache web server.
+
+        EOT;
+
+        while (true) {
+            echo "\n", 'enter primary administrator email address: ';
+
+            $primaryAdministratorEmailAddress = (
+                trim(
+                    fgets(STDIN),
+                )
+            );
+
+            $result = filter_var(
+                $primaryAdministratorEmailAddress,
+                FILTER_VALIDATE_EMAIL
+            );
+
+            if ($result !== false) {
+                return $result;
+            }
+        }
+    }
+    /* askForPrimaryAdministratorEmailAddress() */
+
+
+
+    /**
+     * @return string
      *
      *      Returns the primary website domain or an empty string if the user
      *      wants to use the server specific website domain as the primary
