@@ -13,6 +13,43 @@ CB_Configuration {
          * @return string
          */
         static function
+        getDatabaseName(
+            stdClass $model
+        ): string {
+            return CBModel::valueToString(
+                $model,
+                'CB_Configuration_databaseName'
+            );
+        }
+        /* getDatabaseName() */
+
+
+
+        /**
+         * @param object $model
+         * @param string $databaseName
+         *
+         * @return void
+         */
+        static function
+        setDatabaseName(
+            stdClass $model,
+            string $databaseName
+        ): void {
+            $model->CB_Configuration_databaseName = (
+                $databaseName
+            );
+        }
+        /* setDatabaseName() */
+
+
+
+        /**
+         * @param object $model
+         *
+         * @return string
+         */
+        static function
         getPrimaryWebsiteDomain(
             stdClass $model
         ): string {
