@@ -50,6 +50,43 @@ CB_Configuration {
          * @return string
          */
         static function
+        getDatabasePassword(
+            stdClass $model
+        ): string {
+            return CBModel::valueToString(
+                $model,
+                'CB_Configuration_databasePassword'
+            );
+        }
+        /* getDatabasePassword() */
+
+
+
+        /**
+         * @param object $model
+         * @param string $databasePassword
+         *
+         * @return void
+         */
+        static function
+        setDatabasePassword(
+            stdClass $model,
+            string $databasePassword
+        ): void {
+            $model->CB_Configuration_databasePassword = (
+                $databasePassword
+            );
+        }
+        /* setDatabasePassword() */
+
+
+
+        /**
+         * @param object $model
+         *
+         * @return string
+         */
+        static function
         getDatabaseUsername(
             stdClass $model
         ): string {
