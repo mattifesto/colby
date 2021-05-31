@@ -74,6 +74,35 @@ final class CBConvert {
 
 
     /**
+     * @param string $domain
+     *
+     * @return string
+     *
+     *      foo.bar.com -> com_bar_foo
+     */
+    static function
+    domainToReverseDomain(
+        string $domain
+    ): string {
+        $parts = explode(
+            '.',
+            $domain
+        );
+
+        $parts = array_reverse(
+            $parts
+        );
+
+        return implode(
+            '_',
+            $parts
+        );
+    }
+    /* domainToReverseDomain() */
+
+
+
+    /**
      * @BUG 2019_01_31
      *
      *      This function incorrectly uses the CBModel class. The CBModel class
