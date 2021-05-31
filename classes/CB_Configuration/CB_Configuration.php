@@ -124,6 +124,43 @@ CB_Configuration {
          * @return string
          */
         static function
+        getPrimaryAdministratorEmailAddress(
+            stdClass $model
+        ): string {
+            return CBModel::valueToString(
+                $model,
+                'CB_Configuration_primaryAdministratorEmailAddress'
+            );
+        }
+        /* getPrimaryAdministratorEmailAddress() */
+
+
+
+        /**
+         * @param object $model
+         * @param string $primaryAdministratorEmailAddress
+         *
+         * @return void
+         */
+        static function
+        setPrimaryAdministratorEmailAddress(
+            stdClass $model,
+            string $primaryAdministratorEmailAddress
+        ): void {
+            $model->CB_Configuration_primaryAdministratorEmailAddress = (
+                $primaryAdministratorEmailAddress
+            );
+        }
+        /* setPrimaryAdministratorEmailAddress() */
+
+
+
+        /**
+         * @param object $model
+         *
+         * @return string
+         */
+        static function
         getPrimaryWebsiteDomain(
             stdClass $model
         ): string {
