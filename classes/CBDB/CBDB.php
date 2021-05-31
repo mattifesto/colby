@@ -59,6 +59,49 @@ final class CBDB {
      * @return string
      */
     static function
+    generateDatabasePassword(
+    ): string {
+        $allowedCharacters = (
+            '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' .
+            '~!@#$%^&*()_-+={}[]/<>,.;?:|'
+        );
+
+        $allowedCharactersMax = strlen(
+            $allowedCharacters
+        ) - 1;
+
+        $username = '';
+
+        $count = 0;
+
+        while ($count < 30) {
+            $allowedCharactersIndex = random_int(
+                0,
+                $allowedCharactersMax
+            );
+
+            $username .= $allowedCharacters[
+                $allowedCharactersIndex
+            ];
+
+            $count += 1;
+        }
+
+        /**
+         * @TODO 2021_05_16
+         *
+         * If the password doesn't have the characters it needs, then regenerate
+         */
+        return $username;
+    }
+    /* generateDatabasePassword() */
+
+
+
+    /**
+     * @return string
+     */
+    static function
     generateDatabaseUsername(
     ): string {
         $allowedCharacters = (
