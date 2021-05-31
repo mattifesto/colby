@@ -95,6 +95,15 @@ CBTCommand_update_configuration {
 
 
 
+        /* primary administrator email address */
+
+        CB_Configuration::setPrimaryAdministratorEmailAddress(
+            $configurationSpec,
+            CBTCommand_update_configuration::askForPrimaryAdministratorEmailAddress()
+        );
+
+
+
         /* write configuration file */
 
         file_put_contents(
