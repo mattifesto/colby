@@ -47,6 +47,43 @@ CB_Configuration {
         /**
          * @param object $model
          *
+         * @return [string]
+         */
+        static function
+        getSecondaryWebsiteDomains(
+            stdClass $model
+        ): array {
+            return CBModel::valueToArray(
+                $model,
+                'CB_Configuration_secondaryWebsiteDomains'
+            );
+        }
+        /* getSecondaryWebsiteDomains() */
+
+
+
+        /**
+         * @param object $model
+         * @param [string] $secondaryWebsiteDomains
+         *
+         * @return void
+         */
+        static function
+        setSecondaryWebsiteDomains(
+            stdClass $model,
+            array $secondaryWebsiteDomains
+        ): void {
+            $model->CB_Configuration_secondaryWebsiteDomains = (
+                $secondaryWebsiteDomains
+            );
+        }
+        /* setSecondaryWebsiteDomains() */
+
+
+
+        /**
+         * @param object $model
+         *
          * @return string
          */
         static function
