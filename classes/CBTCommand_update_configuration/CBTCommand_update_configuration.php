@@ -116,4 +116,64 @@ CBTCommand_update_configuration {
     }
     /* inputDomain() */
 
+
+
+    /**
+     * This function presents no user interface, so the calling function should.
+     * It simply allows the user to enter a string.
+     *
+     * @return stdClass
+     *
+     *      {
+     *          values: []
+     *          firstInvalidDomainIndex: int|null
+     *      }
+     */
+    static function
+    inputMultipleDomains(
+    ): stdClass {
+        $value = (
+            trim(
+                fgets(STDIN),
+            )
+        );
+
+        $values = preg_split(
+            '/[\s,]+/',
+            $value,
+            -1,
+            PREG_SPLIT_NO_EMPTY
+        );
+
+        $returnValue = (object)[
+            'values' => array_values(
+                $values
+            ),
+            'firstInvalidDomainIndex' => null,
+        ];
+
+        for (
+            $index = 0;
+            $index < count($values);
+            $index += 1
+        ) {
+            $domain = $values[$index];
+
+            $result = filter_var(
+                $domain,
+                FILTER_VALIDATE_DOMAIN,
+                FILTER_FLAG_HOSTNAME
+            );
+
+            if ($result === false) {
+                $returnValue->firstInvalidDomainIndex = $index;
+
+                return $returnValue;
+            }
+        }
+
+        return $returnValue;
+    }
+    /* inputMultipleDomains() */
+
 }
