@@ -16,7 +16,10 @@ CB_Configuration {
         getServerSpecificWebsiteDomain(
             stdClass $model
         ): string {
-            return $model->CB_Configuration_serverSpecificWebsiteDomain;
+            return CBModel::valueToString(
+                $model,
+                'CB_Configuration_serverSpecificWebsiteDomain'
+            );
         }
         /* getServerSpecificWebsiteDomain() */
 
