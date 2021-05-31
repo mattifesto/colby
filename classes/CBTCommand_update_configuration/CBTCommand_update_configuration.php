@@ -77,6 +77,15 @@ CBTCommand_update_configuration {
 
 
 
+        /* database username */
+
+        CB_Configuration::setDatabaseUserName(
+            $configurationSpec,
+            CBDB::generateDatabaseUsername()
+        );
+
+
+
         /* write configuration file */
 
         file_put_contents(
