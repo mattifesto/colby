@@ -50,6 +50,43 @@ CB_Configuration {
          * @return string
          */
         static function
+        getDatabaseUsername(
+            stdClass $model
+        ): string {
+            return CBModel::valueToString(
+                $model,
+                'CB_Configuration_databaseUsername'
+            );
+        }
+        /* getDatabaseUsername() */
+
+
+
+        /**
+         * @param object $model
+         * @param string $databaseUsername
+         *
+         * @return void
+         */
+        static function
+        setDatabaseUsername(
+            stdClass $model,
+            string $databaseUsername
+        ): void {
+            $model->CB_Configuration_databaseUsername = (
+                $databaseUsername
+            );
+        }
+        /* setDatabaseUsername() */
+
+
+
+        /**
+         * @param object $model
+         *
+         * @return string
+         */
+        static function
         getPrimaryWebsiteDomain(
             stdClass $model
         ): string {
