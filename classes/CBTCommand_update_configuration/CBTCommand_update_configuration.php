@@ -17,6 +17,10 @@ CBTCommand_update_configuration {
             'CB_Configuration'
         );
 
+
+
+        /* server specific website domain */
+
         $serverSpecificWebsiteDomain = (
             CBTCommand_update_configuration::askForServerSpecificWebsiteDomain()
         );
@@ -25,6 +29,40 @@ CBTCommand_update_configuration {
             $configurationSpec,
             $serverSpecificWebsiteDomain
         );
+
+
+
+        /* primary website domain */
+
+        $primaryWebsiteDomain = (
+            CBTCommand_update_configuration::askForPrimaryWebsiteDomain()
+        );
+
+        if ($primaryWebsiteDomain === '') {
+            $primaryWebsiteDomain = $serverSpecificWebsiteDomain;
+        }
+
+        CB_Configuration::setPrimaryWebsiteDomain(
+            $configurationSpec,
+            $primaryWebsiteDomain
+        );
+
+
+
+        /* secondary website domains */
+
+        $secondaryWebsiteDomains = (
+            CBTCommand_update_configuration::askForSecondaryWebsiteDomains()
+        );
+
+        CB_Configuration::setSecondaryWebsiteDomains(
+            $configurationSpec,
+            $secondaryWebsiteDomains
+        );
+
+
+
+        /* write configuration file */
 
         file_put_contents(
             cbsitedir() . "/../cb_configuration.json",
