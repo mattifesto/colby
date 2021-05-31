@@ -62,6 +62,21 @@ CBTCommand_update_configuration {
 
 
 
+        /* database name */
+
+        $serverSpecificWebsiteReverseDomain = (
+            CBConvert::domainToReverseDomain(
+                $serverSpecificWebsiteDomain
+            )
+        );
+
+        CB_Configuration::setDatabaseName(
+            $configurationSpec,
+            "{$serverSpecificWebsiteReverseDomain}_database"
+        );
+
+
+
         /* write configuration file */
 
         file_put_contents(
