@@ -56,6 +56,43 @@ final class CBDB {
 
 
     /**
+     * @return string
+     */
+    static function
+    generateDatabaseUsername(
+    ): string {
+        $allowedCharacters = (
+            '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        );
+
+        $allowedCharactersMax = strlen(
+            $allowedCharacters
+        ) - 1;
+
+        $username = '';
+
+        $count = 0;
+
+        while ($count < 10) {
+            $allowedCharactersIndex = random_int(
+                0,
+                $allowedCharactersMax
+            );
+
+            $username .= $allowedCharacters[
+                $allowedCharactersIndex
+            ];
+
+            $count += 1;
+        }
+
+        return $username;
+    }
+    /* generateDatabaseUsername() */
+
+
+
+    /**
      * @deprecated use `CBID::toSQL`
      */
     static function hex160ToSQL($values) {
