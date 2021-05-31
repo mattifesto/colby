@@ -86,6 +86,15 @@ CBTCommand_update_configuration {
 
 
 
+        /* database password */
+
+        CB_Configuration::setDatabasePassword(
+            $configurationSpec,
+            CBDB::generateDatabasePassword()
+        );
+
+
+
         /* write configuration file */
 
         file_put_contents(
