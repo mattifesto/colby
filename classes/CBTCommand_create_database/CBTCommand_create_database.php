@@ -12,30 +12,52 @@ final class CBTCommand_create_database {
     static function
     cbt_execute(
     ): void {
-        global $argv;
+        $configurationSpec = CB_Configuration::fetchConfigurationSpec();
 
-        if (count($argv) < 3) {
-            echo "not enough parameters\n";
-
-            exit(1);
-        }
-
-        $strings = CBDB::SQLToArrayOfNullableStrings(
-            "select CURRENT_USER();"
+        $databaseName = CB_Configuration::getDatabaseName(
+            $configurationSpec
         );
 
-        $databaseName = $argv[2];
+        $databaseUsername = CB_Configuration::getDatabaseUsername(
+            $configurationSpec
+        );
 
-        echo implode(
-            "\n",
-            $strings
-        ) . "\n";
+        $databasePassword = CB_Configuration::getDatabasePassword(
+            $configurationSpec
+        );
 
-        if (false) {
-            echo "ERROR\n";
+        $SQL = <<<EOT
 
-            exit(1);
-        }
+        create database
+        {$databaseName};
+
+        create user
+        {$databaseUsername}@localhost
+        identified with mysql_native_password by
+        '{$databasePassword}';
+
+        grant all on
+        {$databaseName}.*
+        to
+        {$databaseUsername}@localhost;
+
+        flush privileges;
+
+        EOT;
+
+        file_put_contents(
+            cbsitedir() . '/../create-database.sql',
+            $SQL
+        );
+
+        echo <<<EOT
+
+            Now run:
+
+                sudo mysql < create_database.sql
+
+
+        EOT;
     }
     /* cbt_execute() */
 
