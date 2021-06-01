@@ -264,4 +264,26 @@ CB_Configuration {
         }
         /* setServerSpecificWebsiteDomain() */
 
+
+
+        /* -- functions -- */
+
+
+
+        /**
+         * @return object
+         */
+        static function
+        fetchConfigurationSpec(
+        ): stdClass {
+            $specAsJSON = file_get_contents(
+                cbsitedir() . '/../cb_configuration.json'
+            );
+
+            return CBConvert::JSONToValue(
+                $specAsJSON
+            );
+        }
+        /* fetchConfigurationSpec() */
+
 }
