@@ -76,6 +76,68 @@ final class CBConvert {
     /**
      * @param string $domain
      *
+     *      Colby recommends that local network web servers use domains that
+     *      have an element that starts with "ld", "lt", or "lp". This function
+     *      will determine whether the $domain argument is one of those domains,
+     *      and if it is, it will return the web server's domain.
+     *
+     * @return string|null
+     *
+     *      Examples:
+     *
+     *      mysite.ld4.example.com will return ld4.example.com
+     *
+     *      mysite.com will return null
+     */
+    static function
+    domainToLocalServerDomain(
+        string $domain
+    ): ?string {
+        $domainParts = explode(
+            '.',
+            $domain
+        );
+
+        $domainPartsCount = count(
+            $domainParts
+        );
+
+        if (
+            $domainPartsCount < 4
+        ) {
+            return null;
+        }
+
+        $serverPart = $domainParts[
+            1
+        ];
+
+        if (
+            preg_match('/^l[dtp][0-9]+$/', $serverPart)
+        ) {
+            $localServerDomainParts = $domainParts;
+
+            array_shift(
+                $localServerDomainParts
+            );
+
+            $localServerDomain = implode(
+                '.',
+                $localServerDomainParts
+            );
+
+            return $localServerDomain;
+        }
+
+        return null;
+    }
+    /* domainToLocalServerDomain() */
+
+
+
+    /**
+     * @param string $domain
+     *
      * @return string
      *
      *      foo.bar.com -> com_bar_foo
