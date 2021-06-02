@@ -24,6 +24,36 @@ error_reporting(E_ALL | E_STRICT);
 
 
 /**
+ * @return string|null
+ *
+ *      Newer Colby projects have a project directory that contains a
+ *      document_root directory. Older projects will not have this and those
+ *      projects will return null from this function.
+ */
+function
+cb_project_directory(
+): ?string {
+    static $projectDirectory = false;
+
+    if ($projectDirectory === false) {
+        $projectDirectory = dirname(
+            cbsitedir()
+        );
+
+        if (
+            !is_dir("{$projectDirectory}/document_root")
+        ) {
+            $projectDirectory = null;
+        }
+    }
+
+    return $projectDirectory;
+}
+/* cb_project_directory() */
+
+
+
+/**
  * @NOTE 2021_01_24
  *
  *      This function used to return realpath($_SERVER['DOCUMENT_ROOT']), but
