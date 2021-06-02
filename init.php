@@ -23,6 +23,36 @@ set_exception_handler(
 error_reporting(E_ALL | E_STRICT);
 
 
+
+/**
+ * @return string|null
+ *
+ *      Newer Colby projects have a project directory that contains a
+ *      document_root directory and also contains a logs directory. Older
+ *      projects will not have this and those projects will return null from
+ *      this function.
+ */
+function
+cb_logs_directory(
+): ?string {
+    static $logsDirectory = false;
+
+    if ($logsDirectory === false) {
+        $projectDirectory = cb_project_directory();
+
+        if ($projectDirectory === null) {
+            $logsDirectory = null;
+        } else {
+            $logsDirectory = "{$projectDirectory}/logs";
+        }
+    }
+
+    return $logsDirectory;
+}
+/* cb_logs_directory() */
+
+
+
 /**
  * @return string|null
  *
