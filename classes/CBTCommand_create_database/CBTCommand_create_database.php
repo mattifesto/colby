@@ -1,6 +1,7 @@
 <?php
 
-final class CBTCommand_create_database {
+final class
+CBTCommand_create_database {
 
     /* -- cbt interfaces -- */
 
