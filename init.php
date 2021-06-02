@@ -63,7 +63,14 @@ cb_project_directory(
  *      returning the parent directory of the directory containing this file
  *      will be the correct value in all cases.
  *
+ *
+ * @TODO 2021_06_01
+ *
+ *      Rename to cb_document_root_directory()
+ *
  * @return string
+ *
+ *      Returns the document root directory.
  */
 function
 cbsitedir(
