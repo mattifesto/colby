@@ -13,6 +13,20 @@ CBTCommand_update_configuration {
     static function
     cbt_execute(
     ): void {
+        $configurationSpec = CB_Configuration::fetchConfigurationSpec();
+
+        if (
+            $configurationSpec !== null
+        ) {
+            echo <<<EOT
+            A configuration file already exists. You can edit it by hand but
+            this command does not yet edit existing configuration files.
+
+            EOT;
+
+            exit(1);
+        }
+
         $configurationSpec = CBModel::createSpec(
             'CB_Configuration'
         );
