@@ -271,13 +271,32 @@ CB_Configuration {
 
 
         /**
-         * @return object
+         * @return object|null
+         *
+         *      Returns the configuration spec if the spec file exists, null
+         *      if it does not.
          */
         static function
         fetchConfigurationSpec(
-        ): stdClass {
+        ): ?stdClass {
+            $projectDirectory = cb_project_directory();
+
+            if ($projectDirectory === null) {
+                return null;
+            }
+
+            $configurationFilename = (
+                "{$projectDirectory}/cb_configuration.json"
+            );
+
+            if (
+                !file_exists($configurationFilename)
+            ) {
+                return null;
+            }
+
             $specAsJSON = file_get_contents(
-                cbsitedir() . '/../cb_configuration.json'
+                $configurationFilename
             );
 
             return CBConvert::JSONToValue(
