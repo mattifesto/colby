@@ -15,6 +15,15 @@ CBTCommand_create_database {
     ): void {
         $configurationSpec = CB_Configuration::fetchConfigurationSpec();
 
+        if ($configurationSpec === null) {
+            echo (
+                "There is no configuration file. " .
+                "Run 'cbt update-configuration'\n"
+            );
+
+            exit(1);
+        }
+
         $databaseName = CB_Configuration::getDatabaseName(
             $configurationSpec
         );
@@ -47,7 +56,7 @@ CBTCommand_create_database {
         EOT;
 
         file_put_contents(
-            cbsitedir() . '/../create-database.sql',
+            cbsitedir() . '/../create_database.sql',
             $SQL
         );
 
