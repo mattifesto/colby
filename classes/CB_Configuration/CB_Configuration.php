@@ -13,6 +13,43 @@ CB_Configuration {
          * @return string
          */
         static function
+        getDatabaseHost(
+            stdClass $model
+        ): string {
+            return CBModel::valueToString(
+                $model,
+                'CB_Configuration_databaseHost'
+            );
+        }
+        /* getDatabaseHost() */
+
+
+
+        /**
+         * @param object $model
+         * @param string $databaseHost
+         *
+         * @return void
+         */
+        static function
+        setDatabaseHost(
+            stdClass $model,
+            string $databaseHost
+        ): void {
+            $model->CB_Configuration_databaseHost = (
+                $databaseHost
+            );
+        }
+        /* setDatabaseHost() */
+
+
+
+        /**
+         * @param object $model
+         *
+         * @return string
+         */
+        static function
         getDatabaseName(
             stdClass $model
         ): string {
