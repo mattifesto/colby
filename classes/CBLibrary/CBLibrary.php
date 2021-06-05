@@ -51,20 +51,18 @@ final class CBLibrary {
      *      class code files, which should not happen, but this function doesn't
      *      address that issue.
      */
-    static function getAllClassDirectoryNames(
+    static function
+    getAllClassDirectoryNames(
     ): array {
         $classNames = [];
 
-        foreach (Colby::$libraryDirectories as $libraryDirectory) {
-            if ($libraryDirectory === '') {
-                $libraryClassesDirectory =
-                cbsitedir() .
-                '/classes';
-            } else {
-                $libraryClassesDirectory =
-                cbsitedir() .
-                "/{$libraryDirectory}/classes";
-            }
+        foreach (
+            Colby::getAbsoluteLibraryDirectories() as $absoluteLibraryDirectory
+        ) {
+            $libraryClassesDirectory = (
+                $absoluteLibraryDirectory .
+                '/classes'
+            );
 
             $libraryClassDirectories = glob(
                 "{$libraryClassesDirectory}/*",
@@ -83,7 +81,9 @@ final class CBLibrary {
         }
 
         return array_values(
-            array_unique($classNames)
+            array_unique(
+                $classNames
+            )
         );
     }
     /* getAllClassDirectoryNames() */
