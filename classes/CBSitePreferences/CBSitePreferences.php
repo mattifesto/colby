@@ -733,9 +733,25 @@ final class CBSitePreferences {
     /**
      * @return string
      */
-    static function mysqlUser() {
-        return defined('CBMySQLUser') ? CBMySQLUser : COLBY_MYSQL_USER;
+    static function
+    mysqlUser(
+    ): string {
+        if (defined('CBMySQLUser')) {
+            return CBMySQLUser;
+        }
+
+        if (defined('COLBY_MYSQL_USER')) {
+            return COLBY_MYSQL_USER;
+        }
+
+        $configurationSpec = CB_Configuration::fetchConfigurationSpec();
+
+        return CB_Configuration::getDatabaseUsername(
+            $configurationSpec
+        );
     }
+    /* mysqlUser() */
+
 
 
     /**
