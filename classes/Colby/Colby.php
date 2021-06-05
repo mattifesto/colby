@@ -317,13 +317,18 @@ final class Colby {
      *
      * @return string | null
      */
-    static function findHandler(
+    static function
+    findHandler(
         $filename,
-        $returnFormat = Colby::returnAbsoluteFilename
+        $returnFormat = null /* deprecated */
     ) {
         $path = "handlers/{$filename}";
-        return Colby::findFile($path, $returnFormat);
+
+        return Colby::findFile(
+            $path
+        );
     }
+    /* findHandler() */
 
 
 
