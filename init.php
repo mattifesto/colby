@@ -25,6 +25,43 @@ error_reporting(E_ALL | E_STRICT);
 
 
 /**
+ * @NOTE 2021_01_24
+ *
+ *      This function used to return realpath($_SERVER['DOCUMENT_ROOT']), but
+ *      the value of DOCUMENT_ROOT when loaded by terminal does not necessarily
+ *      have the same value as it does when loaded by a web server. Currently,
+ *      Colby is always contained in a folder named "colby" in the site
+ *      directory so returning the parent directory of the directory containing
+ *      this file will be the correct value in all cases.
+ *
+ *      When Colby moves we may need a different approach.
+ *
+ * @return string
+ */
+function
+cb_document_root_directory(
+): string {
+    static $documentRootDirectory = null;
+
+    if ($documentRootDirectory === null) {
+        $testDocumentRootDirectory = getenv(
+            'CB_TEST_DOCUMENT_ROOT_DIRECTORY'
+        );
+
+        if ($testDocumentRootDirectory === false) {
+            $documentRootDirectory = dirname(__DIR__);
+        } else {
+            $documentRootDirectory = $testDocumentRootDirectory;
+        }
+    }
+
+    return $documentRootDirectory;
+}
+/* cb_document_root_directory() */
+
+
+
+/**
  * @return string|null
  *
  *      Newer Colby projects have a project directory that contains a
@@ -84,34 +121,14 @@ cb_project_directory(
 
 
 /**
- * @NOTE 2021_01_24
+ * @deprecated 2021_06_04
  *
- *      This function used to return realpath($_SERVER['DOCUMENT_ROOT']), but
- *      the value of DOCUMENT_ROOT when loaded by terminal does not necessarily
- *      have that same value as it does when loaded by a web server. Colby is
- *      always contained in a folder named "colby" in the site directory so
- *      returning the parent directory of the directory containing this file
- *      will be the correct value in all cases.
- *
- *
- * @TODO 2021_06_01
- *
- *      Rename to cb_document_root_directory()
- *
- * @return string
- *
- *      Returns the document root directory.
+ *      Use cb_document_root_directory().
  */
 function
 cbsitedir(
-) {
-    static $cbsitedir = null;
-
-    if ($cbsitedir === null) {
-        $cbsitedir = dirname(__DIR__);
-    }
-
-    return $cbsitedir;
+): string {
+    return cb_document_root_directory();
 }
 /* cbsitedir() */
 
