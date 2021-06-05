@@ -679,15 +679,29 @@ final class CBSitePreferences {
      *
      * @return string|null
      */
-    static function mysqlHost(): ?string {
+    static function
+    mysqlHost(
+    ): ?string {
+        $databaseHost = '';
+        $configurationSpec = CB_Configuration::fetchConfigurationSpec();
+
+        if ($configurationSpec !== null) {
+            $databaseHost = CB_Configuration::getDatabaseHost(
+                $configurationSpec
+            );
+        }
+
         if (defined('CBMySQLHost')) {
             return CBMySQLHost;
         } else if (defined('COLBY_MYSQL_HOST')) {
             return COLBY_MYSQL_HOST;
+        } else if ($databaseHost !== '') {
+            return $databaseHost;
         } else {
             return null;
         }
     }
+    /* mysqlHost() */
 
 
 
@@ -696,6 +710,7 @@ final class CBSitePreferences {
      */
     static function mysqlPassword() {
         return defined('CBMySQLPassword') ? CBMySQLPassword : COLBY_MYSQL_PASSWORD;
+            return COLBY_MYSQL_PASSWORD;
     }
 
 
