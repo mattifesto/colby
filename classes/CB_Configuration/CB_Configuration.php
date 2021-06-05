@@ -161,6 +161,43 @@ CB_Configuration {
          * @return string
          */
         static function
+        getEncryptionPassword(
+            stdClass $model
+        ): string {
+            return CBModel::valueToString(
+                $model,
+                'CB_Configuration_encryptionPassword'
+            );
+        }
+        /* getEncryptionPassword() */
+
+
+
+        /**
+         * @param object $model
+         * @param string $encryptionPassword
+         *
+         * @return void
+         */
+        static function
+        setEncryptionPassword(
+            stdClass $model,
+            string $encryptionPassword
+        ): void {
+            $model->CB_Configuration_encryptionPassword = (
+                $encryptionPassword
+            );
+        }
+        /* setEncryptionPassword() */
+
+
+
+        /**
+         * @param object $model
+         *
+         * @return string
+         */
+        static function
         getPrimaryAdministratorEmailAddress(
             stdClass $model
         ): string {
