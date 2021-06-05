@@ -269,6 +269,43 @@ CB_Configuration {
         /**
          * @param object $model
          *
+         * @return bool
+         */
+        static function
+        getSecondaryDomainsShouldRedirectToPrimaryDomain(
+            stdClass $model
+        ): string {
+            return CBModel::valueToBool(
+                $model,
+                'CB_Configuration_secondaryDomainsShouldRedirectToPrimaryDomain'
+            );
+        }
+        /* getSecondaryDomainsShouldRedirectToPrimaryDomain() */
+
+
+
+        /**
+         * @param object $model
+         * @param string $secondaryDomainsShouldRedirectToPrimaryDomain
+         *
+         * @return void
+         */
+        static function
+        setSecondaryDomainsShouldRedirectToPrimaryDomain(
+            stdClass $model,
+            bool $secondaryDomainsShouldRedirectToPrimaryDomain
+        ): void {
+            $model->CB_Configuration_secondaryDomainsShouldRedirectToPrimaryDomain = (
+                $secondaryDomainsShouldRedirectToPrimaryDomain
+            );
+        }
+        /* setSecondaryDomainsShouldRedirectToPrimaryDomain() */
+
+
+
+        /**
+         * @param object $model
+         *
          * @return [string]
          */
         static function
