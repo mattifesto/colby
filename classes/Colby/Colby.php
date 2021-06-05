@@ -337,10 +337,17 @@ final class Colby {
      *
      * @return string | null
      */
-    static function findSnippet($filename) {
+    static function
+    findSnippet(
+        $filename
+    ) {
         $path = "snippets/{$filename}";
-        return Colby::findFile($path);
+
+        return Colby::findFile(
+            $path
+        );
     }
+    /* findSnippet() */
 
 
 
