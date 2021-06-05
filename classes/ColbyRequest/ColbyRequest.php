@@ -314,7 +314,17 @@ final class ColbyRequest {
     /**
      * @return void
      */
-    static function initialize(): void {
+    static function
+    initialize(
+    ): void {
+        /**
+         * If this function is called from a process initiated from the comman
+         * line interface there is conceptually no work for this class to do.
+         */
+        if (php_sapi_name() === 'cli') {
+            return;
+        }
+
         ColbyRequest::$originalEncodedPath =
         CBRequest::requestURIToOriginalEncodedPath();
 
