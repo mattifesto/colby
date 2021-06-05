@@ -92,18 +92,31 @@ final class Colby {
     /**
      * @return bool
      */
-    static function autoload($className) {
-        foreach (Colby::$libraryDirectories as $directory) {
-            $directory = empty($directory) ? '' : "/{$directory}";
-            $filepath = cbsitedir() . "{$directory}/classes/{$className}.php";
+    static function
+    autoload(
+        string $className
+    ): bool {
+        foreach (
+            Colby::getAbsoluteLibraryDirectories() as $absoluteLibraryDirectory
+        ) {
+            /**
+             * @deprecated 2021_06_03
+             *
+             *      Class PHP files are no longer allowed to be directly in the
+             *      classes directory.
+             */
+            $filepath = (
+                $absoluteLibraryDirectory .
+                "/classes/{$className}.php"
+            );
 
             if (is_file($filepath)) {
                 break;
             }
 
             $filepath = (
-                cbsitedir() .
-                "{$directory}/classes/{$className}/{$className}.php"
+                $absoluteLibraryDirectory .
+                "/classes/{$className}/{$className}.php"
             );
 
             if (is_file($filepath)) {
