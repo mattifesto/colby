@@ -637,8 +637,8 @@ final class Colby {
          * loaded later.
          */
 
-        Colby::$libraryDirectories[] = '';
-        Colby::$libraryDirectories[] = 'colby';
+        Colby::$libraryDirectories[] = cb_document_root_directory();
+        Colby::$libraryDirectories[] = cbsysdir();
 
         /**
          * Set up autoloading. Autoloading is used by error handling. Colby used
