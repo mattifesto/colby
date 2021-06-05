@@ -476,18 +476,23 @@ final class Colby {
      *
      * @return [string]
      */
-    static function globFiles($pattern) {
+    static function
+    globFiles(
+        $pattern
+    ) {
         $filenames = array();
 
-        foreach (Colby::$libraryDirectories as $libraryDirectory) {
-            if ($libraryDirectory) {
-                $intraSitePattern = "{$libraryDirectory}/{$pattern}";
-            } else {
-                $intraSitePattern = $pattern;
-            }
+        foreach (
+            Colby::getAbsoluteLibraryDirectories() as $absoluteLibraryDirectory
+        ) {
+            $libraryFilenames = glob(
+                "{$absoluteLibraryDirectory}/{$pattern}"
+            );
 
-            $libraryFilenames = glob(cbsitedir() . "/{$intraSitePattern}");
-            $filenames = array_merge($filenames, $libraryFilenames);
+            $filenames = array_merge(
+                $filenames,
+                $libraryFilenames
+            );
         }
 
         return $filenames;
