@@ -643,12 +643,28 @@ final class CBSitePreferences {
     }
 
 
+
     /**
      * @return string
      */
-    static function mysqlDatabase() {
-        return defined('CBMySQLDatabase') ? CBMySQLDatabase : COLBY_MYSQL_DATABASE;
+    static function
+    mysqlDatabase(
+    ): string {
+        if (defined('CBMySQLDatabase')) {
+            return CBMySQLDatabase;
+        }
+
+        if (defined('COLBY_MYSQL_DATABASE')) {
+            return COLBY_MYSQL_DATABASE;
+        }
+
+        $configurationSpec = CB_Configuration::fetchConfigurationSpec();
+
+        return CB_Configuration::getDatabaseName(
+            $configurationSpec
+        );
     }
+    /* mysqlDatabase() */
 
 
 
