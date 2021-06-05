@@ -369,6 +369,49 @@ final class Colby {
 
 
     /**
+     * @return [string]
+     *
+     *      Returns an array of absolute directories for each registered
+     *      library.
+     */
+    static function
+    getAbsoluteLibraryDirectories(
+    ): array {
+        return array_values(
+            array_map(
+                function ($directory) {
+                    $firstCharacter = mb_substr(
+                        $directory,
+                        0,
+                        1
+                    );
+
+                    if ($firstCharacter === '/') {
+                        $absoluteLibraryDirectory = $directory;
+                    } else {
+                        $absoluteLibraryDirectory = (
+                            cb_document_root_directory()
+                        );
+
+                        if ($directory !== '') {
+                            $absoluteLibraryDirectory = (
+                                $absoluteLibraryDirectory .
+                                "/{$directory}"
+                            );
+                        }
+                    }
+
+                    return $absoluteLibraryDirectory;
+                },
+                Colby::$libraryDirectories
+            )
+        );
+    }
+    /* getAbsoluteLibraryDirectories() */
+
+
+
+    /**
      * @return object
      */
     static function getSettingsObject(): stdClass {
