@@ -35,22 +35,15 @@ CBInstall {
 
 
     /**
-     * @NOTE 2021_04_03
+     * @NOTE 2021_06_05
      *
      *      This function is currently called from:
      *
-     *          (
-     *              handle,admin.php ||
-     *              CBAdminPageForUpdate::CBAjax_update()
-     *          ) ->
-     *          CBAdminPageForUpdate::update() ->
-     *          <website|colby>/setup/update.php ->
-     *          CBInstall::install()
+     *          handle,admin.php ->
+     *          CBAdminPageForUpdate::update()
      *
-     *
-     *      The "setup/update.php" file is deprecated. Implementing CBInstall
-     *      interfaces is the now one and only way of performing installation
-     *      tasks.
+     *          CBAdminPageForUpdate::CBAjax_update() ->
+     *          CBAdminPageForUpdate::update()
      *
      * @return void
      */
