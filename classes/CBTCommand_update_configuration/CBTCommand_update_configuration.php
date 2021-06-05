@@ -76,6 +76,15 @@ CBTCommand_update_configuration {
 
 
 
+        /* database host */
+
+        CB_Configuration::setDatabaseHost(
+            $configurationSpec,
+            'localhost'
+        );
+
+
+
         /* database name */
 
         $serverSpecificWebsiteReverseDomain = (
