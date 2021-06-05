@@ -282,35 +282,27 @@ final class Colby {
      *
      * @param string path
      *
-     *  The relative path of the file to be found, for example:
+     *  The library relative path of the file to be found, for example:
      *
      *  "handlers/handle,view-cart.php"
      *  "setup/update-database.php"
      *
      * @return string | null
+     *
+     *      The absolute path of the file; null if the file was not found.
      */
-    static function findFile(
+    static function
+    findFile(
         $path,
-        $returnFormat = Colby::returnAbsoluteFilename
-    ) {
-        foreach (Colby::$libraryDirectories as $libraryDirectory) {
-            if ($libraryDirectory) {
-                $intraSiteFilename = "{$libraryDirectory}/{$path}";
-            } else {
-                $intraSiteFilename = $path;
-            }
-
-            $absoluteFilename = cbsitedir() . "/{$intraSiteFilename}";
+        $returnFormat = null /* deprectated */
+    ): ?string {
+        foreach (
+            Colby::getAbsoluteLibraryDirectories() as $absoluteLibraryDirectory
+        ) {
+            $absoluteFilename = "{$absoluteLibraryDirectory}/{$path}";
 
             if (is_file($absoluteFilename)) {
-                switch ($returnFormat) {
-                    case Colby::returnAbsoluteFilename:
-                        return $absoluteFilename;
-                    case Colby::returnURL:
-                        return cbsiteurl() . "/{$intraSiteFilename}";
-                    default:
-                        throw new InvalidArgumentException('returnFormat');
-                }
+                return $absoluteFilename;
             }
         }
 
