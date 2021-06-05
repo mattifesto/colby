@@ -1805,6 +1805,25 @@ final class Admin_CBCode {
 
                 (object)[
                     'CBCodeSearch_CBID' => (
+                        '883ff0dad589455caa15717f5a144e8d4fd00ea4'
+                    ),
+                    'cbmessage' => <<<EOT
+
+                        Use cb_document_root_directory().
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => '\bcbsitedir\(',
+                    'severity' => 5,
+                    'title' => 'cbsitedir()',
+
+                    'noticeStartDate' => '2021/06/04',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
+                    'CBCodeSearch_CBID' => (
                         '9d6720771e71d4f8c395c74e9b2b03d3232290bb'
                     ),
                     'cbmessage' => <<<EOT
