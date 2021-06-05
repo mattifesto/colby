@@ -708,10 +708,26 @@ final class CBSitePreferences {
     /**
      * @return string
      */
-    static function mysqlPassword() {
-        return defined('CBMySQLPassword') ? CBMySQLPassword : COLBY_MYSQL_PASSWORD;
+    static function
+    mysqlPassword(
+    ): string {
+        if (defined('CBMySQLPassword')) {
+            return CBMySQLPassword;
+        }
+
+        if (defined('COLBY_MYSQL_PASSWORD')) {
             return COLBY_MYSQL_PASSWORD;
+        }
+
+
+        $configurationSpec = CB_Configuration::fetchConfigurationSpec();
+
+        return CB_Configuration::getDatabasePassword(
+            $configurationSpec
+        );
     }
+    /* mysqlPassword() */
+
 
 
     /**
