@@ -483,10 +483,8 @@ final class CBAdminPageForUpdate {
     static function
     update(
     ): void {
-        include Colby::findFile(
-            'setup/update.php'
-        );
-
+        CBInstall::install();
+        
         CBLog::addMessage(
             'System',
             5,
