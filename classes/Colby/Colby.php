@@ -8,9 +8,10 @@ Colby::initialize();
 final class Colby {
 
     /**
-     * These constants are used as parameters to the `find` methods.
+     * @deprecated 2021_06_04
+     *
+     *      These constants are no longer used.
      */
-
     const returnAbsoluteFilename    = 0;
     const returnURL                 = 1;
 
