@@ -9,30 +9,26 @@ final class CBLibrary {
     /**
      * @return [string]
      *
-     *      Returns a website relative list of directories.
+     *      Returns a list of absolute class directories for a given class name.
      */
-    static function getClassDirectories(
+    static function
+    getClassDirectories(
         string $className
     ): array {
         $classDirectories = [];
 
-        foreach (Colby::$libraryDirectories as $libraryDirectory) {
-            $directory = (
-                cbsitedir() .
-                (
-                    $libraryDirectory === '' ?
-                    '' :
-                    '/'
-                ) .
-                $libraryDirectory .
-                '/classes/' .
-                $className
+        foreach (
+            Colby::getAbsoluteLibraryDirectories() as $absoluteLibraryDirectory
+        ) {
+            $classDirectory = (
+                $absoluteLibraryDirectory .
+                "/classes/{$className}"
             );
 
-            if (is_dir($directory)) {
+            if (is_dir($classDirectory)) {
                 array_push(
                     $classDirectories,
-                    $directory
+                    $classDirectory
                 );
             }
         }
