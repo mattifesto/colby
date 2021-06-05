@@ -792,11 +792,24 @@ final class Colby {
      *
      * @return void
      */
-    static function loadLibrary($libraryPath): void {
-        $libraryDirectory = (
-            cbsitedir() .
-            "/{$libraryPath}"
+    static function
+    loadLibrary(
+        $libraryPath
+    ): void {
+        $firstCharacter = mb_substr(
+            $libraryPath,
+            0,
+            1
         );
+
+        if ($firstCharacter === '/') {
+            $libraryDirectory = $libraryPath;
+        } else {
+            $libraryDirectory = (
+                cbsitedir() .
+                "/{$libraryPath}"
+            );
+        }
 
         $libraryConfigurationFilepath = (
             $libraryDirectory .
