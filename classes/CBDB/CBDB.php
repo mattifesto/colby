@@ -61,38 +61,59 @@ final class CBDB {
     static function
     generateDatabasePassword(
     ): string {
-        $allowedCharacters = (
-            '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ' .
+        $generatedPassword = '';
+
+        $characterSets = [
+            'abcdefghijklmnopqrstuvwxyz',
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            '0123456789',
             '~!@#$%^&*()_-+={}[]/<>,.;?:|'
-        );
+        ];
 
-        $allowedCharactersMax = strlen(
-            $allowedCharacters
-        ) - 1;
+        for (
+            $characterSetIndex = 0;
+            $characterSetIndex < count($characterSets);
+            $characterSetIndex += 1
+        ) {
+            $characters = $characterSets[$characterSetIndex];
 
-        $username = '';
+            $characterCount = 0;
 
-        $count = 0;
+            while ($characterCount < 2) {
+                $generatedPassword .= mb_substr(
+                    $characters,
+                    random_int(
+                        0,
+                        mb_strlen($characters) - 1
+                    ),
+                    1
+                );
 
-        while ($count < 30) {
-            $allowedCharactersIndex = random_int(
-                0,
-                $allowedCharactersMax
-            );
-
-            $username .= $allowedCharacters[
-                $allowedCharactersIndex
-            ];
-
-            $count += 1;
+                $characterCount += 1;
+            }
         }
 
-        /**
-         * @TODO 2021_05_16
-         *
-         * If the password doesn't have the characters it needs, then regenerate
-         */
-        return $username;
+        $allCharacters = implode(
+            '',
+            $characterSets
+        );
+
+        $characterCount = 0;
+
+        while ($characterCount < 22) {
+            $generatedPassword .= mb_substr(
+                $allCharacters,
+                random_int(
+                    0,
+                    mb_strlen($allCharacters) - 1
+                ),
+                1
+            );
+
+            $characterCount += 1;
+        }
+
+        return $generatedPassword;
     }
     /* generateDatabasePassword() */
 
