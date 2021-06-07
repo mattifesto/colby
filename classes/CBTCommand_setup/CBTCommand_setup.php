@@ -24,61 +24,6 @@ CBTCommand_setup {
             exit(1);
         }
 
-        $p = (object)[];
-
-        $p->primaryWebsiteDomain = CB_Configuration::getPrimaryWebsiteDomain(
-            $configurationSpec
-        );
-
-        /* TODO validate */
-
-
-
-        $p->databaseHost = CB_Configuration::getDatabaseHost(
-            $configurationSpec
-        );
-
-        /* TODO validate */
-
-
-
-        $p->databaseUsername = CB_Configuration::getDatabaseUsername(
-            $configurationSpec
-        );
-
-        /* TODO validate */
-
-
-
-        $p->databasePassword = CB_Configuration::getDatabasePassword(
-            $configurationSpec
-        );
-
-        /* TODO validate */
-
-
-
-        $primaryAdministratorEmailAddress = CB_Configuration::getPrimaryAdministratorEmailAddress(
-            $configurationSpec
-        );
-
-        /* TODO validate */
-
-
-
-        $p->primaryAdministratorPassword = '';
-
-        /* TODO ask for password */
-
-
-
-        $p->primaryAdministratorPassword2 = '';
-
-        /* TODO ask for password */
-
-
-
-
         if (Colby::mysqli() === null) {
             echo "Database connection can't be created.\n";
             exit(1);
