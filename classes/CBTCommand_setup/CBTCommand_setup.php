@@ -233,6 +233,12 @@ CBTCommand_setup {
 
         /* create user account */
 
+        $primaryAdministratorEmailAddress = (
+            CB_Configuration::getPrimaryAdministratorEmailAddress(
+                $configurationSpec
+            )
+        );
+
         $existingUserCBID = CBUser::emailToUserCBID(
             $primaryAdministratorEmailAddress
         );
@@ -337,8 +343,9 @@ CBTCommand_setup {
         );
 
         try {
-            $value = (
-                fgets(STDIN)
+            $value = rtrim(
+                fgets(STDIN),
+                "\n\r\v\0"
             );
         } finally {
             system(
