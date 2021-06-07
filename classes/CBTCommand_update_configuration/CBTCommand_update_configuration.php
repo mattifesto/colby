@@ -118,6 +118,15 @@ CBTCommand_update_configuration {
 
 
 
+        /* encryption password */
+
+        CB_Configuration::setEncryptionPassword(
+            $configurationSpec,
+            CBID::generateRandomCBID()
+        );
+
+
+
         /* primary administrator email address */
 
         CB_Configuration::setPrimaryAdministratorEmailAddress(
