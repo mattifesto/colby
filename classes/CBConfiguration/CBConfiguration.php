@@ -30,10 +30,19 @@ CBConfiguration {
         static function
         primaryDomain(
         ): string {
-            return explode(
-                '//',
-                CBSiteURL
-            )[1];
+            $configurationSpec = CB_Configuration::fetchConfigurationSpec();
+
+            if ($configurationSpec === null) {
+                /* deprecated */
+                return explode(
+                    '//',
+                    CBSiteURL
+                )[1];
+            } else {
+                return CB_Configuration::getPrimaryWebsiteDomain(
+                    $configurationSpec
+                );
+            }
         }
         /* primaryDomain() */
 
@@ -45,14 +54,23 @@ CBConfiguration {
         static function
         secondaryDomainsShouldRedirectToPrimaryDomain(
         ): string {
-            $isDefined = defined(
-                'CBConfiguration_secondaryDomainsShouldRedirectToPrimaryDomain'
-            );
+            $configurationSpec = CB_Configuration::fetchConfigurationSpec();
 
-            return (
-                $isDefined &&
-                CBConfiguration_secondaryDomainsShouldRedirectToPrimaryDomain
-            );
+            if ($configurationSpec === null) {
+                /* deprecated */
+                $isDefined = defined(
+                    'CBConfiguration_secondaryDomainsShouldRedirectToPrimaryDomain'
+                );
+
+                return (
+                    $isDefined &&
+                    CBConfiguration_secondaryDomainsShouldRedirectToPrimaryDomain
+                );
+            } else {
+                return CB_Configuration::getSecondaryDomainsShouldRedirectToPrimaryDomain(
+                    $configurationSpec
+                );
+            }
         }
         /* secondaryDomainsShouldRedirectToPrimaryDomain() */
 
