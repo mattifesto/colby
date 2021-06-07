@@ -26,6 +26,7 @@ CBTCommand_setup {
 
         if (Colby::mysqli() === null) {
             echo "Database connection can't be created.\n";
+
             exit(1);
         }
 
@@ -129,8 +130,15 @@ CBTCommand_setup {
 
         /* empty favicon files */
 
-        touch(cb_document_root_directory() . '/favicon.gif');
-        touch(cb_document_root_directory() . '/favicon.ico');
+        touch(
+            cb_document_root_directory() .
+            '/favicon.gif'
+        );
+
+        touch(
+            cb_document_root_directory() .
+            '/favicon.ico'
+        );
 
 
 
@@ -159,59 +167,64 @@ CBTCommand_setup {
 
         if (!is_dir($documentRootClassesDirectory)) {
             mkdir($documentRootClassesDirectory);
-        }
 
-        /* TODO ask for namespace */
-        $namespace = 'CBX';
+            /**
+             * We only create the template files when we create the classes
+             * directory because we don't want to create more of them or
+             * overwrite the current ones.
+             */
 
-        $templates = [
-            ['BlogPostPageKind', 'php'],
-            ['BlogPostPageTemplate', 'php'],
-            ['Menu_main', 'php'],
-            ['PageFooterView', 'php'],
-            ['PageFooterView', 'css'],
-            ['PageFrame', 'php'],
-            ['PageHeaderView', 'php'],
-            ['PageSettings', 'php'],
-            ['PageTemplate', 'php'],
-            ['Page_blog', 'php'],
-        ];
+            $namespace = CBTCommand_setup::inputNamespace();
 
-        $colbyTemplateDirectory = "{$colbySetupDirectory}/templates";
+            $templates = [
+                ['BlogPostPageKind', 'php'],
+                ['BlogPostPageTemplate', 'php'],
+                ['Menu_main', 'php'],
+                ['PageFooterView', 'php'],
+                ['PageFooterView', 'css'],
+                ['PageFrame', 'php'],
+                ['PageHeaderView', 'php'],
+                ['PageSettings', 'php'],
+                ['PageTemplate', 'php'],
+                ['Page_blog', 'php'],
+            ];
 
-        foreach ($templates as $template) {
-            $templateName = $template[0];
-            $extension = $template[1];
+            $colbyTemplateDirectory = "{$colbySetupDirectory}/templates";
 
-            $sourceFilepath =
-            "{$colbyTemplateDirectory}/{$templateName}.{$extension}";
+            foreach ($templates as $template) {
+                $templateName = $template[0];
+                $extension = $template[1];
 
-            $destinationDirectory =
-            "{$documentRootClassesDirectory}/{$namespace}{$templateName}";
+                $sourceFilepath =
+                "{$colbyTemplateDirectory}/{$templateName}.{$extension}";
 
-            $destinationFilepath =
-            "{$destinationDirectory}/{$namespace}{$templateName}.{$extension}";
+                $destinationDirectory =
+                "{$documentRootClassesDirectory}/{$namespace}{$templateName}";
 
-            if (!is_dir($destinationDirectory)) {
-                mkdir($destinationDirectory);
+                $destinationFilepath =
+                "{$destinationDirectory}/{$namespace}{$templateName}.{$extension}";
+
+                if (!is_dir($destinationDirectory)) {
+                    mkdir($destinationDirectory);
+                }
+
+                $content = file_get_contents($sourceFilepath);
+                $content = preg_replace('/PREFIX/', $namespace, $content);
+
+                $content = preg_replace_callback(
+                    '/RANDOMID/',
+                    function () {
+                        $ID = CBID::generateRandomCBID();
+                        return "'{$ID}'";
+                    },
+                    $content
+                );
+
+                file_put_contents(
+                    $destinationFilepath,
+                    $content
+                );
             }
-
-            $content = file_get_contents($sourceFilepath);
-            $content = preg_replace('/PREFIX/', $namespace, $content);
-
-            $content = preg_replace_callback(
-                '/RANDOMID/',
-                function () {
-                    $ID = CBID::generateRandomCBID();
-                    return "'{$ID}'";
-                },
-                $content
-            );
-
-            file_put_contents(
-                $destinationFilepath,
-                $content
-            );
         }
 
         CBInstall::install();
@@ -304,9 +317,6 @@ CBTCommand_setup {
                 $userCBID
             );
         }
-
-
-
     }
     /* cbt_execute() */
 
@@ -328,9 +338,7 @@ CBTCommand_setup {
 
         try {
             $value = (
-                trim(
-                    fgets(STDIN),
-                )
+                fgets(STDIN)
             );
         } finally {
             system(
@@ -341,5 +349,57 @@ CBTCommand_setup {
         return $value;
     }
     /* inputHiddenText() */
+
+
+
+    /**
+     * @return string
+     *
+     *      This function will not return until it has a valid namespace.
+     */
+    static function
+    inputNamespace(
+    ): string {
+        while (true) {
+            echo 'enter namespace ([A-Z][A-Z0-9]*): ';
+
+            $value = (
+                trim(
+                    fgets(STDIN),
+                )
+            );
+
+            echo "\n";
+
+            if (
+                CBTCommand_setup::isNamespace($value)
+            ) {
+                break;
+            }
+        }
+
+        return $value;
+    }
+    /* inputNamespace() */
+
+
+
+    /**
+     * @param string $potentialNamespace
+     *
+     * @return bool
+     */
+    static function
+    isNamespace(
+        string $potentialNamespace
+    ): bool {
+        $result = preg_match(
+            '/^[A-Z][A-Z0-9]*$/',
+            $potentialNamespace
+        );
+
+        return ($result === 1);
+    }
+    /* isNamespace() */
 
 }
