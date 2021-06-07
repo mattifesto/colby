@@ -12,6 +12,10 @@ final class CBDBTests {
     static function CBTest_getTests(): array {
         return [
             (object)[
+                'name' => 'generateDatabasePassword',
+                'type' => 'server',
+            ],
+            (object)[
                 'name' => 'hex160ToSQL',
                 'type' => 'server',
             ],
@@ -42,6 +46,34 @@ final class CBDBTests {
 
 
     /* -- tests -- -- -- -- -- */
+
+
+
+    /**
+     * @return object
+     */
+    static function
+    CBTest_generateDatabasePassword(
+    ): stdClass {
+        $generatedPassword = CBDB::generateDatabasePassword();
+        $expectedResult = 30;
+        $actualResult = mb_strlen(
+            $generatedPassword
+        );
+
+        if ($actualResult !== $expectedResult) {
+            return CBTest::resultMismatchFailure(
+                'password length',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_generateDatabasePassword() */
 
 
 
