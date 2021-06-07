@@ -170,7 +170,10 @@ final class Colby {
      *      passed into the `encrypt` function. Will return null if unable to
      *      decrypt the cipher data string.
      */
-    static function decrypt($cipherDataString) {
+    static function
+    decrypt(
+        string $cipherDataString
+    ) /* mixed */ {
         $cipherData = unserialize($cipherDataString);
 
         if ($cipherData->version != 1) {
@@ -179,10 +182,19 @@ final class Colby {
             );
         }
 
+        if (defined('CBEncryptionPassword')) {
+            /* 2021_06_07 deprecated */
+            $encryptionPassword = CBEncryptionPassword;
+        } else {
+            $encryptionPassword = CB_Configuration::getEncryptionPassword(
+                CB_Configuration::fetchConfigurationSpec()
+            );
+        }
+
         $serializedData = openssl_decrypt(
             $cipherData->ciphertext,
             Colby::encryptionMethod,
-            CBEncryptionPassword,
+            $encryptionPassword,
             Colby::encryptionOptions,
             $cipherData->initializationVector
         );
@@ -238,10 +250,19 @@ final class Colby {
             Colby::countOfInitializationVectorBytes
         );
 
+        if (defined('CBEncryptionPassword')) {
+            /* 2021_06_07 deprecated */
+            $encryptionPassword = CBEncryptionPassword;
+        } else {
+            $encryptionPassword = CB_Configuration::getEncryptionPassword(
+                CB_Configuration::fetchConfigurationSpec()
+            );
+        }
+
         $cipherData->ciphertext = openssl_encrypt(
             $serializedData,
             Colby::encryptionMethod,
-            CBEncryptionPassword,
+            $encryptionPassword,
             Colby::encryptionOptions,
             $cipherData->initializationVector
         );
@@ -728,15 +749,30 @@ final class Colby {
          *      function to fail writing to the database. This is fine.
          */
 
-        $filepath = cbsitedir() . '/colby-configuration.php';
+        $deprecatedConfigurationFilepath = (
+            cb_document_root_directory() .
+            '/colby-configuration.php'
+        );
+
+        $configurationFilepath = (
+            cb_project_directory() .
+            '/cb_configuration.json'
+        );
 
         if (
-            file_exists($filepath)
+            file_exists($deprecatedConfigurationFilepath)
         ) {
             include_once(
-                $filepath
+                $deprecatedConfigurationFilepath
             );
 
+            define(
+                'CBSiteIsConfigured',
+                true
+            );
+        } else if (
+            file_exists($configurationFilepath)
+        ) {
             define(
                 'CBSiteIsConfigured',
                 true
@@ -1040,7 +1076,8 @@ cbsiteurl(
         empty($_SERVER['HTTPS']) ?
         'http://' :
         'https://'
-    ) . $_SERVER['SERVER_NAME'];
+    ) . 
+    $_SERVER['SERVER_NAME'];
 }
 /* cbsiteurl() */
 
