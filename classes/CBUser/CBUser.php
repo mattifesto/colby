@@ -724,6 +724,80 @@ final class CBUser {
 
 
 
+    /* -- accessors -- */
+
+
+
+    /**
+     * @param object $userModel
+     *
+     * @return string
+     */
+    static function
+    getEmailAddress(
+        stdClass $userModel
+    ): string {
+        return CBModel::valueToString(
+            $userModel,
+            'email'
+        );
+    }
+    /* getEmailAddress() */
+
+
+
+    /**
+     * @param object $userModel
+     * @param string $emailAddress
+     *
+     * @return void
+     */
+    static function
+    setEmailAddress(
+        stdClass $userModel,
+        string $emailAddress
+    ): void {
+        $userModel->email = $emailAddress;
+    }
+    /* setEmailAddress() */
+
+
+
+    /**
+     * @param object $userModel
+     *
+     * @return string
+     */
+    static function
+    getPasswordHash(
+        stdClass $userModel
+    ): string {
+        return CBModel::valueToString(
+            $userModel,
+            'passwordHash'
+        );
+    }
+    /* getPasswordHash() */
+
+
+
+    /**
+     * @param object $userModel
+     * @param string $passwordHash
+     *
+     * @return void
+     */
+    static function
+    setPasswordHash(
+        stdClass $userModel,
+        string $passwordHash
+    ): void {
+        $userModel->passwordHash = $passwordHash;
+    }
+    /* setPasswordHash() */
+
+
+
     /* -- functions -- -- -- -- -- */
 
 
