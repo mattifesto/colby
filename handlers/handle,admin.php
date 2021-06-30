@@ -16,4 +16,7 @@ if (!$isAdministrator) {
 $className = $_GET['c'] ?? 'CBStatusAdminPage';
 $pageStub = $_GET['p'] ?? '';
 
-CBAdmin::render($className, $pageStub);
+CBAdmin::render(
+    $className,
+    $pageStub
+);
