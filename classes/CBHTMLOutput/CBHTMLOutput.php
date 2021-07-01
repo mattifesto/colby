@@ -497,23 +497,36 @@ final class CBHTMLOutput {
     /**
      * @return void
      */
-    static function render(): void {
+    static function
+    render(
+    ): void {
         $bodyContent = ob_get_clean();
 
         ob_start();
 
-        if ($className = CBHTMLOutput::getClassNameForPageSettings()) {
-            $pageSettingsClassNames = CBPageSettings::requiredClassNames(
-                [
-                    $className,
-                ]
+        /**
+         * If a root page settings class name has been specified, this variable
+         * will contain the root page settings class name along with all if the
+         * class names that it and it's required classes require.
+         */
+        $requiredPageSettingsClassNames = [];
+
+        $rootPageSettingsClassName = (
+            CBHTMLOutput::getClassNameForPageSettings()
+        );
+
+        if ($rootPageSettingsClassName !== null) {
+            $requiredPageSettingsClassNames = (
+                CBPageSettings::requiredClassNames(
+                    [
+                        $rootPageSettingsClassName,
+                    ]
+                )
             );
-        } else {
-            $pageSettingsClassNames = [];
         }
 
         $htmlElementClassNames = CBPageSettings::htmlElementClassNames(
-            $pageSettingsClassNames
+            $requiredPageSettingsClassNames
         );
 
         array_walk(
@@ -524,8 +537,16 @@ final class CBHTMLOutput {
         CBHTMLOutput::processRequiredClassNames();
 
         $info = CBHTMLOutput::$pageInformation;
-        $title = CBModel::valueToString($info, 'title');
-        $description = CBModel::valueToString($info, 'description');
+
+        $title = CBModel::valueToString(
+            $info,
+            'title'
+        );
+
+        $description = CBModel::valueToString(
+            $info,
+            'description'
+        );
 
         ?>
 
@@ -558,7 +579,9 @@ final class CBHTMLOutput {
                     <?php
                 }
 
-                CBPageSettings::renderHeadElementHTML($pageSettingsClassNames);
+                CBPageSettings::renderHeadElementHTML(
+                    $requiredPageSettingsClassNames
+                );
 
                 CBHTMLOutput::renderJavaScriptInHead();
                 CBHTMLOutput::renderCSSLinks();
@@ -569,13 +592,17 @@ final class CBHTMLOutput {
             <body>
                 <?php
 
-                CBPageSettings::renderPreContentHTML($pageSettingsClassNames);
+                CBPageSettings::renderPreContentHTML(
+                    $requiredPageSettingsClassNames
+                );
 
                 echo $bodyContent;
 
                 $bodyContent = null;
 
-                CBPageSettings::renderPostContentHTML($pageSettingsClassNames);
+                CBPageSettings::renderPostContentHTML(
+                    $requiredPageSettingsClassNames
+                );
 
                 CBHTMLOutput::renderJavaScript();
 
