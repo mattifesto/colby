@@ -112,7 +112,7 @@ final class CBAdmin {
 
         try {
             CBHTMLOutput::pageInformation()->classNameForPageSettings =
-            'CBPageSettingsForAdminPages';
+            'CBPageSettingsForResponsivePages';
 
             CBHTMLOutput::requireClassName('CBAdmin');
             CBHTMLOutput::requireClassName('CBUI');
