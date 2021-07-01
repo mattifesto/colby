@@ -1,6 +1,7 @@
 <?php
 
-final class CBPageSettings {
+final class
+CBPageSettings {
 
     /* -- functions -- -- -- -- -- */
 
@@ -16,21 +17,30 @@ final class CBPageSettings {
     ): array {
         $htmlElementClassNames = [];
 
-        foreach ($pageSettingsClassNames as $className) {
-            $function = "{$className}::CBPageSettings_htmlElementClassNames";
+        foreach (
+            $pageSettingsClassNames as $pageSettingsClassName
+        ) {
+            $functionName = (
+                $pageSettingsClassName .
+                '::CBPageSettings_htmlElementClassNames'
+            );
 
-            if (is_callable($function)) {
-                $classNames = call_user_func($function);
+            if (is_callable($functionName)) {
+                $additionalHTMLElementClassNames = call_user_func(
+                    $functionName
+                );
 
                 $htmlElementClassNames = array_merge(
                     $htmlElementClassNames,
-                    $classNames
+                    $additionalHTMLElementClassNames
                 );
             }
         }
 
         return array_values(
-            array_unique($htmlElementClassNames)
+            array_unique(
+                $htmlElementClassNames
+            )
         );
     }
     /* htmlElementClassNames() */
@@ -146,9 +156,12 @@ final class CBPageSettings {
      *
      * @return [string]
      *
-     *      The full array of page settings class names in dependency order.
+     *      The full array of page settings class names in dependency order
+     *      which will include all of the class nanes in
+     *      $rootPageSettingsClassNames.
      */
-    static function requiredClassNames(
+    static function
+    requiredClassNames(
         array $rootPageSettingsClassNames
     ): array {
         return CBRequiredClassNamesResolver::resolveRequiredClassNames(
