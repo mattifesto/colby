@@ -1,6 +1,13 @@
 <?php
 
-final class CBPageSettingsForAdminPages {
+/**
+ * @deprecated 2021_06_30
+ *
+ *      This page has very few differences from CBPageSettingsForResponsivePages
+ *      and none that justify another page settings class.
+ */
+final class
+CBPageSettingsForAdminPages {
 
     /* -- CBPageSettings interfaces -- */
 
