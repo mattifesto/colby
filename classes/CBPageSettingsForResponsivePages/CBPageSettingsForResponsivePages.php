@@ -1,18 +1,34 @@
 <?php
 
-final class CBPageSettingsForResponsivePages {
+final class
+CBPageSettingsForResponsivePages {
+
+    /* -- CBPageSettings interfaces -- */
+
+
 
     /**
      * @return [string]
      */
-    static function CBPageSettings_htmlElementClassNames(): array {
-        return ['CBLightTheme', 'CBStyleSheet'];
+    static function
+    CBPageSettings_htmlElementClassNames(
+    ): array {
+        return [
+            'CBPageSettingsForResponsivePages',
+            'CBLightTheme',
+            'CBStyleSheet',
+        ];
     }
+    /* CBPageSettings_htmlElementClassNames() */
+
+
 
     /**
      * @return [string]
      */
-    static function CBPageSettings_requiredClassNames(): array {
+    static function
+    CBPageSettings_requiredClassNames(
+    ): array {
         return [
             'CBEqualizePageSettingsPart',
             'CBResponsiveViewportPageSettingsPart',
@@ -20,4 +36,6 @@ final class CBPageSettingsForResponsivePages {
             'CBFacebookPageSettingsPart',
         ];
     }
+    /* CBPageSettings_requiredClassNames() */
+
 }
