@@ -1805,6 +1805,25 @@ final class Admin_CBCode {
 
                 (object)[
                     'CBCodeSearch_CBID' => (
+                        '69607c2dafd879d145764ef4750b505be3cae53d'
+                    ),
+                    'cbmessage' => <<<EOT
+
+                        Use CBPageSettingsForResponsivePages.
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => '\bCBPageSettingsForAdminPages\b',
+                    'severity' => 5,
+                    'title' => 'CBPageSettingsForAdminPages',
+
+                    'noticeStartDate' => '2021/06/30',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
+                    'CBCodeSearch_CBID' => (
                         '883ff0dad589455caa15717f5a144e8d4fd00ea4'
                     ),
                     'cbmessage' => <<<EOT
