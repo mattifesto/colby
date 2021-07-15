@@ -1,0 +1,5 @@
+This view is deprecated but still in use by some people. The
+CBBackgroundView.css file was added recently to specify (max-width: 100% (code))
+to bring the element more in line with the CBView CSS recommendations and fix a
+bug. Other root element styles have not been moved to this file to prevent
+accidental regressions.
