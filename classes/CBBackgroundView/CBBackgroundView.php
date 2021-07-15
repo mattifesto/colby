@@ -1,8 +1,33 @@
 <?php
 
-final class CBBackgroundView {
+final class
+CBBackgroundView {
+
+    /* -- CBHTMLOutput interfaces -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_CSSURLs(
+    ) {
+        return [
+            Colby::flexpath(
+                __CLASS__,
+                'v675.34.css',
+                cbsysurl()
+            ),
+        ];
+    }
+    /* CBHTMLOutput_CSSURLs() */
+
+
 
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
@@ -13,6 +38,7 @@ final class CBBackgroundView {
         );
     }
     /* CBInstall_install() */
+
 
 
     /**
@@ -26,7 +52,10 @@ final class CBBackgroundView {
     /* CBInstall_requiredClassNames() */
 
 
+
     /* -- CBModel interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param model $spec
