@@ -32,6 +32,7 @@ intrinsic width, the (root element (b)) is a flexible box that will shrink the
 (content element (b)) to fit into the available width.
 
 
+
 --- h2
 Root element styles
 ---
@@ -85,6 +86,23 @@ Root element styles
     ---
 
 ---
+
+
+
+--- h3
+Root element styles notes
+---
+
+--- ul
+The class name (CBUI_view (code)) in CBUI.css specifies these styles except for
+padding. This class should probably be moved into a CBView provided CSS class
+name.
+
+These styles do not the prevent overflow of aberrant view elements in some cases
+(see CBContainerView documentation).
+---
+
+
 
 --- h2
 Content element styles
