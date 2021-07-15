@@ -1,0 +1,35 @@
+--- h2
+2021_07_15 Note
+---
+
+CBContainerView is a single element view and was developed before the CBView two
+element model and its suggested CSS styles were established. Because of that,
+this view's root element probably should have the following styles:
+
+--- ul
+(box-sizing: border-box; (code))
+
+(max-width: 100%; (code))
+
+(overflow-wrap: break-word; (code))
+---
+
+However, those styles have not been added because we are being very conservative
+about changing the base element styles of such a commonly used element. The best
+approach to this is probably to eventually create a replacement view.
+
+--- h2
+"flow" element style overflow
+---
+
+This element supports the "flow" CSS class name (which should be updated to be
+"CBContainerView_flow"). When that class name is added an aberrant child view's
+element is allowed to overflow the root element of this view. Adding the style
+(overflow: hidden; (code)) solves this, but has not been added so that we don't
+accidentally clobber existing uses that actually might want overflow for some
+reason.
+
+It's debatable whether a parent view should take into consideration the behavior
+of aberrant child views.
+
+A replacement view should take this into consideration.
