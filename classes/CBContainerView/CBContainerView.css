@@ -2,6 +2,8 @@
     background-position: center top;
     background-repeat: no-repeat;
     display: block;
+
+    /* 2021_07_15 see documentation */
 }
 
 a.CBContainerView {

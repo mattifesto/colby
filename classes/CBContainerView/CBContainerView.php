@@ -14,9 +14,12 @@
  *          CSS
  *      - backgroundPositionY: this property should be moved to local CSS
  */
-final class CBContainerView {
+final class
+CBContainerView {
 
     /* -- CBInstall interfaces -- -- -- -- -- */
+
+
 
     /**
      * @return void
@@ -27,6 +30,7 @@ final class CBContainerView {
         );
     }
     /* CBInstall_install() */
+
 
 
     /**
@@ -40,7 +44,10 @@ final class CBContainerView {
     /* CBInstall_requiredClassNames() */
 
 
+
     /* -- CBModel interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param model $spec
@@ -62,6 +69,8 @@ final class CBContainerView {
         return $spec;
     }
 
+
+
     /**
      * @deprecated use CBContainerView::modelToImageCSS()
      *
@@ -75,6 +84,8 @@ final class CBContainerView {
             'filename' => 'CBContainerViewImageSetTheme.css',
         ]);
     }
+
+
 
     /**
      * @param object $model
@@ -261,14 +272,31 @@ EOT;
     }
 
 
+
+    /* -- CBHTMLOutput interfaces -- */
+
+
+
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.34.css',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
+
+
+
+    /* -- CBModel interfaces -- */
+
 
 
     /**
