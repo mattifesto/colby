@@ -778,6 +778,8 @@ final class CBMessageMarkup {
         return CBMessageMarkup::stringToMessage($value);
     }
 
+
+
     /**
      * This function converts a string to a message representing that string as
      * plain text. This function is the `htmlspecialchars` of message markup.
@@ -798,7 +800,10 @@ final class CBMessageMarkup {
      *
      * @return string
      */
-    static function stringToMessage(string $value): string {
+    static function
+    stringToMessage(
+        string $value
+    ): string {
         $patterns = [
             '/\\\\/',   /* single backslack */
             '/-/',      /* hyphen */
