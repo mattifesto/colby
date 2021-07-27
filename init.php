@@ -173,20 +173,5 @@ if (file_exists($websiteVersionFilepath)) {
     define('CBSiteVersionNumber', 'setup');
 }
 
-/**
- * Includes performed before setting up error handling should use
- * `require` or `require_once` to halt execution if they aren't
- * successful.
- *
- * Includes performed after setting up error handling should use
- * `include` or `include_once` which will invoke the error handling
- * mechanism if they aren't successful.
- *
- * Only the following lines should use `require_once`.
- */
 
-require_once cbsysdir() . '/version.php';
-require_once cbsysdir() . '/functions.php';
 require_once cbsysdir() . '/classes/Colby/Colby.php';
-
-CBSitePreferences::initialize();

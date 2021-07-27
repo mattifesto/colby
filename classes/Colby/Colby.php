@@ -639,6 +639,10 @@ final class Colby {
     static function
     initialize(
     ): void {
+        require_once __DIR__ . '/../../functions.php';
+        require_once cbsysdir() . '/version.php';
+
+
 
         /**
          * Library directories are relative paths from the site directory. So
@@ -808,6 +812,8 @@ final class Colby {
                 $filepath
             );
         }
+
+        CBSitePreferences::initialize();
     }
     /* initialize() */
 
@@ -1076,7 +1082,7 @@ cbsiteurl(
         empty($_SERVER['HTTPS']) ?
         'http://' :
         'https://'
-    ) . 
+    ) .
     $_SERVER['SERVER_NAME'];
 }
 /* cbsiteurl() */
