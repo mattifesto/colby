@@ -21,44 +21,6 @@ function cbhtml($text) {
 
 
 /**
- * @param string $markdown
- *
- *      The goal is for the full CommonMark spec to be supported.
- *
- *      @NOTE This shoudn't be in this file because it has a depencency.
- *
- * @return string (HTML)
- */
-function cbmdhtml($markdown) {
-    $parsedown = new Parsedown();
-
-    return $parsedown->text($markdown);
-}
-
-
-
-/**
- * @NOTE 2020_02_15
- *
- *      This function technically does not belong in this file because it has a
- *      dependency. However, I'm not sure where to place functions like this so
- *      for now it is going here.
- *
- * @param string $plaintext
- *
- * @return string
- *
- *      Returns a CBMessage safe version of $plaintext.
- */
-function cbmessage(string $plaintext) {
-    return CBMessageMarkup::stringToMessage(
-        $plaintext
-    );
-}
-
-
-
-/**
  * @param callable $callback
  * @param array $array
  *

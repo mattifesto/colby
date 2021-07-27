@@ -1087,6 +1087,54 @@ final class Colby {
 
 
 /**
+ * The following are global functions that rely on Colby initialization to run.
+ */
+
+
+
+/**
+ * @param string $markdown
+ *
+ *      The goal is for the full CommonMark spec to be supported.
+ *
+ * @return string
+ *
+ *      The string returned will be HTML.
+ */
+function
+cbmdhtml(
+    $markdow
+) {
+    $parsedown = new Parsedown();
+
+    return $parsedown->text(
+        $markdown
+    );
+}
+/* cbmdhtml() */
+
+
+
+/**
+ * @param string $plaintext
+ *
+ * @return string
+ *
+ *      Returns a CBMessage safe version of $plaintext.
+ */
+function
+cbmessage(
+    string $plaintext
+) {
+    return CBMessageMarkup::stringToMessage(
+        $plaintext
+    );
+}
+/* cbmessage() */
+
+
+
+/**
  * For web scenarios this function returns the root website URL using the same
  * domain as the current request in the following form:
  *
