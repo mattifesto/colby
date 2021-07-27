@@ -146,32 +146,4 @@ cbsysdir(
 
 
 
-/**
- * @deprecated 2021_01_24
- *
- *      The definition of CBSiteDirectory and COLBY_SITE_DIRECTORY should be
- *      removed in version 676.
- */
-
-define(
-    'CBSiteDirectory',
-    cbsitedir()
-);
-
-define(
-    'COLBY_SITE_DIRECTORY',
-    cbsitedir()
-);
-
-
-
-$websiteVersionFilepath = cbsitedir() . '/version.php';
-
-if (file_exists($websiteVersionFilepath)) {
-    include_once($websiteVersionFilepath);
-} else {
-    define('CBSiteVersionNumber', 'setup');
-}
-
-
 require_once cbsysdir() . '/classes/Colby/Colby.php';

@@ -645,6 +645,46 @@ final class Colby {
 
 
         /**
+         * Load the site version.php file which defines the CBSiteVersionNumber
+         * constant. If the site is currently being created, this file will
+         * not exists and CBSiteVersionNumber is set to "setup".
+         *
+         * @TODO 2021_07_27
+         *
+         *      Create a function to replace the constant and replace
+         *      version.php with a file that only contains the version number
+         *      that will be read by the function.
+         */
+        $websiteVersionFilepath = cbsitedir() . '/version.php';
+
+        if (file_exists($websiteVersionFilepath)) {
+            include_once($websiteVersionFilepath);
+        } else {
+            define('CBSiteVersionNumber', 'setup');
+        }
+
+
+
+        /**
+         * @deprecated 2021_01_24
+         *
+         *      The definition of CBSiteDirectory and COLBY_SITE_DIRECTORY
+         *      should be removed in version 676.
+         */
+
+        define(
+            'CBSiteDirectory',
+            cbsitedir()
+        );
+
+        define(
+            'COLBY_SITE_DIRECTORY',
+            cbsitedir()
+        );
+
+
+
+        /**
          * Library directories are relative paths from the site directory. So
          * the site library directory is simply an empty string.
          *
