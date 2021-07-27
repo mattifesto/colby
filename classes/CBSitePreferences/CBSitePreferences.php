@@ -513,7 +513,9 @@ final class CBSitePreferences {
      *
      *      The object is a CBImage model.
      */
-    static function imageForIcon() {
+    static function
+    imageForIcon(
+    ) {
         $model = CBSitePreferences::model();
 
         if (empty($model->imageForIcon)) {
@@ -522,11 +524,11 @@ final class CBSitePreferences {
             return $model->imageForIcon;
         }
     }
+    /* imageForIcon() */
+
 
 
     /**
-     * Called by init.php
-     *
      * @NOTE 2019_08_15
      *
      *      The putenv() and getenv() functions are very odd in the following
@@ -548,7 +550,9 @@ final class CBSitePreferences {
      *
      * @return void
      */
-    static function initialize(): void {
+    static function
+    initialize(
+    ): void {
         $path = CBModel::valueToString(
             CBSitePreferences::model(),
             'path'
@@ -558,11 +562,18 @@ final class CBSitePreferences {
             return;
         }
 
-        $newpath = getenv('PATH') . ':' . $path;
+        $newpath = (
+            getenv('PATH') .
+            ':' .
+            $path
+        );
 
-        putenv("PATH={$newpath}");
+        putenv(
+            "PATH={$newpath}"
+        );
     }
     /* initialize() */
+
 
 
     /**
