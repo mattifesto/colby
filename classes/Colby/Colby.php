@@ -1,11 +1,42 @@
 <?php
 
+/**
+ * Colby sites always run with all error reporting turned on.
+ */
+error_reporting(
+    E_ALL
+);
+
+
+/**
+ * This exception handler is mean to handle exceptions that happen before the
+ * true Colby exception handler is set during initialize.
+ */
+set_exception_handler(
+    function (
+        Throwable $throwable
+    ) {
+        $message = $throwable->getMessage();
+        $filename = $throwable->getFile();
+        $line = $throwable->getLine();
+
+        error_log(
+            "\"{$message}\" in {$filename} line {$line}" .
+            ' | error log entry made in ' .
+            __FILE__
+        );
+    }
+);
+
+
 Colby::initialize();
+
 
 /**
  *
  */
-final class Colby {
+final class
+Colby {
 
     /**
      * @deprecated 2021_06_04
@@ -722,23 +753,33 @@ final class Colby {
          * limitations in this area, document them clearly and explicity here.
          */
 
-        spl_autoload_register('Colby::autoload');
+        spl_autoload_register(
+            'Colby::autoload'
+        );
+
 
         /**
          * Once the first library directories are configured and autoloading
          * is started, we can set up error handling.
          */
 
-        set_error_handler('Colby::handleError');
-        set_exception_handler('CBErrorHandler::handle');
-        register_shutdown_function('Colby::handleShutdown');
+        set_error_handler(
+            'Colby::handleError'
+        );
+
+        set_exception_handler(
+            'CBErrorHandler::handle'
+        );
+
+        register_shutdown_function(
+            'Colby::handleShutdown'
+        );
 
 
         /**
          * Deprecated items from SCShoppingCartLibrary library-configuration.php
          */
 
-        /* deprecated */
         define(
             'SCLibraryDirectory',
             cbsysdir()

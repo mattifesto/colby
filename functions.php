@@ -21,6 +21,32 @@ function cbhtml($text) {
 
 
 /**
+ * @deprecated 2021_06_04
+ *
+ *      Use cb_document_root_directory().
+ */
+function
+cbsitedir(
+): string {
+    return cb_document_root_directory();
+}
+/* cbsitedir() */
+
+
+
+/**
+ * @return string
+ */
+function
+cbsysdir(
+) {
+    return __DIR__;
+}
+/* cbsysdir() */
+
+
+
+/**
  * @param callable $callback
  * @param array $array
  *
@@ -78,6 +104,76 @@ function cb_array_map_assoc(callable $callback, array $array) {
     return $result;
 }
 
+
+
+/**
+ * @NOTE 2021_01_24
+ *
+ *      This function used to return realpath($_SERVER['DOCUMENT_ROOT']), but
+ *      the value of DOCUMENT_ROOT when loaded by terminal does not necessarily
+ *      have the same value as it does when loaded by a web server. Currently,
+ *      Colby is always contained in a folder named "colby" in the site
+ *      directory so returning the parent directory of the directory containing
+ *      this file will be the correct value in all cases.
+ *
+ *      When Colby moves we may need a different approach.
+ *
+ * @return string
+ */
+function
+cb_document_root_directory(
+): string {
+    static $documentRootDirectory = null;
+
+    if ($documentRootDirectory === null) {
+        $testDocumentRootDirectory = getenv(
+            'CB_TEST_DOCUMENT_ROOT_DIRECTORY'
+        );
+
+        if ($testDocumentRootDirectory === false) {
+            $documentRootDirectory = dirname(
+                __DIR__
+            );
+        } else {
+            $documentRootDirectory = $testDocumentRootDirectory;
+        }
+    }
+
+    return $documentRootDirectory;
+}
+/* cb_document_root_directory() */
+
+
+
+/**
+ * @return string|null
+ *
+ *      Newer Colby projects have a project directory that contains a
+ *      document_root directory and also contains a logs directory. Older
+ *      projects will not have this and those projects will return null from
+ *      this function.
+ */
+function
+cb_logs_directory(
+): ?string {
+    static $logsDirectory = false;
+
+    if ($logsDirectory === false) {
+        $projectDirectory = cb_project_directory();
+
+        if ($projectDirectory === null) {
+            $logsDirectory = null;
+        } else {
+            $logsDirectory = "{$projectDirectory}/logs";
+        }
+    }
+
+    return $logsDirectory;
+}
+/* cb_logs_directory() */
+
+
+
 /**
  * @param string $name
  * @param mixed $default
@@ -98,6 +194,40 @@ function cb_post_value($name, $default = null, callable $transform = null) {
         return $value;
     }
 }
+
+
+
+/**
+ * @return string|null
+ *
+ *      Newer Colby projects have a project directory that contains a
+ *      document_root directory. Older projects will not have this and those
+ *      projects will return null from this function.
+ */
+function
+cb_project_directory(
+): ?string {
+    static $projectDirectory = false;
+
+    if ($projectDirectory === false) {
+        $projectDirectory = dirname(
+            cbsitedir()
+        );
+
+        if (
+            !is_dir(
+                "{$projectDirectory}/document_root"
+            )
+        ) {
+            $projectDirectory = null;
+        }
+    }
+
+    return $projectDirectory;
+}
+/* cb_project_directory() */
+
+
 
 /**
  * @param string $name
