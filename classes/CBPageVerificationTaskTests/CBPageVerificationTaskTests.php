@@ -70,14 +70,24 @@ final class CBPageVerificationTaskTests {
     /**
      * @return object
      */
-    static function CBTest_deprecatedAndUnsupportedViews(): stdClass {
+    static function
+    CBTest_deprecatedAndUnsupportedViews(
+    ): stdClass {
         $ID = 'f9553b44249935fb78965c67862a1cec675b0835';
 
         $spec = (
             CBPageVerificationTaskTests::specWithDeprecatedAndUnsupportedViews()
         );
 
-        $spec->ID = $ID;
+        CBModel::setCBID(
+            $spec,
+            $ID
+        );
+
+        CBViewPage::setURI(
+            $spec,
+            $ID
+        );
 
         CBDB::transaction(
             function () use ($ID) {
@@ -227,7 +237,9 @@ final class CBPageVerificationTaskTests {
     /**
      * @return object
      */
-    static function CBTest_hasColbyPagesRow(): stdClass {
+    static function
+    CBTest_hasColbyPagesRow(
+    ): stdClass {
         CBLog::bufferStart();
 
         $ID = '722880dadcef3874157d086b4eceeae83194173f';
@@ -239,13 +251,21 @@ final class CBPageVerificationTaskTests {
             'title' => 'Test Page For ' . __METHOD__ . '()',
         ];
 
+        CBViewPage::setURI(
+            $spec,
+            $ID
+        );
+
         CBDB::transaction(
             function () use ($ID) {
                 CBModels::deleteByID($ID);
             }
         );
 
-        $result = CBPageVerificationTask::run($ID);
+        $result = CBPageVerificationTask::run(
+            $ID
+        );
+
         $actual = $result->hasColbyPagesRow;
         $expected = false;
 
@@ -263,7 +283,10 @@ final class CBPageVerificationTaskTests {
             }
         );
 
-        $result = CBPageVerificationTask::run($ID);
+        $result = CBPageVerificationTask::run(
+            $ID
+        );
+
         $actual = $result->hasColbyPagesRow;
         $expected = true;
 
@@ -318,18 +341,27 @@ final class CBPageVerificationTaskTests {
      *
      * @return object
      */
-    static function CBTest_importThumbnailURLToImage(): stdClass {
+    static function
+    CBTest_importThumbnailURLToImage(
+    ): stdClass {
         $pageID = '4a7bc517a928056f9518d839881cc9f49ea10c0a';
         $temporaryImageDataStoreID = 'a66a45225d071a4f6e65c475ece1810ac4dec45a';
 
         CBDB::transaction(
             function () use ($pageID) {
-                CBModels::deleteByID([$pageID]);
+                CBModels::deleteByID(
+                    [$pageID]
+                );
             }
         );
 
-        CBModels::deleteByID($temporaryImageDataStoreID);
-        CBModels::deleteByID(CBTestAdmin::testImageID());
+        CBModels::deleteByID(
+            $temporaryImageDataStoreID
+        );
+
+        CBModels::deleteByID(
+            CBTestAdmin::testImageID()
+        );
 
         $testImageFilepath = CBTestAdmin::testImageFilepath();
 
@@ -345,10 +377,16 @@ final class CBPageVerificationTaskTests {
             cbsiteurl()
         );
 
-        CBDataStore::create($temporaryImageDataStoreID);
-        copy($testImageFilepath, $temporaryImageFilepath);
+        CBDataStore::create(
+            $temporaryImageDataStoreID
+        );
 
-        $initialPageSspec = CBModelTemplateCatalog::fetchLivePageTemplate(
+        copy(
+            $testImageFilepath,
+            $temporaryImageFilepath
+        );
+
+        $initialPageSpec = CBModelTemplateCatalog::fetchLivePageTemplate(
             (object)[
                 'isTest' => true,
                 'ID' => $pageID,
@@ -357,9 +395,16 @@ final class CBPageVerificationTaskTests {
             ]
         );
 
+        CBViewPage::setURI(
+            $initialPageSpec,
+            $pageID
+        );
+
         CBDB::transaction(
-            function () use ($initialPageSspec) {
-                CBModels::save($initialPageSspec);
+            function () use ($initialPageSpec) {
+                CBModels::save(
+                    $initialPageSpec
+                );
             }
         );
 
@@ -376,7 +421,10 @@ final class CBPageVerificationTaskTests {
 
         /* log entry count */
 
-        $actual = count($entries);
+        $actual = count(
+            $entries
+        );
+
         $expected = 3;
 
         if ($actual !== $expected) {
@@ -389,7 +437,11 @@ final class CBPageVerificationTaskTests {
 
         /* log entry source ID */
 
-        $actual = CBModel::valueAsID($entries[0], 'sourceID');
+        $actual = CBModel::valueAsID(
+            $entries[0],
+            'sourceID'
+        );
+
         $expected = '0099cecb597038d4bf5f182965271e25cc60c070';
 
         if ($actual !== $expected) {
@@ -402,7 +454,9 @@ final class CBPageVerificationTaskTests {
 
         /* --- */
 
-        $updatedPageSpec = CBModels::fetchSpecByID($pageID);
+        $updatedPageSpec = CBModels::fetchSpecByID(
+            $pageID
+        );
 
         if (!empty($updatedPageSpec->thumbnailURL)) {
             throw new Exception(
@@ -418,7 +472,11 @@ final class CBPageVerificationTaskTests {
             );
         }
 
-        $resultImageID = CBModel::value($updatedPageSpec, 'image.ID');
+        $resultImageID = CBModel::value(
+            $updatedPageSpec,
+            'image.ID'
+        );
+
         $expectedImageID = CBTestAdmin::testImageID();
 
         if ($resultImageID !== $expectedImageID) {
@@ -440,8 +498,13 @@ final class CBPageVerificationTaskTests {
             }
         );
 
-        CBModels::deleteByID($temporaryImageDataStoreID);
-        CBModels::deleteByID(CBTestAdmin::testImageID());
+        CBModels::deleteByID(
+            $temporaryImageDataStoreID
+        );
+
+        CBModels::deleteByID(
+            CBTestAdmin::testImageID()
+        );
 
         return (object)[
             'succeeded' => true,
@@ -454,7 +517,9 @@ final class CBPageVerificationTaskTests {
     /**
      * @return object
      */
-    static function CBTest_invalidImageProperty(): stdClass {
+    static function
+    CBTest_invalidImageProperty(
+    ): stdClass {
         $ID = '5cf7dc1d21b1c70d62eeede0b9558d63f91781a3';
 
         $spec = (object)[
@@ -470,6 +535,11 @@ final class CBPageVerificationTaskTests {
                 'CBPageVerificationTaskTests'
             ),
         ];
+
+        CBViewPage::setURI(
+            $spec,
+            $ID
+        );
 
         CBDB::transaction(
             function () use ($ID) {
@@ -594,7 +664,9 @@ final class CBPageVerificationTaskTests {
      *
      * @return object
      */
-    static function CBTest_upgradeThumbnailURLToImage(): stdClass {
+    static function
+    CBTest_upgradeThumbnailURLToImage(
+    ): stdClass {
         $pageID = 'e87c8eef4953d3060faaa2e3597c730326adfc29';
 
         CBDB::transaction(
@@ -603,9 +675,13 @@ final class CBPageVerificationTaskTests {
             }
         );
 
-        CBModels::deleteByID(CBTestAdmin::testImageID());
+        CBModels::deleteByID(
+            CBTestAdmin::testImageID()
+        );
 
-        $testImage = CBImages::URIToCBImage(CBTestAdmin::testImageFilepath());
+        $testImage = CBImages::URIToCBImage(
+            CBTestAdmin::testImageFilepath()
+        );
 
         if ($testImage->ID !== CBTestAdmin::testImageID()) {
             throw new Exception(
@@ -619,7 +695,7 @@ final class CBPageVerificationTaskTests {
             cbsiteurl()
         );
 
-        $initialPageSspec = CBModelTemplateCatalog::fetchLivePageTemplate(
+        $initialPageSpec = CBModelTemplateCatalog::fetchLivePageTemplate(
             (object)[
                 'isTest' => true,
                 'ID' => $pageID,
@@ -628,26 +704,41 @@ final class CBPageVerificationTaskTests {
             ]
         );
 
+        CBViewPage::setURI(
+            $initialPageSpec,
+            $pageID
+        );
+
         CBDB::transaction(
-            function () use ($initialPageSspec) {
-                CBModels::save($initialPageSspec);
+            function () use ($initialPageSpec) {
+                CBModels::save(
+                    $initialPageSpec
+                );
             }
         );
 
         CBLog::bufferStart();
 
-        CBTasks2::runSpecificTask('CBPageVerificationTask', $pageID);
+        CBTasks2::runSpecificTask(
+            'CBPageVerificationTask',
+            $pageID
+        );
 
         $buffer = CBLog::bufferContents();
 
         CBLog::bufferEndClean();
 
-        $bufferIsValid = function ($buffer): bool {
+        $bufferIsValid = function (
+            $buffer
+        ): bool {
             if (count($buffer) !== 3) {
                 return false;
             }
 
-            $sourceID = CBModel::valueAsID($buffer[0], 'sourceID');
+            $sourceID = CBModel::valueAsID(
+                $buffer[0],
+                'sourceID'
+            );
 
             if ($sourceID !== '0099cecb597038d4bf5f182965271e25cc60c070') {
                 return false;
@@ -658,7 +749,9 @@ final class CBPageVerificationTaskTests {
 
         if (!$bufferIsValid($buffer)) {
             $bufferAsMessage = CBMessageMarkup::stringToMessage(
-                CBConvert::valueToPrettyJSON($buffer)
+                CBConvert::valueToPrettyJSON(
+                    $buffer
+                )
             );
 
             $message = <<<EOT
@@ -691,12 +784,21 @@ final class CBPageVerificationTaskTests {
             );
         }
 
-        $resultImageID = CBModel::value($updatedPageSpec, 'image.ID');
+        $resultImageID = CBModel::value(
+            $updatedPageSpec,
+            'image.ID'
+        );
+
         $expectedImageID = CBTestAdmin::testImageID();
 
         if ($resultImageID !== $expectedImageID) {
-            $resultImageIDAsJSON = json_encode($resultImageID);
-            $expectedImageIDAsJSON = json_encode($expectedImageID);
+            $resultImageIDAsJSON = json_encode(
+                $resultImageID
+            );
+
+            $expectedImageIDAsJSON = json_encode(
+                $expectedImageID
+            );
 
             throw new Exception(
                 "2: The page spec \"image.ID\" property is " .
@@ -707,8 +809,13 @@ final class CBPageVerificationTaskTests {
 
         // clean up
 
-        CBModels::deleteByID($pageID);
-        CBModels::deleteByID($resultImageID);
+        CBModels::deleteByID(
+            $pageID
+        );
+
+        CBModels::deleteByID(
+            $resultImageID
+        );
 
         return (object)[
             'succeeded' => true,
