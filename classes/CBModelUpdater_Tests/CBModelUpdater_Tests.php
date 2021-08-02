@@ -94,6 +94,11 @@ final class CBModelUpdater_Tests {
             'CBPageSettingsForResponsivePages'
         );
 
+        CBViewPage::setURI(
+            $spec,
+            $CBID
+        );
+
         CBModels::save(
             $spec
         );
