@@ -141,7 +141,9 @@ final class CBViewPageTests {
     /**
      * @return object
      */
-    static function CBTest_general(): stdClass {
+    static function
+    CBTest_general(
+    ): stdClass {
 
         /* Test 1 */
 
@@ -176,10 +178,13 @@ final class CBViewPageTests {
             'thumbnailURL' => '',
             'sections' => CBViewTests::testSubviewModels(),
             'thumbnailURLAsHTML' => '',
+            'URI' => '',
             'URIAsHTML' => '',
         ];
 
-        $model = CBModel::build($spec);
+        $model = CBModel::build(
+            $spec
+        );
 
         if ($model != $expectedModel) {
             return CBTest::resultMismatchFailure(
@@ -191,7 +196,10 @@ final class CBViewPageTests {
 
         /* Test 2 */
 
-        $searchText = CBModel::toSearchText($model);
+        $searchText = CBModel::toSearchText(
+            $model
+        );
+
         $expectedSearchText = (
             CBViewTests::testSubviewSearchText() .
             ' CBViewPage'
@@ -219,10 +227,12 @@ final class CBViewPageTests {
     /**
      * @return object
      */
-    static function CBTest_save(): stdClass {
+    static function
+    CBTest_save(
+    ): stdClass {
         $ID = '697f4e4cb46436f5c204e495caff5957d4d62a31';
         $kind = 'CBViewPageTestPages';
-        $specURI = 'CBViewPageTests/super écali fragil isticø expialidociouså';
+        $specURI = 'cbviewpagetests/super-cali-fragil-istic-expialidocious';
         $modelURI = 'cbviewpagetests/super-cali-fragil-istic-expialidocious';
 
         /**
@@ -241,10 +251,16 @@ final class CBViewPageTests {
             'title' => $title,
             'classNameForKind' => $kind,
             'isPublished' => true,
-            'URI' => $specURI,
         ];
 
-        CBModels::save($spec);
+        CBViewPage::setURI(
+            $spec,
+            $specURI
+        );
+
+        CBModels::save(
+            $spec
+        );
 
 
         /* test 1 */
