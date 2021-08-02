@@ -257,7 +257,9 @@ final class CBViewTests {
     /**
      * @return object
      */
-    static function CBTest_renderSpec(): stdClass {
+    static function
+    CBTest_renderSpec(
+    ): stdClass {
         $testName = 'class does not exist';
         $actualSourceCBID = 'no exception';
         $expectedSourceCBID = '0f170c152f54ebb97ecd2fb0a27055a096276d37';
@@ -324,24 +326,35 @@ final class CBViewTests {
          *      1. Rendering a view spec with no class name when test mode is
          *      NOT active should succeed but produce two log entries.
          *
-         *      2. The source CBID of the secong log entry should be
+         *      2. The source CBID of the second log entry should be
          *      'da871db8b36e6fb4f1ec74f5abaf24f8ccf8aac4'.
          */
 
         ob_start();
 
         try {
+            error_log(
+                '---- start of expected error log entries created by ' .
+                __METHOD__ .
+                '() -----'
+            );
+
             CBSlack::disable();
 
             $logEntries = CBLog::buffer(
                 function () {
                     $viewSpec = (object)[];
 
-                    CBView::renderSpec($viewSpec);
+                    CBView::renderSpec(
+                        $viewSpec
+                    );
                 }
             );
 
-            $actualCountOfLogEntries = count($logEntries);
+            $actualCountOfLogEntries = count(
+                $logEntries
+            );
+
             $expectedCountOfLogEntries = 2;
 
             if ($actualCountOfLogEntries !== $expectedCountOfLogEntries) {
@@ -376,6 +389,12 @@ final class CBViewTests {
 
             ob_end_clean();
         }
+
+        error_log(
+            '---- end of expected error log entries created by ' .
+            __METHOD__ .
+            '() -----'
+        );
 
         return (object)[
             'succeeded' => true,
