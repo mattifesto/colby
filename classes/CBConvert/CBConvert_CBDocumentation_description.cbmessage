@@ -1,0 +1,55 @@
+--- h2
+stringToStub( mixed $string )
+---
+
+Converts plain text to a single URL stub. A stub is a string that contains only
+the characters [0-9a-z-]. It replaces spaces with a hyphens and trims the
+string.
+
+--- dl
+
+    --- dt
+    Important
+    ---
+    The algorithm of this function will change over time. Do not use the return
+    value as an identifier or a key value.
+
+    --- dt
+    History
+    ---
+    This function used to use iconv() to convert international characters to
+    their ASCII base characters, but this is unreliable on different hosts.
+    Future options include maintaining a list of character replacements which is
+    a method used by many systems.
+
+    --- dt
+    Example
+    ---
+    'Piñata Örtega' --> 'piata-rtega'
+
+---
+
+
+
+--- h2
+stringToURI( mixed $string )
+---
+
+This function is very similar to CBConvert::stringToStub() but it handles
+forward slashes.
+
+--- dl
+
+    --- dt
+    Important
+    ---
+    The algorithm of this function will change over time. Do not use the return
+    value as an identifier or a key value.
+
+    --- dt
+    Example
+    ---
+
+    " hey  //  you read  / this post /  " --> "hey/you-read/this-post"
+
+---

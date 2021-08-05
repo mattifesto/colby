@@ -347,46 +347,16 @@ final class CBConvert {
 
 
     /**
-     * Converts plain text to a simple "stub".
-     *
-     * A stub is a string that contains only the characters [0-9a-z-]. It
-     * replaces spaces with a hyphens and trims the string.
-     *
-     * Useful for:
-     *
-     *  - URL stubs
-     *  - HTML classes and IDs
-     *
-     * History: This function used to use iconv() to convert international
-     * characters to their ASCII base characters, but this is unreliable on
-     * different hosts. Future options include maintaining a list of character
-     * replacements which is a method used by many systems.
-     *
-     * current algorithm:
-     *
-     * 1. trim the input string, which also converts the input to a string if
-     *    it isn't already one
-     *
-     * 2. replace sequences of white space and hyphens with one hyphen
-     *
-     * 3. remove all characters except: a-z, A-Z, 0-9, and hyphen
-     *
-     * 4. remove leading hyphens
-     *
-     * 5. remove trailing hyphens
-     *
-     * 6. replace two or more adjacent hyphens with one hypen
-     *    step 3 can result in characters being removed which causes this
-     *
-     * 7. make all characters lowercase
-     *
-     * common example: 'Piñata Örtega' --> 'piata-rtega'
+     * @see documentation
      *
      * @param mixed $string
      *
      * @return string
      */
-    static function stringToStub($string): string {
+    static function
+    stringToStub(
+        $string
+    ): string {
         $patterns = [];
         $replacements = [];
 
@@ -411,7 +381,11 @@ final class CBConvert {
         array_push($replacements, '-');
 
         return strtolower(
-            preg_replace($patterns, $replacements, $string)
+            preg_replace(
+                $patterns,
+                $replacements,
+                $string
+            )
         );
     }
     /* stringToStub() */
@@ -419,10 +393,7 @@ final class CBConvert {
 
 
     /**
-     * This function is very similar to CBConvert::stringToStub() but it handles
-     * forward slashes
-     *
-     * " hey  //  you read  / this post /  " --> "hey/you-read/this-post"
+     * @see documentation
      *
      * @param string $string
      *
@@ -450,7 +421,10 @@ final class CBConvert {
             }
         );
 
-        return implode('/', $stubs);
+        return implode(
+            '/',
+            $stubs
+        );
     }
     /* stringToURI() */
 
@@ -462,17 +436,38 @@ final class CBConvert {
      * This function needs to be very stable because it will be called from
      * error handlers.
      *
+     * @param Throwable $throwable
+     *
      * @return string
      */
-    static function throwableToFunction(/* Throwable: */ $throwable) {
+    static function
+    throwableToFunction(
+        /* Throwable */ $throwable
+    ) /* : string */ {
         $trace = $throwable->getTrace();
         $entry = $trace[0];
-        $class = empty($entry['class']) ? '' : $entry['class'];
-        $type = empty($entry['type']) ? '' : $entry['type'];
-        $function = empty($entry['function']) ? '' : $entry['function'];
+
+        $class = (
+            empty($entry['class']) ?
+            '' :
+            $entry['class']
+        );
+
+        $type = (
+            empty($entry['type']) ?
+            '' :
+            $entry['type']
+        );
+
+        $function = (
+            empty($entry['function']) ?
+            '' :
+            $entry['function']
+        );
 
         return "{$class}{$type}{$function}()\n";
     }
+    /* throwableToFunction() */
 
 
 
