@@ -80,6 +80,7 @@ final class CBViewPage {
             );
         }
 
+
         $model = (object)[
             'classNameForKind' => CBModel::valueToString(
                 $spec,
@@ -123,14 +124,61 @@ final class CBViewPage {
                     'title'
                 )
             ),
-
-            'URI' => CBConvert::stringToURI(
-                CBModel::valueToString(
-                    $spec,
-                    'URI'
-                )
-            ),
         ];
+
+
+        /**
+         * URI
+         *
+         * @NOTE 2021_08_01
+         *
+         *      If the spec has a URI property, then the URI must be a valid URI
+         *      or we will throw an exception. An empty URI is a valid value but
+         *      won't result in a usable URL. The characters allowed in a URI
+         *      are fairly restricted right now, but more will be allowed over
+         *      time.
+         *
+         *      If we generated a URL, for instance by using the title, then
+         *      allowing more characters in URLs might make the URLs of existing
+         *      pages change, so if a page has a URL it must be specified
+         *      exactly in the spec so that changes to processes or allowed
+         *      characters won't cause changes to the URLs for pages.
+         *
+         * @TODO 2021_08_01
+         *
+         *      The code below reports but does not throw an exception if the
+         *      page spec doesn't have a valid URI. In the future, this
+         *      exception will be thrown and the code to alter or generate a
+         *      valid URI will be removed.
+         */
+
+        $specURI = CBViewPage::getURI(
+            $spec
+        );
+
+        $modelURI = CBConvert::stringToURI(
+            $specURI
+        );
+
+        if (
+            $modelURI !== $specURI
+        ) {
+            $throwable = new CBExceptionWithValue(
+                'This CBViewPage spec does not have a valid URI value.',
+                $spec,
+                '1c1609f6087a9caaad3ac902689aa076eae1ed4a'
+            );
+
+            CBErrorHandler::report(
+                $throwable
+            );
+        }
+
+        CBViewPage::setURI(
+            $model,
+            $modelURI
+        );
+
 
         /**
          * selectedMenuItemNames
@@ -157,13 +205,6 @@ final class CBViewPage {
 
         $model->selectedMenuItemNames = $selectedMenuItemNames;
 
-        /* URI */
-
-        $ID = CBModel::valueAsID($spec, 'ID');
-
-        if (empty($model->URI) && !empty($ID)) {
-            $model->URI = $ID;
-        }
 
         if ($model->publicationTimeStamp === null && $model->isPublished) {
             $model->publicationTimeStamp = time();
@@ -600,9 +641,8 @@ final class CBViewPage {
                 'description'
             ),
 
-            'URI' => CBModel::valueToString(
+            'URI' => CBViewPage::getURI(
                 $model,
-                'URI'
             ),
 
             'created' => CBModel::valueAsInt(
@@ -877,6 +917,57 @@ final class CBViewPage {
         $viewPageSpec->sections = $viewSpecs;
     }
     /* setViews() */
+
+
+
+    /**
+     * @param object $viewPageSpec
+     *
+     * @return string
+     */
+    static function
+    getURI(
+        stdClass $viewPageSpec
+    ): string {
+        return CBModel::valueToString(
+            $viewPageSpec,
+            'URI'
+        );
+    }
+    /* getURI() */
+
+
+
+    /**
+     * @param object $viewPageSpec
+     * @param string $URI
+     *
+     *      Empty URIs are allowed.
+     *
+     * @return void
+     */
+    static function
+    setURI(
+        stdClass $viewPageSpec,
+        string $URI
+    ): void {
+        $validatedURI = CBConvert::stringToURI(
+            $URI
+        );
+
+        if (
+            $validatedURI !== $URI
+        ) {
+            throw new CBExceptionWithValue(
+                "'${URI}' is not a valid URI value.",
+                $viewPageSpec,
+                '1bf1d855be02c39c95e325c0547ca54d3119845d'
+            );
+        }
+
+        $viewPageSpec->URI = $URI;
+    }
+    /* setURI() */
 
 
 
