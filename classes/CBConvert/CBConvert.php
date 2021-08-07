@@ -9,11 +9,35 @@ final class CBConvert {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v563.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v563.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+
+
+    /**
+     * @return [[string]]
+     */
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array {
+        return [
+            [
+                'CBConvert_stubReplacements',
+                CBConvert::stubReplacements(),
+            ]
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptVariables() */
 
 
 
@@ -355,38 +379,23 @@ final class CBConvert {
      */
     static function
     stringToStub(
-        $string
+        $originalString
     ): string {
-        $patterns = [];
-        $replacements = [];
-
-        /* replace separator characters with a hyphen */
-        array_push($patterns, '/[\s\-_]+/');
-        array_push($replacements, '-');
-
-        /* remove unused characters */
-        array_push($patterns, '/[^a-zA-Z0-9\-]/');
-        array_push($replacements, '');
-
-        /* remove leading hyphens */
-        array_push($patterns, '/^-+/');
-        array_push($replacements, '');
-
-        /* remove trailing hyphens */
-        array_push($patterns, '/-+$/');
-        array_push($replacements, '');
-
-        /* replace repeating hyphens with a single hyphen */
-        array_push($patterns, '/--+/');
-        array_push($replacements, '-');
-
-        return strtolower(
-            preg_replace(
-                $patterns,
-                $replacements,
-                $string
-            )
+        $stub = strtolower(
+            $originalString
         );
+
+        $stubReplacements = CBConvert::stubReplacements();
+
+        foreach ($stubReplacements as $stubReplacement) {
+            $stub = preg_replace(
+                "/{$stubReplacement->pattern}/",
+                $stubReplacement->replacement,
+                $stub
+            );
+        }
+
+        return $stub;
     }
     /* stringToStub() */
 
@@ -427,6 +436,39 @@ final class CBConvert {
         );
     }
     /* stringToURI() */
+
+
+
+    /**
+     * @return [object]
+     */
+    private static function
+    stubReplacements(
+    ): array {
+        return [
+            (object)[
+                'pattern' => '[\s\-_]+',
+                'replacement' => '-',
+            ],
+            (object)[
+                'pattern' => '[^a-zA-Z0-9\-]',
+                'replacement' => '',
+            ],
+            (object)[
+                'pattern' => '^-+',
+                'replacement' => '',
+            ],
+            (object)[
+                'pattern' => '-+$',
+                'replacement' => '',
+            ],
+            (object)[
+                'pattern' => '--+',
+                'replacement' => '-',
+            ],
+        ];
+    }
+    /* stubReplacements() */
 
 
 
