@@ -310,7 +310,10 @@ Colby {
      *
      * @return string
      */
-    static function exceptionStackTrace($exception) {
+    static function
+    exceptionStackTrace(
+        $exception
+    ) {
         ob_start();
 
         echo CBRequest::requestInformation();
@@ -319,6 +322,7 @@ Colby {
 
         return ob_get_clean();
     }
+    /* exceptionStackTrace() */
 
 
 
