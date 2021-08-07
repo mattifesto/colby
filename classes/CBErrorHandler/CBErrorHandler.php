@@ -254,7 +254,8 @@ final class CBErrorHandler {
      *
      * @return void
      */
-    static function report(
+    static function
+    report(
         Throwable $throwable
     ): void {
         try {
@@ -281,8 +282,18 @@ final class CBErrorHandler {
             }
         } catch (Throwable $ignoredError) {
             error_log(
-                'writing to the error log failed' .
-                ' | error log entry made in ' .
+                '(1) INNER ERROR: ' .
+                'Attempting to write stack traces for the original error ' .
+                'to the error log threw the following inner error: ' .
+                '"' . $ignoredError->getMessage() . '" ' .
+                $ignoredError->getFile() . ' ' .
+                $ignoredError->getLine() . ' ' .
+                '(2) ORIGINAL ERROR: ' .
+                '"' . $throwable->getMessage() . '" ' .
+                $throwable->getFile() . ' ' .
+                $throwable->getLine() . ' ' .
+                '(3) Source CBID: 0fb61539ff2a86e7855866a45e29e22f2011c884. ' .
+                'This error log entry was made in the method: ' .
                 __METHOD__ .
                 '()'
             );
