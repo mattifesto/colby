@@ -1,6 +1,7 @@
 <?php
 
-final class CBConvertTests {
+final class
+CBConvertTests {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -9,19 +10,32 @@ final class CBConvertTests {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v560.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.35.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
     /**
      * @return [[<variableName>, <variableValue>]]
      */
-    static function CBHTMLOutput_JavaScriptVariables(): array {
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array {
         return [
+            [
+                'CBConvertTests_stringToStubTestCases',
+                CBConvertTests::CBTest_stringToStub_testCases(),
+            ],
             [
                 'CBConvertTests_valueAsMonikerTestCases',
                 CBConvertTests::valueAsMonikerTestCases(),
@@ -32,6 +46,7 @@ final class CBConvertTests {
             ],
         ];
     }
+    /* CBHTMLOutput_JavaScriptVariables() */
 
 
 
@@ -122,6 +137,9 @@ final class CBConvertTests {
             ],
             (object)[
                 'name' => 'stringToLines',
+            ],
+            (object)[
+                'name' => 'stringToStub',
             ],
             (object)[
                 'name' => 'valueAsInt',
@@ -340,44 +358,62 @@ final class CBConvertTests {
     /**
      * @return object
      */
-    static function CBTest_stringToStub(): stdClass {
-        /* Test 1 */
+    static function
+    CBTest_stringToStub(
+    ): stdClass {
+        $testCases = CBConvertTests::CBTest_stringToStub_testCases();
 
-        $text = ' ';
-        $expected = '';
-        $actual = CBConvert::stringToStub($text);
+        for (
+            $index = 0;
+            $index < count($testCases);
+            $index += 1
+        ) {
+            $originalString = $testCases[$index][0];
+            $expectedResult = $testCases[$index][1];
 
-        if ($actual !== $expected) {
-            return CBTest::resultMismatchFailure('Test 1', $actual, $expected);
+            $actualResult = CBConvert::stringToStub(
+                $originalString
+            );
+
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    "Test Index {$index}",
+                    $actualResult,
+                    $expectedResult
+                );
+            }
         }
-
-        /* Test 2 */
-
-        $text = 'You\'re the_best';
-        $expected = 'youre-the-best';
-        $actual = CBConvert::stringToStub($text);
-
-        if ($actual !== $expected) {
-            return CBTest::resultMismatchFailure('Test 2', $actual, $expected);
-        }
-
-        /* Test 3 */
-
-        $text = '-é- __ --hello __-é-__ world  __ -ö-__';
-        $expected = 'hello-world';
-        $actual = CBConvert::stringToStub($text);
-
-        if ($actual !== $expected) {
-            return CBTest::resultMismatchFailure('Test 3', $actual, $expected);
-        }
-
-        /* done */
 
         return (object)[
             'succeeded' => true,
         ];
     }
     /* CBTest_stringToStub() */
+
+
+
+    /**
+     * @return [[originalString, expectedResult]
+     */
+    private static function
+    CBTest_stringToStub_testCases(
+    ): array {
+        return [
+            [
+                ' ',
+                '',
+            ],
+            [
+                'You\'re the_best',
+                'youre-the-best',
+            ],
+            [
+                '-é- __ --hello __-é-__ world  __ -ö-__',
+                'hello-world'
+            ],
+        ];
+    }
+    /* CBTest_stringToStub_testCases() */
 
 
 

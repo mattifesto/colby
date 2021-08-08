@@ -8,6 +8,7 @@
     CBMessageMarkup,
     CBTest,
 
+    CBConvertTests_stringToStubTestCases,
     CBConvertTests_valueAsMonikerTestCases,
     CBConvertTests_valueAsNameTestCases,
 */
@@ -211,6 +212,45 @@ var CBConvertTests = {
             };
         }
     },
+    /* CBTest_stringToLines() */
+
+
+
+    /**
+     * @return object
+     */
+    CBTest_stringToStub(
+    ) {
+        let testCases = CBConvertTests_stringToStubTestCases;
+
+        for (
+            let index = 0;
+            index < testCases.length;
+            index += 1
+        ) {
+            let originalString = testCases[index][0];
+            let expectedResult = testCases[index][1];
+
+            let actualResult = CBConvert.stringToStub(
+                originalString
+            );
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    `Test Index ${index}`,
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_stringToStub() */
+
+
 
     /**
      * @return object|Promise
