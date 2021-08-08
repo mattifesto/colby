@@ -15,7 +15,7 @@ final class CBConvert {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v563.js',
+                'v675.35.js',
                 cbsysurl()
             ),
         ];
@@ -32,8 +32,8 @@ final class CBConvert {
     ): array {
         return [
             [
-                'CBConvert_stubReplacements',
-                CBConvert::stubReplacements(),
+                'CBConvert_stringToStubReplacements',
+                CBConvert::stringToStubReplacements(),
             ]
         ];
     }
@@ -385,7 +385,7 @@ final class CBConvert {
             $originalString
         );
 
-        $stubReplacements = CBConvert::stubReplacements();
+        $stubReplacements = CBConvert::stringToStubReplacements();
 
         foreach ($stubReplacements as $stubReplacement) {
             $stub = preg_replace(
@@ -398,6 +398,39 @@ final class CBConvert {
         return $stub;
     }
     /* stringToStub() */
+
+
+
+    /**
+     * @return [object]
+     */
+    private static function
+    stringToStubReplacements(
+    ): array {
+        return [
+            (object)[
+                'pattern' => '[\s\-_]+',
+                'replacement' => '-',
+            ],
+            (object)[
+                'pattern' => '[^a-zA-Z0-9\-]',
+                'replacement' => '',
+            ],
+            (object)[
+                'pattern' => '^-+',
+                'replacement' => '',
+            ],
+            (object)[
+                'pattern' => '-+$',
+                'replacement' => '',
+            ],
+            (object)[
+                'pattern' => '--+',
+                'replacement' => '-',
+            ],
+        ];
+    }
+    /* stringToStubReplacements() */
 
 
 
@@ -436,39 +469,6 @@ final class CBConvert {
         );
     }
     /* stringToURI() */
-
-
-
-    /**
-     * @return [object]
-     */
-    private static function
-    stubReplacements(
-    ): array {
-        return [
-            (object)[
-                'pattern' => '[\s\-_]+',
-                'replacement' => '-',
-            ],
-            (object)[
-                'pattern' => '[^a-zA-Z0-9\-]',
-                'replacement' => '',
-            ],
-            (object)[
-                'pattern' => '^-+',
-                'replacement' => '',
-            ],
-            (object)[
-                'pattern' => '-+$',
-                'replacement' => '',
-            ],
-            (object)[
-                'pattern' => '--+',
-                'replacement' => '-',
-            ],
-        ];
-    }
-    /* stubReplacements() */
 
 
 
