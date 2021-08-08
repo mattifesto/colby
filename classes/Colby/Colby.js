@@ -617,6 +617,7 @@ var Colby = {
     /* get tasks */
 
 
+
     /**
      * @param string text
      *
@@ -633,16 +634,22 @@ var Colby = {
 
          return text.replace(/[&<>"']/g, function(m) { return map[m]; });
     },
+    /* textToHTML() */
+
 
 
     /**
-     * @TODO Reconcile with CBConvert::stringToURI()
+     * @deprecated 2021_08_08
+     *
+     *      Use CBConvert.stringToURI()
      *
      * @param string text
      *
      * @return string
      */
-    textToURI: function (text) {
+    textToURI(
+        text
+    ) {
         text = (typeof text === "string") ? text.trim() : "";
 
         /**
@@ -703,6 +710,7 @@ var Colby = {
         return uri;
     },
     /* textToURI() */
+
 
 
     /**

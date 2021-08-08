@@ -74,11 +74,18 @@ Colby {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v357.css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v357.css',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
 
 
 
@@ -91,7 +98,7 @@ Colby {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.7.js',
+                'v675.35.js',
                 cbsysurl()
             ),
         ];
