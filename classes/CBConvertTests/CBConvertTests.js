@@ -9,6 +9,7 @@
     CBTest,
 
     CBConvertTests_stringToStubTestCases,
+    CBConvertTests_stringToURITestCases,
     CBConvertTests_valueAsMonikerTestCases,
     CBConvertTests_valueAsNameTestCases,
 */
@@ -249,6 +250,42 @@ var CBConvertTests = {
         };
     },
     /* CBTest_stringToStub() */
+
+
+
+    /**
+     * @return object
+     */
+    CBTest_stringToURI(
+    ) {
+        let testCases = CBConvertTests_stringToURITestCases;
+
+        for (
+            let index = 0;
+            index < testCases.length;
+            index += 1
+        ) {
+            let originalString = testCases[index][0];
+            let expectedResult = testCases[index][1];
+
+            let actualResult = CBConvert.stringToURI(
+                originalString
+            );
+
+            if (actualResult !== expectedResult) {
+                return CBTest.resultMismatchFailure(
+                    `Test Index ${index}`,
+                    actualResult,
+                    expectedResult
+                );
+            }
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_stringToURI() */
 
 
 

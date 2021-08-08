@@ -37,6 +37,10 @@ CBConvertTests {
                 CBConvertTests::CBTest_stringToStub_testCases(),
             ],
             [
+                'CBConvertTests_stringToURITestCases',
+                CBConvertTests::CBTest_stringToURI_testCases(),
+            ],
+            [
                 'CBConvertTests_valueAsMonikerTestCases',
                 CBConvertTests::valueAsMonikerTestCases(),
             ],
@@ -140,6 +144,9 @@ CBConvertTests {
             ],
             (object)[
                 'name' => 'stringToStub',
+            ],
+            (object)[
+                'name' => 'stringToURI',
             ],
             (object)[
                 'name' => 'valueAsInt',
@@ -420,20 +427,30 @@ CBConvertTests {
     /**
      * @return object
      */
-    static function CBTest_stringToURI(): stdClass {
+    static function
+    CBTest_stringToURI(
+    ): stdClass {
+        $testCases = CBConvertTests::CBTest_stringToURI_testCases();
 
-        /* test 1 */
+        for (
+            $index = 0;
+            $index < count($testCases);
+            $index += 1
+        ) {
+            $originalString = $testCases[$index][0];
+            $expectedResult = $testCases[$index][1];
 
-        $testcase = '   / foo /bar   /// baz/ /';
-        $expected = 'foo/bar/baz';
-        $result = CBConvert::stringToURI($testcase);
-
-        if ($result != $expected) {
-            return CBTest::resultMismatchFailure(
-                'test 1',
-                $result,
-                $expected
+            $actualResult = CBConvert::stringToURI(
+                $originalString
             );
+
+            if ($actualResult !== $expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    "Test Index {$index}",
+                    $actualResult,
+                    $expectedResult
+                );
+            }
         }
 
         return (object)[
@@ -441,6 +458,39 @@ CBConvertTests {
         ];
     }
     /* CBTest_stringToURI() */
+
+
+
+    /**
+     * @return [[originalString, expectedResult]
+     */
+    private static function
+    CBTest_stringToURI_testCases(
+    ): array {
+        return [
+            [
+                '',
+                '',
+            ],
+            [
+                '  foo ',
+                'foo',
+            ],
+            [
+                ' / foo/',
+                'foo',
+            ],
+            [
+                '/café/piñata/',
+                'caf/piata',
+            ],
+            [
+                '   / foo /bar   /// baz/ /',
+                'foo/bar/baz',
+            ],
+        ];
+    }
+    /* CBTest_stringToURI_testCases() */
 
 
 
