@@ -292,6 +292,48 @@ var CBConvert = {
 
 
     /**
+     * @param string originalString
+     *
+     * @return string
+     */
+    stringToURI(
+        originalString
+    ) {
+        originalString = CBConvert.valueToString(
+            originalString
+        );
+
+        let originalStubs = originalString.split(
+            "/"
+        );
+
+        let stubs = [];
+
+        originalStubs.forEach(
+            function (originalStub) {
+                let stub = CBConvert.stringToStub(
+                    originalStub
+                );
+
+                if (stub !== "") {
+                    stubs.push(
+                        stub
+                    );
+                }
+            }
+        );
+
+        let URI = stubs.join(
+            "/"
+        );
+
+        return URI;
+    },
+    /* stringToURI() */
+
+
+
+    /**
      * @param mixed value
      *
      * @return CBID|undefined

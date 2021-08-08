@@ -441,7 +441,8 @@ final class CBConvert {
      *
      * @return string
      */
-    static function stringToURI(
+    static function
+    stringToURI(
         $string
     ): string {
         $stubs = preg_split(
