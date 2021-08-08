@@ -1805,6 +1805,25 @@ final class Admin_CBCode {
 
                 (object)[
                     'CBCodeSearch_CBID' => (
+                        '0bb1384bd3a5960eca4b7ab8ede0d39cd071181a'
+                    ),
+                    'cbmessage' => <<<EOT
+
+                        Use CBConvert.stringToURI().
+
+                    EOT,
+                    'filetype' => 'js',
+                    'regex' => '\bColby\.textToURI\(',
+                    'severity' => 5,
+                    'title' => 'Colby.textToURI()',
+
+                    'noticeStartDate' => '2021/08/08',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
+                    'CBCodeSearch_CBID' => (
                         '69607c2dafd879d145764ef4750b505be3cae53d'
                     ),
                     'cbmessage' => <<<EOT
