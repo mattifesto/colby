@@ -2,6 +2,9 @@
 /* jshint strict: global */
 /* jshint esversion: 6 */
 /* exported CBConvert */
+/* global
+    CBConvert_stringToStubReplacements
+*/
 
 
 
@@ -251,6 +254,40 @@ var CBConvert = {
     stringToLines: function (value) {
         return value.split(/\r\n|\r|\n/);
     },
+
+
+
+    /**
+     * @param string originalString
+     *
+     * @return string
+     */
+    stringToStub(
+        originalString
+    ) {
+        let stub = CBConvert.valueToString(
+            originalString
+        );
+
+        stub = stub.toLowerCase();
+
+        CBConvert_stringToStubReplacements.forEach(
+            function (stubReplacement) {
+                let expression = new RegExp(
+                    stubReplacement.pattern,
+                    'g'
+                );
+
+                stub = stub.replace(
+                    expression,
+                    stubReplacement.replacement
+                );
+            }
+        );
+
+        return stub;
+    },
+    /* stringToStub() */
 
 
 
