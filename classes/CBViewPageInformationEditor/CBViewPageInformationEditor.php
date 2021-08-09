@@ -6,7 +6,8 @@
  *      All of the code in this class belongs in the CBViewPageEditor class.
  *      This is not an editor of a CBViewPageInformation spec.
  */
-final class CBViewPageInformationEditor {
+final class
+CBViewPageInformationEditor {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -21,7 +22,7 @@ final class CBViewPageInformationEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.7.js',
+                'v675.35.js',
                 cbsysurl()
             ),
         ];

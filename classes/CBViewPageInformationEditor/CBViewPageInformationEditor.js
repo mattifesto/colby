@@ -335,11 +335,44 @@ var CBViewPageInformationEditor = {
 
             let URIEditor2 = CBUIStringEditor2.create();
 
-            URIEditor2.CBUIStringEditor2_initializeObjectPropertyEditor(
-                spec,
-                "URI",
-                "URI",
-                specChangedCallback
+            URIEditor2.CBUIStringEditor2_setTitle(
+                "URI"
+            );
+
+            URIEditor2.CBUIStringEditor2_setValue(
+                CBModel.valueToString(
+                    spec,
+                    "URI"
+                )
+            );
+
+            URIEditor2.CBUIStringEditor2_setChangedEventListener(
+                function () {
+                    let editorElement = (
+                        URIEditor2.CBUIStringEditor2_getElement()
+                    );
+
+                    let enteredURI = URIEditor2.CBUIStringEditor2_getValue();
+                    enteredURI = enteredURI.trim();
+
+                    let validatedURI = CBConvert.stringToURI(
+                        enteredURI
+                    );
+
+                    if (validatedURI === enteredURI) {
+                        editorElement.classList.remove(
+                            "CBUIStringEditor2_error"
+                        );
+
+                        spec.URI = validatedURI;
+
+                        specChangedCallback();
+                    } else {
+                        editorElement.classList.add(
+                            "CBUIStringEditor2_error"
+                        );
+                    }
+                }
             );
 
             var publicationDateEditor = CBUIUnixTimestampEditor.create(
@@ -368,7 +401,7 @@ var CBViewPageInformationEditor = {
                                 ).trim();
 
                                 if (URI === "") {
-                                    spec.URI = Colby.textToURI(
+                                    spec.URI = CBConvert.stringToStub(
                                         spec.title
                                     );
 
