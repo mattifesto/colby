@@ -1564,7 +1564,7 @@ final class Admin_CBCode {
                  * 2019_06_26
                  */
                 (object)[
-                    'args' => '--ignore-file=match:init.php',
+                    'args' => '--ignore-file=match:Colby.php',
                     'filetype' => 'php',
                     'regex' => 'COLBY_SITE_DIRECTORY',
                     'severity' => 4,
@@ -1576,7 +1576,7 @@ final class Admin_CBCode {
                  * 2019_06_26
                  */
                 (object)[
-                    'args' => '--ignore-file=match:init.php',
+                    'args' => '--ignore-file=match:Colby.php',
                     'filetype' => 'php',
                     'regex' => 'CBSiteDirectory',
                     'severity' => 4,
