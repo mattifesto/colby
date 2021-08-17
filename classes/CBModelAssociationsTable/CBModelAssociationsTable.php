@@ -1,6 +1,7 @@
 <?php
 
-final class CBModelAssociationsTable {
+final class
+CBModelAssociationsTable {
 
     /**
      * @NOTE 2018_12_07
@@ -11,10 +12,13 @@ final class CBModelAssociationsTable {
      *
      * @return void
      */
-    static function CBInstall_install(): void {
+    static function
+    CBInstall_install(
+    ): void {
         $SQL = <<<EOT
 
-            CREATE TABLE IF NOT EXISTS CBModelAssociations (
+            CREATE TABLE IF NOT EXISTS
+            CBModelAssociations (
                 ID              BINARY(20) NOT NULL,
                 className       VARCHAR(80) NOT NULL,
                 associatedID    BINARY(20) NOT NULL,
@@ -27,45 +31,12 @@ final class CBModelAssociationsTable {
             DEFAULT CHARSET=utf8mb4
             COLLATE=utf8mb4_unicode_520_ci
 
-EOT;
+        EOT;
 
-        Colby::query($SQL);
-
-        CBModelAssociationsTable::upgradeForVersion468();
+        Colby::query(
+            $SQL
+        );
     }
+    /* CBInstall_install() */
 
-    /**
-     * 2018_11_29
-     *
-     * @return void
-     */
-    static function upgradeForVersion468(): void {
-        $SQL = <<<EOT
-
-            SELECT  COUNT(*)
-            FROM    information_schema.STATISTICS
-            WHERE   TABLE_NAME = 'CBModelAssociations' AND
-                    INDEX_NAME = 'className_associatedID' AND
-                    TABLE_SCHEMA = DATABASE()
-
-EOT;
-
-        $count = CBConvert::valueAsInt(
-            CBDB::SQLToValue($SQL)
-        ) ?? 0;
-
-        if ($count > 0) {
-            return;
-        }
-
-        $SQL = <<<EOT
-
-            ALTER TABLE CBModelAssociations
-            ADD KEY className_associatedID  (className, associatedID),
-            ADD KEY associatedID            (associatedID)
-
-EOT;
-
-        Colby::query($SQL);
-    }
 }
