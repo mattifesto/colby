@@ -325,19 +325,22 @@ var CBModel = {
     merge: function(model1, model2) {
         Object.assign(model1, model2);
     },
+    /* merge() */
+
+
 
     /**
-     * @param mixed model
+     * @param mixed originalValue
      * @param string keyPath
      *
      * @return mixed
      */
-    value: function (model, keyPath) {
-        model = CBConvert.valueAsObject(model);
-
-        if (model === undefined) {
-            return undefined;
-        }
+    value(
+        originalValue,
+        keyPath
+    ) {
+        let value = originalValue;
+        let defaultValue;
 
         if (typeof keyPath !== "string") {
             throw TypeError(
@@ -346,18 +349,68 @@ var CBModel = {
         }
 
         let keys = keyPath.split(".");
-        let propertyName = keys.pop();
 
-        for (let i = 0; i < keys.length; i += 1) {
-            let key = keys[i];
-            model = CBConvert.valueAsObject(model[key]);
+        for (
+            let index = 0;
+            index < keys.length;
+            index += 1
+        ) {
+            let key = keys[index];
 
-            if (model === undefined) {
-                return undefined;
+            if (key === "") {
+                return defaultValue;
+            }
+
+            /* array index */
+
+            if (key.substring(0, 1) === "[") {
+                if (
+                    !Array.isArray(value)
+                ) {
+                    return defaultValue;
+                }
+
+                let result = key.match(
+                    /^\[([0-9]+)\]$/
+                );
+
+                if (result === null) {
+                    return defaultValue;
+                }
+
+                let arrayIndex = result[1];
+
+                if (arrayIndex >= value.length) {
+                    return defaultValue;
+                }
+
+                value = value[arrayIndex];
+
+                continue;
+            }
+
+
+            /* object property */
+
+            value = CBConvert.valueAsObject(
+                value
+            );
+
+            if (value === undefined) {
+                return defaultValue;
+            }
+
+            value = value[key];
+
+
+            /* default */
+
+            if (value === undefined) {
+                return defaultValue;
             }
         }
 
-        return model[propertyName];
+        return value;
     },
     /* value() */
 

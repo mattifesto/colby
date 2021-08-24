@@ -54,7 +54,7 @@ final class CBModel {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.13.js',
+                'v675.36.js',
                 cbsysurl()
             ),
         ];
@@ -872,15 +872,14 @@ final class CBModel {
 
 
     /**
-     * @param mixed $model
+     * @param mixed $originalValue
      *
      *      This function takes a mixed parameter to make it "array function
-     *      safe".
+     *      safe" and also because it supports arrays for the original value and
+     *      array property values.
      *
-     *      The $model parameter is generally expected to be a stdClass instance
-     *      or `null`, but it can be any value such as `42`. If it is not
-     *      stdClass this function will treat is as `null` and return the
-     *      default value.
+     *      Any value for this parameter that is not a stdClass or an array is
+     *      guarateed to return the default value.
      *
      *      This behavior reduces the amount of validation code required in many
      *      cases. For instance, it allows code to fetch a model and not
@@ -890,39 +889,94 @@ final class CBModel {
      * @param string $keyPath
      *
      *      Examples: "height", "width", "image.height",
-     *                "image.alternativeText.text"
+     *                "images.[2].alternativeText.text"
      *
-     * @param mixed $default (deprecated)
+     * @param mixed $defaultValue (deprecated)
      * @param function $transform (deprecated)
      *
      * @return mixed
      */
-    static function value(
-        $model,
+    static function
+    value(
+        $originalValue,
         $keyPath,
-        $default = null,
+        $defaultValue = null,
         callable $transform = null
     ) {
-        $keys = explode('.', $keyPath);
-        $propertyName = array_pop($keys);
+        $value = $originalValue;
 
-        foreach($keys as $key) {
-            if (isset($model->{$key}) && is_object($model->{$key})) {
-                $model = $model->{$key};
-            } else {
-                return $default;
+        $keys = explode(
+            '.',
+            $keyPath
+        );
+
+        foreach (
+            $keys as $key
+        ) {
+            if ($key === '') {
+                return $defaultValue;
             }
+
+            /* array index */
+
+            if (
+                mb_substr($key, 0, 1) === '['
+            ) {
+                if (
+                    !is_array($value)
+                ) {
+                    return $defaultValue;
+                }
+
+                $result = preg_match(
+                    '/^\[([0-9]+)\]$/',
+                    $key,
+                    $matches
+                );
+
+                if ($result !== 1) {
+                    return $defaultValue;
+                }
+
+                $arrayIndex = $matches[1];
+
+                if (
+                    isset($value[$arrayIndex])
+                ) {
+                    $value = $value[$arrayIndex];
+
+                    continue;
+                } else {
+                    return $defaultValue;
+                }
+            }
+
+
+            /* object property */
+
+            if (
+                isset($value->{$key})
+            ) {
+                $value = $value->{$key};
+
+                continue;
+            }
+
+
+            /* default */
+
+            return $defaultValue;
+        }
+        /* foreach */
+
+        if ($transform !== null) {
+            $value = call_user_func(
+                $transform,
+                $value
+            );
         }
 
-        if (isset($model->{$propertyName})) {
-            if ($transform !== null) {
-                return call_user_func($transform, $model->{$propertyName});
-            } else {
-                return $model->{$propertyName};
-            }
-        } else {
-            return $default;
-        }
+        return $value;
     }
     /* value() */
 
