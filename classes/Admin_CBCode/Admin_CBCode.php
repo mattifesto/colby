@@ -1805,6 +1805,31 @@ final class Admin_CBCode {
 
                 (object)[
                     'CBCodeSearch_CBID' => (
+                        '08fc779f0af49400a29f73b67ca33f878a348a51'
+                    ),
+                    'cbmessage' => <<<EOT
+
+                        Use:
+
+                        --- pre
+                        CBModelCache::fetchModelByID(
+                            CBSitePreferences::ID()
+                        );
+                        ---
+
+                    EOT,
+                    'filetype' => 'php',
+                    'regex' => '\bCBSitePreferences\::model\(',
+                    'severity' => 5,
+                    'title' => 'CBSitePreferences::model()',
+
+                    'noticeStartDate' => '2021/08/24',
+                    'noticeVersion' => 675,
+                ],
+
+
+                (object)[
+                    'CBCodeSearch_CBID' => (
                         '0bb1384bd3a5960eca4b7ab8ede0d39cd071181a'
                     ),
                     'cbmessage' => <<<EOT
