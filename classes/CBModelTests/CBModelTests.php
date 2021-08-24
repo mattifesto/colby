@@ -1,6 +1,7 @@
 <?php
 
-final class CBModelTests {
+final class
+CBModelTests {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -9,24 +10,51 @@ final class CBModelTests {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v652.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.36.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+
+
+    /**
+     * @return [[<name>, <value>]]
+     */
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array {
+        return [
+            [
+                'CBModelTests_CBTest_value_testCases',
+                CBModelTests::CBTest_value_testCases(),
+            ],
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptVariables() */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'CBMessageMarkup',
             'CBModel',
             'CBTest',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 
 
 
@@ -37,7 +65,9 @@ final class CBModelTests {
     /**
      * @return [object]
      */
-    static function CBTest_getTests(): array {
+    static function
+    CBTest_getTests(
+    ): array {
         return [
             (object)[
                 'name' => 'build_minimalImplementation',
@@ -55,6 +85,14 @@ final class CBModelTests {
                 'name' => 'upgradeSpecWithID',
                 'type' => 'server',
             ],
+            (object)[
+                'name' => 'value',
+                'type' => 'server',
+            ],
+
+            (object)[
+                'name' => 'value',
+            ],
         ];
     }
     /* CBTest_getTests() */
@@ -68,7 +106,6 @@ final class CBModelTests {
         return [
             ['CBModel', 'classFunction'],
             ['CBModel', 'equals'],
-            ['CBModel', 'value'],
         ];
     }
 
@@ -243,8 +280,175 @@ final class CBModelTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_upgradeSpecWithID() */
+
+
+
+    /**
+     * @return object
+     */
+    static function
+    CBTest_value(
+    ): stdClass {
+        $testCases = CBModelTests::CBTest_value_testCases();
+
+        for (
+            $index = 0;
+            $index < count($testCases);
+            $index += 1
+        ) {
+            $testCase = $testCases[$index];
+
+            $actualResult = CBModel::value(
+                $testCase->originalValue,
+                $testCase->keyPath,
+            );
+
+            if ($actualResult !== $testCase->expectedResult) {
+                return CBTest::resultMismatchFailure(
+                    "test index {$index}",
+                    $actualResult,
+                    $testCase->expectedResult
+                );
+            }
+        }
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_value() */
+
+
+
+    /**
+     * @return [object]
+     */
+    private static function
+    CBTest_value_testCases(
+    ): array {
+        return [
+            (object)[
+                'originalValue' => 1,
+                'keyPath' => '',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => 1,
+                'keyPath' => '...',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => [
+                    (object)[
+                        'foo' => 'bar'
+                    ]
+                ],
+                'keyPath' => '...',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => (object)[
+                    'foo' => 'bar'
+                ],
+                'keyPath' => '...',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => [
+                    4,
+                    5,
+                    6
+                ],
+                'keyPath' => '[1]',
+                'expectedResult' => 5,
+            ],
+            (object)[
+                'originalValue' => [
+                    4,
+                    5,
+                    6
+                ],
+                'keyPath' => '[1a]',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => [
+                    4,
+                    (object)[
+                        'foo' => 'bar',
+                    ],
+                    6
+                ],
+                'keyPath' => '[1].foo',
+                'expectedResult' => 'bar',
+            ],
+            (object)[
+                'originalValue' => (object)[
+                    'foo' => 'bar',
+                ],
+                'keyPath' => 'foo',
+                'expectedResult' => 'bar',
+            ],
+            (object)[
+                'originalValue' => (object)[
+                    'foo' => [
+                        (object)[
+                            'z' => 'x',
+                        ],
+                        (object)[
+                            'bar' => (object)[
+                                'baz' => 'hi',
+                            ],
+                        ],
+                    ],
+                ],
+                'keyPath' => 'foo.[1].bar.baz',
+                'expectedResult' => 'hi',
+            ],
+            (object)[
+                /* bug fix test */
+                'originalValue' => null,
+                'keyPath' => 'color',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => (object)[
+                    'color' => 'red'
+                ],
+                'keyPath' => 'color',
+                'expectedResult' => 'red',
+            ],
+            (object)[
+                /* bug fix test */
+                'originalValue' => (object)[
+                    'color' => null,
+                ],
+                'keyPath' => 'color.shade',
+                'expectedResult' => null,
+            ],
+            (object)[
+                'originalValue' => (object)[
+                    'color' => (object)[
+                        'shade' => 'light',
+                    ],
+                ],
+                'keyPath' => 'color.shade',
+                'expectedResult' => 'light',
+            ],
+            (object)[
+                'originalValue' => (object)[
+                    'number' => 42,
+                ],
+                'keyPath' => 'number',
+                'expectedResult' => 42,
+            ],
+        ];
+    }
+    /* CBTest_value_testCases() */
 
 }
+/* CBModelTests */
 
 
 

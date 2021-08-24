@@ -7,6 +7,8 @@
     CBMessageMarkup,
     CBModel,
     CBTest,
+
+    CBModelTests_CBTest_value_testCases,
 */
 
 var CBModelTests = {
@@ -207,31 +209,37 @@ var CBModelTests = {
         };
     },
 
+
+
     /**
      * @return object|Promise
      */
-    CBTest_value: function () {
-        let tests = [
-            [null, "color", undefined], /* bug fix test */
-            [{color: "red"}, "color", "red"],
-            [{color: null}, "color.shade", undefined], /* bug fix test */
-            [{color: {shade: "light"}}, "color.shade", "light"],
-            [{number: 42}, "number", 42],
-        ];
+    CBTest_value() {
+        let testCases = CBModelTests_CBTest_value_testCases;
 
-        for (let i = 0; i < tests.length; i += 1) {
-            let test = tests[i];
-            let model = test[0];
-            let keyPath = test[1];
-            let expected = test[2];
+        for (
+            let index = 0;
+            index < testCases.length;
+            index += 1
+        ) {
+            let testCase = testCases[index];
 
-            let actual = CBModel.value(model, keyPath);
+            let actualResult = CBModel.value(
+                testCase.originalValue,
+                testCase.keyPath
+            );
 
-            if (actual !== expected) {
+            let expectedResult = (
+                testCase.expectedResult === null ?
+                undefined :
+                testCase.expectedResult
+            );
+
+            if (actualResult !== expectedResult) {
                 return CBTest.resultMismatchFailure(
-                    `Test index ${i}`,
-                    actual,
-                    expected
+                    `test index ${index}`,
+                    actualResult,
+                    expectedResult
                 );
             }
         }
@@ -240,7 +248,12 @@ var CBModelTests = {
             succeeded: true,
         };
     },
+    /* CBTest_value() */
+
 };
+/* CBModelTests */
+
+
 
 /**
  *
