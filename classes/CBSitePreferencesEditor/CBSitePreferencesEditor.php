@@ -1,6 +1,7 @@
 <?php
 
-final class CBSitePreferencesEditor {
+final class
+CBSitePreferencesEditor {
 
     /* -- CBHTMLOutput interfaces -- */
 
@@ -13,7 +14,7 @@ final class CBSitePreferencesEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.7.js',
+                'v675.36.js',
                 cbsysurl()
             ),
         ];
