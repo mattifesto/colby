@@ -242,7 +242,7 @@ final class CBSitePreferences {
         CBSitePreferences::setYouTubeAPIKey(
             $model,
             CBSitePreferences::getYouTubeAPIKey(
-                $model
+                $spec
             )
         );
 
