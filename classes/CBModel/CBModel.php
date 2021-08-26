@@ -986,6 +986,28 @@ final class CBModel {
      * @param mixed $model
      * @param string $keyPath
      *
+     * @return array|null
+     */
+    static function
+    valueAsArray(
+        /* mixed */ $model,
+        string $keyPath
+    ): ?array {
+        return CBConvert::valueAsArray(
+            CBModel::value(
+                $model,
+                $keyPath
+            )
+        );
+    }
+    /* valueAsArray() */
+
+
+
+    /**
+     * @param mixed $model
+     * @param string $keyPath
+     *
      * @return CBID|null
      */
     static function valueAsCBID($model, string $keyPath): ?string {
