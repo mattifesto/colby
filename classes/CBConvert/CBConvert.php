@@ -673,6 +673,27 @@ final class CBConvert {
     /**
      * @param mixed $value
      *
+     * @return array|null
+     */
+    static function
+    valueAsArray(
+        /* mixed */ $value
+    ): ?array {
+        if (
+            is_array($value)
+        ) {
+            return $value;
+        } else {
+            return null;
+        }
+    }
+    /* valueAsArray() */
+
+
+
+    /**
+     * @param mixed $value
+     *
      * @return string|null
      */
     static function valueAsEmail(
