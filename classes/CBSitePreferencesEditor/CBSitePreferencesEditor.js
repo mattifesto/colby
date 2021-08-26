@@ -219,6 +219,15 @@
             sectionElement.appendChild(
                 CBUIStringEditor2.createObjectPropertyEditorElement(
                     spec,
+                    "CBSitePreferences_youtubeChannelID",
+                    "YouTube Channel ID",
+                    specChangedCallback
+                )
+            );
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
                     "CBSitePreferences_youtubeAPIKey",
                     "YouTube API Key",
                     specChangedCallback
