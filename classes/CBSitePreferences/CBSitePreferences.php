@@ -239,6 +239,13 @@ final class CBSitePreferences {
 
         $model->administratorEmails = $administatorEmails;
 
+        CBSitePreferences::setYouTubeChannelID(
+            $model,
+            CBSitePreferences::getYouTubeChannelID(
+                $spec
+            )
+        );
+
         CBSitePreferences::setYouTubeAPIKey(
             $model,
             CBSitePreferences::getYouTubeAPIKey(
@@ -333,6 +340,47 @@ final class CBSitePreferences {
         $sitePreferencesModel->CBSitePreferences_youtubeAPIKey = $youtubeAPIKey;
     }
     /* setYouTubeAPIKey() */
+
+
+
+    /**
+     * @param object $sitePreferencesModel
+     *
+     * @return string
+     *
+     *      Returns an empty string if the property value has not been set.
+     */
+    static function
+    getYouTubeChannelID(
+        stdClass $sitePreferencesModel
+    ): string {
+        return trim(
+            CBModel::valueToString(
+                $sitePreferencesModel,
+                'CBSitePreferences_youtubeChannelID'
+            )
+        );
+    }
+    /* getYouTubeChannelID() */
+
+
+
+    /**
+     * @param object $sitePreferencesModel
+     * @param string $youtubeChannelID
+     *
+     * @return void
+     */
+    static function
+    setYouTubeChannelID(
+        stdClass $sitePreferencesModel,
+        string $youtubeChannelID
+    ): void {
+        $sitePreferencesModel->CBSitePreferences_youtubeChannelID = (
+            $youtubeChannelID
+        );
+    }
+    /* setYouTubeChannelID() */
 
 
 
