@@ -1,0 +1,58 @@
+.CB_StandardPageFrame {
+    display: flex;
+    justify-content: center;
+
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+
+
+.CB_StandardPageFrame_leftSidebar,
+.CB_StandardPageFrame_rightSidebar {
+    display: none;
+    flex-shrink: 0;
+    height: 100vh;
+    top: 0;
+    width: 240px;
+    position: sticky;
+}
+
+
+
+.CB_StandardPageFrame_firstSidebarEnabled
+.CB_StandardPageFrame_rightSidebar {
+    display: block;
+}
+
+
+
+.CB_StandardPageFrame_secondSidebarEnabled
+.CB_StandardPageFrame_leftSidebar {
+    display: block;
+}
+
+
+
+.CB_StandardPageFrame_main {
+    /* the body must be at least as tall as the viewport */
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    /**
+     * The default min-width for flex items is "auto". This means that the
+     * actuall min-width will be the intrinsic width of the element and not even
+     * flex-shrink will allow the element to have a smaller width. Specifying a
+     * min-width of 0 means that the actual minimum width is 0 and the width
+     * can shrink.
+    **/
+    min-width: 0;
+
+    max-width: 100%;
+    width: 720px; /* 240 * 3 */
+
+    border-left: 1px solid var(--CB_UI_borderColor);
+    border-right: 1px solid var(--CB_UI_borderColor);
+}
