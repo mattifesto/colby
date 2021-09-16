@@ -1,6 +1,7 @@
 <?php
 
-final class CBUser {
+final class
+CBUser {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
@@ -430,16 +431,6 @@ final class CBUser {
         }
 
 
-        /* Facebook name */
-
-        $facebookName = trim(
-            CBModel::valueToString(
-                $spec,
-                'facebookName'
-            )
-        );
-
-
         /* Facebook user ID */
 
         $facebookUserID = CBModel::valueAsInt(
@@ -467,20 +458,6 @@ final class CBUser {
         );
 
 
-        /* title */
-
-        $title = trim(
-            CBModel::valueToString(
-                $spec,
-                'title'
-            )
-        );
-
-        if ($title === '') {
-            $title = $facebookName;
-        }
-
-
         /* validation */
 
         if (
@@ -500,9 +477,7 @@ final class CBUser {
         }
 
 
-        /* return model */
-
-        return (object)[
+        $userModel = (object)[
             'description' => trim(
                 CBModel::valueToString($spec, 'description')
             ),
@@ -525,8 +500,6 @@ final class CBUser {
                 'facebookAccessToken'
             ),
 
-            'facebookName' => $facebookName,
-
             'facebookUserID' => $facebookUserID,
 
             'lastLoggedIn' => CBModel::valueAsInt(
@@ -535,9 +508,23 @@ final class CBUser {
             ),
 
             'passwordHash' => $passwordHash,
-
-            'title' => $title,
         ];
+
+        CBUser::setFacebookName(
+            $userModel,
+            CBUser::getFacebookName(
+                $spec
+            )
+        );
+
+        CBUser::setName(
+            $userModel,
+            CBUser::getName(
+                $spec
+            )
+        );
+
+        return $userModel;
     }
     /* CBModel_build() */
 
@@ -760,6 +747,90 @@ final class CBUser {
         $userModel->email = $emailAddress;
     }
     /* setEmailAddress() */
+
+
+
+    /**
+     * @param object $userModel
+     *
+     * @return string
+     */
+    static function
+    getFacebookName(
+        stdClass $userModel
+    ): string {
+        $userFacebookName = trim(
+            CBModel::valueToString(
+                $userModel,
+                'facebookName'
+            )
+        );
+
+        return $userFacebookName;
+    }
+    /* getFacebookName() */
+
+
+
+    /**
+     * @param object $userModel
+     * @param string $facebookName
+     *
+     * @return void
+     */
+    static function
+    setFacebookName(
+        stdClass $userModel,
+        string $facebookName
+    ): void {
+        $userModel->facebookName = $facebookName;
+    }
+    /* setFacebookName() */
+
+
+
+    /**
+     * @param object $userModel
+     *
+     * @return string
+     */
+    static function
+    getName(
+        stdClass $userModel
+    ): string {
+        $userName = trim(
+            CBModel::valueToString(
+                $userModel,
+                'title'
+            )
+        );
+
+        if ($userName === '') {
+            $userName = CBUser::getFacebookName(
+                $userModel
+            );
+        }
+
+        return $userName;
+    }
+    /* getName() */
+
+
+
+    /**
+     * @param object $userModel
+     * @param string $name
+     *
+     * @return void
+     */
+    static function
+    setName(
+        stdClass $userModel,
+        string $name
+    ): void {
+        $userModel->title = $name;
+    }
+    /* setName() */
 
 
 
