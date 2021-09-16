@@ -22,7 +22,7 @@ CBViewPageInformationEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.35.js',
+                'v675.37.js',
                 cbsysurl()
             ),
         ];

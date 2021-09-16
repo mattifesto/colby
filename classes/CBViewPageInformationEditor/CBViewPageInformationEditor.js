@@ -555,6 +555,7 @@ var CBViewPageInformationEditor = {
                 selector.value = spec.frameClassName;
                 selector.onchange = function () {
                     spec.frameClassName = selector.value;
+                    specChangedCallback();
                 };
 
                 let options = [
