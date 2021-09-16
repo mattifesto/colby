@@ -1081,4 +1081,27 @@ final class CBViewPage {
     }
     /* selectedMenuItemNames() */
 
+
+
+    /**
+     * @NOTE 2021_09_03
+     *
+     *      This is the first step in creating pages with the new 3 column
+     *      standard layout to be used by all pages. I'm not sure if the
+     *      eventual form of this will be a CBViewPage but it is for now.
+     *
+     * @return object
+     */
+    static function
+    standardPageTemplate(
+    ): stdClass {
+        return (object)[
+            'className' => 'CBViewPage',
+            'classNameForSettings' => 'CB_StandardPageSettings',
+            'frameClassName' => 'CB_StandardPageFrame',
+            'sections' => [],
+        ];
+    }
+    /* standardPageTemplate() */
+
 }
