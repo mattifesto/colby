@@ -32,7 +32,8 @@
  * also render admin pages because the CBHTMLOutput dependencies will likely be
  * different.
  */
-final class CBAdmin {
+final class
+CBAdmin {
 
     /* -- functions -- -- -- -- -- */
 
@@ -61,7 +62,8 @@ final class CBAdmin {
      *
      * @return void
      */
-    static function render(
+    static function
+    render(
         string $className,
         string $pageStub
     ): void {
@@ -111,27 +113,52 @@ final class CBAdmin {
         CBHTMLOutput::begin();
 
         try {
-            CBHTMLOutput::pageInformation()->classNameForPageSettings =
-            'CBPageSettingsForResponsivePages';
+            CBHTMLOutput::pageInformation()->classNameForPageSettings = (
+                'CBPageSettingsForResponsivePages'
+            );
 
-            CBHTMLOutput::requireClassName('CBAdmin');
-            CBHTMLOutput::requireClassName('CBUI');
-            CBHTMLOutput::requireClassName($className);
+            CBHTMLOutput::requireClassName(
+                'CBAdmin'
+            );
+
+            CBHTMLOutput::requireClassName(
+                'CBUI'
+            );
+
+            CBHTMLOutput::requireClassName(
+                $className
+            );
 
             $menuViewModel = (object)[
                 'className' => 'CBAdminPageMenuView',
             ];
 
             if (is_callable($function = "{$className}::CBAdmin_initialize")) {
-                call_user_func($function);
+                call_user_func(
+                    $function
+                );
             }
 
             if (is_callable($function = "{$className}::CBAdmin_menuNamePath")) {
-                $names = call_user_func($function, $pageStub);
-                CBHTMLOutput::pageInformation()->selectedMenuItemNames = $names;
+                $names = call_user_func(
+                    $function,
+                    $pageStub
+                );
+
+                CBHTMLOutput::pageInformation()->selectedMenuItemNames = (
+                    $names
+                );
             }
 
-            CBView::render($menuViewModel);
+            CBView::renderSpec(
+                (object)[
+                    'className' => 'CB_CBView_MainHeader',
+                ]
+            );
+
+            CBView::render(
+                $menuViewModel
+            );
 
             ?>
 
