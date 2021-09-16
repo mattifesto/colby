@@ -1,0 +1,33 @@
+.CB_CBView_MainHeader {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--CB_UI_borderColor);
+    position: sticky;
+    top: 0;
+}
+
+
+
+.CB_CBView_MainHeader_group {
+    display: flex;
+}
+
+
+
+.CB_CBView_MainHeader_item {
+    height: 44px;
+    width: 44px;
+    xmargin: 5px;
+    filter: grayscale(100%) drop-shadow(0 0 1px hsla(0, 0%, 100%, 1));
+    xbackground-color: hsla(0, 0%, 100%, 0.2);
+    border-radius: 50%;
+    text-align: center;
+    text-decoration: none;
+}
+
+
+
+.CB_CBView_MainHeader_icon {
+    font-size: 18pt;
+    line-height: 44px;
+}
