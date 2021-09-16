@@ -76,13 +76,13 @@ html {
     color: var(--CBTextColor1);
 
     /* @deprecated use --CBBackgroundColor1 */
-    --CBBackgroundColor: hsl(0, 0%, 10%);
+    --CBBackgroundColor: var(--CBBackgroundColor1);
 
     /* deprecated use --CBTextColor1 */
-    --CBTextColor: hsla(0, 0%, 100%, 0.9);
+    --CBTextColor: var(--CBTextColor1);
 
     /* @deprecated use --CBBackgroundColor2 */
-    --CBUIBackgroundColor: hsl(0, 0%, 15%);
+    --CBUIBackgroundColor: var(--CBBackgroundColor2);
 }
 
 
@@ -114,13 +114,13 @@ html {
     color: var(--CBTextColor1);
 
     /* @deprecated use --CBBackgroundColor1 */
-    --CBBackgroundColor: hsl(0, 0%, 100%);
+    --CBBackgroundColor: var(--CBBackgroundColor1);
 
-    /* @deprecated use --CBTextColor1 */
-    --CBTextColor: hsla(0, 0%, 0%, 0.9);
+    /* deprecated use --CBTextColor1 */
+    --CBTextColor: var(--CBTextColor1);
 
     /* @deprecated use --CBBackgroundColor2 */
-    --CBUIBackgroundColor: hsl(0, 0%, 95%);
+    --CBUIBackgroundColor: var(--CBBackgroundColor2);
 }
 
 
