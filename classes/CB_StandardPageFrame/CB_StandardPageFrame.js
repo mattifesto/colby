@@ -9,7 +9,13 @@
 
     CB_StandardPageFrame_handleResize();
 
-    function CB_StandardPageFrame_handleResize() {
+
+
+    /**
+     * @return undefined
+     */
+    function
+    CB_StandardPageFrame_handleResize() {
         if (window.innerWidth > 960) {
             document.documentElement.classList.add(
                 "CB_StandardPageFrame_firstSidebarEnabled"
@@ -30,5 +36,6 @@
             );
         }
     }
+    /* CB_StandardPageFrame_handleResize() */
 
 })();

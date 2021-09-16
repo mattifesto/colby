@@ -79,7 +79,7 @@ CB_StandardPageFrame {
      * @return [string]
      */
     static function
-    CBInstall_requiredClassNames(
+    CBHTMLOutput_requiredClassNames(
     ): array {
         return [
             'CB_UI',
