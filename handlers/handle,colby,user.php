@@ -15,7 +15,10 @@ if ($currentUserCBID === null) {
     exit();
 }
 
-$pageSpec = CBModelTemplateCatalog::fetchLivePageTemplate(
+$pageSpec = CBViewPage::standardPageTemplate();
+
+CBModel::merge(
+    $pageSpec,
     (object)[
         'title' => 'User',
         'sections' => [
