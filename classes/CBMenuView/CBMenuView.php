@@ -1,6 +1,7 @@
 <?php
 
-final class CBMenuView {
+final class
+CBMenuView {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -9,11 +10,18 @@ final class CBMenuView {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs(): array {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v594.css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.37.css',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
 
 
 

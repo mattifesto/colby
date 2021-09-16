@@ -11,7 +11,7 @@
  */
 
 .CBMenuView_default {
-    background-color: var(--CBBackgroundColor);
+    background-color: var(--CBBackgroundColor1);
     box-sizing: border-box;
     max-width: 100%;
 
