@@ -1,0 +1,46 @@
+.CB_Brick_Button_outer {
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    max-width: 100%;
+
+    cursor: default;
+
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+
+
+.CB_Brick_Button_inner {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    max-width: 100%;
+    padding-left: 22px;
+    padding-right: 22px;
+
+
+    background: linear-gradient(var(--CBButtonBackgroundColorHighlight),
+                var(--CBButtonBackgroundColor));
+    border: 1px solid var(--CBButtonBackgroundColor);
+    border-radius: 22px;
+    color: var(--CBButtonTextColor);
+
+    /**
+     * This is here in case the inner element is a button element which it
+     * probably should be.
+     */
+    font: inherit;
+
+    min-height: 44px;
+    text-align: center;
+    text-decoration: none;
+}
+
+
+
+.CB_Brick_Button_isDisabled > .CB_Brick_Button_inner {
+    background: gray;
+}
