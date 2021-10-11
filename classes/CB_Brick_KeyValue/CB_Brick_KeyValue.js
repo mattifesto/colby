@@ -1,4 +1,5 @@
 (function () {
+    "use strict";
 
     window.CB_Brick_KeyValue = {
         create: CB_Brick_KeyValue_create,
