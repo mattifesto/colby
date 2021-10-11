@@ -1,0 +1,24 @@
+.CB_Brick_KeyValue {
+    display: flex;
+    align-items: center;
+
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+.CB_Brick_KeyValue_keyValueContainer {
+    flex-grow: 1;
+}
+
+.CB_Brick_KeyValue_key {
+    font-weight: bold;
+}
+
+.CB_Brick_KeyValue_navigationArrow {
+    display: none;
+}
+
+.CB_Brick_KeyValue_hasNavigationArrow .CB_Brick_KeyValue_navigationArrow {
+    display: block;
+}
