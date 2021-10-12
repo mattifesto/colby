@@ -1,0 +1,11 @@
+.CB_Brick_TextContainer {
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+.CB_Brick_TextContainer_inner {
+    max-width: 100%;
+    width: 500px;
+}
