@@ -432,7 +432,11 @@ final class CBTasks2 {
      *
      * @return void
      */
-    static function remove($className, $IDs): void {
+    static function
+    remove(
+        $className,
+        $IDs
+    ): void {
         if (!is_array($IDs)) {
             $IDs = [$IDs];
         }
@@ -451,10 +455,14 @@ final class CBTasks2 {
 
         Colby::query($SQL);
     }
+    /* remove() */
 
 
 
     /**
+     * This is the best function to call if you want to make sure a task is run
+     * in the near future.
+     *
      * @param string $className
      * @param [CBID]|CBID $IDs
      * @param ?int $priority
@@ -462,7 +470,8 @@ final class CBTasks2 {
      *
      * @return void
      */
-    static function restart(
+    static function
+    restart(
         string $className,
         $IDs,
         ?int $priority = null,
@@ -695,7 +704,10 @@ final class CBTasks2 {
      *
      *      Returns true if the task is run; otherwise false.
      */
-    private static function runTaskForStarter($starterID): bool {
+    private static function
+    runTaskForStarter(
+        $starterID
+    ): bool {
         $starterIDAsSQL = CBID::toSQL($starterID);
 
         try {
@@ -905,9 +917,15 @@ final class CBTasks2 {
 
 
     /**
+     * This updates a task for a wide number of reasons, not all of which
+     * involve running or scheduling the task. If you want to make sure a task
+     * will run and don't have a need for specific scheduling, use
+     * CBTasks2::restart() instead.
+     *
      * @return void
      */
-    static function updateTask(
+    static function
+    updateTask(
         $className,
         $ID,
         $processID = null,
@@ -948,7 +966,8 @@ final class CBTasks2 {
      *
      * @return void
      */
-    static function updateTasks(
+    static function
+    updateTasks(
         string $className,
         array $IDs,
         ?string $processID = null,
@@ -960,12 +979,33 @@ final class CBTasks2 {
         }
 
         $now = time();
-        $classNameAsSQL = CBDB::stringToSQL($className);
-        $IDsAsSQL = array_map('CBID::toSQL', $IDs);
+
+        $classNameAsSQL = CBDB::stringToSQL(
+            $className
+        );
+
+        $IDsAsSQL = array_map(
+            'CBID::toSQL',
+            $IDs
+        );
+
         $updates = [];
 
-        if (($value = $processID) || ($value = CBProcess::ID())) {
-            $processIDAsSQL = CBID::toSQL($value);
+        if (
+            !CBID::valueIsCBID($processID)
+        ) {
+            $processID = CBProcess::ID();
+        } else {
+            $processID = null;
+        }
+
+        if (
+            $processID !== null
+        ) {
+            $processIDAsSQL = CBID::toSQL(
+                $processID
+            );
+
             $updates[] = "processID = {$processIDAsSQL}";
         } else {
             $processIDAsSQL = 'NULL';
@@ -993,7 +1033,11 @@ final class CBTasks2 {
             $updates[] = 'priority = priority';
         }
 
-        $updates = implode(', ', $updates);
+        $updates = implode(
+            ', ',
+            $updates
+        );
+
         $values = [];
 
         foreach ($IDsAsSQL as $IDAsSQL) {
@@ -1009,7 +1053,11 @@ final class CBTasks2 {
             );
         }
 
-        $values = implode(', ', $values);
+        $values = implode(
+            ', ',
+            $values
+        );
+
 
         /**
          * INSERT ON DUPLICATE KEY UPDATE can be used here because CBTasks2
@@ -1036,7 +1084,10 @@ final class CBTasks2 {
 
         EOT;
 
-        Colby::query($SQL, /* retryOnDeadlock */ true);
+        Colby::query(
+            $SQL,
+            true /* retryOnDeadlock */
+        );
     }
     /* updateTasks() */
 
