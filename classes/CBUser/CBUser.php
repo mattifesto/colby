@@ -535,10 +535,17 @@ CBUser {
      *
      * @return object
      */
-    static function CBModel_upgrade(
+    static function
+    CBModel_upgrade(
         stdClass $originalSpec
     ): stdClass {
-        $upgradedSpec = CBModel::clone($originalSpec);
+        /**
+         * version 675 upgrades can be removed in version 676
+         */
+
+        $upgradedSpec = CBModel::clone(
+            $originalSpec
+        );
 
 
         /* facebook.id -> facebookUserID */
@@ -567,7 +574,33 @@ CBUser {
 
         /* remove facebook property */
 
-        unset($upgradedSpec->facebook);
+        unset(
+            $upgradedSpec->facebook
+        );
+
+
+        /**
+         * If the user model has a CBID and doesn't have a username restart a
+         * task to assign them one. It's odd for user models not to have CBIDs
+         * but it's not impossible.
+         */
+
+        $userModelCBID = CBModel::getCBID(
+            $originalSpec
+        );
+
+        if ($userModelCBID !== null) {
+            $currentUsernameCBID = CB_Username::fetchUsernameCBIDByUserCBID(
+                $userModelCBID
+            );
+
+            if ($currentUsernameCBID === null) {
+                CBTasks2::restart(
+                    'CB_Task_GenerateUsername',
+                    $userModelCBID
+                );
+            }
+        }
 
 
         /* done */
