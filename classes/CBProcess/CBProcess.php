@@ -1,6 +1,7 @@
 <?php
 
-final class CBProcess {
+final class
+CBProcess {
 
     private static $processID = null;
 
@@ -9,8 +10,11 @@ final class CBProcess {
     /**
      * @return null
      */
-    static function clearID() {
-        if (CBProcess::$processID === null) {
+    static function
+    clearID() {
+        if (
+            CBProcess::$processID === null
+        ) {
             throw new RuntimeException(
                 'The process ID is not set.'
             );
@@ -23,9 +27,11 @@ final class CBProcess {
 
 
     /**
-     * @return hex160
+     * @return CBID|null
      */
-    static function ID() {
+    static function
+    ID(
+    ): ?string {
         return CBProcess::$processID;
     }
     /* ID() */
@@ -40,18 +46,23 @@ final class CBProcess {
      *      a message describing the process. The first log entry for a process
      *      acts as the representative entry for that process.
      *
-     * @param hex160 $processID
+     * @param CBID $processID
      *
      * @return null
      */
-    static function setID($processID) {
+    static function
+    setID(
+        $processID
+    ) {
         if (CBProcess::$processID !== null) {
             throw new RuntimeException(
                 'A process ID has already been set.'
             );
         }
 
-        if (!CBID::valueIsCBID($processID)) {
+        if (
+            !CBID::valueIsCBID($processID)
+        ) {
             $processIDAsJSON = json_encode(
                 $processID
             );
