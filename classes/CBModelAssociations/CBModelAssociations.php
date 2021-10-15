@@ -3,9 +3,10 @@
 /**
  * @see documentation
  */
-final class CBModelAssociations {
+final class
+CBModelAssociations {
 
-    /* -- functions -- -- -- -- -- */
+    /* -- functions -- */
 
 
 
@@ -16,7 +17,8 @@ final class CBModelAssociations {
      *
      * @return void
      */
-    static function add(
+    static function
+    add(
         string $CBID,
         string $associationKey,
         string $associatedCBID
@@ -40,13 +42,20 @@ final class CBModelAssociations {
     /**
      * @param [[<CBID>, <associationKey>, <associatedCBID>]]
      */
-    static function addMultiple(array $associations): void {
-        if (count($associations) === 0) {
+    static function
+    addMultiple(
+        array $associations
+    ): void {
+        if (
+            count($associations) === 0
+        ) {
             return;
         }
 
         $values = array_map(
-            function ($association) {
+            function (
+                $association
+            ) {
                 if (
                     !is_array($association) ||
                     count($association) !== 3
@@ -94,13 +103,14 @@ final class CBModelAssociations {
 
 
     /**
-     * @param ?ID $ID
+     * @param ?CBID $ID
      * @param ?string $associationKey
-     * @param ?ID $associatedID
+     * @param ?CBID $associatedID
      *
      * @return void
      */
-    static function delete(
+    static function
+    delete(
         string $ID = null,
         string $associationKey = null,
         string $associatedID = null
@@ -109,26 +119,47 @@ final class CBModelAssociations {
 
         if ($ID !== null) {
             $IDAsSQL = CBID::toSQL($ID);
-            array_push($clauses, "ID = {$IDAsSQL}");
+
+            array_push(
+                $clauses,
+                "ID = {$IDAsSQL}"
+            );
         }
 
         if ($associationKey !== null) {
-            $associationKeyAsSQL = CBDB::stringToSQL($associationKey);
-            array_push($clauses, "className = {$associationKeyAsSQL}");
+            $associationKeyAsSQL = CBDB::stringToSQL(
+                $associationKey
+            );
+
+            array_push(
+                $clauses,
+                "className = {$associationKeyAsSQL}"
+            );
         }
 
         if ($associatedID !== null) {
-            $associatedIDAsSQL = CBID::toSQL($associatedID);
-            array_push($clauses, "associatedID = {$associatedIDAsSQL}");
+            $associatedIDAsSQL = CBID::toSQL(
+                $associatedID
+            );
+
+            array_push(
+                $clauses,
+                "associatedID = {$associatedIDAsSQL}"
+            );
         }
 
-        if (empty($clauses)) {
+        if (
+            empty($clauses)
+        ) {
             throw new Exception(
                 'At least one of the parameters to ' .
                 'CBModelAssociations::delete() must be specified.'
             );
         } else {
-            $clauses = implode(' AND ', $clauses);
+            $clauses = implode(
+                ' AND ',
+                $clauses
+            );
         }
 
         $SQL = <<<EOT
@@ -151,8 +182,13 @@ final class CBModelAssociations {
      *
      * @param [[<CBID>, <associationKey>, <associatedCBID>]]
      */
-    static function deleteMultiple(array $associations): void {
-        if (count($associations) === 0) {
+    static function
+    deleteMultiple(
+        array $associations
+    ): void {
+        if (
+            count($associations) === 0
+        ) {
             return;
         }
 
@@ -191,19 +227,20 @@ final class CBModelAssociations {
 
 
     /**
-     * @param ID|[ID] $IDs
-     * @param ?string $associationKey
-     * @param ?ID $associatedID
+     * @param CBID|[CBID]|null $IDs
+     * @param string|null $associationKey
+     * @param CBID|null $associatedID
      *
      * @return [object]
      *
      *      {
-     *          ID: ID
+     *          ID: CBID
      *          className: string
-     *          associatedID: ID
+     *          associatedID: CBID
      *      }
      */
-    static function fetch(
+    static function
+    fetch(
         $IDs,
         ?string $associationKey = null,
         ?string $associatedID = null
@@ -211,25 +248,51 @@ final class CBModelAssociations {
         $clauses = [];
 
         if ($IDs !== null) {
-            if (!is_array($IDs)) {
+            if (
+                !is_array($IDs)
+            ) {
                 $IDs = [$IDs];
             }
 
-            $IDsAsSQL = CBID::toSQL($IDs);
-            array_push($clauses, "ID IN ({$IDsAsSQL})");
+            $IDsAsSQL = CBID::toSQL(
+                $IDs
+            );
+
+            array_push(
+                $clauses,
+                "ID IN ({$IDsAsSQL})"
+            );
         }
 
-        if ($associationKey !== null) {
-            $associationKeyAsSQL = CBDB::stringToSQL($associationKey);
-            array_push($clauses, "className = {$associationKeyAsSQL}");
+        if (
+            $associationKey !== null
+        ) {
+            $associationKeyAsSQL = CBDB::stringToSQL(
+                $associationKey
+            );
+
+            array_push(
+                $clauses,
+                "className = {$associationKeyAsSQL}"
+            );
         }
 
-        if ($associatedID !== null) {
-            $associatedIDAsSQL = CBID::toSQL($associatedID);
-            array_push($clauses, "associatedID = {$associatedIDAsSQL}");
+        if (
+            $associatedID !== null
+        ) {
+            $associatedIDAsSQL = CBID::toSQL(
+                $associatedID
+            );
+
+            array_push(
+                $clauses,
+                "associatedID = {$associatedIDAsSQL}"
+            );
         }
 
-        if (empty($clauses)) {
+        if (
+            empty($clauses)
+        ) {
             throw new Exception(
                 'At least one of the parameters to ' .
                 'CBModelAssociations::fetch() must be specified.'
@@ -255,30 +318,24 @@ final class CBModelAssociations {
 
 
     /**
-     * @param ID $modelID
+     * @deprecated 2021_09_28
+     *
+     *      Use CBModelAssociations::fetchSingularAssociatedCBID()
+     *
+     * @param CBID $modelID
      * @param string $associationKey
      *
-     * @return ID|null
+     * @return CBID|null
      */
-    static function fetchAssociatedID(
-        $primaryID,
-        $associationKey
+    static function
+    fetchAssociatedID(
+        string $primaryID,
+        string $associationKey
     ): ?string {
-        $associations = CBModelAssociations::fetch(
+        return CBModelAssociations::fetchSingularSecondCBID(
             $primaryID,
             $associationKey
         );
-
-        if (count($associations) === 0) {
-            return null;
-        } else if (count($associations) === 1) {
-            return $associations[0]->associatedID;
-        } else {
-            throw new Exception(
-                "There is more than one ID associated with the ID " .
-                "{$primaryID} for the association key \"{$associationKey}\"."
-            );
-        }
     }
     /* fetchAssociatedID() */
 
@@ -290,7 +347,8 @@ final class CBModelAssociations {
      *
      * @return [CBID]
      */
-    static function fetchAssociatedIDs(
+    static function
+    fetchAssociatedIDs(
         $CBID,
         $associationKey
     ): array {
@@ -316,7 +374,8 @@ final class CBModelAssociations {
      *
      * @return object|null
      */
-    static function fetchAssociatedModel(
+    static function
+    fetchAssociatedModel(
         string $primaryID,
         string $associationKey
     ): ?stdClass {
@@ -325,10 +384,14 @@ final class CBModelAssociations {
             $associationKey
         );
 
-        if ($associatedID === null) {
+        if (
+            $associatedID === null
+        ) {
             return null;
         } else {
-            return CBModelCache::fetchModelByID($associatedID);
+            return CBModelCache::fetchModelByID(
+                $associatedID
+            );
         }
     }
     /* fetchAssociatedModel() */
@@ -341,7 +404,8 @@ final class CBModelAssociations {
      *
      * @return [object]
      */
-    static function fetchAssociatedModels(
+    static function
+    fetchAssociatedModels(
         string $CBID,
         string $associationKey
     ): array {
@@ -350,10 +414,14 @@ final class CBModelAssociations {
             $associationKey
         );
 
-        if (count($associatedIDs) === 0) {
+        if (
+            count($associatedIDs) === 0
+        ) {
             return [];
         } else {
-            return CBModelCache::fetchModelsByID($associatedIDs);
+            return CBModelCache::fetchModelsByID(
+                $associatedIDs
+            );
         }
     }
     /* fetchAssociatedModels() */
@@ -365,13 +433,14 @@ final class CBModelAssociations {
      * either one row or no rows. This function will throw an exception if it
      * finds more than one row.
      *
-     * @param ?ID $primaryID
+     * @param ?CBID $primaryID
      * @param ?string $associationClassName
-     * @param ?ID $associatedID
+     * @param ?CBID $associatedID
      *
      * @return ?object
      */
-    static function fetchOne(
+    static function
+    fetchOne(
         ?string $primaryID,
         ?string $associationClassName = null,
         ?string $associatedID = null
@@ -382,9 +451,13 @@ final class CBModelAssociations {
             $associatedID
         );
 
-        if (empty($rows)) {
+        if (
+            empty($rows)
+        ) {
             return null;
-        } else if (count($rows) === 1) {
+        } else if (
+            count($rows) === 1
+        ) {
             return $rows[0];
         } else {
             $rowsAsJSONAsMessage = CBMessageMarkup::stringToMessage(
@@ -401,14 +474,16 @@ final class CBModelAssociations {
                 --- pre\n{$rowsAsJSONAsMessage}
                 ---
 
-EOT;
+            EOT;
 
-            CBLog::log((object)[
-                'ID' => $primaryID ?? $associatedID,
-                'message' => $message,
-                'severity' => 3,
-                'sourceClassName' => __CLASS__,
-            ]);
+            CBLog::log(
+                (object)[
+                    'ID' => $primaryID ?? $associatedID,
+                    'message' => $message,
+                    'severity' => 3,
+                    'sourceClassName' => __CLASS__,
+                ]
+            );
 
             throw new Exception(
                 'More than one CBModelAssociations row was found when ' .
@@ -417,6 +492,95 @@ EOT;
         }
     }
     /* fetchOne() */
+
+
+
+    /**
+     * @see documentation
+     *
+     * @param string $associationKey
+     * @param CBID $secondCBID
+     *
+     * @return string|null
+     */
+    static function
+    fetchSingularFirstCBID(
+        string $associationKey,
+        string $secondCBID
+    ): ?string {
+        $associations = CBModelAssociations::fetch(
+            null,
+            $associationKey,
+            $secondCBID
+        );
+
+        if (
+            count($associations) === 0
+        ) {
+            return null;
+        } else if (
+            count($associations) === 1
+        ) {
+            return $associations[0]->ID;
+        } else {
+            throw new CBException(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    There is more than one first CBID associated with the
+                    association key "{$associationKey}" and the second CBID
+                    "{$secondCBID}".
+
+                EOT),
+                '',
+                'cfc1e2d9c8aa55d6ac302b153d6e10445cfa645e'
+            );
+        }
+    }
+    /* fetchSingularFirstCBID() */
+
+
+
+    /**
+     * @see documentation
+     *
+     * @param CBID $firstCBID
+     * @param string $associationKey
+     *
+     * @return string|null
+     */
+    static function
+    fetchSingularSecondCBID(
+        string $firstCBID,
+        string $associationKey
+    ): ?string {
+        $associations = CBModelAssociations::fetch(
+            $firstCBID,
+            $associationKey
+        );
+
+        if (
+            count($associations) === 0
+        ) {
+            return null;
+        } else if (
+            count($associations) === 1
+        ) {
+            return $associations[0]->associatedID;
+        } else {
+            throw new CBException(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    There is more than one second CBID associated with the first
+                    CBID "{$firstCBID}" and the association key
+                    "{$associationKey}".
+
+                EOT),
+                '',
+                'cfc1e2d9c8aa55d6ac302b153d6e10445cfa645e'
+            );
+        }
+    }
+    /* fetchSingularSecondCBID() */
 
 
 
@@ -431,7 +595,8 @@ EOT;
      *
      * @return void
      */
-    static function replaceAssociatedID(
+    static function
+    replaceAssociatedID(
         string $ID,
         string $associationKey,
         string $associatedID

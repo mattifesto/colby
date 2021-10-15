@@ -1,5 +1,53 @@
-Associations can be stored inside models, but sometimes its better to use the
-CBModelAssociations table to store associations.
+--- h1
+About
+---
+
+This class provides functionality to associate two CBIDs, which may or may not
+be CBIDs for models. The association policy is identified by a unique
+association key string.
+
+
+
+--- h1
+Terminology
+---
+
+On 2021/09/28 the terms for the three components of an association were
+adjusted to be:
+
+
+--- dl
+
+    --- dt
+    first CBID
+    ---
+
+    This is the first of the two associated CBIDs.
+
+
+    --- dt
+    association key
+    ---
+
+    This is a globally unique string identifying the association.
+
+
+    --- dt
+    second CBID
+    ---
+
+    This is the second of the two associated CBIDs.
+
+---
+
+The association developer decides what the first CBID holds and what the
+second CBID holds. For instance, if a developer wants to create and
+association of authors to pages they might say that the user model CBID of
+the author goes in the first position and the page model CBID goes in the
+second. It does not matter which CBID goes in which position, but once the
+policy is set, they must always go in their assigned position.
+
+
 
 --- h1
 History
@@ -14,23 +62,6 @@ the similarities between the custom tables became obvious.
 Organically, the shape and nature of the CBModelAssociations table was developed
 and more serious thought was given to the simplicity vs. complexity of such a
 table and why the table was a necessary part of Colby.
-
-
-
---- h1
-About
----
-
-The table associates two models or potential models, because both models don't
-have to technically exist, with the class name of a class that manages a
-specific type of association. Having said this, both models eventually should
-exist, however in the middle of a model import the models not yet imported
-obviously won't exist.
-
-The table has an ID column and an associatedID column, however the association
-flows in both directions and neither column, at this point, is considered
-always represent a more dominant or primary model.
-
 
 
 --- h1
@@ -70,18 +101,13 @@ Bidirectional Association
 ---
 
 Currently there is theoretically no performance difference between fetching the
-associated CBID for the primary CBID or fetching the primary CBID for the
-associated CBID. The terms primary and associated only exist to provide names to
-the two CBIDs.
+second CBID for the first CBID or fetching the first CBID for the second CBID.
+The terms first and second only exist to provide names to the two CBIDs.
 
-However, the APIs and the language around associations favors fetching the
-associated CBIDs when given the primary CBIDs.
-
-But in many use cases both directions are required. Tags are a good
-example. In the case of tags the tagged model CBID would be the primary CBID and
-the tag model CBID would be the associated CBID. Getting the tagged model CBIDs
-for a tag CBID would be just as common as getting the tag CBIDs for a tagged
-model CBID.
+But in many use cases both directions are required. Tags are a good example. In
+the case of tags the tagged model CBID would be the first CBID and the tag model
+CBID would be the second CBID. Getting the tagged model CBIDs for a tag CBID
+would be just as common as getting the tag CBIDs for a tagged model CBID.
 
 There's a possibility that using unidirectional associations and using two
 associations when "bidirectional" associations required might help in some way.
