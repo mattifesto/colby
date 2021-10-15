@@ -1,8 +1,9 @@
 <?php
 
-final class CBUINavigationView {
+final class
+CBUINavigationView {
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
@@ -33,7 +34,7 @@ final class CBUINavigationView {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.20.js',
+                'v675.38.js',
                 cbsysurl()
             ),
         ];

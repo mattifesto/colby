@@ -47,6 +47,8 @@ var CBUINavigationView = {
      */
     context: undefined,
 
+
+
     /**
      * @param object item
      *
@@ -72,35 +74,67 @@ var CBUINavigationView = {
      *
      * @return Element
      */
-    containerFromItem: function (item) {
-        var leftElements, titleElement;
-        var container = document.createElement("div");
+    containerFromItem(
+        item
+    ) {
+        let leftElements;
+        let titleElement;
+
+        let container = document.createElement(
+            "div"
+        );
+
         container.className = "container";
 
-        if (typeof item.title === "string") {
-            titleElement = CBUI.createHeaderTitle({
-                text: item.title,
-            });
+        if (
+            typeof item.title === "string"
+        ) {
+            titleElement = CBUI.createHeaderTitle(
+                {
+                    text: item.title,
+                }
+            );
         }
 
-        if (typeof item.left === "string") {
-            leftElements = [CBUI.createHeaderButtonItem({
-                callback: window.history.back.bind(window.history),
-                text: "< " + item.left,
-            })];
+        if (
+            typeof item.left === "string"
+        ) {
+            leftElements = [
+                CBUI.createHeaderButtonItem(
+                    {
+                        callback: function () {
+                            window.history.back();
+                        },
+                        text: (
+                            "< " +
+                            item.left
+                        ),
+                    }
+                )
+            ];
         }
 
-        var header = CBUI.createHeader({
-            centerElement: titleElement,
-            leftElements: leftElements,
-            rightElements: item.rightElements,
-        });
+        var header = CBUI.createHeader(
+            {
+                centerElement: titleElement,
+                leftElements: leftElements,
+                rightElements: item.rightElements,
+            }
+        );
 
-        container.appendChild(header);
-        container.appendChild(item.element);
+        container.appendChild(
+            header
+        );
+
+        container.appendChild(
+            item.element
+        );
 
         return container;
     },
+    /* containerFromItem() */
+
+
 
     /**
      * @param object? args
@@ -119,19 +153,34 @@ var CBUINavigationView = {
      *          navigate: function
      *      }
      */
-    create: function (args) {
-        var element = document.createElement("div");
+    create(
+        args
+    ) {
+        let element = document.createElement(
+            "div"
+        );
+
         element.className = "CBUINavigationView";
-        var state = {
+
+        let state = {
             element: element,
             items: [],
         };
+
         let level;
 
-        window.addEventListener("popstate", handlePopState);
+        window.addEventListener(
+            "popstate",
+            handlePopState
+        );
 
-        if (args !== undefined && args.rootItem !== undefined) {
-            navigate(args.rootItem);
+        if (
+            args !== undefined &&
+            args.rootItem !== undefined
+        ) {
+            navigate(
+                args.rootItem
+            );
         }
 
         let api = {
@@ -143,7 +192,9 @@ var CBUINavigationView = {
             replace: replace,
         };
 
-        if (CBUINavigationView.context !== undefined) {
+        if (
+            CBUINavigationView.context !== undefined
+        ) {
             throw new Error(
                 "There is only one CBUINavigationView allowed per page."
             );
@@ -151,7 +202,7 @@ var CBUINavigationView = {
             CBUINavigationView.context = api;
         }
 
-        return api;
+
 
         /**
          * closure
@@ -167,34 +218,44 @@ var CBUINavigationView = {
          *
          * @return undefined
          */
-        function navigate(item) {
-            if (typeof item !== "object") {
+        function navigate(
+            item
+        ) {
+            if (
+                typeof item !== "object"
+            ) {
                 throw TypeError(
                     `The "item" parameter must be an object`
                 );
             }
 
-            if (!(item.element instanceof HTMLElement)) {
+            if (
+                !(item.element instanceof HTMLElement)
+            ) {
                 throw TypeError(
                     `The "element" property of the "item" parameter ` +
                     `must be an HTMLElement`
                 );
             }
 
-            if (level === undefined) {
+            if (
+                level === undefined
+            ) {
                 level = 0;
             } else {
                 level += 1;
             }
 
-            var toItem = {
+            let toItem = {
                 element: item.element,
                 left: item.left,
                 rightElements: item.rightElements,
                 title: item.title,
             };
 
-            if (level > 0) {
+            if (
+                level > 0
+            ) {
                 let fromItem = state.items[level - 1];
 
                 if (toItem.left === undefined) {
@@ -208,17 +269,34 @@ var CBUINavigationView = {
                 toItem
             );
 
-            state.items.push(toItem);
+            state.items.push(
+                toItem
+            );
 
             if (level === 0) {
-                history.replaceState({level: level}, toItem.title);
+                history.replaceState(
+                    {
+                        level: level
+                    },
+                    toItem.title
+                );
             } else {
-                history.pushState({level: level}, toItem.title);
+                history.pushState(
+                    {
+                        level: level
+                    },
+                    toItem.title
+                );
             }
 
-            renderLevel(level);
+            renderLevel(
+                level
+            );
 
-            window.scrollTo(0, 0);
+            window.scrollTo(
+                0,
+                0
+            );
         }
         /* navigate() */
 
@@ -241,13 +319,17 @@ var CBUINavigationView = {
         function replace(
             item
         ) {
-            if (level === undefined) {
-                navigate(item);
+            if (
+                level === undefined
+            ) {
+                navigate(
+                    item
+                );
 
                 return;
             }
 
-            var toItem = {
+            let toItem = {
                 element: item.element,
                 left: item.left,
                 rightElements: item.rightElements,
@@ -268,11 +350,21 @@ var CBUINavigationView = {
 
             state.items[level] = toItem;
 
-            history.replaceState({level: level}, toItem.title);
+            history.replaceState(
+                {
+                    level: level
+                },
+                toItem.title
+            );
 
-            renderLevel(level);
+            renderLevel(
+                level
+            );
 
-            window.scrollTo(0, 0);
+            window.scrollTo(
+                0,
+                0
+            );
         }
         /* replace() */
 
@@ -325,7 +417,9 @@ var CBUINavigationView = {
                 stateEventLevel < 0
             ) {
                 level = 0;
-            } else if (stateEventLevel >= stateItems.length) {
+            } else if (
+                stateEventLevel >= stateItems.length
+            ) {
                 level = stateItems.length - 1;
 
                 history.replaceState(
@@ -351,16 +445,23 @@ var CBUINavigationView = {
          *
          * @return undefined
          */
-        function renderLevel(
+        function
+        renderLevel(
             level
         ) {
             let containerElement = state.items[level].containerElement;
 
             element.textContent = null;
-            element.appendChild(containerElement);
+
+            element.appendChild(
+                containerElement
+            );
         }
         /* renderLevel() */
 
+
+
+        return api;
     },
     /* create() */
 
@@ -378,13 +479,24 @@ var CBUINavigationView = {
      *
      * @return undefined
      */
-    navigate: function (item) {
-        if (CBUINavigationView.context === undefined) {
-            throw new Error("No CBUINavigationView has been created");
+    navigate(
+        item
+    ) {
+        if (
+            CBUINavigationView.context === undefined
+        ) {
+            throw new Error(
+                "No CBUINavigationView has been created"
+            );
         }
 
-        CBUINavigationView.context.navigate(item);
+        CBUINavigationView.context.navigate(
+            item
+        );
     },
+    /* navigate() */
+
+
 
     /**
      * @param object item
@@ -398,11 +510,21 @@ var CBUINavigationView = {
      *
      * @return undefined
      */
-    replace: function (item) {
-        if (CBUINavigationView.context === undefined) {
-            throw new Error("No CBUINavigationView has been created");
+    replace(
+        item
+    ) {
+        if (
+            CBUINavigationView.context === undefined
+        ) {
+            throw new Error(
+                "No CBUINavigationView has been created"
+            );
         }
 
-        CBUINavigationView.context.replace(item);
+        CBUINavigationView.context.replace(
+            item
+        );
     },
+    /* replace() */
+
 };
