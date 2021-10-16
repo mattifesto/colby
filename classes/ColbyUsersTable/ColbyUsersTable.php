@@ -8,6 +8,12 @@ ColbyUsersTable {
 
 
     /**
+     * @deprecated 2021_09_25
+     *
+     *      The email and facebookId columns should be tracked with a the
+     *      CB_Username class method of associating items with a user model to
+     *      enforce their uniqueness. This table can then be removed.
+     *
      * @return void
      */
     static function
