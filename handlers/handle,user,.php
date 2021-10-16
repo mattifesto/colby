@@ -1,57 +1,74 @@
 <?php
 
-$stubs = ColbyRequest::decodedStubs();
+(function () {
 
-if (
-    count($stubs) !== 2
-) {
-    return 0;
-}
+    $stubs = ColbyRequest::decodedStubs();
 
-$userCBID = $stubs[1];
+    if (
+        count($stubs) !== 2
+    ) {
+        return 0;
+    }
 
-if (
-    !CBID::valueIsCBID($userCBID)
-) {
-    return 0;
-}
+    $prettyUsername = $stubs[1];
 
-$userModel = CBModelCache::fetchModelByID(
-    $userCBID
-);
+    if (
+        !CB_Username::isPrettyUsernameValid(
+            $prettyUsername
+        )
+    ) {
+        return 0;
+    }
 
-if (
-    $userModel === null ||
-    CBModel::getClassName($userModel) !== 'CBUser'
-) {
-    return 0;
-}
+    $usernameModelCBID = CB_Username::prettyUsernameToUsernameModelCBID(
+        $prettyUsername
+    );
 
-$userName = CBUser::getName(
-    $userModel
-);
+    if (
+        $usernameModelCBID === null
+    ) {
+        return 0;
+    }
 
-$cbmessage = <<<EOT
+    $userModelCBID = CB_Username::fetchUserCBIDByUsernameCBID(
+        $usernameModelCBID
+    );
 
-    --- h1
-    {$userName}
-    ---
+    if ($userModelCBID === null) {
+        return 0;
+    }
 
-    (edit profile (a /colby/user/))
+    $userModel = CBModelCache::fetchModelByID(
+        $userModelCBID
+    );
 
-EOT;
+    $userFullName = CBUser::getName(
+        $userModel
+    );
+
+    $cbmessage = <<<EOT
+
+        --- h1
+        {$userFullName}
+        ---
+
+        (edit profile (a /colby/user/))
+
+    EOT;
 
 
-CBPage::renderSpec(
-    CBModelTemplateCatalog::fetchLivePageTemplate(
-        (object)[
-            'title' => $userName,
-            'sections' => [
-                (object)[
-                    'className' => 'CBMessageView',
-                    'markup' => $cbmessage,
+    CBPage::renderSpec(
+        CBModelTemplateCatalog::fetchLivePageTemplate(
+            (object)[
+                'title' => $userFullName,
+                'sections' => [
+                    (object)[
+                        'className' => 'CBMessageView',
+                        'markup' => $cbmessage,
+                    ]
                 ]
             ]
-        ]
-    )
-);
+        )
+    );
+
+})();
