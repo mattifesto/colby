@@ -16,7 +16,8 @@
  * fully possible with a simple regular expression search and no need to analyze
  * any code.
  */
-final class CBUIStringEditor2 {
+final class
+CBUIStringEditor2 {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -30,7 +31,7 @@ final class CBUIStringEditor2 {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.7.css',
+                'v675.38.css',
                 cbsysurl()
             ),
         ];
@@ -48,7 +49,7 @@ final class CBUIStringEditor2 {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.14.js',
+                'v675.38.js',
                 cbsysurl()
             ),
         ];

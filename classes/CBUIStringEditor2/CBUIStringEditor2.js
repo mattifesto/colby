@@ -76,6 +76,7 @@
             CBUIStringEditor2_getValue,
             CBUIStringEditor2_initializeObjectPropertyEditor,
             CBUIStringEditor2_setChangedEventListener,
+            CBUIStringEditor2_setHasOutline,
             CBUIStringEditor2_setInputType,
             CBUIStringEditor2_setName,
             CBUIStringEditor2_setPlaceholderText,
@@ -322,6 +323,29 @@
             inputElement = newInputElement;
         }
         /* CBUIStringEditor2_setInputType() */
+
+
+
+        /**
+         * @param bool value
+         *
+         * @return undefined
+         */
+        function
+        CBUIStringEditor2_setHasOutline(
+            value
+        ) {
+            if (!!value) {
+                element.classList.add(
+                    "CBUIStringEditor2_hasOutline"
+                );
+            } else {
+                element.classList.remove(
+                    "CBUIStringEditor2_hasOutline"
+                );
+            }
+        }
+        /* CBUIStringEditor2_setHasOutline() */
 
 
 
