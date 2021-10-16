@@ -1,0 +1,41 @@
+--- h2
+Class Names
+---
+
+<namespace> _ <category> _ <simple class name>
+
+--- dl
+
+    --- dt
+    namespace
+    ---
+    A namespace is a sequence of uppercase letters.
+
+    --- dt
+    category
+    ---
+    (optional)
+
+    A word used to describe the general function of the class to aid in sorting
+    and to allow a viewer to list your classes and quickly see what the categories
+    are.
+
+
+    --- dt
+    simple class name
+    ---
+    This is the class name the class would have if the world were not so big
+    and complex or it's the simple class name of the topic of the class.
+
+---
+
+
+--- h3
+Examples
+---
+
+CB_View_MenuView ((br))
+CB_Tests_MenuView
+
+MY_View_PersonView ((br))
+MY_Tests_PersonView
