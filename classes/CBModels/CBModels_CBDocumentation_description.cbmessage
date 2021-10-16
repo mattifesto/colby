@@ -1,0 +1,29 @@
+--- h2
+Methods of Exposing Model Editing To Users
+---
+
+--- h3
+Full Model Saving via Ajax
+---
+
+Currently members of the Administrators group can save any model by default.
+However each model can implement an interface to specify exactly who can save
+the model using this method.
+
+--- h3
+Partial Model Modification
+---
+
+When this method is used a limited number of model properties can be modified on
+a web page and saved with a custom Ajax function that will verify user
+permissions and whether the modifications are allowed.
+
+For instance, a web form can be provided to alter the user's username. When the
+user makes a modification a custom Ajax function will be called that will verify
+that the user can make these changes by checking that they have the permission
+and maybe that at this time the username can be changed. If it can, the entire
+user spec will be fetched, the appropriate property will be modified, and then
+the model will be saved.
+
+In this way, even though the entire model is saved the user only has access to
+modify a single property.
