@@ -853,6 +853,18 @@ a.CBUI_sectionItem {
     flex: 1 0 auto;
 }
 
+
+
+/**
+ * On CB_UI pages the CBUIRoot background color should be the paper color.
+ */
+.CB_UI .CBUIRoot {
+    background-color: var(--CB_UI_paperColor);
+}
+
+
+
+
 .CBUIRoot + .flex-fill {
     display: none;
 }
@@ -870,6 +882,18 @@ a.CBUI_sectionItem {
     justify-content: space-between;
     padding: 0 5px;
 }
+
+
+
+/**
+ * On CB_UI pages the CBUIHeader should use the appropriate colors.
+ */
+.CB_UI .CBUIHeader {
+    background-color: var(--CB_UI_paperColor);
+    border-bottom-color: var(--CB_UI_borderColor);
+}
+
+
 
 .CBUIHeader > .left {
     display: flex;

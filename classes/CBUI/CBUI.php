@@ -1,6 +1,7 @@
 <?php
 
-final class CBUI {
+final class
+CBUI {
 
     /* -- CBHTMLOutput interfaces -- */
 
@@ -15,7 +16,7 @@ final class CBUI {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.12.css',
+                'v675.38.css',
                 cbsysurl()
             ),
         ];
@@ -47,6 +48,7 @@ final class CBUI {
      */
     static function CBHTMLOutput_requiredClassNames() {
         return [
+            'CB_UI',
             'CBContentStyleSheet',
             'CBMessageMarkup',
             'CBUIDropdown',
