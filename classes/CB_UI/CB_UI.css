@@ -22,5 +22,5 @@ html.CB_UI_browserPrefersDarkMode {
 
 
 .CB_UI {
-    background: var(--CB_UI_paperColor);
+    background-color: var(--CB_UI_paperColor);
 }
