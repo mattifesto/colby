@@ -69,14 +69,16 @@ CB_CBView_MainHeader {
     CBView_render(
         stdClass $viewModel
     ): void {
-        $currentUserCBID = ColbyUser::getCurrentUserCBID();
+        $currentPrettyUsername = CB_Username::fetchCurrentUserPrettyUsername();
 
-        if ($currentUserCBID === null) {
+        if (
+            $currentPrettyUsername === null
+        ) {
             $userEmoji = '👤';
             $userURL = '/colby/user/';
         } else {
             $userEmoji = '👨';
-            $userURL = "/user/{$currentUserCBID}/";
+            $userURL = "/user/{$currentPrettyUsername}/";
         }
 
         echo <<<EOT
