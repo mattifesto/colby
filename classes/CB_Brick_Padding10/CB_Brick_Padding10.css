@@ -1,0 +1,12 @@
+.CB_Brick_Padding10_outer {
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    padding: 10px;
+}
+
+.CB_Brick_Padding10_inner {
+    max-width: 100%;
+}
