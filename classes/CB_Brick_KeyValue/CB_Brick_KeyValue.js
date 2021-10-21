@@ -14,6 +14,7 @@
      *          CB_Brick_KeyValue_getElement: function
      *          CB_Brick_KeyValue_setHasNavigationArrow: function
      *          CB_Brick_KeyValue_setKey: function
+     *          CB_Brick_KeyValue_getValue: function
      *          CB_Brick_KeyValue_setValue: function
      *      }
      */
@@ -124,6 +125,18 @@
 
 
         /**
+         * @return string
+         */
+        function
+        CB_Brick_KeyValue_getValue(
+        ) {
+            return valueElement.textContent;
+        }
+        /* CB_Brick_KeyValue_getValue() */
+
+
+
+        /**
          * @param string newValue
          *
          * @return undefined
@@ -142,6 +155,7 @@
             CB_Brick_KeyValue_getElement,
             CB_Brick_KeyValue_setHasNavigationArrow,
             CB_Brick_KeyValue_setKey,
+            CB_Brick_KeyValue_getValue,
             CB_Brick_KeyValue_setValue,
         };
     }
