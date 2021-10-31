@@ -18,7 +18,6 @@ CB_Username {
      *
      *      {
      *          value: string
-     *
      *      }
      */
     static function
@@ -40,17 +39,56 @@ CB_Username {
             }
         }
 
+        $currentUserCBID = ColbyUser::getCurrentUserCBID();
+
+        if (
+            $targetUserCBID !== $currentUserCBID &&
+            !CBUserGroup::userIsMemberOfUserGroup(
+                $currentUserCBID,
+                'CBAdministratorsUserGroup'
+            )
+        ) {
+            throw new CBException(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The current user does not have permission to call this ajax
+                    function.
+
+                EOT),
+                '',
+                '170dfc9a3a8e2824ef69137b9fa971e9472306cb'
+            );
+        }
+
         $usernameModelCBID = CB_Username::fetchUsernameCBIDByUserCBID(
             $targetUserCBID
         );
 
-        /* if null */
+        if (
+            $usernameModelCBID === null
+        ) {
+            throw new CBExceptionWithValue(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The user with the user model CBID of "{$targetUserCBID}"
+                    does not have a username model associated with their user
+                    model.
+
+                EOT),
+                $targetUserCBID,
+                '17b8c4412d4515a7925ce7892ad1914700221fdf'
+            );
+        }
 
         $usernameModel = CBModels::fetchModelByCBID(
             $usernameModelCBID
         );
 
-        /* if null */
+        if (
+            $usernameModel === null
+        ) {
+            return '';
+        }
 
         return CB_Username::getPrettyUsername(
             $usernameModel
