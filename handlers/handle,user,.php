@@ -62,23 +62,37 @@ return (function () {
         {$userFullName}
         ---
 
-        (edit profile (a /colby/user/))
-
     EOT;
 
+    $currentUserModelCBID = ColbyUser::getCurrentUserCBID();
 
-    CBPage::renderSpec(
-        CBModelTemplateCatalog::fetchLivePageTemplate(
-            (object)[
-                'title' => $userFullName,
-                'sections' => [
-                    (object)[
-                        'className' => 'CBMessageView',
-                        'markup' => $cbmessage,
-                    ]
+    if (
+        $userModelCBID === $currentUserModelCBID
+    ) {
+        $cbmessage .= <<<EOT
+
+            (edit profile (a /colby/user/))
+
+        EOT;
+    }
+
+    $pageSpec = CBViewPage::standardPageTemplate();
+
+    CBModel::merge(
+        $pageSpec,
+        (object)[
+            'title' => $userFullName,
+            'sections' => [
+                (object)[
+                    'className' => 'CBMessageView',
+                    'markup' => $cbmessage,
                 ]
             ]
-        )
+        ]
+    );
+
+    CBPage::renderSpec(
+        $pageSpec
     );
 
     return 1;
