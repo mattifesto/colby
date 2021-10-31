@@ -1,0 +1,16 @@
+.CB_Brick_OnOff {
+    display: flex;
+    align-items: center;
+
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+.CB_Brick_OnOff_titleDescriptionContainer {
+    flex-grow: 1;
+}
+
+.CB_Brick_OnOff_title {
+    font-weight: bold;
+}
