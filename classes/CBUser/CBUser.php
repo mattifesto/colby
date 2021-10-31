@@ -267,6 +267,203 @@ CBUser {
 
 
     /**
+     * @param object $args
+     *
+     *      {
+     *          targetUserCBID: CBID
+     *      }
+     *
+     * @return bool
+     */
+    static function
+    CBAjax_fetchPublicProfileIsEnabled(
+        stdClass $args
+    ): bool {
+        $targetUserCBID = CBModel::valueAsCBID(
+            $args,
+            'targetUserCBID'
+        );
+
+        if ($targetUserCBID === null) {
+            if ($targetUserCBID === null) {
+                throw new CBExceptionWithValue(
+                    'The "targetUserCBID" argument is not valid.',
+                    $args,
+                    'f0a4e82374632b7d408987b1b8cf6c7474141226'
+                );
+            }
+        }
+
+        $currentUserCBID = ColbyUser::getCurrentUserCBID();
+
+        if (
+            $targetUserCBID !== $currentUserCBID &&
+            !CBUserGroup::userIsMemberOfUserGroup(
+                $currentUserCBID,
+                'CBAdministratorsUserGroup'
+            )
+        ) {
+            throw new CBException(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The current user does not have permission to call this ajax
+                    function.
+
+                EOT),
+                '',
+                'b9aa8abb2df46bc78cb836a9c7d4460e232c8579'
+            );
+        }
+
+        $userModel = CBModels::fetchModelByCBID(
+            $targetUserCBID
+        );
+
+        $userModelClassName = CBModel::getClassName(
+            $userModel
+        );
+
+        if (
+            $userModelClassName !== 'CBUser'
+        ) {
+            throw new CBException(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The target user CBID argument is not the CBID of a user
+                    model.
+
+                EOT),
+                '',
+                'c62382a924d00ffa6dce7c449cfb77e30b15d05a'
+            );
+        }
+
+        $publicProfileIsEnabled = CBUser::getPublicProfileIsEnabled(
+            $userModel
+        );
+
+        return $publicProfileIsEnabled;
+    }
+    /* CBAjax_fetchPublicProfileIsEnabled() */
+
+
+
+    static function
+    CBAjax_fetchPublicProfileIsEnabled_getUserGroupClassName(
+    ): string {
+        return 'CBPublicUserGroup';
+    }
+    /* CBAjax_fetchPublicProfileIsEnabled_getUserGroupClassName() */
+
+
+
+    /**
+     * @param object $args
+     *
+     *      {
+     *          targetUserCBID: CBID
+     *          newPublicProfileIsEnabledValue: bool
+     *      }
+     *
+     * @return void
+     */
+    static function
+    CBAjax_setPublicProfileIsEnabled(
+        stdClass $args
+    ): void {
+        $targetUserCBID = CBModel::valueAsCBID(
+            $args,
+            'targetUserCBID'
+        );
+
+        if ($targetUserCBID === null) {
+            if ($targetUserCBID === null) {
+                throw new CBExceptionWithValue(
+                    'The "targetUserCBID" argument is not valid.',
+                    $args,
+                    'bae1d8fd19962c5e705deb69f00a65987fc8331f'
+                );
+            }
+        }
+
+        $currentUserCBID = ColbyUser::getCurrentUserCBID();
+
+        if (
+            $targetUserCBID !== $currentUserCBID &&
+            !CBUserGroup::userIsMemberOfUserGroup(
+                $currentUserCBID,
+                'CBAdministratorsUserGroup'
+            )
+        ) {
+            throw new CBException(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The current user does not have permission to call this ajax
+                    function.
+
+                EOT),
+                '',
+                'ee142cd80ca364bf5085d226f104fccf613c02bb'
+            );
+        }
+
+        $userSpec = CBModels::fetchModelByCBID(
+            $targetUserCBID
+        );
+
+        $userSpecClassName = CBModel::getClassName(
+            $userSpec
+        );
+
+        if (
+            $userSpecClassName !== 'CBUser'
+        ) {
+            throw new CBException(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The target user CBID argument is not the CBID of a user
+                    model.
+
+                EOT),
+                '',
+                '65937defe670aeb837438f71458945962bb776f4'
+            );
+        }
+
+        $newPublicProfileIsEnabledValue = CBModel::valueToBool(
+            $args,
+            'newPublicProfileIsEnabledValue'
+        );
+
+        CBUser::setPublicProfileIsEnabled(
+            $userSpec,
+            $newPublicProfileIsEnabledValue
+        );
+
+        CBDB::transaction(
+            function () use (
+                $userSpec
+            ) {
+                CBModels::save(
+                    $userSpec
+                );
+            }
+        );
+    }
+    /* CBAjax_setPublicProfileIsEnabled() */
+
+
+
+    static function
+    CBAjax_setPublicProfileIsEnabled_getUserGroupClassName(
+    ): string {
+        return 'CBPublicUserGroup';
+    }
+    /* CBAjax_setPublicProfileIsEnabled_getUserGroupClassName() */
+
+
+
+    /**
      * @return void
      */
     static function CBAjax_signOut(): void {
@@ -520,6 +717,13 @@ CBUser {
         CBUser::setName(
             $userModel,
             CBUser::getName(
+                $spec
+            )
+        );
+
+        CBUser::setPublicProfileIsEnabled(
+            $userModel,
+            CBUser::getPublicProfileIsEnabled(
                 $spec
             )
         );
@@ -899,6 +1103,43 @@ CBUser {
         $userModel->passwordHash = $passwordHash;
     }
     /* setPasswordHash() */
+
+
+
+    /**
+     * @param object $userModel
+     *
+     * @return bool
+     */
+    static function
+    getPublicProfileIsEnabled(
+        stdClass $userModel
+    ): bool {
+        return CBModel::valueToBool(
+            $userModel,
+            'CBUser_publicProfileIsEnabled'
+        );
+    }
+    /* getPublicProfileIsEnabled() */
+
+
+
+    /**
+     * @param object $userModel
+     * @param bool $newPublicProfileIsEnabledValue
+     *
+     * @return void
+     */
+    static function
+    setPublicProfileIsEnabled(
+        stdClass $userModel,
+        bool $newPublicProfileIsEnabledValue
+    ): void {
+        $userModel->CBUser_publicProfileIsEnabled = (
+            $newPublicProfileIsEnabledValue
+        );
+    }
+    /* setPublicProfileIsEnabled() */
 
 
 
