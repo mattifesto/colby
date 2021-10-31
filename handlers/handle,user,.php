@@ -1,6 +1,6 @@
 <?php
 
-(function () {
+return (function () {
 
     $stubs = ColbyRequest::decodedStubs();
 
@@ -42,6 +42,16 @@
         $userModelCBID
     );
 
+    $userPublicProfileIsEnabled = CBUser::getPublicProfileIsEnabled(
+        $userModel
+    );
+
+    if (
+        $userPublicProfileIsEnabled !== true
+    ) {
+        return 0;
+    }
+
     $userFullName = CBUser::getName(
         $userModel
     );
@@ -71,4 +81,5 @@
         )
     );
 
+    return 1;
 })();
