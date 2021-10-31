@@ -1,6 +1,7 @@
 <?php
 
-final class CBUIBooleanSwitchPart {
+final class
+CBUIBooleanSwitchPart {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -9,11 +10,18 @@ final class CBUIBooleanSwitchPart {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs(): array {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v523.css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.38.css',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
 
 
 
@@ -21,21 +29,31 @@ final class CBUIBooleanSwitchPart {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v555.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.38.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'CBUI',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 
 }

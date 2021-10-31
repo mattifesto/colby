@@ -1,14 +1,17 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBUIBooleanSwitchPart */
 /* global
     CBUI,
 */
 
 
 
-var CBUIBooleanSwitchPart = {
+(function () {
+    "use strict";
+
+    window.CBUIBooleanSwitchPart = {
+        create: CBUIBooleanSwitchPart_create,
+    };
+
+
 
     /**
      * @return object
@@ -16,11 +19,15 @@ var CBUIBooleanSwitchPart = {
      *      {
      *          changed: function (get, set)
      *          element: Element (readonly)
+     *          CBUIBooleanSwitchPart_setIsDisabled: function
      *          value: bool (get, set)
      *      }
      */
-    create: function () {
+    function
+    CBUIBooleanSwitchPart_create(
+    ) {
         let changed;
+        let isDisabled = false;
         let value = false;
 
 
@@ -47,50 +54,113 @@ var CBUIBooleanSwitchPart = {
         element.addEventListener(
             "click",
             function () {
-                api.value = !value;
+                if (
+                    isDisabled === true
+                ) {
+                    return;
+                }
+
+                CBUIBooleanSwitchPart_setValue(
+                    !value
+                );
             }
         );
 
-        let api = {
+
+
+        /* -- functions -- */
+
+
+
+        /**
+         * @param bool newIsDisabledValue
+         *
+         * @return undefined
+         */
+        function
+        CBUIBooleanSwitchPart_setIsDisabled(
+            newIsDisabledValue
+        ) {
+            isDisabled = !!newIsDisabledValue;
+
+            if (
+                isDisabled === true
+            ) {
+                element.classList.add(
+                    "CBUIBooleanSwitchPart_isDisabled"
+                );
+            } else {
+                element.classList.remove(
+                    "CBUIBooleanSwitchPart_isDisabled"
+                );
+            }
+        }
+        /* CBUIBooleanSwitchPart_setIsDisabled() */
+
+
+
+        function
+        CBUIBooleanSwitchPart_setValue(
+            newValue
+        ) {
+            newValue = !!newValue;
+
+            if (value == newValue) {
+                return;
+            }
+
+            value = newValue;
+
+            if (value === true) {
+                element.classList.add("true");
+            } else {
+                element.classList.remove("true");
+            }
+
+            if (typeof changed === "function") {
+                changed();
+            }
+        }
+        /* CBUIBooleanSwitchPart_setValue() */
+
+
+
+        return {
+            CBUIBooleanSwitchPart_setIsDisabled,
+
             get changed() {
                 return changed;
             },
-            set changed(value) {
-                if (typeof value === "function") {
-                    changed = value;
+
+            set changed(
+                newChangedCallback
+            ) {
+                if (
+                    typeof newChangedCallback === "function"
+                ) {
+                    changed = newChangedCallback;
                 } else {
                     changed = undefined;
                 }
             },
+
             get element() {
                 return element;
             },
+
             get value() {
                 return value;
             },
-            set value(newValue) {
-                newValue = !!newValue;
 
-                if (value == newValue) {
-                    return;
-                }
-
-                value = newValue;
-
-                if (value === true) {
-                    element.classList.add("true");
-                } else {
-                    element.classList.remove("true");
-                }
-
-                if (typeof changed === "function") {
-                    changed();
-                }
+            set value(
+                newValue
+            ) {
+                CBUIBooleanSwitchPart_setValue(
+                    newValue
+                );
             },
         };
+    }
+    /* CBUIBooleanSwitchPart_create() */
 
-        return api;
-    },
-    /* create() */
-
-};
+})();
