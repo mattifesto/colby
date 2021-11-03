@@ -16,6 +16,11 @@ CB_StandardPageFrame {
         CBPageFrameCatalog::install(
             __CLASS__
         );
+
+        CBModelAssociations::delete(
+            CB_StandardPageFrame::getCBID(),
+            'CB_StandardPageFrame_defaultMainMenu'
+        );
     }
     /* CBInstall_install() */
 
@@ -28,7 +33,8 @@ CB_StandardPageFrame {
     CBInstall_requiredClassNames(
     ): array {
         return [
-            'CBPageFrameCatalog'
+            'CBModelAssociations',
+            'CBPageFrameCatalog',
         ];
     }
     /* CBInstall_requiredClassNames() */
@@ -48,7 +54,7 @@ CB_StandardPageFrame {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.37.css',
+                'v675.38.css',
                 cbsysurl()
             ),
         ];
@@ -102,11 +108,40 @@ CB_StandardPageFrame {
     CBPageFrame_render(
         callable $renderContent
     ): void {
+        $mainMenuModelCBID = CBModelAssociations::fetchSingularSecondCBID(
+            CB_StandardPageFrame::getCBID(),
+            'CB_StandardPageFrame_defaultMainMenu'
+        );
+
         echo <<<EOT
 
             <div class="CB_StandardPageFrame">
 
                 <div class="CB_StandardPageFrame_leftSidebar">
+        EOT;
+
+        if ($mainMenuModelCBID !== null) {
+            $menuViewSpec = CBModel::createSpec(
+                'CBMenuView'
+            );
+
+            CBMenuView::setCSSClassNames(
+                $menuViewSpec,
+                'custom CB_StandardPageFrame_mainMenu'
+            );
+
+            CBMenuView::setMenuModelCBID(
+                $menuViewSpec,
+                $mainMenuModelCBID
+            );
+
+            CBView::renderSpec(
+                $menuViewSpec
+            );
+        }
+
+        echo <<<EOT
+
                 </div>
 
                 <div class="CB_StandardPageFrame_main">
@@ -133,5 +168,47 @@ CB_StandardPageFrame {
         EOT;
     }
     /* CBPageFrame_render() */
+
+
+
+    /* -- functions -- */
+
+
+
+    /**
+     * @return CBID
+     *
+     *      This function returns the CBID that represents the standard page
+     *      frame in the associations table when something is associated with
+     *      it.
+     */
+    static function
+    getCBID(
+    ): string {
+        return '59bd18277734acc3ac0d3ed7963ff2f128989cfc';
+    }
+    /* getCBID() */
+
+
+
+    /**
+     * @param CBID @newMainMenuModelCBID
+     *
+     *      This menu will be shown as the default main menu when the standard
+     *      page frame is used.
+     *
+     * @return void
+     */
+    static function
+    setDefaultMainMenuModelCBID(
+        string $newMainMenuModelCBID
+    ): void {
+        CBModelAssociations::replaceAssociatedID(
+            CB_StandardPageFrame::getCBID(),
+            'CB_StandardPageFrame_defaultMainMenu',
+            $newMainMenuModelCBID
+        );
+    }
+    /* setDefaultMainMenuModelCBID() */
 
 }

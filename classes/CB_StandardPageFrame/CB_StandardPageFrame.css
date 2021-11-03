@@ -6,6 +6,9 @@
     max-width: 100%;
 }
 
+.CB_StandardPageFrame a {
+    text-decoration: none;
+}
 
 
 .CB_StandardPageFrame_leftSidebar,
@@ -55,4 +58,20 @@
 
     border-left: 1px solid var(--CB_UI_borderColor);
     border-right: 1px solid var(--CB_UI_borderColor);
+}
+
+
+
+.CB_StandardPageFrame_mainMenu .CBMenuView_header,
+.CB_StandardPageFrame_mainMenu .CBMenuView_containerTitle {
+    display: none;
+}
+
+.CB_StandardPageFrame_mainMenu ul {
+    list-style-type: none;
+    padding: 20px 0;
+}
+
+.CB_StandardPageFrame_mainMenu li {
+    padding: 10px;
 }
