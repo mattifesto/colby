@@ -85,17 +85,14 @@ CBMenuView {
      *
      * @return object
      */
-    static function CBModel_build(
+    static function
+    CBModel_build(
         stdClass $spec
     ): stdClass {
-        return (object)[
+        $menuViewModel = (object)[
             'CSSClassNames' => CBModel::valueToNames(
                 $spec,
                 'CSSClassNames'
-            ),
-            'menuID' => CBModel::valueAsID(
-                $spec,
-                'menuID'
             ),
             'menuIndex' => CBModel::valueAsInt(
                 $spec,
@@ -106,6 +103,15 @@ CBMenuView {
                 'selectedItemName'
             ),
         ];
+
+        CBMenuView::setMenuModelCBID(
+            $menuViewModel,
+            CBMenuView::getMenuModelCBID(
+                $spec
+            )
+        );
+
+        return $menuViewModel;
     }
     /* CBModel_build() */
 
@@ -148,7 +154,8 @@ CBMenuView {
      *
      * @return void
      */
-    static function CBView_render(
+    static function
+    CBView_render(
         stdClass $model
     ): void {
         $menu = CBModel::valueAsObject(
@@ -336,5 +343,54 @@ CBMenuView {
         <?php
     }
     /* CBView_render() */
+
+
+
+    /* -- accessors -- */
+
+
+
+    static function
+    setCSSClassNames(
+        stdClass $menuViewModel,
+        string $newCSSClassNames
+    ): void {
+        $menuViewModel->CSSClassNames = $newCSSClassNames;
+    }
+
+
+
+    /**
+     * @param object $menuViewModel
+     *
+     * @return CBID|null
+     */
+    static function
+    getMenuModelCBID(
+        stdClass $menuViewModel
+    ): ?string {
+        return CBModel::valueAsCBID(
+            $menuViewModel,
+            'menuID'
+        );
+    }
+    /* setMenuModelCBID() */
+
+
+
+    /**
+     * @param object $menuViewModel
+     * @param string|null $menuModelCBID
+     *
+     * @return void
+     */
+    static function
+    setMenuModelCBID(
+        stdClass $menuViewModel,
+        ?string $newMenuModelCBID
+    ): void {
+        $menuViewModel->menuID = $newMenuModelCBID;
+    }
+    /* setMenuModelCBID() */
 
 }
