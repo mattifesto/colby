@@ -585,6 +585,12 @@ CBModelAssociations {
 
 
     /**
+     * @TODO
+     *
+     *      This function should be replaced with a function named
+     *      replaceSecondCBID() to match the new naming standard for
+     *      associations.
+     *
      * This function is useful in situations where you have a one-to-one
      * association and you want to add or replace the associated ID while making
      * sure the association remains singular.
@@ -597,19 +603,19 @@ CBModelAssociations {
      */
     static function
     replaceAssociatedID(
-        string $ID,
+        string $firstCBID,
         string $associationKey,
-        string $associatedID
+        string $secondCBID
     ): void {
         CBModelAssociations::delete(
-            $ID,
+            $firstCBID,
             $associationKey
         );
 
         CBModelAssociations::add(
-            $ID,
+            $firstCBID,
             $associationKey,
-            $associatedID
+            $secondCBID
         );
     }
     /* replaceAssociatedID() */
