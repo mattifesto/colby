@@ -1,9 +1,8 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
 /* exported CBViewPageEditor */
 /* global
+    CB_Brick_Button,
     CBAjax,
+    CBConvert,
     CBErrorHandler,
     CBImage,
     CBModel,
@@ -16,315 +15,412 @@
     CBViewPageEditor_currentFrontPageID,
 */
 
-var CBViewPageEditor = {
+(function () {
+    "use strict";
 
-    /**
-     * This variable will be set to the spec as soon as the editor is created.
-     */
-    spec: undefined,
+    let CBViewPageEditor = {
 
-
-
-    /**
-     * This variable will be set to the specChangedCallback as soon as the
-     * editor is created.
-     */
-    specChangedCallback: undefined,
+        /**
+         * This variable will be set to the spec as soon as the editor is created.
+         */
+        spec: undefined,
 
 
 
-    /**
-     * This will be set to a function by the CBViewPageInformationEditor.
-     */
-    thumbnailChangedCallback: undefined,
+        /**
+         * This variable will be set to the specChangedCallback as soon as the
+         * editor is created.
+         */
+        specChangedCallback: undefined,
 
 
 
-    /**
-     * @param object args
-     *
-     *      {
-     *          spec: model
-     *          specChangedCallback: function
-     *      }
-     *
-     * @return Element
-     */
-    CBUISpecEditor_createEditorElement(
-        args
-    ) {
-        let spec = args.spec;
-        let specChangedCallback = args.specChangedCallback;
+        /**
+         * This will be set to a function by the CBViewPageInformationEditor.
+         */
+        thumbnailChangedCallback: undefined,
 
-        CBViewPageEditor.spec = spec;
-        CBViewPageEditor.specChangedCallback = specChangedCallback;
 
-        var editorContainer = document.createElement("div");
 
-        editorContainer.classList.add("CBViewPageEditor");
+        /**
+         * @param object args
+         *
+         *      {
+         *          spec: model
+         *          specChangedCallback: function
+         *      }
+         *
+         * @return Element
+         */
+        CBUISpecEditor_createEditorElement(
+            args
+        ) {
+            let spec = args.spec;
+            let specChangedCallback = args.specChangedCallback;
 
-        if (spec.ID === CBViewPageEditor_currentFrontPageID) {
-            editorContainer.appendChild(
-                createFrontPageNotificationElement()
-            );
-        }
+            CBViewPageEditor.spec = spec;
+            CBViewPageEditor.specChangedCallback = specChangedCallback;
 
-        /* CBViewPageInformationEditor */
-        {
-            let handleTitleChanged =
-            CBViewPageEditor.handleTitleChanged.bind(
-                undefined,
+            var editorContainer = document.createElement("div");
+
+            editorContainer.classList.add("CBViewPageEditor");
+
+            if (spec.ID === CBViewPageEditor_currentFrontPageID) {
+                editorContainer.appendChild(
+                    createFrontPageNotificationElement()
+                );
+            }
+
+            /* CBViewPageInformationEditor */
+            {
+                let handleTitleChanged =
+                CBViewPageEditor.handleTitleChanged.bind(
+                    undefined,
+                    {
+                        spec: spec,
+                    }
+                );
+
+                let makeFrontPageCallback =
+                CBViewPageEditor.makeFrontPage.bind(
+                    undefined,
+                    {
+                        ID: spec.ID,
+                    }
+                );
+
+                editorContainer.appendChild(
+                    CBViewPageInformationEditor.CBViewPageEditor_createEditor(
+                        {
+                            handleTitleChanged: handleTitleChanged,
+                            makeFrontPageCallback: makeFrontPageCallback,
+                            spec: spec,
+                            specChangedCallback: specChangedCallback,
+                        }
+                    )
+                );
+            }
+            /* CBViewPageInformationEditor */
+
+
+            /* use views as right sidebar content */
+            {
+                let buttonBrick = CB_Brick_Button.create();
+
+                buttonBrick.CB_Brick_Button_setTextContent(
+                    "Use Views as Right Sidebar Content"
+                );
+
+                editorContainer.append(
+                    buttonBrick.CB_Brick_Button_getElement()
+                );
+
+                let pageModelCBID = spec.ID;
+
+                buttonBrick.CB_Brick_Button_setClickedCallback(
+                    function () {
+                        useViewsAsRightSidebarContent(
+                            buttonBrick,
+                            pageModelCBID
+                        );
+                    }
+                );
+            }
+            /* use views as right sidebar content */
+
+
+            /* views */
+            {
+                if (spec.sections === undefined) {
+                    spec.sections = [];
+                }
+
+                let titleElement = CBUI.createElement("CBUI_title1");
+                titleElement.textContent = "Views";
+
+                editorContainer.appendChild(titleElement);
+
+                let editor = CBUISpecArrayEditor.create(
+                    {
+                        specs: spec.sections,
+                        specsChangedCallback: specChangedCallback,
+                        addableClassNames: CBViewPageEditor_addableClassNames,
+                    }
+                );
+
+                editorContainer.appendChild(editor.element);
+
+                editorContainer.appendChild(
+                    CBUI.createHalfSpace()
+                );
+            }
+            /* views */
+
+
+            CBViewPageEditor.handleTitleChanged(
                 {
                     spec: spec,
                 }
             );
-
-            let makeFrontPageCallback =
-            CBViewPageEditor.makeFrontPage.bind(
-                undefined,
-                {
-                    ID: spec.ID,
-                }
-            );
-
-            editorContainer.appendChild(
-                CBViewPageInformationEditor.CBViewPageEditor_createEditor(
-                    {
-                        handleTitleChanged: handleTitleChanged,
-                        makeFrontPageCallback: makeFrontPageCallback,
-                        spec: spec,
-                        specChangedCallback: specChangedCallback,
-                    }
-                )
-            );
-        }
-        /* CBViewPageInformationEditor */
-
-
-        /* views */
-        {
-            if (spec.sections === undefined) {
-                spec.sections = [];
-            }
-
-            let titleElement = CBUI.createElement("CBUI_title1");
-            titleElement.textContent = "Views";
-
-            editorContainer.appendChild(titleElement);
-
-            let editor = CBUISpecArrayEditor.create(
-                {
-                    specs: spec.sections,
-                    specsChangedCallback: specChangedCallback,
-                    addableClassNames: CBViewPageEditor_addableClassNames,
-                }
-            );
-
-            editorContainer.appendChild(editor.element);
 
             editorContainer.appendChild(
                 CBUI.createHalfSpace()
             );
-        }
-        /* views */
+
+            return editorContainer;
 
 
-        CBViewPageEditor.handleTitleChanged(
-            {
-                spec: spec,
+
+            /* -- closures -- -- -- -- -- */
+
+
+
+            /**
+             * @return Element
+             */
+            function createFrontPageNotificationElement() {
+                let element = CBUI.createElement(
+                    "CBViewPageEditor_frontPageNotification " +
+                    "CBUI_sectionContainer"
+                );
+
+                let sectionElement = CBUI.createElement(
+                    "CBUI_section"
+                );
+
+                element.appendChild(sectionElement);
+
+                let textContainerElement = CBUI.createElement(
+                    "CBUI_container_topAndBottom"
+                );
+
+                sectionElement.appendChild(textContainerElement);
+
+                let textElement = CBUI.createElement();
+
+                textElement.textContent = "This page is currently the front page.";
+
+                textContainerElement.appendChild(textElement);
+
+                return element;
             }
-        );
+            /* createFrontPageNotificationElement() */
 
-        editorContainer.appendChild(
-            CBUI.createHalfSpace()
-        );
-
-        return editorContainer;
-
-
-
-        /* -- closures -- -- -- -- -- */
+        },
+        /* CBUISpecEditor_createEditorElement() */
 
 
 
         /**
-         * @return Element
+         * @param object args
+         *
+         *      {
+         *          spec: object
+         *      }
+         *
+         * @return undefined
          */
-        function createFrontPageNotificationElement() {
-            let element = CBUI.createElement(
-                "CBViewPageEditor_frontPageNotification " +
-                "CBUI_sectionContainer"
+        handleTitleChanged(
+            args
+        ) {
+            /**
+             * Only change the page title if this is a CBModelEditor admin page.
+             */
+
+            let elements = document.getElementsByClassName(
+                "CBModelEditor"
             );
 
-            let sectionElement = CBUI.createElement(
-                "CBUI_section"
-            );
+            if (elements.length === 0) {
+                return;
+            }
 
-            element.appendChild(sectionElement);
+            /**
+             * Change the page title.
+             */
 
-            let textContainerElement = CBUI.createElement(
-                "CBUI_container_topAndBottom"
-            );
+            let title = CBModel.valueToString(
+                args,
+                "spec.title"
+            ).trim();
 
-            sectionElement.appendChild(textContainerElement);
+            let documentTitle = "Page Editor";
 
-            let textElement = CBUI.createElement();
+            if (title.length > 0) {
+                documentTitle = documentTitle + ": " + title;
+            }
 
-            textElement.textContent = "This page is currently the front page.";
+            document.title = documentTitle;
+        },
+        /* handleTitleChanged() */
 
-            textContainerElement.appendChild(textElement);
 
-            return element;
-        }
-        /* createFrontPageNotificationElement() */
 
-    },
-    /* CBUISpecEditor_createEditorElement() */
+        /**
+         * @param object args
+         *
+         *      {
+         *          ID: ID
+         *      }
+         *
+         * @return undefined
+         */
+        makeFrontPage(
+            args
+        ) {
+            if (
+                window.confirm(
+                    "Are you sure you want to use this page as the front page?"
+                )
+            ) {
+                CBAjax.call(
+                    "CBSitePreferences",
+                    "setFrontPageID",
+                    {
+                        ID: args.ID
+                    }
+                ).then(
+                    function (response) {
+                        CBUIPanel.displayText(response.message);
+                    }
+                ).catch(
+                    function (error) {
+                        CBUIPanel.displayError(error);
+
+                        CBErrorHandler.report(
+                            error
+                        );
+                    }
+                );
+            }
+        },
+        /* makeFrontPage() */
+
+
+
+        /**
+         * @param model? image
+         *
+         * @return undefined
+         */
+        setThumbnailImage(
+            image
+        ) {
+            var spec = CBViewPageEditor.spec;
+
+            if (spec === undefined) {
+                return;
+            }
+
+            if (image === undefined) {
+                spec.image = undefined;
+                spec.thumbnailURL = undefined;
+            } else {
+                spec.image = image;
+                spec.thumbnailURL = CBImage.toURL(
+                    image,
+                    "rw640"
+                );
+            }
+
+            if (CBViewPageEditor.thumbnailChangedCallback) {
+                CBViewPageEditor.thumbnailChangedCallback(
+                    {
+                        spec: spec,
+                        image: image
+                    }
+                );
+            }
+
+            CBViewPageEditor.specChangedCallback.call();
+        },
+        /* setThumbnailImage() */
+
+
+
+        /**
+         * @param model image
+         *
+         * @return undefined
+         */
+        suggestThumbnailImage(
+            image
+        ) {
+            var spec = CBViewPageEditor.spec;
+
+            if (spec && !spec.image && !spec.thumbnailURL) {
+                CBViewPageEditor.setThumbnailImage(image);
+            }
+        },
+        /* suggestThumbnailImage() */
+
+
+
+    };
+    /* CBViewPageEditor */
+
+
+
+    window.CBViewPageEditor = CBViewPageEditor;
 
 
 
     /**
-     * @param object args
-     *
-     *      {
-     *          spec: object
-     *      }
+     * @param object buttonBrick
+     * @param CBID pageModelCBID
      *
      * @return undefined
      */
-    handleTitleChanged(
-        args
-    ) {
-        /**
-         * Only change the page title if this is a CBModelEditor admin page.
-         */
-
-        let elements = document.getElementsByClassName(
-            "CBModelEditor"
-        );
-
-        if (elements.length === 0) {
-            return;
-        }
-
-        /**
-         * Change the page title.
-         */
-
-        let title = CBModel.valueToString(
-            args,
-            "spec.title"
-        ).trim();
-
-        let documentTitle = "Page Editor";
-
-        if (title.length > 0) {
-            documentTitle = documentTitle + ": " + title;
-        }
-
-        document.title = documentTitle;
-    },
-    /* handleTitleChanged() */
-
-
-
-    /**
-     * @param object args
-     *
-     *      {
-     *          ID: ID
-     *      }
-     *
-     * @return undefined
-     */
-    makeFrontPage(
-        args
+    async function
+    useViewsAsRightSidebarContent(
+        buttonBrick,
+        pageModelCBID
     ) {
         if (
-            window.confirm(
-                "Are you sure you want to use this page as the front page?"
-            )
+            buttonBrick.CB_Brick_Button_getIsDisabled()
         ) {
-            CBAjax.call(
-                "CBSitePreferences",
-                "setFrontPageID",
-                {
-                    ID: args.ID
-                }
-            ).then(
-                function (response) {
-                    CBUIPanel.displayText(response.message);
-                }
-            ).catch(
-                function (error) {
-                    CBUIPanel.displayError(error);
-
-                    CBErrorHandler.report(
-                        error
-                    );
-                }
-            );
-        }
-    },
-    /* makeFrontPage() */
-
-
-
-    /**
-     * @param model? image
-     *
-     * @return undefined
-     */
-    setThumbnailImage(
-        image
-    ) {
-        var spec = CBViewPageEditor.spec;
-
-        if (spec === undefined) {
             return;
         }
 
-        if (image === undefined) {
-            spec.image = undefined;
-            spec.thumbnailURL = undefined;
-        } else {
-            spec.image = image;
-            spec.thumbnailURL = CBImage.toURL(
-                image,
-                "rw640"
+        {
+            let userConfirmed = window.confirm(
+                CBConvert.stringToCleanLine(`
+
+                    Are you sure you want to use the views of this page as the
+                    content of the right sidebar?
+
+                `)
             );
+
+            if (
+                !userConfirmed
+            ) {
+                return;
+            }
         }
 
-        if (CBViewPageEditor.thumbnailChangedCallback) {
-            CBViewPageEditor.thumbnailChangedCallback(
+        buttonBrick.CB_Brick_Button_setIsDisabled(
+            true
+        );
+
+        try {
+            await CBAjax.call(
+                "CB_StandardPageFrame",
+                "setRightSidebarPageModelCBID",
                 {
-                    spec: spec,
-                    image: image
+                    pageModelCBID,
                 }
             );
+        } catch (error) {
+            CBErrorHandler.report(
+                error
+            );
+        } finally {
+            buttonBrick.CB_Brick_Button_setIsDisabled(
+                false
+            );
         }
+    }
+    /* useViewsAsRightSidebarContent() */
 
-        CBViewPageEditor.specChangedCallback.call();
-    },
-    /* setThumbnailImage() */
-
-
-
-    /**
-     * @param model image
-     *
-     * @return undefined
-     */
-    suggestThumbnailImage(
-        image
-    ) {
-        var spec = CBViewPageEditor.spec;
-
-        if (spec && !spec.image && !spec.thumbnailURL) {
-            CBViewPageEditor.setThumbnailImage(image);
-        }
-    },
-    /* suggestThumbnailImage() */
-
-};
-/* CBViewPageEditor */
+})();

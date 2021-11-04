@@ -1,6 +1,7 @@
 <?php
 
-final class CBViewPageEditor {
+final class
+CBViewPageEditor {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -15,7 +16,7 @@ final class CBViewPageEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.3.js',
+                'v675.38.js',
                 cbsysurl()
             ),
         ];
@@ -46,7 +47,9 @@ final class CBViewPageEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         $classNamesForEditableViewsAndLayouts = array_merge(
             CBPagesPreferences::classNamesForEditableViews(),
             CBPagesPreferences::classNamesForLayouts()
@@ -62,7 +65,9 @@ final class CBViewPageEditor {
         return array_merge(
             $classNamesForEditors,
             [
+                'CB_Brick_Button',
                 'CBAjax',
+                'CBConvert',
                 'CBErrorHandler',
                 'CBImage',
                 'CBModel',
