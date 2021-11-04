@@ -235,14 +235,31 @@ final class CBViewPage {
             $model->layout = CBModel::build($layoutSpec);
         }
 
-        $model->sections = [];
-        $sectionSpecs = CBModel::valueToArray($spec, 'sections');
+        $viewModels = [];
 
-        foreach ($sectionSpecs as $sectionSpec) {
-            if ($sectionModel = CBModel::build($sectionSpec)) {
-                $model->sections[] = $sectionModel;
+        $viewSpecs = CBViewPage::getViews(
+            $spec
+        );
+
+        foreach ($viewSpecs as $viewSpec) {
+            $viewModel = CBModel::build(
+                $viewSpec
+            );
+
+            if (
+                $viewModel !== null
+            ) {
+                array_push(
+                    $viewModels,
+                    $viewModel
+                );
             }
         }
+
+        CBViewPage::setViews(
+            $model,
+            $viewModels
+        );
 
         /**
          * Computed values
@@ -346,17 +363,27 @@ final class CBViewPage {
         }
 
 
-        CBViewPage::initializePageInformation($model);
+        CBViewPage::initializePageInformation(
+            $model
+        );
+
+        $views = CBViewPage::getViews(
+            $model
+        );
 
         return implode(
             ' ',
-            array_values(array_filter(array_merge(
-                $strings,
-                array_map(
-                    'CBModel::toSearchText',
-                    CBModel::valueToArray($model, 'sections')
+            array_values(
+                array_filter(
+                    array_merge(
+                        $strings,
+                        array_map(
+                            'CBModel::toSearchText',
+                            $views
+                        )
+                    )
                 )
-            )))
+            )
         );
     }
     /* CBModel_toSearchText() */
@@ -427,13 +454,22 @@ final class CBViewPage {
         }
 
 
-        $spec->sections = array_values(
+        $originalViews = CBViewPage::getViews(
+            $spec
+        );
+
+        $upgradedViews = array_values(
             array_filter(
                 array_map(
                     'CBModel::upgrade',
-                    CBModel::valueToArray($spec, 'sections')
+                    $originalViews
                 )
             )
+        );
+
+        CBViewPage::setViews(
+            $spec,
+            $upgradedViews
         );
 
 
@@ -536,11 +572,15 @@ final class CBViewPage {
                 $renderContent = function () use ($model) {
                     echo '<main class="CBViewPage CBViewPage_default">';
 
-                    $sections = CBModel::valueToArray($model, 'sections');
+                    $views = CBViewPage::getViews(
+                        $model
+                    );
 
                     array_walk(
-                        $sections,
-                        function ($viewModel) {
+                        $views,
+                        function (
+                            $viewModel
+                        ) {
                             CBView::render($viewModel);
                         }
                     );
@@ -551,9 +591,8 @@ final class CBViewPage {
                 CBPageFrame::render($frameClassName, $renderContent);
             } else {
                 $renderContentCallback = function () use ($model) {
-                    $viewModels = CBModel::valueToArray(
-                        $model,
-                        'sections'
+                    $viewModels = CBViewPage::getViews(
+                        $model
                     );
 
                     array_walk(
@@ -703,9 +742,15 @@ final class CBViewPage {
      *
      * @return [object]
      */
-    static function CBView_toSubviews(stdClass $model): array {
-        return CBModel::valueToArray($model, 'sections');
+    static function
+    CBView_toSubviews(
+        stdClass $model
+    ): array {
+        return CBViewPage::getViews(
+            $model
+        );
     }
+    /* CBView_toSubviews() */
 
 
 
@@ -719,7 +764,10 @@ final class CBViewPage {
         stdClass $model,
         array $subviews
     ): void {
-        $model->sections = $subviews;
+        CBViewPage::setViews(
+            $model,
+            $subviews
+        );
     }
 
 
@@ -900,6 +948,24 @@ final class CBViewPage {
         $viewPageSpec->title = $title;
     }
     /* setTitle() */
+
+
+
+    /**
+     * @param object $viewPageModel
+     *
+     * @return [object]
+     */
+    static function
+    getViews(
+        stdClass $viewPageModel
+    ): array {
+        return CBModel::valueToArray(
+            $viewPageModel,
+            'sections'
+        );
+    }
+    /* getViews() */
 
 
 
@@ -1095,12 +1161,24 @@ final class CBViewPage {
     static function
     standardPageTemplate(
     ): stdClass {
-        return (object)[
-            'className' => 'CBViewPage',
-            'classNameForSettings' => 'CB_StandardPageSettings',
-            'frameClassName' => 'CB_StandardPageFrame',
-            'sections' => [],
-        ];
+        $standardPageTemplate = CBModel::createSpec(
+            'CBViewPage'
+        );
+
+        CBViewPage::setViews(
+            $standardPageTemplate,
+            []
+        );
+
+        CBModel::merge(
+            $standardPageTemplate,
+            (object)[
+                'classNameForSettings' => 'CB_StandardPageSettings',
+                'frameClassName' => 'CB_StandardPageFrame',
+            ]
+        );
+
+        return $standardPageTemplate;
     }
     /* standardPageTemplate() */
 
