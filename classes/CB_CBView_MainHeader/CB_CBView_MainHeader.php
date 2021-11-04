@@ -16,7 +16,7 @@ CB_CBView_MainHeader {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.37.css',
+                'v675.38.css',
                 cbsysurl()
             ),
         ];

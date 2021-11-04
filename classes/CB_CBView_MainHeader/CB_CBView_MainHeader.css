@@ -4,6 +4,7 @@
     border-bottom: 1px solid var(--CB_UI_borderColor);
     position: sticky;
     top: 0;
+    z-index: 500;
 }
 
 
