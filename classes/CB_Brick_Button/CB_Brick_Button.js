@@ -54,6 +54,25 @@
 
 
 
+        /**
+         * @return bool
+         */
+        function
+        CB_Brick_Button_getIsDisabled(
+        ) {
+            return outerElement.classList.contains(
+                "CB_Brick_Button_isDisabled"
+            );
+        }
+        /* CB_Brick_Button_getIsDisabled() */
+
+
+
+        /**
+         * @param bool newIsDisabled
+         *
+         * @return undefined
+         */
         function
         CB_Brick_Button_setIsDisabled(
             newIsDisabled
@@ -149,6 +168,7 @@
 
         return {
             CB_Brick_Button_setClickedCallback,
+            CB_Brick_Button_getIsDisabled,
             CB_Brick_Button_setIsDisabled,
             CB_Brick_Button_getElement,
             CB_Brick_Button_setTextContent,
