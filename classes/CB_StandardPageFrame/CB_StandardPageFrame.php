@@ -3,6 +3,54 @@
 final class
 CB_StandardPageFrame {
 
+    /* -- CBAjax interfaces -- */
+
+
+
+    /**
+     * @param object $args
+     *
+     *      {
+     *          pageModelCBID: CBID
+     *      }
+     *
+     * @return void
+     */
+    static function
+    CBAjax_setRightSidebarPageModelCBID(
+        stdClass $args
+    ): void {
+        $pageModelCBID = CBModel::valueAsCBID(
+            $args,
+            'pageModelCBID'
+        );
+
+        if (
+            $pageModelCBID === null
+        ) {
+            // TODO throw exception
+        }
+
+        CB_StandardPageFrame::setRightSidebarPageModelCBID(
+            $pageModelCBID
+        );
+    }
+    /* CBAjax_setRightSidebarPageModelCBID() */
+
+
+
+    /**
+     * @return string
+     */
+    static function
+    CBAjax_setRightSidebarPageModelCBID_getUserGroupClassName(
+    ): string {
+        return 'CBAdministratorsUserGroup';
+    }
+    /* CBAjax_setRightSidebarPageModelCBID_getUserGroupClassName() */
+
+
+
     /* -- CBInstall interfaces -- */
 
 
@@ -108,19 +156,20 @@ CB_StandardPageFrame {
     CBPageFrame_render(
         callable $renderContent
     ): void {
-        $mainMenuModelCBID = CBModelAssociations::fetchSingularSecondCBID(
-            CB_StandardPageFrame::getCBID(),
-            'CB_StandardPageFrame_defaultMainMenu'
-        );
-
         echo <<<EOT
 
             <div class="CB_StandardPageFrame">
-
                 <div class="CB_StandardPageFrame_leftSidebar">
+
         EOT;
 
-        if ($mainMenuModelCBID !== null) {
+        $mainMenuModelCBID = (
+            CB_StandardPageFrame::getDefaultMainMenuModelCBID()
+        );
+
+        if (
+            $mainMenuModelCBID !== null
+        ) {
             $menuViewSpec = CBModel::createSpec(
                 'CBMenuView'
             );
@@ -143,7 +192,6 @@ CB_StandardPageFrame {
         echo <<<EOT
 
                 </div>
-
                 <div class="CB_StandardPageFrame_main">
 
         EOT;
@@ -159,10 +207,44 @@ CB_StandardPageFrame {
         echo <<<EOT
 
                 </div>
-
                 <div class="CB_StandardPageFrame_rightSidebar">
-                </div>
 
+        EOT;
+
+        $rightSidebarPageModelCBID = (
+            CB_StandardPageFrame::getRightSidebarPageModelCBID()
+        );
+
+        if (
+            $rightSidebarPageModelCBID !== null
+        ) {
+            $viewPageModel = CBModelCache::fetchModelByID(
+                $rightSidebarPageModelCBID
+            );
+
+            if (
+                $viewPageModel !== null
+            ) {
+                $views = CBViewPage::getViews(
+                    $viewPageModel
+                );
+
+                array_walk(
+                    $views,
+                    function (
+                        $view
+                    ) {
+                        CBView::render(
+                            $view
+                        );
+                    }
+                );
+            }
+        }
+
+        echo <<<EOT
+
+                </div>
             </div>
 
         EOT;
@@ -192,6 +274,21 @@ CB_StandardPageFrame {
 
 
     /**
+     * @return CBID|null
+     */
+    static function
+    getDefaultMainMenuModelCBID(
+    ): ?string {
+        return CBModelAssociations::fetchSingularSecondCBID(
+            CB_StandardPageFrame::getCBID(),
+            'CB_StandardPageFrame_defaultMainMenu'
+        );
+    }
+    /* getDefaultMainMenuModelCBID() */
+
+
+
+    /**
      * @param CBID @newMainMenuModelCBID
      *
      *      This menu will be shown as the default main menu when the standard
@@ -210,5 +307,39 @@ CB_StandardPageFrame {
         );
     }
     /* setDefaultMainMenuModelCBID() */
+
+
+
+    /**
+     * @return CBID|null
+     */
+    static function
+    getRightSidebarPageModelCBID(
+    ): ?string {
+        return CBModelAssociations::fetchSingularSecondCBID(
+            CB_StandardPageFrame::getCBID(),
+            'CB_StandardPageFrame_rightSidebarPage'
+        );
+    }
+    /* getRightSidebarPageModelCBID() */
+
+
+
+    /**
+     * @param CBID $newPageModelCBID
+     *
+     * @return void
+     */
+    static function
+    setRightSidebarPageModelCBID(
+        string $newPageModelCBID
+    ): void {
+        CBModelAssociations::replaceAssociatedID(
+            CB_StandardPageFrame::getCBID(),
+            'CB_StandardPageFrame_rightSidebarPage',
+            $newPageModelCBID
+        );
+    }
+    /* setRightSidebarPageModelCBID() */
 
 }
