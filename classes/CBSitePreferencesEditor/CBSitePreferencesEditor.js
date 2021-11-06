@@ -10,8 +10,11 @@
     CBUIBooleanEditor,
     CBUIImageChooser,
     CBUIPanel,
+    CBUISelector,
     CBUISpecArrayEditor,
     CBUIStringEditor2,
+
+    CBSitePreferencesEditor_environmentOptions,
 */
 
 
@@ -134,16 +137,25 @@
 
             let sectionElement = elements[1];
 
-            sectionElement.appendChild(
-                CBUIBooleanEditor.create(
-                    {
-                        labelText: "This is a Development Website",
-                        propertyName: "debug",
-                        spec: args.spec,
-                        specChangedCallback: args.specChangedCallback,
-                    }
-                ).element
-            );
+
+            /* website environment */
+            {
+                let selector = CBUISelector.create();
+                selector.title = "Website Environment";
+                selector.value = spec.CBSitePreferences_environment;
+                selector.options = CBSitePreferencesEditor_environmentOptions;
+
+                sectionElement.append(
+                    selector.element
+                );
+
+                selector.onchange = function () {
+                    spec.CBSitePreferences_environment = selector.value;
+                    specChangedCallback();
+                };
+            }
+            /* website environment */
+
 
             sectionElement.appendChild(
                 CBUIBooleanEditor.create(

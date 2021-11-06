@@ -10,16 +10,47 @@ CBSitePreferencesEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.36.js',
+                'v675.39.js',
                 cbsysurl()
             ),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
+
+
+    /**
+     * @return [[<name>, <value>]]
+     */
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array {
+        $environmentOptions = array_map(
+            function (
+                string $environmentOption
+            ) {
+                return (object)[
+                    'title' => $environmentOption,
+                    'value' => $environmentOption,
+                ];
+            },
+            CBSitePreferences::getEnvironmentOptions()
+        );
+
+        return [
+            [
+                'CBSitePreferencesEditor_environmentOptions',
+                $environmentOptions,
+            ],
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptVariables() */
 
 
 
@@ -37,6 +68,7 @@ CBSitePreferencesEditor {
             'CBUIBooleanEditor',
             'CBUIImageChooser',
             'CBUIPanel',
+            'CBUISelector',
             'CBUISpecArrayEditor',
             'CBUIStringEditor2',
 
