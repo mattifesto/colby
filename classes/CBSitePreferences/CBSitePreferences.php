@@ -172,7 +172,6 @@ final class CBSitePreferences {
     ): stdClass {
         $model = (object)[
             'custom' => CBKeyValuePair::valueToObject($spec, 'custom'),
-            'debug' => CBModel::valueToBool($spec, 'debug'),
             'disallowRobots' => CBModel::valueToBool($spec, 'disallowRobots'),
             'facebookURL' => trim(
                 CBModel::valueToString($spec, 'facebookURL')
@@ -253,6 +252,13 @@ final class CBSitePreferences {
             )
         );
 
+        CBSitePreferences::setEnvironment(
+            $model,
+            CBSitePreferences::getEnvironment(
+                $spec
+            )
+        );
+
         /* done */
 
         return $model;
@@ -301,6 +307,65 @@ final class CBSitePreferences {
 
 
     /* -- accessors -- */
+
+
+
+    /**
+     * @param object $sitePreferencesModel
+     *
+     * @return string
+     *
+     *      Returns an empty string if the website environment is unknown.
+     */
+    static function
+    getEnvironment(
+        stdClass $sitePreferencesModel
+    ): string {
+        $environment = trim(
+            CBModel::valueToString(
+                $sitePreferencesModel,
+                'CBSitePreferences_environment'
+            )
+        );
+
+        if (
+            in_array(
+                $environment,
+                CBSitePreferences::getEnvironmentOptions()
+            )
+        ) {
+            return $environment;
+        } else {
+            return '';
+        }
+    }
+    /* getEnvironment() */
+
+
+
+    /**
+     * @param object $sitePreferencesModel
+     * @param string $newEnvironment
+     *
+     * @return void
+     */
+    static function
+    setEnvironment(
+        stdClass $sitePreferencesModel,
+        string $newEnvironment
+    ): void {
+        if (
+            !in_array(
+                $newEnvironment,
+                CBSitePreferences::getEnvironmentOptions()
+            )
+        ) {
+            $newEnvironment = '';
+        }
+
+        $sitePreferencesModel->CBSitePreferences_environment = $newEnvironment;
+    }
+    /* setEnvironment() */
 
 
 
@@ -402,11 +467,14 @@ final class CBSitePreferences {
 
 
     /**
-     * @deprecated use CBSitePreferences::getIsDevelopmentWebsite()
+     * @deprecated use CBSitePreferences::getEnvironment()
      */
-    static function debug() {
+    static function
+    debug(
+    ) {
         return CBSitePreferences::getIsDevelopmentWebsite();
     }
+    /* debug() */
 
 
 
@@ -437,6 +505,10 @@ final class CBSitePreferences {
 
 
     /**
+     * @deprecated 2021_11_06
+     *
+     *      Use CBSitePreferences::getEnvironment()
+     *
      * Returns a boolean value indicating whether the site is a development site
      * (not a production site). This property is used to determine whether to
      * show development site only options such a "pull Colby".
@@ -459,13 +531,35 @@ final class CBSitePreferences {
      *
      * @return bool
      */
-    static function getIsDevelopmentWebsite(): bool {
-        return CBModel::valueToBool(
-            CBSitePreferences::model(),
-            'debug'
+    static function
+    getIsDevelopmentWebsite(
+    ): bool {
+        $environment = CBSitePreferences::getEnvironment(
+            CBSitePreferences::model()
+        );
+
+        return (
+            $environment === 'CBSitePreferences_environment_development'
         );
     }
     /* getIsDevelopmentWebsite() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    getEnvironmentOptions(
+    ): array {
+        return [
+            'CBSitePreferences_environment_development',
+            'CBSitePreferences_environment_testing',
+            'CBSitePreferences_environment_staging',
+            'CBSitePreferences_environment_production',
+        ];
+    }
+    /* getEnvironmentOptions() */
 
 
 
@@ -701,7 +795,7 @@ final class CBSitePreferences {
      *      Non-standard code slows us down every time. This code is bad. If the
      *      database is down that's a red hot bug that needs to be fixed and
      *      there isn't likely much to be done until it is. This function should
-     *      be replaced with CBModelCached::fetchModelByID().
+     *      be replaced with CBModelCache::fetchModelByID().
      *
      * @return model
      *
