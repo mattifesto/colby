@@ -42,14 +42,18 @@ return (function () {
         $userModelCBID
     );
 
-    $userPublicProfileIsEnabled = CBUser::getPublicProfileIsEnabled(
-        $userModel
-    );
+    $currentUserModelCBID = ColbyUser::getCurrentUserCBID();
 
-    if (
-        $userPublicProfileIsEnabled !== true
-    ) {
-        return 0;
+    if ($currentUserModelCBID !== $userModelCBID) {
+        $userPublicProfileIsEnabled = CBUser::getPublicProfileIsEnabled(
+            $userModel
+        );
+
+        if (
+            $userPublicProfileIsEnabled !== true
+        ) {
+            return 0;
+        }
     }
 
     $userFullName = CBUser::getName(
@@ -63,8 +67,6 @@ return (function () {
         ---
 
     EOT;
-
-    $currentUserModelCBID = ColbyUser::getCurrentUserCBID();
 
     if (
         $userModelCBID === $currentUserModelCBID
