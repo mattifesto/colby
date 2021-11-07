@@ -84,7 +84,7 @@ var CBUINavigationView = {
             "div"
         );
 
-        container.className = "container";
+        container.className = "CBUINavigationView_container container";
 
         if (
             typeof item.title === "string"

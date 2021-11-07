@@ -1,4 +1,20 @@
-.CBUINavigationView > .container > .CBUIHeader {
+.CBUINavigationView {
+    display: flex;
+    flex-direction: column;
+}
+
+.CBUINavigationView_container {
+    display: flex;
+    flex-direction: column;
+
+    flex-grow: 1;
+}
+
+.CBUINavigationView_container > * + * {
+    flex-grow: 1;
+}
+
+.CBUINavigationView_container > .CBUIHeader {
     -webkit-backdrop-filter: blur(3px);
     position: sticky;
     top: 0px;

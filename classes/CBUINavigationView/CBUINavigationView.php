@@ -16,7 +16,7 @@ CBUINavigationView {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.14.css',
+                'v675.39.css',
                 cbsysurl()
             ),
         ];
@@ -34,7 +34,7 @@ CBUINavigationView {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.38.js',
+                'v675.39.js',
                 cbsysurl()
             ),
         ];
