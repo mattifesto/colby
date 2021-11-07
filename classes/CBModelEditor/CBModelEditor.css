@@ -1,0 +1,8 @@
+.CBModelEditor {
+    display: flex;
+    flex-direction: column;
+}
+
+.CBModelEditor > * {
+    flex-grow: 1;
+}
