@@ -45,15 +45,26 @@ final class CBAdminPageForPagesFind {
      *
      * @return array
      */
-    static function CBAjax_fetchPages(stdClass $args): array {
+    static function
+    CBAjax_fetchPages(
+        stdClass $args
+    ): array {
         $parameters = $args;
         $conditions = [];
 
         /* classNameForKind (null means all, 'unspecified' means NULL) */
-        if (isset($parameters->classNameForKind)) {
-            if ($parameters->classNameForKind === 'unspecified') {
+        if (
+            isset($parameters->classNameForKind)
+        ) {
+            if (
+                $parameters->classNameForKind === 'unspecified'
+            ) {
                 $conditions[] = '`classNameForKind` IS NULL';
-            } else if ($parameters->classNameForKind === 'currentFrontPage') {
+            }
+
+            else if (
+                $parameters->classNameForKind === 'currentFrontPage'
+            ) {
                 $frontPageID = CBSitePreferences::frontPageID();
 
                 if (empty($frontPageID)) {
@@ -62,7 +73,32 @@ final class CBAdminPageForPagesFind {
                     $frontPageIDForSQL = CBID::toSQL($frontPageID);
                     $conditions[] = "`archiveID` = {$frontPageIDForSQL}";
                 }
-            } else {
+            }
+
+            else if (
+                $parameters->classNameForKind === (
+                    'CBAdminPageForPagesFind_kind_rightSidebarPage'
+                )
+            ) {
+                $rightSidebarPageModelCBID = (
+                    CB_StandardPageFrame::getRightSidebarPageModelCBID()
+                );
+
+                if (
+                    $rightSidebarPageModelCBID !== null
+                ) {
+                    $rightSidebarPageModelCBIDAsSQL = CBID::toSQL(
+                        $rightSidebarPageModelCBID
+                    );
+
+                    array_push(
+                        $conditions,
+                        "archiveID = {$rightSidebarPageModelCBIDAsSQL}"
+                    );
+                }
+            }
+
+            else {
                 $classNameForKindAsSQL = CBDB::stringToSQL(
                     $parameters->classNameForKind
                 );
@@ -181,7 +217,9 @@ final class CBAdminPageForPagesFind {
     /**
      * @return [[string, mixed]]
      */
-    static function CBHTMLOutput_JavaScriptVariables() {
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array {
         $pageKinds = CBDB::SQLToArray(
             'SELECT DISTINCT classNameForKind FROM ColbyPages'
         );
@@ -201,7 +239,8 @@ final class CBAdminPageForPagesFind {
         }, $pageKinds);
 
 
-        array_unshift($pageKinds,
+        array_unshift(
+            $pageKinds,
             (object)[
                 'title' => 'All',
                 /* value unspecified */
@@ -209,7 +248,11 @@ final class CBAdminPageForPagesFind {
             (object)[
                 'title' => 'Current Front Page',
                 'value' => 'currentFrontPage',
-            ]
+            ],
+            (object)[
+                'title' => 'Current Right Sidebar Page',
+                'value' => 'CBAdminPageForPagesFind_kind_rightSidebarPage',
+            ],
         );
 
         return [
