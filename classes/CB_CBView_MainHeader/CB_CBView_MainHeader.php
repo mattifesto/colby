@@ -50,7 +50,16 @@ CB_CBView_MainHeader {
     CBModel_build(
         stdClass $viewSpec
     ): stdClass {
-        return (object)[];
+        $viewModel = (object)[];
+
+        CB_CBView_MainHeader::setContext(
+            $viewModel,
+            CB_CBView_MainHeader::getContext(
+                $viewSpec
+            )
+        );
+
+        return $viewModel;
     }
     /* CBModel_build() */
 
@@ -87,6 +96,17 @@ CB_CBView_MainHeader {
                 <div class="CB_CBView_MainHeader_group">
 
         EOT;
+
+        $context = CB_CBView_MainHeader::getContext(
+            $viewModel
+        );
+
+        CB_CBView_MainHeader::renderItem(
+            '☰',
+            null,
+            'CB_CBView_MainHeader_menuButton',
+            $context
+        );
 
         CB_CBView_MainHeader::renderItem(
             '🏠',
@@ -147,31 +167,123 @@ CB_CBView_MainHeader {
 
 
 
+    /* -- accessors -- */
+
+
+
+    /**
+     * @param object $viewModel
+     *
+     * @return string|null
+     *
+     *      Returns null if the model has no context.
+     */
+    static function
+    getContext(
+        stdClass $viewModel
+    ): ?string {
+        return CBModel::valueAsName(
+            $viewModel,
+            'CB_CBView_MainHeader_context'
+        );
+    }
+    /* getContext() */
+
+
+
+    /**
+     * @param object $viewModel
+     * @param string|null $context
+     *
+     *      See CBConvert::valueIsName() for characters allowed in context
+     *      string.
+     *
+     * @return void
+     */
+    static function
+    setContext(
+        stdClass $viewModel,
+        ?string $context
+    ): void {
+        $context = CBConvert::valueAsName(
+            $context
+        );
+
+        $viewModel->CB_CBView_MainHeader_context = $context;
+    }
+    /* setContext() */
+
+
+
     /* -- functions -- */
 
 
 
     /**
      * @param string $emoji
-     * @param string $url
-     * @param string $text
+     * @param string|null $url
+     * @param string $CSSClass
      *
      * @return void
      */
     private static function
     renderItem(
         string $emoji,
-        string $url
+        ?string $url,
+        string $CSSClass = '',
+        ?string $context = null
     ): void {
         $emojiAsHTML = cbhtml(
             $emoji
         );
 
+        $CSSClasses = [
+            'CB_CBView_MainHeader_item'
+        ];
+
+        $CSSClass = CBConvert::valueAsName(
+            $CSSClass
+        );
+
+        if (
+            $CSSClass !== null
+        ) {
+            array_push(
+                $CSSClasses,
+                $CSSClass
+            );
+
+            if (
+                $context !== null
+            ) {
+                array_push(
+                    $CSSClasses,
+                    $CSSClass . '_' . $context
+                );
+            }
+        }
+
+        if (
+            $url !== null
+        ) {
+            $url = cbhtml($url);
+            $tag = 'a';
+            $hrefAttribute = "href=\"{$url}\"";
+        } else {
+            $tag = 'div';
+            $hrefAttribute = '';
+        }
+
+        $CSSClasses = implode(
+            ' ',
+            $CSSClasses
+        );
+
         echo <<<EOT
 
-            <a class="CB_CBView_MainHeader_item" href="{$url}">
+            <{$tag} class="{$CSSClasses}" {$hrefAttribute}>
                 <div class="CB_CBView_MainHeader_icon">$emojiAsHTML</div>
-            </a>
+            </{$tag}>
 
         EOT;
     }
