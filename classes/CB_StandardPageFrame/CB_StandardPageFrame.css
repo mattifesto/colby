@@ -6,7 +6,8 @@
     max-width: 100%;
 }
 
-.CB_StandardPageFrame a {
+.CB_StandardPageFrame a,
+.CB_StandardPageFrame_mainMenuPopup a {
     text-decoration: none;
 }
 
@@ -24,26 +25,38 @@
 
 
 
-.CB_StandardPageFrame_firstSidebarEnabled
+.CB_StandardPageFrame_leftSidebar {
+    border-right: 1px solid var(--CB_UI_borderColor);
+}
+
+
+
 .CB_StandardPageFrame_rightSidebar {
+    border-left: 1px solid var(--CB_UI_borderColor);
+}
+
+
+
+.CB_StandardPageFrame_rightSidebarEnabled
+  .CB_StandardPageFrame_rightSidebar {
     display: block;
 }
 
 
 
-.CB_StandardPageFrame_secondSidebarEnabled
-.CB_StandardPageFrame_leftSidebar {
+.CB_StandardPageFrame_leftSidebarEnabled
+  .CB_StandardPageFrame_leftSidebar {
     display: block;
 }
 
 
 
 .CB_StandardPageFrame_main {
-    /* the body must be at least as tall as the viewport */
-    min-height: 100vh;
-
     display: flex;
     flex-direction: column;
+
+    /* the body must be at least as tall as the viewport */
+    min-height: 100vh;
 
     /**
      * The default min-width for flex items is "auto". This means that the
@@ -55,16 +68,17 @@
     min-width: 0;
 
     max-width: 100%;
-    width: 720px; /* 240 * 3 */
-
-    border-left: 1px solid var(--CB_UI_borderColor);
-    border-right: 1px solid var(--CB_UI_borderColor);
+    width: 960px; /* 240 * 4 */
 }
 
 
 
-.CB_StandardPageFrame_mainMenu .CBMenuView_header,
-.CB_StandardPageFrame_mainMenu .CBMenuView_containerTitle {
+.CB_StandardPageFrame_mainMenu
+  .CBMenuView_header,
+.CB_StandardPageFrame_mainMenu
+  .CBMenuView_containerTitle,
+.CB_StandardPageFrame_mainMenu
+  .CBMenuView_listItemTitle {
     display: none;
 }
 
@@ -75,4 +89,32 @@
 
 .CB_StandardPageFrame_mainMenu li {
     padding: 10px;
+}
+
+.CB_StandardPageFrame_mainMenuPopup {
+    display: none;
+
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    position: fixed;
+    z-index: 1500; /* see CBEqualizePageSettingsPart.css */
+
+    background-color: var(--CB_UI_paperColor);
+}
+
+.CB_StandardPageFrame_mainMenuPopup_isVisible
+  .CB_StandardPageFrame_mainMenuPopup {
+    display: flex;
+}
+
+
+
+.CB_StandardPageFrame_leftSidebarEnabled
+  .CB_CBView_MainHeader_menuButton {
+    display: none;
 }

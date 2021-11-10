@@ -102,7 +102,7 @@ CB_StandardPageFrame {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.38.css',
+                'v675.39.css',
                 cbsysurl()
             ),
         ];
@@ -120,7 +120,7 @@ CB_StandardPageFrame {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.37.js',
+                'v675.39.js',
                 cbsysurl()
             ),
         ];
@@ -137,6 +137,7 @@ CB_StandardPageFrame {
     ): array {
         return [
             'CB_UI',
+            'Colby',
         ];
     }
     /* CBInstall_requiredClassNames() */
@@ -196,10 +197,17 @@ CB_StandardPageFrame {
 
         EOT;
 
+        $mainHeaderViewSpec = CBModel::createSpec(
+            'CB_CBView_MainHeader'
+        );
+
+        CB_CBView_MainHeader::setContext(
+            $mainHeaderViewSpec,
+            'page'
+        );
+
         CBView::renderSpec(
-            (object)[
-                'className' => 'CB_CBView_MainHeader',
-            ]
+            $mainHeaderViewSpec
         );
 
         $renderContent();
@@ -244,6 +252,63 @@ CB_StandardPageFrame {
 
         echo <<<EOT
 
+                </div>
+            </div>
+
+        EOT;
+
+        /* -- TODO move this into another functon -- */
+
+
+        echo <<<EOT
+
+
+            <div class="CB_StandardPageFrame CB_StandardPageFrame_mainMenuPopup CBUI_panel">
+                <div class="CB_StandardPageFrame_leftSidebar">
+                </div>
+                <div class="CB_StandardPageFrame_main">
+
+        EOT;
+
+        $mainHeaderViewSpec = CBModel::createSpec(
+            'CB_CBView_MainHeader'
+        );
+
+        CB_CBView_MainHeader::setContext(
+            $mainHeaderViewSpec,
+            'menu'
+        );
+
+        CBView::renderSpec(
+            $mainHeaderViewSpec
+        );
+
+        if (
+            $mainMenuModelCBID !== null
+        ) {
+            $menuViewSpec = CBModel::createSpec(
+                'CBMenuView'
+            );
+
+            CBMenuView::setCSSClassNames(
+                $menuViewSpec,
+                'custom CB_StandardPageFrame_mainMenu'
+            );
+
+            CBMenuView::setMenuModelCBID(
+                $menuViewSpec,
+                $mainMenuModelCBID
+            );
+
+            CBView::renderSpec(
+                $menuViewSpec
+            );
+        }
+
+        echo <<<EOT
+
+                </div>
+                <div class="CB_StandardPageFrame_rightSidebar">
                 </div>
             </div>
 
