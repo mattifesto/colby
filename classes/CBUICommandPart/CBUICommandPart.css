@@ -12,5 +12,5 @@
 }
 
 .CBUICommandPart.disabled {
-    color: hsla(0, 0%, 0%, 0.2);
+    color: var(--CB_UI_borderColor);
 }
