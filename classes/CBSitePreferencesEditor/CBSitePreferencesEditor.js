@@ -14,6 +14,7 @@
     CBUISpecArrayEditor,
     CBUIStringEditor2,
 
+    CBSitePreferencesEditor_appearanceOptions,
     CBSitePreferencesEditor_environmentOptions,
 */
 
@@ -136,6 +137,25 @@
             );
 
             let sectionElement = elements[1];
+
+
+            /* website appearance */
+            {
+                let selector = CBUISelector.create();
+                selector.title = "Website Appearance";
+                selector.value = spec.CBSitePreferences_appearance;
+                selector.options = CBSitePreferencesEditor_appearanceOptions;
+
+                sectionElement.append(
+                    selector.element
+                );
+
+                selector.onchange = function () {
+                    spec.CBSitePreferences_appearance = selector.value;
+                    specChangedCallback();
+                };
+            }
+            /* website appearance */
 
 
             /* website environment */

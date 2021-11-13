@@ -16,7 +16,7 @@ CBSitePreferencesEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.40.js',
+                'v675.41.js',
                 cbsysurl()
             ),
         ];
@@ -43,11 +43,27 @@ CBSitePreferencesEditor {
             CBSitePreferences::getEnvironmentOptions()
         );
 
+        $appearanceOptions = array_map(
+            function (
+                string $appearanceOption
+            ) {
+                return (object)[
+                    'title' => $appearanceOption,
+                    'value' => $appearanceOption,
+                ];
+            },
+            CBSitePreferences::getAppearanceOptions()
+        );
+
         return [
             [
                 'CBSitePreferencesEditor_environmentOptions',
                 $environmentOptions,
             ],
+            [
+                'CBSitePreferencesEditor_appearanceOptions',
+                $appearanceOptions
+            ]
         ];
     }
     /* CBHTMLOutput_JavaScriptVariables() */
