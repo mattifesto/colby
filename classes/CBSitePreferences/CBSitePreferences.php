@@ -238,9 +238,30 @@ final class CBSitePreferences {
 
         $model->administratorEmails = $administatorEmails;
 
+        CBSitePreferences::setAdSensePublisherID(
+            $model,
+            CBSitePreferences::getAdSensePublisherID(
+                $spec
+            )
+        );
+
+        CBSitePreferences::setAdsTxtContent(
+            $model,
+            CBSitePreferences::getAdsTxtContent(
+                $spec
+            )
+        );
+
         CBSitePreferences::setAppearance(
             $model,
             CBSitePreferences::getAppearance(
+                $spec
+            )
+        );
+
+        CBSitePreferences::setEnvironment(
+            $model,
+            CBSitePreferences::getEnvironment(
                 $spec
             )
         );
@@ -259,19 +280,6 @@ final class CBSitePreferences {
             )
         );
 
-        CBSitePreferences::setEnvironment(
-            $model,
-            CBSitePreferences::getEnvironment(
-                $spec
-            )
-        );
-
-        CBSitePreferences::setAdsTxtContent(
-            $model,
-            CBSitePreferences::getAdsTxtContent(
-                $spec
-            )
-        );
 
         /* done */
 
@@ -321,6 +329,47 @@ final class CBSitePreferences {
 
 
     /* -- accessors -- */
+
+
+
+    /**
+     * @param object $sitePreferencesModel
+     *
+     * @return string
+     *
+     *      Returns an empty string if the property value has not been set.
+     */
+    static function
+    getAdSensePublisherID(
+        stdClass $sitePreferencesModel
+    ): string {
+        return trim(
+            CBModel::valueToString(
+                $sitePreferencesModel,
+                'CBSitePreferences_adSensePublisherID'
+            )
+        );
+    }
+    /* getAdSensePublisherID() */
+
+
+
+    /**
+     * @param object $sitePreferencesModel
+     * @param string $newAdSensePublisherID
+     *
+     * @return void
+     */
+    static function
+    setAdSensePublisherID(
+        stdClass $sitePreferencesModel,
+        string $newAdSensePublisherID
+    ): void {
+        $sitePreferencesModel->CBSitePreferences_adSensePublisherID = (
+            $newAdSensePublisherID
+        );
+    }
+    /* setAdSensePublisherID() */
 
 
 
