@@ -259,6 +259,13 @@ final class CBSitePreferences {
             )
         );
 
+        CBSitePreferences::setAdsTxtContent(
+            $model,
+            CBSitePreferences::getAdsTxtContent(
+                $spec
+            )
+        );
+
         /* done */
 
         return $model;
@@ -307,6 +314,45 @@ final class CBSitePreferences {
 
 
     /* -- accessors -- */
+
+
+
+    /**
+     * @param object $sitePreferencesModel
+     *
+     * @return string
+     *
+     *      Returns an empty string if the property value has not been set.
+     */
+    static function
+    getAdsTxtContent(
+        stdClass $sitePreferencesModel
+    ): string {
+        return CBModel::valueToString(
+            $sitePreferencesModel,
+            'CBSitePreferences_adsTxtContent'
+        );
+    }
+    /* getAdsTxtContent() */
+
+
+
+    /**
+     * @param object $sitePreferencesModel
+     * @param string $newAdsTxtContent
+     *
+     * @return void
+     */
+    static function
+    setAdsTxtContent(
+        stdClass $sitePreferencesModel,
+        string $newAdsTxtContent
+    ): void {
+        $sitePreferencesModel->CBSitePreferences_adsTxtContent = (
+            $newAdsTxtContent
+        );
+    }
+    /* setAdsTxtContent() */
 
 
 
