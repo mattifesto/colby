@@ -204,6 +204,45 @@
         }
 
 
+
+        /* -- ads.txt -- */
+
+
+
+        {
+            let titleElement = CBUI.createElement(
+                "CBUI_title1"
+            );
+
+            titleElement.textContent = "ads.txt";
+
+            element.appendChild(
+                titleElement
+            );
+
+            let elements = CBUI.createElementTree(
+                "CBUI_sectionContainer",
+                "CBUI_section"
+            );
+
+            element.appendChild(
+                elements[0]
+            );
+
+            let sectionElement = elements[1];
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
+                    "CBSitePreferences_adsTxtContent",
+                    "Content",
+                    specChangedCallback
+                )
+            );
+        }
+
+
+
         /* -- social section -- -- -- -- -- */
 
         {
