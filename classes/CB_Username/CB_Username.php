@@ -563,13 +563,19 @@ CB_Username {
                     )
                 );
 
-                $currentUserUsernameModel = CBModels::fetchModelByCBID(
-                    $currentUserUsernameModelCBID
-                );
+                if (
+                    $currentUserUsernameModelCBID === null
+                ) {
+                    $currentUserPrettyUsername = null;
+                } else {
+                    $currentUserUsernameModel = CBModels::fetchModelByCBID(
+                        $currentUserUsernameModelCBID
+                    );
 
-                $currentUserPrettyUsername = CB_Username::getPrettyUsername(
-                    $currentUserUsernameModel
-                );
+                    $currentUserPrettyUsername = CB_Username::getPrettyUsername(
+                        $currentUserUsernameModel
+                    );
+                }
             }
         }
 
