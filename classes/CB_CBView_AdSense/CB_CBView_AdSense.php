@@ -138,6 +138,28 @@ CB_CBView_AdSense {
             $viewModel
         );
 
+        if (
+            $slot === ''
+        ) {
+            return;
+        }
+
+        if (
+            $client === ''
+        ) {
+            $adSensePublisherID = CBSitePreferences::getAdSensePublisherID(
+                CBSitePreferences::model()
+            );
+
+            if (
+                $adSensePublisherID === ''
+            ) {
+                return;
+            }
+
+            $client = "ca-{$adSensePublisherID}";
+        }
+
         $src = (
             'https://pagead2.googlesyndication.com' .
             '/pagead/js/adsbygoogle.js' .
