@@ -71,6 +71,7 @@ CBPageSettingsForAdminPages {
             'CBEqualizePageSettingsPart',
             'CBGoogleTagManagerPageSettingsPart',
             'CBResponsiveViewportPageSettingsPart',
+            'CB_CBPageSettingsPart_SitePreferences',
         ];
     }
     /* CBPageSettings_requiredClassNames() */
