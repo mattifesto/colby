@@ -1,6 +1,6 @@
 <?php
 
-$message = <<<EOT
+$cbmessage = <<<EOT
 
         --- center
         This is the default front page rendered by:
@@ -20,16 +20,23 @@ $message = <<<EOT
 
 EOT;
 
-CBPage::renderSpec(
-    CBModelTemplateCatalog::fetchLivePageTemplate(
+$pageSpec = CBViewPage::standardPageTemplate();
+
+CBViewPage::setTitle(
+    $pageSpec,
+    'Default Front Page'
+);
+
+CBViewPage::setViews(
+    $pageSpec,
+    [
         (object)[
-            'title' => 'Default Front Page',
-            'sections' => [
-                (object)[
-                    'className' => 'CBMessageView',
-                    'markup' => $message,
-                ],
-            ],
+            'className' => 'CBMessageView',
+            'markup' => $cbmessage,
         ]
-    )
+    ]
+);
+
+CBPage::renderSpec(
+    $pageSpec
 );
