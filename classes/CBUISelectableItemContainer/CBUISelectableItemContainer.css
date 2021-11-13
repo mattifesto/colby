@@ -19,8 +19,8 @@
 }
 
 .CBUISelectableItemContainer > .container > .header {
-    background-color: hsl(0, 0%, 95%);
-    border-color: var(--CBUIBorderColor);
+    background-color: var(--CB_UI_paperColor);
+    border-color: var(--CB_UI_borderColor);
     border-radius: 10px 10px 0 0;
     border-style: solid;
     border-width: 1px;
@@ -28,7 +28,6 @@
     justify-content: space-between;
     min-height: 44px;
     padding: 0 5px;
-    position: -webkit-sticky;
     position: sticky;
     top: 0;
     z-index: 500;
@@ -50,8 +49,8 @@
 }
 
 .CBUISelectableItemContainer > .container > .items {
-    background-color: var(--CBBackgroundColor);
-    border-color: var(--CBUIBorderColor);
+    background-color: var(--CB_UI_paperColor);
+    border-color: var(--CB_UI_borderColor);
     border-style: solid;
     border-width: 0 1px;
     min-height: 44px;
@@ -64,12 +63,12 @@
 }
 
 .CBUISelectableItemContainer > .container > .items > * + * {
-    border-top: 1px solid var(--CBUIBorderColor);
+    border-top: 1px solid var(--CB_UI_borderColor);
 }
 
 .CBUISelectableItemContainer > .container > .footer {
-    background-color: hsl(0, 0%, 95%);
-    border-color: var(--CBUIBorderColor);
+    background-color: var(--CB_UI_paperColor);
+    border-color: var(--CB_UI_borderColor);
     border-radius: 0 0 10px 10px;
     border-style: solid;
     border-width: 1px;
