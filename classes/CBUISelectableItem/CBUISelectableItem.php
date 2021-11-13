@@ -9,11 +9,18 @@ final class CBUISelectableItem {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs(): array {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v361.css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.41.css',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
 
 
 
@@ -31,8 +38,11 @@ final class CBUISelectableItem {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
+            'CB_UI',
             'CBUIPanel',
         ];
     }

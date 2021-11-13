@@ -21,8 +21,10 @@
 
 .CBUISelectableItem > .selectorPart > .box {
     align-items: center;
-    background-color: hsla(0, 0%, 0%, 0.05);
+    border-color: var(--CB_UI_borderColor);
     border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
     display: flex;
     justify-content: center;
     height: 20px;
