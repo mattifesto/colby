@@ -238,6 +238,13 @@ final class CBSitePreferences {
 
         $model->administratorEmails = $administatorEmails;
 
+        CBSitePreferences::setAppearance(
+            $model,
+            CBSitePreferences::getAppearance(
+                $spec
+            )
+        );
+
         CBSitePreferences::setYouTubeChannelID(
             $model,
             CBSitePreferences::getYouTubeChannelID(
@@ -353,6 +360,66 @@ final class CBSitePreferences {
         );
     }
     /* setAdsTxtContent() */
+
+
+
+    /**
+     * @param object $sitePreferencesModel
+     *
+     * @return string
+     *
+     *      Returns an empty string if the website appearance automatically
+     *      matches the user's computer preference.
+     */
+    static function
+    getAppearance(
+        stdClass $sitePreferencesModel
+    ): string {
+        $appearance = trim(
+            CBModel::valueToString(
+                $sitePreferencesModel,
+                'CBSitePreferences_appearance'
+            )
+        );
+
+        if (
+            in_array(
+                $appearance,
+                CBSitePreferences::getAppearanceOptions()
+            )
+        ) {
+            return $appearance;
+        } else {
+            return 'CBSitePreferences_appearance_light';
+        }
+    }
+    /* getAppearance() */
+
+
+
+    /**
+     * @param object $sitePreferencesModel
+     * @param string $newAppearance
+     *
+     * @return void
+     */
+    static function
+    setAppearance(
+        stdClass $sitePreferencesModel,
+        string $newAppearance
+    ): void {
+        if (
+            !in_array(
+                $newAppearance,
+                CBSitePreferences::getAppearanceOptions()
+            )
+        ) {
+            $newAppearance = 'CBSitePreferences_appearance_light';
+        }
+
+        $sitePreferencesModel->CBSitePreferences_appearance = $newAppearance;
+    }
+    /* setAppearance() */
 
 
 
@@ -547,6 +614,22 @@ final class CBSitePreferences {
         );
     }
     /* frontPageID() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    getAppearanceOptions(
+    ): array {
+        return [
+            'CBSitePreferences_appearance_light',
+            'CBSitePreferences_appearance_dark',
+            'CBSitePreferences_appearance_auto',
+        ];
+    }
+    /* getAppearanceOptions() */
 
 
 
