@@ -6,7 +6,8 @@
  *      This class no longer creates static width pages. This class will be
  *      removed as soon as removal is known to not cause issues.
  */
-final class CBPageSettingsForStaticPages {
+final class
+CBPageSettingsForStaticPages {
 
     /**
      * @return [string]
@@ -14,6 +15,8 @@ final class CBPageSettingsForStaticPages {
     static function CBPageSettings_htmlElementClassNames(): array {
         return ['CBLightTheme', 'CBStyleSheet'];
     }
+
+
 
     /**
      * @return [string]
@@ -24,6 +27,8 @@ final class CBPageSettingsForStaticPages {
             'CBResponsiveViewportPageSettingsPart',
             'CBGoogleTagManagerPageSettingsPart',
             'CBFacebookPageSettingsPart',
+            'CB_CBPageSettingsPart_SitePreferences',
         ];
     }
+
 }
