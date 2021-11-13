@@ -64,6 +64,7 @@ CB_StandardPageSettings {
             'CBResponsiveViewportPageSettingsPart',
             'CBGoogleTagManagerPageSettingsPart',
             'CBFacebookPageSettingsPart',
+            'CB_CBPageSettingsPart_SitePreferences',
         ];
     }
     /* CBPageSettings_requiredClassNames() */
