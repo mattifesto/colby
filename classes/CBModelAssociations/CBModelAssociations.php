@@ -6,6 +6,24 @@
 final class
 CBModelAssociations {
 
+    /* -- CBInstall interfaces -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBInstall_requiredClassNames(
+    ): array {
+        return [
+            'CBModelAssociationsTable',
+        ];
+    }
+    /* CBInstall_requiredClassNames() */
+
+
+
     /* -- functions -- */
 
 
