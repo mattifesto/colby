@@ -16,7 +16,7 @@ CB_CBView_AdSenseEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.39.js',
+                'v675.41.js',
                 cbsysurl()
             ),
         ];
@@ -34,6 +34,7 @@ CB_CBView_AdSenseEditor {
         return [
             'CB_Brick_Padding10',
             'CB_Brick_TextContainer',
+            'CBModel',
             'CB_UI',
             'CBUIStringEditor2',
         ];

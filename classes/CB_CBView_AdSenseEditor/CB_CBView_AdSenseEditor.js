@@ -1,6 +1,7 @@
 /* global
     CB_Brick_Padding10,
     CB_Brick_TextContainer,
+    CBModel,
     CBUIStringEditor2,
 */
 
@@ -64,6 +65,13 @@
         specChangedCallback
     ) {
         let clientEditorElement = CBUIStringEditor2.create();
+
+        clientEditorElement.CBUIStringEditor2_setValue(
+            CBModel.valueToString(
+                spec,
+                'CB_CBView_AdSense_client'
+            )
+        );
 
         clientEditorElement.CBUIStringEditor2_setTitle(
             "Client"
@@ -144,6 +152,13 @@
         specChangedCallback
     ) {
         let slotEditorElement = CBUIStringEditor2.create();
+
+        slotEditorElement.CBUIStringEditor2_setValue(
+            CBModel.valueToString(
+                spec,
+                'CB_CBView_AdSense_slot'
+            )
+        );
 
         slotEditorElement.CBUIStringEditor2_setTitle(
             "Slot"
