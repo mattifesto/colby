@@ -198,6 +198,15 @@
             sectionElement.appendChild(
                 CBUIStringEditor2.createObjectPropertyEditorElement(
                     spec,
+                    "CBSitePreferences_adSensePublisherID",
+                    "AdSense Publisher ID",
+                    specChangedCallback
+                )
+            );
+
+            sectionElement.appendChild(
+                CBUIStringEditor2.createObjectPropertyEditorElement(
+                    spec,
                     "onDemandImageResizeOperations",
                     "On Demand Image Resize Operations (deprecated)",
                     specChangedCallback
