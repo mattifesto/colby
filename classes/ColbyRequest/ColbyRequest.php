@@ -174,6 +174,21 @@ final class ColbyRequest {
         }
 
 
+        /* ads.txt */
+
+        else if (
+            1 === $countOfStubs &&
+            'ads.txt' === ColbyRequest::$decodedStubs[0]
+        ) {
+            $canonicalEncodedPath = '/ads.txt';
+            $function = function() {
+                return include cbsysdir() .
+                '/handlers/handle-ads.php';
+            };
+        }
+
+
+
         /* robots.txt */
 
         else if (
