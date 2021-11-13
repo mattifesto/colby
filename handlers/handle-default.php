@@ -12,7 +12,7 @@ $URL = cbsiteurl() . htmlspecialchars(
 
 $URLAsMessage = CBMessageMarkup::stringToMessage($URL);
 
-$message = <<<EOT
+$cbmessage = <<<EOT
 
     --- center
     The page you requested was not found.
@@ -22,16 +22,23 @@ $message = <<<EOT
 
 EOT;
 
-CBPage::renderSpec(
-    CBModelTemplateCatalog::fetchLivePageTemplate(
+$pageSpec = CBViewPage::standardPageTemplate();
+
+CBViewPage::setTitle(
+    $pageSpec,
+    'Page Not Found'
+);
+
+CBViewPage::setViews(
+    $pageSpec,
+    [
         (object)[
-            'title' => 'Page Not Found',
-            'sections' => [
-                (object)[
-                    'className' => 'CBMessageView',
-                    'markup' => $message,
-                ]
-            ]
+            'className' => 'CBMessageView',
+            'markup' => $cbmessage,
         ]
-    )
+    ]
+);
+
+CBPage::renderSpec(
+    $pageSpec
 );
