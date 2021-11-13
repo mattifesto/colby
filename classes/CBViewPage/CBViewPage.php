@@ -1,19 +1,27 @@
 <?php
 
-final class CBViewPage {
+final class
+CBViewPage {
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs(): array {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v418.css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v418.css',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
 
 
 
