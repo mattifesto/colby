@@ -23,7 +23,7 @@ CB_UI {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.37.css',
+                'v675.41.css',
                 cbsysurl()
             ),
         ];
@@ -47,6 +47,25 @@ CB_UI {
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
+
+
+    /**
+     * @return [[<name>, <value>]]
+     */
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array {
+        return [
+            [
+                'CB_UI_CBSitePreferences_appearance',
+                CBSitePreferences::getAppearance(
+                    CBSitePreferences::model()
+                ),
+            ]
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptVariables() */
 
 
 
