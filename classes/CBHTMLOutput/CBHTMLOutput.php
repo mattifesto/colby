@@ -45,7 +45,8 @@
  *      class should be made to enable at least the easy use of functions on
  *      this class in that scenario or even full support for that scenario.
  */
-final class CBHTMLOutput {
+final class
+CBHTMLOutput {
 
     const JSAsync           = 1; // 1 << 0
     const JSInHeadElement   = 2; // 1 << 1
@@ -322,10 +323,35 @@ final class CBHTMLOutput {
     static function
     getClassNameForPageSettings(
     ): ?string {
-        return CBModel::valueAsName(
+        $classNameForPageSettings = CBModel::valueAsName(
             CBHTMLOutput::$pageInformation,
             'classNameForPageSettings'
         );
+
+        if (
+            $classNameForPageSettings !== null
+        ) {
+            /**
+             * If a page settings class has been deprecated it can implement the
+             * CBHTMLOutput_replacementClassNameForPageSettings() interface to
+             * specify the page settings class that is replacing it.
+             */
+
+            $functionName = (
+                $classNameForPageSettings .
+                "::CBHTMLOutput_replacementClassNameForPageSettings"
+            );
+
+            if (
+                is_callable($functionName)
+            ) {
+                $classNameForPageSettings = call_user_func(
+                    $functionName
+                );
+            }
+        }
+
+        return $classNameForPageSettings;
     }
     /* getClassNameForPageSettings() */
 
