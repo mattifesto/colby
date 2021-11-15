@@ -8,23 +8,46 @@ CBPageFrame {
 
 
     /**
-     * @param ?string $frameClassName
+     * @param ?string $pageFrameClassName
      * @param callable $renderContent
      *
      * @return void
      */
     static function
     render(
-        ?string $frameClassName,
+        ?string $pageFrameClassName,
         callable $renderContent
     ): void {
-        $functionName = "{$frameClassName}::CBPageFrame_render";
+
+        /**
+         * If a page frame class is deprecated it can implement the
+         * CBPageFrame_replacementPageFrameClassName() interface to provide the
+         * replacement page fram class name.
+         */
+
+        $functionName = (
+            $pageFrameClassName .
+            '::CBPageFrame_replacementPageFrameClassName'
+        );
+
+        if (
+            is_callable($functionName)
+        ) {
+            $pageFrameClassName = call_user_func(
+                $functionName
+            );
+        }
+
+        $functionName = (
+            $pageFrameClassName .
+            '::CBPageFrame_render'
+        );
 
         if (
             is_callable($functionName)
         ) {
             CBHTMLOutput::requireClassName(
-                $frameClassName
+                $pageFrameClassName
             );
 
             call_user_func(
