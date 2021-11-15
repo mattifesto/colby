@@ -46,6 +46,7 @@ CB_StandardPageSettings {
     CBPageSettings_htmlElementClassNames(
     ): array {
         return [
+            'CB_StandardPageSettings',
             'CB_UI',
         ];
     }
