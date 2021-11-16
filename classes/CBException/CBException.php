@@ -318,16 +318,52 @@
      *
      * @return string
      */
-    static function throwableToOneLineErrorReport(
+    static function
+    throwableToOneLineErrorReport(
         Throwable $throwable
     ): string {
         $message = $throwable->getMessage();
-        $basename = basename($throwable->getFile());
+
+        $basename = basename(
+            $throwable->getFile()
+        );
+
         $line = $throwable->getLine();
 
         return "\"{$message}\" in {$basename} line {$line}";
     }
     /* throwableToOneLineErrorReport() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    throwableToOneLineErrorReports(
+        Throwable $originalError
+    ): array {
+        $oneLineErrorReports = [];
+        $error = $originalError;
+
+        while (
+            $error !== null
+        ) {
+            $oneLineErrorReport = CBException::throwableToOneLineErrorReport(
+                $error
+            );
+
+            array_push(
+                $oneLineErrorReports,
+                $oneLineErrorReport
+            );
+
+            $error = $error->getPrevious();
+        }
+
+        return $oneLineErrorReports;
+    }
+    /* throwableToOneLineErrorReports() */
 
 
 
