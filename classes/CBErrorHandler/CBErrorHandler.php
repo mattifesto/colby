@@ -1,6 +1,7 @@
 <?php
 
-final class CBErrorHandler {
+final class
+CBErrorHandler {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -99,11 +100,14 @@ final class CBErrorHandler {
      *
      * @return void
      */
-    static function renderErrorReportPage(
+    static function
+    renderErrorReportPage(
         Throwable $throwable
     ): void {
         try {
-            CBExceptionView::pushThrowable($throwable);
+            CBExceptionView::pushThrowable(
+                $throwable
+            );
 
             $spec = CBModelTemplateCatalog::fetchLivePageTemplate();
             $spec->title = 'Error';
@@ -118,7 +122,9 @@ final class CBErrorHandler {
 
             CBExceptionView::popThrowable();
         } catch (Throwable $innerThrowable) {
-            CBErrorHandler::report($innerThrowable);
+            CBErrorHandler::report(
+                $innerThrowable
+            );
 
             CBErrorHandler::renderErrorReportPageForInnerErrorAndExit(
                 $throwable,
@@ -146,7 +152,8 @@ final class CBErrorHandler {
      *
      * @return void
      */
-    static function renderErrorReportPageForInnerErrorAndExit(
+    static function
+    renderErrorReportPageForInnerErrorAndExit(
         Throwable $firstError,
         Throwable $secondError
     ): void {
@@ -159,28 +166,42 @@ final class CBErrorHandler {
             'CBDevelopersUserGroup'
         );
 
-        if ($isDeveloper) {
-            $oneLineErrorReport1 = CBException::throwableToOneLineErrorReport(
-                $firstError
+        if (
+            $isDeveloper
+        ) {
+            $oneLineErrorReports1 = cbhtml(
+                implode(
+                    "\n",
+                    CBException::throwableToOneLineErrorReports(
+                        $firstError
+                    )
+                )
             );
 
-            $oneLineErrorReport2 = CBException::throwableToOneLineErrorReport(
-                $secondError
+            $oneLineErrorReports2 = cbhtml(
+                implode(
+                    "\n",
+                    CBException::throwableToOneLineErrorReports(
+                        $secondError
+                    )
+                )
             );
 
-            $messageAsHTML = (
-                '<p><i>This page was rendered by ' .
-                __METHOD__ .
-                '()</i>' .
-                '<p><b>First Error</b>' .
-                '<p><code>' .
-                cbhtml($oneLineErrorReport1) .
-                '</code>' .
-                '<p><b>Second Error</b>' .
-                '<p><code>' .
-                cbhtml($oneLineErrorReport2) .
-                '</code>'
-            );
+            $method = __METHOD__;
+
+            $messageAsHTML = <<<EOT
+
+                <p>This page was rendered by {$method}()
+
+                <h3>First Error</h3>
+
+                <pre>{$oneLineErrorReports1}</pre>
+
+                <h3>Second Error</h3>
+
+                <pre>{$oneLineErrorReports2}</pre>
+
+            EOT;
         } else {
             $messageAsHTML = cbhtml(
                 'An error has occurred.'
@@ -206,7 +227,10 @@ final class CBErrorHandler {
                     }
                     body {
                         padding: 40px 20px;
-                        text-align: center;
+                    }
+                    pre {
+                        line-height: 2;
+                        white-space: break-spaces;
                     }
                 </style>
             </head>
