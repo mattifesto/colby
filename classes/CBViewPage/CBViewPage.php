@@ -638,10 +638,12 @@ CBViewPage {
             CBHTMLOutput::reset();
 
             $pageError = new CBExceptionWithValue(
-                (
-                    'This page model generate an error ' .
-                    'while it was rendering.'
-                ),
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    This CBViewPage model generated an error while it was
+                    rendering.
+
+                EOT),
                 $model,
                 '1c9e0e1c0e89467c9e1c061a3e6e3f735e0cc92e',
                 0,
