@@ -5,7 +5,8 @@
  * it contains an exception instance. This model for this view is created in
  * response to an exception.
  */
-final class CBExceptionView {
+final class
+CBExceptionView {
 
     private static $throwableStack = [];
 
@@ -24,7 +25,10 @@ final class CBExceptionView {
      *
      * @return void
      */
-    static function CBView_render(stdClass $model): void {
+    static function
+    CBView_render(
+        stdClass $model
+    ): void {
         if (!empty($model->exception)) {
             $throwable = $model->exception;
         } else {
@@ -47,22 +51,31 @@ final class CBExceptionView {
                     'CBDevelopersUserGroup'
                 )
             ) {
-                $cbmessage = CBException::throwableToCBMessage($throwable);
-
-                $stackTraceAsCBMessage = CBMessageMarkup::stringToMessage(
-                    CBConvert::throwableToStackTrace($throwable)
-                );
-
                 $cbmessage = <<<EOT
 
-                    {$cbmessage}
+                    This content is being rendered by CBExceptionView because
+                    you are a member of  CBDevelopersUserGroup.
+
+                EOT;
+
+                $cbmessage .= CBException::throwableToCBMessage(
+                    $throwable
+                );
+
+                $stackTraceAsMessage = CBMessageMarkup::stringToMessage(
+                    CBErrorHandler::throwableToPlainTextIteratedStackTrace(
+                        $throwable
+                    )
+                );
+
+                $cbmessage .= <<<EOT
 
                     --- dl
                         --- dt
                         Stack
                         ---
                         --- dd
-                            --- trace\n{$stackTraceAsCBMessage}
+                            --- trace\n{$stackTraceAsMessage}
                             ---
                         ---
                     ---
@@ -87,7 +100,7 @@ final class CBExceptionView {
                     An error occurred on this page and our administrators have
                     been notified.
 
-EOT;
+                EOT;
 
                 CBView::renderSpec(
                     (object)[
