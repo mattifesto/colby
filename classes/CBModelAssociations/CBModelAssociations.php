@@ -29,6 +29,10 @@ CBModelAssociations {
 
 
     /**
+     * @deprecated 2021_11_26
+     *
+     *      Use CBModelAssociations::insertOrUpdate()
+     *
      * @param CBID $CBID
      * @param string $associationKey
      * @param CBID $associatedCBID
@@ -58,6 +62,10 @@ CBModelAssociations {
 
 
     /**
+     * @deprecated 2021_11_26
+     *
+     *      Use CBModelAssociations::insertOrUpdate()
+     *
      * @param [[<CBID>, <associationKey>, <associatedCBID>]]
      */
     static function
@@ -107,6 +115,12 @@ CBModelAssociations {
 
             INSERT INTO CBModelAssociations
 
+            (
+                ID,
+                className,
+                associatedID
+            )
+
             VALUES {$values}
 
             ON DUPLICATE KEY UPDATE
@@ -114,7 +128,9 @@ CBModelAssociations {
 
         EOT;
 
-        Colby::query($SQL);
+        Colby::query(
+            $SQL
+        );
     }
     /* addMultiple() */
 
@@ -424,11 +440,11 @@ CBModelAssociations {
      */
     static function
     fetchAssociatedModels(
-        string $CBID,
+        string $firstCBID,
         string $associationKey
     ): array {
         $associatedIDs = CBModelAssociations::fetchAssociatedIDs(
-            $CBID,
+            $firstCBID,
             $associationKey
         );
 
@@ -510,6 +526,189 @@ CBModelAssociations {
         }
     }
     /* fetchOne() */
+
+
+
+    /**
+     * @param CBID $firstCBID
+     * @param string $associationKey
+     * @param string $sortingOrder
+     * @param int $maximumResultCount
+     * @param int|null $sortingValueMinimum
+     * @param int|null $sortingValueMaximum
+     *
+     * @return [CB_ModelAssociation]
+     */
+    static function
+    fetchModelAssociationsByFirstCBIDAndAssociationKey(
+        string $firstCBID,
+        string $associationKey,
+        string $sortingOrder = 'ascending',
+        int $maximumResultCount = 10,
+        ?int $sortingValueMinimum = null,
+        ?int $sortingValueMaximum = null
+    ): array {
+
+        if (
+            $maximumResultCount < 0
+        ) {
+            $maximumResultCount = 10;
+        }
+
+        if (
+            $sortingOrder === 'descending'
+        ) {
+            $sortingOrderAsSQL = 'DESC';
+        } else {
+            $sortingOrderAsSQL = 'ASC';
+        }
+
+        $whereClauses = [];
+
+        array_push(
+            $whereClauses,
+            (
+                'ID = ' .
+                CBID::toSQL(
+                    $firstCBID
+                )
+            )
+        );
+
+        array_push(
+            $whereClauses,
+            (
+                'className = ' .
+                CBDB::stringToSQL(
+                    $associationKey
+                )
+            )
+        );
+
+        if (
+            $sortingValueMinimum !== null
+        ) {
+            array_push(
+                $whereClauses,
+                (
+                    'CBModelAssociations_sortingValue_column >= ' .
+                    $sortingValueMinimum
+                )
+            );
+        }
+
+        if (
+            $sortingValueMaximum !== null
+        ) {
+            array_push(
+                $whereClauses,
+                (
+                    'CBModelAssociations_sortingValue_column <= ' .
+                    $sortingValueMaximum
+                )
+            );
+        }
+
+        $whereClauses = implode(
+            ' AND ',
+            $whereClauses
+        );
+
+        $SQL = <<<EOT
+
+            SELECT
+            CBModelAssociations_sortingValue_column as sortingValue,
+            LOWER(HEX(associatedID)) as secondCBID
+
+            FROM
+            CBModelAssociations
+
+            WHERE
+            {$whereClauses}
+
+            ORDER BY
+            CBModelAssociations_sortingValue_column {$sortingOrderAsSQL}
+
+            LIMIT
+            {$maximumResultCount}
+
+        EOT;
+
+        $results = CBDB::SQLToObjects(
+            $SQL
+        );
+
+        $modelAssociations = array_map(
+            function (
+                $result
+            ) use (
+                $firstCBID,
+                $associationKey
+            ) {
+                $modelAssociation = CBModel::createSpec(
+                    'CB_ModelAssociation'
+                );
+
+                CB_ModelAssociation::setFirstCBID(
+                    $modelAssociation,
+                    $firstCBID
+                );
+
+                CB_ModelAssociation::setAssociationKey(
+                    $modelAssociation,
+                    $associationKey
+                );
+
+                CB_ModelAssociation::setSortingValue(
+                    $modelAssociation,
+                    $result->sortingValue
+                );
+
+                CB_ModelAssociation::setSecondCBID(
+                    $modelAssociation,
+                    $result->secondCBID
+                );
+
+                return $modelAssociation;
+            },
+            $results
+        );
+
+        return $modelAssociations;
+    }
+    /* fetchModelAssociationsByFirstCBIDAndAssociationKey() */
+
+
+
+    /**
+     * @param [CB_ModelAssociation]
+     *
+     * @return [object]
+     */
+    static function
+    fetchSecondModels(
+        array $modelAssociations
+    ): array {
+        $secondCBIDs = array_map(
+            function (
+                stdClass $modelAssociation
+            ) {
+                $secondCBID = CB_ModelAssociation::getSecondCBID(
+                    $modelAssociation
+                );
+
+                return $secondCBID;
+            },
+            $modelAssociations
+        );
+
+        return array_values(
+            CBModels::fetchModelsByID(
+                $secondCBIDs
+            )
+        );
+    }
+    /* fetchSecondModels() */
 
 
 
@@ -599,6 +798,109 @@ CBModelAssociations {
         }
     }
     /* fetchSingularSecondCBID() */
+
+
+
+    /**
+     * Calling this function will ensure that the model associations exist and
+     * that the sorting value is updated.
+     *
+     * @param CB_ModelAssociation | [CB_ModelAssociation] $modelAssociations
+     *
+     * @return void
+     */
+    static function
+    insertOrUpdate(
+        $modelAssociations
+    ): void {
+        if (
+            !is_array($modelAssociations)
+        ) {
+            $modelAssociations = [$modelAssociations];
+        }
+
+        $values = array_map(
+            function (
+                stdClass $modelAssociation
+            ) {
+                return CBModelAssociations::modelAssociationToSQLValue(
+                    $modelAssociation
+                );
+            },
+            $modelAssociations
+        );
+
+        $values = implode(
+            ',',
+            $values
+        );
+
+        $SQL = <<<EOT
+
+            INSERT INTO CBModelAssociations
+
+            (
+                ID,
+                className,
+                CBModelAssociations_sortingValue_column,
+                associatedID
+            )
+
+            VALUES
+            {$values}
+
+            ON DUPLICATE KEY UPDATE
+            CBModelAssociations_sortingValue_column =
+            CBModelAssociations_sortingValue_column
+
+        EOT;
+
+        Colby::query(
+            $SQL
+        );
+    }
+    /* insertOrUpdate() */
+
+
+
+    /**
+     * @return string
+     *
+     *      "(<firstCBID>, <associationKey>, <sortingValue>, <secondCBID>)"
+     */
+    private static function
+    modelAssociationToSQLValue(
+        stdClass $modelAssociation
+    ): string {
+        $firstCBID = CB_ModelAssociation::getFirstCBID(
+            $modelAssociation
+        );
+
+        $associationKey = CB_ModelAssociation::getAssociationKey(
+            $modelAssociation
+        );
+
+        $sortingValue = CB_ModelAssociation::getSortingValue(
+            $modelAssociation
+        );
+
+        $secondCBID = CB_ModelAssociation::getSecondCBID(
+            $modelAssociation
+        );
+
+        return (
+            '(' .
+            CBID::toSQL($firstCBID) .
+            ',' .
+            CBDB::stringToSQL($associationKey) .
+            ',' .
+            $sortingValue .
+            ',' .
+            CBID::toSQL($secondCBID) .
+            ')'
+        );
+    }
+    /* modelAssociationToSQLValue() */
 
 
 
