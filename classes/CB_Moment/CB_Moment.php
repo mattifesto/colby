@@ -23,7 +23,7 @@ CB_Moment {
         $text = trim(
             CBModel::valueToString(
                 $args,
-                'CB_CBView_Moment_text'
+                'CB_Moment_create_text'
             )
         );
 
