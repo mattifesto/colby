@@ -81,15 +81,24 @@ CB_Moment {
     /**
      * @param object $args
      *
+     *      {
+     *          userModelCBID: CBID
+     *      }
+     *
      * @return [CB_Moment]
      */
     static function
     CBAjax_fetchMomentsForUserModelCBID(
         stdClass $args
     ): array {
+        $userModelCBID = CBModel::valueAsCBID(
+            $args,
+            'userModelCBID'
+        );
+
         $modelAssociations = (
             CBModelAssociations::fetchModelAssociationsByFirstCBIDAndAssociationKey(
-                ColbyUser::getCurrentUserCBID(),
+                $userModelCBID,
                 'CB_Moment_userMoments'
             )
         );
