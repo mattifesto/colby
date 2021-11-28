@@ -38,7 +38,10 @@ final class CBImage {
      *
      * @return object
      */
-    static function CBModel_build(stdClass $spec): stdClass {
+    static function
+    CBModel_build(
+        stdClass $spec
+    ): stdClass {
         $extension = CBModel::valueToString(
             $spec,
             'extension'
@@ -103,30 +106,38 @@ final class CBImage {
             );
         }
 
-        $width = CBModel::valueAsInt(
-            $spec,
-            'width'
+        $originalWidth = CBImage::getOriginalWidth(
+            $spec
         );
 
-        if ($width === null || $width < 1) {
+        if (
+            $originalWidth === null || $originalWidth < 1
+        ) {
             throw new CBExceptionWithValue(
-                (
-                    'This spec can\'t be built because it has an invalid ' .
-                    '"width" property value.'
-                ),
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    This spec can't be built because it has an invalid original
+                    width.
+
+                EOT),
                 $spec,
                 'c2bedac1eb80124931939a28d82b60e570658c5d'
             );
         }
 
-        return (object)[
-            'className' => __CLASS__,
+        $imageModel = (object)[
             'extension' => $extension,
             'filename' => $filename,
             'height' => $height,
             'ID' => $imageCBID,
-            'width' => $width,
         ];
+
+        CBImage::setOriginalWidth(
+            $imageModel,
+            $originalWidth
+        );
+
+        return $imageModel;
     }
     /* CBModel_build() */
 
@@ -179,6 +190,45 @@ final class CBImage {
             );
         }
     }
+
+
+
+    /* -- accessors -- */
+
+
+
+    /**
+     * @param object $imageModel
+     *
+     * @return int|null
+     */
+    static function
+    getOriginalWidth(
+        stdClass $imageModel
+    ): ?int {
+        return CBModel::valueAsInt(
+            $imageModel,
+            'width'
+        );
+    }
+    /* getOriginalWidth() */
+
+
+
+    /**
+     * @param object $imageModel
+     * @param int $originalWidth
+     *
+     * @return void
+     */
+    static function
+    setOriginalWidth(
+        stdClass $imageModel,
+        int $originalWidth
+    ): void {
+        $imageModel->width = $originalWidth;
+    }
+    /* setOriginalWidth() */
 
 
 
