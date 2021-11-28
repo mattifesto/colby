@@ -1,0 +1,35 @@
+.CB_CBView_Moment {
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-wrap: break-word;
+
+    padding: 10px;
+}
+
+
+
+.CB_CBView_Moment_content {
+    border-width: 1px;
+    border-color: var(--CB_UI_borderColor);
+    border-radius: 10px;
+    border-style: solid;
+
+
+    max-width: 100%;
+}
+
+
+
+.CB_CBView_Moment_standard
+.CB_CBView_Moment_content {
+    width: 640px;
+}
+
+
+
+.CB_CBView_Moment_standard
+.CB_CBView_Moment_text {
+    padding: 10px;
+}
