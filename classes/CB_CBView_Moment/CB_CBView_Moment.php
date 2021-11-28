@@ -51,6 +51,7 @@ CB_CBView_Moment {
     ): array {
         return [
             'CB_Moment',
+            'Colby',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

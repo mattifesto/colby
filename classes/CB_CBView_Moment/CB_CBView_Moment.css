@@ -1,4 +1,4 @@
-.CB_CBView_Moment {
+.CB_CBView_Moment_root_element {
     display: flex;
     justify-content: center;
     box-sizing: border-box;
@@ -10,7 +10,7 @@
 
 
 
-.CB_CBView_Moment_content {
+.CB_CBView_Moment_content_element {
     border-width: 1px;
     border-color: var(--CB_UI_borderColor);
     border-radius: 10px;
@@ -22,14 +22,21 @@
 
 
 
-.CB_CBView_Moment_standard
-.CB_CBView_Moment_content {
+.CB_CBView_Moment_standard_element
+.CB_CBView_Moment_content_element {
     width: 640px;
 }
 
 
 
-.CB_CBView_Moment_standard
-.CB_CBView_Moment_text {
+.CB_CBView_Moment_standard_element
+.CB_CBView_Moment_header_element {
+    padding: 5px 10px 0;
+}
+
+
+
+.CB_CBView_Moment_standard_element
+.CB_CBView_Moment_text_element {
     padding: 10px;
 }

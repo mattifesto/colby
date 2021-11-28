@@ -1,5 +1,6 @@
 /* global
     CB_Moment,
+    Colby,
 */
 
 
@@ -23,13 +24,13 @@
             "div"
         );
 
-        element.className = "CB_CBView_Moment";
+        element.className = "CB_CBView_Moment_root_element";
 
         let contentElement = document.createElement(
             "div"
         );
 
-        contentElement.className = "CB_CBView_Moment_content";
+        contentElement.className = "CB_CBView_Moment_content_element";
 
         element.append(
             contentElement
@@ -88,6 +89,39 @@
     /**
      * @param object momentModel
      *
+     * @return Element
+     */
+    function
+    createHeaderElement(
+        momentModel
+    ) {
+        let headerElement = document.createElement(
+            "div"
+        );
+
+        headerElement.className = "CB_CBView_Moment_header_element";
+
+        let timeElement = Colby.unixTimestampToElement(
+            CB_Moment.getCreatedTimestamp(
+                momentModel
+            ),
+            "",
+            "Colby_time_element_style_moment"
+        );
+
+        headerElement.append(
+            timeElement
+        );
+
+        return headerElement;
+    }
+    /* createHeaderElement() */
+
+
+
+    /**
+     * @param object momentModel
+     *
      * @return CB_CBView_Moment
      */
     function
@@ -97,14 +131,20 @@
         let momentView = create();
 
         momentView.CB_CBView_Moment_getElement().classList.add(
-            "CB_CBView_Moment_standard"
+            "CB_CBView_Moment_standard_element"
+        );
+
+        momentView.CB_CBView_Moment_append(
+            createHeaderElement(
+                momentModel
+            )
         );
 
         let textElement = document.createElement(
             "div"
         );
 
-        textElement.className = "CB_CBView_Moment_text";
+        textElement.className = "CB_CBView_Moment_text_element";
 
         textElement.textContent = CB_Moment.getText(
             momentModel
