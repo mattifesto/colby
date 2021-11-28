@@ -1,9 +1,11 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBUIButton */
+(function () {
+    "use strict";
 
-var CBUIButton = {
+    window.CBUIButton = {
+        create,
+    };
+
+
 
     /**
      * @return object
@@ -17,7 +19,9 @@ var CBUIButton = {
      *          removeClickListener()
      *      }
      */
-    create: function () {
+    function
+    create(
+    ) {
         let clickListeners = [];
         let element = document.createElement("div");
         element.className = "CBUIButton";
@@ -36,12 +40,17 @@ var CBUIButton = {
 
         let api = {
 
+            CBUIButton_getElement,
+            CBUIButton_setTextContent,
+
+            CBUIButton_addClickEventListener,
+
             /**
              * @param function value
              *
              * @return undefined
              */
-            addClickListener: addClickListener,
+            addClickListener: CBUIButton_addClickEventListener,
 
             /**
              * @param function value
@@ -68,11 +77,15 @@ var CBUIButton = {
                 }
             },
 
+
+
             /**
+             * @deprecated use CBUIButton_getElement()
+             *
              * @return Element
              */
             get element() {
-                return element;
+                return CBUIButton_getElement();
             },
 
             /**
@@ -83,33 +96,76 @@ var CBUIButton = {
             },
 
             /**
+             * @deprecated use CBUIButton_setTextContent()
+             *
              * @param string value
              */
             set textContent(value) {
-                contentElement.textContent = value;
+                CBUIButton_setTextContent(
+                    value
+                );
             },
         };
 
-        return api;
+
 
         /**
-         * closure in create()
+         * @return Element
+         */
+        function
+        CBUIButton_getElement(
+        ) {
+            return element;
+        }
+        /* CBUIButton_getElement() */
+
+
+
+        /**
+         * @param string newTextContent
          *
+         * @return undefined
+         */
+        function
+        CBUIButton_setTextContent(
+            newTextContent
+        ) {
+            contentElement.textContent = newTextContent;
+        }
+        /* CBUIButton_setTextContent() */
+
+
+
+        /**
          * @param function value
          *
          * @return undefined
          */
-        function addClickListener(value) {
-            if (typeof value !== "function") {
+        function
+        CBUIButton_addClickEventListener(
+            callback
+        ) {
+            if (
+                typeof callback !== "function"
+            ) {
                 throw new TypeError();
             }
 
-            if (clickListeners.includes(value)) {
+            if (
+                clickListeners.includes(
+                    callback
+                )
+            ) {
                 return;
             }
 
-            clickListeners.push(value);
+            clickListeners.push(
+                callback
+            );
         }
+        /* CBUIButton_addClickEventListener() */
+
+
 
         /**
          * closure in create()
@@ -146,5 +202,9 @@ var CBUIButton = {
                 }
             );
         }
-    },
-};
+
+        return api;
+    }
+    /* create() */
+
+})();
