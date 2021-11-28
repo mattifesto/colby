@@ -1,45 +1,63 @@
 <?php
 
-final class CBArtworkElement {
+final class
+CBArtworkElement {
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v618.css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v618.css',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v624.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v624.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'CBModel',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 
 
 
-    /* -- functions -- -- -- -- -- */
+    /* -- functions -- */
 
 
 
@@ -75,6 +93,35 @@ final class CBArtworkElement {
 
 
 
+    private static function
+    makeSrcSetEntry(
+        stdClass $imageModel,
+        int $width
+    ): ?string {
+        $originalImageWidth = CBImage::getOriginalWidth(
+            $imageModel
+        );
+
+        if (
+            $originalImageWidth === null ||
+            $originalImageWidth < $width
+        ) {
+            return null;
+        }
+
+        $imageURL = CBImage::asFlexpath(
+            $imageModel,
+            "rw{$width}",
+            cbsiteurl()
+        );
+
+        $imageSize = "{$width}w";
+
+        return "{$imageURL} {$imageSize}";
+    }
+
+
+
     /**
      * @param object|array $args
      *
@@ -86,6 +133,10 @@ final class CBArtworkElement {
      *          feature that only works in PHP >= 8.
      *
      *      {
+     *          imageModel: object
+     *
+     *              The CBImage model
+     *
      *          URL: string
      *
      *              The URL for the image.
@@ -121,7 +172,8 @@ final class CBArtworkElement {
      *
      * @return void
      */
-    static function render(
+    static function
+    render(
         $args
     ): void {
         CBHTMLOutput::requireClassName(
@@ -134,7 +186,73 @@ final class CBArtworkElement {
             $args = CBConvert::valueToObject($args);
         }
 
-        $URL = CBModel::valueToString($args, 'URL');
+        $URL = CBModel::valueToString(
+            $args,
+            'URL'
+        );
+
+        if (
+            $URL === ''
+        ) {
+            $imageModel = CBModel::valueAsObject(
+                $args,
+                'imageModel'
+            );
+
+            $URL = CBImage::asFlexpath(
+                $imageModel,
+                'rw960',
+                cbsiteurl()
+            );
+
+
+            $widths = [
+                320,
+                640,
+                960,
+                1280,
+                1600,
+                1920,
+                2560,
+                3200,
+                3840,
+                4480,
+                5120,
+            ];
+
+            $srcsetEntries = [];
+
+            foreach (
+                $widths as $width
+            ) {
+                $srcsetEntry = CBArtworkElement::makeSrcSetEntry(
+                    $imageModel,
+                    $width
+                );
+
+                if (
+                    $srcsetEntry === null
+                ) {
+                    break;
+                }
+
+                array_push(
+                    $srcsetEntries,
+                    $srcsetEntry
+                );
+            }
+
+            $srcsetAttribute = (
+                'srcset="' .
+                implode(
+                    ', ',
+                    $srcsetEntries
+                ) .
+                '"'
+            );
+        } else {
+            $srcsetAttribute = '';
+        }
 
         $aspectRatioWidth = (
             CBModel::valueAsNumber($args, 'aspectRatioWidth') ??
@@ -195,6 +313,7 @@ final class CBArtworkElement {
             <div>
                 <img
                     src="<?= cbhtml($URL) ?>"
+                    <?= $srcsetAttribute ?>
                     alt="<?= cbhtml($alternativeText) ?>"
                 >
             </div>
