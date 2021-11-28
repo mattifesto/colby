@@ -387,8 +387,11 @@ CBErrorHandler {
         /* slack */
 
         try {
-            $oneLineErrorReport = CBException::throwableToOneLineErrorReport(
-                $throwable
+            $errorDescription = implode(
+                ' <-- ',
+                CBException::throwableToOneLineErrorReports(
+                    $throwable
+                )
             );
 
             $logAdminPageURL = cbsiteurl() . "/admin/?c=CBLogAdminPage";
@@ -396,7 +399,7 @@ CBErrorHandler {
             CBSlack::sendMessage(
                 (object)[
                     'message' => (
-                        "{$oneLineErrorReport} <{$logAdminPageURL}|link>"
+                        "{$errorDescription} <{$logAdminPageURL}|link>"
                     ),
                 ]
             );
