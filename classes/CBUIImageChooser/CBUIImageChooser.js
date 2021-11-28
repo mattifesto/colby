@@ -44,6 +44,7 @@ var CBUIImageChooser = {
         var inputElement = document.createElement("input");
         inputElement.type = "file";
         inputElement.style.display = "none";
+        inputElement.accept="image/jpeg, image/png, image/gif";
 
         element.appendChild(inputElement);
 
