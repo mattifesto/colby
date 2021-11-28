@@ -80,16 +80,59 @@ return (function () {
 
     $pageSpec = CBViewPage::standardPageTemplate();
 
+    $views = [
+        (object)[
+            'className' => 'CBMessageView',
+            'markup' => $cbmessage,
+        ],
+    ];
+
+    if (
+        $userModelCBID === $currentUserModelCBID
+
+        &&
+
+        (
+            CBUserGroup::currentUserIsMemberOfUserGroup(
+                'CBAdministratorsUserGroup'
+            )
+
+            ||
+
+            CBSitePreferences::getEnvironment(
+                CBSitePreferences::model()
+            ) === 'CBSitePreferences_environment_development'
+        )
+    ) {
+        $viewSpec = CBModel::createSpec(
+            'CB_CBView_MomentCreator'
+        );
+
+        array_push(
+            $views,
+            $viewSpec
+        );
+    }
+
+    $viewSpec = CBModel::createSpec(
+        'CB_CBView_UserMomentList'
+    );
+
+    CB_CBView_UserMomentList::setUserModelCBID(
+        $viewSpec,
+        $userModelCBID
+    );
+
+    array_push(
+        $views,
+        $viewSpec
+    );
+
     CBModel::merge(
         $pageSpec,
         (object)[
             'title' => $userFullName,
-            'sections' => [
-                (object)[
-                    'className' => 'CBMessageView',
-                    'markup' => $cbmessage,
-                ]
-            ]
+            'sections' => $views,
         ]
     );
 
@@ -98,4 +141,5 @@ return (function () {
     );
 
     return 1;
+
 })();
