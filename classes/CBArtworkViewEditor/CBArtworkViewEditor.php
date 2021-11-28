@@ -1,8 +1,9 @@
 <?php
 
-final class CBArtworkViewEditor {
+final class
+CBArtworkViewEditor {
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
@@ -15,7 +16,7 @@ final class CBArtworkViewEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.4.js',
+                'v675.45.js',
                 cbsysurl()
             ),
         ];
@@ -27,9 +28,12 @@ final class CBArtworkViewEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'CBAjax',
+            'CBConvert',
             'CBImage',
             'CBMessageMarkup',
             'CBModel',

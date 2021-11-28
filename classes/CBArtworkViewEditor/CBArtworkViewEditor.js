@@ -1,9 +1,6 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBArtworkViewEditor */
 /* globals
     CBAjax,
+    CBConvert,
     CBImage,
     CBMessageMarkup,
     CBModel,
@@ -17,6 +14,7 @@
 
 
 (function () {
+    "use strict";
 
     window.CBArtworkViewEditor = {
         CBUISpecEditor_createEditorElement,
@@ -42,7 +40,10 @@
         let spec = args.spec;
         let specChangedCallback = args.specChangedCallback;
         let sectionElement, item;
-        let element = CBUI.createElement("CBArtworkViewEditor");
+
+        let element = CBUI.createElement(
+            "CBArtworkViewEditor"
+        );
 
         element.appendChild(
             CBUI.createHalfSpace()
@@ -58,8 +59,13 @@
 
         item = CBUI.createSectionItem();
 
-        item.appendChild(imageChooser.element);
-        sectionElement.appendChild(item);
+        item.appendChild(
+            imageChooser.element
+        );
+
+        sectionElement.appendChild(
+            item
+        );
 
 
         /* alternative text */
@@ -85,6 +91,7 @@
         /* maximum display width */
 
         item = CBUI.createSectionItem();
+
         item.appendChild(
             CBUISelector.create(
                 {
@@ -119,16 +126,23 @@
                         },
                         {
                             title: "Image Width",
-                            description:
-                            "The maximum width in CSS pixels is half the count of" +
-                            " horizontal pixels of the uploaded image.",
+                            description: CBConvert.stringToCleanLine(`
+
+                                The maximum width in CSS pixels is half the
+                                count of horizontal pixels of the uploaded
+                                image.
+
+                            `),
                             value: "original",
                         },
                         {
                             title: "Page Width",
-                            description:
-                            "The uploaded image will always use the full width of" +
-                            " the page regardless of its size.",
+                            description: CBConvert.stringToCleanLine(`
+
+                                The uploaded image will always use the full
+                                width of the page regardless of its size.
+
+                            `),
                             value: "page",
                         },
                     ],
@@ -182,20 +196,22 @@
         /* set thumbnail */
 
         if (args.spec.image) {
-            imageChooser.src = CBImage.toURL(args.spec.image, "rw960");
+            imageChooser.src = CBImage.toURL(
+                args.spec.image,
+                "rw960"
+            );
         }
 
-        return element;
 
-
-        /* -- closures -- -- -- -- -- */
 
         /**
          * @param object chooseArgs
          *
          * @return undefined
          */
-        function createEditor_handleImageChosen() {
+        function
+        createEditor_handleImageChosen(
+        ) {
             imageChooser.caption = "uploading...";
 
             CBAjax.call(
@@ -204,12 +220,17 @@
                 {},
                 imageChooser.file
             ).then(
-                function (imageModel) {
+                function (
+                    imageModel
+                ) {
                     args.spec.image = imageModel;
 
                     args.specChangedCallback();
 
-                    imageChooser.src = CBImage.toURL(imageModel, "rw960");
+                    imageChooser.src = CBImage.toURL(
+                        imageModel,
+                        "rw960"
+                    );
 
                     let suggestThumbnailImage = CBModel.valueAsFunction(
                         window.CBViewPageEditor,
@@ -217,12 +238,18 @@
                     );
 
                     if (suggestThumbnailImage) {
-                        suggestThumbnailImage(imageModel);
+                        suggestThumbnailImage(
+                            imageModel
+                        );
                     }
                 }
             ).catch(
-                function (error) {
-                    CBUIPanel.displayAndReportError(error);
+                function (
+                    error
+                ) {
+                    CBUIPanel.displayAndReportError(
+                        error
+                    );
                 }
             ).finally(
                 function () {
@@ -243,6 +270,9 @@
         }
         /* createEditor_handleImageRemoved() */
 
+
+
+        return element;
     }
     /* CBUISpecEditor_createEditorElement() */
 
@@ -367,21 +397,25 @@
         );
 
         element.appendChild(
-            CBUI.createSectionHeader(
-                {
-                    paragraphs: [
-                        `
-                            Supported Class Names:
-                        `,
-                        `
-                            left: Align the caption text to the left.
-                        `,
-                        `
-                            right: Align the caption text to the right.
-                        `,
-                   ],
-                }
-            )
+            CBUI.createSectionHeader2(`
+
+                    Supported Class Names
+
+                    --- dl
+                        --- dt
+                        CBArtworkView_captionLeft
+                        ---
+
+                        Align the caption text to the left.
+
+                        --- dt
+                        CBArtworkView_captionRight
+                        ---
+
+                        Align the caption text to the right.
+                    ---
+
+            `)
         );
 
         let elements = CBUI.createElementTree(
