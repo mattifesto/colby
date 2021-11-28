@@ -144,26 +144,54 @@ var Colby = {
      * @param object args
      *
      *      {
-     *          compact: bool
+     *          Colby_time_element_style: string
      *      }
      *
      * @return string
      *
      *      example: "February 14, 2010".
      */
-    dateToLocaleDateString: function (date, args) {
-        if (args && args.compact === true) {
-            return date.getFullYear() +
+    dateToLocaleDateString(
+        date,
+        args
+    ) {
+        let timeElementStyle = "Colby_time_element_style_default";
+
+        if (args !== undefined) {
+            timeElementStyle = args.Colby_time_element_style;
+        }
+
+        if (
+            timeElementStyle === "Colby_time_element_style_compact"
+        ) {
+            return (
+                date.getFullYear() +
                 "/" +
                 ("00" + (date.getMonth() + 1)).slice(-2) +
                 "/" +
-                ("00" + date.getDate()).slice(-2);
+                ("00" + date.getDate()).slice(-2)
+            );
+        } else if (
+            timeElementStyle === "Colby_time_element_style_moment"
+        ) {
+            return new Intl.DateTimeFormat(
+                [],
+                {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                }
+            ).format(
+                date
+            );
         } else {
-            return Colby.monthNames[date.getMonth()] +
+            return (
+                Colby.monthNames[date.getMonth()] +
                 " " +
                 date.getDate() +
                 ", " +
-                date.getFullYear();
+                date.getFullYear()
+            );
         }
     },
     /* dateToLocaleDateString() */
@@ -187,12 +215,15 @@ var Colby = {
      * @param object args
      *
      *      {
-     *          compact: bool
+     *          Colby_time_element_style: string
      *      }
      *
      * @return string
      */
-    dateToLocaleTimeString: function (date, args) {
+    dateToLocaleTimeString(
+        date,
+        args
+    ) {
         let formattedAMPM;
 
         let formattedHour = date.getHours() % 12;
@@ -200,7 +231,13 @@ var Colby = {
 
         let formattedMinutes = ("00" + date.getMinutes()).slice(-2);
 
-        if (args && args.compact === true) {
+        if (
+            args !== undefined &&
+
+            args.Colby_time_element_style === (
+                "Colby_time_element_style_compact"
+            )
+        ) {
             formattedAMPM = (date.getHours() > 11) ? 'pm' : 'am';
             formattedHour = ("00" + formattedHour).slice(-2);
         } else {
@@ -218,14 +255,79 @@ var Colby = {
      * @param object args
      *
      *      {
-     *          compact: bool
+     *          Colby_time_element_style: string
      *      }
      *
      * @return string
      */
-    dateToRelativeLocaleString: function (date, now, args) {
+    dateToRelativeLocaleString(
+        date,
+        now,
+        args
+    ) {
+        let timeElementStyle = "Colby_time_element_style_default";
+
+        if (
+            args !== undefined
+        ) {
+            timeElementStyle = args.Colby_time_element_style;
+        }
+
         var timespan = now.getTime() - date.getTime();
         var string;
+
+        if (
+            timeElementStyle === "Colby_time_element_style_moment"
+        ) {
+            let millisecondsSinceDate = timespan;
+
+            if (
+                millisecondsSinceDate < 0 /* in the future */
+            ) {
+                return "0s";
+            }
+
+            else if (
+                millisecondsSinceDate < (1000 * 60) /* 60 seconds */
+            ) {
+                let seconds = Math.floor(
+                    millisecondsSinceDate / 1000
+                );
+
+                return `${seconds}s`;
+            }
+
+            else if (
+                millisecondsSinceDate < (1000 * 60 * 60) /* 60 minutes */
+            ) {
+                let minutes = Math.floor(
+                    millisecondsSinceDate / (1000 * 60)
+                );
+
+                return `${minutes}m`;
+            }
+
+            else if (
+                millisecondsSinceDate < (1000 * 60 * 60 * 24) /* 24 */
+            ) {
+                let hours = Math.floor(
+                    millisecondsSinceDate / (1000 * 60 * 60)
+                );
+
+                return `${hours}h`;
+            }
+
+            return new Intl.DateTimeFormat(
+                [],
+                {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                }
+            ).format(
+                date
+            );
+        }
 
         // date is in the future by more than 60 seconds
         if (timespan < (1000 * -60)) {
@@ -722,35 +824,57 @@ var Colby = {
      *
      *      This text will be displayed if there is no unix timestamp.
      *
+     * @param string className
+     *
+     *      Colby_time_element_style_default
+     *      Colby_time_element_style_compact
+     *      Colby_time_element_style_moment
+     *
      * @return Element
      */
-    unixTimestampToElement: function (
+    unixTimestampToElement(
         unixTimestamp,
         defaultTextContent,
         className
     ) {
-        let element = document.createElement("time");
+        let element = document.createElement(
+            "time"
+        );
 
-        if (typeof className === "string") {
+        if (
+            typeof className === "string"
+        ) {
             element.className = "time " + className;
         } else {
             element.className = "time";
         }
 
-        unixTimestamp = Number(unixTimestamp);
+        unixTimestamp = Number(
+            unixTimestamp
+        );
 
-        if (Number.isInteger(unixTimestamp)) {
+        if (
+            Number.isInteger(
+                unixTimestamp
+            )
+        ) {
             element.dataset.timestamp = unixTimestamp * 1000;
-            Colby.updateTimes(/* restart: */ true);
+
+            Colby.updateTimes(
+                /* restart: */ true
+            );
         } else {
             element.dataset.nulltextcontent = defaultTextContent || "";
         }
 
-        Colby.updateCBTimeElementTextContent(element);
+        Colby.updateCBTimeElementTextContent(
+            element
+        );
 
         return element;
     },
     /* unixTimestampToElement() */
+
 
 
     /**
@@ -761,43 +885,68 @@ var Colby = {
      *
      * @return string
      */
-    unixTimestampToParseableDateString: function (unixTimestamp) {
-        var date = new Date(unixTimestamp * 1000);
+    unixTimestampToParseableDateString(
+        unixTimestamp
+    ) {
+        var date = new Date(
+            unixTimestamp * 1000
+        );
 
-        let parseableDateString =
-        (date.getMonth() + 1) +
-        "/" +
-        date.getDate() +
-        "/" +
-        date.getFullYear();
+        let parseableDateString = (
+            (date.getMonth() + 1) +
+            "/" +
+            date.getDate() +
+            "/" +
+            date.getFullYear()
+        );
 
         return parseableDateString;
     },
+    /* unixTimestampToParseableDateString() */
+
 
 
     /**
      * @return string
      */
-    unixTimestampToParseableString: function (unixTimestamp) {
-        let parseableString =
-        Colby.unixTimestampToParseableDateString(unixTimestamp) +
-        " " +
-        Colby.unixTimestampToParseableTimeString(unixTimestamp);
+    unixTimestampToParseableString(
+        unixTimestamp
+    ) {
+        let parseableString = (
+            Colby.unixTimestampToParseableDateString(
+                unixTimestamp
+            ) +
+            " " +
+            Colby.unixTimestampToParseableTimeString(
+                unixTimestamp
+            )
+        );
 
         return parseableString;
     },
+    /* unixTimestampToParseableString() */
+
 
 
     /**
      * @return string
      */
-    unixTimestampToParseableTimeString: function (unixTimestamp) {
-        var date = new Date(unixTimestamp * 1000);
+    unixTimestampToParseableTimeString(
+        unixTimestamp
+    ) {
+        var date = new Date(
+            unixTimestamp * 1000
+        );
+
         var hour = date.getHours() % 12;
+
         hour = hour ? hour : 12;
+
         var minutes = date.getMinutes().toString();
 
-        if (minutes.length < 2) {
+        if (
+            minutes.length < 2
+        ) {
             minutes = '0'.concat(minutes);
         }
 
@@ -805,6 +954,8 @@ var Colby = {
 
         return hour + ':' + minutes + ' ' + AMPM;
     },
+    /* unixTimestampToParseableTimeString() */
+
 
 
     /**
@@ -813,32 +964,70 @@ var Colby = {
      *
      * @return undefined
      */
-    updateCBTimeElementTextContent: function (element, now) {
+    updateCBTimeElementTextContent(
+        element,
+        now
+    ) {
         if (now === undefined) {
             now = new Date();
         }
 
-        let timestamp = Colby.elementToTimestamp(element);
+        let timestamp = Colby.elementToTimestamp(
+            element
+        );
 
-        if (timestamp === null) {
-            if (element.hasAttribute("data-nulltextcontent")) {
-                element.textContent =
-                    element.getAttribute("data-nulltextcontent");
+        if (
+            timestamp === null
+        ) {
+            if (
+                element.hasAttribute(
+                    "data-nulltextcontent"
+                )
+            ) {
+                element.textContent = (
+                    element.getAttribute("data-nulltextcontent")
+                );
             }
 
             return;
         }
 
-        let date = new Date(timestamp);
-        let args;
+        let date = new Date(
+            timestamp
+        );
 
-        if (element.classList.contains("compact")) {
-            args = { "compact": true };
+        let args = {
+            Colby_time_element_style: "Colby_time_element_style_default"
+        };
+
+        if (
+            element.classList.contains(
+                "Colby_time_element_style_moment"
+            )
+        ) {
+            args.Colby_time_element_style = "Colby_time_element_style_moment";
+        } else if (
+            element.classList.contains(
+                "compact"
+            ) ||
+
+            element.classList.contains(
+                "Colby_time_element_style_compact"
+            )
+        ) {
+            args.Colby_time_element_style = "Colby_time_element_style_compact";
         }
 
-        element.textContent =
-        Colby.dateToRelativeLocaleString(date, now, args);
+        element.textContent = (
+            Colby.dateToRelativeLocaleString(
+                date,
+                now,
+                args
+            )
+        );
     },
+    /* updateCBTimeElementTextContent() */
+
 
 
     /**
