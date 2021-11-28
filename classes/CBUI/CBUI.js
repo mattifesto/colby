@@ -377,10 +377,15 @@ var CBUI = {
 
         return section.element;
     },
+    /* createSection() */
 
 
 
     /**
+     * @deprecated 2021_12_27
+     *
+     *      Use CBUI.createSectionHeader2()
+     *
      * Creates a section header with an optional title and description. This is
      * use to add inline context for the user interface.
      *
@@ -426,6 +431,28 @@ var CBUI = {
         return element;
     },
     /* createSectionHeader() */
+
+
+
+    /**
+     * @param string cbmessage
+     *
+     * @return Element
+     */
+    createSectionHeader2(
+        cbmessage
+    ) {
+        let element = CBUI.createElement(
+            "CBUISectionHeader CBContentStyleSheet"
+        );
+
+        element.innerHTML = CBMessageMarkup.messageToHTML(
+            cbmessage
+        );
+
+        return element;
+    },
+    /* createSectionHeader2() */
 
 
 
