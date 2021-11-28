@@ -14,7 +14,7 @@
     padding: 20px;
 }
 
-.CBArtworkView .caption {
+.CBArtworkView .CBArtworkView_caption {
     box-sizing: border-box;
     color: var(--CBTextColor2);
     font-size: 80%;
@@ -23,15 +23,25 @@
     width: 100%;
 }
 
-.CBArtworkView.left .caption {
+
+
+.CBArtworkView.left .CBArtworkView_caption,
+.CBArtworkView.CBArtworkView_captionLeft .CBArtworkView_caption
+{
     text-align: left;
 }
 
-.CBArtworkView.right .caption {
+
+
+.CBArtworkView.right .CBArtworkView_caption
+.CBArtworkView.CBArtworkView_captionRight .CBArtworkView_caption
+{
     text-align: right;
 }
 
-.CBArtworkView .social {
+
+
+.CBArtworkView .CBArtworkView_socialMedia {
     border-top: 0.5px solid var(--CBTextColor3);
     box-sizing: border-box;
     font-size: 80%;
@@ -40,7 +50,7 @@
     text-align: center;
 }
 
-.CBArtworkView.hideSocial .social {
+.CBArtworkView.hideSocial .CBArtworkView_socialMedia {
     display: none;
 }
 

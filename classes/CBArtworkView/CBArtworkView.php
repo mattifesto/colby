@@ -1,6 +1,7 @@
 <?php
 
-final class CBArtworkView {
+final class
+CBArtworkView {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -9,11 +10,17 @@ final class CBArtworkView {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
+    static function
+    CBHTMLOutput_CSSURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v374.css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.45.css',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
 
 
 
@@ -76,7 +83,10 @@ final class CBArtworkView {
      *
      * @return object
      */
-    static function CBModel_build(stdClass $spec): stdClass {
+    static function
+    CBModel_build(
+        stdClass $spec
+    ): stdClass {
         $model = (object)[
             'alternativeText' => trim(
                 CBModel::valueToString($spec, 'alternativeText')
@@ -231,11 +241,15 @@ final class CBArtworkView {
      *
      * @return void
      */
-    static function CBView_render(
+    static function
+    CBView_render(
         stdClass $model
     ): void {
-        if (empty($model->image)) {
+        if (
+            empty($model->image)
+        ) {
             echo '<!-- CBArtworkView without an image. -->';
+
             return;
         }
 
@@ -244,11 +258,22 @@ final class CBArtworkView {
             'renderImageOnly'
         );
 
-        $CSSClassNames = CBModel::valueToArray($model, 'CSSClassNames');
+        $CSSClassNames = CBModel::valueToArray(
+            $model,
+            'CSSClassNames'
+        );
 
-        array_walk($CSSClassNames, 'CBHTMLOutput::requireClassName');
+        array_walk(
+            $CSSClassNames,
+            'CBHTMLOutput::requireClassName'
+        );
 
-        $CSSClassNames = cbhtml(implode(' ', $CSSClassNames));
+        $CSSClassNames = cbhtml(
+            implode(
+                ' ',
+                $CSSClassNames
+            )
+        );
 
         CBHTMLOutput::addPinterest();
 
@@ -269,7 +294,9 @@ final class CBArtworkView {
          * imperfect if there's actual markdown formatting, but it still works.
          */
 
-        if (empty($alternativeText)) {
+        if (
+            empty($alternativeText)
+        ) {
             $captionAsCBMessage = trim(
                 CBModel::valueToString(
                     $model,
@@ -284,7 +311,9 @@ final class CBArtworkView {
             );
         }
 
-        $alternativeTextAsHTML = cbhtml($alternativeText);
+        $alternativeTextAsHTML = cbhtml(
+            $alternativeText
+        );
 
         $captionAsHTML = CBModel::valueToString(
             $model,
@@ -335,7 +364,9 @@ final class CBArtworkView {
                 break;
         }
 
-        if ($maxWidth) {
+        if (
+            $maxWidth
+        ) {
             $captionDeclarations = "max-width: {$maxWidth}px";
         } else {
             $captionDeclarations = '';
@@ -347,19 +378,14 @@ final class CBArtworkView {
 
             <?php
 
-            $imageURL = CBDataStore::flexpath(
-                $image->ID,
-                "{$filename}.{$image->extension}",
-                cbsiteurl()
-            );
-
             CBArtworkElement::render(
                 [
+                    'imageModel' => $image,
+
                     'alternativeText' => $alternativeText,
                     'height' => $image->height,
                     'maxWidth' => $maxWidth,
                     'width' => $image->width,
-                    'URL' => $imageURL,
                 ]
             );
 
@@ -369,17 +395,25 @@ final class CBArtworkView {
             ) {
                 ?>
 
-                <div class="caption" style="<?= $captionDeclarations ?>">
+                <div
+                    class="caption CBArtworkView_caption"
+                    style="<?= $captionDeclarations ?>"
+                >
                     <?= $captionAsHTML ?>
                 </div>
 
                 <?php
             }
 
-            if (!$renderImageOnly) {
+            if (
+                !$renderImageOnly
+            ) {
                 ?>
 
-                <div class="social" style="<?= $captionDeclarations ?>">
+                <div
+                    class="social CBArtworkView_socialMedia"
+                    style="<?= $captionDeclarations ?>"
+                >
                     <a href="https://www.pinterest.com/pin/create/button/"
                        data-pin-custom="true"
                        data-pin-description="<?= $alternativeTextAsHTML ?>"
