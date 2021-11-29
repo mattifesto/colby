@@ -246,6 +246,8 @@ final class CBImage {
      *
      * @param string $flexdir
      *
+     *      cbsitedir() or cbsiteurl()
+     *
      * @return ?string
      *
      *      This function will return null if the required properties are not
