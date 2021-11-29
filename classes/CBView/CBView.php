@@ -1,6 +1,7 @@
 <?php
 
-final class CBView {
+final class
+CBView {
 
     /**
      * Tests can set this variable to true which will make view rendering rethrow
@@ -318,26 +319,32 @@ final class CBView {
                 $function,
                 $viewModel
             );
-        } catch (Throwable $throwable) {
+        } catch (
+            Throwable $throwable
+        ) {
             if (CBView::$testModeIsActive) {
                 throw $throwable;
             }
 
-            CBErrorHandler::report($throwable);
+            $newThrowable = new CBExceptionWithValue(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    An exception was thrown when rendering a view with this
+                    model.
+
+                EOT),
+                $viewModel,
+                'e5feaef4c2a106287e8982bb6a7e70b276555fe8',
+                0,
+                $throwable
+            );
 
             CBErrorHandler::report(
-                new CBExceptionWithValue(
-                    (
-                        'An exception was thrown when rendering ' .
-                        'a view with this model.'
-                    ),
-                    $viewModel,
-                    'e5feaef4c2a106287e8982bb6a7e70b276555fe8'
-                )
+                $newThrowable
             );
 
             CBView::renderViewElementForException(
-                $throwable,
+                $newThrowable,
                 $viewModel
             );
         }
@@ -409,32 +416,41 @@ final class CBView {
      *
      * @return void
      */
-    private static function renderViewElementForException(
+    private static function
+    renderViewElementForException(
         Throwable $throwable,
         stdClass $viewModel
     ): void {
-        $className = CBModel::valueAsName(
-            $viewModel,
-            'className'
-        ) ?? '';
-
-        $isDeveloper = CBUserGroup::userIsMemberOfUserGroup(
-            ColbyUser::getCurrentUserCBID(),
-            'CBDevelopersUserGroup'
-        );
-
         ?>
 
-        <div class="CBView_error <?= $className ?>_error">
+        <div class="CBView_error">
 
             <?php
 
-            if ($isDeveloper) {
+
+            if (
+                CBUserGroup::currentUserIsMemberOfUserGroup(
+                    'CBDevelopersUserGroup'
+                )
+            ) {
+                CBExceptionView::pushThrowable(
+                    $throwable
+                );
+
+                CBView::renderSpec(
+                    (object)[
+                        'className' => 'CBExceptionView',
+                    ],
+                );
+
+                CBExceptionView::popThrowable();
+
+                /*
                 $messageAsHTML = cbhtml(
                     $throwable->getMessage()
                 );
 
-                echo "<!-- {$messageAsHTML} (see log for details) -->";
+                echo "<!-- {$messageAsHTML} (see log for details) -->";*/
             }
 
             ?>
