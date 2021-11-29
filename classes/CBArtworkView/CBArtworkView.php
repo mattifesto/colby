@@ -277,7 +277,7 @@ CBArtworkView {
 
         CBHTMLOutput::addPinterest();
 
-        $image = $model->image;
+        $imageModel = $model->image;
 
         $alternativeText = CBModel::valueToString(
             $model,
@@ -380,12 +380,12 @@ CBArtworkView {
 
             CBArtworkElement::render(
                 [
-                    'imageModel' => $image,
+                    'imageModel' => $imageModel,
 
                     'alternativeText' => $alternativeText,
-                    'height' => $image->height,
+                    'height' => $imageModel->height,
                     'maxWidth' => $maxWidth,
-                    'width' => $image->width,
+                    'width' => $imageModel->width,
                 ]
             );
 
@@ -408,6 +408,12 @@ CBArtworkView {
             if (
                 !$renderImageOnly
             ) {
+                $pinterestImageURL = CBImage::asFlexpath(
+                    $imageModel,
+                    'rw1600',
+                    cbsiteurl()
+                );
+
                 ?>
 
                 <div
@@ -418,7 +424,7 @@ CBArtworkView {
                        data-pin-custom="true"
                        data-pin-description="<?= $alternativeTextAsHTML ?>"
                        data-pin-do="buttonPin"
-                       data-pin-media="<?= $imageURL ?>">
+                       data-pin-media="<?= $pinterestImageURL ?>">
                         Pin to Pinterest
                     </a>
                 </div>
