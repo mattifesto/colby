@@ -68,34 +68,11 @@ CBViewPage {
     CBModel_build(
         stdClass $spec
     ) {
-        $classNameForSettings = CBModel::valueAsName(
-            $spec,
-            'classNameForSettings'
-        );
-
-        if ($classNameForSettings === null) {
-            throw new CBExceptionWithValue(
-                CBConvert::stringToCleanLine(<<<EOT
-
-                    This CBViewPage spec does not have a valid
-                    "classNameForSettings" property value. A CBViewPage spec
-                    must have a valid "classNameForSettings" property value to
-                    be built into a model.
-
-                EOT),
-                $spec,
-                'c0a955387d1cf7c82bd0662c06916102646aaf54'
-            );
-        }
-
-
         $model = (object)[
             'classNameForKind' => CBModel::valueToString(
                 $spec,
                 'classNameForKind'
             ),
-
-            'classNameForSettings' => $classNameForSettings,
 
             'description' => trim(
                 CBModel::valueToString(
@@ -104,22 +81,7 @@ CBViewPage {
                 )
             ),
 
-            'frameClassName' => CBModel::valueToString(
-                $spec,
-                'frameClassName'
-            ),
-
-            'isPublished' => CBModel::valueToBool(
-                $spec,
-                'isPublished'
-            ),
-
             'iteration' => 0, /* deprecated */
-
-            'publicationTimeStamp' => CBModel::valueAsInt(
-                $spec,
-                'publicationTimeStamp'
-            ),
 
             'publishedByUserCBID' => CBModel::valueAsCBID(
                 $spec,
@@ -134,6 +96,34 @@ CBViewPage {
             ),
         ];
 
+        CBViewPage::setFrameClassName(
+            $model,
+            CBViewPage::getFrameClassName(
+                $spec
+            )
+        );
+
+        CBViewPage::setIsPublished(
+            $model,
+            CBViewPage::getIsPublished(
+                $spec
+            )
+        );
+
+
+        CBViewPage::setPageSettingsClassName(
+            $model,
+            CBViewPage::getPageSettingsClassName(
+                $spec
+            )
+        );
+
+        CBViewPage::setPublicationTimestamp(
+            $model,
+            CBViewPage::getPublicationTimestamp(
+                $spec
+            )
+        );
 
         /**
          * URI
@@ -787,6 +777,115 @@ CBViewPage {
 
 
     /**
+     * @param object $viewPageModel
+     *
+     * @return string|null
+     */
+    static function
+    getFrameClassName(
+        stdClass $viewPageModel
+    ): ?string {
+        return CBModel::valueAsName(
+            $viewPageModel,
+            'frameClassName'
+        );
+    }
+    /* getFrameClassName() */
+
+
+
+    /**
+     * @param object $viewPageSpec
+     * @param string $pageSettingsClassName
+     *
+     * @return void
+     */
+    static function
+    setFrameClassName(
+        stdClass $viewPageSpec,
+        ?string $newFrameClassName
+    ): void {
+        $newFrameClassNameAsName = CBConvert::valueAsName(
+            $newFrameClassName
+        );
+
+        $viewPageSpec->frameClassName = $newFrameClassNameAsName;
+    }
+    /* setPageSettingsClassName() */
+
+
+
+    /**
+     * @param object %viewPageModel
+     *
+     * @return bool
+     */
+    static function
+    getIsPublished(
+        stdClass $viewPageModel
+    ): bool {
+        return CBModel::valueToBool(
+            $viewPageModel,
+            'isPublished'
+        );
+    }
+    /* getIsPublished() */
+
+
+
+    /**
+     * @param object $viewPageModel
+     * @param bool $newIsPublished
+     *
+     * @return void
+     */
+    static function
+    setIsPublished(
+        stdClass $viewPageModel,
+        bool $newIsPublished
+    ): void {
+        $viewPageModel->isPublished = $newIsPublished;
+
+        if (
+            $newIsPublished
+        ) {
+            $publicationTimestamp = CBViewPage::getPublicationTimestamp(
+                $viewPageModel
+            );
+
+            if (
+                $publicationTimestamp === null
+            ) {
+                CBViewPage::setPublicationTimestamp(
+                    $viewPageModel,
+                    time()
+                );
+            }
+        }
+    }
+    /* setIsPublished() */
+
+
+
+    /**
+     * @param object $viewPageModel
+     *
+     * @return string|null
+     */
+    static function
+    getPageSettingsClassName(
+        stdClass $viewPageModel
+    ): ?string {
+        return CBModel::valueAsName(
+            $viewPageModel,
+            'classNameForSettings'
+        );
+    }
+    /* getPageSettingsClassName() */
+
+
+
+    /**
      * @param object $viewPageSpec
      * @param string $pageSettingsClassName
      *
@@ -795,23 +894,58 @@ CBViewPage {
     static function
     setPageSettingsClassName(
         stdClass $viewPageSpec,
-        string $pageSettingsClassName
+        string $newPageSettingsClassName
     ): void {
-        $classNameAsName = CBConvert::valueAsName(
-            $pageSettingsClassName
+        $newPageSettingsClassNameAsName = CBConvert::valueAsName(
+            $newPageSettingsClassName
         );
 
-        if ($classNameAsName === null) {
+        if ($newPageSettingsClassNameAsName === null) {
             throw new CBExceptionWithValue(
                 'The class name must be a valid Colby name value.',
-                $pageSettingsClassName,
+                $newPageSettingsClassName,
                 '7f5a08b9d4d548d3e6972a2e683929f3e4877f73'
             );
         }
 
-        $viewPageSpec->classNameForSettings = $pageSettingsClassName;
+        $viewPageSpec->classNameForSettings = $newPageSettingsClassNameAsName;
     }
     /* setPageSettingsClassName() */
+
+
+
+    /**
+     * @param object $viewPageModel
+     *
+     * @return int|null
+     */
+    static function
+    getPublicationTimestamp(
+        stdClass $viewPageModel
+    ): ?int {
+        return CBModel::valueAsInt(
+            $viewPageModel,
+            'publicationTimeStamp'
+        );
+    }
+    /* getPublicationTimestamp() */
+
+
+
+    /**
+     * @param object $viewPageModel
+     * @param int|null $newPublicationTimestamp
+     *
+     * @return void
+     */
+    static function
+    setPublicationTimestamp(
+        stdClass $viewPageModel,
+        ?int $newPublicationTimestamp
+    ): void {
+        $viewPageModel->publicationTimeStamp = $newPublicationTimestamp;
+    }
+    /* setPublicationTimestamp() */
 
 
 
