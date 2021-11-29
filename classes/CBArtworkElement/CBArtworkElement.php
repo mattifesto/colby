@@ -186,6 +186,8 @@ CBArtworkElement {
             $args = CBConvert::valueToObject($args);
         }
 
+        $imageModel = null;
+
         $URL = CBModel::valueToString(
             $args,
             'URL'
@@ -198,13 +200,16 @@ CBArtworkElement {
                 $args,
                 'imageModel'
             );
+        }
 
+        if (
+            $imageModel !== NULL
+        ) {
             $URL = CBImage::asFlexpath(
                 $imageModel,
                 'rw960',
                 cbsiteurl()
             );
-
 
             $widths = [
                 320,
@@ -305,7 +310,9 @@ CBArtworkElement {
 
         EOT;
 
-        CBHTMLOutput::addCSS($styleSheet);
+        CBHTMLOutput::addCSS(
+            $styleSheet
+        );
 
         ?>
 
