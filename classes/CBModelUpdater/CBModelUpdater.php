@@ -3,13 +3,14 @@
 /**
  * See documentation.
  *
- * @NOTE 2012_02_15
+ * @NOTE 2021_02_15
  *
  *      This class is in transition from using primarily static functions to an
  *      object-oriented from. The static methods will soon be deprecated after
  *      a trial period.
  */
-final class CBModelUpdater {
+final class
+CBModelUpdater {
 
     private $originalSpec;
     private $workingSpec;
@@ -27,7 +28,9 @@ final class CBModelUpdater {
      *
      * @return [string]
      */
-    static function CBInstall_requiredClassNames(): array {
+    static function
+    CBInstall_requiredClassNames(
+    ): array {
         return [
             'CBModels',
         ];
@@ -93,7 +96,9 @@ final class CBModelUpdater {
     function
     save2(
     ): void {
-        if ($this->workingSpec != $this->originalSpec) {
+        if (
+            $this->workingSpec != $this->originalSpec
+        ) {
             CBModels::save(
                 $this->workingSpec
             );
@@ -209,7 +214,8 @@ final class CBModelUpdater {
      *          CBModelUpdater_save() -> void
      *      }
      */
-    static function fetchByCBID(
+    static function
+    fetchByCBID(
         string $CBID
     ): stdClass {
         $workingSpec = null;
@@ -280,11 +286,20 @@ final class CBModelUpdater {
      *
      * @return void
      */
-    static function save(stdClass $updater): void {
-        if ($updater->working != $updater->original) {
+    static function
+    save(
+        stdClass $updater
+    ): void {
+        if (
+            $updater->working != $updater->original
+        ) {
             CBDB::transaction(
-                function () use ($updater) {
-                    CBModels::save($updater->working);
+                function () use (
+                    $updater
+                ) {
+                    CBModels::save(
+                        $updater->working
+                    );
                 }
             );
         }
@@ -302,12 +317,17 @@ final class CBModelUpdater {
      *
      * @return void
      */
-    static function update(
+    static function
+    update(
         stdClass $updates
     ): void {
-        $updater = CBModelUpdater::fetch($updates);
+        $updater = CBModelUpdater::fetch(
+            $updates
+        );
 
-        CBModelUpdater::save($updater);
+        CBModelUpdater::save(
+            $updater
+        );
     }
     /* update() */
 
