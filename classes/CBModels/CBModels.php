@@ -1033,15 +1033,20 @@ final class CBModels {
      *
      * @return null
      */
-    static function save(
+    static function
+    save(
         $originalSpecs,
         $force = false
     ) {
-        if (empty($originalSpecs)) {
+        if (
+            empty($originalSpecs)
+        ) {
             return; // TODO: Why are we okay with this being empty? Document.
         }
 
-        if (!is_array($originalSpecs)) {
+        if (
+            !is_array($originalSpecs)
+        ) {
             $originalSpecs = [$originalSpecs];
         }
 
@@ -1049,21 +1054,32 @@ final class CBModels {
          * If the user has passed in an associative array, this function wants
          * a numeric array with the first item at index 0.
          */
-        $originalSpecs = array_values($originalSpecs);
+        $originalSpecs = array_values(
+            $originalSpecs
+        );
 
-        CBModels::save_checkSpecs($originalSpecs);
+        CBModels::save_checkSpecs(
+            $originalSpecs
+        );
 
         $sharedClassName = $originalSpecs[0]->className;
         $modified = time();
 
         $tuples = array_map(
-            function ($originalSpec) {
+            function (
+                $originalSpec
+            ) {
 
                 /* we've already verified all specs have valid IDs */
                 $ID = $originalSpec->ID;
 
-                $upgradedSpec = CBModel::upgrade($originalSpec);
-                $model = CBModel::build($upgradedSpec);
+                $upgradedSpec = CBModel::upgrade(
+                    $originalSpec
+                );
+
+                $model = CBModel::build(
+                    $upgradedSpec
+                );
 
                 return (object)[
                     'spec' => $upgradedSpec,
@@ -1074,7 +1090,9 @@ final class CBModels {
         );
 
         $IDs = array_map(
-            function ($tuple) {
+            function (
+                $tuple
+            ) {
                 return $tuple->model->ID;
             },
             $tuples
@@ -1083,7 +1101,9 @@ final class CBModels {
         /**
          * If any of the models being saved are in the cache, remove them now.
          */
-        if (class_exists('CBModelCache', false)) {
+        if (
+            class_exists('CBModelCache', false)
+        ) {
             CBModelCache::uncacheByID($IDs);
         }
 
@@ -1094,17 +1114,27 @@ final class CBModels {
 
         array_walk(
             $tuples,
-            function ($tuple) use ($initialDataByID, $modified, $force) {
+            function (
+                $tuple
+            ) use (
+                $initialDataByID,
+                $modified,
+                $force
+            ) {
                 $ID = $tuple->model->ID;
                 $mostRecentVersion = (int)$initialDataByID[$ID]->version;
 
-                if ($force !== true) {
+                if (
+                    $force !== true
+                ) {
                     $specVersion = CBModel::valueAsInt(
                         $tuple->spec,
                         'version'
                     ) ?? 0;
 
-                    if ($specVersion !== $mostRecentVersion) {
+                    if (
+                        $specVersion !== $mostRecentVersion
+                    ) {
                         throw new CBExceptionWithValue(
                             CBConvert::stringToCleanLine(<<<EOT
 
@@ -1146,7 +1176,9 @@ final class CBModels {
 
         $functionName = "{$sharedClassName}::CBModels_willSave";
 
-        if (is_callable($functionName)) {
+        if (
+            is_callable($functionName)
+        ) {
             $models = array_map(
                 function ($tuple) {
                     return $tuple->model;
@@ -1170,7 +1202,9 @@ final class CBModels {
             }
         }
 
-        CBModels::saveToDatabase($tuples);
+        CBModels::saveToDatabase(
+            $tuples
+        );
 
         $priority = null;
         $delayInSeconds = 60; /* 1 minute */
