@@ -1338,19 +1338,28 @@ final class CBModels {
      *          meta: object
      *      }
      */
-    private static function saveToDatabase(array $tuples) {
+    private static function
+    saveToDatabase(
+        array $tuples
+    ) {
         /* 1: CBModelVersions */
 
         $values = array_map(
             function ($tuple) {
-                $IDAsSQL = CBID::toSQL($tuple->model->ID);
+                $IDAsSQL = CBID::toSQL(
+                    $tuple->model->ID
+                );
 
                 $modelAsJSONAsSQL = CBDB::stringToSQL(
-                    json_encode($tuple->model)
+                    json_encode(
+                        $tuple->model
+                    )
                 );
 
                 $specAsJSONAsSQL = CBDB::stringToSQL(
-                    json_encode($tuple->spec)
+                    json_encode(
+                        $tuple->spec
+                    )
                 );
 
                 return (
@@ -1420,7 +1429,9 @@ final class CBModels {
          * Insert data for all models into the temporary CBModels table.
          */
 
-        Colby::query("INSERT INTO CBModelsTemp VALUES {$values}");
+        Colby::query(
+            "INSERT INTO CBModelsTemp VALUES {$values}"
+        );
 
         /**
          * For models that already exist in the CBModels table, transfer their
@@ -1441,7 +1452,9 @@ final class CBModels {
 
         EOT;
 
-        Colby::query($SQL);
+        Colby::query(
+            $SQL
+        );
 
         /**
          * For models that don't yet exist in the CBModels table, insert their
@@ -1465,13 +1478,17 @@ final class CBModels {
 
         EOT;
 
-        Colby::query($SQL);
+        Colby::query(
+            $SQL
+        );
 
         /**
          * Delete the temporary CBModels table.
          */
 
-        Colby::query('DROP TEMPORARY TABLE CBModelsTemp');
+        Colby::query(
+            'DROP TEMPORARY TABLE CBModelsTemp'
+        );
     }
     /* saveToDatabase() */
 
