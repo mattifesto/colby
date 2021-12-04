@@ -405,9 +405,31 @@ CBModels {
 
         EOT;
 
-        $CBID = CBDB::SQLToValue2(
-            $SQL
-        );
+        /**
+         * @TODO 2021_12_04
+         *
+         *      Remove try/catch block in Colby version 676
+         */
+
+        try {
+            $CBID = CBDB::SQLToValue2(
+                $SQL
+            );
+        } catch (
+            Throwable $throwable
+        ) {
+            if (
+                Colby::mysqli()->errno === 1146
+            ) {
+                error_log(
+                    'CBModels2_table does not yet exist. Update website.'
+                );
+
+                return null;
+            } else {
+                throw $throwable;
+            }
+        }
 
         return $CBID;
     }
@@ -1575,6 +1597,8 @@ CBModels {
             $SQL
         );
 
+
+
         /**
          * Delete the temporary CBModels table.
          */
@@ -1589,73 +1613,89 @@ CBModels {
 
 
 
-        if (
-            CBDBA::tableDoesExist(
-                'CBModels2_table'
-            )
-        ) {
-            $values = array_map(
-                function (
-                    $tuple
-                ) {
-                    $IDAsSQL = CBID::toSQL(
-                        $tuple->model->ID
-                    );
+        $values = array_map(
+            function (
+                $tuple
+            ) {
+                $IDAsSQL = CBID::toSQL(
+                    $tuple->model->ID
+                );
 
-                    $classNameAsSQL = CBDB::stringToSQL(
-                        $tuple->model->className
-                    );
+                $classNameAsSQL = CBDB::stringToSQL(
+                    $tuple->model->className
+                );
 
-                    $searchTextAsSQL = CBDB::stringToSQL(
-                        $tuple->meta->searchText
-                    );
+                $searchTextAsSQL = CBDB::stringToSQL(
+                    $tuple->meta->searchText
+                );
 
-                    $URLPathAsSQL = CBDB::stringToSQL(
-                        $tuple->meta->URLPath
-                    );
+                $URLPathAsSQL = CBDB::stringToSQL(
+                    $tuple->meta->URLPath
+                );
 
-                    return (
-                        "(" .
-                        "{$IDAsSQL}," .
-                        "{$classNameAsSQL}," .
-                        "{$tuple->meta->created}," .
-                        "{$tuple->meta->modified}," .
-                        "{$tuple->meta->version}," .
-                        "{$searchTextAsSQL}," .
-                        "{$URLPathAsSQL}" .
-                        ")"
-                    );
-                },
-                $tuples
-            );
+                return (
+                    "(" .
+                    "{$IDAsSQL}," .
+                    "{$classNameAsSQL}," .
+                    "{$tuple->meta->created}," .
+                    "{$tuple->meta->modified}," .
+                    "{$tuple->meta->version}," .
+                    "{$searchTextAsSQL}," .
+                    "{$URLPathAsSQL}" .
+                    ")"
+                );
+            },
+            $tuples
+        );
 
-            $values = implode(
-                ',',
-                $values
-            );
+        $values = implode(
+            ',',
+            $values
+        );
 
-            $SQL = <<<EOT
+        $SQL = <<<EOT
 
-                INSERT INTO
-                CBModels2_table
+            INSERT INTO
+            CBModels2_table
 
-                VALUES
-                {$values}
+            VALUES
+            {$values}
 
-                ON DUPLICATE KEY UPDATE
+            ON DUPLICATE KEY UPDATE
 
-                CBModels2_className_column = CBModels2_className_column,
-                CBModels2_created_column = CBModels2_created_column,
-                CBModels2_modified_column = CBModels2_modified_column,
-                CBModels2_version_column = CBModels2_version_column,
-                CBModels2_searchText_column = CBModels2_searchText_column,
-                CBModels2_URLPath_column = CBModels2_URLPath_column
+            CBModels2_className_column = CBModels2_className_column,
+            CBModels2_created_column = CBModels2_created_column,
+            CBModels2_modified_column = CBModels2_modified_column,
+            CBModels2_version_column = CBModels2_version_column,
+            CBModels2_searchText_column = CBModels2_searchText_column,
+            CBModels2_URLPath_column = CBModels2_URLPath_column
 
-            EOT;
+        EOT;
 
+        /**
+         * @TODO 2021_12_04
+         *
+         *      Remove try/catch block in Colby version 676
+         */
+
+        try {
             Colby::query(
                 $SQL
             );
+        } catch (
+            Throwable $throwable
+        ) {
+            if (
+                Colby::mysqli()->errno === 1146
+            ) {
+                error_log(
+                    'CBModels2_table does not yet exist. Update website.'
+                );
+
+                return null;
+            } else {
+                throw $throwable;
+            }
         }
     }
     /* saveToDatabase() */
