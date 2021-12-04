@@ -6,7 +6,8 @@
  * good coding practices, help with rapid development, and provide the highest
  * performance when working with the `ColbyPages` table.
  */
-class CBPages {
+final class
+CBPages {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
@@ -225,8 +226,13 @@ class CBPages {
      *      The returned array may be empty if no page is found or have more
      *      than one ID if multiple pages are found.
      */
-    static function fetchPublishedPageIDsByURI(string $URI): array {
-        $URIAsSQL = CBDB::stringToSQL($URI);
+    static function
+    fetchPublishedPageIDsByURI(
+        string $URI
+    ): array {
+        $URIAsSQL = CBDB::stringToSQL(
+            $URI
+        );
 
         $SQL = <<<EOT
 
@@ -239,8 +245,11 @@ class CBPages {
 
         EOT;
 
-        return CBDB::SQLToArray($SQL);
+        return CBDB::SQLToArray(
+            $SQL
+        );
     }
+    /* fetchPublishedPageIDsByURI() */
 
 
 
