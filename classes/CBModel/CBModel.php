@@ -39,7 +39,8 @@
  * non-model value would be difficult. Non-model values in this context will not
  * be a common situation.
  */
-final class CBModel {
+final class
+CBModel {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -329,9 +330,17 @@ final class CBModel {
      *
      * @return mixed
      */
-    static function clone($model) {
-        return json_decode(json_encode($model));
+    static function
+    clone(
+        $model
+    ) {
+        return json_decode(
+            json_encode(
+                $model
+            )
+        );
     }
+    /* clone() */
 
 
 
@@ -737,6 +746,7 @@ final class CBModel {
             $object1->{$key} = $value;
         }
     }
+    /* merge() */
 
 
 
@@ -748,24 +758,52 @@ final class CBModel {
      *
      * @return string
      */
-    static function toSearchText($model): string {
-        $className = CBModel::valueToString($model, 'className');
+    static function
+    toSearchText(
+        $model
+    ): string {
+        $className = CBModel::getClassName(
+            $model,
+        );
 
-        if (empty($className)) {
+        if (
+            empty($className)
+        ) {
             return '';
         }
 
-        $ID = CBModel::valueAsID($model, 'ID');
         $text = '';
 
-        if (is_callable($function = "{$className}::CBModel_toSearchText")) {
-            $text = call_user_func($function, $model);
+        if (
+            is_callable(
+                $function = "{$className}::CBModel_toSearchText"
+            )
+        ) {
+            $text = call_user_func(
+                $function,
+                CBModel::clone(
+                    $model
+                )
+            );
         }
 
         /* deprecated */
-        else if (is_callable($function = "{$className}::modelToSearchText")) {
-            $text = call_user_func($function, $model);
+        else if (
+            is_callable(
+                $function = "{$className}::modelToSearchText"
+            )
+        ) {
+            $text = call_user_func(
+                $function,
+                CBModel::clone(
+                    $model
+                )
+            );
         }
+
+        $CBID = CBModel::getCBID(
+            $model
+        );
 
         return implode(
             ' ',
@@ -773,11 +811,78 @@ final class CBModel {
                 [
                     $text,
                     $className,
-                    $ID,
+                    $CBID,
                 ]
             )
         );
     }
+    /* toSearchText() */
+
+
+
+    /**
+     * @param mixed $model
+     *
+     * @return string
+     */
+    static function
+    toURLPath(
+        $model
+    ) {
+        $className = CBModel::getClassName(
+            $model,
+        );
+
+        if (
+            empty($className)
+        ) {
+            return '';
+        }
+
+        $functionName = "{$className}::CBModel_toURLPath";
+
+        if (
+            is_callable(
+                $functionName
+            )
+        ) {
+            $potentialURLPath = call_user_func(
+                $functionName,
+                CBModel::clone(
+                    $model
+                )
+            );
+
+            $normalizedURLPath = (
+                '/' .
+                CBConvert::stringToURI(
+                    $potentialURLPath
+                ) .
+                '/'
+            );
+
+            if (
+                $potentialURLPath !== $normalizedURLPath
+            ) {
+                throw new CBExceptionWithValue(
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        The class for this model returned the value of
+                        "{$potentialURLPath}" from the function
+                        CBModel_toURLPath(). This value is not a valid URL path.
+
+                    EOT),
+                    $model,
+                    'af0223135f24cee34d999ec5e6cbf13f9bc1aa94'
+                );
+            }
+
+            return $potentialURLPath;
+        }
+
+        return '';
+    }
+    /* toURLPath() */
 
 
 
