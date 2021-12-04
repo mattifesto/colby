@@ -1,6 +1,7 @@
 <?php
 
-final class CBLog {
+final class
+CBLog {
 
     /* RFC3164 */
     static $severityDescriptions = [
@@ -694,7 +695,10 @@ final class CBLog {
 
         $SQL = <<<EOT
 
-            INSERT INTO CBLog (
+            INSERT INTO
+            CBLog
+
+            (
                 message,
                 modelID,
                 processID,
@@ -702,7 +706,11 @@ final class CBLog {
                 sourceClassName,
                 sourceID,
                 timestamp
-            ) VALUES (
+            )
+
+            VALUES
+
+            (
                 {$messageAsSQL},
                 {$modelIDAsSQL},
                 {$processIDAsSQL},
@@ -714,7 +722,25 @@ final class CBLog {
 
         EOT;
 
-        Colby::query($SQL);
+        try {
+            Colby::query(
+                $SQL
+            );
+        } catch (
+            Throwable $throwable
+        ) {
+            if (
+                Colby::mysqli()->errno === 1146
+            ) {
+                error_log(
+                    'CBLog table does not exist. Update website.'
+                );
+
+                return;
+            } else {
+                throw $throwable;
+            }
+        }
     }
     /* logForReals() */
 
@@ -727,7 +753,9 @@ final class CBLog {
      *
      * @return void
      */
-    static function removeExpiredEntries(): void {
+    static function
+    removeExpiredEntries(
+    ): void {
         $tenDays = 60 * 60 * 24 * 10;
         $timestamp = time() - $tenDays;
 
@@ -738,7 +766,25 @@ final class CBLog {
 
         EOT;
 
-        Colby::query($SQL);
+        try {
+            Colby::query(
+                $SQL
+            );
+        } catch (
+            Throwable $throwable
+        ) {
+            if (
+                Colby::mysqli()->errno === 1146
+            ) {
+                error_log(
+                    'CBLog table does not exist. Update website.'
+                );
+
+                return;
+            } else {
+                throw $throwable;
+            }
+        }
 
         $count = Colby::mysqli()->affected_rows;
 
