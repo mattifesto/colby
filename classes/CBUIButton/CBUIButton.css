@@ -5,27 +5,32 @@
     padding: 0 10px;
 }
 
+
+
 .CBUIButton_button {
     display: flex;
     align-items: center;
 
-    background: linear-gradient(var(--CBButtonBackgroundColorHighlight), var(--CBButtonBackgroundColor));
+    background: linear-gradient(
+        var(--CBButtonBackgroundColorHighlight),
+        var(--CBButtonBackgroundColor)
+    );
+
     border: 1px solid var(--CBButtonBackgroundColor);
-    border-radius: 5px;
+    border-radius: 20px;
     box-sizing: border-box;
     color: var(--CBButtonTextColor);
     min-height: 44px;
-    padding: 5px 10px;
+    padding: 5px 40px;
     text-align: center;
-    width: 640px;
 
     cursor: default;
 
     user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     -webkit-user-select: none;
 }
+
+
 
 .CBUIButton_content {
     flex: 1 1 auto;

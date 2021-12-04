@@ -12,7 +12,7 @@ CBUIButton {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v468.css',
+                'v675.45.css',
                 cbsysurl()
             ),
         ];
