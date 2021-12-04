@@ -5,7 +5,8 @@
  *
  *      Move the functionality of this file into the CBRequest class.
  */
-final class ColbyRequest {
+final class
+ColbyRequest {
 
     private static $decodedPath;
     // type: stríng
@@ -271,25 +272,37 @@ final class ColbyRequest {
                     ColbyRequest::$decodedStubs
                 );
 
-                $pageModel = ColbyRequest::fetchPageModelForURI($URI);
+                $pageModel = ColbyRequest::fetchPageModelForURI(
+                    $URI
+                );
 
-                if ($pageModel !== null) {
+                if (
+                    $pageModel !== null
+                ) {
                     $canonicalEncodedPath = (
                         CBRequest::decodedPathToCanonicalEncodedPath(
                             $URI
                         )
                     );
 
-                    $function = function() use ($pageModel) {
+                    $function = function() use (
+                        $pageModel
+                    ) {
                         CBRequest::setNoCacheHeaders();
-                        CBPage::render($pageModel);
+
+                        CBPage::render(
+                            $pageModel
+                        );
+
                         return 1;
                     };
                 }
             }
         }
 
-        if ($function) {
+        if (
+            $function
+        ) {
             if (ColbyRequest::$originalEncodedPath !== $canonicalEncodedPath) {
                 $redirectURI = (
                     $canonicalEncodedPath .
@@ -363,40 +376,39 @@ final class ColbyRequest {
      *
      * @return object|null
      */
-    private static function fetchPageModelForURI(
+    private static function
+    fetchPageModelForURI(
         string $URI
     ): ?stdClass {
-        $URIAsSQL = CBDB::stringToSQL($URI);
+        $URLPath = "/{$URI}/";
 
-        $SQL = <<<EOT
+        $pageModelCBID = CBModels::fetchCBIDByURLPath(
+            $URLPath
+        );
 
-            SELECT      v.modelAsJSON
+        if (
+            $pageModelCBID === null
+        ) {
+            $potentialPageModelCBIDs = CBPages::fetchPublishedPageIDsByURI(
+                $URI
+            );
 
-            FROM        ColbyPages AS p
+            if (
+                count($potentialPageModelCBIDs) > 0
+            ) {
+                $pageModelCBID = $potentialPageModelCBIDs[0];
+            }
+        }
 
-            LEFT JOIN   CBModels AS m
-                ON      p.archiveID = m.ID
-
-            LEFT JOIN   CBModelVersions AS v
-                ON      m.ID = v.ID AND
-                        m.version = v.version
-
-            WHERE       p.URI = {$URIAsSQL} AND
-                        p.published IS NOT NULL
-
-            ORDER BY    p.published ASC
-
-            LIMIT       1
-
-        EOT;
-
-        $pageModelAsJSON = CBDB::SQLToValue2($SQL);
-
-        if ($pageModelAsJSON !== null) {
-            return json_decode($pageModelAsJSON);
-        } else {
+        if (
+            $pageModelCBID === null
+        ) {
             return null;
         }
+
+        return CBModels::fetchModelByCBID(
+            $pageModelCBID
+        );
     }
     /* fetchPageModelForURI() */
 
