@@ -1,5 +1,6 @@
 /* global
     CB_Moment,
+    CBModel,
     Colby,
 */
 
@@ -101,6 +102,20 @@
 
         headerElement.className = "CB_CBView_Moment_header_element";
 
+        let timeContainerElement = document.createElement(
+            "a"
+        );
+
+        let momentModelCBID = CBModel.getCBID(
+            momentModel
+        );
+
+        timeContainerElement.href = `/moment/${momentModelCBID}/`;
+
+        headerElement.append(
+            timeContainerElement
+        );
+
         let timeElement = Colby.unixTimestampToElement(
             CB_Moment.getCreatedTimestamp(
                 momentModel
@@ -109,7 +124,7 @@
             "Colby_time_element_style_moment"
         );
 
-        headerElement.append(
+        timeContainerElement.append(
             timeElement
         );
 

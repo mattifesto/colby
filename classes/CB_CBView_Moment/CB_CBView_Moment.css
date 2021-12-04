@@ -15,16 +15,22 @@
     border-color: var(--CB_UI_borderColor);
     border-radius: 10px;
     border-style: solid;
-
-
     max-width: 100%;
+    overflow: hidden;
 }
 
 
 
 .CB_CBView_Moment_standard_element
 .CB_CBView_Moment_content_element {
-    width: 640px;
+    width: 30em;
+}
+
+
+
+.CB_CBView_Moment_standard_element.CB_CBView_Moment_momentPage
+.CB_CBView_Moment_content_element {
+    width: 40em;
 }
 
 
@@ -39,4 +45,12 @@
 .CB_CBView_Moment_standard_element
 .CB_CBView_Moment_text_element {
     padding: 10px;
+    white-space: pre-wrap;
+}
+
+
+
+.CB_CBView_Moment_standard_element.CB_CBView_Moment_momentPage
+.CB_CBView_Moment_text_element {
+    font-size: 150%;
 }
