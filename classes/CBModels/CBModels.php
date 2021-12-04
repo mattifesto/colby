@@ -9,7 +9,8 @@
  * - Provide an API to ensure data integrity
  * - Provide an API to give best possible performance for multiple operations
  */
-final class CBModels {
+final class
+CBModels {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
@@ -370,11 +371,57 @@ final class CBModels {
 
 
     /**
+     * There can be multiple CBIDs associated with a URLPath. This is not a
+     * great situation but it is possible. This function always selects the CBID
+     * that was created first.
+     *
+     * @param string $URLPath
+     *
+     * @return CBID|null
+     */
+    static function
+    fetchCBIDByURLPath(
+        $URLPath
+    ): ?string {
+        $URLPathAsSQL = CBDB::stringToSQL(
+            $URLPath
+        );
+
+        $SQL = <<<EOT
+
+            SELECT
+            LOWER(HEX(CBModels2_CBID_column))
+
+            FROM
+            CBModels2_table
+
+            WHERE
+            CBModels2_URLPath_column = {$URLPathAsSQL}
+
+            ORDER BY
+            CBModels2_created_column
+
+            LIMIT 1
+
+        EOT;
+
+        $CBID = CBDB::SQLToValue2(
+            $SQL
+        );
+
+        return $CBID;
+    }
+    /* fetchCBIDByURLPath() */
+
+
+
+    /**
      * @param string $className
      *
      * @return [CBID]
      */
-    public static function fetchCBIDsByClassName(
+    static function
+    fetchCBIDsByClassName(
         string $className
     ): array {
         $classNameAsSQL = CBDB::stringToSQL(
@@ -1102,9 +1149,14 @@ final class CBModels {
          * If any of the models being saved are in the cache, remove them now.
          */
         if (
-            class_exists('CBModelCache', false)
+            class_exists(
+                'CBModelCache',
+                false
+                )
         ) {
-            CBModelCache::uncacheByID($IDs);
+            CBModelCache::uncacheByID(
+                $IDs
+            );
         }
 
         $initialDataByID = CBModels::selectInitialDataForUpdateByID(
@@ -1166,9 +1218,19 @@ final class CBModels {
                 $tuple->model->version =
                 $mostRecentVersion + 1;
 
+                $searchText = CBModel::toSearchText(
+                    $tuple->model
+                );
+
+                $URLPath = CBModel::toURLPath(
+                    $tuple->model
+                );
+
                 $tuple->meta = (object)[
                     'created' => $initialDataByID[$ID]->created,
                     'modified' => $modified,
+                    'searchText' => $searchText,
+                    'URLPath' => $URLPath,
                     'version' => $mostRecentVersion + 1,
                 ];
             }
@@ -1342,7 +1404,9 @@ final class CBModels {
     saveToDatabase(
         array $tuples
     ) {
-        /* 1: CBModelVersions */
+        /* CBModelVersions */
+
+
 
         $values = array_map(
             function ($tuple) {
@@ -1375,11 +1439,16 @@ final class CBModels {
             $tuples
         );
 
-        $values = implode(',', $values);
+        $values = implode(
+            ',',
+            $values
+        );
 
         $SQL = <<<EOT
 
-            INSERT INTO CBModelVersions
+            INSERT INTO
+            CBModelVersions
+
             (
                 ID,
                 version,
@@ -1387,20 +1456,39 @@ final class CBModels {
                 specAsJSON,
                 timestamp
             )
-            VALUES {$values}
+
+            VALUES
+            {$values}
 
         EOT;
 
-        Colby::query($SQL);
+        Colby::query(
+            $SQL
+        );
 
-        /* 2: CBModels */
+
+
+        /* CBModels */
+
+
 
         $values = array_map(
-            function ($tuple) {
-                $IDAsSQL = CBID::toSQL($tuple->model->ID);
-                $classNameAsSQL = CBDB::stringToSQL($tuple->model->className);
+            function (
+                $tuple
+            ) {
+                $IDAsSQL = CBID::toSQL(
+                    $tuple->model->ID
+                );
+
+                $classNameAsSQL = CBDB::stringToSQL(
+                    $tuple->model->className
+                );
+
                 $titleAsSQL = CBDB::stringToSQL(
-                    CBModel::valueToString($tuple->model, 'title')
+                    CBModel::valueToString(
+                        $tuple->model,
+                        'title'
+                    )
                 );
 
                 return (
@@ -1417,13 +1505,18 @@ final class CBModels {
             $tuples
         );
 
-        $values = implode(',', $values);
+        $values = implode(
+            ',',
+            $values
+        );
 
         /**
          * Created temporary CBModels table.
          */
 
-        CBModelsTable::create(/* temporary: */ true);
+        CBModelsTable::create(
+            /* temporary: */ true
+        );
 
         /**
          * Insert data for all models into the temporary CBModels table.
@@ -1489,6 +1582,81 @@ final class CBModels {
         Colby::query(
             'DROP TEMPORARY TABLE CBModelsTemp'
         );
+
+
+
+        /* CBModels2 */
+
+
+
+        if (
+            CBDBA::tableDoesExist(
+                'CBModels2_table'
+            )
+        ) {
+            $values = array_map(
+                function (
+                    $tuple
+                ) {
+                    $IDAsSQL = CBID::toSQL(
+                        $tuple->model->ID
+                    );
+
+                    $classNameAsSQL = CBDB::stringToSQL(
+                        $tuple->model->className
+                    );
+
+                    $searchTextAsSQL = CBDB::stringToSQL(
+                        $tuple->meta->searchText
+                    );
+
+                    $URLPathAsSQL = CBDB::stringToSQL(
+                        $tuple->meta->URLPath
+                    );
+
+                    return (
+                        "(" .
+                        "{$IDAsSQL}," .
+                        "{$classNameAsSQL}," .
+                        "{$tuple->meta->created}," .
+                        "{$tuple->meta->modified}," .
+                        "{$tuple->meta->version}," .
+                        "{$searchTextAsSQL}," .
+                        "{$URLPathAsSQL}" .
+                        ")"
+                    );
+                },
+                $tuples
+            );
+
+            $values = implode(
+                ',',
+                $values
+            );
+
+            $SQL = <<<EOT
+
+                INSERT INTO
+                CBModels2_table
+
+                VALUES
+                {$values}
+
+                ON DUPLICATE KEY UPDATE
+
+                CBModels2_className_column = CBModels2_className_column,
+                CBModels2_created_column = CBModels2_created_column,
+                CBModels2_modified_column = CBModels2_modified_column,
+                CBModels2_version_column = CBModels2_version_column,
+                CBModels2_searchText_column = CBModels2_searchText_column,
+                CBModels2_URLPath_column = CBModels2_URLPath_column
+
+            EOT;
+
+            Colby::query(
+                $SQL
+            );
+        }
     }
     /* saveToDatabase() */
 
