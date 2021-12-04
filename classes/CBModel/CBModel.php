@@ -55,7 +55,7 @@ CBModel {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.36.js',
+                'v675.45.js',
                 cbsysurl()
             ),
         ];

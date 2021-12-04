@@ -15,6 +15,23 @@ var CBModel = {
     /**
      * @param object model
      *
+     * @return CBID|undefined
+     */
+    getCBID(
+        model
+    ) {
+        return CBModel.valueAsCBID(
+            model,
+            'ID'
+        );
+    },
+    /* getCBID() */
+
+
+
+    /**
+     * @param object model
+     *
      * @return string
      */
     getClassName(
@@ -266,23 +283,6 @@ var CBModel = {
         }
     },
     /* equals() */
-
-
-
-    /**
-     * @param object model
-     *
-     * @return CBID|undefined
-     */
-    getCBID(
-        model
-    ) {
-        return CBModel.valueAsCBID(
-            model,
-            'ID'
-        );
-    },
-    /* getCBID() */
 
 
 
