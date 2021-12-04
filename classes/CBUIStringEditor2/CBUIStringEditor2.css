@@ -42,15 +42,20 @@
 
 
 
-.CBUIStringEditor2:focus-within .CBUIStringEditor2_container {
+.CBUIStringEditor2:focus-within
+.CBUIStringEditor2_container {
     border-left: 5px solid Highlight;
     border-right: 5px solid Highlight;
     padding: 3px 5px;
 }
 
+
+
 .CBUIStringEditor2 label {
     color: var(--CBTextColor2);
 }
+
+
 
 .CBUIStringEditor2 input,
 .CBUIStringEditor2 textarea {
@@ -65,6 +70,8 @@
     resize: none;
 }
 
+
+
 /*  Note 1:
 
     Setting the line height and min-height is important because of an odd edge
@@ -78,3 +85,10 @@
     it's undercertain and unlikely that height would not truncte the value.
 
  */
+
+
+
+.CBUIStringEditor2.CBUIStringEditor2_tall
+textarea {
+    min-height: 150px;
+}
