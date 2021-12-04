@@ -519,7 +519,10 @@ CBViewPage {
      *
      * @return void
      */
-    static function CBPage_render($model): void {
+    static function
+    CBPage_render(
+        $model
+    ): void {
 
         /**
          * @NOTE 2019_12_12
