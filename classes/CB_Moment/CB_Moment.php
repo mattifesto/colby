@@ -99,7 +99,8 @@ CB_Moment {
         $modelAssociations = (
             CBModelAssociations::fetchModelAssociationsByFirstCBIDAndAssociationKey(
                 $userModelCBID,
-                'CB_Moment_userMoments'
+                'CB_Moment_userMoments',
+                'descending'
             )
         );
 
@@ -249,6 +250,31 @@ CB_Moment {
 
 
     /**
+     * @param objecct $momentModel
+     *
+     * @return string
+     */
+    static function
+    CBModel_toURLPath(
+        stdClass $momentModel
+    ): string {
+        $CBID = CBModel::getCBID(
+            $momentModel
+        );
+
+        if (
+            $CBID === null
+        ) {
+            return '';
+        }
+
+        return "/moment/{$CBID}/";
+    }
+    /* CBModel_toURLPath() */
+
+
+
+    /**
      * @param obejct $momentSpec
      *
      * @return object
@@ -263,9 +289,10 @@ CB_Moment {
          * will require existing model to be rebuilt.
          *
          * 2021_11_25 Implemented CBModel_toSearchText()
+         * 2021_12_04 Implemented CBModel_toURLPath()
          */
 
-        $momentSpec->CB_Moment_modelVersionDate = '2021_11_26';
+        $momentSpec->CB_Moment_modelVersionDate = '2021_12_04';
 
         return $momentSpec;
     }
@@ -291,6 +318,10 @@ CB_Moment {
         foreach (
             $momentModels as $momentModel
         ) {
+            $momentModelCBID = CBModel::getCBID(
+                $momentModel
+            );
+
             $modelAssociation = CBModel::createSpec(
                 'CB_ModelAssociation'
             );
@@ -316,9 +347,7 @@ CB_Moment {
 
             CB_ModelAssociation::setSecondCBID(
                 $modelAssociation,
-                CBModel::getCBID(
-                    $momentModel
-                )
+                $momentModelCBID
             );
 
             array_push(
@@ -332,6 +361,80 @@ CB_Moment {
         );
     }
     /* CBModels_willSave() */
+
+
+
+    /* -- CBPage interfaces -- */
+
+
+
+    /**
+     * @param object $momentModel
+     *
+     * @return void
+     */
+    static function
+    CBPage_render(
+        stdClass $momentModel
+    ): void {
+        $viewPageSpec = CBModel::createSpec(
+            'CBViewPage'
+        );
+
+        CBViewPage::setFrameClassName(
+            $viewPageSpec,
+            'CB_StandardPageFrame'
+        );
+
+        CBViewPage::setIsPublished(
+            $viewPageSpec,
+            true
+        );
+
+        CBViewPage::setPageSettingsClassName(
+            $viewPageSpec,
+            'CB_StandardPageSettings'
+        );
+
+        CBViewPage::setTitle(
+            $viewPageSpec,
+            mb_substr(
+                CB_Moment::getText(
+                    $momentModel
+                ),
+                0,
+                240
+            )
+        );
+
+        $viewSpecs = [];
+
+        $momentPageViewSpec = CBModel::createSpec(
+            'CB_CBView_MomentPage'
+        );
+
+        CB_CBView_MomentPage::setMomentModelCBID(
+            $momentPageViewSpec,
+            CBModel::getCBID(
+                $momentModel
+            )
+        );
+
+        array_push(
+            $viewSpecs,
+            $momentPageViewSpec
+        );
+
+        CBViewPage::setViews(
+            $viewPageSpec,
+            $viewSpecs
+        );
+
+        CBPage::renderSpec(
+            $viewPageSpec
+        );
+    }
+    /* CBPage_render() */
 
 
 
