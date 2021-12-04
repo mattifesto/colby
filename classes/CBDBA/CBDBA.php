@@ -4,7 +4,8 @@
  * This class is related to CBDB and contains less frequently used
  * administrative functions.
  */
-final class CBDBA {
+final class
+CBDBA {
 
     /* -- functions -- -- -- -- -- */
 
@@ -97,6 +98,45 @@ final class CBDBA {
         }
     }
     /* dropTableKey() */
+
+
+
+    /**
+     * @param string $tableName
+     *
+     * @return bool
+     */
+    static function
+    tableDoesExist(
+        string $tableName
+    ): bool {
+        $tableNameAsSQL = CBDB::stringToSQL(
+            $tableName
+        );
+
+        $SQL = <<<EOT
+
+            SELECT
+            COUNT(*)
+
+            FROM
+            information_schema.tables
+
+            WHERE
+            table_schema = DATABASE()
+
+            AND
+            table_name = $tableNameAsSQL
+
+        EOT;
+
+        $count = CBDB::SQLToValue2(
+            $SQL
+        );
+
+        return ($count === '1');
+    }
+    /* tableDoesExist() */
 
 
 
