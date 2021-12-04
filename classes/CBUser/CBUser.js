@@ -1,31 +1,38 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBUser */
 /* global
     CBAjax,
     CBErrorHandler,
 */
 
 
+(function () {
+    "use strict";
 
-var CBUser = {
+    window.CBUser = {
+        signOut,
+        userIDToUserAdminPageURL,
+    };
+
+
 
     /**
      * @return Promise -> undefined
      */
-    signOut() {
-        let promise = CBAjax.call(
-            "CBUser",
-            "signOut"
-        ).catch(
-            function (error) {
-                CBErrorHandler.report(error);
-            }
-        );
-
-        return promise;
-    },
+    async function
+    signOut(
+    ) {
+        try {
+            await CBAjax.call(
+                "CBUser",
+                "signOut"
+            );
+        } catch (
+            error
+        ) {
+            CBErrorHandler.report(
+                error
+            );
+        }
+    }
     /* signOut() */
 
 
@@ -35,14 +42,17 @@ var CBUser = {
      *
      * @return string
      */
-    userIDToUserAdminPageURL: function (userID) {
+    function
+    userIDToUserAdminPageURL(
+        userID
+    ) {
         return (
             "/admin/?" +
             "c=CBAdminPageForUserSettings&" +
             "hash=" +
             userID
         );
-    },
+    }
     /* userIDToUserAdminPageURL() */
 
-};
+})();
