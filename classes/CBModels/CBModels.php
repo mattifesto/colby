@@ -757,6 +757,105 @@ CBModels {
 
 
     /**
+     * @returng [object]
+     *
+     *      {
+     *          CBModels_sitemapInformation_URL: string
+     *          CBModels_sitemapInformation_modified: int (timestamp)
+     *      }
+     */
+    static function
+    fetchSitemapInformaton(
+    ): array {
+        $sitemapInformation = [
+            (object)[
+                'CBModels_sitemapInformation_URL' => '/',
+                'CBModels_sitemapInformation_modified' => null,
+            ],
+        ];
+
+        $SQL = <<<EOT
+
+            SELECT
+
+            CONCAT(
+                "/",
+                URI,
+                "/"
+            )
+            AS CBModels_sitemapInformation_URL,
+
+            modified
+            AS CBModels_sitemapInformation_modified
+
+            FROM
+            ColbyPages
+
+            WHERE
+            published IS NOT NULL
+
+        EOT;
+
+        $results = CBDB::SQLToObjects(
+            $SQL
+        );
+
+        $sitemapInformation = array_merge(
+            $sitemapInformation,
+            $results
+        );
+
+        $SQL = <<<EOT
+
+            SELECT
+
+            CBModels2_URLPath_column
+            AS CBModels_sitemapInformation_URL,
+
+            CBModels2_modified_column
+            AS CBModels_sitemapInformation_modified
+
+            FROM
+            CBModels2_table
+
+            WHERE
+            CBModels2_URLPath_column != ''
+
+        EOT;
+
+        try {
+            $results = CBDB::SQLToObjects(
+                $SQL
+            );
+        } catch (
+            Throwable $throwable
+        ) {
+            if (
+                Colby::mysqli()->errno === 1146
+            ) {
+                error_log(
+                    'CBModels2_table does not yet exist. Update website.' .
+                    ' 4485aa38e03afe63dd3b934653bcc222a901e5d7'
+                );
+
+                $results = [];
+            } else {
+                throw $throwable;
+            }
+        }
+
+        $sitemapInformation = array_merge(
+            $sitemapInformation,
+            $results
+        );
+
+        return $sitemapInformation;
+    }
+    /* fetchSitemapInformaton() */
+
+
+
+    /**
      * Fetches the spec and model for use in tasks that analyze both.
      *
      * @param CBID $CBID
