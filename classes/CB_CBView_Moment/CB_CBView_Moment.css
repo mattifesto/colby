@@ -21,6 +21,14 @@
 
 
 
+.CB_CBView_Moment_root_element
+.CB_CBView_Moment_fullName_element
+{
+    font-weight: bold;
+}
+
+
+
 .CB_CBView_Moment_standard_element
 .CB_CBView_Moment_content_element {
     width: 30em;

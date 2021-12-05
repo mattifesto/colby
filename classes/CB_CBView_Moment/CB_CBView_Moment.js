@@ -1,6 +1,7 @@
 /* global
     CB_Moment,
     CBModel,
+    CBUser,
     Colby,
 */
 
@@ -102,30 +103,9 @@
 
         headerElement.className = "CB_CBView_Moment_header_element";
 
-        let timeContainerElement = document.createElement(
-            "a"
-        );
-
-        let momentModelCBID = CBModel.getCBID(
+        populateHeaderElement(
+            headerElement,
             momentModel
-        );
-
-        timeContainerElement.href = `/moment/${momentModelCBID}/`;
-
-        headerElement.append(
-            timeContainerElement
-        );
-
-        let timeElement = Colby.unixTimestampToElement(
-            CB_Moment.getCreatedTimestamp(
-                momentModel
-            ),
-            "",
-            "Colby_time_element_style_moment"
-        );
-
-        timeContainerElement.append(
-            timeElement
         );
 
         return headerElement;
@@ -172,5 +152,77 @@
         return momentView;
     }
     /* createStandardMoment() */
+
+
+
+    /**
+     * @param Element headerElement
+     * @param object momentModel
+     *
+     * @return Promise -> undefined
+     */
+    async function
+    populateHeaderElement(
+        headerElement,
+        momentModel
+    ) {
+        let publicProfile = await CBUser.fetchPublicProfileByUserModelCBID(
+            CB_Moment.getAuthorUserModelCBID(
+                momentModel
+            )
+        );
+
+        let userFullNameElement = document.createElement(
+            "span"
+        );
+
+        userFullNameElement.classList.add(
+            "CB_CBView_Moment_fullName_element"
+        );
+
+        userFullNameElement.textContent = (
+            publicProfile.CBUser_publicProfile_fullName
+        );
+
+        headerElement.append(
+            userFullNameElement
+        );
+
+        headerElement.append(
+            " @" + publicProfile.CBUser_publicProfile_username
+        );
+
+        let timeContainerElement = document.createElement(
+            "a"
+        );
+
+        let momentModelCBID = CBModel.getCBID(
+            momentModel
+        );
+
+        timeContainerElement.href = `/moment/${momentModelCBID}/`;
+
+        headerElement.append(
+            " • "
+        );
+
+        headerElement.append(
+            timeContainerElement
+        );
+
+        let timeElement = Colby.unixTimestampToElement(
+            CB_Moment.getCreatedTimestamp(
+                momentModel
+            ),
+            "",
+            "Colby_time_element_style_moment"
+        );
+
+        timeContainerElement.append(
+            timeElement
+        );
+    }
+    /* populateHeaderElement() */
+
 
 })();

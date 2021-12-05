@@ -52,6 +52,7 @@ CB_CBView_Moment {
         return [
             'CB_Moment',
             'CBModel',
+            'CBUser',
             'Colby',
         ];
     }
