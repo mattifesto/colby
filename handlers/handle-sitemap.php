@@ -2,70 +2,28 @@
 
 header('Content-type: text/xml');
 
-$frontPageSummaryModel = [
-    (object)[
-        'URI' => '/',
-    ],
-];
-
-$SQL = <<<EOT
-
-    SELECT  `keyValueData`
-    FROM    `ColbyPages`
-    WHERE   `published` IS NOT NULL
-
-EOT;
-
-$pageSummaryModels = CBDB::SQLToArray(
-    $SQL,
-    [
-        'valueIsJSON' => true
-    ]
-);
-
-$pageSummaryModels = array_merge(
-    $frontPageSummaryModel,
-    $pageSummaryModels
-);
-
 echo '<?xml version="1.0" encoding="utf-8" ?>';
+
+$sitemapInformation = CBModels::fetchSitemapInformaton();
 
 ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
    <?php
 
    array_walk(
-       $pageSummaryModels,
+       $sitemapInformation,
        function (
-           $model
+           $page
        ) {
-           if (
-               empty($model->URI)
-           ) {
-               return;
-           } else if (
-               $model->URI === '/'
-           ) {
-               $URL = cbsiteurl() . '/';
-           } else {
-               $URL = cbsiteurl() . "/{$model->URI}/";
-           }
-
            echo '<url>';
-           echo "<loc>{$URL}</loc>";
-
-           $lastmodTimestamp = (
-               empty($model->updated) ?
-               null :
-               (int)$model->updated
-           );
+           echo "<loc>{$page->CBModels_sitemapInformation_URL}</loc>";
 
            if (
-               !empty($lastmodTimestamp)
+               $page->CBModels_sitemapInformation_modified !== null
            ) {
                $lastmodW3C = gmdate(
                    DateTime::W3C,
-                   $lastmodTimestamp
+                   $page->CBModels_sitemapInformation_modified
                );
 
                echo "<lastmod>{$lastmodW3C}</lastmod>";
