@@ -42,8 +42,14 @@
     ) {
         let moment = CB_CBView_Moment.create();
 
+        let momentElement = moment.CB_CBView_Moment_getElement();
+
+        momentElement.classList.add(
+            "CB_CBView_Moment_standard_element"
+        );
+
         element.append(
-            moment.CB_CBView_Moment_getElement()
+            momentElement
         );
 
         let stringEditor = CBUIStringEditor2.create();
@@ -52,8 +58,14 @@
             "Share a Moment"
         );
 
+        let stringEditorElement = stringEditor.CBUIStringEditor2_getElement();
+
+        stringEditorElement.classList.add(
+            "CBUIStringEditor2_tall"
+        );
+
         moment.CB_CBView_Moment_append(
-            stringEditor.CBUIStringEditor2_getElement()
+            stringEditorElement
         );
 
         let button = CBUIButton.create();
@@ -68,7 +80,7 @@
             }
         );
 
-        moment.CB_CBView_Moment_append(
+        element.append(
             button.CBUIButton_getElement()
         );
 
