@@ -260,9 +260,92 @@ CBUser {
     /**
      * @return string
      */
-    static function CBAjax_changeEmailAddress_getUserGroupClassName(): string {
+    static function
+    CBAjax_changeEmailAddress_getUserGroupClassName(
+    ): string {
         return 'CBPublicUserGroup';
     }
+    /* CBAjax_changeEmailAddress_getUserGroupClassName() */
+
+
+
+    /**
+     * @param object $args
+     *
+     *      {
+     *          userModelCBID: CBID
+     *      }
+     *
+     * @return object
+     */
+    static function
+    CBAjax_fetchPublicProfileByUserModelCBID(
+        stdClass $args
+    ) {
+        $userModelCBID = CBModel::valueAsCBID(
+            $args,
+            'userModelCBID'
+        );
+
+        if (
+            $userModelCBID === null
+        ) {
+            throw new InvalidArgumentException(
+                'userModelCBID'
+            );
+        }
+
+        $userModel = CBModels::fetchModelByCBID(
+            $userModelCBID
+        );
+
+        if (
+            $userModel === null ||
+
+            CBModel::getClassName(
+                $userModel
+            ) !== 'CBUser'
+        ) {
+            throw new InvalidArgumentException(
+                'userModelCBID'
+            );
+        }
+
+        $username = '';
+
+        $usernameModelCBID = CB_Username::fetchUsernameCBIDByUserCBID(
+            $userModelCBID
+        );
+
+        if (
+            $usernameModelCBID !== null
+        ) {
+            $usernameModel = CBModels::fetchModelByCBID(
+                $usernameModelCBID
+            );
+
+            $username = CB_Username::getPrettyUsername(
+                $usernameModel
+            );
+        }
+
+        return (object)[
+            'CBUser_publicProfile_fullName' => CBUser::getName(
+                $userModel
+            ),
+            'CBUser_publicProfile_username' => $username,
+        ];
+    }
+    /* CBAjax_fetchPublicProfileByUserModelCBID() */
+
+
+
+    static function
+    CBAjax_fetchPublicProfileByUserModelCBID_getUserGroupClassName(
+    ): string {
+        return 'CBPublicUserGroup';
+    }
+    /* CBAjax_fetchPublicProfileByUserModelCBID_getUserGroupClassName() */
 
 
 
