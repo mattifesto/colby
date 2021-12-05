@@ -2,5 +2,5 @@
 
 define(
     'CBSystemVersionNumber', 
-    '675.44'
+    '675.45'
 );
