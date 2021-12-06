@@ -33,6 +33,10 @@ final class CBSitePreferences {
         'rw1600',       /*  800pt x ? */
         'rw1920',       /*  960pt x ? */
         'rw2560',       /* 1280pt x ? */
+        'rw3200',       /* 1600pt x ? */
+        'rw3840',       /* 1920pt x ? */
+        'rw4480',       /* 2240pt x ? */
+        'rw5120',       /* 2560pt x ? */
     ];
 
     private static $model = null;
