@@ -93,6 +93,12 @@ CBArtworkElement {
 
 
 
+    /**
+     * @param object $imageModel
+     * @param int $width
+     *
+     * @return string|null
+     */
     private static function
     makeSrcSetEntry(
         stdClass $imageModel,
@@ -119,6 +125,7 @@ CBArtworkElement {
 
         return "{$imageURL} {$imageSize}";
     }
+    /* makeSrcSetEntry() */
 
 
 
@@ -202,63 +209,6 @@ CBArtworkElement {
             );
         }
 
-        if (
-            $imageModel !== NULL
-        ) {
-            $URL = CBImage::asFlexpath(
-                $imageModel,
-                'rw960',
-                cbsiteurl()
-            );
-
-            $widths = [
-                320,
-                640,
-                960,
-                1280,
-                1600,
-                1920,
-                2560,
-                3200,
-                3840,
-                4480,
-                5120,
-            ];
-
-            $srcsetEntries = [];
-
-            foreach (
-                $widths as $width
-            ) {
-                $srcsetEntry = CBArtworkElement::makeSrcSetEntry(
-                    $imageModel,
-                    $width
-                );
-
-                if (
-                    $srcsetEntry === null
-                ) {
-                    break;
-                }
-
-                array_push(
-                    $srcsetEntries,
-                    $srcsetEntry
-                );
-            }
-
-            $srcsetAttribute = (
-                'srcset="' .
-                implode(
-                    ', ',
-                    $srcsetEntries
-                ) .
-                '"'
-            );
-        } else {
-            $srcsetAttribute = '';
-        }
-
         $aspectRatioWidth = (
             CBModel::valueAsNumber($args, 'aspectRatioWidth') ??
             CBModel::valueAsNumber($args, 'width') ?? /* deprecated */
@@ -281,6 +231,70 @@ CBArtworkElement {
             $aspectRatioWidth,
             $aspectRatioHeight
         );
+
+        if (
+            $imageModel !== NULL
+        ) {
+            $URL = CBImage::asFlexpath(
+                $imageModel,
+                'rw960',
+                cbsiteurl()
+            );
+
+            $potentialPixelWidths = [
+                320,
+                480,
+                640,
+                960,
+                1280,
+                1600,
+                1920,
+                2560,
+                3200,
+                3840,
+                4480,
+                5120,
+            ];
+
+            $srcsetEntries = [];
+
+            foreach (
+                $potentialPixelWidths as $potentialPixelWidth
+            ) {
+                $srcsetEntry = CBArtworkElement::makeSrcSetEntry(
+                    $imageModel,
+                    $potentialPixelWidth
+                );
+
+                if (
+                    $srcsetEntry === null
+                ) {
+                    break;
+                }
+
+                array_push(
+                    $srcsetEntries,
+                    $srcsetEntry
+                );
+
+                if (
+                    ($calculatedMaxWidth * 2) < $potentialPixelWidth
+                ) {
+                    break;
+                }
+            }
+
+            $srcsetAttribute = (
+                'srcset="' .
+                implode(
+                    ', ',
+                    $srcsetEntries
+                ) .
+                '"'
+            );
+        } else {
+            $srcsetAttribute = '';
+        }
 
         $ID = CBID::generateRandomCBID();
 
