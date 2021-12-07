@@ -402,6 +402,12 @@ CBUser {
             $targetUserCBID
         );
 
+        if (
+            $userModel === null
+        ) {
+            return false;
+        }
+
         $userModelClassName = CBModel::getClassName(
             $userModel
         );
