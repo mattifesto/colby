@@ -300,7 +300,7 @@ CB_Moment {
 
 
 
-    /* -- CBModel interfaces -- */
+    /* -- CBModels interfaces -- */
 
 
 
