@@ -14,11 +14,7 @@ CB_Username {
      *          targetUserCBID: CBID
      *      }
      *
-     * @return object
-     *
-     *      {
-     *          value: string
-     *      }
+     * @return string
      */
     static function
     CBAjax_CB_Username_ajax_fetchUsernameByUserCBID(
@@ -67,17 +63,7 @@ CB_Username {
         if (
             $usernameModelCBID === null
         ) {
-            throw new CBExceptionWithValue(
-                CBConvert::stringToCleanLine(<<<EOT
-
-                    The user with the user model CBID of "{$targetUserCBID}"
-                    does not have a username model associated with their user
-                    model.
-
-                EOT),
-                $targetUserCBID,
-                '17b8c4412d4515a7925ce7892ad1914700221fdf'
-            );
+            return '';
         }
 
         $usernameModel = CBModels::fetchModelByCBID(
