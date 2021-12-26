@@ -65,6 +65,8 @@ function cb_array_any(callable $callback, array $array) {
     return false;
 }
 
+
+
 /**
  * This function is a PHP version of Array.prototype.find().
  *
@@ -73,13 +75,26 @@ function cb_array_any(callable $callback, array $array) {
  *
  * @return mixed|null
  */
-function cb_array_find(array $array, callable $callback) {
+function
+cb_array_find(
+    array $array,
+    callable $callback
+) {
     $foundArrayElement = null;
 
-    foreach ($array as $index => $element) {
-        $result = call_user_func($callback, $element, $index, $array);
+    foreach (
+        $array as $index => $element
+    ) {
+        $result = call_user_func(
+            $callback,
+            $element,
+            $index,
+            $array
+        );
 
-        if ($result) {
+        if (
+            $result
+        ) {
             $foundArrayElement = $element;
             break;
         }
@@ -87,6 +102,46 @@ function cb_array_find(array $array, callable $callback) {
 
     return $foundArrayElement;
 }
+/* cb_array_find() */
+
+
+
+/**
+ * @TODO 2021_12_16
+ *
+ *      In PHP 8.1 the function array_is_list() will be available. When PHP 8.1
+ *      becomes the supported version this function can be deprecated.
+ */
+function
+cb_array_is_list(
+    array $theArray
+) {
+    /**
+     * An empty array is a list.
+     */
+
+    if (
+        [] === $theArray
+    ) {
+        return true;
+    }
+
+    $theArrayKeys = array_keys(
+        $theArray
+    );
+
+    $properListKeys = range(
+        0,
+        count($theArray) - 1
+    );
+
+    return (
+        $theArrayKeys === $properListKeys
+    );
+}
+/* cb_array_is_list() */
+
+
 
 /**
  * This behaves almost exactly like `array_map` except that it passes the key
@@ -94,15 +149,26 @@ function cb_array_find(array $array, callable $callback) {
  *
  * @return array
  */
-function cb_array_map_assoc(callable $callback, array $array) {
+function
+cb_array_map_assoc(
+    callable $callback,
+    array $array
+) {
     $result = [];
 
-    foreach ($array as $key => $value) {
-        $result[$key] = call_user_func($callback, $key, $value);
+    foreach (
+        $array as $key => $value
+    ) {
+        $result[$key] = call_user_func(
+            $callback,
+            $key,
+            $value
+        );
     }
 
     return $result;
 }
+/* cb_array_map_assoc() */
 
 
 
