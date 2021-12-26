@@ -14,12 +14,44 @@ CB_Moment {
      *          CB_CBView_Moment_text: string
      *      }
      *
-     *  @return void
+     *  @return object
+     *
+     *      {
+     *          CB_Moment_create_momentModel: object|null
+     *
+     *              The moment model that was created.
+     *
+     *          CB_Moment_create_userErrorMessage: string|null
+     *
+     *              If something went wrong that the user can fix this property
+     *              will be set to a user appropriate error message.
+     *      }
      */
     static function
     CBAjax_create(
         stdClass $args
-    ): void {
+    ): ?stdClass {
+        $response = (object)[
+            'CB_Moment_create_momentModel' => null,
+            'CB_Moment_create_userErrorMessage' => null,
+        ];
+
+        $currentUserModelCBID = ColbyUser::getCurrentUserCBID();
+
+        if (
+            $currentUserModelCBID === null
+        ) {
+            $response->CB_Moment_create_userErrorMessage = (
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    You are not currently logged in.
+
+                EOT)
+            );
+
+            return $response;
+        }
+
         $text = trim(
             CBModel::valueToString(
                 $args,
@@ -30,7 +62,15 @@ CB_Moment {
         if (
             $text === ''
         ) {
-            return;
+            $response->CB_Moment_create_userErrorMessage = (
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    You have provided no text for your moment.
+
+                EOT)
+            );
+
+            return $response;
         }
 
         $momentSpec = CBModel::createSpec(
@@ -40,7 +80,7 @@ CB_Moment {
 
         CB_Moment::setAuthorUserModelCBID(
             $momentSpec,
-            ColbyUser::getCurrentUserCBID()
+            $currentUserModelCBID
         );
 
         CB_Moment::setCreatedTimestamp(
@@ -54,13 +94,25 @@ CB_Moment {
         );
 
         CBDB::transaction(
-            function ()
-            use ($momentSpec) {
+            function (
+            ) use (
+                $momentSpec
+            ) {
                 CBModels::save(
                     $momentSpec
                 );
             }
         );
+
+        $response->CB_Moment_create_momentModel = (
+            CBModels::fetchModelByCBID(
+                CBModel::getCBID(
+                    $momentSpec
+                )
+            )
+        );
+
+        return $response;
     }
     /* CBAjax_create() */
 
@@ -82,10 +134,11 @@ CB_Moment {
      * @param object $args
      *
      *      {
+     *          maxModelsCount: int
      *          userModelCBID: CBID
      *      }
      *
-     * @return [CB_Moment]
+     * @return [<CB_Moment model>]
      */
     static function
     CBAjax_fetchMomentsForUserModelCBID(
@@ -96,44 +149,31 @@ CB_Moment {
             'userModelCBID'
         );
 
+        $maxModelsCount = CBModel::valueAsInt(
+            $args,
+            'maxModelsCount'
+        );
+
+        if (
+            $maxModelsCount === null ||
+            $maxModelsCount < 1 ||
+            $maxModelsCount > 50
+        ) {
+            $maxModelsCount = 10;
+        }
+
         $modelAssociations = (
             CBModelAssociations::fetchModelAssociationsByFirstCBIDAndAssociationKey(
                 $userModelCBID,
                 'CB_Moment_userMoments',
-                'descending'
+                'descending',
+                $maxModelsCount
             )
         );
 
         $momentModels = CBModelAssociations::fetchSecondModels(
-            $modelAssociations
-        );
-
-        usort(
-            $momentModels,
-            function (
-                $momentModelA,
-                $momentModelB
-            ) {
-                $sortingValueA = CB_Moment::getCreatedTimestamp(
-                    $momentModelA
-                );
-
-                $sortingValueB = CB_Moment::getCreatedTimestamp(
-                    $momentModelB
-                );
-
-                if (
-                    $sortingValueB > $sortingValueA
-                ) {
-                    return 1;
-                } else if (
-                    $sortingValueB < $sortingValueA
-                ) {
-                    return -1;
-                } else {
-                    return 0;
-                }
-            }
+            $modelAssociations,
+            true /* maintainPositions */
         );
 
         return $momentModels;
