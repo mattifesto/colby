@@ -590,6 +590,23 @@ CBUser {
 
 
     /**
+     * @return [[<name>,<value>]]
+     */
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array {
+        return [
+            [
+                'CUser_currentUserModelCBID_jsvariable',
+                ColbyUser::getCurrentUserCBID(),
+            ],
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptVariables() */
+
+
+
+    /**
      * @return [string]
      */
     static function
