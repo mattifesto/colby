@@ -22,9 +22,15 @@
 
 
 .CB_CBView_Moment_root_element
-.CB_CBView_Moment_fullName_element
-{
-    font-weight: bold;
+.CB_CBView_Moment_userLink_element {
+    color: inherit;
+}
+
+
+
+.CB_CBView_Moment_root_element
+.CB_CBView_Moment_timeContainer_element {
+    color: inherit;
 }
 
 
@@ -45,6 +51,7 @@
 
 .CB_CBView_Moment_standard_element
 .CB_CBView_Moment_header_element {
+    color: var(--CBTextColor3);
     padding: 5px 10px 0;
 }
 

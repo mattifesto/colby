@@ -129,6 +129,19 @@
             "CB_CBView_Moment_standard_element"
         );
 
+        let momentModelCBID = CBModel.getCBID(
+            momentModel
+        );
+
+        momentView.CB_CBView_Moment_getElement().addEventListener(
+            "click",
+            function () {
+                window.location.assign(
+                    `/moment/${momentModelCBID}`
+                );
+            }
+        );
+
         momentView.CB_CBView_Moment_append(
             createHeaderElement(
                 momentModel
@@ -172,6 +185,20 @@
             )
         );
 
+        let userLinkElement = document.createElement(
+            "a"
+        );
+
+        userLinkElement.className = "CB_CBView_Moment_userLink_element";
+
+        userLinkElement.href = (
+            `/user/${publicProfile.CBUser_publicProfile_username}`
+        );
+
+        headerElement.append(
+            userLinkElement
+        );
+
         let userFullNameElement = document.createElement(
             "span"
         );
@@ -184,16 +211,20 @@
             publicProfile.CBUser_publicProfile_fullName
         );
 
-        headerElement.append(
+        userLinkElement.append(
             userFullNameElement
         );
 
-        headerElement.append(
+        userLinkElement.append(
             " @" + publicProfile.CBUser_publicProfile_username
         );
 
         let timeContainerElement = document.createElement(
             "a"
+        );
+
+        timeContainerElement.className = (
+            "CB_CBView_Moment_timeContainer_element"
         );
 
         let momentModelCBID = CBModel.getCBID(
