@@ -145,4 +145,45 @@ CB_ModelAssociation {
     }
     /* setSortingValue() */
 
+
+
+    /**
+     * @param object $modelAssociation
+     *
+     * @return int
+     */
+    static function
+    getSortingValueDifferentiator(
+        stdClass $modelAssociation
+    ): int {
+        return CBModel::valueAsInt(
+            $modelAssociation,
+            'CB_ModelAssociation_sortingValueDifferentiator'
+        ) ?? 0;
+    }
+    /* getSortingValueDifferentiator() */
+
+
+
+    /**
+     * This function exists to set the sorting differentiator of an association
+     * fetched from the database. The sorting differentiator can't and won't
+     * ever be saved to the database.
+     *
+     * @param object $modelAssociation
+     * @param int $sortingValueDifferentiator
+     *
+     * @return void
+     */
+    static function
+    setSortingValueDifferentiator(
+        stdClass $modelAssociation,
+        int $sortingValueDifferentiator
+    ): void {
+        $modelAssociation->CB_ModelAssociation_sortingValueDifferentiator = (
+            $sortingValueDifferentiator
+        );
+    }
+    /* setSortingValueDifferentiator() */
+
 }
