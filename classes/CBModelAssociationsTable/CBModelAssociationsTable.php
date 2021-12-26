@@ -113,6 +113,50 @@ CBModelAssociationsTable {
                 $SQL
             );
         }
+
+        /**
+         * Upgrades added in version 675.47
+         */
+
+        if (
+            !CBDBA::tableHasColumnNamed(
+                'CBModelAssociations',
+                'CBModelAssociations_sortingValueDifferentiator_column'
+            )
+        ) {
+            $SQL = <<<EOT
+
+                ALTER TABLE
+                CBModelAssociations
+
+                ADD COLUMN
+                CBModelAssociations_sortingValueDifferentiator_column
+                BIGINT NOT NULL AUTO_INCREMENT
+                AFTER
+                CBModelAssociations_sortingValue_column,
+
+                ADD UNIQUE KEY
+                CBModelAssociations_sortingValueDifferentiator_key (
+                    CBModelAssociations_sortingValueDifferentiator_column
+                ),
+
+                DROP KEY
+                CBModelAssociations_sortedListOfModels_key,
+
+                ADD KEY
+                CBModelAssociations_sortedListOfModels_key (
+                    ID,
+                    className,
+                    CBModelAssociations_sortingValue_column,
+                    CBModelAssociations_sortingValueDifferentiator_column
+                )
+
+            EOT;
+
+            Colby::query(
+                $SQL
+            );
+        }
     }
     /* CBInstall_install() */
 

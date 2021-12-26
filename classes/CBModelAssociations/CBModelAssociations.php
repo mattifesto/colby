@@ -617,8 +617,18 @@ CBModelAssociations {
         $SQL = <<<EOT
 
             SELECT
-            CBModelAssociations_sortingValue_column as sortingValue,
-            LOWER(HEX(associatedID)) as secondCBID
+
+            CBModelAssociations_sortingValue_column
+            AS
+            sortingValue,
+
+            CBModelAssociations_sortingValueDifferentiator_column
+            AS
+            sortingValueDifferentiator,
+
+            LOWER(HEX(associatedID))
+            AS
+            secondCBID
 
             FROM
             CBModelAssociations
@@ -627,7 +637,12 @@ CBModelAssociations {
             {$whereClauses}
 
             ORDER BY
-            CBModelAssociations_sortingValue_column {$sortingOrderAsSQL}
+
+            CBModelAssociations_sortingValue_column
+            {$sortingOrderAsSQL},
+
+            CBModelAssociations_sortingValueDifferentiator_column
+            {$sortingOrderAsSQL}
 
             LIMIT
             {$maximumResultCount}
@@ -664,6 +679,11 @@ CBModelAssociations {
                     $result->sortingValue
                 );
 
+                CB_ModelAssociation::setSortingValueDifferentiator(
+                    $modelAssociation,
+                    $result->sortingValueDifferentiator
+                );
+
                 CB_ModelAssociation::setSecondCBID(
                     $modelAssociation,
                     $result->secondCBID
@@ -687,7 +707,8 @@ CBModelAssociations {
      */
     static function
     fetchSecondModels(
-        array $modelAssociations
+        array $modelAssociations,
+        bool $maintainPositions = false
     ): array {
         $secondCBIDs = array_map(
             function (
@@ -703,8 +724,9 @@ CBModelAssociations {
         );
 
         return array_values(
-            CBModels::fetchModelsByID(
-                $secondCBIDs
+            CBModels::fetchModelsByID2(
+                $secondCBIDs,
+                $maintainPositions
             )
         );
     }
