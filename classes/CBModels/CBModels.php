@@ -682,39 +682,124 @@ CBModels {
 
 
     /**
-     * @param [ID] $IDs
+     * @param [CBID] $originalCBIDs
+     *
+     *      The original CBIDs array is always replaced with the array_values()
+     *      of the array, meaning that if it is an associative array it will be
+     *      converted without being sorted into a standard array. This only
+     *      really matters if the $maintainPositions argument is true.
+     *
+     * @param bool $maintainPositions
+     *
+     *      If this argument is true then the array of models returned will have
+     *      each model at its same index in the array as its CBID in the
+     *      original CBIDs array. It's best to
      *
      * @return [model]
      */
-    static function fetchModelsByID2(array $IDs): array {
-        if (empty($IDs)) {
+    static function
+    fetchModelsByID2(
+        array $originalCBIDs,
+        bool $maintainPositions = false
+    ): array {
+        if (
+            empty($originalCBIDs)
+        ) {
             return [];
         }
 
-        $IDsAsSQL = CBID::toSQL($IDs);
+        if (
+            $maintainPositions &&
+
+            !cb_array_is_list(
+                $originalCBIDs
+            )
+        ) {
+            $CBIDs = array_values(
+                $originalCBIDs
+            );
+        } else {
+            $CBIDs = $originalCBIDs;
+        }
+
+        $CBIDsAsSQL = CBID::toSQL(
+            $CBIDs
+        );
 
         $SQL = <<<EOT
 
-            SELECT  v.modelAsJSON
+            SELECT
+            CBModelVersions.modelAsJSON
 
-            FROM    CBModels as m
+            FROM
+            CBModels
 
-            JOIN    CBModelVersions as v
-                ON  m.ID = v.ID AND
-                    m.version = v.version
+            JOIN
+            CBModelVersions
 
-            WHERE   m.ID IN ($IDsAsSQL)
+            ON
+            CBModels.ID = CBModelVersions.ID AND
+            CBModels.version = CBModelVersions.version
+
+            WHERE
+            CBModels.ID IN ($CBIDsAsSQL)
 
         EOT;
 
-        $valuesAsJSON = CBDB::SQLToArrayOfNullableStrings($SQL);
+        $valuesAsJSON = CBDB::SQLToArrayOfNullableStrings(
+            $SQL
+        );
 
-        return array_map(
-            function ($JSON) {
-                return CBConvert::JSONToValue($JSON);
+        $models = array_map(
+            function (
+                $JSON
+            ) {
+                return CBConvert::JSONToValue(
+                    $JSON
+                );
             },
             $valuesAsJSON
         );
+
+        $models = array_values(
+            $models
+        );
+
+        if (
+            $maintainPositions
+        ) {
+            $positionedModels = array_fill(
+                0,
+                count($originalCBIDs) - 1,
+                null
+            );
+
+            foreach (
+                $models as $currentModel
+            ) {
+                $modelCBID = CBModel::getCBID(
+                    $currentModel
+                );
+
+                $index = array_search(
+                    $modelCBID,
+                    $CBIDs,
+                    true
+                );
+
+                $positionedModels[$index] = $currentModel;
+            }
+
+            ksort(
+                $positionedModels
+            );
+
+            $models = array_values(
+                $positionedModels
+            );
+        }
+
+        return $models;
     }
     /* fetchModelsByID2() */
 
