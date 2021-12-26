@@ -1,8 +1,12 @@
 /* global
     CB_CBView_Moment,
+    CB_CBView_MomentCreator,
     CBAjax,
+    CBConvert,
     CBErrorHandler,
     Colby,
+
+    CUser_currentUserModelCBID_jsvariable,
 */
 
 (function () {
@@ -15,6 +19,36 @@
 
 
 
+    /* -- functions -- */
+
+
+
+    /**
+     * @return Promise -> undefined
+     */
+    async function
+    fetchMomentModels(
+        userModelCBID,
+    ) {
+        try {
+            let momentModels = await CBAjax.call(
+                "CB_Moment",
+                "fetchMomentsForUserModelCBID",
+                {
+                    userModelCBID,
+                }
+            );
+
+            return momentModels;
+        } catch (error) {
+            CBErrorHandler.report(
+                error
+            );
+        }
+    }
+
+
+
     /**
      * @return undefined
      */
@@ -22,7 +56,7 @@
     initialize(
     ) {
         let elements = Array.from(
-                document.getElementsByClassName(
+            document.getElementsByClassName(
                 "CB_CBView_UserMomentList"
             )
         );
@@ -50,15 +84,88 @@
     initializeElement(
         element
     ) {
-        try {
-            let userModelCBID = element.dataset.userCbid;
+        let userModelCBID;
 
-            let momentModels = await CBAjax.call(
-                "CB_Moment",
-                "fetchMomentsForUserModelCBID",
+        let momentContainerElement = document.createElement(
+            "div"
+        );
+
+        momentContainerElement.className = (
+            "CB_CBView_UserMomentList_momentContainer"
+        );
+
+        try {
+            let showMomentCreator = CBConvert.valueToBool(
+                element.dataset.showMomentCreator
+            );
+
+            userModelCBID = CBConvert.valueAsCBID(
+                element.dataset.userModelCBID
+            );
+
+            if (
+                userModelCBID === undefined
+            ) {
+                return;
+            }
+
+            if (
+                userModelCBID !== undefined &&
+                userModelCBID === CUser_currentUserModelCBID_jsvariable &&
+                showMomentCreator
+            ) {
+                let momentCreator = CB_CBView_MomentCreator.create();
+
                 {
-                    userModelCBID,
+                    let momentCreatorElement = (
+                        momentCreator.CB_CBView_MomentCreator_getElement()
+                    );
+
+                    if (momentCreatorElement !== undefined) {
+                        element.append(
+                            momentCreatorElement
+                        );
+
+                        momentCreator.CB_CBView_MomentCreator_setNewMomentCallback(
+                            function (
+                                newMomentModel
+                            ) {
+                                let momentView = CB_CBView_Moment.createStandardMoment(
+                                    newMomentModel
+                                );
+
+                                momentContainerElement.prepend(
+                                    momentView.CB_CBView_Moment_getElement()
+                                );
+                            }
+                        );
+                    }
                 }
+            }
+
+            element.append(
+                momentContainerElement
+            );
+
+            handleTimeout();
+        } catch(
+            error
+        ) {
+            CBErrorHandler.report(
+                error
+            );
+        }
+
+
+
+        /**
+         * @return undefined
+         */
+        async function
+        handleTimeout(
+        ) {
+            let momentModels = await fetchMomentModels(
+                userModelCBID
             );
 
             momentModels.forEach(
@@ -67,15 +174,13 @@
                 ) {
                     renderMoment(
                         momentModel,
-                        element
+                        momentContainerElement
                     );
                 }
             );
-        } catch (error) {
-            CBErrorHandler.report(
-                error
-            );
         }
+        /* handleTimeout() */
+
     }
     /* initializeElement() */
 

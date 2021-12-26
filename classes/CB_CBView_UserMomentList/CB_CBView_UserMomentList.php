@@ -16,7 +16,7 @@ CB_CBView_UserMomentList {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.45.js',
+                'v675.47.js',
                 cbsysurl()
             ),
         ];
@@ -33,8 +33,11 @@ CB_CBView_UserMomentList {
     ): array {
         return [
             'CB_CBView_Moment',
+            'CB_CBView_MomentCreator',
             'CBAjax',
+            'CBConvert',
             'CBErrorHandler',
+            'CBUser',
             'Colby',
         ];
     }
@@ -56,6 +59,13 @@ CB_CBView_UserMomentList {
         stdClass $viewSpec
     ): stdClass {
         $viewModel = (object)[];
+
+        CB_CBView_UserMomentList::setShowMomentCreator(
+            $viewModel,
+            CB_CBView_UserMomentList::getShowMomentCreator(
+                $viewSpec
+            )
+        );
 
         CB_CBView_UserMomentList::setUserModelCBID(
             $viewModel,
@@ -83,13 +93,18 @@ CB_CBView_UserMomentList {
             )
         );
 
+        $showMomentCreator = CB_CBView_UserMomentList::getShowMomentCreator(
+            $viewModel
+        );
+
         ?>
 
         <div
             class="CB_CBView_UserMomentList"
-            data-user-cbid="<?= $userModelCBID ?>"
+            data-user-model-c-b-i-d="<?= $userModelCBID ?>"
+            data-show-moment-creator="<?= json_encode($showMomentCreator) ?>"
         >
-        <div>
+        </div>
 
         <?php
     }
@@ -98,6 +113,43 @@ CB_CBView_UserMomentList {
 
 
     /* -- accessors -- */
+
+
+
+    /**
+     * @param object $viewModel
+     *
+     * @return bool
+     */
+    static function
+    getShowMomentCreator(
+        stdClass $viewModel
+    ): bool {
+        return CBModel::valueToBool(
+            $viewModel,
+            'CB_CBView_UserMomentList_showMomentCreator'
+        );
+    }
+    /* getShowMomentCreator() */
+
+
+
+    /**
+     * @param object $viewModel
+     * @param bool $showMomentCreator
+     *
+     * @return void
+     */
+    static function
+    setShowMomentCreator(
+        stdClass $viewModel,
+        bool $showMomentCreator
+    ): void {
+        $viewModel->CB_CBView_UserMomentList_showMomentCreator = (
+            $showMomentCreator
+        );
+    }
+    /* setShowMomentCreator() */
 
 
 
@@ -123,7 +175,7 @@ CB_CBView_UserMomentList {
      * @param object $viewModel
      * @param CBID|null $userModelCBID
      *
-     * @return CBID|null
+     * @return void
      */
     static function
     setUserModelCBID(
@@ -132,6 +184,6 @@ CB_CBView_UserMomentList {
     ): void {
         $viewModel->CB_CBView_UserMomentList_userModelCBID = $userModelCBID;
     }
-    /* getUserModelCBID() */
+    /* setUserModelCBID() */
 
 }
