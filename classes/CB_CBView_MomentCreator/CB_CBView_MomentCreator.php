@@ -16,7 +16,7 @@ CB_CBView_MomentCreator {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.45.js',
+                'v675.47.js',
                 cbsysurl()
             ),
         ];
@@ -49,12 +49,18 @@ CB_CBView_MomentCreator {
 
 
 
+    /**
+     * @param object $viewSpec
+     *
+     * @return object
+     */
     static function
     CBModel_build(
-        $viewSpec
+        stdClass $viewSpec
     ): stdClass {
         return (object)[];
     }
+    /* CBModel_build() */
 
 
 
@@ -62,9 +68,14 @@ CB_CBView_MomentCreator {
 
 
 
+    /**
+     * @param object $viewModel
+     *
+     * @return void
+     */
     static function
     CBView_render(
-        $viewModel
+        stdClass $viewModel
     ): void {
         ?>
 
@@ -72,5 +83,6 @@ CB_CBView_MomentCreator {
 
         <?php
     }
+    /* CBView_render() */
 
 }
