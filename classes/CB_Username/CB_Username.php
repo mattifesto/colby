@@ -99,6 +99,54 @@ CB_Username {
     /**
      * @param object $args
      *
+     *      {
+     *          prettyUsername: string
+     *      }
+     *
+     * @return CBID|null
+     */
+    static function
+    CBAjax_CB_Username_ajax_fetchUserModelCBIDByPrettyUsername(
+        stdClass $args
+    ): ?string {
+        $prettyUsername = CBModel::valueToString(
+            $args,
+            'prettyUsername'
+        );
+
+        if (
+            !CB_Username::isPrettyUsernameValid(
+                $prettyUsername
+            )
+        ) {
+            return null;
+        }
+
+        return CB_Username::fetchUserCBIDByUsernameCBID(
+            CB_Username::prettyUsernameToUsernameModelCBID(
+                $prettyUsername
+            )
+        );
+    }
+    /* CBAjax_CB_Username_ajax_fetchUserModelCBIDByPrettyUsername() */
+
+
+
+    /**
+     * @return string
+     */
+    static function
+    CBAjax_CB_Username_ajax_fetchUserModelCBIDByPrettyUsername_getUserGroupClassName(
+    ): string {
+        return 'CBPublicUserGroup';
+    }
+    /* CBAjax_CB_Username_ajax_fetchUserModelCBIDByPrettyUsername() */
+
+
+
+    /**
+     * @param object $args
+     *
      *  {
      *      CB_Username_ajax_setUsername_targetUserCBID: CBID
      *      CB_Username_ajax_setUsername_requestedUsername: string
