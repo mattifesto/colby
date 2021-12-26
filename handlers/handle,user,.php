@@ -87,33 +87,6 @@ return (function () {
         ],
     ];
 
-    if (
-        $userModelCBID === $currentUserModelCBID
-
-        &&
-
-        (
-            CBUserGroup::currentUserIsMemberOfUserGroup(
-                'CBAdministratorsUserGroup'
-            )
-
-            ||
-
-            CBSitePreferences::getEnvironment(
-                CBSitePreferences::model()
-            ) === 'CBSitePreferences_environment_development'
-        )
-    ) {
-        $viewSpec = CBModel::createSpec(
-            'CB_CBView_MomentCreator'
-        );
-
-        array_push(
-            $views,
-            $viewSpec
-        );
-    }
-
     $viewSpec = CBModel::createSpec(
         'CB_CBView_UserMomentList'
     );
@@ -121,6 +94,11 @@ return (function () {
     CB_CBView_UserMomentList::setUserModelCBID(
         $viewSpec,
         $userModelCBID
+    );
+
+    CB_CBView_UserMomentList::setShowMomentCreator(
+        $viewSpec,
+        true
     );
 
     array_push(
