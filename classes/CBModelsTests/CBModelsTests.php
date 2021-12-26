@@ -48,16 +48,25 @@ final class CBModelsTests {
     /**
      * @return [object]
      */
-    static function CBTest_getTests(): array {
+    static function
+    CBTest_getTests(
+    ): array {
         return [
             (object)[
                 'name' => 'fetchModelByID',
                 'type' => 'server',
             ],
+
             (object)[
                 'name' => 'fetchModelsByID',
                 'type' => 'server',
             ],
+
+            (object)[
+                'name' => 'fetchModelsByID2_maintainPositions',
+                'type' => 'server',
+            ],
+
             (object)[
                 'name' => 'saveSpecWithoutID',
                 'type' => 'server',
@@ -66,6 +75,7 @@ final class CBModelsTests {
             (object)[
                 'name' => 'general',
             ],
+
             (object)[
                 'name' => 'saveAfterSave',
             ],
@@ -182,7 +192,79 @@ final class CBModelsTests {
 
 
     /**
-     * CBModel::buildel() is allowed to return a model without an ID, however
+     * @return object
+     */
+    static function
+    CBTest_fetchModelsByID2_maintainPositions(
+    ): stdClass {
+        $CBIDs = [];
+
+        do {
+            $SQL = <<<EOT
+
+                SELECT
+                LOWER(HEX(ID))
+
+                FROM
+                CBModels
+
+                ORDER BY
+                RAND()
+
+                LIMIT
+                10
+
+            EOT;
+
+            $CBIDs = CBDB::SQLToArray(
+                $SQL
+            );
+
+            $models = CBModels::fetchModelsByID2(
+                $CBIDs
+            );
+
+            if (
+                !CBModelsTests::havePositionsBeenMaintained(
+                    $CBIDs,
+                    $models
+                )
+            ) {
+                break;
+            }
+        } while (true);
+
+        $models = CBModels::fetchModelsByID2(
+            $CBIDs,
+            true /* maintainPositions */
+        );
+
+        if (
+            !CBModelsTests::havePositionsBeenMaintained(
+                $CBIDs,
+                $models
+            )
+        ) {
+            return CBTest::valueIssueFailure(
+                'position check',
+                (object)[
+                    'CBIDs' => $CBIDs,
+                    'models' => $models
+                ],
+                'the model positions do not match the CBID positions'
+            );
+        }
+
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* CBTest_fetchModelsByID2_maintainPositions() */
+
+
+    /**
+     * CBModel::build() is allowed to return a model without an ID, however
      * these models cannot be saved.
      */
     static function CBTest_saveSpecWithoutID(): stdClass {
@@ -235,7 +317,9 @@ final class CBModelsTests {
      *
      * @return null
      */
-    private static function createTestEnvironment() {
+    private static function
+    createTestEnvironment(
+    ) {
         $specs = CBModels::fetchSpecsByID(
             CBModelsTests::testModelIDs,
             [
@@ -255,6 +339,50 @@ final class CBModelsTests {
 
         CBModels::save(array_values($specs));
     }
+    /* createTestEnvironment() */
+
+
+
+    /**
+     * @return bool
+     */
+    private static function
+    havePositionsBeenMaintained(
+        array $CBIDs,
+        array $models
+    ): bool {
+        $count = count(
+            $CBIDs
+        );
+
+        if (
+            count($models) !== $count
+        ) {
+            return false;
+        }
+
+        for (
+            $index = 0;
+            $index < $count;
+            $index += 1
+        ) {
+            $CBID = $CBIDs[$index];
+
+            $modelCBID = CBModel::getCBID(
+                $models[$index]
+            );
+
+            if (
+                $CBID !== $modelCBID
+            ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    /* havePositionsBeenMaintained() */
+
 }
 
 
