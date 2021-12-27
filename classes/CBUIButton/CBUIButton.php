@@ -12,7 +12,7 @@ CBUIButton {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.45.css',
+                'v675.48.css',
                 cbsysurl()
             ),
         ];
@@ -30,11 +30,25 @@ CBUIButton {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.45.js',
+                'v675.48.js',
                 cbsysurl()
             ),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
+        return [
+            'CB_UI',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
 
 }

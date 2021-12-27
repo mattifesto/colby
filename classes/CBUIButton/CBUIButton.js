@@ -11,46 +11,79 @@
      * @return object
      *
      *      {
-     *          disabled: bool (get, set)
-     *          element: Element (get)
-     *          textContent: string (get, set)
+     *          CBUIButton_addClickEventListener(<function>)
      *
-     *          addClickListener()
-     *          removeClickListener()
+     *          CBUIButton_getElement() -> Element
+     *
+     *          CBUIButton_getIsDisabled() -> bool
+     *          CBUIButton_setIsDisabled(<bool>)
+     *
+     *          CBUIButton_setTextContent(<string>)
+     *
+     *          disabled: bool (get, set) (deprecated)
+     *          element: Element (get) (deprecated)
+     *          textContent: string (get, set) (deprecated)
+     *
+     *          addClickListener() (deprecated)
+     *          removeClickListener() (deprecated)
      *      }
      */
     function
     create(
     ) {
         let clickListeners = [];
-        let element = document.createElement("div");
+
+        let element = document.createElement(
+            "div"
+        );
+
         element.className = "CBUIButton";
 
-        let buttonElement = document.createElement("div");
+        let buttonElement = document.createElement(
+            "div"
+        );
+
         buttonElement.className = "CBUIButton_button";
 
-        buttonElement.addEventListener("click", handleClick);
+        buttonElement.addEventListener(
+            "click",
+            handleClick
+        );
 
-        element.appendChild(buttonElement);
+        element.append(
+            buttonElement
+        );
 
-        let contentElement = document.createElement("div");
+        let contentElement = document.createElement(
+            "div"
+        );
+
         contentElement.className = "CBUIButton_content";
 
-        buttonElement.appendChild(contentElement);
+        buttonElement.append(
+            contentElement
+        );
 
         let api = {
 
-            CBUIButton_getElement,
-            CBUIButton_setTextContent,
-
             CBUIButton_addClickEventListener,
 
+            CBUIButton_getElement,
+
+            CBUIButton_getIsDisabled,
+            CBUIButton_setIsDisabled,
+
+            CBUIButton_setTextContent,
+
+
+
+
             /**
-             * @param function value
-             *
-             * @return undefined
+             * @deprecated use CBUIButton_addClickEventListener()
              */
             addClickListener: CBUIButton_addClickEventListener,
+
+
 
             /**
              * @param function value
@@ -59,48 +92,57 @@
              */
             removeClickListener: removeClickListener,
 
-            /**
-             * @return bool
-             */
-            get disabled() {
-                return element.classList.contains("CBUIButton_disabled");
-            },
+
 
             /**
-             * @param bool value
+             * @deprecated use CBUIButton_getIsDisabled()
              */
-            set disabled(value) {
-                if (value) {
-                    element.classList.add("CBUIButton_disabled");
-                } else {
-                    element.classList.remove("CBUIButton_disabled");
-                }
+            get disabled(
+            ) {
+                return CBUIButton_getIsDisabled();
+            },
+
+
+
+            /**
+             * @deprecated use CBUIButton_setIsDisabled()
+             */
+            set disabled(
+                newIsDisabledValue
+            ) {
+                CBUIButton_setIsDisabled(
+                    newIsDisabledValue
+                );
             },
 
 
 
             /**
              * @deprecated use CBUIButton_getElement()
-             *
-             * @return Element
              */
-            get element() {
+            get element(
+            ) {
                 return CBUIButton_getElement();
             },
+
+
 
             /**
              * @return string
              */
-            get textContent() {
+            get textContent(
+            ) {
                 return contentElement.textContent;
             },
 
+
+
             /**
              * @deprecated use CBUIButton_setTextContent()
-             *
-             * @param string value
              */
-            set textContent(value) {
+            set textContent(
+                value
+            ) {
                 CBUIButton_setTextContent(
                     value
                 );
@@ -118,6 +160,43 @@
             return element;
         }
         /* CBUIButton_getElement() */
+
+
+
+        /**
+         * @return bool
+         */
+        function
+        CBUIButton_getIsDisabled(
+        ) {
+            return element.classList.contains(
+                "CBUIButton_disabled"
+            );
+        }
+        /* CBUIButton_getIsDisabled() */
+
+
+
+        /**
+         * @param bool newIsDisabledValue
+         */
+        function
+        CBUIButton_setIsDisabled(
+            newIsDisabledValue
+        ) {
+            if (
+                newIsDisabledValue
+            ) {
+                element.classList.add(
+                    "CBUIButton_disabled"
+                );
+            } else {
+                element.classList.remove(
+                    "CBUIButton_disabled"
+                );
+            }
+        }
+        /* CBUIButton_setIsDisabled() */
 
 
 
@@ -172,17 +251,28 @@
          *
          * @return undefined
          */
-        function handleClick() {
-            if (element.classList.contains("CBUIButton_disabled")) {
+        function
+        handleClick(
+        ) {
+            if (
+                element.classList.contains(
+                    "CBUIButton_disabled"
+                )
+            ) {
                 return;
             }
 
             clickListeners.forEach(
-                function (callback) {
+                function (
+                    callback
+                ) {
                     callback.call();
                 }
             );
         }
+        /* handleClick() */
+
+
 
         /**
          * closure in create()
@@ -191,13 +281,20 @@
          *
          * @return undefined
          */
-        function removeClickListener(value) {
-            if (typeof value !== "function") {
+        function
+        removeClickListener(
+            value
+        ) {
+            if (
+                typeof value !== "function"
+            ) {
                 throw new TypeError();
             }
 
             clickListeners = clickListeners.filter(
-                function (callback) {
+                function (
+                    callback
+                ) {
                     return callback !== value;
                 }
             );
