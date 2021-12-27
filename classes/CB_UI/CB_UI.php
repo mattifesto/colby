@@ -23,7 +23,7 @@ CB_UI {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.41.css',
+                'v675.48.css',
                 cbsysurl()
             ),
         ];

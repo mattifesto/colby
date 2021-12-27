@@ -10,6 +10,9 @@ html {
 
     --CB_UI_paperColor: hsl(0, 0%, 100%);
     --CB_UI_borderColor: hsl(0, 0%, 94%);
+
+    --CB_UI_spotColor: hsl(210, 80%, 50%);
+    --CB_UI_disabledSpotColor: hsl(210, 0%, 50%);
 }
 
 
