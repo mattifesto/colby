@@ -842,8 +842,10 @@ a.CBUI_sectionItem {
 .CBUI_view_inner_text {
     line-height: 1.5;
     max-width: 100%;
-    width: 36em;
+    width: var(--CB_UI_readableWidth);
 }
+
+
 
 /* old style classes */
 

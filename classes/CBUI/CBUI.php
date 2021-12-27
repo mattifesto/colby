@@ -16,7 +16,7 @@ CBUI {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.38.css',
+                'v675.48.css',
                 cbsysurl()
             ),
         ];
@@ -46,7 +46,9 @@ CBUI {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ) {
         return [
             'CB_UI',
             'CBContentStyleSheet',
