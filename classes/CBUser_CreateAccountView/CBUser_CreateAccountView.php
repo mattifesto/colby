@@ -39,11 +39,11 @@ CBUser_CreateAccountView {
     CBHTMLOutput_requiredClassNames(
     ): array {
         return [
+            'CB_UI_StringEditor',
             'CBAjax',
             'CBUI',
             'CBUIButton',
             'CBUIPanel',
-            'CBUIStringEditor',
             'Colby',
         ];
     }

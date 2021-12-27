@@ -1,9 +1,9 @@
 /* global
+    CB_UI_StringEditor,
     CBAjax,
     CBUI,
     CBUIButton,
     CBUIPanel,
-    CBUIStringEditor,
     Colby,
 */
 
@@ -31,8 +31,15 @@
             "CBUser_CreateAccountView"
         );
 
-        for (let index = 0; index < viewElements.length; index += 1) {
-            let viewElement = viewElements.item(index);
+        for (
+            let index = 0;
+            index < viewElements.length;
+            index += 1
+        ) {
+            let viewElement = viewElements.item(
+                index
+            );
+
             let destinationURL = viewElement.dataset.destinationURL;
 
             initializeViewElement(
@@ -91,13 +98,13 @@
         let cbmessageElement = CBUI.cbmessageToElement(`
 
             --- CBUI_title1
-            Create New Account
+            Create A New Account
             ---
 
             After you submit this form the website will send you an email
-            containing a one time password to confirm your access to this email
-            account. After you enter the one time password your account will be
-            created and you will be signed in.
+            containing a one time password to confirm that you have access to
+            the email account. After you enter the one time password your
+            account will be created and you will be signed in.
 
         `);
 
@@ -107,54 +114,57 @@
 
         /* form */
 
-        elements = CBUI.createElementTree(
-            "CBUI_sectionContainer",
-            "CBUI_section"
+        let emailAddressEditor = CB_UI_StringEditor.create();
+
+        emailAddressEditor.CB_UI_StringEditor_setTitle(
+            "Email Address"
         );
 
-        rootElement.appendChild(
-            elements[0]
+        rootElement.append(
+            emailAddressEditor.CB_UI_StringEditor_getElement()
         );
 
-        let sectionElement = elements[1];
 
-        let emailAddressEditor = CBUIStringEditor.create();
-        emailAddressEditor.title = "Email Address";
+        let fullNameEditor = CB_UI_StringEditor.create();
 
-        sectionElement.appendChild(
-            emailAddressEditor.element
+        fullNameEditor.CB_UI_StringEditor_setTitle(
+            "Full Name"
         );
 
-        let fullNameEditor = CBUIStringEditor.create();
-        fullNameEditor.title = "Full Name";
-
-        sectionElement.appendChild(
-            fullNameEditor.element
+        rootElement.append(
+            fullNameEditor.CB_UI_StringEditor_getElement()
         );
 
-        let password1Editor = CBUIStringEditor.create(
-            {
-                inputType: "password",
-            }
+
+        let password1Editor = CB_UI_StringEditor.create();
+
+        password1Editor.CB_UI_StringEditor_setInputType(
+            "CB_UI_StringEditor_inputType_password"
         );
 
-        password1Editor.title = "Password";
-
-        sectionElement.appendChild(
-            password1Editor.element
+        password1Editor.CB_UI_StringEditor_setTitle(
+            "Password"
         );
 
-        let password2Editor = CBUIStringEditor.create(
-            {
-                inputType: "password",
-            }
+        rootElement.append(
+            password1Editor.CB_UI_StringEditor_getElement()
         );
 
-        password2Editor.title = "Re-enter Password";
 
-        sectionElement.appendChild(
-            password2Editor.element
+        let password2Editor = CB_UI_StringEditor.create();
+
+        password2Editor.CB_UI_StringEditor_setInputType(
+            "CB_UI_StringEditor_inputType_password"
         );
+
+        password2Editor.CB_UI_StringEditor_setTitle(
+            "Re-enter Password"
+        );
+
+        rootElement.append(
+            password2Editor.CB_UI_StringEditor_getElement()
+        );
+
 
         let signUpButton = CBUIButton.create();
 
@@ -174,14 +184,30 @@
                         true
                     );
 
+                    let emailAddress = (
+                        emailAddressEditor.CB_UI_StringEditor_getValue()
+                    );
+
+                    let fullName = (
+                        fullNameEditor.CB_UI_StringEditor_getValue()
+                    );
+
+                    let password1 = (
+                        password1Editor.CB_UI_StringEditor_getValue()
+                    );
+
+                    let password2 = (
+                        password2Editor.CB_UI_StringEditor_getValue()
+                    );
+
                     let response = await CBAjax.call(
                         "CBUser_PotentialUser",
                         "create",
                         {
-                            emailAddress: emailAddressEditor.value,
-                            fullName: fullNameEditor.value,
-                            password1: password1Editor.value,
-                            password2: password2Editor.value,
+                            emailAddress,
+                            fullName,
+                            password1,
+                            password2,
                         }
                     );
 
@@ -259,60 +285,76 @@
 
         `);
 
-        rootElement.appendChild(
+        rootElement.append(
             cbmessageElement
         );
 
-        elements = CBUI.createElementTree(
-            "CBUI_sectionContainer",
-            "CBUI_section"
+        let oneTimePasswordEditor = CB_UI_StringEditor.create();
+
+        oneTimePasswordEditor.CB_UI_StringEditor_setTitle(
+            "One Time Password"
         );
 
-        rootElement.appendChild(
-            elements[0]
+        rootElement.append(
+            oneTimePasswordEditor.CB_UI_StringEditor_getElement()
         );
 
-        let sectionElement = elements[1];
+        let confirmButton = CBUIButton.create();
 
-        let oneTimePasswordEditor = CBUIStringEditor.create();
-        oneTimePasswordEditor.title = "One Time Password";
-
-        sectionElement.appendChild(
-            oneTimePasswordEditor.element
+        confirmButton.CBUIButton_setTextContent(
+            "Confirm"
         );
 
-        elements = CBUI.createElementTree(
-            "CBUI_container1",
-            "CBUI_button1"
+        rootElement.append(
+            confirmButton.CBUIButton_getElement()
         );
 
-        rootElement.appendChild(
-            elements[0]
+        confirmButton.CBUIButton_addClickEventListener(
+            async function () {
+                try {
+                    confirmButton.CBUIButton_setIsDisabled(
+                        true
+                    );
+
+                    let oneTimePassword = (
+                        oneTimePasswordEditor.CB_UI_StringEditor_getValue()
+                    );
+
+                    let response = await CBAjax.call(
+                        "CBUser_PotentialUser",
+                        "verify",
+                        {
+                            potentialUserCBID,
+                            oneTimePassword,
+                        }
+                    );
+
+                    if (
+                        response.succeeded === true
+                    ) {
+                        resolve();
+                    } else {
+                        await CBUIPanel.displayCBMessage(
+                            response.cbmessage
+                        );
+
+                        confirmButton.CBUIButton_setIsDisabled(
+                            false
+                        );
+                    }
+                } catch (
+                    error
+                ) {
+                    CBUIPanel.displayError2(
+                        error
+                    );
+
+                    confirmButton.CBUIButton_setIsDisabled(
+                        false
+                    );
+                }
+            }
         );
-
-        let buttonElement = elements[1];
-
-        buttonElement.textContent = "Confirm";
-
-        buttonElement.addEventListener(
-            "click",
-            closure_tryToVerifyPotentialUserViaAjax
-        );
-
-
-
-        /**
-         * @return undefined
-         */
-        function closure_tryToVerifyPotentialUserViaAjax() {
-            tryToVerifyPotentialUserViaAjax(
-                potentialUserCBID,
-                oneTimePasswordEditor.value,
-                resolve
-            );
-        }
-        /* closure_tryToVerifyPotentialUserViaAjax() */
-
     }
     /* createVerificationForm() */
 
@@ -349,40 +391,6 @@
         }
     }
     /* initializeViewElement() */
-
-
-
-    /**
-     * @param CBID potentialUserCBID
-     * @param string oneTimePassword
-     * @param function resolve
-     *
-     * @return Promise -> undefined
-     */
-    async function
-    tryToVerifyPotentialUserViaAjax(
-        potentialUserCBID,
-        oneTimePassword,
-        resolve
-    ) {
-        let response = await CBAjax.call(
-            "CBUser_PotentialUser",
-            "verify",
-            {
-                potentialUserCBID,
-                oneTimePassword,
-            }
-        );
-
-        if (response.succeeded === true) {
-            resolve();
-        } else {
-            return CBUIPanel.displayCBMessage(
-                response.cbmessage
-            );
-        }
-    }
-    /* tryToVerifyPotentialUserViaAjax() */
 
 
 
