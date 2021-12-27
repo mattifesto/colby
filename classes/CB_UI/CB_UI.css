@@ -13,6 +13,8 @@ html {
 
     --CB_UI_spotColor: hsl(210, 80%, 50%);
     --CB_UI_disabledSpotColor: hsl(210, 0%, 50%);
+
+    --CB_UI_readableWidth: 500px;
 }
 
 
