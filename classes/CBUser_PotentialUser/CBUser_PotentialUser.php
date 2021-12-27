@@ -1,6 +1,7 @@
 <?php
 
-final class CBUser_PotentialUser {
+final class
+CBUser_PotentialUser {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
@@ -29,10 +30,13 @@ final class CBUser_PotentialUser {
      *              This will only be used if succeeded is false.
      *      }
      */
-    static function CBAjax_create(
+    static function
+    CBAjax_create(
         stdClass $args
     ): stdClass {
-        if (ColbyUser::getCurrentUserCBID() !== null) {
+        if (
+            ColbyUser::getCurrentUserCBID() !== null
+        ) {
             return (object)[
                 'cbmessage' => 'You are already signed in.',
             ];
