@@ -1,9 +1,7 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 8 */
 /* global
     CBAjax,
     CBUI,
+    CBUIButton,
     CBUIPanel,
     CBUIStringEditor,
     Colby,
@@ -11,8 +9,11 @@
 
 
 (function () {
+    "use strict";
 
-    Colby.afterDOMContentLoaded(afterDOMContentLoaded);
+    Colby.afterDOMContentLoaded(
+        afterDOMContentLoaded
+    );
 
 
 
@@ -23,7 +24,9 @@
     /**
      * @return undefined
      */
-    function afterDOMContentLoaded() {
+    function
+    afterDOMContentLoaded(
+    ) {
         let viewElements = document.getElementsByClassName(
             "CBUser_CreateAccountView"
         );
@@ -49,7 +52,8 @@
      *
      *      This promise returns the CBID of a CBUser_PotentialUser model.
      */
-    function createPotentialUserModel(
+    function
+    createPotentialUserModel(
         viewElement
     ) {
         return new Promise(
@@ -71,7 +75,8 @@
      *
      * @return undefined
      */
-    function createSignUpForm(
+    function
+    createSignUpForm(
         viewElement,
         resolve
     ) {
@@ -151,40 +156,67 @@
             password2Editor.element
         );
 
-        elements = CBUI.createElementTree(
-            "CBUI_container1",
-            "CBUI_button1"
+        let signUpButton = CBUIButton.create();
+
+        signUpButton.CBUIButton_setTextContent(
+            "Sign Up"
         );
 
-        rootElement.appendChild(
-            elements[0]
+        rootElement.append(
+            signUpButton.CBUIButton_getElement()
         );
 
-        let buttonElement = elements[1];
+        signUpButton.CBUIButton_addClickEventListener(
+            async function (
+            ) {
+                try {
+                    signUpButton.CBUIButton_setIsDisabled(
+                        true
+                    );
 
-        buttonElement.textContent = "Sign Up";
+                    let response = await CBAjax.call(
+                        "CBUser_PotentialUser",
+                        "create",
+                        {
+                            emailAddress: emailAddressEditor.value,
+                            fullName: fullNameEditor.value,
+                            password1: password1Editor.value,
+                            password2: password2Editor.value,
+                        }
+                    );
 
-        buttonElement.addEventListener(
-            "click",
-            closure_tryToCreatePotentialUserViaAjax
+                    if (
+                        response.succeeded === true
+                    ) {
+                        resolve(
+                            response.potentialUserCBID
+                        );
+
+                        /* don't re-enabled the sign up button */
+
+                        return;
+                    } else {
+                        await CBUIPanel.displayCBMessage(
+                            response.cbmessage
+                        );
+
+                        signUpButton.CBUIButton_setIsDisabled(
+                            false
+                        );
+                    }
+                } catch (
+                    error
+                ) {
+                    CBUIPanel.displayError2(
+                        error
+                    );
+
+                    signUpButton.CBUIButton_setIsDisabled(
+                        false
+                    );
+                }
+            }
         );
-
-
-
-        /**
-         * @return undefined
-         */
-        function closure_tryToCreatePotentialUserViaAjax() {
-            tryToCreatePotentialUserViaAjax(
-                emailAddressEditor.value,
-                fullNameEditor.value,
-                password1Editor.value,
-                password2Editor.value,
-                resolve
-            );
-        }
-        /* closure_tryToCreatePotentialUserViaAjax() */
-
     }
     /* createSignUpForm() */
 
@@ -197,7 +229,8 @@
      *
      * @return undefined
      */
-    function createVerificationForm(
+    function
+    createVerificationForm(
         viewElement,
         potentialUserCBID,
         resolve
@@ -291,7 +324,8 @@
      *
      * @return Promise -> undefined
      */
-    async function initializeViewElement(
+    async function
+    initializeViewElement(
         viewElement,
         destinationURL
     ) {
@@ -319,57 +353,14 @@
 
 
     /**
-     * @param string emailAddress
-     * @param string fullName
-     * @param string password1
-     * @param string password2
-     * @param function resolve
-     *
-     *      When a CBUser_PotentialUser model is created, this function will be
-     *      called with the potentialUserCBID as the argument.
-     *
-     * @return Promise -> CBID
-     */
-    async function tryToCreatePotentialUserViaAjax(
-        emailAddress,
-        fullName,
-        password1,
-        password2,
-        resolve
-    ) {
-        let response = await CBAjax.call(
-            "CBUser_PotentialUser",
-            "create",
-            {
-                emailAddress,
-                fullName,
-                password1,
-                password2,
-            }
-        );
-
-        if (response.succeeded === true) {
-            resolve(
-                response.potentialUserCBID
-            );
-        } else {
-            return CBUIPanel.displayCBMessage(
-                response.cbmessage
-            );
-        }
-    }
-    /* tryToCreatePotentialUserViaAjax() */
-
-
-
-    /**
      * @param CBID potentialUserCBID
      * @param string oneTimePassword
      * @param function resolve
      *
      * @return Promise -> undefined
      */
-    async function tryToVerifyPotentialUserViaAjax(
+    async function
+    tryToVerifyPotentialUserViaAjax(
         potentialUserCBID,
         oneTimePassword,
         resolve
@@ -401,7 +392,8 @@
      *
      * @return Promise -> undefined
      */
-    function verifyPotentialUser(
+    function
+    verifyPotentialUser(
         viewElement,
         potentialUserCBID
     ) {

@@ -7,7 +7,8 @@
  * handler. This view should only be used on page rendered by the create account
  * handler, not any other pages.
  */
-final class CBUser_CreateAccountView {
+final class
+CBUser_CreateAccountView {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -16,21 +17,31 @@ final class CBUser_CreateAccountView {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v660.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.48.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'CBAjax',
             'CBUI',
+            'CBUIButton',
             'CBUIPanel',
             'CBUIStringEditor',
             'Colby',
