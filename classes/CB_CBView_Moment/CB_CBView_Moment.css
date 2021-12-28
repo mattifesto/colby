@@ -15,6 +15,7 @@
     border-color: var(--CB_UI_borderColor);
     border-radius: 10px;
     border-style: solid;
+    box-sizing: border-box;
     max-width: 100%;
     overflow: hidden;
 }
@@ -37,7 +38,7 @@
 
 .CB_CBView_Moment_standard_element
 .CB_CBView_Moment_content_element {
-    width: 30em;
+    width: var(--CB_UI_readableWidth);
 }
 
 
