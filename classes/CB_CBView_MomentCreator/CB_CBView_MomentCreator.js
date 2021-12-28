@@ -1,9 +1,8 @@
 /* global
-    CB_CBView_Moment,
+    CB_UI_StringEditor,
     CBAjax,
     CBErrorHandler,
     CBUIButton,
-    CBUIStringEditor2,
     Colby,
 */
 
@@ -53,33 +52,21 @@
             "div"
         );
 
-        element.className = "CB_CBView_MomentCreator2";
+        element.className = "CB_CBView_MomentCreator";
 
-        let moment = CB_CBView_Moment.create();
+        let stringEditor = CB_UI_StringEditor.create();
 
-        let momentElement = moment.CB_CBView_Moment_getElement();
-
-        momentElement.classList.add(
-            "CB_CBView_Moment_standard_element"
-        );
-
-        element.append(
-            momentElement
-        );
-
-        let stringEditor = CBUIStringEditor2.create();
-
-        stringEditor.CBUIStringEditor2_setPlaceholderText(
+        stringEditor.CB_UI_StringEditor_setPlaceholderText(
             "Share a Moment"
         );
 
-        let stringEditorElement = stringEditor.CBUIStringEditor2_getElement();
+        let stringEditorElement = stringEditor.CB_UI_StringEditor_getElement();
 
         stringEditorElement.classList.add(
-            "CBUIStringEditor2_tall"
+            "CB_UI_StringEditor_tall"
         );
 
-        moment.CB_CBView_Moment_append(
+        element.append(
             stringEditorElement
         );
 
@@ -108,12 +95,16 @@
         createMoment(
         ) {
             try {
+                button.CBUIButton_setIsDisabled(
+                    true
+                );
+
                 let response = await CBAjax.call(
                     "CB_Moment",
                     "create",
                     {
                         CB_Moment_create_text: (
-                            stringEditor.CBUIStringEditor2_getValue()
+                            stringEditor.CB_UI_StringEditor_getValue()
                         ),
                     }
                 );
@@ -128,7 +119,9 @@
                     return;
                 }
 
-                stringEditor.CBUIStringEditor2_setValue("");
+                stringEditor.CB_UI_StringEditor_setValue(
+                    ""
+                );
 
                 if (
                     newMomentCallback !== undefined
@@ -137,9 +130,15 @@
                         response.CB_Moment_create_momentModel
                     );
                 }
-            } catch (error) {
+            } catch (
+                error
+            ) {
                 CBErrorHandler.report(
                     error
+                );
+            } finally {
+                button.CBUIButton_setIsDisabled(
+                    false
                 );
             }
         }

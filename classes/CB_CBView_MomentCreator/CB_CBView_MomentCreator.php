@@ -16,7 +16,7 @@ CB_CBView_MomentCreator {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.47.js',
+                'v675.48.js',
                 cbsysurl()
             ),
         ];
@@ -32,12 +32,11 @@ CB_CBView_MomentCreator {
     CBHTMLOutput_requiredClassNames(
     ): array {
         return [
-            'CB_CBView_Moment',
             'CB_UI',
+            'CB_UI_StringEditor',
             'CBAjax',
             'CBErrorHandler',
             'CBUIButton',
-            'CBUIStringEditor2',
             'Colby',
         ];
     }
