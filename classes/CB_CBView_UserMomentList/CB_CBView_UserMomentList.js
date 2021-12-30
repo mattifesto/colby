@@ -24,32 +24,6 @@
 
 
     /**
-     * @return Promise -> undefined
-     */
-    async function
-    fetchMomentModels(
-        userModelCBID,
-    ) {
-        try {
-            let momentModels = await CBAjax.call(
-                "CB_Moment",
-                "fetchMomentsForUserModelCBID",
-                {
-                    userModelCBID,
-                }
-            );
-
-            return momentModels;
-        } catch (error) {
-            CBErrorHandler.report(
-                error
-            );
-        }
-    }
-
-
-
-    /**
      * @return undefined
      */
     function
@@ -85,14 +59,7 @@
         element
     ) {
         let userModelCBID;
-
-        let momentContainerElement = document.createElement(
-            "div"
-        );
-
-        momentContainerElement.className = (
-            "CB_CBView_UserMomentList_momentContainer"
-        );
+        let momentContainerElement;
 
         try {
             let showMomentCreator = CBConvert.valueToBool(
@@ -116,38 +83,43 @@
             ) {
                 let momentCreator = CB_CBView_MomentCreator.create();
 
-                {
-                    let momentCreatorElement = (
-                        momentCreator.CB_CBView_MomentCreator_getElement()
+                let momentCreatorElement = (
+                    momentCreator.CB_CBView_MomentCreator_getElement()
+                );
+
+                if (
+                    momentCreatorElement !== undefined
+                ) {
+                    element.append(
+                        momentCreatorElement
                     );
 
-                    if (momentCreatorElement !== undefined) {
-                        element.append(
-                            momentCreatorElement
-                        );
-
-                        momentCreator.CB_CBView_MomentCreator_setNewMomentCallback(
-                            function (
+                    momentCreator.CB_CBView_MomentCreator_setNewMomentCallback(
+                        function (
+                            newMomentModel
+                        ) {
+                            renderNewMoment(
                                 newMomentModel
-                            ) {
-                                let momentView = CB_CBView_Moment.createStandardMoment(
-                                    newMomentModel
-                                );
-
-                                momentContainerElement.prepend(
-                                    momentView.CB_CBView_Moment_getElement()
-                                );
-                            }
-                        );
-                    }
+                            );
+                        }
+                    );
                 }
             }
+
+            momentContainerElement = document.createElement(
+                "div"
+            );
+
+            momentContainerElement.className = (
+                "CB_CBView_UserMomentList_momentContainer"
+            );
+
 
             element.append(
                 momentContainerElement
             );
 
-            handleTimeout();
+            renderBatchOfOlderMoments();
         } catch(
             error
         ) {
@@ -159,52 +131,81 @@
 
 
         /**
-         * @return undefined
+         * @return Promise -> undefined
          */
         async function
-        handleTimeout(
+        renderBatchOfOlderMoments(
         ) {
-            let momentModels = await fetchMomentModels(
-                userModelCBID
-            );
+            try {
+                let momentModels = await CBAjax.call(
+                    "CB_Moment",
+                    "fetchMomentsForUserModelCBID",
+                    {
+                        userModelCBID,
+                    }
+                );
 
-            momentModels.forEach(
-                function (
-                    momentModel
-                ) {
-                    renderMoment(
-                        momentModel,
-                        momentContainerElement
-                    );
-                }
-            );
+                momentModels.forEach(
+                    function (
+                        momentModel
+                    ) {
+                        renderOlderMoment(
+                            momentModel,
+                        );
+                    }
+                );
+            } catch (error) {
+                CBErrorHandler.report(
+                    error
+                );
+            }
         }
         /* handleTimeout() */
 
+
+
+        /**
+         * @param object newMomentModel
+         *
+         * @return undefined
+         */
+        function
+        renderNewMoment(
+            newMomentModel
+        ) {
+            let momentView = CB_CBView_Moment.createStandardMoment(
+                newMomentModel
+            );
+
+            momentContainerElement.prepend(
+                momentView.CB_CBView_Moment_getElement()
+            );
+        }
+        /* renderNewMoment() */
+
+
+
+        /**
+         * @param object momentModel
+         *
+         * @return undefined
+         */
+        function
+        renderOlderMoment(
+            momentModel,
+        ) {
+            let momentView = CB_CBView_Moment.createStandardMoment(
+                momentModel
+            );
+
+            momentContainerElement.append(
+                momentView.CB_CBView_Moment_getElement()
+            );
+        }
+        /* renderOlderMoment() */
+
+        return;
     }
     /* initializeElement() */
-
-
-
-    /**
-     * @param object momentModel
-     * @param Element parentElement
-     *
-     * @return undefined
-     */
-    function
-    renderMoment(
-        momentModel,
-        parentElement
-    ) {
-        let momentView = CB_CBView_Moment.createStandardMoment(
-            momentModel
-        );
-
-        parentElement.append(
-            momentView.CB_CBView_Moment_getElement()
-        );
-    }
-    /* renderMoment() */
 
 })();

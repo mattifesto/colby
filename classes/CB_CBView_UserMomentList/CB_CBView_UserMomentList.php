@@ -16,7 +16,7 @@ CB_CBView_UserMomentList {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.47.js',
+                'v675.48.js',
                 cbsysurl()
             ),
         ];
