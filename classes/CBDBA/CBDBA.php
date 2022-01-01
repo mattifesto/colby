@@ -17,7 +17,8 @@ CBDBA {
      *
      * @return void
      */
-    static function dropTableColumn(
+    static function
+    dropTableColumn(
         string $tableName,
         string $columnName
     ): void {
@@ -62,7 +63,8 @@ CBDBA {
      *
      * @return void
      */
-    static function dropTableKey(
+    static function
+    dropTableKey(
         string $tableName,
         string $keyName
     ): void {
@@ -146,7 +148,11 @@ CBDBA {
      *
      * @return bool
      */
-    static function tableHasColumnNamed($tableName, $columnName) {
+    static function
+    tableHasColumnNamed(
+        string $tableName,
+        string $columnName
+    ): bool {
         $tableNameAsSQL = CBDB::stringToSQL($tableName);
         $columnNameAsSQL = CBDB::stringToSQL($columnName);
 
@@ -162,8 +168,54 @@ CBDBA {
 
         EOT;
 
-        return boolval(CBDB::SQLToValue($SQL));
+        return boolval(
+            CBDB::SQLToValue($SQL)
+        );
     }
     /* tableHasColumnNamed() */
+
+
+
+    /**
+     * @param string $tableName
+     * @param string $indexName
+     *
+     * @return bool
+     */
+    static function
+    tableHasIndexNamed(
+        string $tableName,
+        string $indexName
+    ): bool {
+        $tableNameAsSQL = CBDB::stringToSQL(
+            $tableName
+        );
+
+        $indexNameAsSQL = CBDB::stringToSQL(
+            $indexName
+        );
+
+        $SQL = <<<EOT
+
+            SELECT
+            COUNT(*)
+
+            FROM
+            INFORMATION_SCHEMA.STATISTICS
+
+            WHERE
+            TABLE_SCHEMA = DATABASE() AND
+            TABLE_NAME = {$tableNameAsSQL} AND
+            INDEX_NAME = {$indexNameAsSQL}
+
+        EOT;
+
+        $count = intval(
+            CBDB::SQLToValue($SQL)
+        );
+
+        return $count > 0;
+    }
+    /* tableHasIndexNamed() */
 
 }
