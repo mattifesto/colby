@@ -17,11 +17,21 @@ CBModelAssociationsTable {
      *
      *          associatedID --> CBModelAssociations_secondCBID_column
      *
-     * @NOTE 2021_11_25
+     * @NOTE 2021_11_25 updated 2021_12_31
      *
-     *      The CBModelAssociations_sortingValue_column was added to enable this
-     *      table to hold sorted lists of models, the first of which was a list
-     *      of moments sorted by creation timestamp.
+     *      The columns named CBModelAssociations_sortingValue_2_column and
+     *      CBModelAssociations_sortingValueDifferentiator_2_column have been
+     *      added to enable this table to hold sorted lists of models, the first
+     *      of which was a list of moments sorted the moment time.
+     *
+     *      These two columns are designed to be able to hold with unique
+     *      timestamps:
+     *
+     *      The CBModelAssociations_sortingValue_2_column can hold the Unix
+     *      timestamp portion of a unique timestamp.
+     *
+     *      The CBModelAssociations_sortingValueDifferentiator_2_column can hold
+     *      the fractional sub-second portion of a unique timestamp.
      *
      * @return void
      */
@@ -34,16 +44,19 @@ CBModelAssociationsTable {
             CBModelAssociations (
 
                 ID
-                    BINARY(20) NOT NULL,
+                BINARY(20) NOT NULL,
 
                 className
-                    VARCHAR(80) NOT NULL,
+                VARCHAR(80) NOT NULL,
 
-                CBModelAssociations_sortingValue_column
-                    BIGINT DEFAULT 0,
+                CBModelAssociations_sortingValue_2_column
+                BIGINT NOT NULL DEFAULT 0,
+
+                CBModelAssociations_sortingValueDifferentiator_2_column
+                BIGINT NOT NULL DEFAULT 0,
 
                 associatedID
-                    BINARY(20) NOT NULL,
+                BINARY(20) NOT NULL,
 
 
 
@@ -54,18 +67,22 @@ CBModelAssociationsTable {
                     associatedID
                 ),
 
-                KEY CBModelAssociations_sortedListOfModels_key (
+                INDEX
+                CBModelAssociations_sortedListOfModels_2_index (
                     ID,
                     className,
-                    CBModelAssociations_sortingValue_column
+                    CBModelAssociations_sortingValue_2_column,
+                    CBModelAssociations_sortingValueDifferentiator_2_column
                 ),
 
-                KEY className_associatedID (
+                INDEX
+                className_associatedID (
                     className,
                     associatedID
                 ),
 
-                KEY associatedID (
+                INDEX
+                associatedID (
                     associatedID
                 )
             )
@@ -79,12 +96,79 @@ CBModelAssociationsTable {
             $SQL
         );
 
-        /**
-         * Upgrades added in version 675.45
-         */
 
+
+        /**
+         * Version 675.48
+         *
+         * The index named CBModelAssociations_sortedListOfModels_key was
+         * originally added with one definition and later that definition was
+         * modified and the index was renamed to
+         * CBModelAssociations_sortedListOfModels_2_index. If an index with the
+         * orignal name exists it should be removed.
+         */
         if (
-            !CBDBA::tableHasColumnNamed(
+            CBDBA::tableHasIndexNamed(
+                'CBModelAssociations',
+                'CBModelAssociations_sortedListOfModels_key'
+            )
+        ) {
+            $SQL = <<<EOT
+
+                ALTER TABLE
+                CBModelAssociations
+
+                DROP INDEX
+                CBModelAssociations_sortedListOfModels_key
+
+            EOT;
+
+            Colby::query(
+                $SQL
+            );
+        }
+
+
+
+        /**
+         * Version 675.48
+         *
+         * The index named CBModelAssociations_sortingValueDifferentiator_key
+         * was originally added but its logic was flawed and if it exists it
+         * needs to be removed.
+         */
+        if (
+            CBDBA::tableHasIndexNamed(
+                'CBModelAssociations',
+                'CBModelAssociations_sortingValueDifferentiator_key'
+            )
+        ) {
+            $SQL = <<<EOT
+
+                ALTER TABLE
+                CBModelAssociations
+
+                DROP INDEX
+                CBModelAssociations_sortingValueDifferentiator_key
+
+            EOT;
+
+            Colby::query(
+                $SQL
+            );
+        }
+
+
+
+        /**
+         * Version 675.48
+         *
+         * The column named CBModelAssociations_sortingValue_column was added
+         * but its definition has changed and it has been renamed to
+         * CBModelAssociations_sortingValue_2_column.
+         */
+        if (
+            CBDBA::tableHasColumnNamed(
                 'CBModelAssociations',
                 'CBModelAssociations_sortingValue_column'
             )
@@ -94,18 +178,10 @@ CBModelAssociationsTable {
                 ALTER TABLE
                 CBModelAssociations
 
-                ADD COLUMN
+                CHANGE COLUMN
                 CBModelAssociations_sortingValue_column
-                BIGINT DEFAULT 0
-                AFTER
-                className,
-
-                ADD KEY
-                CBModelAssociations_sortedListOfModels_key (
-                    ID,
-                    className,
-                    CBModelAssociations_sortingValue_column
-                )
+                CBModelAssociations_sortingValue_2_column
+                BIGINT NOT NULL DEFAULT 0
 
             EOT;
 
@@ -114,12 +190,49 @@ CBModelAssociationsTable {
             );
         }
 
-        /**
-         * Upgrades added in version 675.47
-         */
 
+
+        /**
+         * Version 675.48
+         *
+         * If the column named CBModelAssociations_sortingValue_2_column doesn't
+         * exist then create it.
+         */
         if (
             !CBDBA::tableHasColumnNamed(
+                'CBModelAssociations',
+                'CBModelAssociations_sortingValue_2_column'
+            )
+        ) {
+            $SQL = <<<EOT
+
+                ALTER TABLE
+                CBModelAssociations
+
+                ADD COLUMN
+                CBModelAssociations_sortingValue_2_column
+                BIGINT NOT NULL DEFAULT 0
+                AFTER className
+
+            EOT;
+
+            Colby::query(
+                $SQL
+            );
+        }
+
+
+
+        /**
+         * Version 675.48
+         *
+         * The column named
+         * CBModelAssociations_sortingValueDifferentiator_column was added but
+         * its definition has changed and it has been renamed to
+         * CBModelAssociations_sortingValueDifferentiator_2_column.
+         */
+        if (
+            CBDBA::tableHasColumnNamed(
                 'CBModelAssociations',
                 'CBModelAssociations_sortingValueDifferentiator_column'
             )
@@ -129,26 +242,72 @@ CBModelAssociationsTable {
                 ALTER TABLE
                 CBModelAssociations
 
-                ADD COLUMN
+                CHANGE COLUMN
                 CBModelAssociations_sortingValueDifferentiator_column
-                BIGINT NOT NULL AUTO_INCREMENT
-                AFTER
-                CBModelAssociations_sortingValue_column,
+                CBModelAssociations_sortingValueDifferentiator_2_column
+                BIGINT NOT NULL DEFAULT 0
 
-                ADD UNIQUE KEY
-                CBModelAssociations_sortingValueDifferentiator_key (
-                    CBModelAssociations_sortingValueDifferentiator_column
-                ),
+            EOT;
 
-                DROP KEY
-                CBModelAssociations_sortedListOfModels_key,
+            Colby::query(
+                $SQL
+            );
+        }
 
-                ADD KEY
-                CBModelAssociations_sortedListOfModels_key (
+
+
+
+        /**
+         * Version 675.48
+         *
+         * If the column named CBModelAssociations_sortingValue_2_column doesn't
+         * exist then create it.
+         */
+        if (
+            !CBDBA::tableHasColumnNamed(
+                'CBModelAssociations',
+                'CBModelAssociations_sortingValueDifferentiator_2_column'
+            )
+        ) {
+            $SQL = <<<EOT
+
+                ALTER TABLE
+                CBModelAssociations
+
+                ADD COLUMN
+                CBModelAssociations_sortingValueDifferentiator_2_column
+                BIGINT NOT NULL DEFAULT 0
+                AFTER CBModelAssociations_sortingValue_column
+
+            EOT;
+
+            Colby::query(
+                $SQL
+            );
+        }
+
+
+
+        /**
+         * Version 675.48
+         */
+        if (
+            !CBDBA::tableHasIndexNamed(
+                'CBModelAssociations',
+                'CBModelAssociations_sortedListOfModels_2_index'
+            )
+        ) {
+            $SQL = <<<EOT
+
+                ALTER TABLE
+                CBModelAssociations
+
+                ADD INDEX
+                CBModelAssociations_sortedListOfModels_2_index (
                     ID,
                     className,
-                    CBModelAssociations_sortingValue_column,
-                    CBModelAssociations_sortingValueDifferentiator_column
+                    CBModelAssociations_sortingValue_2_column,
+                    CBModelAssociations_sortingValueDifferentiator_2_column
                 )
 
             EOT;
@@ -157,6 +316,7 @@ CBModelAssociationsTable {
                 $SQL
             );
         }
+
     }
     /* CBInstall_install() */
 
