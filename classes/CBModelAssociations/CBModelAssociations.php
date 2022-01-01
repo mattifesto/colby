@@ -536,6 +536,8 @@ CBModelAssociations {
      * @param int $maximumResultCount
      * @param int|null $sortingValueMinimum
      * @param int|null $sortingValueMaximum
+     * @param int|null $sortingValueDifferentiatorMinimum
+     * @param int|null $sortingValueDifferentiatorMaximum
      *
      * @return [CB_ModelAssociation]
      */
@@ -546,7 +548,9 @@ CBModelAssociations {
         string $sortingOrder = 'ascending',
         int $maximumResultCount = 10,
         ?int $sortingValueMinimum = null,
-        ?int $sortingValueMaximum = null
+        ?int $sortingValueMaximum = null,
+        ?int $sortingValueDifferentiatorMinimum = null,
+        ?int $sortingValueDifferentiatorMaximum = null
     ): array {
 
         if (
@@ -591,7 +595,7 @@ CBModelAssociations {
             array_push(
                 $whereClauses,
                 (
-                    'CBModelAssociations_sortingValue_column >= ' .
+                    'CBModelAssociations_sortingValue_2_column >= ' .
                     $sortingValueMinimum
                 )
             );
@@ -603,8 +607,32 @@ CBModelAssociations {
             array_push(
                 $whereClauses,
                 (
-                    'CBModelAssociations_sortingValue_column <= ' .
+                    'CBModelAssociations_sortingValue_2_column <= ' .
                     $sortingValueMaximum
+                )
+            );
+        }
+
+        if (
+            $sortingValueDifferentiatorMinimum !== null
+        ) {
+            array_push(
+                $whereClauses,
+                (
+                    'CBModelAssociations_sortingValueDifferentiator_2_column >= ' .
+                    $sortingValueDifferentiatorMinimum
+                )
+            );
+        }
+
+        if (
+            $sortingValueDifferentiatorMaximum !== null
+        ) {
+            array_push(
+                $whereClauses,
+                (
+                    'CBModelAssociations_sortingValueDifferentiator_2_column <= ' .
+                    $sortingValueDifferentiatorMaximum
                 )
             );
         }
@@ -618,11 +646,11 @@ CBModelAssociations {
 
             SELECT
 
-            CBModelAssociations_sortingValue_column
+            CBModelAssociations_sortingValue_2_column
             AS
             sortingValue,
 
-            CBModelAssociations_sortingValueDifferentiator_column
+            CBModelAssociations_sortingValueDifferentiator_2_column
             AS
             sortingValueDifferentiator,
 
@@ -638,10 +666,10 @@ CBModelAssociations {
 
             ORDER BY
 
-            CBModelAssociations_sortingValue_column
+            CBModelAssociations_sortingValue_2_column
             {$sortingOrderAsSQL},
 
-            CBModelAssociations_sortingValueDifferentiator_column
+            CBModelAssociations_sortingValueDifferentiator_2_column
             {$sortingOrderAsSQL}
 
             LIMIT
@@ -864,7 +892,8 @@ CBModelAssociations {
             (
                 ID,
                 className,
-                CBModelAssociations_sortingValue_column,
+                CBModelAssociations_sortingValue_2_column,
+                CBModelAssociations_sortingValueDifferentiator_2_column,
                 associatedID
             )
 
@@ -872,8 +901,10 @@ CBModelAssociations {
             {$values}
 
             ON DUPLICATE KEY UPDATE
-            CBModelAssociations_sortingValue_column =
-            CBModelAssociations_sortingValue_column
+            CBModelAssociations_sortingValue_2_column =
+            CBModelAssociations_sortingValue_2_column,
+            CBModelAssociations_sortingValueDifferentiator_2_column =
+            CBModelAssociations_sortingValueDifferentiator_2_column
 
         EOT;
 
@@ -906,6 +937,12 @@ CBModelAssociations {
             $modelAssociation
         );
 
+        $sortingValueDifferentiator = (
+            CB_ModelAssociation::getSortingValueDifferentiator(
+                $modelAssociation
+            )
+        );
+
         $secondCBID = CB_ModelAssociation::getSecondCBID(
             $modelAssociation
         );
@@ -917,6 +954,8 @@ CBModelAssociations {
             CBDB::stringToSQL($associationKey) .
             ',' .
             $sortingValue .
+            ',' .
+            $sortingValueDifferentiator .
             ',' .
             CBID::toSQL($secondCBID) .
             ')'
