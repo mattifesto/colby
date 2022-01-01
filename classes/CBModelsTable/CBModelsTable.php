@@ -1,6 +1,7 @@
 <?php
 
-final class CBModelsTable {
+final class
+CBModelsTable {
 
     /* -- CBInstall interfaces -- -- -- -- -- */
 
@@ -9,9 +10,12 @@ final class CBModelsTable {
     /**
      * @return void
      */
-    static function CBInstall_install(): void {
+    static function
+    CBInstall_install(
+    ): void {
         CBModelsTable::create();
     }
+    /* CBInstall_install() */
 
 
 
@@ -26,7 +30,8 @@ final class CBModelsTable {
      *
      * @return void
      */
-    static function create(
+    static function
+    create(
         bool $temporary = false
     ): void {
         $name = $temporary ? 'CBModelsTemp' : 'CBModels';
