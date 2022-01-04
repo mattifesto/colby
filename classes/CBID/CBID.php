@@ -15,7 +15,8 @@
  *      CBLog::log() uses the ID on the top of the stack as the ID for a log
  *      entry if one isn't specified explicitly.
  */
-final class CBID {
+final class
+CBID {
 
     private static $stack = [];
 
@@ -102,14 +103,27 @@ final class CBID {
      *
      * @return string
      */
-    static function toSQL($values): string {
-        if (!is_array($values)) {
+    static function
+    toSQL(
+        $values
+    ): string {
+        if (
+            !is_array(
+                $values
+            )
+        ) {
             $values = [$values];
         }
 
         $values = array_map(
-            function($value) {
-                if (!CBID::valueIsCBID($value)) {
+            function(
+                $value
+            ) {
+                if (
+                    !CBID::valueIsCBID(
+                        $value
+                    )
+                ) {
                     throw CBException::createWithValue(
                         'This is not a valid CBID.',
                         $value,
@@ -122,7 +136,10 @@ final class CBID {
             $values
         );
 
-        return implode(',', $values);
+        return implode(
+            ',',
+            $values
+        );
     }
     /* toSQL() */
 
