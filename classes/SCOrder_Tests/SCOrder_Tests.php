@@ -1,6 +1,7 @@
-<?php
+    <?php
 
-final class SCOrder_Tests {
+final class
+SCOrder_Tests {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
@@ -283,19 +284,27 @@ final class SCOrder_Tests {
     /**
      * @return object
      */
-    static function CBTest_prepareOrderKind(): stdClass {
+    static function
+    prepareOrderKind(
+    ): stdClass {
         $actualSourceID = null;
         $expectedSourceID = '922fc2133e1d4f1a8b58346658cfa58cf4950104';
 
         SCOrder_Tests::runWithPreferences(
-            function () use (&$actualSourceID) {
+            function () use (
+                &$actualSourceID
+            ) {
                 $spec = (object)[
                     'className' => 'SCOrder',
                 ];
 
                 try {
-                    $preparedSpec = SCOrder::prepare($spec);
-                } catch (Throwable $throwable) {
+                    $preparedSpec = SCOrder::prepare(
+                        $spec
+                    );
+                } catch (
+                    Throwable $throwable
+                ) {
                     $actualSourceID = CBException::throwableToSourceID(
                         $throwable
                     );
@@ -304,7 +313,9 @@ final class SCOrder_Tests {
             (object)[]
         );
 
-        if ($actualSourceID !== $expectedSourceID) {
+        if (
+            $actualSourceID !== $expectedSourceID
+        ) {
             return CBTest::resultMismatchFailure(
                 'no default order kind',
                 $actualSourceID,
@@ -319,12 +330,16 @@ final class SCOrder_Tests {
         $expectedOrderKindClassName = 'SCOrder_Tests_OrderKind1';
 
         SCOrder_Tests::runWithPreferences(
-            function () use (&$actualOrderKindClassName) {
+            function () use (
+                &$actualOrderKindClassName
+            ) {
                 $spec = (object)[
                     'className' => 'SCOrder',
                 ];
 
-                $preparedSpec = SCOrder::prepare($spec);
+                $preparedSpec = SCOrder::prepare(
+                    $spec
+                );
 
                 $actualOrderKindClassName = CBModel::valueToString(
                     $preparedSpec,
@@ -336,7 +351,9 @@ final class SCOrder_Tests {
             ]
         );
 
-        if ($actualOrderKindClassName !== $expectedOrderKindClassName) {
+        if (
+            $actualOrderKindClassName !== $expectedOrderKindClassName
+        ) {
             return CBTest::resultMismatchFailure(
                 'SCOrder_Tests_OrderKind1',
                 $actualOrderKindClassName,
@@ -355,14 +372,18 @@ final class SCOrder_Tests {
             'kindClassName' => $expectedOrderKindClassName,
         ];
 
-        $preparedSpec = SCOrder::prepare($spec);
+        $preparedSpec = SCOrder::prepare(
+            $spec
+        );
 
         $actualOrderKindClassName = CBModel::valueToString(
             $preparedSpec,
             'kindClassName'
         );
 
-        if ($actualOrderKindClassName !== $expectedOrderKindClassName) {
+        if (
+            $actualOrderKindClassName !== $expectedOrderKindClassName
+        ) {
             return CBTest::resultMismatchFailure(
                 'SCOrder_Tests_OrderKind2',
                 $actualOrderKindClassName,
@@ -377,7 +398,7 @@ final class SCOrder_Tests {
             'succeeded' => true,
         ];
     }
-    /* CBTest_prepareOrderKind() */
+    /* prepareOrderKind() */
 
 
 
@@ -391,30 +412,47 @@ final class SCOrder_Tests {
      *
      * @return void
      */
-    static function runWithPreferences(
+    static function
+    runWithPreferences(
         callable $callable,
         stdClass $preferencesSpec
     ): void {
-        $testPreferencesID = '68111dc9ce8e29ccba961b96afbdfcd45891b4d0';
+        CBDB::transaction(
+            function () use (
+                $callable,
+                $preferencesSpec
+            ) {
+                $testPreferencesID = '68111dc9ce8e29ccba961b96afbdfcd45891b4d0';
 
-        try {
-            CBModels::deleteByID($testPreferencesID);
+                try {
+                    CBModels::deleteByID(
+                        $testPreferencesID
+                    );
 
-            SCPreferences::$testID = $testPreferencesID;
+                    SCPreferences::$testID = $testPreferencesID;
 
-            $preferencesSpec->className = 'SCPreferences';
-            $preferencesSpec->ID = $testPreferencesID;
+                    $preferencesSpec->className = 'SCPreferences';
+                    $preferencesSpec->ID = $testPreferencesID;
 
-            CBModels::save($preferencesSpec);
+                    CBModels::save(
+                        $preferencesSpec
+                    );
 
-            call_user_func($callable);
-        } finally {
-            SCPreferences::$testID = null;
+                    call_user_func(
+                        $callable
+                    );
+                } finally {
+                    SCPreferences::$testID = null;
 
-            CBModels::deleteByID($testPreferencesID);
-        }
+                    CBModels::deleteByID(
+                        $testPreferencesID
+                    );
+                }
+            }
+        );
     }
     /* runWithPreferences() */
+
 }
 
 
