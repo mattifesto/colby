@@ -1,6 +1,7 @@
 <?php
 
-final class CBPageVerificationTaskTests {
+final class
+CBPageVerificationTaskTests {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
@@ -9,52 +10,40 @@ final class CBPageVerificationTaskTests {
     /**
      * @return [object]
      */
-    static function CBTest_getTests(): array {
+    static function
+    CBTest_getTests(
+    ): array {
         return [
             (object)[
                 'name' => 'deprecatedAndUnsupportedViews',
-                'title' => (
-                    'CBPageVerificationTask deprecatedAndUnsupportedViews'
-                ),
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'findDeprecatedSubviewClassNames',
-                'title' => (
-                    'CBPageVerificationTask findDeprecatedSubviewClassNames'
-                ),
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'findUnsupportedSubviewClassNames',
-                'title' => (
-                    'CBPageVerificationTask findUnsupportedSubviewClassNames'
-                ),
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'hasColbyPagesRow',
-                'title' => 'CBPageVerificationTask hasColbyPagesRow',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'importThumbnailURLToImage',
-                'title' => 'CBPageVerificationTask importThumbnailURLToImage',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'invalidImageProperty',
-                'title' => 'CBPageVerificationTask invalidImageProperty',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'rowWithNoModel',
-                'title' => 'CBPageVerificationTask rowWithNoModel',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'upgradeThumbnailURLToImage',
-                'title' => 'CBPageVerificationTask upgradeThumbnailURLToImage',
                 'type' => 'server',
             ],
         ];
@@ -342,25 +331,37 @@ final class CBPageVerificationTaskTests {
      * @return object
      */
     static function
-    CBTest_importThumbnailURLToImage(
+    importThumbnailURLToImage(
     ): stdClass {
         $pageID = '4a7bc517a928056f9518d839881cc9f49ea10c0a';
         $temporaryImageDataStoreID = 'a66a45225d071a4f6e65c475ece1810ac4dec45a';
 
         CBDB::transaction(
-            function () use ($pageID) {
+            function () use (
+                $pageID
+            ) {
                 CBModels::deleteByID(
-                    [$pageID]
+                    $pageID
                 );
             }
         );
 
-        CBModels::deleteByID(
-            $temporaryImageDataStoreID
+        CBDB::transaction(
+            function () use (
+                $temporaryImageDataStoreID
+            ) {
+                CBModels::deleteByID(
+                    $temporaryImageDataStoreID
+                );
+            }
         );
 
-        CBModels::deleteByID(
-            CBTestAdmin::testImageID()
+        CBDB::transaction(
+            function () {
+                CBModels::deleteByID(
+                    CBTestAdmin::testImageID()
+                );
+            }
         );
 
         $testImageFilepath = CBTestAdmin::testImageFilepath();
@@ -401,7 +402,9 @@ final class CBPageVerificationTaskTests {
         );
 
         CBDB::transaction(
-            function () use ($initialPageSpec) {
+            function () use (
+                $initialPageSpec
+            ) {
                 CBModels::save(
                     $initialPageSpec
                 );
@@ -427,7 +430,9 @@ final class CBPageVerificationTaskTests {
 
         $expected = 3;
 
-        if ($actual !== $expected) {
+        if (
+            $actual !== $expected
+        ) {
             return CBTest::resultMismatchFailure(
                 'Log entry count',
                 $actual,
@@ -444,7 +449,9 @@ final class CBPageVerificationTaskTests {
 
         $expected = '0099cecb597038d4bf5f182965271e25cc60c070';
 
-        if ($actual !== $expected) {
+        if (
+            $actual !== $expected
+        ) {
             return CBTest::resultMismatchFailure(
                 'Log entry source ID',
                 $actual,
@@ -458,14 +465,18 @@ final class CBPageVerificationTaskTests {
             $pageID
         );
 
-        if (!empty($updatedPageSpec->thumbnailURL)) {
+        if (
+            !empty($updatedPageSpec->thumbnailURL)
+        ) {
             throw new Exception(
                 'The `thumbnailURL` property is still set on the updated ' .
                 'page spec.'
             );
         }
 
-        if (empty($updatedPageSpec->deprecatedThumbnailURL)) {
+        if (
+            empty($updatedPageSpec->deprecatedThumbnailURL)
+        ) {
             throw new Exception(
                 'The `deprecatedThumbnailURL` property should be set on ' .
                 'the updated page spec.'
@@ -479,7 +490,9 @@ final class CBPageVerificationTaskTests {
 
         $expectedImageID = CBTestAdmin::testImageID();
 
-        if ($resultImageID !== $expectedImageID) {
+        if (
+            $resultImageID !== $expectedImageID
+        ) {
             $resultImageIDAsJSON = json_encode($resultImageID);
             $expectedImageIDAsJSON = json_encode($expectedImageID);
 
@@ -493,24 +506,38 @@ final class CBPageVerificationTaskTests {
         // clean up
 
         CBDB::transaction(
-            function () use ($pageID) {
-                CBModels::deleteByID([$pageID]);
+            function () use (
+                $pageID
+            ) {
+                CBModels::deleteByID(
+                    $pageID
+                );
             }
         );
 
-        CBModels::deleteByID(
-            $temporaryImageDataStoreID
+        CBDB::transaction(
+            function () use (
+                $temporaryImageDataStoreID
+            ) {
+                CBModels::deleteByID(
+                    $temporaryImageDataStoreID
+                );
+            }
         );
 
-        CBModels::deleteByID(
-            CBTestAdmin::testImageID()
+        CBDB::transaction(
+            function () {
+                CBModels::deleteByID(
+                    CBTestAdmin::testImageID()
+                );
+            }
         );
 
         return (object)[
             'succeeded' => true,
         ];
     }
-    /* CBTest_importThumbnailURLToImage() */
+    /* importThumbnailURLToImage() */
 
 
 
@@ -665,25 +692,35 @@ final class CBPageVerificationTaskTests {
      * @return object
      */
     static function
-    CBTest_upgradeThumbnailURLToImage(
+    upgradeThumbnailURLToImage(
     ): stdClass {
         $pageID = 'e87c8eef4953d3060faaa2e3597c730326adfc29';
 
         CBDB::transaction(
-            function () use ($pageID) {
-                CBModels::deleteByID([$pageID]);
+            function () use (
+                $pageID
+            ) {
+                CBModels::deleteByID(
+                    $pageID
+                );
             }
         );
 
-        CBModels::deleteByID(
-            CBTestAdmin::testImageID()
+        CBDB::transaction(
+            function () {
+                CBModels::deleteByID(
+                    CBTestAdmin::testImageID()
+                );
+            }
         );
 
         $testImage = CBImages::URIToCBImage(
             CBTestAdmin::testImageFilepath()
         );
 
-        if ($testImage->ID !== CBTestAdmin::testImageID()) {
+        if (
+            $testImage->ID !== CBTestAdmin::testImageID()
+        ) {
             throw new Exception(
                 '2: The imported test image ID is not what was expected.'
             );
@@ -710,7 +747,9 @@ final class CBPageVerificationTaskTests {
         );
 
         CBDB::transaction(
-            function () use ($initialPageSpec) {
+            function () use (
+                $initialPageSpec
+            ) {
                 CBModels::save(
                     $initialPageSpec
                 );
@@ -731,7 +770,9 @@ final class CBPageVerificationTaskTests {
         $bufferIsValid = function (
             $buffer
         ): bool {
-            if (count($buffer) !== 3) {
+            if (
+                count($buffer) !== 3
+            ) {
                 return false;
             }
 
@@ -740,14 +781,18 @@ final class CBPageVerificationTaskTests {
                 'sourceID'
             );
 
-            if ($sourceID !== '0099cecb597038d4bf5f182965271e25cc60c070') {
+            if (
+                $sourceID !== '0099cecb597038d4bf5f182965271e25cc60c070'
+            ) {
                 return false;
             }
 
             return true;
         };
 
-        if (!$bufferIsValid($buffer)) {
+        if (
+            !$bufferIsValid($buffer)
+        ) {
             $bufferAsMessage = CBMessageMarkup::stringToMessage(
                 CBConvert::valueToPrettyJSON(
                     $buffer
@@ -768,16 +813,22 @@ final class CBPageVerificationTaskTests {
             ];
         }
 
-        $updatedPageSpec = CBModels::fetchSpecByID($pageID);
+        $updatedPageSpec = CBModels::fetchSpecByID(
+            $pageID
+        );
 
-        if (!empty($updatedPageSpec->thumbnailURL)) {
+        if (
+            !empty($updatedPageSpec->thumbnailURL)
+        ) {
             throw new Exception(
                 '2: The `thumbnailURL` property is still set on the ' .
                 'updated page spec.'
             );
         }
 
-        if (empty($updatedPageSpec->deprecatedThumbnailURL)) {
+        if (
+            empty($updatedPageSpec->deprecatedThumbnailURL)
+        ) {
             throw new Exception(
                 '2: The `deprecatedThumbnailURL` property should be set ' .
                 'on the updated page spec.'
@@ -791,7 +842,9 @@ final class CBPageVerificationTaskTests {
 
         $expectedImageID = CBTestAdmin::testImageID();
 
-        if ($resultImageID !== $expectedImageID) {
+        if (
+            $resultImageID !== $expectedImageID
+        ) {
             $resultImageIDAsJSON = json_encode(
                 $resultImageID
             );
@@ -809,19 +862,31 @@ final class CBPageVerificationTaskTests {
 
         // clean up
 
-        CBModels::deleteByID(
-            $pageID
+        CBDB::transaction(
+            function () use (
+                $pageID
+            ) {
+                CBModels::deleteByID(
+                    $pageID
+                );
+            }
         );
 
-        CBModels::deleteByID(
-            $resultImageID
+        CBDB::transaction(
+            function () use (
+                $resultImageID
+            ) {
+                CBModels::deleteByID(
+                    $resultImageID
+                );
+            }
         );
 
         return (object)[
             'succeeded' => true,
         ];
     }
-    /* CBTest_upgradeThumbnailURLToImage() */
+    /* upgradeThumbnailURLToImage() */
 
 
 
