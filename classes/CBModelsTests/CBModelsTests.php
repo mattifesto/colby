@@ -1,6 +1,7 @@
 <?php
 
-final class CBModelsTests {
+final class
+CBModelsTests {
 
     const testModelIDs = [
         'dbc96d7b92337a3c6b9274c89473ee547ee518d7',
@@ -92,31 +93,48 @@ final class CBModelsTests {
     /**
      * @return object
      */
-    static function CBTest_fetchModelByID(): stdClass {
-        Colby::query('START TRANSACTION');
-        CBModelsTests::createTestEnvironment();
+    static function
+    fetchModelByID(
+    ): stdClass {
+        CBDB::transaction(
+            function () {
+                CBModelsTests::createTestEnvironment();
 
-        /* 1 */
+                /* 1 */
 
-        $ID = CBModelsTests::testModelIDs[2];
-        $model = CBModels::fetchModelByID($ID);
+                $ID = CBModelsTests::testModelIDs[2];
 
-        CBModelsTests_TestClass::checkModelWithID($model, $ID, 1);
+                $model = CBModels::fetchModelByID(
+                    $ID
+                );
 
-        /* 2 */
+                CBModelsTests_TestClass::checkModelWithID(
+                    $model,
+                    $ID,
+                    1
+                );
 
-        $ID = CBID::generateRandomCBID();
-        $model = CBModels::fetchModelByID($ID);
+                /* 2 */
 
-        if ($model !== false) {
-            throw new Exception(
-                __METHOD__ .
-                ' Calling `CBModel::fetchModelByID` with and ID with ' .
-                'no model should return false.'
-            );
-        }
+                $ID = CBID::generateRandomCBID();
 
-        Colby::query('ROLLBACK');
+                $model = CBModels::fetchModelByID(
+                    $ID
+                );
+
+                if (
+                    $model !== false
+                ) {
+                    throw new Exception(
+                        __METHOD__ .
+                        ' Calling `CBModel::fetchModelByID` with and ID with ' .
+                        'no model should return false.'
+                    );
+                }
+
+                return 'CBDB_transaction_rollback';
+            }
+        );
 
         return (object)[
             'succeeded' => true,
@@ -129,59 +147,89 @@ final class CBModelsTests {
     /**
      * @return object
      */
-    static function CBTest_fetchModelsByID(): stdClass {
-        Colby::query('START TRANSACTION');
-        CBModelsTests::createTestEnvironment();
+    static function
+    fetchModelsByID(
+    ): stdClass {
+        CBDB::transaction(
+            function () {
+                CBModelsTests::createTestEnvironment();
 
-        /* 1 */
+                /* 1 */
 
-        $models = CBModels::fetchModelsByID(CBModelsTests::testModelIDs);
+                $models = CBModels::fetchModelsByID(
+                    CBModelsTests::testModelIDs
+                );
 
-        if (count($models) !== 3) {
-            throw new Exception(
-                __METHOD__ . ' Test 1: Array should contain 3 models.'
-            );
-        }
+                if (
+                    count($models) !== 3
+                ) {
+                    throw new Exception(
+                        __METHOD__ . ' Test 1: Array should contain 3 models.'
+                    );
+                }
 
-        for ($i = 0; $i < 3; $i++) {
-            $ID = CBModelsTests::testModelIDs[$i];
-            CBModelsTests_TestClass::checkModelWithID($models[$ID], $ID, 1);
-        }
+                for (
+                    $i = 0;
+                    $i < 3;
+                    $i++
+                ) {
+                    $ID = CBModelsTests::testModelIDs[$i];
 
-        /* 2 */
+                    CBModelsTests_TestClass::checkModelWithID(
+                        $models[$ID],
+                        $ID,
+                        1
+                    );
+                }
 
-        $IDs = [
-            CBID::generateRandomCBID(),
-            CBID::generateRandomCBID(),
-            CBID::generateRandomCBID(),
-        ];
+                /* 2 */
 
-        $models = CBModels::fetchModelsByID($IDs);
+                $IDs = [
+                    CBID::generateRandomCBID(),
+                    CBID::generateRandomCBID(),
+                    CBID::generateRandomCBID(),
+                ];
 
-        if ($models !== []) {
-            throw new Exception(
-                __METHOD__ . ' Test 2: Array should be empty.'
-            );
-        }
+                $models = CBModels::fetchModelsByID(
+                    $IDs
+                );
 
-        /* 3 */
+                if (
+                    $models !== []
+                ) {
+                    throw new Exception(
+                        __METHOD__ . ' Test 2: Array should be empty.'
+                    );
+                }
 
-        $IDs = [
-            CBID::generateRandomCBID(),
-            CBID::generateRandomCBID(),
-            CBID::generateRandomCBID(),
-        ];
+                /* 3 */
 
-        $IDs = array_merge(CBModelsTests::testModelIDs, $IDs);
-        $models = CBModels::fetchModelsByID($IDs);
+                $IDs = [
+                    CBID::generateRandomCBID(),
+                    CBID::generateRandomCBID(),
+                    CBID::generateRandomCBID(),
+                ];
 
-        if (count($models) !== 3) {
-            throw new Exception(
-                __METHOD__ . ' Test 3: Array should contain 3 models.'
-            );
-        }
+                $IDs = array_merge(
+                    CBModelsTests::testModelIDs,
+                    $IDs
+                );
 
-        Colby::query('ROLLBACK');
+                $models = CBModels::fetchModelsByID(
+                    $IDs
+                );
+
+                if (
+                    count($models) !== 3
+                ) {
+                    throw new Exception(
+                        __METHOD__ . ' Test 3: Array should contain 3 models.'
+                    );
+                }
+
+                return 'CBDB_transaction_rollback';
+            }
+        );
 
         return (object)[
             'succeeded' => true,
@@ -267,29 +315,39 @@ final class CBModelsTests {
      * CBModel::build() is allowed to return a model without an ID, however
      * these models cannot be saved.
      */
-    static function CBTest_saveSpecWithoutID(): stdClass {
+    static function
+    saveSpecWithoutID(
+    ): stdClass {
         $actualSourceCBID = null;
         $expectedSourceCBID = '3754cbe6a23732edfaed0d357946840a1bf66bb6';
 
         try {
-            Colby::query('START TRANSACTION');
-
             $spec = (object)[
                 'className' => 'CBViewPage',
             ];
 
-            CBModels::save([$spec]);
+            CBDB::transaction(
+                function () use (
+                    $spec
+                ) {
+                    CBModels::save(
+                        $spec
+                    );
 
-            Colby::query('ROLLBACK');
-        } catch (Throwable $throwable) {
-            Colby::query('ROLLBACK');
-
+                    return 'CBDB_transaction_rollback';
+                }
+            );
+        } catch (
+            Throwable $throwable
+        ) {
             $actualSourceCBID = CBException::throwableToSourceCBID(
                 $throwable
             );
         }
 
-        if ($actualSourceCBID !== $expectedSourceCBID) {
+        if (
+            $actualSourceCBID !== $expectedSourceCBID
+        ) {
             return CBTest::resultMismatchFailure(
                 'sourceCBID',
                 $actualSourceCBID,
@@ -301,7 +359,7 @@ final class CBModelsTests {
             'succeeded' => true,
         ];
     }
-    /* CBTest_saveSpecWithoutID() */
+    /* saveSpecWithoutID() */
 
 
 
