@@ -86,6 +86,8 @@ CBModelUpdater {
 
 
     /**
+     * This function must be called from inside a CBDB::transaction() callback.
+     *
      * @TODO 2021_02_15
      *
      *      This method will be renamed to "save" one the static "save" function
@@ -117,7 +119,7 @@ CBModelUpdater {
             );
         }
     }
-    /* save() */
+    /* save2() */
 
 
 
@@ -252,6 +254,11 @@ CBModelUpdater {
 
 
         /**
+         * @NOTE 2022_01_03
+         *
+         *      This function must be called from inside a CBDB::transaction()
+         *      callback.
+         *
          * @return void
          */
         $CBModelUpdater_save = function() use (
