@@ -1,6 +1,7 @@
 <?php
 
-final class CBUserGroup_Tests {
+final class
+CBUserGroup_Tests {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
@@ -43,7 +44,9 @@ final class CBUserGroup_Tests {
      *
      * @return object
      */
-    static function CBTest_general(): stdClass {
+    static function
+    general(
+    ): stdClass {
         $currentUserCBID = ColbyUser::getCurrentUserCBID();
 
         $userGroupClassName = 'CBTest_general_group';
@@ -60,12 +63,22 @@ final class CBUserGroup_Tests {
 
 
         $testName = CBConvert::stringToCleanLine(<<<EOT
+
             Delete the test group model and make sure the current user is not a
             member of the test group.
+
         EOT);
 
         {
-            CBModels::deleteByID($userGroupSpec->ID);
+            CBDB::transaction(
+                function () use (
+                    $userGroupSpec
+                ) {
+                    CBModels::deleteByID(
+                        $userGroupSpec->ID
+                    );
+                }
+            );
 
             $actualResult = CBUserGroup::userIsMemberOfUserGroup(
                 $currentUserCBID,
@@ -74,7 +87,9 @@ final class CBUserGroup_Tests {
 
             $expectedResult = false;
 
-            if ($actualResult !== $expectedResult) {
+            if (
+                $actualResult !== $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     $testName,
                     $actualResult,
@@ -85,8 +100,10 @@ final class CBUserGroup_Tests {
 
 
         $testName = CBConvert::stringToCleanLine(<<<EOT
+
             Make sure the current user is not a member of the test group
             according to CBUserGroup::currentUserIsMemberOfUserGroup().
+
         EOT);
 
         {
@@ -107,15 +124,21 @@ final class CBUserGroup_Tests {
 
 
         $testName = CBConvert::stringToCleanLine(<<<EOT
+
             Fetch all group models and make sure the test group model is not
             included.
+
         EOT);
 
         {
             $userGroupModels = CBUserGroup::fetchAllUserGroupModels();
 
             $actualResult = cb_array_any(
-                function ($userGroupModel) use ($userGroupClassName) {
+                function (
+                    $userGroupModel
+                ) use (
+                    $userGroupClassName
+                ) {
                     return (
                         $userGroupModel->userGroupClassName ===
                         $userGroupClassName
@@ -126,7 +149,9 @@ final class CBUserGroup_Tests {
 
             $expectedResult = false;
 
-            if ($actualResult !== $expectedResult) {
+            if (
+                $actualResult !== $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     $testName,
                     $actualResult,
@@ -137,17 +162,31 @@ final class CBUserGroup_Tests {
 
 
         $testName = CBConvert::stringToCleanLine(<<<EOT
+
             Save the test group model, fetch all user group models, and make
             sure the test group model is included.
+
         EOT);
 
         {
-            CBModels::save($userGroupSpec);
+            CBDB::transaction(
+                function () use (
+                    $userGroupSpec
+                ) {
+                    CBModels::save(
+                        $userGroupSpec
+                    );
+                }
+            );
 
             $userGroupModels = CBUserGroup::fetchAllUserGroupModels();
 
             $actualResult = cb_array_any(
-                function ($userGroupModel) use ($userGroupClassName) {
+                function (
+                    $userGroupModel
+                ) use (
+                    $userGroupClassName
+                ) {
                     return (
                         $userGroupModel->userGroupClassName ===
                         $userGroupClassName
@@ -158,7 +197,9 @@ final class CBUserGroup_Tests {
 
             $expectedResult = true;
 
-            if ($actualResult !== $expectedResult) {
+            if (
+                $actualResult !== $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     $testName,
                     $actualResult,
@@ -169,8 +210,10 @@ final class CBUserGroup_Tests {
 
 
         $testName = CBConvert::stringToCleanLine(<<<EOT
+
             Add the current user to the test group and then make sure the
             current user is a member of the test group.
+
         EOT);
 
         {
@@ -186,7 +229,9 @@ final class CBUserGroup_Tests {
 
             $expectedResult = true;
 
-            if ($actualResult !== $expectedResult) {
+            if (
+                $actualResult !== $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     $testName,
                     $actualResult,
@@ -197,9 +242,11 @@ final class CBUserGroup_Tests {
 
 
         $testName = CBConvert::stringToCleanLine(<<<EOT
+
             After adding the current user to the test group make sure the
             current user is a member of the test group according to
             CBUserGroup::currentUserIsMemberOfUserGroup().
+
         EOT);
 
         {
@@ -209,7 +256,9 @@ final class CBUserGroup_Tests {
 
             $expectedResult = true;
 
-            if ($actualResult !== $expectedResult) {
+            if (
+                $actualResult !== $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     $testName,
                     $actualResult,
@@ -220,8 +269,10 @@ final class CBUserGroup_Tests {
 
 
         $testName = CBConvert::stringToCleanLine(<<<EOT
+
             Remove the current user from the test group and then make sure the
             current user is not a member of the test group.
+
         EOT);
 
         {
@@ -237,7 +288,9 @@ final class CBUserGroup_Tests {
 
             $expectedResult = false;
 
-            if ($actualResult !== $expectedResult) {
+            if (
+                $actualResult !== $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     $testName,
                     $actualResult,
@@ -248,9 +301,11 @@ final class CBUserGroup_Tests {
 
 
         $testName = CBConvert::stringToCleanLine(<<<EOT
+
             After removing the current user from the test group and make sure
             the current user is not a member of the test group according to
             CBUserGroup::currentUserIsMemberOfUserGroup().
+
         EOT);
 
         {
@@ -260,7 +315,9 @@ final class CBUserGroup_Tests {
 
             $expectedResult = false;
 
-            if ($actualResult !== $expectedResult) {
+            if (
+                $actualResult !== $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     $testName,
                     $actualResult,
@@ -271,8 +328,10 @@ final class CBUserGroup_Tests {
 
 
         $testName = CBConvert::stringToCleanLine(<<<EOT
+
             Add the current user to the test group after having been removed and
             then make sure the current user is a member of the test group.
+
         EOT);
 
         {
@@ -288,7 +347,9 @@ final class CBUserGroup_Tests {
 
             $expectedResult = true;
 
-            if ($actualResult !== $expectedResult) {
+            if (
+                $actualResult !== $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     $testName,
                     $actualResult,
@@ -299,9 +360,11 @@ final class CBUserGroup_Tests {
 
 
         $testName = CBConvert::stringToCleanLine(<<<EOT
+
             After adding the current user to the test group after having been
             removed make sure the current user is a member of the test group
             according to CBUserGroup::currentUserIsMemberOfUserGroup().
+
         EOT);
 
         {
@@ -316,7 +379,9 @@ final class CBUserGroup_Tests {
 
             $expectedResult = true;
 
-            if ($actualResult !== $expectedResult) {
+            if (
+                $actualResult !== $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     $testName,
                     $actualResult,
@@ -327,12 +392,22 @@ final class CBUserGroup_Tests {
 
 
         $testName = CBConvert::stringToCleanLine(<<<EOT
+
             Delete the test group and make sure the current user is no longer a
             member of the test group.
+
         EOT);
 
         {
-            CBModels::deleteByID($userGroupSpec->ID);
+            CBDB::transaction(
+                function () use (
+                    $userGroupSpec
+                ) {
+                    CBModels::deleteByID(
+                        $userGroupSpec->ID
+                    );
+                }
+            );
 
             $actualResult = CBUserGroup::userIsMemberOfUserGroup(
                 $currentUserCBID,
@@ -341,7 +416,9 @@ final class CBUserGroup_Tests {
 
             $expectedResult = false;
 
-            if ($actualResult !== $expectedResult) {
+            if (
+                $actualResult !== $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     $testName,
                     $actualResult,
@@ -352,13 +429,23 @@ final class CBUserGroup_Tests {
 
 
         $testName = CBConvert::stringToCleanLine(<<<EOT
+
             After deleting the test group make sure the current user is no
             longer a member of the test group according to
             CBUserGroup::currentUserIsMemberOfUserGroup().
+
         EOT);
 
         {
-            CBModels::deleteByID($userGroupSpec->ID);
+            CBDB::transaction(
+                function () use (
+                    $userGroupSpec
+                ) {
+                    CBModels::deleteByID(
+                        $userGroupSpec->ID
+                    );
+                }
+            );
 
             $actualResult = CBUserGroup::currentUserIsMemberOfUserGroup(
                 $userGroupClassName
@@ -366,7 +453,9 @@ final class CBUserGroup_Tests {
 
             $expectedResult = false;
 
-            if ($actualResult !== $expectedResult) {
+            if (
+                $actualResult !== $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     $testName,
                     $actualResult,
@@ -380,7 +469,7 @@ final class CBUserGroup_Tests {
             'succeeded' => true,
         ];
     }
-    /* CBTest_general() */
+    /* general() */
 
 
 
