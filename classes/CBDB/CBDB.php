@@ -1,6 +1,7 @@
 <?php
 
-final class CBDB {
+final class
+CBDB {
 
     private static $transactionIsActive = false;
 
@@ -357,14 +358,20 @@ final class CBDB {
      *
      * @return [stdClass] | [key => stdClass]
      */
-    static function SQLToObjects($SQL, $args = []): array {
+    static function
+    SQLToObjects(
+        $SQL,
+        $args = []
+    ): array {
         $keyField = null;
         extract($args, EXTR_IF_EXISTS);
 
         $result     = Colby::query($SQL);
         $objects    = [];
 
-        while ($object = $result->fetch_object()) {
+        while (
+            $object = $result->fetch_object()
+        ) {
             if ($keyField) {
                 $key            = $object->{$keyField};
                 $objects[$key]  = $object;
@@ -405,31 +412,75 @@ final class CBDB {
      *
      * @param callable $callback
      *
+     *      If the callback returns the string 'CBDB_transaction_rollback' or
+     *      throws an exception, the transaction will be rolled back; otherwise
+     *      it will be committed.
+     *
      * @return void
      */
-    static function transaction(callable $callback): void {
-        if (CBDB::$transactionIsActive) {
-            throw new RuntimeException('Nested transactions are not allowed.');
+    static function
+    transaction(
+        callable $callback
+    ): void {
+        if (
+            CBDB::$transactionIsActive
+        ) {
+            throw new RuntimeException(
+                'Nested transactions are not allowed.'
+            );
         }
 
         CBDB::$transactionIsActive = true;
+
         CBLog::bufferStart();
 
         try {
-            Colby::query('START TRANSACTION');
+            Colby::query(
+                'START TRANSACTION'
+            );
 
-            call_user_func($callback);
+            $result = call_user_func(
+                $callback
+            );
 
-            Colby::query('COMMIT');
-        } catch (Throwable $throwable) {
-            Colby::query('ROLLBACK');
+            if (
+                $result === 'CBDB_transaction_rollback'
+            ) {
+                Colby::query(
+                    'ROLLBACK'
+                );
+            } else {
+                Colby::query(
+                    'COMMIT'
+                );
+            }
+        } catch (
+            Throwable $throwable
+        ) {
+            Colby::query(
+                'ROLLBACK'
+            );
 
             throw $throwable;
         } finally {
             CBDB::$transactionIsActive = false;
+
             CBLog::bufferEndFlush();
         }
     }
+    /* transaction() */
+
+
+
+    /**
+     * @return bool
+     */
+    static function
+    transactionIsActive(
+    ): bool {
+        return CBDB::$transactionIsActive;
+    }
+    /* transactionIsActive() */
 
 
 
