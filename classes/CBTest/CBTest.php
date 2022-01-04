@@ -35,17 +35,37 @@ final class CBTest {
 
             $functionName = "{$className}::CBTest_{$testName}";
 
-            if (is_callable($functionName)) {
+            if (
+                !is_callable(
+                    $functionName
+                )
+            ) {
+                $functionName = "{$className}::{$testName}";
+            }
+
+            if (
+                is_callable(
+                    $functionName
+                )
+            ) {
                 CBLog::bufferStart();
 
-                $result = call_user_func($functionName);
+                $result = call_user_func(
+                    $functionName
+                );
 
                 $testLogEntries = CBLog::bufferContents();
 
                 CBLog::bufferEndClean();
 
-                if (!is_object($result)) {
-                    $resultAsJSON = CBConvert::valueToPrettyJSON($result);
+                if (
+                    !is_object(
+                        $result
+                    )
+                ) {
+                    $resultAsJSON = CBConvert::valueToPrettyJSON(
+                        $result
+                    );
 
                     $functionAsMarkup = CBMessageMarkup::stringToMarkup(
                         $function
@@ -65,13 +85,17 @@ final class CBTest {
                         EOT
                     ];
                 } else {
-                    foreach ($testLogEntries as $testLogEntry) {
+                    foreach (
+                        $testLogEntries as $testLogEntry
+                    ) {
                         $testLogEntrySeverity = CBModel::valueAsInt(
                             $testLogEntry,
                             'severity'
                         ) ?? 7;
 
-                        if ($testLogEntrySeverity < 5) {
+                        if (
+                            $testLogEntrySeverity < 5
+                        ) {
                             $result = CBTest::valueIssueFailure(
                                 (
                                     'This test produced at least one ' .
@@ -98,7 +122,9 @@ final class CBTest {
                     EOT
                 ];
             }
-        } catch (Throwable $throwable) {
+        } catch (
+            Throwable $throwable
+        ) {
             $result = (object)[
                 'succeeded' => false,
                 'message' => CBException::throwableToErrorReportAsCBMessage(
@@ -106,7 +132,9 @@ final class CBTest {
                 ),
             ];
 
-            CBErrorHandler::report($throwable);
+            CBErrorHandler::report(
+                $throwable
+            );
         }
 
         return $result;
