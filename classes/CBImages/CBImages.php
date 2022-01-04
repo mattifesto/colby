@@ -10,7 +10,8 @@
  *      required uses of the table exist. If they do, rename the table to
  *      something like CBImageTable so uses can be found more easily.
  */
-class CBImages {
+final class
+CBImages {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
@@ -483,52 +484,58 @@ class CBImages {
             );
         }
 
-        Colby::query('START TRANSACTION');
+        $timestamp = (
+            isset($_POST['timestamp']) ?
+            $_POST['timestamp'] :
+            time()
+        );
 
-        try {
+        $extension = image_type_to_extension(
+            /* type: */ $size[2],
+            /* include dot: */ false
+        );
 
-            $timestamp = (
-                isset($_POST['timestamp']) ?
-                $_POST['timestamp'] :
-                time()
-            );
+        $ID = sha1_file(
+            $temporaryFilepath
+        );
 
-            $extension = image_type_to_extension(
-                /* type: */ $size[2],
-                /* include dot: */ false
-            );
+        $filename = "original";
+        $basename = "{$filename}.{$extension}";
 
-            $ID = sha1_file($temporaryFilepath);
-            $filename = "original";
-            $basename = "{$filename}.{$extension}";
+        $permanentFilepath = CBDataStore::flexpath(
+            $ID,
+            $basename,
+            cbsitedir()
+        );
 
-            $permanentFilepath = CBDataStore::flexpath(
-                $ID,
-                $basename,
-                cbsitedir()
-            );
+        $spec = (object)[
+            'className' => 'CBImage',
+            'ID' => $ID,
+            'extension' => $extension,
+            'filename' => $filename,
+            'height' => $size[1],
+            'width' => $size[0],
+        ];
 
-            $spec = (object)[
-                'className' => 'CBImage',
-                'ID' => $ID,
-                'extension' => $extension,
-                'filename' => $filename,
-                'height' => $size[1],
-                'width' => $size[0],
-            ];
+        CBDB::transaction(
+            function () use (
+                $spec
+            ) {
+                CBModels::save(
+                    $spec,
+                    /* force: */ true
+                );
+            }
+        );
 
-            CBModels::save([$spec], /* force: */ true);
-            CBDataStore::makeDirectoryForID($ID);
-            move_uploaded_file($temporaryFilepath, $permanentFilepath);
-            Colby::query('COMMIT');
+        CBDataStore::makeDirectoryForID(
+            $ID
+        );
 
-        } catch (Throwable $exception) {
-
-            Colby::query('ROLLBACK');
-
-            throw $exception;
-
-        }
+        move_uploaded_file(
+            $temporaryFilepath,
+            $permanentFilepath
+        );
 
         return $spec;
     }
@@ -649,62 +656,61 @@ class CBImages {
             return null;
         }
 
-        Colby::query('START TRANSACTION');
+        $extension = image_type_to_extension(
+            /* type: */ $size[2],
+            /* include dot: */ false
+        );
 
-        try {
-            $extension = image_type_to_extension(
-                /* type: */ $size[2],
-                /* include dot: */ false
-            );
+        $ID = sha1_file(
+            $importedImageFilepath
+        );
 
-            $ID = sha1_file(
-                $importedImageFilepath
-            );
+        $filename = "original";
+        $basename = "{$filename}.{$extension}";
 
-            $filename = "original";
-            $basename = "{$filename}.{$extension}";
+        $destinationFilepath = CBDataStore::flexpath(
+            $ID,
+            $basename,
+            cbsitedir()
+        );
 
-            $destinationFilepath = CBDataStore::flexpath(
-                $ID,
-                $basename,
-                cbsitedir()
-            );
+        $spec = (object)[
+            'className' => 'CBImage',
+            'extension' => $extension,
+            'filename' => $filename,
+            'height' => $size[1],
+            'ID' => $ID,
+            'width' => $size[0],
+        ];
 
-            $spec = (object)[
-                'className' => 'CBImage',
-                'extension' => $extension,
-                'filename' => $filename,
-                'height' => $size[1],
-                'ID' => $ID,
-                'width' => $size[0],
-            ];
+        CBDB::transaction(
+            function () use (
+                $spec
+            ) {
+                /**
+                 * @NOTE 2020_11_15
+                 *
+                 *      We force this save because we may be resaving the model
+                 *      for the original image. This code could probably be
+                 *      changed to better handle this without resaving the
+                 *      model.
+                 */
 
-            /**
-             * @NOTE 2020_11_15
-             *
-             *      We force this save because we may be resaving the model for
-             *      the original image. This code could probably be changed to
-             *      better handle this without resaving the model.
-             */
+                CBModels::save(
+                    $spec,
+                    /* force: */ true
+                );
+            }
+        );
 
-            CBModels::save(
-                [$spec],
-                /* force: */ true
-            );
+        CBDataStore::makeDirectoryForID(
+            $ID
+        );
 
-            CBDataStore::makeDirectoryForID($ID);
-
-            copy(
-                $importedImageFilepath,
-                $destinationFilepath
-            );
-
-            Colby::query('COMMIT');
-        } catch (Throwable $exception) {
-            Colby::query('ROLLBACK');
-
-            throw $exception;
-        }
+        copy(
+            $importedImageFilepath,
+            $destinationFilepath
+        );
 
         return $spec;
     }
