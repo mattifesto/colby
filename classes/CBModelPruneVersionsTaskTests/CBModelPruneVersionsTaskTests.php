@@ -1,6 +1,7 @@
 <?php
 
-final class CBModelPruneVersionsTaskTests {
+final class
+CBModelPruneVersionsTaskTests {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
@@ -9,20 +10,21 @@ final class CBModelPruneVersionsTaskTests {
     /**
      * @return [object]
      */
-    static function CBTest_getTests(): array {
+    static function
+    CBTest_getTests(
+    ): array {
         return [
             (object)[
                 'name' => 'assignActions',
-                'title' => 'CBModelPruneVersionsTask assign actions',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'runTask',
-                'title' => 'CBModelPruneVersionsTask',
                 'type' => 'server',
             ],
         ];
     }
+    /* CBTest_getTests() */
 
 
 
@@ -41,26 +43,26 @@ final class CBModelPruneVersionsTaskTests {
             /* 0 to 1,000 */
 
             [
-                'deathspan: greater than 0, lifespan: less than 10', /* name */
+                'deathspan: greater than 0, lifespan: less than 10',
                 5, /* deathspan */
                 5, /* lifespan */
                 'prune', /* action */
             ],
             [
-                'deathspan: greater than 0, lifespan: greater than 10', /* name */
+                'deathspan: greater than 0, lifespan: greater than 10',
                  5, /* deathspan */
                 15, /* lifespan */
                 'keep', /* action */
             ],
 
             [
-                'deathspan: less than 1,000, lifespan: less than 10', /* name */
+                'deathspan: less than 1,000, lifespan: less than 10',
                 900, /* deathspan */
                   5, /* lifespan */
                 'prune', /* action */
             ],
             [
-                'deathspan: less than 1,000, lifespan: greater than 10', /* name */
+                'deathspan: less than 1,000, lifespan: greater than 10',
                 900, /* deathspan */
                  15, /* lifespan */
                 'keep', /* action */
@@ -69,26 +71,26 @@ final class CBModelPruneVersionsTaskTests {
             /* 1,000 to 100,000 */
 
             [
-                'deathspan: greater than 1,000, lifespan: less than 100', /* name */
+                'deathspan: greater than 1,000, lifespan: less than 100',
                 1100, /* deathspan */
                   90, /* lifespan */
                 'prune', /* action */
             ],
             [
-                'deathspan: greater than 1,000, lifespan: greater than 100', /* name */
+                'deathspan: greater than 1,000, lifespan: greater than 100',
                 1100, /* deathspan */
                  110, /* lifespan */
                 'keep', /* action */
             ],
 
             [
-                'deathspan: less than 100,000, lifespan: less than 100', /* name */
+                'deathspan: less than 100,000, lifespan: less than 100',
                 99000, /* deathspan */
                 90, /* lifespan */
                 'prune', /* action */
             ],
             [
-                'deathspan: less than 100,000, lifespan: greater than 100', /* name */
+                'deathspan: less than 100,000, lifespan: greater than 100',
                 99000, /* deathspan */
                   110, /* lifespan */
                 'keep', /* action */
@@ -97,26 +99,26 @@ final class CBModelPruneVersionsTaskTests {
             /* 100,000 to 1,000,000 */
 
             [
-                'deathspan: greater than 100,000, lifespan: less than 1,000', /* name */
+                'deathspan: greater than 100,000, lifespan: less than 1,000',
                 110000, /* deathspan */
                    900, /* lifespan */
                 'prune', /* action */
             ],
             [
-                'deathspan: greater than 100,000, lifespan: greater than 1,000', /* name */
+                'deathspan: greater than 100,000, lifespan: greater than 1,000',
                 110000, /* deathspan */
                   1100, /* lifespan */
                 'keep', /* action */
             ],
 
             [
-                'deathspan: less than 1,000,000, lifespan: less than 1,000', /* name */
+                'deathspan: less than 1,000,000, lifespan: less than 1,000',
                 990000, /* deathspan */
                    900, /* lifespan */
                 'prune', /* action */
             ],
             [
-                'deathspan: less than 1,000,000, lifespan: greater than 1,000', /* name */
+                'deathspan: less than 1,000,000, lifespan: greater than 1,000',
                 990000, /* deathspan */
                   1100, /* lifespan */
                 'keep', /* action */
@@ -125,26 +127,26 @@ final class CBModelPruneVersionsTaskTests {
             /* 1,000,000 to 10,000,000 */
 
             [
-                'deathspan: greater than 1,000,000, lifespan: less than 10,000', /* name */
+                'deathspan: greater than 1,000,000, lifespan: less than 10,000',
                 1100000, /* deathspan */
                    9000, /* lifespan */
                 'prune', /* action */
             ],
             [
-                'deathspan: greater than 1,000,000, lifespan: greater than 10,000', /* name */
+                'deathspan: greater than 1,000,000, lifespan: greater than 10,000',
                 1100000, /* deathspan */
                   11000, /* lifespan */
                 'keep', /* action */
             ],
 
             [
-                'deathspan: less than 10,000,000, lifespan: less than 10,000', /* name */
+                'deathspan: less than 10,000,000, lifespan: less than 10,000',
                 9900000, /* deathspan */
                    9900, /* lifespan */
                 'prune', /* action */
             ],
             [
-                'deathspan: less than 10,000,000, lifespan: greater than 10,000', /* name */
+                'deathspan: less than 10,000,000, lifespan: greater than 10,000',
                 9900000, /* deathspan */
                   11000, /* lifespan */
                 'keep', /* action */
@@ -153,19 +155,19 @@ final class CBModelPruneVersionsTaskTests {
             /* greater than 10,000,000 */
 
             [
-                'deathspan: 11,000,000, lifespan: 1', /* name */
+                'deathspan: 11,000,000, lifespan: 1',
                 11000000, /* deathspan */
                 1, /* lifespan */
                 'prune', /* action */
             ],
             [
-                'deathspan: 11,000,000, lifespan: 10,000,000', /* name */
+                'deathspan: 11,000,000, lifespan: 10,000,000',
                 11000000, /* deathspan */
                 10000000, /* lifespan */
                 'prune', /* action */
             ],
             [
-                'deathspan: 100,000,000,000, lifespan: 10,000,000', /* name */
+                'deathspan: 100,000,000,000, lifespan: 10,000,000',
                 100000000000, /* deathspan */
                 10000000, /* lifespan */
                 'prune', /* action */
@@ -228,9 +230,14 @@ final class CBModelPruneVersionsTaskTests {
     /**
      * @return object
      */
-    static function CBTest_runTask(): stdClass {
+    static function
+    runTask(
+    ): stdClass {
         $ID = '8ab4d33187e3016af99e9c2e97ecd1284d219917';
-        $IDAsSQL = CBID::toSQL($ID);
+
+        $IDAsSQL = CBID::toSQL(
+            $ID
+        );
 
         $versionNumber = 0;
 
@@ -276,9 +283,19 @@ final class CBModelPruneVersionsTaskTests {
             [$versionNumber += 1,        0, 'keep'], /* will be current version */
         ];
 
-        $count = count($versionHistory);
+        $count = count(
+            $versionHistory
+        );
 
-        CBModels::deleteByID($ID);
+        CBDB::transaction(
+            function () use (
+                $ID
+            ) {
+                CBModels::deleteByID(
+                    $ID
+                );
+            }
+        );
 
         $spec = (object)[
             'className' => 'CBModelPruneVersionsTaskTests_class',
@@ -286,10 +303,18 @@ final class CBModelPruneVersionsTaskTests {
             'version' => 0,
         ];
 
-        for ($index = 0; $index < $count; $index += 1) {
+        for (
+            $index = 0;
+            $index < $count;
+            $index += 1
+        ) {
             CBDB::transaction(
-                function () use ($spec) {
-                    CBModels::save($spec);
+                function () use (
+                    $spec
+                ) {
+                    CBModels::save(
+                        $spec
+                    );
 
                     $spec->version += 1;
                 }
@@ -298,7 +323,11 @@ final class CBModelPruneVersionsTaskTests {
 
         $now = time();
 
-        for ($index = 0; $index < $count; $index += 1) {
+        for (
+            $index = 0;
+            $index < $count;
+            $index += 1
+        ) {
             $versionNumber = $versionHistory[$index][0];
             $timestamp = $now - $versionHistory[$index][1];
 
@@ -309,9 +338,11 @@ final class CBModelPruneVersionsTaskTests {
                 WHERE   ID = {$IDAsSQL} AND
                         version = {$versionNumber}
 
-EOT;
+            EOT;
 
-            Colby::query($SQL);
+            Colby::query(
+                $SQL
+            );
         }
 
         CBTasks2::runSpecificTask(
@@ -326,12 +357,19 @@ EOT;
             WHERE       ID = {$IDAsSQL}
             ORDER BY    version
 
-EOT;
+        EOT;
 
-        $actual = CBDB::SQLToArray($SQL);
+        $actual = CBDB::SQLToArray(
+            $SQL
+        );
+
         $expected = [];
 
-        for ($index = 0; $index < $count; $index += 1) {
+        for (
+            $index = 0;
+            $index < $count;
+            $index += 1
+        ) {
             $values = $versionHistory[$index];
             $versionNumber = $values[0];
 
@@ -343,7 +381,9 @@ EOT;
             }
         }
 
-        if ($actual != $expected) {
+        if (
+            $actual != $expected
+        ) {
             return CBTest::resultMismatchFailure(
                 "Final",
                 $actual,
@@ -351,13 +391,21 @@ EOT;
             );
         }
 
-        CBModels::deleteByID($ID);
+        CBDB::transaction(
+            function () use (
+                $ID
+            ) {
+                CBModels::deleteByID(
+                    $ID
+                );
+            }
+        );
 
         return (object)[
             'succeeded' => true,
         ];
     }
-    /* CBTest_runTask() */
+    /* runTask() */
 
 }
 
