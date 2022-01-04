@@ -30,15 +30,21 @@ SCPromotion_Tests {
      * @return object
      */
     static function
-    CBTest_general(
+    general(
     ): stdClass {
         $promotionCBID = 'd918a66dec8e39311ae5bf496e2c8d74ba8f9353';
 
 
         /* initialize test */
 
-        CBModels::deleteByID(
-            $promotionCBID
+        CBDB::transaction(
+            function () use (
+                $promotionCBID
+            ) {
+                CBModels::deleteByID(
+                    $promotionCBID
+                );
+            }
         );
 
         SCPromotionsTable::deletePromotionByCBID(
@@ -72,12 +78,24 @@ SCPromotion_Tests {
             'ID' => $promotionCBID,
         ];
 
-        CBModels::save(
-            $promotionSpec
+        CBDB::transaction(
+            function () use (
+                $promotionSpec
+            ) {
+                CBModels::save(
+                    $promotionSpec
+                );
+            }
         );
 
-        CBModels::deleteByID(
-            $promotionCBID
+        CBDB::transaction(
+            function () use (
+                $promotionCBID
+            ) {
+                CBModels::deleteByID(
+                    $promotionCBID
+                );
+            }
         );
 
         $activePromotionCBIDs = SCPromotionsTable::fetchActivePromotionCBIDs();
@@ -87,7 +105,9 @@ SCPromotion_Tests {
             $activePromotionCBIDs
         );
 
-        if ($isActive !== false) {
+        if (
+            $isActive !== false
+        ) {
             return CBTest::valueIssueFailure(
                 'bare promotion',
                 $activePromotionCBIDs,
@@ -110,8 +130,14 @@ SCPromotion_Tests {
             'endTimestamp' => time() + 600,
         ];
 
-        CBModels::save(
-            $promotionSpec
+        CBDB::transaction(
+            function () use (
+                $promotionSpec
+            ) {
+                CBModels::save(
+                    $promotionSpec
+                );
+            }
         );
 
         $activePromotionCBIDs = SCPromotionsTable::fetchActivePromotionCBIDs();
@@ -140,8 +166,14 @@ SCPromotion_Tests {
         $promotionSpec->version = 1;
         $promotionSpec->endTimestamp = 0;
 
-        CBModels::save(
-            $promotionSpec
+        CBDB::transaction(
+            function () use (
+                $promotionSpec
+            ) {
+                CBModels::save(
+                    $promotionSpec
+                );
+            }
         );
 
         $activePromotionCBIDs = SCPromotionsTable::fetchActivePromotionCBIDs();
@@ -151,7 +183,9 @@ SCPromotion_Tests {
             $activePromotionCBIDs
         );
 
-        if ($isActive !== false) {
+        if (
+            $isActive !== false
+        ) {
             return CBTest::valueIssueFailure(
                 'make active promotion inactive',
                 $activePromotionCBIDs,
@@ -167,8 +201,14 @@ SCPromotion_Tests {
 
         /* delete promotion */
 
-        CBModels::deleteByID(
-            $promotionCBID
+        CBDB::transaction(
+            function () use (
+                $promotionCBID
+            ) {
+                CBModels::deleteByID(
+                    $promotionCBID
+                );
+            }
         );
 
         $activePromotionCBIDs = SCPromotionsTable::fetchActivePromotionCBIDs();
@@ -178,7 +218,9 @@ SCPromotion_Tests {
             $activePromotionCBIDs
         );
 
-        if ($isActive !== false) {
+        if (
+            $isActive !== false
+        ) {
             return CBTest::valueIssueFailure(
                 'delete promotion',
                 $activePromotionCBIDs,
@@ -198,6 +240,6 @@ SCPromotion_Tests {
             'succeeded' => true,
         ];
     }
-    /* CBTest_general() */
+    /* general() */
 
 }
