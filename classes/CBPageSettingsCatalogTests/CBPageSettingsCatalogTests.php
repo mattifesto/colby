@@ -1,6 +1,7 @@
 <?php
 
-final class CBPageSettingsCatalogTests {
+final class
+CBPageSettingsCatalogTests {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
@@ -9,15 +10,17 @@ final class CBPageSettingsCatalogTests {
     /**
      * @return [object]
      */
-    static function CBTest_getTests(): array {
+    static function
+    CBTest_getTests(
+    ): array {
         return [
             (object)[
                 'name' => 'test',
-                'title' => 'CBPageSettingsCatalog',
                 'type' => 'server',
             ],
         ];
     }
+    /* CBTest_getTests() */
 
 
 
@@ -28,9 +31,12 @@ final class CBPageSettingsCatalogTests {
     /**
      * @return object
      */
-    static function CBTest_test(): stdClass {
-        CBPageSettingsCatalog::$testID =
-        '0fc48f5a3d1ee3322de14822184bb162e15efdbc';
+    static function
+    test(
+    ): stdClass {
+        CBPageSettingsCatalog::$testID = (
+            '0fc48f5a3d1ee3322de14822184bb162e15efdbc'
+        );
 
         CBPageSettingsCatalog::CBInstall_install();
 
@@ -61,7 +67,9 @@ final class CBPageSettingsCatalogTests {
             'CBPageSettingsCatalogTests_pageSettings2',
         ];
 
-        if ($pageSettingsClassNames != $expectedClassNames) {
+        if (
+            $pageSettingsClassNames != $expectedClassNames
+        ) {
             return CBTest::resultMismatchFailure(
                 'test 1',
                 $pageSettingsClassNames,
@@ -69,7 +77,13 @@ final class CBPageSettingsCatalogTests {
             );
         }
 
-        CBModels::deleteByID(CBPageSettingsCatalog::$testID);
+        CBDB::transaction(
+            function () {
+                CBModels::deleteByID(
+                    CBPageSettingsCatalog::$testID
+                );
+            }
+        );
 
         CBPageSettingsCatalog::$testID = null;
 
@@ -77,7 +91,7 @@ final class CBPageSettingsCatalogTests {
             'succeeded' => true,
         ];
     }
-    /* CBTest_test() */
+    /* test() */
 
 }
 
