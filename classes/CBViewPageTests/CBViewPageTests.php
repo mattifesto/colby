@@ -1,6 +1,7 @@
 <?php
 
-final class CBViewPageTests {
+final class
+CBViewPageTests {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
@@ -242,7 +243,13 @@ final class CBViewPageTests {
 
         $title = 'I 🏛 <Websites>!';
 
-        CBModels::deleteByID($ID);
+        CBDB::transaction(
+            function () use (
+                $ID
+            ) {
+                CBModels::deleteByID($ID);
+            }
+        );
 
         $spec = (object)[
             'className' => 'CBViewPage',
@@ -258,8 +265,14 @@ final class CBViewPageTests {
             $specURI
         );
 
-        CBModels::save(
-            $spec
+        CBDB::transaction(
+            function () use (
+                $spec
+            ) {
+                CBModels::save(
+                    $spec
+                );
+            }
         );
 
 
@@ -273,10 +286,15 @@ final class CBViewPageTests {
 
         EOT;
 
-        $actualResult = CBDB::SQLToValue($SQL);
+        $actualResult = CBDB::SQLToValue(
+            $SQL
+        );
+
         $expectedResult = '1';
 
-        if ($actualResult !== $expectedResult) {
+        if (
+            $actualResult !== $expectedResult
+        ) {
             return CBTest::resultMismatchFailure(
                 'test 1',
                 $actualResult,
@@ -295,10 +313,15 @@ final class CBViewPageTests {
 
         EOT;
 
-        $actualResult = CBDB::SQLToValue($SQL);
+        $actualResult = CBDB::SQLToValue(
+            $SQL
+        );
+
         $expectedResult = '1';
 
-        if ($actualResult !== $expectedResult) {
+        if (
+            $actualResult !== $expectedResult
+        ) {
             return CBTest::resultMismatchFailure(
                 'test 2',
                 $actualResult,
@@ -317,7 +340,9 @@ final class CBViewPageTests {
 
         EOT;
 
-        $actualResult = CBDB::SQLToValue($SQL);
+        $actualResult = CBDB::SQLToValue(
+            $SQL
+        );
 
         if ($actualResult !== $modelURI) {
             return CBTest::resultMismatchFailure(
@@ -330,7 +355,13 @@ final class CBViewPageTests {
 
         /* delete test model */
 
-        CBModels::deleteByID([$ID]);
+        CBDB::transaction(
+            function () use (
+                $ID
+            ) {
+                CBModels::deleteByID($ID);
+            }
+        );
 
 
         /* done */
