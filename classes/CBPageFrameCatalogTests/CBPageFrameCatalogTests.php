@@ -1,6 +1,7 @@
 <?php
 
-final class CBPageFrameCatalogTests {
+final class
+CBPageFrameCatalogTests {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
@@ -9,15 +10,17 @@ final class CBPageFrameCatalogTests {
     /**
      * @return [object]
      */
-    static function CBTest_getTests(): array {
+    static function
+    CBTest_getTests(
+    ): array {
         return [
             (object)[
                 'name' => 'test',
-                'title' => 'CBPageFrameCatalog',
                 'type' => 'server',
             ],
         ];
     }
+    /* CBTest_getTests() */
 
 
 
@@ -28,8 +31,12 @@ final class CBPageFrameCatalogTests {
     /**
      * @return object
      */
-    static function CBTest_test(): stdClass {
-        CBPageFrameCatalog::$testID = '961cf3538a564259b47db8658f5f507d92f63e52';
+    static function
+    test(
+    ): stdClass {
+        CBPageFrameCatalog::$testID = (
+            '961cf3538a564259b47db8658f5f507d92f63e52'
+        );
 
         CBPageFrameCatalog::CBInstall_install();
         CBPageFrameCatalog::install('CBPageFrameCatalogTests_frame1');
@@ -45,7 +52,9 @@ final class CBPageFrameCatalogTests {
             'CBPageFrameCatalogTests_frame2',
         ];
 
-        if ($frameClassNames != $expectedClassNames) {
+        if (
+            $frameClassNames != $expectedClassNames
+        ) {
             return CBTest::resultMismatchFailure(
                 'test 1',
                 $frameClassNames,
@@ -53,7 +62,13 @@ final class CBPageFrameCatalogTests {
             );
         }
 
-        CBModels::deleteByID(CBPageFrameCatalog::$testID);
+        CBDB::transaction(
+            function () {
+                CBModels::deleteByID(
+                    CBPageFrameCatalog::$testID
+                );
+            }
+        );
 
         CBPageFrameCatalog::$testID = null;
 
@@ -61,7 +76,7 @@ final class CBPageFrameCatalogTests {
             'succeeded' => true,
         ];
     }
-    /* CBTest_test() */
+    /* test() */
 
 }
 
