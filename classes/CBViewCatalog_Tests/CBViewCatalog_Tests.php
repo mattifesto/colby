@@ -1,8 +1,11 @@
 <?php
 
-final class CBViewCatalog_Tests {
+final class
+CBViewCatalog_Tests {
 
-    /* -- CBTest interfaces -- -- -- -- -- */
+    /* -- CBTest interfaces -- */
+
+
 
     /**
      * @return [object]
@@ -19,15 +22,28 @@ final class CBViewCatalog_Tests {
     /* CBTest_getTests() */
 
 
-    /* -- tests -- -- -- -- -- */
+
+    /* -- tests -- */
+
+
 
     /**
      * @return object
      */
-    static function CBTest_installView(): stdClass {
+    static function
+    installView(
+    ): stdClass {
         $testID = '4f3d8e4ce9ef94db860660dfd5faf3e786c9915c';
 
-        CBModels::deleteByID($testID);
+        CBDB::transaction(
+            function () use (
+                $testID
+            ) {
+                CBModels::deleteByID(
+                    $testID
+                );
+            }
+        );
 
         CBViewCatalog::$testID = $testID;
 
@@ -35,12 +51,15 @@ final class CBViewCatalog_Tests {
 
             /* test */
 
-            $actualResult =
-            CBViewCatalog::fetchSupportedViewClassNames();
+            $actualResult = (
+                CBViewCatalog::fetchSupportedViewClassNames()
+            );
 
             $expectedResult = [];
 
-            if ($actualResult != $expectedResult) {
+            if (
+                $actualResult != $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     'initial supported view class names',
                     $actualResult,
@@ -50,14 +69,19 @@ final class CBViewCatalog_Tests {
 
             /* test */
 
-            CBViewCatalog::installView('FakeClassName');
+            CBViewCatalog::installView(
+                'FakeClassName'
+            );
 
-            $actualResult =
-            CBViewCatalog::fetchSupportedViewClassNames();
+            $actualResult = (
+                CBViewCatalog::fetchSupportedViewClassNames()
+            );
 
             $expectedResult = [];
 
-            if ($actualResult != $expectedResult) {
+            if (
+                $actualResult != $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     'non-existent class name',
                     $actualResult,
@@ -67,7 +91,9 @@ final class CBViewCatalog_Tests {
 
             /* test */
 
-            CBViewCatalog::installView('CBArtworkView');
+            CBViewCatalog::installView(
+                'CBArtworkView'
+            );
 
             $actualResult = [
                 CBViewCatalog::fetchViewClassNames(),
@@ -83,7 +109,9 @@ final class CBViewCatalog_Tests {
                 [],
             ];
 
-            if ($actualResult != $expectedResult) {
+            if (
+                $actualResult != $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     'supported class name',
                     $actualResult,
@@ -114,7 +142,9 @@ final class CBViewCatalog_Tests {
                 [],
             ];
 
-            if ($actualResult != $expectedResult) {
+            if (
+                $actualResult != $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     'deprecated class name',
                     $actualResult,
@@ -145,7 +175,9 @@ final class CBViewCatalog_Tests {
                 ['CBArtworkView'],
             ];
 
-            if ($actualResult != $expectedResult) {
+            if (
+                $actualResult != $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     'unsupported class name',
                     $actualResult,
@@ -154,13 +186,23 @@ final class CBViewCatalog_Tests {
             }
         } finally {
             CBViewCatalog::$testID = null;
-            CBModels::deleteByID($testID);
+
+            CBDB::transaction(
+                function () use (
+                    $testID
+                ) {
+                    CBModels::deleteByID(
+                        $testID
+                    );
+                }
+            );
         }
 
         return (object)[
             'succeeded' => true,
         ];
     }
-    /* CBTest_installView() */
+    /* installView() */
+
 }
 /* CBViewCatalog_Tests */
