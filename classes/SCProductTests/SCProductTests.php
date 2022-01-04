@@ -1,6 +1,7 @@
 <?php
 
-final class SCProductTests {
+final class
+SCProductTests {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
@@ -47,27 +48,36 @@ final class SCProductTests {
     /**
      * @return void
      */
-    static function installTestProducts(): void {
-        CBModels::save(
-            [
-                (object)[
-                    'className' => 'SCProduct',
-                    'ID' => SCProductTests::testProductID1(),
-                    'priceInCents' => 1000,
-                    'productCode' => SCProductTests::testProductCode1(),
-                    'title' => 'Test Product 1',
-                ],
-                (object)[
-                    'className' => 'SCProduct',
-                    'ID' => SCProductTests::testProductID2(),
-                    'priceInCents' => 2000,
-                    'productCode' => SCProductTests::testProductCode2(),
-                    'title' => 'Test Product 2',
-                ],
-            ],
-            /* force: */ true
+    static function
+    installTestProducts(
+    ): void {
+        CBDB::transaction(
+            function () {
+                CBModels::save(
+                    [
+                        (object)[
+                            'className' => 'SCProduct',
+                            'ID' => SCProductTests::testProductID1(),
+                            'priceInCents' => 1000,
+                            'productCode' => SCProductTests::testProductCode1(),
+                            'title' => 'Test Product 1',
+                        ],
+                        (object)[
+                            'className' => 'SCProduct',
+                            'ID' => SCProductTests::testProductID2(),
+                            'priceInCents' => 2000,
+                            'productCode' => SCProductTests::testProductCode2(),
+                            'title' => 'Test Product 2',
+                        ],
+                    ],
+                    /* force: */ true
+                );
+            }
         );
     }
+    /* installTestProducts() */
+
+
 
     /**
      * @return string
@@ -101,15 +111,25 @@ final class SCProductTests {
         );
     }
 
+
+
     /**
      * @return void
      */
-    static function uninstallTestProducts(): void {
-        CBModels::deleteByID(
-            [
-                SCProductTests::testProductID1(),
-                SCProductTests::testProductID2(),
-            ]
+    static function
+    uninstallTestProducts(
+    ): void {
+        CBDB::transaction(
+            function () {
+                CBModels::deleteByID(
+                    [
+                        SCProductTests::testProductID1(),
+                        SCProductTests::testProductID2(),
+                    ]
+                );
+            }
         );
     }
+    /* uninstallTestProducts() */
+
 }
