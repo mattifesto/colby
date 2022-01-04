@@ -784,19 +784,18 @@ final class CBConvert {
 
     /**
      * @param mixed $value
-     * @param [string] $classNames
+     * @param string|[string] $classNames
      *
-     *      If this parameter is empty all models will be returned. If not, only
-     *      models with a class name matching one of the class names in the
-     *      array will be returned.
+     *      If the value of this argument is an empty array, which is the
+     *      default value, all models will be returned. If not, only models with
+     *      a class name matching one of the class names in the array will be
+     *      returned.
      *
-     *      @TODO 2019_01_31
+     *      @NOTE 2022_01_02
      *
-     *          This parameter should be deprecated. This is not the place to
-     *          compare class names. If it isn't deprecated, replace this note
-     *          with explicit documentation on why this is the place for it and
-     *          adjust the JavaScript implementation, which does not support the
-     *          parameter currently.
+     *          This parameter had been question but is now fully approved. This
+     *          is exactly the place we want this of someone wants to request
+     *          a specific class name of model rather than just any model.
      *
      * @return object|null
      *
@@ -814,7 +813,19 @@ final class CBConvert {
      *          whether the $value parameter is attempting to be a model than
      *          whether it might succeed at being a model.
      */
-    static function valueAsModel($value, array $classNames = []): ?stdClass {
+    static function
+    valueAsModel(
+        $value,
+        $classNames = []
+    ): ?stdClass {
+        if (
+            is_string(
+                $classNames
+            )
+        ) {
+            $classNames = [$classNames];
+        }
+
         if (CBConvert::valueAsObject($value) === null) {
             return null;
         }
