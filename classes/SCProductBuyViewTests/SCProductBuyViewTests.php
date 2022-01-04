@@ -9,7 +9,9 @@ final class SCProductBuyViewTests {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
             Colby::flexpath(
                 __CLASS__,
@@ -25,7 +27,9 @@ final class SCProductBuyViewTests {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'SCProductBuyView',
         ];
@@ -41,7 +45,9 @@ final class SCProductBuyViewTests {
     /**
      * @return [object]
      */
-    static function CBTest_getTests(): array {
+    static function
+    CBTest_getTests(
+    ): array {
         return [
             (object)[
                 'name' => 'render',
@@ -63,7 +69,9 @@ final class SCProductBuyViewTests {
     /**
      * @return object
      */
-    static function CBTest_render(): stdClass {
+    static function
+    render(
+    ): stdClass {
         ob_start();
 
         try {
@@ -76,7 +84,9 @@ final class SCProductBuyViewTests {
                 'productCode' => 'SCProductBuyViewTests_bad_1',
             ];
 
-            SCProductBuyView::CBView_render($model);
+            SCProductBuyView::CBView_render(
+                $model
+            );
 
 
             /* good product code */
@@ -86,7 +96,9 @@ final class SCProductBuyViewTests {
                 'productCode' => SCProductTests::testProductCode1(),
             ];
 
-            SCProductBuyView::CBView_render($model);
+            SCProductBuyView::CBView_render(
+                $model
+            );
         } finally {
             ob_end_clean();
 
@@ -97,5 +109,6 @@ final class SCProductBuyViewTests {
             'succeeded' => true,
         ];
     }
-    /* CBTest_render() */
+    /* render() */
+
 }
