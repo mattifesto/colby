@@ -11,7 +11,8 @@
  *      that belongs in other classes will be moved out. Comments should
  *      document each action.
  */
-final class CBPageVerificationTask {
+final class
+CBPageVerificationTask {
 
     static $messageContext = [];
 
@@ -78,13 +79,21 @@ final class CBPageVerificationTask {
      *
      * @return void
      */
-    static function CBTasks2_run(string $ID): void {
+    static function
+    CBTasks2_run(
+        string $ID
+    ): void {
         $messages = [];
         $resave = false;
         $severity = 7;
-        $result = CBPageVerificationTask::run($ID);
 
-        if (empty($result->hasColbyPagesRow)) {
+        $result = CBPageVerificationTask::run(
+            $ID
+        );
+
+        if (
+            empty($result->hasColbyPagesRow)
+        ) {
             CBLog::log(
                 (object)[
                     'sourceClassName' => __CLASS__,
@@ -94,7 +103,9 @@ final class CBPageVerificationTask {
             );
         }
 
-        if (empty($result->model)) {
+        if (
+            empty($result->model)
+        ) {
             CBLog::log(
                 (object)[
                     'sourceClassName' => __CLASS__,
@@ -104,7 +115,9 @@ final class CBPageVerificationTask {
             );
         }
 
-        if (!empty($result->didDeleteRowWithoutModel)) {
+        if (
+            !empty($result->didDeleteRowWithoutModel)
+        ) {
             $message = <<<EOT
 
                 The page row and data store were deleted by this task because no
@@ -121,23 +134,44 @@ final class CBPageVerificationTask {
             );
         }
 
-        if (!empty($result->renderError)) {
-            CBErrorHandler::report($result->renderError);
+        if (
+            !empty($result->renderError)
+        ) {
+            CBErrorHandler::report(
+                $result->renderError
+            );
         }
 
         /* first line of message */
 
-        $pageTitle = CBModel::valueToString($result, 'model.title');
+        $pageTitle = CBModel::valueToString(
+            $result,
+            'model.title'
+        );
+
         $firstLine = "A page with the title \"{$pageTitle}\" was verified";
 
-        array_unshift($messages, $firstLine);
+        array_unshift(
+            $messages,
+            $firstLine
+        );
 
-        $modelClassName = CBModel::valueToString($result, 'model.className');
+        $modelClassName = CBModel::valueToString(
+            $result,
+            'model.className'
+        );
 
-        if ($modelClassName == 'CBViewPage') {
-            $imageValue = CBModel::value($result, 'spec.image');
+        if (
+            $modelClassName == 'CBViewPage'
+        ) {
+            $imageValue = CBModel::value(
+                $result,
+                'spec.image'
+            );
 
-            if (empty($imageValue)) {
+            if (
+                empty($imageValue)
+            ) {
 
                 /**
                  * We only process `thumbnailURL` on the spec if `image` is not
@@ -145,20 +179,32 @@ final class CBPageVerificationTask {
                  * ignored by CBViewPage::CBModel_build().
                  */
 
-                $thumbnailURL = CBModel::value($result, 'spec.thumbnailURL');
+                $thumbnailURL = CBModel::value(
+                    $result,
+                    'spec.thumbnailURL'
+                );
 
-                if ($thumbnailURL) {
-                    $image = CBImages::URIToCBImage($thumbnailURL);
+                if (
+                    $thumbnailURL
+                ) {
+                    $image = CBImages::URIToCBImage(
+                        $thumbnailURL
+                    );
 
-                    if ($image) {
+                    if (
+                        $image
+                    ) {
                         $result->spec->image = $image;
 
                         $result->spec->deprecatedThumbnailURL =
                         $result->spec->thumbnailURL;
 
-                        unset($result->spec->thumbnailURL);
+                        unset(
+                            $result->spec->thumbnailURL
+                        );
 
                         $resave = true;
+
                         $message = <<<EOT
 
                             A CBViewPage spec upgraded its thumbnailURL
@@ -189,7 +235,9 @@ final class CBPageVerificationTask {
                     'ID'
                 );
 
-                if ($imageID === null) {
+                if (
+                    $imageID === null
+                ) {
                     $imageModel = null;
                 } else {
                     $imageModel = CBModels::fetchModelByIDNullable(
@@ -202,11 +250,15 @@ final class CBPageVerificationTask {
                     $imageModel->className !== 'CBImage'
                 ) {
                     $imageValueAsMessage = CBMessageMarkup::stringToMarkup(
-                        CBConvert::valueToPrettyJSON($imageValue)
+                        CBConvert::valueToPrettyJSON(
+                            $imageValue
+                            )
                     );
 
                     $imageIDAsMessage = CBMessageMarkup::stringToMarkup(
-                        CBConvert::valueToPrettyJSON($imageID)
+                        CBConvert::valueToPrettyJSON(
+                            $imageID
+                            )
                     );
 
                     $message = <<<EOT
@@ -245,22 +297,37 @@ final class CBPageVerificationTask {
 
             /* check for deprecated views */
 
-            $deprecatedViewClassNames =
-            CBPageVerificationTask::findDeprecatedSubviewClassNames(
-                $result->spec
+            $deprecatedViewClassNames = (
+                CBPageVerificationTask::findDeprecatedSubviewClassNames(
+                    $result->spec
+                )
             );
 
-            if (!empty($deprecatedViewClassNames)) {
-                $count = count($deprecatedViewClassNames);
+            if (
+                !empty($deprecatedViewClassNames)
+            ) {
+                $count = count(
+                    $deprecatedViewClassNames
+                );
+
                 $countPlural = $count > 1 ? 's' : '';
 
                 $uniqueClassNames = array_values(
-                    array_unique($deprecatedViewClassNames)
+                    array_unique(
+                        $deprecatedViewClassNames
+                    )
                 );
 
-                $uniqueCount = count($uniqueClassNames);
+                $uniqueCount = count(
+                    $uniqueClassNames
+                );
+
                 $uniqueCountPlural = $uniqueCount > 1 ? 'es' : '';
-                $uniqueClassNames = implode("\n\n", $uniqueClassNames);
+
+                $uniqueClassNames = implode(
+                    "\n\n",
+                    $uniqueClassNames
+                );
 
                 $message = <<<EOT
 
@@ -288,22 +355,38 @@ final class CBPageVerificationTask {
 
             /* check for unsupported views */
 
-            $unsupportedViewClassNames =
-            CBPageVerificationTask::findUnsupportedSubviewClassNames(
-                $result->spec
+            $unsupportedViewClassNames = (
+                CBPageVerificationTask::findUnsupportedSubviewClassNames(
+                    $result->spec
+                )
             );
 
-            if (!empty($unsupportedViewClassNames)) {
-                $count = count($unsupportedViewClassNames);
+            if (
+                !empty($unsupportedViewClassNames)
+            ) {
+                $count = count(
+                    $unsupportedViewClassNames
+                );
+
                 $countPlural = $count > 1 ? 's' : '';
 
                 $uniqueClassNames = array_values(
-                    array_unique($unsupportedViewClassNames)
+                    array_unique(
+                        $unsupportedViewClassNames
+                    )
                 );
 
-                $uniqueCount = count($uniqueClassNames);
+                $uniqueCount = count(
+                    $uniqueClassNames
+                );
+
                 $uniqueCountPlural = $uniqueCount > 1 ? 'es' : '';
-                $uniqueClassNames = implode("\n\n", $uniqueClassNames);
+
+                $uniqueClassNames = implode(
+                    "\n\n",
+                    $uniqueClassNames
+                );
+
                 $message = <<<EOT
 
                     The page "{$pageTitle}" has {$count} unsupported
@@ -329,8 +412,18 @@ final class CBPageVerificationTask {
             }
         }
 
-        if ($resave) {
-            CBModels::save($result->spec);
+        if (
+            $resave
+        ) {
+            CBDB::transaction(
+                function () use (
+                    $result
+                ) {
+                    CBModels::save(
+                        $result->spec
+                    );
+                }
+            );
         }
 
         CBLog::log(
