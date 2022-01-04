@@ -1,6 +1,7 @@
 <?php
 
-final class CBModelUpdater_Tests {
+final class
+CBModelUpdater_Tests {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
@@ -43,15 +44,21 @@ final class CBModelUpdater_Tests {
      * @return object
      */
     static function
-    CBTest_fetchByCBID(
+    fetchByCBID(
     ): stdClass {
 
         /* prepare */
 
         $CBID = CBTest::getTemporaryModelCBID();
 
-        CBModels::deleteByID(
-            $CBID
+        CBDB::transaction(
+            function () use (
+                $CBID
+            ) {
+                CBModels::deleteByID(
+                    $CBID
+                );
+            }
         );
 
         $updater = CBModelUpdater::fetchByCBID(
@@ -99,8 +106,14 @@ final class CBModelUpdater_Tests {
             $CBID
         );
 
-        CBModels::save(
-            $spec
+        CBDB::transaction(
+            function () use (
+                $spec
+            ) {
+                CBModels::save(
+                    $spec
+                );
+            }
         );
 
         $updater = CBModelUpdater::fetchByCBID(
@@ -156,7 +169,13 @@ final class CBModelUpdater_Tests {
             'New Title'
         );
 
-        ($updater->CBModelUpdater_save)();
+        CBDB::transaction(
+            function () use (
+                $updater
+            ) {
+                ($updater->CBModelUpdater_save)();
+            }
+        );
 
         $updater = CBModelUpdater::fetchByCBID(
             $CBID
@@ -181,15 +200,21 @@ final class CBModelUpdater_Tests {
 
         /* done */
 
-        CBModels::deleteByID(
-            $CBID
+        CBDB::transaction(
+            function () use (
+                $CBID
+            ) {
+                CBModels::deleteByID(
+                    $CBID
+                );
+            }
         );
 
         return (object)[
             'succeeded' => true,
         ];
     }
-    /* CBTest_fetchByCBID() */
+    /* fetchByCBID() */
 
 
 
@@ -197,12 +222,18 @@ final class CBModelUpdater_Tests {
      * @return object
      */
     static function
-    CBTest_objectOrientedMultiSave(
+    objectOrientedMultiSave(
     ): stdClass {
         $CBID = '056936c040c40fbad3932cd95fbaa5851f0be730';
 
-        CBModels::deleteByID(
-            $CBID
+        CBDB::transaction(
+            function () use (
+                $CBID
+            ) {
+                CBModels::deleteByID(
+                    $CBID
+                );
+            }
         );
 
         $modelUpdater = new CBModelUpdater(
@@ -219,21 +250,39 @@ final class CBModelUpdater_Tests {
             'message 1'
         );
 
-        $modelUpdater->save2();
+        CBDB::transaction(
+            function () use (
+                $modelUpdater
+            ) {
+                $modelUpdater->save2();
+            }
+        );
 
         CBMessageView::setCBMessage(
             $modelUpdater->getSpec(),
             'message 2'
         );
 
-        $modelUpdater->save2();
+        CBDB::transaction(
+            function () use (
+                $modelUpdater
+            ) {
+                $modelUpdater->save2();
+            }
+        );
 
         CBMessageView::setCBMessage(
             $modelUpdater->getSpec(),
             'message 3'
         );
 
-        $modelUpdater->save2();
+        CBDB::transaction(
+            function () use (
+                $modelUpdater
+            ) {
+                $modelUpdater->save2();
+            }
+        );
 
         $messageViewModel = CBModels::fetchModelByCBID(
             $CBID
@@ -253,15 +302,21 @@ final class CBModelUpdater_Tests {
             );
         }
 
-        CBModels::deleteByID(
-            $CBID
+        CBDB::transaction(
+            function () use (
+                $CBID
+            ) {
+                CBModels::deleteByID(
+                    $CBID
+                );
+            }
         );
 
         return (object)[
             'succeeded' => true,
         ];
     }
-    /* CBTest_objectOrientedMultiSave() */
+    /* objectOrientedMultiSave() */
 
 
 
@@ -269,9 +324,10 @@ final class CBModelUpdater_Tests {
      * @return object
      */
     static function
-    CBTest_updateIfExists(
+    updateIfExists(
     ): stdClass {
         $modelID = 'dc325defccbfaeb390304b35e4073d2a8c19063a';
+
         $spec = (object)[
             'className' => 'CBMessageView',
             'ID' => $modelID,
@@ -280,16 +336,23 @@ final class CBModelUpdater_Tests {
 
         /* regular update */
 
-        CBModelUpdater::update($spec);
+        CBModelUpdater::update(
+            $spec
+        );
 
-        $actualResult = CBModels::fetchSpecByIDNullable($modelID);
+        $actualResult = CBModels::fetchSpecByIDNullable(
+            $modelID
+        );
+
         $expectedResult = (object)[
             'className' => 'CBMessageView',
             'ID' => $modelID,
             'version' => 1,
         ];
 
-        if ($actualResult != $expectedResult) {
+        if (
+            $actualResult != $expectedResult
+        ) {
             return CBTest::resultMismatchFailure(
                 'update',
                 $actualResult,
@@ -300,17 +363,32 @@ final class CBModelUpdater_Tests {
 
         /* delete model */
 
-        CBModels::deleteByID($modelID);
+        CBDB::transaction(
+            function () use (
+                $modelID
+            ) {
+                CBModels::deleteByID(
+                    $modelID
+                );
+            }
+        );
 
 
         /* update if exists */
 
-        CBModelUpdater::updateIfExists($spec);
+        CBModelUpdater::updateIfExists(
+            $spec
+        );
 
-        $actualResult = CBModels::fetchSpecByIDNullable($modelID);
+        $actualResult = CBModels::fetchSpecByIDNullable(
+            $modelID
+        );
+
         $expectedResult = null;
 
-        if ($actualResult !== $expectedResult) {
+        if (
+            $actualResult !== $expectedResult
+        ) {
             return CBTest::resultMismatchFailure(
                 'updateIfExists',
                 $actualResult,
@@ -322,6 +400,6 @@ final class CBModelUpdater_Tests {
             'succeeded' => true,
         ];
     }
-    /* CBTest_updateIfExists() */
+    /* updateIfExists() */
 
 }
