@@ -1,6 +1,7 @@
 <?php
 
-final class CBTasks2Tests {
+final class
+CBTasks2Tests {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
@@ -9,16 +10,16 @@ final class CBTasks2Tests {
     /**
      * @return [object]
      */
-    static function CBTest_getTests(): array {
+    static function
+    CBTest_getTests(
+    ): array {
         return [
             (object)[
                 'name' => 'runSpecificTask',
-                'title' => 'CBTasks2 run specific task',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'exceptionHandling',
-                'title' => 'CBTasks2 exception handling',
                 'type' => 'server',
             ],
         ];
@@ -41,20 +42,40 @@ final class CBTasks2Tests {
      *
      * @return object
      */
-    static function CBTest_exceptionHandling(): stdClass {
+    static function
+    exceptionHandling(
+    ): stdClass {
         $CBID = 'add1d0e46582644d3b3488206d85bd3c22fdc19b';
-        $CBIDAsSQL = CBID::toSQL($CBID);
         $actualExceptionMessage = '';
         $expectedExceptionMessage = 'CBTasks2Tests_testException';
 
-        CBModels::deleteByID($CBID);
 
-        CBModels::save(
-            (object)[
-                'className' => 'CBMessageView',
-                'ID' => $CBID,
-                'markup' => 'throw an exception',
-            ]
+        $CBIDAsSQL = CBID::toSQL(
+            $CBID
+        );
+
+        CBDB::transaction(
+            function () use (
+                $CBID
+            ) {
+                CBModels::deleteByID(
+                    $CBID
+                );
+            }
+        );
+
+        CBDB::transaction(
+            function () use (
+                $CBID
+            ) {
+                CBModels::save(
+                    (object)[
+                        'className' => 'CBMessageView',
+                        'ID' => $CBID,
+                        'markup' => 'throw an exception',
+                    ]
+                );
+            }
         );
 
         try {
@@ -66,7 +87,15 @@ final class CBTasks2Tests {
             $actualExceptionMessage = $throwable->getMessage();
         }
 
-        CBModels::deleteByID($CBID);
+        CBDB::transaction(
+            function () use (
+                $CBID
+            ) {
+                CBModels::deleteByID(
+                    $CBID
+                );
+            }
+        );
 
         if ($actualExceptionMessage != $expectedExceptionMessage) {
             return CBTest::resultMismatchFailure(
@@ -105,7 +134,7 @@ final class CBTasks2Tests {
             'succeeded' => true,
         ];
     }
-    /* CBTest_exceptionHandling() */
+    /* exceptionHandling() */
 
 
 
