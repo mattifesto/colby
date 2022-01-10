@@ -36,6 +36,10 @@
 
 
     /**
+     * @TODO 2022_01_09
+     *
+     *      Rename to go better with attostamp usage.
+     *
      * @param object momentModel
      *
      * @return int|undefined
@@ -44,10 +48,21 @@
     getCreatedTimestamp(
         momentModel
     ) {
-        return CBModel.valueAsInt(
+        let timestamp = CBModel.valueAsInt(
             momentModel,
-            'CB_Moment_createdTimestamp'
+            'CB_Moment_attostamp_property.CB_Attostamp_unixTimestamp_property'
         );
+
+        if (
+            timestamp === undefined
+        ) {
+            timestamp = CBModel.valueAsInt(
+                momentModel,
+                'CB_Moment_createdTimestamp'
+            );
+        }
+
+        return timestamp;
     }
     /* getCreatedTimestamp() */
 
