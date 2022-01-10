@@ -65,8 +65,6 @@ CB_YouTube {
             $queryStringVariables
         );
 
-        error_log($originalURL);
-
         $curlHandle = curl_init(
             $originalURL
         );
