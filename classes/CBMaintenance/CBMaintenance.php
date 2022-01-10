@@ -1,6 +1,7 @@
 <?php
 
-final class CBMaintenance {
+final class
+CBMaintenance {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
@@ -115,6 +116,8 @@ final class CBMaintenance {
         ];
     }
 
+
+
     /**
      * Check isLocked() when decided whether to do optional database work. For
      * instance, task processing will not occur while isLocked() returns true.
@@ -134,6 +137,8 @@ final class CBMaintenance {
             return false;
         }
     }
+
+
 
     /**
      * Call lock when you need to reserve the database to perform a major
@@ -159,39 +164,76 @@ final class CBMaintenance {
      *
      *      Returns true if the lock was successful; otherwise false.
      */
-    static function lock(stdClass $args): bool {
-        $holderID = CBModel::valueAsID($args, 'holderID');
+    static function
+    lock(
+        stdClass $args
+    ): bool {
+        $holderID = CBModel::valueAsID(
+            $args,
+            'holderID'
+        );
 
-        if (empty($holderID)) {
-            throw new InvalidArgumentException('No holderID argument was provided.');
+        if (
+            empty(
+                $holderID
+            )
+        ) {
+            throw new InvalidArgumentException(
+                'No holderID argument was provided.'
+            );
         }
 
-        $title = trim(CBModel::valueToString($args, 'title'));
+        $title = trim(
+            CBModel::valueToString(
+                $args,
+                'title'
+            )
+        );
 
-        if (empty($title)) {
-            throw new InvalidArgumentException('No title argument was provided.');
+        if (
+            empty(
+                $title
+            )
+        ) {
+            throw new InvalidArgumentException(
+                'No title argument was provided.'
+            );
         }
 
-        $updater = CBModelUpdater::fetch((object)[
-            'className' => 'CBMaintenance',
-            'ID' => CBMaintenance::ID(),
-        ]);
+        $updater = CBModelUpdater::fetch(
+            (object)[
+                'className' => 'CBMaintenance',
+                'ID' => CBMaintenance::ID(),
+            ]
+        );
 
         $spec = $updater->working;
-        $previousHolderID = CBModel::valueAsID($spec, 'holderID');
+
+        $previousHolderID = CBModel::valueAsID(
+            $spec,
+            'holderID'
+        );
 
         /**
          * If the previous holder ID is different than the holder ID argument we
          * may not be able to lock.
          */
-        if ($previousHolderID !== null && $holderID !== $previousHolderID) {
-            $previousTimestamp = CBModel::valueAsInt($spec, 'timestamp');
+        if (
+            $previousHolderID !== null &&
+            $holderID !== $previousHolderID
+        ) {
+            $previousTimestamp = CBModel::valueAsInt(
+                $spec,
+                'timestamp'
+            );
 
             /**
              * If the previous lock was taken less tham 30 seconds ago we are
              * not able to lock.
              */
-            if (time() - $previousTimestamp < 30) {
+            if (
+                time() - $previousTimestamp < 30
+            ) {
                 return false; /* request denied */
             }
         }
@@ -206,10 +248,15 @@ final class CBMaintenance {
             ]
         );
 
-        CBModelUpdater::save($updater);
+        CBModelUpdater::save(
+            $updater
+        );
 
         return true; /* request granted */
     }
+    /* lock() */
+
+
 
     /**
      * If the holder ID matches the previously set holder ID, the lock will be
@@ -220,39 +267,70 @@ final class CBMaintenance {
      *
      * @return void
      */
-    static function unlock(string $holderID): void {
-        $holderID = CBConvert::valueAsID($holderID);
+    static function
+    unlock(
+        string $holderID
+    ): void {
+        $holderID = CBConvert::valueAsID(
+            $holderID
+        );
 
-        if (empty($holderID)) {
-            throw new InvalidArgumentException('No holderID argument was provided.');
+        if (
+            empty(
+                $holderID
+            )
+        ) {
+            throw new InvalidArgumentException(
+                'No holderID argument was provided.'
+            );
         }
 
-        $updater = CBModelUpdater::fetch((object)[
-            'className' => 'CBMaintenance',
-            'ID' => CBMaintenance::ID(),
-        ]);
+        $updater = CBModelUpdater::fetch(
+            (object)[
+                'className' => 'CBMaintenance',
+                'ID' => CBMaintenance::ID(),
+            ]
+        );
 
         $spec = $updater->working;
-        $previousHolderID = CBModel::valueAsID($spec, 'holderID');
 
-        if ($holderID !== $previousHolderID) {
+        $previousHolderID = CBModel::valueAsID(
+            $spec,
+            'holderID'
+        );
+
+        if (
+            $holderID !== $previousHolderID
+        ) {
             return;
         }
 
-        CBModel::merge($spec, (object)[
-            'holderID' => null,
-            'timestamp' => null,
-            'title' => '',
-            'userID' => null,
-        ]);
+        CBModel::merge(
+            $spec,
+            (object)[
+                'holderID' => null,
+                'timestamp' => null,
+                'title' => '',
+                'userID' => null,
+            ]
+        );
 
-        CBModelUpdater::save($updater);
+        CBModelUpdater::save(
+            $updater
+        );
     }
+    /* unlock() */
+
+
 
     /**
      * @return ID
      */
-    static function ID(): string {
+    static function
+    ID(
+    ): string {
         return 'b3e69475bc6bbc2ec8b8ddccd65b2206329095e7';
     }
+    /* ID() */
+
 }
