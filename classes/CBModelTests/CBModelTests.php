@@ -78,10 +78,6 @@ CBModelTests {
                 'type' => 'server',
             ],
             (object)[
-                'name' => 'upgrade',
-                'type' => 'server',
-            ],
-            (object)[
                 'name' => 'upgradeSpecWithID',
                 'type' => 'server',
             ],
@@ -150,55 +146,36 @@ CBModelTests {
 
 
     /**
+     * @NOTE 2022_01_09
+     *
+     *      This is a bizarre test. Not all class names are models. Actually
+     *      model classes should have their own search text tests. I'm not
+     *      entirely sure why this test exists or what it accomplishes.
+     *
      * @return object
      */
-    static function CBTest_toSearchText(): stdClass {
+    static function
+    CBTest_toSearchText(
+    ): stdClass {
         $classNames = CBAdmin::fetchClassNames();
 
-        foreach ($classNames as $className) {
+        foreach (
+            $classNames as $className
+        ) {
             $spec = (object)[
                 'className' => $className,
             ];
 
-            $searchText = CBModel::toSearchText($spec);
+            $searchText = CBModel::toSearchText(
+                $spec
+            );
         }
 
         return (object)[
             'succeeded' => true,
         ];
     }
-
-
-
-    /**
-     * This test creates a test spec for all known classes and passes it to
-     * CBModel::upgrade().
-     *
-     * @return object
-     */
-    static function CBTest_upgrade(): stdClass {
-        CBLog::buffer(
-            function () {
-                $classNames = CBAdmin::fetchClassNames();
-
-                foreach ($classNames as $className) {
-                    $spec = (object)[
-                        'className' => $className,
-                        'title' => (
-                            'This is the title of a test model created ' .
-                            'by CBTest_upgrade() in CBModelTests'
-                        ),
-                    ];
-
-                    $upgradedSpec = CBModel::upgrade($spec);
-                }
-            }
-        );
-
-        return (object)[
-            'succeeded' => true,
-        ];
-    }
+    /* CBTest_toSearchText() */
 
 
 
