@@ -1,4 +1,48 @@
 --- h2
+CBModels::save()
+---
+
+--- h3
+Description
+---
+
+--- pre
+CBModels::save(
+    mixed $originalSpecs,
+    bool $force = false
+): void
+---
+
+Upgrades, builds, and saves model specs.
+
+--- h3
+Parameters
+---
+
+--- dl
+--- dt
+originalSpecs
+---
+This parameter can either be a single object that is a spec for a model or an
+array of multiple objects that are all specs for models. All specs must have the
+same class name.
+
+--- dt
+force
+---
+The default value is false, which means that the function will check to make
+sure the version number of your spec is correct so that you don't accidentally
+clobber other saves. There are certain times, such as during CSV imports where
+clobbering is acceptable and those situation pass true for the value of this
+parameter.
+---
+
+
+
+
+
+
+--- h2
 Methods of Exposing Model Editing To Users
 ---
 
