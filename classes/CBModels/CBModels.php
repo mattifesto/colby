@@ -272,45 +272,88 @@ CBModels {
      * succeed for the save to be successful, so it should always be called
      * inside of a transaction.
      *
-     *      Colby::query('START TRANSACTION');
-     *      CBModels::deleteByID($ID);
-     *      Colby::query('COMMIT');
+     *      CBDB::transaction(
+     *          function () use (
+     *              $CBID
+     *          ) {
+     *              CBModels::deleteByID(
+     *                  $CBID
+     *              );
+     *          }
+     *      );
      *
-     * @param CBID|[CBID] $IDs
+     * @param CBID|[CBID] $CBIDs
      *
      *      All of the referenced models must have the same class name. Make
      *      separate calls for each class name.
      *
      * @return void
      */
-    static function deleteByID(
-        $IDs
+    static function
+    deleteByID(
+        $CBIDs
     ): void {
-        if (empty($IDs)) {
+        if (
+            !CBDB::transactionIsActive()
+        ) {
+            CBErrorHandler::report(
+                new CBException(
+                    'A transaction should be active.',
+                    '',
+                    '805e82bb98cba4f8e4fed7532f31ff29d6becbac'
+                )
+            );
+        }
+
+        if (
+            empty(
+                $CBIDs
+            )
+        ) {
             return;
         }
 
-        if (!is_array($IDs)) {
-            $IDs = [$IDs];
+        if (
+            !is_array(
+                $CBIDs
+            )
+        ) {
+            $CBIDs = [$CBIDs];
         }
 
-        $IDsForSQL = CBID::toSQL($IDs);
+        $CBIDsForSQL = CBID::toSQL(
+            $CBIDs
+        );
 
         $SQL = <<<EOT
 
-            SELECT DISTINCT className
+            SELECT DISTINCT
+            className
 
-            FROM            CBModels
+            FROM
+            CBModels
 
-            WHERE           ID IN ({$IDsForSQL})
+            WHERE
+
+            ID IN ({$CBIDsForSQL})
 
         EOT;
 
-        $classNames = CBDB::SQLtoArray($SQL);
+        $classNames = CBDB::SQLtoArray(
+            $SQL
+        );
 
-        if (count($classNames) > 0) {
-            if (count($classNames) > 1) {
-                $classNames = implode(', ', $classNames);
+        if (
+            count($classNames) > 0
+        ) {
+            if (
+                count($classNames) > 1
+            ) {
+                $classNames = implode(
+                    ', ',
+                    $classNames
+                );
+
                 $method = __METHOD__;
 
                 throw new RuntimeException(
@@ -322,18 +365,26 @@ CBModels {
             $className = $classNames[0];
             $functionName = "{$className}::CBModels_willDelete";
 
-            if (is_callable($functionName)) {
+            if (
+                is_callable(
+                    $functionName
+                )
+            ) {
                 call_user_func(
                     $functionName,
-                    $IDs
+                    $CBIDs
                 );
             } else {
                 $functionName = "{$className}::modelsWillDelete";
 
-                if (is_callable($functionName)) {
+                if (
+                    is_callable(
+                        $functionName
+                    )
+                ) {
                     call_user_func(
                         $functionName,
-                        $IDs
+                        $CBIDs
                     );
                 }
             }
@@ -341,29 +392,60 @@ CBModels {
 
         $SQL = <<<EOT
 
-            DELETE  CBModels,
-                    CBModelVersions
+            DELETE
+            CBModels,
+            CBModelVersions
 
-            FROM    CBModels
+            FROM
+            CBModels
 
-            JOIN    CBModelVersions
-            ON      CBModelVersions.ID = CBModels.ID
+            JOIN
+            CBModelVersions
+            ON
+            CBModelVersions.ID = CBModels.ID
 
-            WHERE   CBModels.ID IN ({$IDsForSQL})
+            WHERE
+
+            CBModels.ID IN ({$CBIDsForSQL})
 
         EOT;
 
-        Colby::query($SQL);
+        Colby::query(
+            $SQL
+        );
 
-        foreach ($IDs as $ID) {
-            CBDataStore::deleteByID($ID);
+        /**
+         * @NOTE 2022_01_10
+         *
+         *      Deleting a model is a highly destructive process. I was considering
+         *      whether I should rereserve attostamps and the I noticed the code
+         *      below which deletes the entire data store. For both of these reasons
+         *      there isn't really any "undelete" possibility.
+         *
+         *      Right now, I'm not doing anything to the attostamps which will
+         *      be deleted by a task because they are no longer associated with
+         *      a saved model.
+         */
+        foreach (
+            $CBIDs as $CBID
+        ) {
+            CBDataStore::deleteByID(
+                $CBID
+            );
         }
 
         /**
          * If any of the models being deleted are in the cache, remove them now.
          */
-        if (class_exists('CBModelCache', false)) {
-            CBModelCache::uncacheByID($IDs);
+        if (
+            class_exists(
+                'CBModelCache',
+                false
+            )
+        ) {
+            CBModelCache::uncacheByID(
+                $CBIDs
+            );
         }
     }
     /* deleteByID() */
@@ -1251,7 +1333,26 @@ CBModels {
      *          }
      *      );
      *
-     * @NOTE How model ID is determined:
+     * @NOTE 2022_01_07
+     *
+     *      This function can save many models at the same time, although it
+     *      does require all the models to have the same class name. It allows
+     *      multiple models to be save at once because of the Mattifesto Method
+     *      tenet "rule of a million" which basically means write your code as
+     *      if there will be millions of whatever there can be multiples of.
+     *
+     *      However, this function can mostly likely not handle a million models
+     *      and it's not a great idea to attempt that. Over the years, there are
+     *      a lot of processes that have been added when a model is saved or
+     *      deleted. Many of those processes are even scheduled to happen at a
+     *      very obviously later time, using tasks, even if we're working with
+     *      just one model.
+     *
+     *      The "rule of a million" is still valid, and a million models should
+     *      be able to be saved, but over a realistic time period and maybe by
+     *      saving the models in small batches or even just one at a time.
+     *
+     * @NOTE How model CBID is determined:
      *
      *      The class CBModel_build() function can set the ID value on the model
      *      by either calculating it or copying it. Potentially no ID value
@@ -1292,6 +1393,18 @@ CBModels {
         $force = false
     ) {
         if (
+            !CBDB::transactionIsActive()
+        ) {
+            CBErrorHandler::report(
+                new CBException(
+                    'A transaction should be active.',
+                    '',
+                    'd8809fdf384924c5a8f575c60c4b643feb8bfa6f'
+                )
+            );
+        }
+
+        if (
             empty($originalSpecs)
         ) {
             return; // TODO: Why are we okay with this being empty? Document.
@@ -1322,10 +1435,33 @@ CBModels {
             function (
                 $originalSpec
             ) {
-
-                /* we've already verified all specs have valid IDs */
-                $ID = $originalSpec->ID;
-
+                /**
+                 * @NOTE 2022_01_04
+                 *
+                 *      Upgrading the spec here can seem somewhat controversial
+                 *      because save() is not supposed to alter the spec because
+                 *      an editor may be making continual changes to its version
+                 *      of the spec without reloading it and expects the spec to
+                 *      stay the same.
+                 *
+                 *      It is true that save() should not alter the spec, but
+                 *      here are the reasons why the changes that come with
+                 *      upgrading the spec are actually okay.
+                 *
+                 *      1. If the spec was not upgraded now, it would still be
+                 *      upgraded pretty soon, so why wait?
+                 *
+                 *      2. When editors fetch the spec to edit, the spec is
+                 *      upgraded so they will most likely have the upgraded
+                 *      version anyway.
+                 *
+                 *      3. Even if the editor doesn't have the most upgraded
+                 *      version of the spec, they can just keep saving the spec
+                 *      they have until the editing session is done without
+                 *      issues. The changes made from the upgrade don't
+                 *      technically need to be sent back to the editor during
+                 *      the editing session.
+                 */
                 $upgradedSpec = CBModel::upgrade(
                     $originalSpec
                 );
@@ -1333,6 +1469,49 @@ CBModels {
                 $model = CBModel::build(
                     $upgradedSpec
                 );
+
+                /* register attostamps */
+
+                $modelCBID = CBModel::getCBID(
+                    $model
+                );
+
+                CB_Attostamp::rereserveAttostampsByRootModelCBID(
+                    $modelCBID
+                );
+
+                $attostampModels = CBModel::getAttostampModels(
+                    $model
+                );
+
+                foreach (
+                    $attostampModels as $attostampModel
+                ) {
+                    $wasRegistered = CB_Attostamp::register(
+                        $attostampModel,
+                        $modelCBID
+                    );
+
+                    if (
+                        $wasRegistered !== true
+                    ) {
+                        throw new CBExceptionWithValue(
+                            CBConvert::stringToCleanLine(<<<EOT
+
+                                A CB_Attostamp was unable to be registered while
+                                a model was being saved.
+
+                            EOT),
+                            (object)[
+                                'unregistered CB_Attostamp model' => (
+                                    $attostampModel
+                                ),
+                                'root model' => $model,
+                            ],
+                            'd280cbd05345eaefcd5705fc981d5e603165d596'
+                        );
+                    }
+                }
 
                 return (object)[
                     'spec' => $upgradedSpec,
@@ -1358,7 +1537,7 @@ CBModels {
             class_exists(
                 'CBModelCache',
                 false
-                )
+            )
         ) {
             CBModelCache::uncacheByID(
                 $IDs
