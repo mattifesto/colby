@@ -1,6 +1,7 @@
 <?php
 
-final class CBTest {
+final class
+CBTest {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
@@ -228,6 +229,37 @@ final class CBTest {
         }
     }
     /* checkForUnsupportedTestImplementation() */
+
+
+
+    /**
+     * This function can be used with test models to remove the model and all
+     * reserved or registered attostamps. It's meant to be a quick way to reset
+     * or clean up test models.
+     *
+     * @param CBID $rootModelCBID
+     *
+     * @return void
+     */
+    static function
+    deleteModelAndAllAttostamps(
+        string $rootModelCBID
+    ) {
+        CBDB::transaction(
+            function () use (
+                $rootModelCBID
+            ) {
+                CBModels::deleteByID(
+                    $rootModelCBID
+                );
+
+                CB_Attostamp::deleteAttostampsByRootModelCBID(
+                    $rootModelCBID
+                );
+            }
+        );
+    }
+    /* deleteModelAndAllAttostamps() */
 
 
 
