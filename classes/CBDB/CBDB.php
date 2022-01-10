@@ -338,10 +338,14 @@ CBDB {
      *      If the result has at least one row then an object representing that
      *      row will be returned.
      */
-    static function SQLToObjectNullable(
+    static function
+    SQLToObjectNullable(
         string $SQL
     ): ?stdClass {
-        $result = Colby::query($SQL);
+        $result = Colby::query(
+            $SQL
+        );
+
         $object = $result->fetch_object();
 
         $result->free();
