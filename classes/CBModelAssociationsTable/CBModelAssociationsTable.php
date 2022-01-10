@@ -4,6 +4,23 @@ final class
 CBModelAssociationsTable {
 
     /**
+     * CBModelAssociations_sortingValue_2_column
+     * CBModelAssociations_sortingValueDifferentiator_2_column
+     *
+     *      These two columns hold the sorting values for a list. It is best if
+     *      there are no duplicate sorting values for items in a list, but this
+     *      table doesn't enforce that.
+     *
+     *      These columns are specifically designed to hold registered
+     *      attostamps which are unique. Although that doesn't technically
+     *      guaratee uniqueness in a list if you do something odd.
+     *
+     *      It is up to developers to make sure they use unique sorting values
+     *      for items in a list. Be mindful of the fact that using unique
+     *      sorting values is important, especially for long lists. Registered
+     *      attostamps were created to assist developers in their efforts to
+     *      make that happen.
+     *
      * @TODO 2021_11_25
      *
      *      Future name changes:
@@ -16,22 +33,6 @@ CBModelAssociationsTable {
      *              name but instead the context of the association for the row.
      *
      *          associatedID --> CBModelAssociations_secondCBID_column
-     *
-     * @NOTE 2021_11_25 updated 2021_12_31
-     *
-     *      The columns named CBModelAssociations_sortingValue_2_column and
-     *      CBModelAssociations_sortingValueDifferentiator_2_column have been
-     *      added to enable this table to hold sorted lists of models, the first
-     *      of which was a list of moments sorted the moment time.
-     *
-     *      These two columns are designed to be able to hold with unique
-     *      timestamps:
-     *
-     *      The CBModelAssociations_sortingValue_2_column can hold the Unix
-     *      timestamp portion of a unique timestamp.
-     *
-     *      The CBModelAssociations_sortingValueDifferentiator_2_column can hold
-     *      the fractional sub-second portion of a unique timestamp.
      *
      * @return void
      */
