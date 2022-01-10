@@ -42,6 +42,10 @@
 final class
 CBModel {
 
+    private static $rootSpecCurrentlyBeingUpgraded = null;
+
+
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
 
@@ -263,7 +267,7 @@ CBModel {
      *
      *      The spec to copy.
      *
-     * @param ID $ID
+     * @param CBID $newSpecCBID
      *
      *      The ID for the copy.
      *
@@ -278,13 +282,30 @@ CBModel {
     static function
     copy(
         stdClass $spec,
-        string $ID
+        string $newSpecCBID
     ): ?stdClass {
-        $spec = CBConvert::valueAsModel($spec);
+        $spec = CBConvert::valueAsModel(
+            $spec
+        );
 
-        if ($spec === null) {
+        if (
+            $spec === null
+        ) {
             return null;
         }
+
+        $newSpec = CBModel::clone(
+            $spec
+        );
+
+        CBModel::setCBID(
+            $newSpec,
+            $newSpecCBID
+        );
+
+        unset(
+            $newSpec->version
+        );
 
         /**
          * @deprecated 2021_01_15
@@ -300,19 +321,35 @@ CBModel {
          *      this change.
          */
 
-        $className = CBModel::valueToString($spec, 'className');
-        $title = trim(CBModel::valueToString($spec, 'title'));
-        $copy = CBModel::clone($spec);
-        $copy->ID = $ID;
-        $copy->title = empty($title) ? 'Copy' : "{$title} Copy";
+        $title = trim(
+            CBModel::valueToString(
+                $spec,
+                'title'
+            )
+        );
 
-        unset($copy->version);
+        $newSpec->title = (
+            empty($title) ?
+            'Copy' :
+            "{$title} Copy"
+        );
 
-        if (is_callable($function = "{$className}::CBModel_prepareCopy")) {
-            $copy = call_user_func($function, $copy);
+        $className = CBModel::getClassName(
+            $spec
+        );
+
+        $functionName = "{$className}::CBModel_prepareCopy";
+
+        if (
+            is_callable($functionName)
+        ) {
+            $functionName = call_user_func(
+                $function,
+                $newSpec
+            );
         }
 
-        return $copy;
+        return $newSpec;
     }
     /* copy() */
 
@@ -414,7 +451,8 @@ CBModel {
      *
      * @return callable|null
      */
-    static function getClassFunction(
+    static function
+    getClassFunction(
         stdClass $model,
         string $functionName
     ): ?callable {
@@ -422,19 +460,69 @@ CBModel {
             $model,
         );
 
-        if ($className === '') {
-            return null;
-        }
-
         $functionName = "{$className}::{$functionName}";
 
-        if (is_callable($functionName)) {
+        if (
+            is_callable(
+                $functionName
+            )
+        ) {
             return $functionName;
         } else {
             return null;
         }
     }
     /* getClassFunction() */
+
+
+
+    /**
+     * @param object $model
+     *
+     * @return [<CB_Attostamp>]
+     *
+     *      An array of attostamps that this model uses. These attostamps
+     *      should have been reserved when they were created.
+     */
+    static function
+    getAttostampModels(
+        stdClass $model
+    ): array {
+        $callable = CBModel::getClassFunction(
+            $model,
+            'CBModel_getAttostampModels'
+        );
+
+        if (
+            $callable === null
+        ) {
+            return [];
+        } else {
+            return call_user_func(
+                $callable,
+                $model
+            );
+        }
+    }
+    /* getAttostampModels() */
+
+
+
+    /**
+     * @return object|null
+     *
+     *      When a model upgrade is in progress, a clone of the root model that
+     *      is currenlty being upgraded is returned from this function;
+     *      otherwise null will be returned.
+     */
+    static function
+    getRootSpecCurrentlyBeingUpgraded(
+    ): ?stdClass {
+        return CBModel::clone(
+            CBModel::$rootSpecCurrentlyBeingUpgraded
+        );
+    }
+    /* getRootSpecCurrentlyBeingUpgraded() */
 
 
 
@@ -590,7 +678,8 @@ CBModel {
      *      The build process is allowed to have requirements and allowed to
      *      throw exceptions if those requirements are not met.
      */
-    static function build(
+    static function
+    build(
         stdClass $spec
     ): stdClass {
         static $staticRootSpec = null;
@@ -629,7 +718,11 @@ CBModel {
 
             $buildInterfaceFunctionName = "{$className}::CBModel_build";
 
-            if (is_callable($buildInterfaceFunctionName)) {
+            if (
+                is_callable(
+                    $buildInterfaceFunctionName
+                )
+            ) {
                 $model = call_user_func(
                     $buildInterfaceFunctionName,
                     $spec
@@ -648,13 +741,18 @@ CBModel {
                 );
             }
 
-            if (!is_object($model)) {
+            if (
+                !is_object(
+                    $model
+                )
+            ) {
                 throw new CBExceptionWithValue(
-                    (
-                        "This spec can't be built because " .
-                        "the CBModel_build() interface returned a value that " .
-                        "is not an object."
-                    ),
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        This spec can't be built because the CBModel_build()
+                        interface returned a value that is not an object.
+
+                    EOT),
                     $spec,
                     '2a8ad1dd8a2d47a80d41609b98056f0e8775a47a'
                 );
@@ -908,15 +1006,31 @@ CBModel {
      *      argument to the returned model using == to determine if any changes
      *      were made during the upgrade.
      */
-    static function upgrade(
+    static function
+    upgrade(
         $originalSpec
     ): stdClass {
-        if (CBConvert::valueAsModel($originalSpec) === null) {
+        if (
+            CBConvert::valueAsModel(
+                $originalSpec
+            ) === null
+        ) {
             throw CBException::createModelIssueException(
-                'This spec can\'t be upgraded because it is not a model.',
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The value of the 'originalSpec' argument can't be upgraded
+                    because it is not a model.
+
+                EOT),
                 $originalSpec,
                 'a38964f4fd545b2c8f568808d5f3035b168c6fc9'
             );
+        }
+
+        if (
+            CBModel::$rootSpecCurrentlyBeingUpgraded === null
+        ) {
+            CBModel::$rootSpecCurrentlyBeingUpgraded = $originalSpec;
         }
 
         $originalCBID = CBModel::valueAsCBID(
@@ -924,50 +1038,109 @@ CBModel {
             'ID'
         );
 
-        if (!empty($originalCBID)) {
-            CBID::push($originalCBID);
-        }
 
-        $functionName = "{$originalSpec->className}::CBModel_upgrade";
+        /**
+         * @deprecated 2022_01_09
+         *
+         *      Use CBModel::getRootSpecCurrentlyBeingUpgraded() instead of
+         *      CBID functions. This code is attempting to let the upgrade
+         *      process of submodels know the CBID of the root model, but it
+         *      breaks in two places.
+         *
+         *      1. If the root model does not have a CBID then the submodels
+         *      will get null or even possibly a different CBID that had been
+         *      pushed before upgrade had ever been called.
+         *
+         *      2. If a submodel actually has a CBID then its submodels will get
+         *      its CBID instead of the root model CBID.
+         */
 
-        if (is_callable($functionName)) {
-            $upgradedSpec = call_user_func(
-                $functionName,
-                CBModel::clone($originalSpec)
-            );
-
-            if (CBConvert::valueAsModel($upgradedSpec) === null) {
-                throw new Exception(
-                    "{$function}() returned an invalid model"
+        {
+            if (
+                !empty(
+                    $originalCBID
+                )
+            ) {
+                CBID::push(
+                    $originalCBID
                 );
             }
-
-            $upgradedCBID = CBModel::valueAsCBID(
-                $upgradedSpec,
-                'ID'
-            );
-
-            if ($upgradedCBID != $originalCBID) {
-                $value = (object)[
-                    'originalSpec' => $originalSpec,
-                    'upgradedSpec' => $upgradedSpec,
-                ];
-
-                throw CBException::createModelIssueException(
-                    (
-                        'The upgraded spec has a different ID than the ' .
-                        'original spec.'
-                    ),
-                    $value,
-                    '88c7bd6b23e18073302ef354def22d7f1f101e66'
-                );
-            }
-        } else {
-            $upgradedSpec = CBModel::clone($originalSpec);
         }
 
-        if (!empty($originalCBID)) {
-            CBID::pop();
+        try {
+            $functionName = "{$originalSpec->className}::CBModel_upgrade";
+
+            if (
+                is_callable(
+                    $functionName
+                )
+            ) {
+                $upgradedSpec = call_user_func(
+                    $functionName,
+                    CBModel::clone(
+                        $originalSpec
+                    )
+                );
+
+                if (
+                    CBConvert::valueAsModel(
+                        $upgradedSpec
+                    ) === null
+                ) {
+                    throw new Exception(
+                        "{$function}() returned an invalid model"
+                    );
+                }
+
+                $upgradedCBID = CBModel::valueAsCBID(
+                    $upgradedSpec,
+                    'ID'
+                );
+
+                if (
+                    $upgradedCBID != $originalCBID
+                ) {
+                    $value = (object)[
+                        'originalSpec' => $originalSpec,
+                        'upgradedSpec' => $upgradedSpec,
+                    ];
+
+                    throw CBException::createModelIssueException(
+                        (
+                            'The upgraded spec has a different ID than the ' .
+                            'original spec.'
+                        ),
+                        $value,
+                        '88c7bd6b23e18073302ef354def22d7f1f101e66'
+                    );
+                }
+            } else {
+                $upgradedSpec = CBModel::clone(
+                    $originalSpec
+                );
+            }
+        } finally {
+            {
+                /**
+                 * @deprecated 2022_01_09
+                 *
+                 *      See comment above.
+                 */
+
+                if (
+                    !empty(
+                        $originalCBID
+                    )
+                ) {
+                    CBID::pop();
+                }
+            }
+
+            if (
+                CBModel::$rootSpecCurrentlyBeingUpgraded === $originalSpec
+            ) {
+                CBModel::$rootSpecCurrentlyBeingUpgraded = null;
+            }
         }
 
         return $upgradedSpec;
@@ -1178,17 +1351,21 @@ CBModel {
      *
      * @param mixed $model
      * @param string $keyPath
-     * @param [string] $classNames
+     * @param string|[string] $classNames
      *
      * @return object|null
      */
-    static function valueAsModel(
+    static function
+    valueAsModel(
         $model,
         string $keyPath,
-        array $classNames = []
+        $classNames = []
     ): ?stdClass {
         return CBConvert::valueAsModel(
-            CBModel::value($model, $keyPath),
+            CBModel::value(
+                $model,
+                $keyPath
+            ),
             $classNames
         );
     }
