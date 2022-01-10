@@ -1025,13 +1025,21 @@ final class CBConvert {
      *      If $value is an object, it will be returned; otherwise null will be
      *      returned.
      */
-    static function valueAsObject($value): ?stdClass {
-        if (is_object($value)) {
+    static function
+    valueAsObject(
+        $value
+    ): ?stdClass {
+        if (
+            is_object(
+                $value
+            )
+        ) {
             return $value;
         } else {
             return null;
         }
     }
+    /* valueAsObject() */
 
 
 
