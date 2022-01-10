@@ -22,7 +22,10 @@
  *
  *          Otherwise, use the text exception message.
  */
- class CBException extends Exception {
+ class
+ CBException
+ extends
+ Exception {
 
     private $cbmessage;
     private $sourceCBID;
@@ -241,7 +244,8 @@
      *
      * @return string
      */
-    static function throwableToErrorReportAsCBMessage(
+    static function
+    throwableToErrorReportAsCBMessage(
         Throwable $throwable
     ): string {
         $oneLineErrorReport = CBException::throwableToOneLineErrorReport(
@@ -253,10 +257,14 @@
         );
 
         $stackTraceAsCBMessage = CBMessageMarkup::stringToMessage(
-            Colby::exceptionStackTrace($throwable)
+            CBErrorHandler::throwableToPlainTextIteratedStackTrace(
+                $throwable
+            )
         );
 
-        if ($throwable instanceof CBException) {
+        if (
+            $throwable instanceof CBException
+        ) {
             $extendedMessage = $throwable->getExtendedMessage();
             $sourceCBID = $throwable->getSourceCBID();
 
@@ -372,10 +380,13 @@
      *
      * @returh CBID|null
      */
-    static function throwableToSourceCBID(
+    static function
+    throwableToSourceCBID(
         Throwable $throwable
     ): ?string {
-        if ($throwable instanceof CBException) {
+        if (
+            $throwable instanceof CBException
+        ) {
             return $throwable->getSourceCBID();
         } else {
             return null;
