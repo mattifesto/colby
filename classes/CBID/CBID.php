@@ -3,7 +3,7 @@
 /**
  * This class contains functions for working with CBID values.
  *
- * This class as originally used only to push a currently relevant ID onto a
+ * This class was originally used only to push a currently relevant ID onto a
  * stack so that other functions that run can access the ID without having to be
  * passed it directly.
  *
@@ -150,8 +150,15 @@ CBID {
      * hexadecimal characters). They are required to be lowercase so that they
      * can be compared for equality.
      */
-    static function valueIsCBID($value): bool {
-        if (is_string($value)) {
+    static function
+    valueIsCBID(
+        $value
+    ): bool {
+        if (
+            is_string(
+                $value
+            )
+        ) {
             return (bool)preg_match(
                 '/^[a-f0-9]{40}$/',
                 $value
@@ -160,4 +167,6 @@ CBID {
             return false;
         }
     }
+    /* valueIsCBID() */
+
 }
