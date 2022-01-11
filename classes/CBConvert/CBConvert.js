@@ -409,23 +409,68 @@ var CBConvert = {
             return undefined;
         }
     },
+    /* valueAsInt() */
+
+
 
     /**
      * @param mixed value
+     * @param string|[string]|undefined classNames
+     *
+     *      If one or more class names is specified, a model will only be
+     *      returned if its class name is one of the specified class names.
      *
      * @return object|undefined
      */
-    valueAsModel: function (value) {
-        if (CBConvert.valueAsObject(value) === undefined) {
+    valueAsModel(
+        value,
+        classNames
+    ) {
+        if (
+            classNames === undefined
+        ) {
+            classNames = [];
+        }
+
+        else if (
+            !Array.isArray(
+                classNames
+            )
+        ) {
+            classNames = [classNames];
+        }
+
+        let potentialModel = CBConvert.valueAsObject(
+            value
+        );
+
+        if (
+            potentialModel === undefined
+        ) {
             return undefined;
         }
 
-        if (value.className === "" || typeof value.className !== "string") {
+        if (
+            !CBConvert.valueIsName(
+                potentialModel.className
+            )
+        ) {
             return undefined;
-        } else {
-            return value;
         }
+
+        if (
+            classNames.length > 0 &&
+
+            !classNames.includes(
+                potentialModel.className
+            )
+        ) {
+            return undefined;
+        }
+
+        return potentialModel;
     },
+    /* valueAsModel() */
 
 
 
@@ -540,6 +585,7 @@ var CBConvert = {
             return undefined;
         }
     },
+    /* valueAsObject() */
 
 
 
@@ -548,13 +594,20 @@ var CBConvert = {
      *
      * @return bool
      */
-    valueIsName: function (value) {
-        if (typeof value !== "string") {
+    valueIsName(
+        value
+    ) {
+        if (
+            typeof value !== "string"
+        ) {
             return false;
         }
 
-        return /^[a-zA-Z0-9_]+$/.test(value);
+        return /^[a-zA-Z0-9_]+$/.test(
+            value
+        );
     },
+    /* valueIsName() */
 
 
 

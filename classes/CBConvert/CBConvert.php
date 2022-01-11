@@ -1,6 +1,7 @@
 <?php
 
-final class CBConvert {
+final class
+CBConvert {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -15,7 +16,7 @@ final class CBConvert {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.35.js',
+                'v675.38.js',
                 cbsysurl()
             ),
         ];
@@ -819,27 +820,51 @@ final class CBConvert {
         $classNames = []
     ): ?stdClass {
         if (
-            is_string(
+            !is_array(
                 $classNames
             )
         ) {
             $classNames = [$classNames];
         }
 
-        if (CBConvert::valueAsObject($value) === null) {
+        $potentialModel = CBConvert::valueAsObject(
+            $value
+        );
+
+        if (
+            $potentialModel === null
+        ) {
             return null;
         }
 
-        if (empty($value->className) || !is_string($value->className)) {
+        if (
+            !isset(
+                $potentialModel->className
+            ) ||
+
+            !CBConvert::valueIsName(
+                $potentialModel->className
+            )
+        ) {
             return null;
         }
 
-        if (empty($classNames) || in_array($value->className, $classNames)) {
-            return $value;
-        } else {
+        if (
+            count(
+                $classNames
+            ) > 0 &&
+
+            !in_array(
+                $potentialModel->className,
+                $classNames
+            )
+        ) {
             return null;
         }
+
+        return $potentialModel;
     }
+    /* valueAsModel() */
 
 
 
@@ -1078,8 +1103,15 @@ final class CBConvert {
      *
      * @return bool
      */
-    static function valueIsName($value): bool {
-        if (!is_string($value)) {
+    static function
+    valueIsName(
+        $value
+    ): bool {
+        if (
+            !is_string(
+                $value
+            )
+        ) {
             return false;
         }
 
@@ -1088,6 +1120,7 @@ final class CBConvert {
             $value,
         );
     }
+    /* valueIsName() */
 
 
 
