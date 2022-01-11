@@ -59,7 +59,7 @@ CBModel {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.45.js',
+                'v675.48.js',
                 cbsysurl()
             ),
         ];
@@ -1361,11 +1361,13 @@ CBModel {
         string $keyPath,
         $classNames = []
     ): ?stdClass {
+        $value = CBModel::value(
+            $model,
+            $keyPath
+        );
+
         return CBConvert::valueAsModel(
-            CBModel::value(
-                $model,
-                $keyPath
-            ),
+            $value,
             $classNames
         );
     }
