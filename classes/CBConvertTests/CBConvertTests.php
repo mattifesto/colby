@@ -16,7 +16,7 @@ CBConvertTests {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.35.js',
+                'v675.38.js',
                 cbsysurl()
             ),
         ];
@@ -47,6 +47,14 @@ CBConvertTests {
             [
                 'CBConvertTests_valueAsNameTestCases',
                 CBConvertTests::valueAsNameTestCases(),
+            ],
+            [
+                'CBConvertTests_validModels_jsvariable',
+                CBConvertTests::getValidTestModels(),
+            ],
+            [
+                'CBConvertTests_invalidModels_jsvariable',
+                CBConvertTests::getInvalidTestModels(),
             ],
         ];
     }
@@ -542,24 +550,19 @@ CBConvertTests {
     /**
      * @return object
      */
-    static function CBTest_valueAsModel(): stdClass {
-        $validModels = [
-            (object)[
-                'className' => 'CBViewPage',
-            ],
-            (object)[
-                'className' => ' ',
-            ],
-            (object)[
-                'className' => ' CBViewPage',
-            ],
-            (object)[
-                'className' => 'CBViewPage ',
-            ],
-        ];
+    static function
+    valueAsModel(
+    ): stdClass {
+        $validModels = CBConvertTests::getValidTestModels();
 
-        foreach ($validModels as $model) {
-            if (CBConvert::valueAsModel($model) === null) {
+        foreach (
+            $validModels as $model
+        ) {
+            if (
+                CBConvert::valueAsModel(
+                    $model
+                ) === null
+            ) {
                 return CBTest::valueIssueFailure(
                     'valid model',
                     $model,
@@ -571,18 +574,16 @@ CBConvertTests {
             }
         }
 
-        $invalidModels = [
-            2,
-            5.5,
-            "hello",
-            [],
-            (object)[
-                'className' => '',
-            ],
-        ];
+        $invalidModels = CBConvertTests::getInvalidTestModels();
 
-        foreach($invalidModels as $model) {
-            if (CBConvert::valueAsModel($model) !== null) {
+        foreach (
+            $invalidModels as $model
+        ) {
+            if (
+                CBConvert::valueAsModel(
+                    $model
+                ) !== null
+            ) {
                 return CBTest::valueIssueFailure(
                     'invalid model',
                     $model,
@@ -849,6 +850,54 @@ EOT;
 
 
     /* -- functions -- -- -- -- -- */
+
+
+
+    /**
+     * @return [mixed]
+     */
+    static function
+    getInvalidTestModels(
+    ): array {
+        return [
+            2,
+            5.5,
+            "hello",
+            [],
+            (object)[
+                'className' => '',
+            ],
+            (object)[
+                'className' => ' ',
+            ],
+            (object)[
+                'className' => ' CBViewPage',
+            ],
+            (object)[
+                'className' => 'CBViewPage ',
+            ],
+            (object)[
+                'className' => 'CBView!Page',
+            ],
+        ];
+    }
+    /* getInvalidTestModels() */
+
+
+
+    /**
+     * @return [object]
+     */
+    static function
+    getValidTestModels(
+    ): array {
+        return [
+            (object)[
+                'className' => 'CBViewPage',
+            ],
+        ];
+    }
+    /* getValidTestModels() */
 
 
 

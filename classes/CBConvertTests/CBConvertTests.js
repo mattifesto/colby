@@ -1,6 +1,5 @@
 "use strict";
 /* jshint strict: global */
-/* jshint esversion: 6 */
 /* exported CBConvertTests */
 /* global
     CBConvert,
@@ -12,6 +11,8 @@
     CBConvertTests_stringToURITestCases,
     CBConvertTests_valueAsMonikerTestCases,
     CBConvertTests_valueAsNameTestCases,
+    CBConvertTests_validModels_jsvariable,
+    CBConvertTests_invalidModels_jsvariable,
 */
 
 
@@ -360,28 +361,26 @@ var CBConvertTests = {
     /**
      * @return object|Promise
      */
-    CBTest_valueAsModel: function () {
-        let validModels = [
-            {
-                className: "CBViewPage",
-            },
-            {
-                className: " ",
-            },
-            {
-                className: " CBViewPage",
-            },
-            {
-                className: "CBViewPage ",
-            },
-        ];
+    CBTest_valueAsModel(
+    ) {
+        let validModels = CBConvertTests_validModels_jsvariable;
 
-        for (let index = 0; index < validModels.length; index += 1) {
+        for (
+            let index = 0;
+            index < validModels.length;
+            index += 1
+        ) {
             let model = validModels[index];
-            let actualResult = CBConvert.valueAsModel(model);
+
+            let actualResult = CBConvert.valueAsModel(
+                model
+            );
+
             let expectedResult = model;
 
-            if (actualResult !== expectedResult) {
+            if (
+                actualResult !== expectedResult
+            ) {
                 return CBTest.resultMismatchFailure(
                     "valid model test index " + index + " failed",
                     actualResult,
@@ -390,22 +389,24 @@ var CBConvertTests = {
             }
         }
 
-        let invalidModels = [
-            2,
-            5.5,
-            "hello",
-            [],
-            {
-                className: "",
-            },
-        ];
+        let invalidModels = CBConvertTests_invalidModels_jsvariable;
 
-        for (let index = 0; index < invalidModels.length; index += 1) {
+        for (
+            let index = 0;
+            index < invalidModels.length;
+            index += 1
+        ) {
             let model = invalidModels[index];
-            let actualResult = CBConvert.valueAsModel(model);
+
+            let actualResult = CBConvert.valueAsModel(
+                model
+            );
+
             let expectedResult; // = undefined;
 
-            if (actualResult !== expectedResult) {
+            if (
+                actualResult !== expectedResult
+            ) {
                 return CBTest.resultMismatchFailure(
                     "invalid model test index " + index + " failed",
                     actualResult,
