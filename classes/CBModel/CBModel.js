@@ -4,6 +4,7 @@
 /* global
     CBConvert,
     CBException,
+    CBID,
 */
 
 var CBModel = {
@@ -26,6 +27,36 @@ var CBModel = {
         );
     },
     /* getCBID() */
+
+
+
+    /**
+     * @param object model
+     * @param CBID modelCBID
+     *
+     * @return object
+     */
+    setCBID(
+        model,
+        modelCBID
+    ) {
+        if (
+            !CBID.valueIsCBID(
+                modelCBID
+            )
+        ) {
+            throw CBException.withValueRelatedError(
+                TypeError(
+                    "The modelCBID argument is not a valid CBID."
+                ),
+                modelCBID,
+                "d0de5e84f4442a2abedff4269ef7dae31fc3cea1"
+            );
+        }
+
+        model.ID = modelCBID;
+    },
+    /* setCBID() */
 
 
 
@@ -62,7 +93,9 @@ var CBModel = {
 
         if (classNameAsName === undefined) {
             throw CBException.withValueRelatedError(
-                Error("The className argument is not a valid name."),
+                TypeError(
+                    "The className argument is not a valid name."
+                ),
                 className,
                 "ecacffe5c64fec1b315a629c5b5128b8343f6698"
             );
@@ -156,9 +189,50 @@ var CBModel = {
      *
      * @return mixed
      */
-    clone: function (model) {
-        return JSON.parse(JSON.stringify(model));
+    clone(
+        model
+    ) {
+        return JSON.parse(
+            JSON.stringify(
+                model
+            )
+        );
     },
+    /* clone() */
+
+
+
+    /**
+     * @param string className
+     * @param string CBID
+     *
+     * @return object
+     */
+    createSpec(
+        className,
+        CBID
+    ) {
+        let spec = {};
+
+        CBModel.setClassName(
+            spec,
+            className
+        );
+
+        if (
+            CBID !== undefined
+        ) {
+            CBModel.setCBID(
+                spec,
+                CBID
+            );
+        }
+
+        return spec;
+    },
+    /* createSpec() */
+
+
 
     /**
      * This function is similar to Object.keys() except that it will not return

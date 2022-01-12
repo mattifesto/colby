@@ -77,6 +77,7 @@ CBModel {
         return [
             'CBConvert',
             'CBException',
+            'CBID',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
@@ -479,18 +480,18 @@ CBModel {
     /**
      * @param object $model
      *
-     * @return [<CB_Attostamp>]
+     * @return [<CB_Timestamp>]
      *
-     *      An array of attostamps that this model uses. These attostamps
+     *      An array of cbtimestamps that this model uses. These cbtimestamps
      *      should have been reserved when they were created.
      */
     static function
-    getAttostampModels(
+    getCBTimestamps(
         stdClass $model
     ): array {
         $callable = CBModel::getClassFunction(
             $model,
-            'CBModel_getAttostampModels'
+            'CBModel_getCBTimestamps'
         );
 
         if (
@@ -504,7 +505,7 @@ CBModel {
             );
         }
     }
-    /* getAttostampModels() */
+    /* getCBTimestamps() */
 
 
 
