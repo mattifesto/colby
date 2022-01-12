@@ -1,35 +1,35 @@
 <?php
 
 final class
-CB_Table_Attostamps {
+CB_Table_Timestamps {
 
     /* -- CBInstall interfaces -- -- -- -- -- */
 
 
 
     /**
-     * CB_Attostamps_rootModelCBID_column
+     * CB_Timestamps_rootModelCBID_column
      *
      *      This column holds the CBID of the root model that has either
-     *      reserved or registered this attostamp.
+     *      reserved or registered this cbtimestamp.
      *
-     * CB_Attostamps_reservedAtUnixTimestamp_column
+     * CB_Timestamps_reservedAtUnixTimestamp_column
      *
-     *      If the attostamp is not yet registered, this column holds the Unix
+     *      If the cbtimestamp is not yet registered, this column holds the Unix
      *      timestamp at which it was reserved. After 24-hours reserved
      *      timestamps are deleted.
      *
-     *      When a model is saved, all of the attostamps associated with the
+     *      When a model is saved, all of the cbtimestamps associated with the
      *      model's CBID are reserved if they are not already reserved. Then the
-     *      attostamps requested by the model are registered (and therefore no
-     *      longer reserved). Any existing attostamps that are still reserved
+     *      cbtimestamps requested by the model are registered (and therefore no
+     *      longer reserved). Any existing cbtimestamps that are still reserved
      *      (not requested by the model) will then be deleted in approximately
      *      24-hours.
      *
-     * CB_Attostamps_unixTimestamp_column
-     * CB_Attostamps_attoseconds_column
+     * CB_Timestamps_unixTimestamp_column
+     * CB_Timestamps_femtoseconds_column
      *
-     *      These two columns hold the attostamp.
+     *      These two columns hold the cbtimestamp.
      *
      * @return void
      */
@@ -40,28 +40,28 @@ CB_Table_Attostamps {
 
             CREATE TABLE
             IF NOT EXISTS
-            CB_Attostamps_table (
+            CB_Timestamps_table (
 
-                CB_Attostamps_rootModelCBID_column
+                CB_Timestamps_rootModelCBID_column
                 BINARY(20) NOT NULL,
 
-                CB_Attostamps_reservedAtUnixTimestamp_column
+                CB_Timestamps_reservedAtUnixTimestamp_column
                 BIGINT,
 
-                CB_Attostamps_unixTimestamp_column
+                CB_Timestamps_unixTimestamp_column
                 BIGINT NOT NULL,
 
-                CB_Attostamps_attoseconds_column
+                CB_Timestamps_femtoseconds_column
                 BIGINT NOT NULL,
 
                 PRIMARY KEY (
-                    CB_Attostamps_unixTimestamp_column,
-                    CB_Attostamps_attoseconds_column
+                    CB_Timestamps_unixTimestamp_column,
+                    CB_Timestamps_femtoseconds_column
                 ),
 
                 INDEX
-                CB_Attostamps_rootModelCBID_index (
-                    CB_Attostamps_rootModelCBID_column
+                CB_Timestamps_rootModelCBID_index (
+                    CB_Timestamps_rootModelCBID_column
                 )
             )
 
