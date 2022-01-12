@@ -39,7 +39,7 @@ CB_Tests_Timestamp_TestModel {
      * @return [<CB_Timestamp>]
      */
     static function
-    CBModel_getCBTimestampModels(
+    CBModel_getCBTimestamps(
         stdClass $model
     ): array {
         return [
