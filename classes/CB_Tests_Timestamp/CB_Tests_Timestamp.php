@@ -1,7 +1,7 @@
 <?php
 
 final class
-CB_Tests_Attostamp {
+CB_Tests_Timestamp {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
@@ -40,19 +40,19 @@ CB_Tests_Attostamp {
     ): stdClass {
         $rootModelCBID = '266c71f1662d5e4860dfc11f5e8c0888768397d8';
 
-        $firstAttostamp = CB_Attostamp::from(
+        $firstCBTimestamp = CB_Timestamp::from(
             1641483605,
-            740031000070034020
+            740031000073034
         );
 
         /* test: restore initial state 1 */
 
-        CB_Attostamp::deleteAttostampsByRootModelCBID(
+        CB_Timestamp::deleteByRootModelCBID(
             $rootModelCBID
         );
 
-        $reservedAttostamps = (
-            CB_Attostamp::fetchReservedAttostampsByRootModelCBID(
+        $reservedCBTimestamps = (
+            CB_Timestamp::fetchReservedCBTimestampsByRootModelCBID(
                 $rootModelCBID
             )
         );
@@ -60,7 +60,7 @@ CB_Tests_Attostamp {
         $expectedResult = 0;
 
         $actualResult = count(
-            $reservedAttostamps
+            $reservedCBTimestamps
         );
 
         if (
@@ -73,8 +73,8 @@ CB_Tests_Attostamp {
             );
         }
 
-        $registeredAttostamps = (
-            CB_Attostamp::fetchRegisteredAttostampsByRootModelCBID(
+        $registeredCBTimestamps = (
+            CB_Timestamp::fetchRegisteredCBTimestampsByRootModelCBID(
                 $rootModelCBID
             )
         );
@@ -82,7 +82,7 @@ CB_Tests_Attostamp {
         $expectedResult = 0;
 
         $actualResult = count(
-            $registeredAttostamps
+            $registeredCBTimestamps
         );
 
         if (
@@ -100,8 +100,8 @@ CB_Tests_Attostamp {
 
         $expectedResult = true;
 
-        $actualResult = CB_Attostamp::reserve(
-            $firstAttostamp,
+        $actualResult = CB_Timestamp::reserve(
+            $firstCBTimestamp,
             $rootModelCBID
         );
 
@@ -118,8 +118,8 @@ CB_Tests_Attostamp {
 
         /* test: reserve with no conflict verify */
 
-        $reservedAttostamps = (
-            CB_Attostamp::fetchReservedAttostampsByRootModelCBID(
+        $reservedCBTimestamps = (
+            CB_Timestamp::fetchReservedCBTimestampsByRootModelCBID(
                 $rootModelCBID
             )
         );
@@ -127,7 +127,7 @@ CB_Tests_Attostamp {
         $expectedResult = 1;
 
         $actualResult = count(
-            $reservedAttostamps
+            $reservedCBTimestamps
         );
 
         if (
@@ -145,8 +145,8 @@ CB_Tests_Attostamp {
 
         $expectedResult = false;
 
-        $actualResult = CB_Attostamp::reserve(
-            $firstAttostamp,
+        $actualResult = CB_Timestamp::reserve(
+            $firstCBTimestamp,
             $rootModelCBID
         );
 
@@ -163,15 +163,15 @@ CB_Tests_Attostamp {
 
         /* test: reserve near (return value should be different) */
 
-        $secondAttostamp = CB_Attostamp::reserveNear(
-            $firstAttostamp,
+        $secondCBTimestamp = CB_Timestamp::reserveNear(
+            $firstCBTimestamp,
             $rootModelCBID
         );
 
         $expectedResult = true;
 
         $actualResult = (
-            $secondAttostamp !== $firstAttostamp
+            $secondCBTimestamp !== $firstCBTimestamp
         );
 
         if (
@@ -187,8 +187,8 @@ CB_Tests_Attostamp {
 
         /* test: reserve near verify */
 
-        $reservedAttostamps = (
-            CB_Attostamp::fetchReservedAttostampsByRootModelCBID(
+        $reservedCBTimestamps = (
+            CB_Timestamp::fetchReservedCBTimestampsByRootModelCBID(
                 $rootModelCBID
             )
         );
@@ -196,7 +196,7 @@ CB_Tests_Attostamp {
         $expectedResult = 2;
 
         $actualResult = count(
-            $reservedAttostamps
+            $reservedCBTimestamps
         );
 
         if (
@@ -210,12 +210,12 @@ CB_Tests_Attostamp {
         }
 
 
-        /* test: register first attostamp */
+        /* test: register first cbtimestamp */
 
         $expectedResult = true;
 
-        $actualResult = CB_Attostamp::register(
-            $firstAttostamp,
+        $actualResult = CB_Timestamp::register(
+            $firstCBTimestamp,
             $rootModelCBID
         );
 
@@ -223,19 +223,19 @@ CB_Tests_Attostamp {
             $actualResult != $expectedResult
         ) {
             return CBTest::resultMismatchFailure(
-                'register first attostamp',
+                'register first cbtimestamp',
                 $actualResult,
                 $expectedResult
             );
         }
 
 
-        /* test: register second attostamp */
+        /* test: register second cbtimestamp */
 
         $expectedResult = true;
 
-        $actualResult = CB_Attostamp::register(
-            $secondAttostamp,
+        $actualResult = CB_Timestamp::register(
+            $secondCBTimestamp,
             $rootModelCBID
         );
 
@@ -243,7 +243,7 @@ CB_Tests_Attostamp {
             $actualResult != $expectedResult
         ) {
             return CBTest::resultMismatchFailure(
-                'register second attostamp',
+                'register second cbtimestamp',
                 $actualResult,
                 $expectedResult
             );
@@ -252,8 +252,8 @@ CB_Tests_Attostamp {
 
         /* test: register verification 1 */
 
-        $reservedAttostamps = (
-            CB_Attostamp::fetchReservedAttostampsByRootModelCBID(
+        $reservedCBTimestamps = (
+            CB_Timestamp::fetchReservedCBTimestampsByRootModelCBID(
                 $rootModelCBID
             )
         );
@@ -261,7 +261,7 @@ CB_Tests_Attostamp {
         $expectedResult = 0;
 
         $actualResult = count(
-            $reservedAttostamps
+            $reservedCBTimestamps
         );
 
         if (
@@ -277,8 +277,8 @@ CB_Tests_Attostamp {
 
         /* test: register verification 2 */
 
-        $registeredAttostamps = (
-            CB_Attostamp::fetchRegisteredAttostampsByRootModelCBID(
+        $registeredCBTimestamps = (
+            CB_Timestamp::fetchRegisteredCBTimestampsByRootModelCBID(
                 $rootModelCBID
             )
         );
@@ -286,7 +286,7 @@ CB_Tests_Attostamp {
         $expectedResult = 2;
 
         $actualResult = count(
-            $registeredAttostamps
+            $registeredCBTimestamps
         );
 
         if (
@@ -302,12 +302,12 @@ CB_Tests_Attostamp {
 
         /* test: restore initial state 2 */
 
-        CB_Attostamp::deleteAttostampsByRootModelCBID(
+        CB_Timestamp::deleteByRootModelCBID(
             $rootModelCBID
         );
 
-        $reservedAttostamps = (
-            CB_Attostamp::fetchReservedAttostampsByRootModelCBID(
+        $reservedCBTimestamps = (
+            CB_Timestamp::fetchReservedCBTimestampsByRootModelCBID(
                 $rootModelCBID
             )
         );
@@ -315,7 +315,7 @@ CB_Tests_Attostamp {
         $expectedResult = 0;
 
         $actualResult = count(
-            $reservedAttostamps
+            $reservedCBTimestamps
         );
 
         if (
@@ -328,8 +328,8 @@ CB_Tests_Attostamp {
             );
         }
 
-        $registeredAttostamps = (
-            CB_Attostamp::fetchRegisteredAttostampsByRootModelCBID(
+        $registeredCBTimestamps = (
+            CB_Timestamp::fetchRegisteredCBTimestampsByRootModelCBID(
                 $rootModelCBID
             )
         );
@@ -337,7 +337,7 @@ CB_Tests_Attostamp {
         $expectedResult = 0;
 
         $actualResult = count(
-            $registeredAttostamps
+            $registeredCBTimestamps
         );
 
         if (
@@ -379,26 +379,26 @@ CB_Tests_Attostamp {
             }
         );
 
-        CB_Attostamp::deleteAttostampsByRootModelCBID(
+        CB_Timestamp::deleteByRootModelCBID(
             $rootModelCBID
         );
 
-        $firstAttostamp = CB_Attostamp::from(
+        $firstCBTimestamp = CB_Timestamp::from(
             1641483602,
-            740041000050002030
+            940041000052602
         );
 
 
-        /* test: use attostamp without reserving */
+        /* test: use cbtimestamp without reserving */
 
         $spec = CBModel::createSpec(
-            'CB_Tests_Attostamp_TestModel',
+            'CB_Tests_Timestamp_TestModel',
             $rootModelCBID
         );
 
-        CB_Tests_Attostamp_TestModel::setAttostamp(
+        CB_Tests_Timestamp_TestModel::setCBTimestamp(
             $spec,
-            $firstAttostamp
+            $firstCBTimestamp
         );
 
         $expectedSourceCBID = 'd280cbd05345eaefcd5705fc981d5e603165d596';
@@ -426,17 +426,17 @@ CB_Tests_Attostamp {
             $actualSourceCBID !== $expectedSourceCBID
         ) {
             return CBTest::resultMismatchFailure(
-                'use attostamp without reserving',
+                'use cbtimestamp without reserving',
                 $actualSourceCBID,
                 $expectedSourceCBID
             );
         }
 
 
-        /* test: use attostamp correctly */
+        /* test: use cbtimestamp correctly */
 
-        CB_Attostamp::reserve(
-            $firstAttostamp,
+        CB_Timestamp::reserve(
+            $firstCBTimestamp,
             $rootModelCBID
         );
 
@@ -463,7 +463,7 @@ CB_Tests_Attostamp {
             }
         );
 
-        CB_Attostamp::deleteAttostampsByRootModelCBID(
+        CB_Timestamp::deleteByRootModelCBID(
             $rootModelCBID
         );
 
