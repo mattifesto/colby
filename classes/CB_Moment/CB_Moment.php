@@ -85,13 +85,13 @@ CB_Moment {
             $currentUserModelCBID
         );
 
-        $reservedAttostampModel = CB_Attostamp::reserveNow(
+        $reservedCBTimestampModel = CB_Timestamp::reserveNow(
             $momentModelCBID
         );
 
-        CB_Moment::setAttostamp(
+        CB_Moment::setCBTimestamp(
             $momentSpec,
-            $reservedAttostampModel
+            $reservedCBTimestampModel
         );
 
         CB_Moment::setText(
@@ -140,7 +140,9 @@ CB_Moment {
      * @param object $args
      *
      *      {
+     *          maxFemtoseconds: int
      *          maxModelsCount: int
+     *          maxUnixTimestamp: int
      *          userModelCBID: CBID
      *      }
      *
@@ -160,6 +162,16 @@ CB_Moment {
             'maxModelsCount'
         );
 
+        $maxUnixTimestamp = CBModel::valueAsInt(
+            $args,
+            'maxUnixTimestamp'
+        );
+
+        $maxFemtoseconds = CBModel::valueAsInt(
+            $args,
+            'maxFemtoseconds'
+        );
+
         if (
             $maxModelsCount === null ||
             $maxModelsCount < 1 ||
@@ -173,7 +185,11 @@ CB_Moment {
                 $userModelCBID,
                 'CB_Moment_userMoments',
                 'descending',
-                $maxModelsCount
+                $maxModelsCount,
+                null,
+                $maxUnixTimestamp,
+                null,
+                $maxFemtoseconds,
             )
         );
 
@@ -251,30 +267,42 @@ CB_Moment {
     ): stdClass {
         $momentModel = (object)[];
 
+        $authorUserModelCBID = CB_Moment::getAuthorUserModelCBID(
+            $momentSpec
+        );
+
+        if (
+            $authorUserModelCBID === null
+        ) {
+            throw new CBExceptionWithValue(
+                'The author user model CBID must be set.',
+                $momentSpec,
+                '30c42acdc8443486eb38b3870ead30b12770d1fb'
+            );
+        }
+
         CB_Moment::setAuthorUserModelCBID(
             $momentModel,
-            CB_Moment::getAuthorUserModelCBID(
-                $momentSpec
-            )
+            $authorUserModelCBID
         );
 
         /**
          * @NOTE 2022_01_02
          *
          *      This is special logic used during the transition from a Unix
-         *      timestamp to an atto timestamp.
+         *      timestamp to a cbtimestamp.
          */
 
-        $attostampModel = CB_Moment::getAttostamp(
+        $cbtimestampModel = CB_Moment::getCBTimestamp(
             $momentSpec,
         );
 
         if (
-            $attostampModel !== null
+            $cbtimestampModel !== null
         ) {
-            CB_Moment::setAttostamp(
+            CB_Moment::setCBTimestamp(
                 $momentModel,
-                $attostampModel
+                $cbtimestampModel
             );
         } else {
             CB_Moment::setCreatedTimestamp(
@@ -301,27 +329,27 @@ CB_Moment {
     /**
      * @param object $momentModel
      *
-     * @return [<CB_Attostamp>]
+     * @return [<CB_Timestamp>]
      */
     static function
-    CBModel_getAttostamps(
+    CBModel_getCBTimestamps(
         stdClass $momentModel
     ): array {
-        $attostampModel = CB_Moment::getAttostamp(
+        $cbtimestampModel = CB_Moment::getCBTimestamp(
             $momentModel
         );
 
         if (
-            $attostampModel === null
+            $cbtimestampModel === null
         ) {
             return [];
         } else {
             return [
-                $attostampModel,
+                $cbtimestampModel,
             ];
         }
     }
-    /* CBModel_getAttostamps() */
+    /* CBModel_getCBTimestamps() */
 
 
 
@@ -381,9 +409,10 @@ CB_Moment {
         );
 
         /**
-         * Attostamps can only be reserved if a root model CBID exists. If the
-         * root model doesn't have a CBID then an uprade won't work. It's rare
-         * for upgrades to occur on models that don't have a root model CBID.
+         * cbtimestamps can only be reserved if a root model CBID exists. If
+         * the root model doesn't have a CBID then an uprade won't work. It's
+         * rare for upgrades to occur on models that don't have a root model
+         * CBID.
          */
 
         if (
@@ -401,37 +430,37 @@ CB_Moment {
             );
         }
 
-        $attostampModel = CB_Moment::getAttostamp(
+        $cbtimestampModel = CB_Moment::getCBTimestamp(
             $momentSpec
         );
 
         if (
-            $attostampModel === null
+            $cbtimestampModel === null
         ) {
             $createdTimestamp = CB_Moment::getCreatedTimestamp(
                 $momentSpec
             );
 
             /**
-             * If there's not an attostamp, the created timestamp should never
-             * be null  but if it is, we can't do much.
+             * If there's not a cbtimestamp, the created timestamp should never
+             * be null but if it is, we can't do much.
              */
 
             if (
                 $createdTimestamp !== null
             ) {
-                $attostampSpec = CB_Attostamp::from(
+                $cbtimestampSpec = CB_Timestamp::from(
                     $createdTimestamp
                 );
 
-                $attostampSpec = CB_Attostamp::reserveNear(
-                    $attostampSpec,
+                $cbtimestampSpec = CB_Timestamp::reserveNear(
+                    $cbtimestampSpec,
                     $rootModelCBID
                 );
 
-                CB_Moment::setAttostamp(
+                CB_Moment::setCBTimestamp(
                     $momentSpec,
-                    $attostampSpec
+                    $cbtimestampSpec
                 );
 
                 unset(
@@ -457,6 +486,45 @@ CB_Moment {
 
 
     /* -- CBModels interfaces -- */
+
+
+
+    /**
+     * @param [object] $momentModelCBIDs
+     *
+     * @return void
+     */
+    static function
+    CBModels_willDelete(
+        array $momentModelCBIDs
+    ): void {
+        $momentModels = CBModels::fetchModelsByID2(
+            $momentModelCBIDs
+        );
+
+        foreach (
+            $momentModels as $momentModel
+        ) {
+            $momentModelCBID = CBModel::getCBID(
+                $momentModel
+            );
+
+            $firstCBID = CB_Moment::getAuthorUserModelCBID(
+                $momentModel
+            );
+
+            $associationKey = 'CB_Moment_userMoments';
+
+            $secondCBID = $momentModelCBID;
+
+            CBModelAssociations::delete(
+                $firstCBID,
+                $associationKey,
+                $secondCBID
+            );
+        }
+    }
+    /* CBModels_willDelete() */
 
 
 
@@ -494,21 +562,21 @@ CB_Moment {
                 'CB_Moment_userMoments'
             );
 
-            $attostampModel = CB_Moment::getAttostamp(
+            $cbtimestampModel = CB_Moment::getCBTimestamp(
                 $momentModel
             );
 
             CB_ModelAssociation::setSortingValue(
                 $modelAssociation,
-                CB_Attostamp::getUnixTimestamp(
-                    $attostampModel
+                CB_Timestamp::getUnixTimestamp(
+                    $cbtimestampModel
                 )
             );
 
             CB_ModelAssociation::setSortingValueDifferentiator(
                 $modelAssociation,
-                CB_Attostamp::getAttoseconds(
-                    $attostampModel
+                CB_Timestamp::getFemtoseconds(
+                    $cbtimestampModel
                 )
             );
 
@@ -613,38 +681,38 @@ CB_Moment {
      * @return object
      */
     static function
-    getAttostamp(
+    getCBTimestamp(
         stdClass $momentModel
     ): ?stdClass {
         return CBModel::valueAsModel(
             $momentModel,
-            'CB_Moment_attostamp_property',
-            'CB_Attostamp'
+            'CB_Moment_cbtimestamp_property',
+            'CB_Timestamp'
         );
     }
-    /* getAttostamp() */
+    /* getCBTimestamp() */
 
 
 
     /**
      * @param object $momentModel
-     * @param object $attostampModel
+     * @param object $cbtimestampModel
      *
      * @return void
      */
     static function
-    setAttostamp(
+    setCBTimestamp(
         stdClass $momentModel,
-        stdClass $attostampModel
+        stdClass $cbtimestampModel
     ): void {
-        $verifiedAttostampModel = CBConvert::valueAsModel(
-            $attostampModel,
-            'CB_Attostamp'
+        $verifiedCBTimestampModel = CBConvert::valueAsModel(
+            $cbtimestampModel,
+            'CB_Timestamp'
         );
 
-        $momentModel->CB_Moment_attostamp_property = $verifiedAttostampModel;
+        $momentModel->CB_Moment_cbtimestamp_property = $verifiedCBTimestampModel;
     }
-    /* setAttostamp() */
+    /* setCBTimestamp() */
 
 
 
@@ -695,7 +763,7 @@ CB_Moment {
     /**
      * @deprecated 2022_01_09
      *
-     *      This property will always be lower priority than the attostamp
+     *      This property will always be lower priority than the cbtimestamp
      *      property.
      *
      * @param object $momentModel
@@ -718,7 +786,7 @@ CB_Moment {
     /**
      * @deprecated 2022_01_09
      *
-     *      This property will always be lower priority than the attostamp
+     *      This property will always be lower priority than the cbtimestamp
      *      property.
      *
      * @param object $momentModel
