@@ -11,15 +11,12 @@ CBModelAssociationsTable {
      *      there are no duplicate sorting values for items in a list, but this
      *      table doesn't enforce that.
      *
-     *      These columns are specifically designed to hold registered
-     *      attostamps which are unique. Although that doesn't technically
-     *      guaratee uniqueness in a list if you do something odd.
+     *      These columns will hold the Unix timestamp and the femtoseconds of
+     *      CB_Timestamp models, which are designed to be unique.
      *
      *      It is up to developers to make sure they use unique sorting values
      *      for items in a list. Be mindful of the fact that using unique
-     *      sorting values is important, especially for long lists. Registered
-     *      attostamps were created to assist developers in their efforts to
-     *      make that happen.
+     *      sorting values is important, especially for long lists.
      *
      * @TODO 2021_11_25
      *
@@ -54,7 +51,7 @@ CBModelAssociationsTable {
                 BIGINT NOT NULL DEFAULT 0,
 
                 CBModelAssociations_sortingValueDifferentiator_2_column
-                BIGINT NOT NULL DEFAULT 0,
+                BIGINT UNSIGNED NOT NULL DEFAULT 0,
 
                 associatedID
                 BINARY(20) NOT NULL,
@@ -246,7 +243,7 @@ CBModelAssociationsTable {
                 CHANGE COLUMN
                 CBModelAssociations_sortingValueDifferentiator_column
                 CBModelAssociations_sortingValueDifferentiator_2_column
-                BIGINT NOT NULL DEFAULT 0
+                BIGINT UNSIGNED NOT NULL DEFAULT 0
 
             EOT;
 
@@ -277,8 +274,8 @@ CBModelAssociationsTable {
 
                 ADD COLUMN
                 CBModelAssociations_sortingValueDifferentiator_2_column
-                BIGINT NOT NULL DEFAULT 0
-                AFTER CBModelAssociations_sortingValue_column
+                BIGINT UNSIGNED NOT NULL DEFAULT 0
+                AFTER CBModelAssociations_sortingValue_2_column
 
             EOT;
 
