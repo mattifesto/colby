@@ -41,6 +41,24 @@ CB_Timestamp {
 
 
 
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBInstall_requiredClassNames(
+    ): array {
+        return [
+            'CB_Table_Timestamps',
+        ];
+    }
+    /* CBInstall_requiredClassNames() */
+
+
+
     /* -- CBModel interfaces -- */
 
 
@@ -204,6 +222,63 @@ CB_Timestamp {
         );
     }
     /* deleteByRootModelCBID() */
+
+
+
+    /**
+     * @param CBID $rootModelCBID
+     *
+     * @return [object]
+     */
+    static function
+    fetchAllCBTimestampsByRootModelCBID(
+        string $rootModelCBID
+    ) {
+        $rootModelCBIDAsSQL = CBID::toSQL(
+            $rootModelCBID
+        );
+
+        $SQL = <<<EOT
+
+            SELECT
+
+            CB_Timestamps_unixTimestamp_column
+            AS
+            unixTimestamp,
+
+            CB_Timestamps_femtoseconds_column
+            AS
+            femtoseconds
+
+            FROM
+            CB_Timestamps_table
+
+            WHERE
+
+            CB_Timestamps_rootModelCBID_column =
+            {$rootModelCBIDAsSQL}
+
+        EOT;
+
+        $results = CBDB::SQLToObjects(
+            $SQL
+        );
+
+        $cbtimestampModels = array_map(
+            function (
+                $result
+            ) {
+                return CB_Timestamp::from(
+                    $result->unixTimestamp,
+                    $result->femtoseconds
+                );
+            },
+            $results
+        );
+
+        return $cbtimestampModels;
+    }
+    /* fetchAllCBTimestampsByRootModelCBID() */
 
 
 
