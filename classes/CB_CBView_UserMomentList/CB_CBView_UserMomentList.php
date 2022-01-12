@@ -32,8 +32,10 @@ CB_CBView_UserMomentList {
     CBHTMLOutput_requiredClassNames(
     ): array {
         return [
+            'CB_Timestamp',
             'CB_CBView_Moment',
             'CB_CBView_MomentCreator',
+            'CB_Moment',
             'CBAjax',
             'CBConvert',
             'CBErrorHandler',

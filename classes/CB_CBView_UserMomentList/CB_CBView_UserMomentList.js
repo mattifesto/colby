@@ -1,6 +1,8 @@
 /* global
+    CB_Timestamp,
     CB_CBView_Moment,
     CB_CBView_MomentCreator,
+    CB_Moment,
     CBAjax,
     CBConvert,
     CBErrorHandler,
@@ -60,6 +62,11 @@
     ) {
         let userModelCBID;
         let momentContainerElement;
+        let isRenderingBatchOfOlderMoments = false;
+        let oldestMomentCBTimestamp;
+        let endOfOlderMomentsElementIsVisible = false;
+        let hasRenderedAllMoments = false;
+        let timeoutID;
 
         try {
             let showMomentCreator = CBConvert.valueToBool(
@@ -114,12 +121,43 @@
                 "CB_CBView_UserMomentList_momentContainer"
             );
 
-
             element.append(
                 momentContainerElement
             );
 
-            renderBatchOfOlderMoments();
+            let endOfOlderMomentsElement = document.createElement(
+                "div"
+            );
+
+            endOfOlderMomentsElement.className = (
+                "CB_CBView_UserMomentList_endOfOlderMoments_element"
+            );
+
+            endOfOlderMomentsElement.style.height="100px";
+
+            element.append(
+                endOfOlderMomentsElement
+            );
+
+            let observer = new IntersectionObserver(
+                function (
+                    entries
+                ) {
+                    let entry = entries[0];
+
+                    endOfOlderMomentsElementIsVisible = entry.isIntersecting;
+
+                    if (
+                        endOfOlderMomentsElementIsVisible
+                    ) {
+                        renderBatchOfOlderMoments();
+                    }
+                }
+            );
+
+            observer.observe(
+                endOfOlderMomentsElement
+            );
         } catch(
             error
         ) {
@@ -137,30 +175,94 @@
         renderBatchOfOlderMoments(
         ) {
             try {
+                if (
+                    isRenderingBatchOfOlderMoments ||
+                    hasRenderedAllMoments
+                ) {
+                    return;
+                }
+
+                isRenderingBatchOfOlderMoments = true;
+
+                let maxUnixTimestamp;
+                let maxFemtoseconds;
+
+                if (
+                    oldestMomentCBTimestamp !== undefined
+                ) {
+                    let decrementedCBTimestamp = CB_Timestamp.decrement(
+                        oldestMomentCBTimestamp
+                    );
+
+                    maxUnixTimestamp = CB_Timestamp.getUnixTimestamp(
+                        decrementedCBTimestamp
+                    );
+
+                    maxFemtoseconds = CB_Timestamp.getFemtoseconds(
+                        decrementedCBTimestamp
+                    );
+                }
+
                 let momentModels = await CBAjax.call(
                     "CB_Moment",
                     "fetchMomentsForUserModelCBID",
                     {
                         userModelCBID,
+                        maxUnixTimestamp,
+                        maxFemtoseconds,
+                        maxModelsCount: 5,
                     }
                 );
+
+                if (
+                    momentModels.length === 0
+                ) {
+                    hasRenderedAllMoments = true;
+
+                    return;
+                }
 
                 momentModels.forEach(
                     function (
                         momentModel
                     ) {
+                        oldestMomentCBTimestamp = CB_Moment.getCBTimestamp(
+                            momentModel
+                        );
+
                         renderOlderMoment(
                             momentModel,
                         );
                     }
                 );
-            } catch (error) {
+
+                if (
+                    timeoutID === undefined
+                ) {
+                    timeoutID = window.setTimeout(
+                        function () {
+                            if (
+                                endOfOlderMomentsElementIsVisible
+                            ) {
+                                renderBatchOfOlderMoments();
+                            }
+
+                            timeoutID = undefined;
+                        },
+                        10
+                    );
+                }
+            } catch (
+                error
+            ) {
                 CBErrorHandler.report(
                     error
                 );
+            } finally {
+                isRenderingBatchOfOlderMoments = false;
             }
         }
-        /* handleTimeout() */
+        /* renderBatchOfOlderMoments() */
 
 
 
