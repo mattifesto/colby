@@ -206,14 +206,15 @@ CBModels {
 
 
     /**
-     * When a model is saved a task is created, so CBTasks2 is required for this
-     * class to be fully installed.
-     *
      * @return [string]
      */
-    static function CBInstall_requiredClassNames(): array {
+    static function
+    CBInstall_requiredClassNames(
+    ): array {
         return [
+            'CB_Timestamp',
             'CBModelsTable',
+            'CBModels2Table',
             'CBModelVersionsTable',
             'CBTasks2',
             'CBUpgradesForVersion442',
@@ -274,15 +275,15 @@ CBModels {
      *
      *      CBDB::transaction(
      *          function () use (
-     *              $CBID
+     *              $rootModelCBIDs
      *          ) {
      *              CBModels::deleteByID(
-     *                  $CBID
+     *                  $rootModelCBIDs
      *              );
      *          }
      *      );
      *
-     * @param CBID|[CBID] $CBIDs
+     * @param CBID|[CBID] $rootModelCBIDs
      *
      *      All of the referenced models must have the same class name. Make
      *      separate calls for each class name.
@@ -291,7 +292,7 @@ CBModels {
      */
     static function
     deleteByID(
-        $CBIDs
+        $rootModelCBIDs
     ): void {
         if (
             !CBDB::transactionIsActive()
@@ -307,7 +308,7 @@ CBModels {
 
         if (
             empty(
-                $CBIDs
+                $rootModelCBIDs
             )
         ) {
             return;
@@ -315,14 +316,14 @@ CBModels {
 
         if (
             !is_array(
-                $CBIDs
+                $rootModelCBIDs
             )
         ) {
-            $CBIDs = [$CBIDs];
+            $rootModelCBIDs = [$rootModelCBIDs];
         }
 
-        $CBIDsForSQL = CBID::toSQL(
-            $CBIDs
+        $rootModelCBIDsAsSQL = CBID::toSQL(
+            $rootModelCBIDs
         );
 
         $SQL = <<<EOT
@@ -335,7 +336,7 @@ CBModels {
 
             WHERE
 
-            ID IN ({$CBIDsForSQL})
+            ID IN ({$rootModelCBIDsAsSQL})
 
         EOT;
 
@@ -372,7 +373,7 @@ CBModels {
             ) {
                 call_user_func(
                     $functionName,
-                    $CBIDs
+                    $rootModelCBIDs
                 );
             } else {
                 $functionName = "{$className}::modelsWillDelete";
@@ -384,7 +385,7 @@ CBModels {
                 ) {
                     call_user_func(
                         $functionName,
-                        $CBIDs
+                        $rootModelCBIDs
                     );
                 }
             }
@@ -406,7 +407,7 @@ CBModels {
 
             WHERE
 
-            CBModels.ID IN ({$CBIDsForSQL})
+            CBModels.ID IN ({$rootModelCBIDsAsSQL})
 
         EOT;
 
@@ -417,20 +418,20 @@ CBModels {
         /**
          * @NOTE 2022_01_10
          *
-         *      Deleting a model is a highly destructive process. I was considering
-         *      whether I should rereserve attostamps and the I noticed the code
-         *      below which deletes the entire data store. For both of these reasons
-         *      there isn't really any "undelete" possibility.
-         *
-         *      Right now, I'm not doing anything to the attostamps which will
-         *      be deleted by a task because they are no longer associated with
-         *      a saved model.
+         *      Deleting a model is a very final action to take. I was
+         *      considering whether I should rereserve instead of deleting
+         *      cbtimestamps and the I noticed the code below that deletes the
+         *      entire data store. After delete there is no simple undelete.
          */
         foreach (
-            $CBIDs as $CBID
+            $rootModelCBIDs as $rootModelCBID
         ) {
+            CB_Timestamp::deleteByRootModelCBID(
+                $rootModelCBID
+            );
+
             CBDataStore::deleteByID(
-                $CBID
+                $rootModelCBID
             );
         }
 
@@ -444,7 +445,7 @@ CBModels {
             )
         ) {
             CBModelCache::uncacheByID(
-                $CBIDs
+                $rootModelCBIDs
             );
         }
     }
@@ -775,7 +776,7 @@ CBModels {
      *
      *      If this argument is true then the array of models returned will have
      *      each model at its same index in the array as its CBID in the
-     *      original CBIDs array. It's best to
+     *      original CBIDs array.
      *
      * @return [model]
      */
@@ -1470,25 +1471,25 @@ CBModels {
                     $upgradedSpec
                 );
 
-                /* register attostamps */
+                /* register cbtimestamps */
 
                 $modelCBID = CBModel::getCBID(
                     $model
                 );
 
-                CB_Attostamp::rereserveAttostampsByRootModelCBID(
+                CB_Timestamp::rereserveByRootModelCBID(
                     $modelCBID
                 );
 
-                $attostampModels = CBModel::getAttostampModels(
+                $cbtimestampModels = CBModel::getCBTimestamps(
                     $model
                 );
 
                 foreach (
-                    $attostampModels as $attostampModel
+                    $cbtimestampModels as $cbtimestampModel
                 ) {
-                    $wasRegistered = CB_Attostamp::register(
-                        $attostampModel,
+                    $wasRegistered = CB_Timestamp::register(
+                        $cbtimestampModel,
                         $modelCBID
                     );
 
@@ -1498,13 +1499,13 @@ CBModels {
                         throw new CBExceptionWithValue(
                             CBConvert::stringToCleanLine(<<<EOT
 
-                                A CB_Attostamp was unable to be registered while
+                                A CB_Timestamp was unable to be registered while
                                 a model was being saved.
 
                             EOT),
                             (object)[
-                                'unregistered CB_Attostamp model' => (
-                                    $attostampModel
+                                'unregistered CB_Timestamp model' => (
+                                    $cbtimestampModel
                                 ),
                                 'root model' => $model,
                             ],
