@@ -137,26 +137,30 @@ CBModelAssociations {
 
 
     /**
-     * @param ?CBID $ID
+     * @param ?CBID $firstCBID
      * @param ?string $associationKey
-     * @param ?CBID $associatedID
+     * @param ?CBID $secondCBID
      *
      * @return void
      */
     static function
     delete(
-        string $ID = null,
+        string $firstCBID = null,
         string $associationKey = null,
-        string $associatedID = null
+        string $secondCBID = null
     ): void {
         $clauses = [];
 
-        if ($ID !== null) {
-            $IDAsSQL = CBID::toSQL($ID);
+        if (
+            $firstCBID !== null
+        ) {
+            $firstCBIDAsSQL = CBID::toSQL(
+                $firstCBID
+            );
 
             array_push(
                 $clauses,
-                "ID = {$IDAsSQL}"
+                "ID = {$firstCBIDAsSQL}"
             );
         }
 
@@ -171,19 +175,23 @@ CBModelAssociations {
             );
         }
 
-        if ($associatedID !== null) {
-            $associatedIDAsSQL = CBID::toSQL(
-                $associatedID
+        if (
+            $secondCBID !== null
+        ) {
+            $secondCBIDAsSQL = CBID::toSQL(
+                $secondCBID
             );
 
             array_push(
                 $clauses,
-                "associatedID = {$associatedIDAsSQL}"
+                "associatedID = {$secondCBIDAsSQL}"
             );
         }
 
         if (
-            empty($clauses)
+            empty(
+                $clauses
+            )
         ) {
             throw new Exception(
                 'At least one of the parameters to ' .
@@ -198,23 +206,28 @@ CBModelAssociations {
 
         $SQL = <<<EOT
 
-            DELETE FROM CBModelAssociations
-            WHERE {$clauses}
+            DELETE FROM
+            CBModelAssociations
+
+            WHERE
+            {$clauses}
 
         EOT;
 
-        Colby::query($SQL);
+        Colby::query(
+            $SQL
+        );
     }
     /* delete() */
 
 
 
     /**
-     * This function is different that CBModelAssociations::delete() in that
-     * you must specify the CBID, associationKey, and associatedCBID for every
-     * row that you want deleted.
+     * This function is different than CBModelAssociations::delete() in that you
+     * must specify the firstCBID, associationKey, and secondCBID for every row
+     * that you want deleted.
      *
-     * @param [[<CBID>, <associationKey>, <associatedCBID>]]
+     * @param [[<firstCBID>, <associationKey>, <secondCBID>]]
      */
     static function
     deleteMultiple(
@@ -227,7 +240,9 @@ CBModelAssociations {
         }
 
         $values = array_map(
-            function ($association) {
+            function (
+                $association
+            ) {
                 return (
                     '(' .
                     CBID::toSQL($association[0]) .
@@ -248,22 +263,28 @@ CBModelAssociations {
 
         $SQL = <<<EOT
 
-            DELETE FROM CBModelAssociations
+            DELETE FROM
+            CBModelAssociations
 
-            WHERE (ID, className, associatedID) IN ({$values})
+            WHERE
+            (ID, className, associatedID)
+            IN
+            ({$values})
 
         EOT;
 
-        Colby::query($SQL);
+        Colby::query(
+            $SQL
+        );
     }
     /* deleteMultiple() */
 
 
 
     /**
-     * @param CBID|[CBID]|null $IDs
+     * @param CBID|[CBID]|null $firstCBIDs
      * @param string|null $associationKey
-     * @param CBID|null $associatedID
+     * @param CBID|null $secondCBID
      *
      * @return [object]
      *
@@ -275,26 +296,28 @@ CBModelAssociations {
      */
     static function
     fetch(
-        $IDs,
+        $firstCBIDs,
         ?string $associationKey = null,
-        ?string $associatedID = null
+        ?string $secondCBID = null
     ): array {
         $clauses = [];
 
-        if ($IDs !== null) {
+        if (
+            $firstCBIDs !== null
+        ) {
             if (
-                !is_array($IDs)
+                !is_array($firstCBIDs)
             ) {
-                $IDs = [$IDs];
+                $firstCBIDs = [$firstCBIDs];
             }
 
-            $IDsAsSQL = CBID::toSQL(
-                $IDs
+            $firstCBIDsAsSQL = CBID::toSQL(
+                $firstCBIDs
             );
 
             array_push(
                 $clauses,
-                "ID IN ({$IDsAsSQL})"
+                "ID IN ({$firstCBIDsAsSQL})"
             );
         }
 
@@ -312,20 +335,22 @@ CBModelAssociations {
         }
 
         if (
-            $associatedID !== null
+            $secondCBID !== null
         ) {
-            $associatedIDAsSQL = CBID::toSQL(
-                $associatedID
+            $secondCBIDAsSQL = CBID::toSQL(
+                $secondCBID
             );
 
             array_push(
                 $clauses,
-                "associatedID = {$associatedIDAsSQL}"
+                "associatedID = {$secondCBIDAsSQL}"
             );
         }
 
         if (
-            empty($clauses)
+            empty(
+                $clauses
+            )
         ) {
             throw new Exception(
                 'At least one of the parameters to ' .
@@ -337,15 +362,29 @@ CBModelAssociations {
 
         $SQL = <<<EOT
 
-            SELECT  LOWER(HEX(ID)) as ID,
-                    className,
-                    LOWER(HEX(associatedID)) as associatedID
-            FROM    CBModelAssociations
-            WHERE   {$clauses}
+            SELECT
+
+            LOWER(HEX(ID))
+            AS
+            ID,
+
+            className,
+
+            LOWER(HEX(associatedID))
+            AS
+            associatedID
+
+            FROM
+            CBModelAssociations
+
+            WHERE
+            {$clauses}
 
         EOT;
 
-        return CBDB::SQLToObjects($SQL);
+        return CBDB::SQLToObjects(
+            $SQL
+        );
     }
     /* fetch() */
 
@@ -590,18 +629,66 @@ CBModelAssociations {
         );
 
         if (
+            $sortingValueMinimum !== null &&
+            $sortingValueDifferentiatorMinimum !== null
+        ) {
+            array_push(
+                $whereClauses,
+                <<<EOT
+
+                    (
+                        (
+                            CBModelAssociations_sortingValue_2_column =
+                            {$sortingValueMinimum} &&
+
+                            CBModelAssociations_sortingValueDifferentiator_2_column >=
+                            {$sortingValueDifferentiatorMinimum}
+                        ) ||
+
+                        CBModelAssociations_sortingValue_2_column >
+                        {$sortingValueMinimum}
+                    )
+
+                EOT
+            );
+        } else if (
             $sortingValueMinimum !== null
         ) {
             array_push(
                 $whereClauses,
-                (
-                    'CBModelAssociations_sortingValue_2_column >= ' .
-                    $sortingValueMinimum
-                )
+                <<<EOT
+
+                    CBModelAssociations_sortingValue_2_column >=
+                    {$sortingValueMinimum}
+
+                EOT
             );
         }
 
         if (
+            $sortingValueMaximum !== null &&
+            $sortingValueDifferentiatorMaximum !== null
+        ) {
+            array_push(
+                $whereClauses,
+                <<<EOT
+
+                    (
+                        (
+                            CBModelAssociations_sortingValue_2_column =
+                            {$sortingValueMaximum} &&
+
+                            CBModelAssociations_sortingValueDifferentiator_2_column <=
+                            {$sortingValueDifferentiatorMaximum}
+                        ) ||
+
+                        CBModelAssociations_sortingValue_2_column <
+                        {$sortingValueMaximum}
+                    )
+
+                EOT
+            );
+        } else if (
             $sortingValueMaximum !== null
         ) {
             array_push(
@@ -613,29 +700,7 @@ CBModelAssociations {
             );
         }
 
-        if (
-            $sortingValueDifferentiatorMinimum !== null
-        ) {
-            array_push(
-                $whereClauses,
-                (
-                    'CBModelAssociations_sortingValueDifferentiator_2_column >= ' .
-                    $sortingValueDifferentiatorMinimum
-                )
-            );
-        }
 
-        if (
-            $sortingValueDifferentiatorMaximum !== null
-        ) {
-            array_push(
-                $whereClauses,
-                (
-                    'CBModelAssociations_sortingValueDifferentiator_2_column <= ' .
-                    $sortingValueDifferentiatorMaximum
-                )
-            );
-        }
 
         $whereClauses = implode(
             ' AND ',
