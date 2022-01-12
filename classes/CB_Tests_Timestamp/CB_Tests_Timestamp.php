@@ -379,10 +379,6 @@ CB_Tests_Timestamp {
             }
         );
 
-        CB_Timestamp::deleteByRootModelCBID(
-            $rootModelCBID
-        );
-
         $firstCBTimestamp = CB_Timestamp::from(
             1641483602,
             940041000052602
@@ -451,7 +447,9 @@ CB_Tests_Timestamp {
         );
 
 
-        /* clean up */
+        /* --- */
+
+        $testName = 'delete';
 
         CBDB::transaction(
             function () use (
@@ -463,9 +461,21 @@ CB_Tests_Timestamp {
             }
         );
 
-        CB_Timestamp::deleteByRootModelCBID(
+        $expectedResult = [];
+
+        $actualResult = CB_Timestamp::fetchAllCBTimestampsByRootModelCBID(
             $rootModelCBID
         );
+
+        if (
+            $actualResult != $expectedResult
+        ) {
+            return CBTest::resultMismatchFailure(
+                $testName,
+                $actualResult,
+                $expectedResult
+            );
+        }
 
 
         /* done */
