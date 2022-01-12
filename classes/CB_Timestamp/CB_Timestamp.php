@@ -1,38 +1,76 @@
 <?php
 
 final class
-CB_Attostamp {
+CB_Timestamp {
+
+    /* -- CBHTMLOutput interfaces -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
+        return [
+            Colby::flexpath(
+                __CLASS__,
+                'v675.48.js',
+                cbsysurl()
+            ),
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
+        return [
+            'CBConvert',
+            'CBException',
+            'CBModel',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
+
+
 
     /* -- CBModel interfaces -- */
 
 
 
     /**
-     * @param $attostampSpec
+     * @param $cbtimestampSpec
      *
      * @return stdClass
      */
     static function
     CBModel_build(
-        $attostampSpec
+        $cbtimestampSpec
     ): stdClass {
-        $attostampModel = (object)[];
+        $cbtimestampModel = (object)[];
 
-        CB_Attostamp::setUnixTimestamp(
-            $attostampModel,
-            CB_Attostamp::getUnixTimestamp(
-                $attostampSpec
+        CB_Timestamp::setUnixTimestamp(
+            $cbtimestampModel,
+            CB_Timestamp::getUnixTimestamp(
+                $cbtimestampSpec
             )
         );
 
-        CB_Attostamp::setAttoseconds(
-            $attostampModel,
-            CB_Attostamp::getAttoseconds(
-                $attostampSpec
+        CB_Timestamp::setFemtoseconds(
+            $cbtimestampModel,
+            CB_Timestamp::getFemtoseconds(
+                $cbtimestampSpec
             )
         );
 
-        return $attostampModel;
+        return $cbtimestampModel;
     }
     /* CBModel_build() */
 
@@ -43,17 +81,17 @@ CB_Attostamp {
 
 
     /**
-     * @param object $registeredTimestamp
+     * @param object $cbtimestampModel
      *
      * @return int
      */
     static function
     getUnixTimestamp(
-        stdClass $registeredTimestamp
+        stdClass $cbtimestampModel
     ): int {
         return CBModel::valueAsInt(
-            $registeredTimestamp,
-            'CB_Attostamp_unixTimestamp_property'
+            $cbtimestampModel,
+            'CB_Timestamp_unixTimestamp_property'
         ) ?? 0;
     }
     /* getUnixTimestamp() */
@@ -61,64 +99,71 @@ CB_Attostamp {
 
 
     /**
-     * @param object $attostampModel
+     * @param object $cbtimestampModel
      * @param int $unixTimestamp
      *
      * return void
      */
     static function
     setUnixTimestamp(
-        stdClass $attostampModel,
+        stdClass $cbtimestampModel,
         int $unixTimestamp
     ): void {
-        $attostampModel->CB_Attostamp_unixTimestamp_property = $unixTimestamp;
+        $cbtimestampModel->CB_Timestamp_unixTimestamp_property = $unixTimestamp;
     }
     /* setUnixTimestamp() */
 
 
 
     /**
-     * @param object $registeredTimestamp
+     * @param object $cbtimestampModel
      *
      * @return int
      */
     static function
-    getAttoseconds(
-        stdClass $registeredTimestamp
+    getFemtoseconds(
+        stdClass $cbtimestampModel
     ): int {
         return CBModel::valueAsInt(
-            $registeredTimestamp,
-            'CB_Attostamp_attoseconds_property'
+            $cbtimestampModel,
+            'CB_Timestamp_femtoseconds_property'
         ) ?? 0;
     }
-    /* getAttoseconds() */
+    /* getFemtoseconds() */
 
 
 
     /**
-     * @param object $attostampModel
-     * @param int $attoseconds
+     * @param object $cbtimestampModel
+     * @param int $femtoseconds
      *
      * return void
      */
     static function
-    setAttoseconds(
-        stdClass $attostampModel,
-        int $attoseconds
+    setFemtoseconds(
+        stdClass $cbtimestampModel,
+        int $femtoseconds
     ): void {
         if (
-            $attoseconds < 0 ||
-            $attoseconds > 999999999999999999
-                        /* ---|||---|||---||| */
+            $femtoseconds < 0 ||
+            $femtoseconds > 999999999999999
+                         /* ---|||---|||--- */
         ) {
-            throw new InvalidArgumentException(
-                'attoseconds'
+            throw new CBExceptionWithValue(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The femtoseconds argument must be between 0 and
+                    999999999999999 inclusive.
+
+                EOT),
+                $femtoseconds,
+                '71790d0ea17c7e79ef57bead3820c5cbd96f7036'
             );
         }
 
-        $attostampModel->CB_Attostamp_attoseconds_property = $attoseconds;
+        $cbtimestampModel->CB_Timestamp_femtoseconds_property = $femtoseconds;
     }
-    /* setAttoseconds() */
+    /* setFemtoseconds() */
 
 
 
@@ -128,15 +173,15 @@ CB_Attostamp {
 
     /**
      * This function is used for administrative and testing purposes and does
-     * not have clear uses outside of that. Unused attostamps will automatically
-     * be removed by the system.
+     * not have clear uses outside of that. Unused cbtimestamps will
+     * automatically be removed by the system.
      *
      * @param CBID $rootModelCBID
      *
      * @return void
      */
     static function
-    deleteAttostampsByRootModelCBID(
+    deleteByRootModelCBID(
         string $rootModelCBID
     ): void {
         $rootModelCBIDAsSQL = CBID::toSQL(
@@ -146,10 +191,10 @@ CB_Attostamp {
         $SQL = <<<EOT
 
             DELETE FROM
-            CB_Attostamps_table
+            CB_Timestamps_table
 
             WHERE
-            CB_Attostamps_rootModelCBID_column =
+            CB_Timestamps_rootModelCBID_column =
             {$rootModelCBIDAsSQL}
 
         EOT;
@@ -158,7 +203,7 @@ CB_Attostamp {
             $SQL
         );
     }
-    /* deleteAttostampsByRootModelCBID() */
+    /* deleteByRootModelCBID() */
 
 
 
@@ -168,7 +213,7 @@ CB_Attostamp {
      * @return [object]
      */
     static function
-    fetchRegisteredAttostampsByRootModelCBID(
+    fetchRegisteredCBTimestampsByRootModelCBID(
         string $rootModelCBID
     ) {
         $rootModelCBIDAsSQL = CBID::toSQL(
@@ -179,23 +224,23 @@ CB_Attostamp {
 
             SELECT
 
-            CB_Attostamps_unixTimestamp_column
+            CB_Timestamps_unixTimestamp_column
             AS
             unixTimestamp,
 
-            CB_Attostamps_attoseconds_column
+            CB_Timestamps_femtoseconds_column
             AS
-            attoseconds
+            femtoseconds
 
             FROM
-            CB_Attostamps_table
+            CB_Timestamps_table
 
             WHERE
 
-            CB_Attostamps_rootModelCBID_column =
+            CB_Timestamps_rootModelCBID_column =
             {$rootModelCBIDAsSQL} AND
 
-            CB_Attostamps_reservedAtUnixTimestamp_column
+            CB_Timestamps_reservedAtUnixTimestamp_column
             IS NULL
 
         EOT;
@@ -204,21 +249,21 @@ CB_Attostamp {
             $SQL
         );
 
-        $attostampModels = array_map(
+        $cbtimestampModels = array_map(
             function (
                 $result
             ) {
-                return CB_Attostamp::from(
+                return CB_Timestamp::from(
                     $result->unixTimestamp,
-                    $result->attoseconds
+                    $result->femtoseconds
                 );
             },
             $results
         );
 
-        return $attostampModels;
+        return $cbtimestampModels;
     }
-    /* fetchRegisteredAttostampsByRootModelCBID() */
+    /* fetchRegisteredCBTimestampsByRootModelCBID() */
 
 
 
@@ -228,7 +273,7 @@ CB_Attostamp {
      * @return [object]
      */
     static function
-    fetchReservedAttostampsByRootModelCBID(
+    fetchReservedCBTimestampsByRootModelCBID(
         string $rootModelCBID
     ) {
         $rootModelCBIDAsSQL = CBID::toSQL(
@@ -239,23 +284,23 @@ CB_Attostamp {
 
             SELECT
 
-            CB_Attostamps_unixTimestamp_column
+            CB_Timestamps_unixTimestamp_column
             AS
             unixTimestamp,
 
-            CB_Attostamps_attoseconds_column
+            CB_Timestamps_femtoseconds_column
             AS
-            attoseconds
+            femtoseconds
 
             FROM
-            CB_Attostamps_table
+            CB_Timestamps_table
 
             WHERE
 
-            CB_Attostamps_rootModelCBID_column =
+            CB_Timestamps_rootModelCBID_column =
             {$rootModelCBIDAsSQL} AND
 
-            CB_Attostamps_reservedAtUnixTimestamp_column
+            CB_Timestamps_reservedAtUnixTimestamp_column
             IS NOT NULL
 
         EOT;
@@ -264,50 +309,50 @@ CB_Attostamp {
             $SQL
         );
 
-        $attostampModels = array_map(
+        $cbtimestampModels = array_map(
             function (
                 $result
             ) {
-                return CB_Attostamp::from(
+                return CB_Timestamp::from(
                     $result->unixTimestamp,
-                    $result->attoseconds
+                    $result->femtoseconds
                 );
             },
             $results
         );
 
-        return $attostampModels;
+        return $cbtimestampModels;
     }
-    /* fetchReservedAttostampsByRootModelCBID() */
+    /* fetchReservedCBTimestampsByRootModelCBID() */
 
 
 
     /**
      * @param int $unixTimestamp
-     * @param int $attoseconds
+     * @param int $femtoseconds
      *
      * @return object
      */
     static function
     from(
         int $unixTimestamp,
-        int $attoseconds = 0
+        int $femtoseconds = 0
     ): stdClass {
-        $attostampModel = CBModel::createSpec(
-            'CB_Attostamp'
+        $cbtimestampModel = CBModel::createSpec(
+            'CB_Timestamp'
         );
 
-        CB_Attostamp::setUnixTimestamp(
-            $attostampModel,
+        CB_Timestamp::setUnixTimestamp(
+            $cbtimestampModel,
             $unixTimestamp
         );
 
-        CB_Attostamp::setAttoseconds(
-            $attostampModel,
-            $attoseconds
+        CB_Timestamp::setFemtoseconds(
+            $cbtimestampModel,
+            $femtoseconds
         );
 
-        return $attostampModel;
+        return $cbtimestampModel;
     }
     /* from() */
 
@@ -318,40 +363,40 @@ CB_Attostamp {
      */
     static function
     register(
-        stdClass $attostampModel,
+        stdClass $cbtimestampModel,
         string $rootModelCBID
     ): bool {
         $rootModelCBIDAsSQL = CBID::toSQL(
             $rootModelCBID
         );
 
-        $unixTimestamp = CB_Attostamp::getUnixTimestamp(
-            $attostampModel
+        $unixTimestamp = CB_Timestamp::getUnixTimestamp(
+            $cbtimestampModel
         );
 
-        $attoseconds = CB_Attostamp::getAttoseconds(
-            $attostampModel
+        $femtoseconds = CB_Timestamp::getFemtoseconds(
+            $cbtimestampModel
         );
 
         $SQL = <<<EOT
 
             UPDATE
-            CB_Attostamps_table
+            CB_Timestamps_table
 
             SET
-            CB_Attostamps_reservedAtUnixTimestamp_column =
+            CB_Timestamps_reservedAtUnixTimestamp_column =
             NULL
 
             WHERE
 
-            CB_Attostamps_rootModelCBID_column =
+            CB_Timestamps_rootModelCBID_column =
             {$rootModelCBIDAsSQL} AND
 
-            CB_Attostamps_unixTimestamp_column =
+            CB_Timestamps_unixTimestamp_column =
             {$unixTimestamp} AND
 
-            CB_Attostamps_attoseconds_column =
-            {$attoseconds}
+            CB_Timestamps_femtoseconds_column =
+            {$femtoseconds}
 
         EOT;
 
@@ -372,29 +417,29 @@ CB_Attostamp {
 
 
     /**
-     * This function will reserve a new unique attostamp for a root model CBID
-     * if the attostamp is available.
+     * This function will reserve a new unique cbtimestamp for a root model CBID
+     * if the cbtimestamp is available.
      *
      * @return bool
      *
-     *      Returns true if the attostamp was available and reserved as
+     *      Returns true if the cbtimestamp was available and reserved as
      *      requested; otherwise false.
      *
-     *      Reserving an attostamp is something you do one time, when you have
+     *      Reserving a cbtimestamp is something you do one time, when you have
      *      discovered that you have a need for a new unique registered
-     *      attostamp. Therefore, if you try to reserve the same attostamp for
-     *      the same root model CBID twice this function will return false the
-     *      second time.
+     *      cbtimestamp. Therefore, if you try to reserve the same cbtimestamp
+     *      for the same root model CBID twice this function will return false
+     *      the second time.
      *
-     *      This function will return false if the attostamp is no longer
+     *      This function will return false if the cbtimestamp is no longer
      *      reserved but is now registered.
      *
-     *      This function will return false if the attostamp is reserved or
+     *      This function will return false if the cbtimestamp is reserved or
      *      registered for a different root model CBID.
      */
     static function
     reserve(
-        stdClass $attostampModel,
+        stdClass $cbtimestampModel,
         string $rootModelCBID
     ): bool {
         $rootModelCBIDAsSQL = CBID::toSQL(
@@ -403,31 +448,31 @@ CB_Attostamp {
 
         $reservedAtUnixTimestamp = time();
 
-        $unixTimestamp = CB_Attostamp::getUnixTimestamp(
-            $attostampModel
+        $unixTimestamp = CB_Timestamp::getUnixTimestamp(
+            $cbtimestampModel
         );
 
-        $attoseconds = CB_Attostamp::getAttoseconds(
-            $attostampModel
+        $femtoseconds = CB_Timestamp::getFemtoseconds(
+            $cbtimestampModel
         );
 
         $SQL = <<<EOT
 
             INSERT INTO
-            CB_Attostamps_table
+            CB_Timestamps_table
 
             (
-                CB_Attostamps_rootModelCBID_column,
-                CB_Attostamps_reservedAtUnixTimestamp_column,
-                CB_Attostamps_unixTimestamp_column,
-                CB_Attostamps_attoseconds_column
+                CB_Timestamps_rootModelCBID_column,
+                CB_Timestamps_reservedAtUnixTimestamp_column,
+                CB_Timestamps_unixTimestamp_column,
+                CB_Timestamps_femtoseconds_column
             )
 
             VALUES (
                 {$rootModelCBIDAsSQL},
                 {$reservedAtUnixTimestamp},
                 {$unixTimestamp},
-                {$attoseconds}
+                {$femtoseconds}
             )
 
         EOT;
@@ -460,46 +505,46 @@ CB_Attostamp {
 
 
     /**
-     * @param object $attostampModel
+     * @param object $cbtimestampModel
      * @param CBID $rootModelCBID
      *
      * @return object
      *
-     *      Returns a reserved CB_Attostamp spec.
+     *      Returns a reserved CB_Timestamp spec.
      */
     static function
     reserveNear(
-        stdClass $attostampModel,
+        stdClass $cbtimestampModel,
         string $rootModelCBID
     ): stdClass {
         while (true) {
-            $wasRegistered = CB_Attostamp::reserve(
-                $attostampModel,
+            $wasRegistered = CB_Timestamp::reserve(
+                $cbtimestampModel,
                 $rootModelCBID
             );
 
             if (
                 $wasRegistered
             ) {
-                return $attostampModel;
+                return $cbtimestampModel;
             }
 
-            $attostampModel = CBModel::clone(
-                $attostampModel
+            $cbtimestampModel = CBModel::clone(
+                $cbtimestampModel
             );
 
-            $attoseconds = CB_Attostamp::getAttoseconds(
-                $attostampModel
+            $femtoseconds = CB_Timestamp::getFemtoseconds(
+                $cbtimestampModel
             );
 
-            $attoseconds += random_int(
+            $femtoseconds += random_int(
                 100,
                 5000
             );
 
-            CB_Attostamp::setAttoseconds(
-                $attostampModel,
-                $attoseconds
+            CB_Timestamp::setFemtoseconds(
+                $cbtimestampModel,
+                $femtoseconds
             );
         }
     }
@@ -512,7 +557,7 @@ CB_Attostamp {
      *
      * @return object
      *
-     *      Returns a reserved CB_Attostamp spec.
+     *      Returns a reserved CB_Timestamp spec.
      */
     static function
     reserveNow(
@@ -538,18 +583,17 @@ CB_Attostamp {
             $matches[1]
         );
 
-        $attoseconds = (
+        $femtoseconds = (
             $microseconds
-            * 1000
             * 1000
             * 1000
             * 1000
         );
 
-        return CB_Attostamp::reserveNear(
-            CB_Attostamp::from(
+        return CB_Timestamp::reserveNear(
+            CB_Timestamp::from(
                 $unixTimestamp,
-                $attoseconds
+                $femtoseconds
             ),
             $rootModelCBID
         );
@@ -559,22 +603,22 @@ CB_Attostamp {
 
 
     /**
-     * @param object $attostampModel
+     * @param object $cbtimestampModel
      * @param CBID $rootModelCBID
      *
      * @return void
      */
     static function
     rereserve(
-        stdClass $attostampModel,
+        stdClass $cbtimestampModel,
         string $rootModelCBID
     ): void {
-        $unixTimestamp = CB_Attostamp::getUnixTimestamp(
-            $attostampModel
+        $unixTimestamp = CB_Timestamp::getUnixTimestamp(
+            $cbtimestampModel
         );
 
-        $attoseconds = CB_Attostamp::getAttoseconds(
-            $attostampModel
+        $femtoseconds = CB_Timestamp::getFemtoseconds(
+            $cbtimestampModel
         );
 
         $rootModelCBIDAsSQL = CBID::toSQL(
@@ -586,22 +630,22 @@ CB_Attostamp {
         $SQL = <<<EOT
 
             UPDATE
-            CB_Attostamps_table
+            CB_Timestamps_table
 
             SET
-            CB_Attostamps_reservedAtUnixTimestamp_column =
+            CB_Timestamps_reservedAtUnixTimestamp_column =
             {$reservedAtUnixTimestamp}
 
             WHERE
 
-            CB_Attostamps_rootModelCBID_column =
+            CB_Timestamps_rootModelCBID_column =
             {$rootModelCBIDAsSQL} AND
 
-            CB_Attostamps_unixTimestamp_column =
+            CB_Timestamps_unixTimestamp_column =
             {$unixTimestamp} AND
 
-            CB_Attostamps_attoseconds_column =
-            {$attoseconds}
+            CB_Timestamps_femtoseconds_column =
+            {$femtoseconds}
 
         EOT;
 
@@ -616,13 +660,13 @@ CB_Attostamp {
     /**
      * This function is intended to be called by the model save process and
      * doesn't have much expected use outside of that. It will unregister any
-     * registered attostamps for a root model CBID by moving them back to the
-     * reserved state. Reserved attostamps will stay around for a while but will
-     * eventually be deleted.
+     * registered cbtimestamps for a root model CBID by moving them back to the
+     * reserved state. Reserved cbtimestamps will stay around for a while but
+     * will eventually be deleted.
      *
      * After calling this function, the model save process registers the
-     * attostamps that the model says it needs. This process moves unused
-     * attostamps back to the reserved state so that they will eventually be
+     * cbtimestamps that the model says it needs. This process moves unused
+     * cbtimestamps back to the reserved state so that they will eventually be
      * deleted.
      *
      * @param CBID $rootModelCBID
@@ -630,7 +674,7 @@ CB_Attostamp {
      * @return void
      */
     static function
-    rereserveAttostampsByRootModelCBID(
+    rereserveByRootModelCBID(
         string $rootModelCBID
     ): void {
         $rootModelCBIDAsSQL = CBID::toSQL(
@@ -642,16 +686,16 @@ CB_Attostamp {
         $SQL = <<<EOT
 
             UPDATE
-            CB_Attostamps_table
+            CB_Timestamps_table
 
             SET
 
-            CB_Attostamps_reservedAtUnixTimestamp_column =
+            CB_Timestamps_reservedAtUnixTimestamp_column =
             {$reservedAtUnixTimestamp}
 
             WHERE
 
-            CB_Attostamps_rootModelCBID_column =
+            CB_Timestamps_rootModelCBID_column =
             {$rootModelCBIDAsSQL}
 
         EOT;
@@ -673,13 +717,13 @@ CB_Attostamp {
                 Colby::mysqli()->errno === 1146
             ) {
                 error_log(
-                    'CB_Attostamps_table does not yet exist. Update website.'
+                    'CB_Timestamps_table does not yet exist. Update website.'
                 );
             } else {
                 throw $throwable;
             }
         }
     }
-    /* rereserveAttostampsByRootModelCBID() */
+    /* rereserveByRootModelCBID() */
 
 }
