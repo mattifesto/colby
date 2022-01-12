@@ -1,7 +1,7 @@
 <?php
 
 final class
-CB_Tests_Attostamp_TestModel {
+CB_Tests_Timestamp_TestModel {
 
     /* -- CBModel interfaces -- */
 
@@ -18,10 +18,10 @@ CB_Tests_Attostamp_TestModel {
     ): stdClass {
         $model = (object)[];
 
-        CB_Tests_Attostamp_TestModel::setAttostamp(
+        CB_Tests_Timestamp_TestModel::setCBTimestamp(
             $model,
             CBModel::build(
-                CB_Tests_Attostamp_TestModel::getAttostamp(
+                CB_Tests_Timestamp_TestModel::getCBTimestamp(
                     $spec
                 )
             )
@@ -36,19 +36,19 @@ CB_Tests_Attostamp_TestModel {
     /**
      * @param object $model
      *
-     * @return [<CB_Attostamp>]
+     * @return [<CB_Timestamp>]
      */
     static function
-    CBModel_getAttostampModels(
+    CBModel_getCBTimestampModels(
         stdClass $model
     ): array {
         return [
-            CB_Tests_Attostamp_TestModel::getAttostamp(
+            CB_Tests_Timestamp_TestModel::getCBTimestamp(
                 $model
             )
         ];
     }
-    /* CBModel_getAttostamps() */
+    /* CBModel_getCBTimestamps() */
 
 
 
@@ -62,49 +62,49 @@ CB_Tests_Attostamp_TestModel {
      * @return object|null
      */
     static function
-    getAttostamp(
+    getCBTimestamp(
         stdClass $model
     ): ?stdClass {
         return CBModel::valueAsModel(
             $model,
-            'CB_Tests_Attostamp_TestModel_attostamp_property',
-            'CB_Attostamp'
+            'CB_Tests_Timestamp_TestModel_cbtimestamp_property',
+            'CB_Timestamp'
         );
     }
-    /* getAttostamp() */
+    /* getCBTimestamp() */
 
 
 
     /**
      * @param object $model
-     * @param object $attostampModel
+     * @param object $cbtimestampModel
      *
      * @return void
      */
     static function
-    setAttostamp(
+    setCBTimestamp(
         stdClass $model,
-        stdClass $attostampModel
+        stdClass $cbtimestampModel
     ): void {
-        $verifiedAttostampModel = CBConvert::valueAsModel(
-            $attostampModel,
-            'CB_Attostamp'
+        $verifiedCBTimestampModel = CBConvert::valueAsModel(
+            $cbtimestampModel,
+            'CB_Timestamp'
         );
 
         if (
-            $verifiedAttostampModel === null
+            $verifiedCBTimestampModel === null
         ) {
             throw new CBExceptionWithValue(
-                'The attostampModel argument is not a CB_Attostamp model.',
-                $attostampModel,
+                'The cbtimestampModel argument is not a CB_Timestamp model.',
+                $cbtimestampModel,
                 '317c12a0bd53dbff1709bdeac13f1d7fb385d8d3'
             );
         }
 
-        $model->CB_Tests_Attostamp_TestModel_attostamp_property = (
-            $attostampModel
+        $model->CB_Tests_Timestamp_TestModel_cbtimestamp_property = (
+            $cbtimestampModel
         );
     }
-    /* setAttostamp() */
+    /* setCBTimestamp() */
 
 }
