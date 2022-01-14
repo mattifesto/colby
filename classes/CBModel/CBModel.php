@@ -342,10 +342,12 @@ CBModel {
         $functionName = "{$className}::CBModel_prepareCopy";
 
         if (
-            is_callable($functionName)
+            is_callable(
+                $functionName
+            )
         ) {
-            $functionName = call_user_func(
-                $function,
+            $newSpec = call_user_func(
+                $functionName,
                 $newSpec
             );
         }
