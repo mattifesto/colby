@@ -1,7 +1,3 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBAdminPageForPagesFind */
 /* globals
     CBAjax,
     CBConvert,
@@ -18,8 +14,8 @@
 */
 
 
-
 (function () {
+    "use strict";
 
     Colby.afterDOMContentLoaded(
         afterDOMContentLoaded
@@ -59,6 +55,108 @@
 
 
     /**
+     * @param [object] pages
+     *
+     * @return Element
+     */
+    function
+    createListElement(
+        pages
+    ) {
+        let sectionContainerElement = CBUI.createElement(
+            "CBAdminPageForPagesFind_pageListView CBUI_sectionContainer"
+        );
+
+        let sectionElement = CBUI.createElement(
+            "CBUI_section"
+        );
+
+        sectionContainerElement.appendChild(
+            sectionElement
+        );
+
+        pages.forEach(
+            function (
+                page
+            ) {
+                let sectionItemElement = CBUI.createElement(
+                    "CBUI_sectionItem"
+                );
+
+                sectionElement.appendChild(
+                    sectionItemElement
+                );
+
+                sectionItemElement.addEventListener(
+                    "click",
+                    function () {
+                        let URI = `/admin/?c=CBModelEditor&ID=${page.ID}`;
+                        window.location = URI;
+                    }
+                );
+
+                let thumbnailPart = CBUIThumbnailPart.create();
+
+                if (
+                    page.keyValueData.image
+                ) {
+                    thumbnailPart.src = CBImage.toURL(
+                        page.keyValueData.image,
+                        "rs200clc200"
+                    );
+                } else if (
+                    page.keyValueData.thumbnailURL
+                ) {
+                    thumbnailPart.src = page.keyValueData.thumbnailURL;
+                }
+
+                sectionItemElement.appendChild(
+                    thumbnailPart.element
+                );
+
+                let textContainerElement = CBUI.createElement(
+                    "CBUI_container_topAndBottom CBUI_flexGrow"
+                );
+
+                sectionItemElement.appendChild(
+                    textContainerElement
+                );
+
+                let textElement1 = CBUI.createElement(
+                    "CBAdminPageForPagesFind_foundPagesItem_pageTitle"
+                );
+
+                textContainerElement.appendChild(
+                    textElement1
+                );
+
+                textElement1.textContent = page.keyValueData.title;
+
+                let textElement2 = CBUI.createElement(
+                    "CBUI_textSize_small CBUI_textColor2 CBUI_ellipsis"
+                );
+
+                textContainerElement.appendChild(
+                    textElement2
+                );
+
+                textElement2.textContent =  page.keyValueData.description;
+
+                sectionItemElement.appendChild(
+                    CBUI.createElement(
+                        "CBUI_navigationArrow"
+                    )
+                );
+            }
+        );
+
+        return sectionContainerElement;
+    }
+    /* createListElement() */
+
+
+
+    /**
      * @return Element
      */
     function createRootPanelElement() {
@@ -84,7 +182,7 @@
 
         var parameters = {};
 
-        var fetchPagesCallback = CBAdminPageForPagesFind.fetchPages.bind(
+        var fetchPagesCallback = fetchPages.bind(
             undefined,
             {
                 element: pageListContainerElement,
@@ -229,11 +327,7 @@
     }
     /* createRootPanelElement() */
 
-})();
 
-
-
-var CBAdminPageForPagesFind = {
 
     /**
      * @param object args
@@ -246,155 +340,60 @@ var CBAdminPageForPagesFind = {
      *
      * @return Promise
      */
-    fetchPages: function (args) {
-        if (args.state.waiting === true) {
-            args.state.argsForNextRequest = args;
-            return;
-        }
+    async function
+    fetchPages(
+        args
+    ) {
+        try {
+            if (
+                args.state.waiting === true
+            ) {
+                args.state.argsForNextRequest = args;
 
-        args.state.waiting = true;
-
-        let promise = CBAjax.call(
-            "CBAdminPageForPagesFind",
-            "fetchPages",
-            CBConvert.valueToObject(args.parameters)
-        ).then(
-            function (pages) {
-                return fetchPages_onResolve(pages);
+                return;
             }
-        ).catch(
-            function (error) {
-                CBUIPanel.displayAndReportError(error);
-            }
-        ).then(
-            fetchPages_onFinally,
-            fetchPages_onFinally
-        );
 
-        return promise;
+            args.state.waiting = true;
 
+            let pages = await CBAjax.call(
+                "CBAdminPageForPagesFind",
+                "fetchPages",
+                CBConvert.valueToObject(
+                    args.parameters
+                )
+            );
 
-        /* -- closures -- -- -- -- -- */
-
-        /**
-         * @param [object] pages
-         *
-         * @return undefined
-         */
-        function fetchPages_onResolve(pages) {
-            var list = CBPageList.createElement(pages);
+            let listElement = createListElement(
+                pages
+            );
 
             args.element.textContent = null;
-            args.element.appendChild(list);
-        }
-        /* fetchPages_onResolve() */
 
+            args.element.appendChild(
+                listElement
+            );
 
-        /**
-         * @return undefined
-         */
-        function fetchPages_onFinally() {
+        } catch (
+            error
+        ) {
+            CBUIPanel.displayAndReportError(
+                error
+            );
+        } finally {
             args.state.waiting = undefined;
 
-            if (args.state.argsForNextRequest) {
-                var argsForNextRequest = args.state.argsForNextRequest;
+            if (
+                args.state.argsForNextRequest
+            ) {
+                let argsForNextRequest = args.state.argsForNextRequest;
                 args.state.argsForNextRequest = undefined;
 
-                CBAdminPageForPagesFind.fetchPages(argsForNextRequest);
+                fetchPages(
+                    argsForNextRequest
+                );
             }
         }
-        /* fetchPages_onFinally() */
-    },
+    }
     /* fetchPages() */
-};
-/* CBAdminPageForPagesFind */
 
-
-/**
- * Used to be separate file, but only used by the above code.
- */
-var CBPageList = {
-
-    /**
-     * @param [object] pages
-     *
-     * @return Element
-     */
-    createElement: function(pages) {
-        let sectionContainerElement = CBUI.createElement(
-            "CBAdminPageForPagesFind_pageListView CBUI_sectionContainer"
-        );
-
-        let sectionElement = CBUI.createElement(
-            "CBUI_section"
-        );
-
-        sectionContainerElement.appendChild(sectionElement);
-
-        pages.forEach(
-            function (page) {
-                let sectionItemElement = CBUI.createElement(
-                    "CBUI_sectionItem"
-                );
-
-                sectionElement.appendChild(sectionItemElement);
-
-                sectionItemElement.addEventListener(
-                    "click",
-                    function () {
-                        let URI = `/admin/?c=CBModelEditor&ID=${page.ID}`;
-                        window.location = URI;
-                    }
-                );
-
-                let thumbnailPart = CBUIThumbnailPart.create();
-
-                if (page.keyValueData.image) {
-                    thumbnailPart.src = CBImage.toURL(
-                        page.keyValueData.image,
-                        "rs200clc200"
-                    );
-                } else if (page.keyValueData.thumbnailURL) {
-                    thumbnailPart.src = page.keyValueData.thumbnailURL;
-                }
-
-                sectionItemElement.appendChild(
-                    thumbnailPart.element
-                );
-
-                let textContainerElement = CBUI.createElement(
-                    "CBUI_container_topAndBottom CBUI_flexGrow"
-                );
-
-                sectionItemElement.appendChild(textContainerElement);
-
-                let textElement1 = CBUI.createElement(
-                    "CBUI_ellipsis"
-                );
-
-                textContainerElement.appendChild(textElement1);
-
-                textElement1.textContent = page.keyValueData.title;
-
-                let textElement2 = CBUI.createElement(
-                    "CBUI_textSize_small CBUI_textColor2 CBUI_ellipsis"
-                );
-
-                textContainerElement.appendChild(textElement2);
-
-                textElement2.textContent =  page.keyValueData.description;
-
-                sectionItemElement.appendChild(
-                    CBUI.createElement(
-                        "CBUI_navigationArrow"
-                    )
-                );
-            }
-        );
-
-        return sectionContainerElement;
-    },
-    /* createElement() */
-
-};
-/* CBPageList (CBAdminPageForPagesFind) */
+})();

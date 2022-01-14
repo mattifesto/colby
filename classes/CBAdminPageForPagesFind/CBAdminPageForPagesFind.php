@@ -1,6 +1,7 @@
 <?php
 
-final class CBAdminPageForPagesFind {
+final class
+CBAdminPageForPagesFind {
 
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
@@ -195,22 +196,36 @@ final class CBAdminPageForPagesFind {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'css',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v608.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.49.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
@@ -266,7 +281,9 @@ final class CBAdminPageForPagesFind {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'CBAjax',
             'CBConvert',
