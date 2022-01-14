@@ -1,13 +1,25 @@
 <?php
 
-final class CBUIThumbnailPart {
+final class
+CBUIThumbnailPart {
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v436.css', cbsysurl())];
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array {
+        return [
+            Colby::flexpath(
+                __CLASS__,
+                'v675.49.css',
+                cbsysurl()
+            )
+        ];
     }
+    /* CBHTMLOutput_CSSURLs() */
+
+
 
     /**
      * @return [string]
@@ -15,4 +27,5 @@ final class CBUIThumbnailPart {
     static function CBHTMLOutput_JavaScriptURLs() {
         return [Colby::flexpath(__CLASS__, 'v361.js', cbsysurl())];
     }
+
 }
