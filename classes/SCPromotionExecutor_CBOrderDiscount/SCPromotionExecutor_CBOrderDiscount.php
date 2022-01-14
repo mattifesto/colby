@@ -42,7 +42,13 @@ SCPromotionExecutor_CBOrderDiscount {
             'Percentage Discount'
         );
 
-        $updater->save2();
+        CBDB::transaction(
+            function () use (
+                $updater
+            ) {
+                $updater->save2();
+            }
+        );
     }
     /* CBInstall_configure() */
 
