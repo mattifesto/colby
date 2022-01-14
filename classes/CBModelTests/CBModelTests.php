@@ -74,6 +74,10 @@ CBModelTests {
                 'type' => 'server',
             ],
             (object)[
+                'name' => 'copy',
+                'type' => 'server',
+            ],
+            (object)[
                 'name' => 'toSearchText',
                 'type' => 'server',
             ],
@@ -142,6 +146,77 @@ CBModelTests {
             'succeeded' => true,
         ];
     }
+    /* CBTest_build_minimalImplementation() */
+
+
+
+    /**
+     * @return object
+     */
+    static function
+    copy(
+    ): stdClass {
+        $originalModelCBID = '3f59a6d1e9c51a2fc90d7359450a408cdaf789dc';
+        $copyModelCBID = '6619e1fe3516a63aef9d667c81e85ab8a3575a0f';
+
+        $originalSpec = CBModel::createSpec(
+            'CBModelTests_TestClass1',
+            $originalModelCBID
+        );
+
+        $copySpec = CBModel::copy(
+            $originalSpec,
+            $copyModelCBID
+        );
+
+
+        /* --- */
+
+        $testName = 'verify CBID';
+
+        $expectedResult = $copyModelCBID;
+
+        $actualResult = CBModel::getCBID(
+            $copySpec
+        );
+
+        if (
+            $actualResult !== $expectedResult
+        ) {
+            return CBTest::resultMismatchFailure(
+                $testName,
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+
+        /* --- */
+
+        $testName = 'verify copy alterations';
+
+        $expectedResult = 42;
+
+        $actualResult = $copySpec->propertyAddedByCopy;
+
+        if (
+            $actualResult !== $expectedResult
+        ) {
+            return CBTest::resultMismatchFailure(
+                $testName,
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+
+        /* done */
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    /* copy() */
 
 
 
@@ -429,23 +504,50 @@ CBModelTests {
 
 
 
-final class CBModelTests_TestClass1 {
+final class
+CBModelTests_TestClass1 {
 
     /**
      * @param object $spec
      *
      * @return object
      */
-    static function CBModel_build(stdClass $spec) {
+    static function
+    CBModel_build(
+        stdClass $spec
+    ) {
         return (object)[];
     }
+    /* CBModel_build() */
+
+
+
+    /**
+     * @param object $spec
+     *
+     * @return object
+     */
+    static function
+    CBModel_prepareCopy(
+        $spec
+    ) {
+        $spec->propertyAddedByCopy = 42;
+
+        return $spec;
+    }
+    /* CBModel_prepareCopy() */
+
+
 
     /**
      * @param object $spec
      *
      * @param object
      */
-    static function CBModel_upgrade(stdClass $spec): stdClass {
+    static function
+    CBModel_upgrade(
+        stdClass $spec
+    ): stdClass {
         CBLog::log(
             (object)[
                 'message' => 'test log entry',
@@ -456,4 +558,6 @@ final class CBModelTests_TestClass1 {
 
         return $spec;
     }
+    /* CBModel_upgrade() */
+
 }
