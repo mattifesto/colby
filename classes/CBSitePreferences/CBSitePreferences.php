@@ -9,7 +9,8 @@
  * model directly so that the use of deprecated properties can be found and the
  * implementation of individual property calculation can change.
  */
-final class CBSitePreferences {
+final class
+CBSitePreferences {
 
     /* deprecated use CBSitePreferences::ID() */
     const ID = '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
@@ -979,11 +980,13 @@ final class CBSitePreferences {
      *      there isn't likely much to be done until it is. This function should
      *      be replaced with CBModelCache::fetchModelByID().
      *
-     * @return model
+     * @return object
      *
      *      The current CBSitePreferences model.
      */
-    static function model() {
+    static function
+    model(
+    ): stdClass {
         if (empty(CBSitePreferences::$model)) {
             $filepath = CBDataStore::flexpath(
                 CBSitePreferences::ID(),
@@ -1220,22 +1223,56 @@ final class CBSitePreferences {
 
         return true;
     }
+    /* sendEmailsForErrors() */
+
 
 
     /**
-     * @param ID $ID
+     * @param CBID $frontPageModelCBID
+     * @param CBID $testSitePreferencesModelCBID
+     *
+     *      This parameter is only used by testing.
      *
      * @return void
      */
-    static function setFrontPageID(string $ID): void {
-        if (!CBID::valueIsCBID($ID)) {
-            throw new InvalidArgumentException("'{$ID}' is not a valid ID");
+    static function
+    setFrontPageID(
+        string $frontPageModelCBID,
+        string $testSitePreferencesModelCBID = null
+    ): void {
+        if (
+            !CBID::valueIsCBID(
+                $frontPageModelCBID
+            )
+        ) {
+            throw new InvalidArgumentException(
+                "'{$frontPageModelCBID}' is not a valid ID"
+            );
         }
 
-        $spec = CBModels::fetchSpecByID(CBSitePreferences::ID());
-        $spec->frontPageID = $ID;
+        if (
+            $testSitePreferencesModelCBID !== null
+        ) {
+            $sitePreferencesModelCBID = $testSitePreferencesModelCBID;
+        } else {
+            $sitePreferencesModelCBID = CBSitePreferences::ID();
+        }
 
-        CBModels::save($spec);
+        $sitePreferencesSpec = CBModels::fetchSpecByID(
+            CBSitePreferences::ID()
+        );
+
+        $sitePreferencesSpec->frontPageID = $frontPageModelCBID;
+
+        CBDB::transaction(
+            function () use (
+                $sitePreferencesSpec
+            ) {
+                CBModels::save(
+                    $sitePreferencesSpec
+                );
+            }
+        );
     }
     /* setFrontPageID() */
 
