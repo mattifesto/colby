@@ -371,7 +371,7 @@ CB_Moment {
 
 
     /**
-     * @param objecct $momentModel
+     * @param object $momentModel
      *
      * @return string
      */
