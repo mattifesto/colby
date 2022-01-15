@@ -93,12 +93,6 @@ CB_SettingsManager_PublicProfile {
     CBUserSettingsManager_currentUserCanViewForTargetUser(
         string $targetUserCBID
     ): bool {
-        if (
-            ColbyUser::getCurrentUserCBID() === $targetUserCBID
-        ) {
-            return true;
-        }
-
         $currentUserIsAnAdministrator = CBUserGroup::userIsMemberOfUserGroup(
             ColbyUser::getCurrentUserCBID(),
             'CBAdministratorsUserGroup'
