@@ -1,6 +1,7 @@
 <?php
 
-final class CBPage {
+final class
+CBPage {
 
     /* -- functions -- -- -- -- -- */
 
@@ -36,27 +37,38 @@ final class CBPage {
      *
      * @return void
      */
-    static function render(stdClass $pageModel): void {
+    static function
+    render(
+        stdClass $pageModel
+    ): void {
         $className = CBModel::valueToString(
             $pageModel,
             'className'
         );
 
-        $function = "{$className}::CBPage_render";
+        $functionName = "{$className}::CBPage_render";
 
-        if (is_callable($function)) {
-            CBHTMLOutput::requireClassName($className);
+        if (
+            is_callable(
+                $functionName
+            )
+        ) {
+            CBHTMLOutput::requireClassName(
+                $className
+            );
 
             call_user_func(
-                $function,
+                $functionName,
                 $pageModel
             );
         } else {
             throw new CBExceptionWithValue(
-                (
-                    "The class ({$className}) for this page " .
-                    "model has not implemented CBPage_render()"
-                ),
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The class ({$className}) for this page model has not
+                    implemented CBPage_render()
+
+                EOT),
                 $pageModel,
                 '5b1831c54024accfe5ed6a4c4eb2d724a5d19845'
             );
