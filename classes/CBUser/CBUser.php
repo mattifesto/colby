@@ -146,7 +146,9 @@ CBUser {
     /**
      * @return string
      */
-    static function CBAjax_addEmailAddress_getUserGroupClassName(): string {
+    static function
+    CBAjax_addEmailAddress_getUserGroupClassName(
+    ): string {
         return 'CBPublicUserGroup';
     }
 
@@ -171,7 +173,8 @@ CBUser {
      *              This will only be returned if succeeded is false.
      *      }
      */
-    static function CBAjax_changeEmailAddress(
+    static function
+    CBAjax_changeEmailAddress(
         stdClass $args
     ): stdClass {
         $currentUserCBID = ColbyUser::getCurrentUserCBID();
@@ -555,15 +558,21 @@ CBUser {
     /**
      * @return void
      */
-    static function CBAjax_signOut(): void {
+    static function
+    CBAjax_signOut(
+    ): void {
         ColbyUser::logoutCurrentUser();
     }
+    /* CBAjax_signOut() */
 
 
 
-    static function CBAjax_signOut_getUserGroupClassName(): string {
+    static function
+    CBAjax_signOut_getUserGroupClassName(
+    ): string {
         return 'CBPublicUserGroup';
     }
+    /* CBAjax_signOut_getUserGroupClassName() */
 
 
 
@@ -632,7 +641,9 @@ CBUser {
      *
      * @return void
      */
-    static function CBInstall_configure(): void {
+    static function
+    CBInstall_configure(
+    ): void {
         $settingsObject = Colby::getSettingsObject();
 
 
@@ -643,7 +654,9 @@ CBUser {
             'developerEmailAddress'
         );
 
-        if ($developerEmailAddress === null) {
+        if (
+            $developerEmailAddress === null
+        ) {
             return;
         }
 
@@ -654,7 +667,9 @@ CBUser {
             $developerEmailAddress
         );
 
-        if ($foundUserCBID === null) {
+        if (
+            $foundUserCBID === null
+        ) {
             $userCBID = CBID::generateRandomCBID();
         } else {
             $userCBID = $foundUserCBID;
@@ -666,7 +681,9 @@ CBUser {
             'email' => $developerEmailAddress,
         ];
 
-        if ($foundUserCBID === null) {
+        if (
+            $foundUserCBID === null
+        ) {
 
             /**
              * If the user is being created, we set the user's password. We
@@ -690,7 +707,9 @@ CBUser {
 
         /* create / save */
 
-        CBModelUpdater::update($userSpec);
+        CBModelUpdater::update(
+            $userSpec
+        );
 
 
         /* add to groups */
@@ -933,19 +952,30 @@ CBUser {
     /**
      * @param [object] $models
      */
-    static function CBModels_willDelete(array $userCBIDs) {
-        foreach ($userCBIDs as $userCBID) {
-            $userCBIDAsSQL = CBID::toSQL($userCBID);
+    static function
+    CBModels_willDelete(
+        array $userCBIDs
+    ) {
+        foreach (
+            $userCBIDs as $userCBID
+        ) {
+            $userCBIDAsSQL = CBID::toSQL(
+                $userCBID
+            );
 
             $SQL = <<<EOT
 
-                DELETE FROM     ColbyUsers
+                DELETE FROM
+                ColbyUsers
 
-                WHERE           hash = {$userCBIDAsSQL}
+                WHERE
+                hash = {$userCBIDAsSQL}
 
             EOT;
 
-            Colby::query($SQL);
+            Colby::query(
+                $SQL
+            );
 
             CBModelAssociations::delete(
                 null,
@@ -970,7 +1000,9 @@ CBUser {
     static function CBModels_willSave(
         array $userModels
     ): void {
-        foreach ($userModels as $userModel) {
+        foreach (
+            $userModels as $userModel
+        ) {
             $userCBIDAsSQL = CBID::toSQL(
                 CBModel::valueAsCBID(
                     $userModel,
@@ -986,10 +1018,14 @@ CBUser {
                 'email'
             );
 
-            if ($userEmail === null) {
+            if (
+                $userEmail === null
+            ) {
                 $userEmailAsSQL = 'NULL';
             } else {
-                $userEmailAsSQL = CBDB::stringToSQL($userEmail);
+                $userEmailAsSQL = CBDB::stringToSQL(
+                    $userEmail
+                );
             }
 
 
@@ -1014,38 +1050,50 @@ CBUser {
                 'title'
             );
 
-            $userFullNameAsSQL = CBDB::stringToSQL($userFullName);
+            $userFullNameAsSQL = CBDB::stringToSQL(
+                $userFullName
+            );
 
 
             /* update row */
 
             $SQL = <<<EOT
 
-                UPDATE      ColbyUsers
+                UPDATE
+                ColbyUsers
 
-                SET         email = {$userEmailAsSQL},
-                            facebookId = {$userFacebookUserIDAsSQL},
-                            facebookName = {$userFullNameAsSQL}
+                SET
+                email = {$userEmailAsSQL},
+                facebookId = {$userFacebookUserIDAsSQL},
+                facebookName = {$userFullNameAsSQL}
 
-                WHERE       hash = {$userCBIDAsSQL}
+                WHERE
+                hash = {$userCBIDAsSQL}
 
             EOT;
 
-            Colby::query($SQL);
+            Colby::query(
+                $SQL
+            );
 
-            if (CBDB::countOfRowsMatched() === 1) {
+            if (
+                CBDB::countOfRowsMatched() === 1
+            ) {
                 return;
             }
 
             $SQL = <<<EOT
 
-                INSERT INTO ColbyUsers
+                INSERT INTO
+                ColbyUsers
+
                 (
                     hash,
                     email,
                     facebookId,
                     facebookName
                 )
+
                 VALUES
                 (
                     {$userCBIDAsSQL},
@@ -1056,7 +1104,9 @@ CBUser {
 
             EOT;
 
-            Colby::query($SQL);
+            Colby::query(
+                $SQL
+            );
         }
     }
     /* CBModels_willSave() */
@@ -1267,24 +1317,36 @@ CBUser {
      *
      * @return CBID|null
      */
-    static function emailToUserCBID(
+    static function
+    emailToUserCBID(
         string $email
     ): ?string {
-        $emailAsSQL = CBDB::stringToSQL($email);
+        $emailAsSQL = CBDB::stringToSQL(
+            $email
+        );
 
         $SQL = <<<EOT
 
-            SELECT      LOWER(HEX(hash))
+            SELECT
+            LOWER(HEX(hash))
 
-            FROM        ColbyUsers
+            FROM
+            ColbyUsers
 
-            WHERE       email = {$emailAsSQL}
+            WHERE
+            email = {$emailAsSQL}
 
         EOT;
 
-        $result = CBDB::SQLToValue($SQL);
+        $result = CBDB::SQLToValue(
+            $SQL
+        );
 
-        if (CBID::valueIsCBID($result)) {
+        if (
+            CBID::valueIsCBID(
+                $result
+            )
+        ) {
             return $result;
         } else {
             return null;
@@ -1299,22 +1361,32 @@ CBUser {
      *
      * @return CBID|null
      */
-    static function facebookUserIDToUserCBID(
+    static function
+    facebookUserIDToUserCBID(
         int $facebookUserID
     ): ?string {
         $SQL = <<<EOT
 
-            SELECT      LOWER(HEX(hash))
+            SELECT
+            LOWER(HEX(hash))
 
-            FROM        ColbyUsers
+            FROM
+            ColbyUsers
 
-            WHERE       facebookId = {$facebookUserID}
+            WHERE
+            facebookId = {$facebookUserID}
 
         EOT;
 
-        $result = CBDB::SQLToValue($SQL);
+        $result = CBDB::SQLToValue(
+            $SQL
+        );
 
-        if (CBID::valueIsCBID($result)) {
+        if (
+            CBID::valueIsCBID(
+                $result
+            )
+        ) {
             return $result;
         } else {
             return null;
@@ -1329,10 +1401,15 @@ CBUser {
      *
      * @return string
      */
-    static function getCreateAccountPageURL(
+    static function
+    getCreateAccountPageURL(
         ?string $destinationURL = null
     ): string {
-        if (empty($destinationURL)) {
+        if (
+            empty(
+                $destinationURL
+            )
+        ) {
             $destinationURL = $_SERVER['REQUEST_URI'];
         }
 
@@ -1340,7 +1417,9 @@ CBUser {
             'destinationURL' => $destinationURL,
         ];
 
-        $stateAsJSON = json_encode($state);
+        $stateAsJSON = json_encode(
+            $state
+        );
 
         $signInPageURL = (
             cbsiteurl() .
@@ -1359,10 +1438,15 @@ CBUser {
      *
      * @return string
      */
-    static function getSignInPageURL(
+    static function
+    getSignInPageURL(
         ?string $destinationURL = null
     ): string {
-        if (empty($destinationURL)) {
+        if (
+            empty(
+                $destinationURL
+            )
+        ) {
             $destinationURL = $_SERVER['REQUEST_URI'];
         }
 
@@ -1370,7 +1454,9 @@ CBUser {
             'destinationURL' => $destinationURL,
         ];
 
-        $stateAsJSON = json_encode($state);
+        $stateAsJSON = json_encode(
+            $state
+        );
 
         $signInPageURL = (
             cbsiteurl() .
@@ -1391,7 +1477,8 @@ CBUser {
      *
      *      If the password has no issues, null is returned.
      */
-    static function passwordIssues(
+    static function
+    passwordIssues(
         string $password
     ): ?string {
         $issues = [];
@@ -1408,7 +1495,9 @@ CBUser {
             $issues[] = 'Your password has less than 8 characters.';
         }
 
-        if (count($issues) > 0) {
+        if (
+            count($issues) > 0
+        ) {
             return implode(' ', $issues);
         } else {
             return null;
@@ -1438,7 +1527,8 @@ CBUser {
      *              This will only be returned if succeeded is false.
      *      }
      */
-    static function signIn(
+    static function
+    signIn(
         string $emailAddress,
         string $password
     ): stdClass {
@@ -1454,9 +1544,13 @@ CBUser {
             ];
         }
 
-        $userCBID = CBUser::emailToUserCBID($emailAddress);
+        $userCBID = CBUser::emailToUserCBID(
+            $emailAddress
+        );
 
-        if ($userCBID === null) {
+        if (
+            $userCBID === null
+        ) {
             return (object)[
                 'cbmessage' => <<<EOT
 
@@ -1480,7 +1574,9 @@ CBUser {
             $passwordHash
         );
 
-        if ($passwordIsVerified !== true) {
+        if (
+            $passwordIsVerified !== true
+        ) {
             return (object)[
                 'cbmessage' => <<<EOT
 
