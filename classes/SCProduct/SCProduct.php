@@ -1,6 +1,7 @@
 <?php
 
-final class SCProduct {
+final class
+SCProduct {
 
     /* -- CBArtworkCollection interfaces -- */
 
@@ -370,14 +371,35 @@ final class SCProduct {
      *
      * @return string
      */
-    static function productCodeToProductPageURL(
+    static function
+    productCodeToProductPageURI(
         string $productCode
     ): string {
         return (
-            '/products/' .
-            CBConvert::stringToStub($productCode) .
-            '/'
+            'products/' .
+            CBConvert::stringToStub(
+                $productCode
+            )
         );
+    }
+    /* productCodeToProductPageURI() */
+
+
+
+    /**
+     * @param string $productCode
+     *
+     * @return string
+     */
+    static function
+    productCodeToProductPageURL(
+        string $productCode
+    ): string {
+        $productPageURI = SCProduct::productCodeToProductPageURI(
+            $productCode
+        );
+
+        return "/{$productPageURI}/";
     }
     /* productCodeToProductPageURL() */
 
@@ -427,7 +449,7 @@ final class SCProduct {
 
         CBViewPage::setThumbnailImage(
             $productPageSpec,
-            $mainArtworkImageModel
+            $imageModel
         );
 
         ($updater->CBModelUpdater_save)();
