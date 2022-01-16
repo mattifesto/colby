@@ -840,7 +840,8 @@ CBLog {
      *      There is now a CBLogEntry model class. Properties on a log entry
      *      should be read and written using the accessors on this class.
      */
-    private static function prepareEntry(
+    private static function
+    prepareEntry(
         stdClass $args
     ): stdClass {
         $entrySourceClassName = CBModel::valueToString(
@@ -848,7 +849,9 @@ CBLog {
             'sourceClassName'
         );
 
-        if (empty($entrySourceClassName)) {
+        if (
+            empty($entrySourceClassName)
+        ) {
             $entrySourceClassName = CBModel::valueToString(
                 $args,
                 'className' /* deprecated */
@@ -860,16 +863,25 @@ CBLog {
             'message'
         );
 
-        if (empty($entryClassName) || empty($entryMessage)) {
+        if (
+            empty($entryClassName) ||
+            empty($entryMessage)
+        ) {
             $entryAsCBMessage = CBMessageMarkup::stringToMessage(
-                CBConvert::valueToPrettyJSON($args)
+                CBConvert::valueToPrettyJSON(
+                    $args
+                )
             );
 
             $stackTraceAsCBMessage = CBMessageMarkup::stringToMessage(
-                CBConvert::traceToString(debug_backtrace())
+                CBConvert::traceToString(
+                    debug_backtrace()
+                )
             );
 
-            if (empty($entrySourceClassName)) {
+            if (
+                empty($entrySourceClassName)
+            ) {
                 $cbmessage = <<<EOT
 
                     CBLog_warning_noClassName: A log entry was submitted that
