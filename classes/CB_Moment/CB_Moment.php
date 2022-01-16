@@ -359,6 +359,39 @@ CB_Moment {
      * @return string
      */
     static function
+    CBModel_getTitle(
+        stdClass $momentModel
+    ): string {
+        $authorUserModelCBID = CB_Moment::getAuthorUserModelCBID(
+            $momentModel
+        );
+
+        $authorUserModel = CBModelCache::fetchModelByID(
+            $authorUserModelCBID
+        );
+
+        $authorFullName = CBUser::getName(
+            $authorUserModel
+        );
+
+        $textAsCleanLine = CBConvert::stringToCleanLine(
+            CB_Moment::getText(
+                $momentModel
+            )
+        );
+
+        return "{$authorFullName} moment: \"{$textAsCleanLine}\"";
+    }
+    /* CBModel_getTitle() */
+
+
+
+    /**
+     * @param object $momentModel
+     *
+     * @return string
+     */
+    static function
     CBModel_toSearchText(
         stdClass $momentModel
     ): string {
@@ -633,12 +666,8 @@ CB_Moment {
 
         CBViewPage::setTitle(
             $viewPageSpec,
-            mb_substr(
-                CB_Moment::getText(
-                    $momentModel
-                ),
-                0,
-                240
+            CBModel::getTitle(
+                $momentModel
             )
         );
 
