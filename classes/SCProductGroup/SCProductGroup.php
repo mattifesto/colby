@@ -1,6 +1,7 @@
 <?php
 
-final class SCProductGroup {
+final class
+SCProductGroup {
 
     /* -- CBModel interfaces -- -- -- -- -- */
 
@@ -145,13 +146,37 @@ final class SCProductGroup {
      *
      * @return string
      */
-    static function productGroupNameToProductGroupPageURL(
+    static function
+    productGroupNameToProductGroupPageURI(
         string $productGroupName
     ): string {
-        return (
-            '/productgroups/' .
-            CBConvert::stringToStub($productGroupName) .
-            '/'
+        $productGroupStub = CBConvert::stringToStub(
+            $productGroupName
         );
+
+        return "productgroups/{$productGroupStub}";
     }
+    /* productGroupNameToProductGroupPageURI() */
+
+
+
+    /**
+     * @param string $productGroupName
+     *
+     * @return string
+     */
+    static function
+    productGroupNameToProductGroupPageURL(
+        string $productGroupName
+    ): string {
+        $productGroupURI = (
+            SCProductGroup::productGroupNameToProductGroupPageURI(
+                $productGroupName
+            )
+        );
+
+        return "/{$productGroupURI}/";
+    }
+    /* productGroupNameToProductGroupPageURL() */
+
 }
