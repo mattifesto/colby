@@ -391,29 +391,63 @@ CBModels {
             }
         }
 
+
+        /* CBModels */
+
         $SQL = <<<EOT
 
-            DELETE
-            CBModels,
-            CBModelVersions
-
-            FROM
+            DELETE FROM
             CBModels
-
-            JOIN
-            CBModelVersions
-            ON
-            CBModelVersions.ID = CBModels.ID
 
             WHERE
 
-            CBModels.ID IN ({$rootModelCBIDsAsSQL})
+            ID IN
+            ({$rootModelCBIDsAsSQL})
 
         EOT;
 
         Colby::query(
             $SQL
         );
+
+
+        /* CBModelVersions */
+
+        $SQL = <<<EOT
+
+            DELETE FROM
+            CBModelVersions
+
+            WHERE
+
+            ID IN
+            ({$rootModelCBIDsAsSQL})
+
+        EOT;
+
+        Colby::query(
+            $SQL
+        );
+
+
+        /* CBModels2_table */
+
+        $SQL = <<<EOT
+
+            DELETE FROM
+            CBModels2_table
+
+            WHERE
+
+            CBModels2_CBID_column IN
+            ({$rootModelCBIDsAsSQL})
+
+        EOT;
+
+        Colby::query(
+            $SQL
+        );
+
 
         /**
          * @NOTE 2022_01_10
@@ -921,6 +955,123 @@ CBModels {
         );
     }
     /* fetchModelByIDWithVersion() */
+
+
+
+    /**
+     * @param string $searchQuery
+     *
+     * @return [CB_SearchResult]
+     */
+    static function
+    fetchSearchResults(
+        $searchQuery
+    ): array {
+        $words = preg_split(
+            '/[\s,]+/',
+            $searchQuery,
+            null,
+            PREG_SPLIT_NO_EMPTY
+        );
+
+        $clauses = [
+            "CBModels2_URLPath_column != ''",
+        ];
+
+        foreach (
+            $words as $word
+        ) {
+            if (
+                strlen($word) > 2
+            ) {
+                $wordAsSQL = CBDB::escapeString(
+                    $word
+                );
+
+                $clauses[] = (
+                    "CBModels2_searchText_column LIKE '%{$wordAsSQL}%'"
+                );
+            }
+        }
+
+        if (
+            empty($clauses)
+        ) {
+            return [];
+        } else {
+            $clauses = implode(
+                ' AND ',
+                $clauses
+            );
+        }
+
+        $SQL = <<<EOT
+
+            SELECT
+            LOWER(HEX(CBModels2_CBID_column))
+            AS
+            CBModels2_CBID_column
+
+            FROM
+            CBModels2_table
+
+            WHERE
+            {$clauses}
+
+        EOT;
+
+        $foundModelCBIDs = CBDB::SQLToArrayOfNullableStrings(
+            $SQL
+        );
+
+        if (
+            count($foundModelCBIDs) === 0
+        ) {
+            return [];
+        }
+
+        $foundModels = CBModels::fetchModelsByID2(
+            $foundModelCBIDs
+        );
+
+        if (
+            count($foundModels) === 0
+        ) {
+            return [];
+        }
+
+        $searchResults = [];
+
+        foreach (
+            $foundModels as $foundModel
+        ) {
+            $searchResult = CBModel::createSpec(
+                'CB_SearchResult'
+            );
+
+            CB_SearchResult::setTitle(
+                $searchResult,
+                CBModel::getTitle(
+                    $foundModel
+                )
+            );
+
+            CB_SearchResult::setURL(
+                $searchResult,
+                CBModel::toURLPath(
+                    $foundModel
+                )
+            );
+
+            array_push(
+                $searchResults,
+                $searchResult
+            );
+        }
+
+        return $searchResults;
+    }
+    /* fetchSearchResults() */
 
 
 
@@ -2022,17 +2173,27 @@ CBModels {
             INSERT INTO
             CBModels2_table
 
+            (
+                CBModels2_CBID_column,
+                CBModels2_className_column,
+                CBModels2_created_column,
+                CBModels2_modified_column,
+                CBModels2_version_column,
+                CBModels2_searchText_column,
+                CBModels2_URLPath_column
+            )
+
             VALUES
             {$values}
 
             ON DUPLICATE KEY UPDATE
 
-            CBModels2_className_column = CBModels2_className_column,
-            CBModels2_created_column = CBModels2_created_column,
-            CBModels2_modified_column = CBModels2_modified_column,
-            CBModels2_version_column = CBModels2_version_column,
-            CBModels2_searchText_column = CBModels2_searchText_column,
-            CBModels2_URLPath_column = CBModels2_URLPath_column
+            CBModels2_className_column = VALUES(CBModels2_className_column),
+            CBModels2_created_column = VALUES(CBModels2_created_column),
+            CBModels2_modified_column = VALUES(CBModels2_modified_column),
+            CBModels2_version_column = VALUES(CBModels2_version_column),
+            CBModels2_searchText_column = VALUES(CBModels2_searchText_column),
+            CBModels2_URLPath_column = VALUES(CBModels2_URLPath_column)
 
         EOT;
 
