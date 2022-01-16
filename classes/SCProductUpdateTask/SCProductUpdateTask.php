@@ -257,7 +257,7 @@ final class SCProductUpdateTask {
                         'title'
                     ),
 
-                    'URI' => SCProduct::productCodeToProductPageURL(
+                    'URI' => SCProduct::productCodeToProductPageURI(
                         $productCode
                     ),
                 ]
