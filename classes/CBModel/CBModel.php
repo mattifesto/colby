@@ -530,6 +530,35 @@ CBModel {
 
 
     /**
+     * @param object $model
+     *
+     * @return string
+     */
+    static function
+    getTitle(
+        stdClass $model
+    ): string {
+        $callable = CBModel::getClassFunction(
+            $model,
+            'CBModel_getTitle'
+        );
+
+        if (
+            $callable !== null
+        ) {
+            return call_user_func(
+                $callable,
+                $model
+            );
+        } else {
+            return '';
+        }
+    }
+    /* getTitle() */
+
+
+
+    /**
      * Returns the index of the first model found with the specified property
      * value.
      *
@@ -911,7 +940,6 @@ CBModel {
             array_filter(
                 [
                     $text,
-                    $className,
                     $CBID,
                 ]
             )
@@ -953,6 +981,12 @@ CBModel {
                     $model
                 )
             );
+
+            if (
+                $potentialURLPath === ''
+            ) {
+                return '';
+            }
 
             $normalizedURLPath = (
                 '/' .
@@ -1071,19 +1105,25 @@ CBModel {
         }
 
         try {
-            $functionName = "{$originalSpec->className}::CBModel_upgrade";
+            $upgradedSpec = CBModel::clone(
+                $originalSpec
+            );
+
+            $callable = CBModel::getClassFunction(
+                $originalSpec,
+                'CBModel_upgrade'
+            );
+
 
             if (
-                is_callable(
-                    $functionName
-                )
+                $callable !== null
             ) {
                 $upgradedSpec = call_user_func(
-                    $functionName,
-                    CBModel::clone(
-                        $originalSpec
-                    )
+                    $callable,
+                    $upgradedSpec
                 );
+
+                /* verify upgraded spec */
 
                 if (
                     CBConvert::valueAsModel(
@@ -1117,11 +1157,23 @@ CBModel {
                         '88c7bd6b23e18073302ef354def22d7f1f101e66'
                     );
                 }
-            } else {
-                $upgradedSpec = CBModel::clone(
-                    $originalSpec
-                );
             }
+
+            /**
+             * @NOTE 2022_01_15
+             *
+             *      The CBModel_versionDate_property value is only updated on
+             *      root specs when every single model needs to be re-processed.
+             *
+             * 2022_01_15 CBModel::toSearchText() no longer adds the model
+             * class name to the search text.
+             **/
+
+             if (
+                 CBModel::$rootSpecCurrentlyBeingUpgraded === $originalSpec
+             ) {
+                 $upgradedSpec->CBModel_versionDate_property = '2022_01_15';
+             }
         } finally {
             {
                 /**
