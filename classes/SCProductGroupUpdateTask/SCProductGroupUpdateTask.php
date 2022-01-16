@@ -221,8 +221,10 @@ final class SCProductGroupUpdateTask {
                         'title'
                     ),
 
-                    'URI' => SCProductGroup::productGroupNameToProductGroupPageURL(
-                        $productGroupName
+                    'URI' => (
+                        SCProductGroup::productGroupNameToProductGroupPageURI(
+                            $productGroupName
+                        )
                     ),
                 ]
             )
