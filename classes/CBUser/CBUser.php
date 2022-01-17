@@ -285,28 +285,28 @@ CBUser {
     CBAjax_fetchPublicProfileByUserModelCBID(
         stdClass $args
     ) {
-        $userModelCBID = CBModel::valueAsCBID(
+        $targetUserModelCBID = CBModel::valueAsCBID(
             $args,
             'userModelCBID'
         );
 
         if (
-            $userModelCBID === null
+            $targetUserModelCBID === null
         ) {
             throw new InvalidArgumentException(
                 'userModelCBID'
             );
         }
 
-        $userModel = CBModels::fetchModelByCBID(
-            $userModelCBID
+        $targetUserModel = CBModels::fetchModelByCBID(
+            $targetUserModelCBID
         );
 
         if (
-            $userModel === null ||
+            $targetUserModel === null ||
 
             CBModel::getClassName(
-                $userModel
+                $targetUserModel
             ) !== 'CBUser'
         ) {
             throw new InvalidArgumentException(
@@ -314,29 +314,53 @@ CBUser {
             );
         }
 
-        $username = '';
-
-        $usernameModelCBID = CB_Username::fetchUsernameCBIDByUserCBID(
-            $userModelCBID
+        $publicProfileIsEnabled = CBUser::getPublicProfileIsEnabled(
+            $targetUserModel
         );
 
         if (
-            $usernameModelCBID !== null
+            $publicProfileIsEnabled !== true
         ) {
-            $usernameModel = CBModels::fetchModelByCBID(
-                $usernameModelCBID
-            );
+            $currentUserModelCBID = ColbyUser::getCurrentUserCBID();
 
-            $username = CB_Username::getPrettyUsername(
-                $usernameModel
-            );
+            if (
+                $currentUserModelCBID !== $targetUserModelCBID
+            ) {
+                $currentUserIsAnAdministrator = (
+                    CBUserGroup::userIsMemberOfUserGroup(
+                        $currentUserModelCBID,
+                        'CBAdministratorsUserGroup'
+                    )
+                );
+
+                if (
+                    $currentUserIsAnAdministrator !== true
+                ) {
+                    throw new CBException(
+                        CBConvert::stringToCleanLine(<<<EOT
+
+                            The current user does not have permission to call
+                            this ajax function.
+
+                        EOT),
+                        '',
+                        '15cfbd719f11caeb1fab47699e9bf3e49eab33df'
+                    );
+                }
+            }
         }
 
+        $fullName = CBUser::getName(
+            $targetUserModel
+        );
+
+        $prettyUsername = CBUser::getPrettyUsername(
+            $targetUserModel
+        );
+
         return (object)[
-            'CBUser_publicProfile_fullName' => CBUser::getName(
-                $userModel
-            ),
-            'CBUser_publicProfile_username' => $username,
+            'CBUser_publicProfile_fullName' => $fullName,
+            'CBUser_publicProfile_prettyUsername' => $prettyUsername,
         ];
     }
     /* CBAjax_fetchPublicProfileByUserModelCBID() */
@@ -862,9 +886,95 @@ CBUser {
             )
         );
 
+        CBUser::setPrettyUsername(
+            $userModel,
+            CBUser::getPrettyUsername(
+                $spec
+            )
+        );
+
         return $userModel;
     }
     /* CBModel_build() */
+
+
+
+    /**
+     * @param object $momentModel
+     *
+     * @return string
+     */
+    static function
+    CBModel_getTitle(
+        stdClass $momentModel
+    ): string {
+        return CBUser::getName(
+            $momentModel
+        );
+    }
+    /* CBModel_getTitle() */
+
+
+
+    /**
+     * @param object $userModel
+     *
+     * @return string
+     */
+    static function
+    CBModel_toSearchText(
+        stdClass $userModel
+    ): string {
+        $publicProfileIsEnabled = CBUser::getPublicProfileIsEnabled(
+            $userModel
+        );
+
+        if (
+            $publicProfileIsEnabled !== true
+        ) {
+            return '';
+        }
+
+        $fullName = CBUser::getName(
+            $userModel
+        );
+
+        $prettyUsername = CBUser::getPrettyUsername(
+            $userModel
+        );
+
+        return "{$fullName} {$prettyUsername}";
+    }
+    /* CBModel_toSearchText() */
+
+
+
+    /**
+     * @param object $userModel
+     *
+     * @return string
+     */
+    static function
+    CBModel_toURLPath(
+        stdClass $userModel
+    ): string {
+        $publicProfileIsEnabled = CBUser::getPublicProfileIsEnabled(
+            $userModel
+        );
+
+        if (
+            $publicProfileIsEnabled !== true
+        ) {
+            return '';
+        }
+
+        $prettyUsername = CBUser::getPrettyUsername(
+            $userModel
+        );
+
+        return "/user/{$prettyUsername}/";
+    }
+    /* CBModel_toURLPath() */
 
 
 
@@ -917,29 +1027,33 @@ CBUser {
         );
 
 
+
         /**
-         * If the user model has a CBID and doesn't have a username restart a
-         * task to assign them one. It's odd for user models not to have CBIDs
-         * but it's not impossible.
+         * @NOTE 2022_01_15
+         *
+         *      If the user doesn't have a username, generate one for them.
          */
 
         $userModelCBID = CBModel::getCBID(
             $originalSpec
         );
 
-        if ($userModelCBID !== null) {
-            $currentUsernameCBID = CB_Username::fetchUsernameCBIDByUserCBID(
+        $currentUsername = CBUser::getPrettyUsername(
+            $originalSpec
+        );
+
+        if (
+            $currentUsername === ''
+        ) {
+            $randomUsername = CBUser::generateRandomAvailablePrettyUsername(
                 $userModelCBID
             );
 
-            if ($currentUsernameCBID === null) {
-                CBTasks2::restart(
-                    'CB_Task_GenerateUsername',
-                    $userModelCBID
-                );
-            }
+            CBUser::setPrettyUsername(
+                $upgradedSpec,
+                $randomUsername
+            );
         }
-
 
         /* done */
 
@@ -950,18 +1064,29 @@ CBUser {
 
 
     /**
-     * @param [object] $models
+     * @param [object] $userModelCBIDs
      */
     static function
     CBModels_willDelete(
-        array $userCBIDs
+        array $userModelCBIDs
     ) {
         foreach (
-            $userCBIDs as $userCBID
+            $userModelCBIDs as $userModelCBID
         ) {
-            $userCBIDAsSQL = CBID::toSQL(
-                $userCBID
+            $userModelCBIDAsSQL = CBID::toSQL(
+                $userModelCBID
             );
+
+
+            /* remove username reservation */
+
+            CBModelAssociations::delete(
+                $userModelCBID,
+                'CBUser_username_association'
+            );
+
+
+            /* dele0te ColbyUsers row */
 
             $SQL = <<<EOT
 
@@ -969,7 +1094,7 @@ CBUser {
                 ColbyUsers
 
                 WHERE
-                hash = {$userCBIDAsSQL}
+                hash = {$userModelCBIDAsSQL}
 
             EOT;
 
@@ -977,14 +1102,17 @@ CBUser {
                 $SQL
             );
 
+
+            /* remove user group memberships */
+
             CBModelAssociations::delete(
                 null,
                 'CBUserGroup_CBUser',
-                $userCBID
+                $userModelCBID
             );
 
             CBModelAssociations::delete(
-                $userCBID,
+                $userModelCBID,
                 'CBUser_CBUserGroup',
                 null
             );
@@ -997,18 +1125,101 @@ CBUser {
     /**
      * @return void
      */
-    static function CBModels_willSave(
+    static function
+    CBModels_willSave(
         array $userModels
     ): void {
         foreach (
             $userModels as $userModel
         ) {
-            $userCBIDAsSQL = CBID::toSQL(
-                CBModel::valueAsCBID(
-                    $userModel,
-                    'ID'
-                )
+            $userModelCBID = CBModel::getCBID(
+                $userModel
             );
+
+            $userModelCBIDAsSQL = CBID::toSQL(
+                $userModelCBID
+            );
+
+
+            /* username */
+
+            $prettyUsername = CBUser::getPrettyUsername(
+                $userModel
+            );
+
+
+            if (
+                $prettyUsername === ''
+            ) {
+                CBModelAssociations::delete(
+                    $userModelCBID,
+                    'CBUser_username_association'
+                );
+            }
+
+            else {
+                $usernameCBID = CB_Username::prettyUsernameToUsernameModelCBID(
+                    $prettyUsername
+                );
+
+                $existingAssociation = CBModelAssociations::fetchOne(
+                    null,
+                    'CBUser_username_association',
+                    $usernameCBID
+                );
+
+                /**
+                 * If there is no association, create one to reserved the
+                 * username.
+                 */
+
+                if (
+                    $existingAssociation === null
+                ) {
+                    $newAssociation = CBModel::createSpec(
+                        'CB_ModelAssociation'
+                    );
+
+                    CB_ModelAssociation::setFirstCBID(
+                        $newAssociation,
+                        $userModelCBID
+                    );
+
+                    CB_ModelAssociation::setAssociationKey(
+                        $newAssociation,
+                        'CBUser_username_association'
+                    );
+
+                    CB_ModelAssociation::setSecondCBID(
+                        $newAssociation,
+                        $usernameCBID
+                    );
+
+                    CBModelAssociations::insertOrUpdate(
+                        $newAssociation
+                    );
+                }
+
+                /**
+                 * Otherwise, if the username has been reserved by another user
+                 * throw an exception.
+                 */
+
+                else if (
+                    $existingAssociation->ID !== $userModelCBID
+                ) {
+                    throw new CBExceptionWithValue(
+                        CBConvert::stringToCleanLine(<<<EOT
+
+                            The username in this user model has already been
+                            reserved by another user.
+
+                        EOT),
+                        $userModel,
+                        '6b9e8d649985a7fdd993eaefd94220a8de53bebb'
+                    );
+                }
+            }
 
 
             /* email */
@@ -1068,7 +1279,7 @@ CBUser {
                 facebookName = {$userFullNameAsSQL}
 
                 WHERE
-                hash = {$userCBIDAsSQL}
+                hash = {$userModelCBIDAsSQL}
 
             EOT;
 
@@ -1096,7 +1307,7 @@ CBUser {
 
                 VALUES
                 (
-                    {$userCBIDAsSQL},
+                    {$userModelCBIDAsSQL},
                     {$userEmailAsSQL},
                     {$userFacebookUserIDAsSQL},
                     {$userFullNameAsSQL}
@@ -1274,6 +1485,67 @@ CBUser {
     /**
      * @param object $userModel
      *
+     * @return string
+     *
+     *      If the user model doesn't have a pretty username, this function will
+     *      return an empty string.
+     */
+    static function
+    getPrettyUsername(
+        stdClass $userModel
+    ): string {
+        return CBModel::valueToString(
+            $userModel,
+            'CBUser_prettyUsername_property'
+        );
+    }
+    /* getPrettyUsername() */
+
+
+
+    /**
+     * @param object $userModel
+     * @param string $passwordHash
+     *
+     * @return void
+     */
+    static function
+    setPrettyUsername(
+        stdClass $userModel,
+        string $prettyUsername
+    ): void {
+        if (
+            $prettyUsername !== ''
+        ) {
+            $prettyUsernameIsValid = CB_Username::isPrettyUsernameValid(
+                $prettyUsername
+            );
+
+            if (
+                $prettyUsernameIsValid !== true
+            ) {
+                throw new CBExceptionWithValue(
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        The prettyUsername argument is not a valid pretty
+                        username.
+
+                    EOT),
+                    $prettyUsername,
+                    'bd58123f8ee2e8c45ac8014cdf30dd6a472b8813'
+                );
+            }
+        }
+
+        $userModel->CBUser_prettyUsername_property = $prettyUsername;
+    }
+    /* setPrettyUsername() */
+
+
+
+    /**
+     * @param object $userModel
+     *
      * @return bool
      */
     static function
@@ -1397,6 +1669,44 @@ CBUser {
 
 
     /**
+     * @return string
+     *
+     *      A random username that has been confirmed to be available.
+     */
+    static function
+    generateRandomAvailablePrettyUsername(
+    ): string {
+        $randomCBID = CBID::generateRandomCBID();
+
+        while (
+            true
+        ) {
+            $randomPrettyUsername = (
+                'user_' .
+                mb_substr(
+                    $randomCBID,
+                    0,
+                    25
+                )
+            );
+
+            $userModelCBID = CBUser::prettyUsernameToUserModelCBID(
+                $randomPrettyUsername
+            );
+
+
+            if (
+                $userModelCBID === null
+            ) {
+                return $randomPrettyUsername;
+            }
+        }
+    }
+    /* generateRandomAvailablePrettyUsername() */
+
+
+
+    /**
      * @param string|null $destinationURL
      *
      * @return string
@@ -1504,6 +1814,37 @@ CBUser {
         }
     }
     /* passwordIssues() */
+
+
+
+    /**
+     * @param string $prettyUsername
+     *
+     * @return CBID|null
+     */
+    static function
+    prettyUsernameToUserModelCBID(
+        string $prettyUsername
+    ): ?string {
+        $usernameCBID = CB_Username::prettyUsernameToUsernameModelCBID(
+            $prettyUsername
+        );
+
+        $association = CBModelAssociations::fetchOne(
+            null,
+            'CBUser_username_association',
+            $usernameCBID
+        );
+
+        if (
+            $association === null
+        ) {
+            return null;
+        } else {
+            return $association->ID;
+        }
+    }
+    /* prettyUsernameToUserModelCBID() */
 
 
 
