@@ -14,7 +14,7 @@ CB_SearchResult {
      */
     static function
     getTitle(
-        stdClass $searchResultModel,
+        stdClass $searchResultModel
     ): string {
         return CBModel::valueToString(
             $searchResultModel,
@@ -49,7 +49,7 @@ CB_SearchResult {
      */
     static function
     getURL(
-        stdClass $searchResultModel,
+        stdClass $searchResultModel
     ): string {
         return CBModel::valueToString(
             $searchResultModel,
