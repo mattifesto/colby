@@ -16,7 +16,7 @@ CB_CBView_MostRecentUserMomentEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.47.js',
+                'v675.51.js',
                 cbsysurl()
             ),
         ];
@@ -36,6 +36,9 @@ CB_CBView_MostRecentUserMomentEditor {
             'CB_UI',
             'CB_CBView_MostRecentUserMoment',
             'CBAjax',
+            'CBConvert',
+            'CBErrorHandler',
+            'CBModel',
             'CBUIStringEditor2',
         ];
     }

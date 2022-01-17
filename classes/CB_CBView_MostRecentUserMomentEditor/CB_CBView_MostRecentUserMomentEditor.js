@@ -1,17 +1,22 @@
 /* global
-    CBAjax,
-    CBUIStringEditor2,
     CB_Brick_TextContainer,
     CB_CBView_MostRecentUserMoment,
+    CBAjax,
+    CBConvert,
+    CBErrorHandler,
+    CBModel,
+    CBUIStringEditor2,
  */
 
 
 (function () {
-
     "use strict";
+
+    let publicProfileCache = {};
 
     window.CB_CBView_MostRecentUserMomentEditor = {
         CBUISpecEditor_createEditorElement,
+        CBUISpec_toDescription,
     };
 
 
@@ -57,6 +62,35 @@
             "Username"
         );
 
+        (async function () {
+            try {
+                let userModelCBID = CBModel.valueAsCBID(
+                    spec,
+                    "CB_CBView_MostRecentUserMoment_userModelCBID"
+                );
+
+                if (
+                    userModelCBID === undefined
+                ) {
+                    return;
+                }
+
+                let publicProfile = await fetchPublicProfileFromCache(
+                    userModelCBID
+                );
+
+                usernameEditor.CBUIStringEditor2_setValue(
+                    publicProfile.CBUser_publicProfile_prettyUsername
+                );
+            } catch (
+                error
+            ) {
+                CBErrorHandler.report(
+                    error
+                );
+            }
+        })();
+
         usernameEditor.CBUIStringEditor2_setChangedEventListener(
             function () {
                 handleUsernameChanged();
@@ -75,45 +109,53 @@
         async function
         handleUsernameChanged(
         ) {
-            if (
-                isCurrentlyLookingUpUsername
-            ) {
-                usernameHasChanged = true;
+            try {
+                if (
+                    isCurrentlyLookingUpUsername
+                ) {
+                    usernameHasChanged = true;
 
-                return;
-            }
-
-            usernameEditor.CBUIStringEditor2_setTitle(
-                "Username (looking up...)"
-            );
-
-            let userModelCBID = await CBAjax.call(
-                "CB_Username",
-                "CB_Username_ajax_fetchUserModelCBIDByPrettyUsername",
-                {
-                    prettyUsername: usernameEditor.CBUIStringEditor2_getValue(),
+                    return;
                 }
-            );
 
-            usernameEditor.CBUIStringEditor2_setTitle(
-                userModelCBID === null ?
-                "Username (not found)" :
-                "Username (found)"
-            );
+                usernameEditor.CBUIStringEditor2_setTitle(
+                    "Username (looking up...)"
+                );
 
-            CB_CBView_MostRecentUserMoment.setUserModelCBID(
-                spec,
-                userModelCBID
-            );
+                let userModelCBID = await CBAjax.call(
+                    "CB_Username",
+                    "CB_Username_ajax_fetchUserModelCBIDByPrettyUsername",
+                    {
+                        prettyUsername: usernameEditor.CBUIStringEditor2_getValue(),
+                    }
+                );
 
-            isCurrentlyLookingUpUsername = false;
+                usernameEditor.CBUIStringEditor2_setTitle(
+                    userModelCBID === null ?
+                    "Username (not found)" :
+                    "Username (found)"
+                );
 
-            if (usernameHasChanged) {
-                usernameHasChanged = false;
+                CB_CBView_MostRecentUserMoment.setUserModelCBID(
+                    spec,
+                    userModelCBID
+                );
 
-                handleUsernameChanged();
-            } else {
-                specChangedCallback();
+                isCurrentlyLookingUpUsername = false;
+
+                if (usernameHasChanged) {
+                    usernameHasChanged = false;
+
+                    handleUsernameChanged();
+                } else {
+                    specChangedCallback();
+                }
+            } catch (
+                error
+            ) {
+                CBErrorHandler.report(
+                    error
+                );
             }
         }
         /* handleUsernameChanged() */
@@ -123,5 +165,86 @@
         return rootEditorElement;
     }
     /* CBUISpecEditor_createEditorElement() */
+
+
+
+    /**
+     * @param object viewSpec
+     *
+     * @return string
+     */
+    async function
+    CBUISpec_toDescription(
+        viewSpec
+    ) {
+        try {
+            let userModelCBID = CBModel.valueAsCBID(
+                viewSpec,
+                "CB_CBView_MostRecentUserMoment_userModelCBID"
+            );
+
+            if (
+                userModelCBID === undefined
+            ) {
+                return "no user has been selected";
+            }
+
+            let publicProfile = await fetchPublicProfileFromCache(
+                userModelCBID
+            );
+
+            return CBConvert.stringToCleanLine(`
+
+                ${publicProfile.CBUser_publicProfile_fullName}
+
+                (${publicProfile.CBUser_publicProfile_prettyUsername})
+
+            `);
+        } catch (
+            error
+        ) {
+            CBErrorHandler.report(
+                error
+            );
+        }
+    }
+    /* CBUISpec_toDescription() */
+
+
+
+    /**
+     * @param CBID userModelCBID
+     *
+     * @return object
+     */
+    async function
+    fetchPublicProfileFromCache(
+        userModelCBID
+    ) {
+        try {
+            if (
+                publicProfileCache[userModelCBID] === undefined
+            ) {
+                let publicProfile = await CBAjax.call(
+                    "CBUser",
+                    "fetchPublicProfileByUserModelCBID",
+                    {
+                        userModelCBID,
+                    }
+                );
+
+                publicProfileCache[userModelCBID] = publicProfile;
+            }
+
+            return publicProfileCache[userModelCBID];
+        } catch (
+            error
+        ) {
+            CBErrorHandler.report(
+                error
+            );
+        }
+    }
+    /* fetchPublicProfileFromCache() */
 
 })();
