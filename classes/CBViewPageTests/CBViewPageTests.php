@@ -45,7 +45,8 @@ CBViewPageTests {
     /**
      * @return object
      */
-    static function CBTest_CBViewPage_getFrameSearchText(
+    static function
+    CBViewPage_getFrameSearchText(
     ): stdClass {
         $testCaseModels = [
 
@@ -53,7 +54,7 @@ CBViewPageTests {
                 'viewPageModel' => (object)[
                     'className' => 'CBViewPage',
                 ],
-                'expectedSearchText' => 'CBViewPage',
+                'expectedSearchText' => '',
             ],
 
             (object)[
@@ -63,7 +64,7 @@ CBViewPageTests {
                 ],
                 'expectedSearchText' => CBConvert::stringToCleanLine(<<<EOT
 
-                    CBViewPageTests_PageFrame frame search text CBViewPage
+                    CBViewPageTests_PageFrame frame search text
 
                 EOT),
             ],
@@ -78,7 +79,7 @@ CBViewPageTests {
                 ],
                 'expectedSearchText' => CBConvert::stringToCleanLine(<<<EOT
 
-                    CBViewPageTests_PageFrame frame search text CBViewPage
+                    CBViewPageTests_PageFrame frame search text
 
                 EOT),
             ],
@@ -90,11 +91,7 @@ CBViewPageTests {
                         'className' => 'CBViewPageTests_PageLayout',
                     ],
                 ],
-                'expectedSearchText' => CBConvert::stringToCleanLine(<<<EOT
-
-                    CBViewPageTests_PageLayout CBViewPage
-
-                EOT),
+                'expectedSearchText' => '',
             ],
 
         ];
@@ -143,7 +140,7 @@ CBViewPageTests {
      * @return object
      */
     static function
-    CBTest_general(
+    general(
     ): stdClass {
 
         /* Test 1 */
@@ -187,7 +184,9 @@ CBViewPageTests {
             $spec
         );
 
-        if ($model != $expectedModel) {
+        if (
+            $model != $expectedModel
+        ) {
             return CBTest::resultMismatchFailure(
                 'build',
                 $model,
@@ -201,12 +200,11 @@ CBViewPageTests {
             $model
         );
 
-        $expectedSearchText = (
-            CBViewTests::testSubviewSearchText() .
-            ' CBViewPage'
-        );
+        $expectedSearchText = CBViewTests::testSubviewSearchText();
 
-        if ($searchText !== $expectedSearchText) {
+        if (
+            $searchText !== $expectedSearchText
+        ) {
             return CBTest::resultMismatchFailure(
                 'toSearchText',
                 $searchText,
@@ -423,6 +421,7 @@ CBViewPageTests {
             'publishedByUserCBID' => ColbyUser::getCurrentUserCBID(),
             'sections' => CBViewTests::testSubviewUpgradedSpecs(),
             'CBViewPage_versionDate' => '2020_11_11',
+            'CBModel_versionDate_property' => '2022_01_15',
         ];
 
         if ($actualUpgradedSpec != $expectedUpgradedSpec) {
@@ -448,6 +447,7 @@ CBViewPageTests {
             'classNameForSettings' => 'CBViewPageTests_PageSettings',
             'sections' => [],
             'CBViewPage_versionDate' => '2020_11_11',
+            'CBModel_versionDate_property' => '2022_01_15',
         ];
 
         if ($actualUpgradedSpec != $expectedUpgradedSpec) {
@@ -477,6 +477,7 @@ CBViewPageTests {
             'publishedByUserCBID' => $publishedByUserCBID,
             'sections' => [],
             'CBViewPage_versionDate' => '2020_11_11',
+            'CBModel_versionDate_property' => '2022_01_15',
         ];
 
         if ($actualUpgradedSpec != $expectedUpgradedSpec) {
