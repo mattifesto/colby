@@ -319,7 +319,7 @@ CB_Username {
         $usernameModelCBID
     ): ?string {
         return CBModelAssociations::fetchSingularFirstCBID(
-            'CBUser_to_CB_Username_association',
+            'CBUser_username_association',
             $usernameModelCBID
         );
     }
