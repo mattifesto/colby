@@ -510,7 +510,13 @@ CBModelAssociations {
      * @param ?string $associationClassName
      * @param ?CBID $associatedID
      *
-     * @return ?object
+     * @return object|null
+     *
+     *      {
+     *          ID: CBID
+     *          className: string
+     *          associatedID: CBID
+     *      }
      */
     static function
     fetchOne(
@@ -528,13 +534,19 @@ CBModelAssociations {
             empty($rows)
         ) {
             return null;
-        } else if (
+        }
+
+        else if (
             count($rows) === 1
         ) {
             return $rows[0];
-        } else {
+        }
+
+        else {
             $rowsAsJSONAsMessage = CBMessageMarkup::stringToMessage(
-                CBConvert::valueToPrettyJSON($rows)
+                CBConvert::valueToPrettyJSON(
+                    $rows
+                )
             );
 
             $message = <<<EOT
@@ -559,8 +571,12 @@ CBModelAssociations {
             );
 
             throw new Exception(
-                'More than one CBModelAssociations row was found when ' .
-                'at most one row was expected.'
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    More than one CBModelAssociations row was found when at most
+                    one row was expected.
+
+                EOT)
             );
         }
     }
