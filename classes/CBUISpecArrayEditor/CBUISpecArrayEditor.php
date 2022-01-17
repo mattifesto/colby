@@ -1,6 +1,7 @@
 <?php
 
-final class CBUISpecArrayEditor {
+final class
+CBUISpecArrayEditor {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -26,7 +27,7 @@ final class CBUISpecArrayEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.js',
+                'v675.51.js',
                 cbsysurl()
             )
         ];

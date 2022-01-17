@@ -1,6 +1,5 @@
 "use strict";
 /* jshint strict: global */
-/* jshint esversion: 6 */
 /* exported CBUISpecArrayEditor */
 /* global
     CBErrorHandler,
@@ -521,14 +520,27 @@ var CBUISpecArrayEditor = {
 
 
 
-            function updateTitleAndDescription() {
+            /**
+             * @return Promise -> undefined
+             */
+            async function
+            updateTitleAndDescription(
+            ) {
                 let nonBreakingSpace = "\u00A0";
 
                 titleAndDescriptionPart.title = spec.className;
+                titleAndDescriptionPart.description = "...";
 
-                titleAndDescriptionPart.description =
-                CBUISpec.specToDescription(spec) || nonBreakingSpace;
+                let description = await CBUISpec.specToDescription(
+                    spec
+                );
+
+                titleAndDescriptionPart.description = (
+                    description ||
+                    nonBreakingSpace
+                );
             }
+            /* updateTitleAndDescription() */
 
 
 
