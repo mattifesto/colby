@@ -13,7 +13,6 @@ final class CBFlexBoxViewTests {
         return [
             (object)[
                 'name' => 'upgrade',
-                'title' => 'CBFlexBoxView upgrade',
                 'type' => 'server',
             ],
         ];
@@ -65,6 +64,7 @@ final class CBFlexBoxViewTests {
                     'markup' => 'Hello 3',
                 ],
             ],
+            'CBModel_versionDate_property' => '2022_01_15',
         ];
 
         $entries = CBLog::buffer(
