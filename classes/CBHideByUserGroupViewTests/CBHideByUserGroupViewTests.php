@@ -29,7 +29,9 @@ final class CBHideByUserGroupViewTests {
     /**
      * @return object
      */
-    static function CBTest_general(): stdClass {
+    static function
+    general(
+    ): stdClass {
         $spec = (object)[
             'className' => 'CBHideByUserGroupView',
             'subviews' => CBViewTests::testSubviewSpecs(),
@@ -59,14 +61,15 @@ final class CBHideByUserGroupViewTests {
 
         /* toSearchText */
 
-        $actualSearchText = CBModel::toSearchText($actualModel);
-
-        $expectedSearchText = (
-            CBViewTests::testSubviewSearchText() .
-            ' CBHideByUserGroupView'
+        $actualSearchText = CBModel::toSearchText(
+            $actualModel
         );
 
-        if ($actualSearchText !== $expectedSearchText) {
+        $expectedSearchText = CBViewTests::testSubviewSearchText();
+
+        if (
+            $actualSearchText !== $expectedSearchText
+        ) {
             return CBTest::resultMismatchFailure(
                 'toSearchText',
                 $actualSearchText,
@@ -82,6 +85,7 @@ final class CBHideByUserGroupViewTests {
         $expectedUpgradedSpec = (object)[
             'className' => 'CBHideByUserGroupView',
             'subviews' => CBViewTests::testSubviewUpgradedSpecs(),
+            'CBModel_versionDate_property' => '2022_01_15',
         ];
 
         if ($actualUpgradedSpec != $expectedUpgradedSpec) {
@@ -115,6 +119,7 @@ final class CBHideByUserGroupViewTests {
                 'expectedUpgradedSpec' => (object)[
                     'className' => 'CBHideByUserGroupView',
                     'subviews' => [],
+                    'CBModel_versionDate_property' => '2022_01_15',
                 ],
             ],
         ];
