@@ -1,6 +1,7 @@
 <?php
 
-final class CBModelUpgradeTask {
+final class
+CBModelUpgradeTask {
 
     /* -- CBInstall interfaces -- -- -- -- -- */
 
@@ -12,10 +13,17 @@ final class CBModelUpgradeTask {
      *
      * @return void
      */
-    static function CBInstall_install(): void {
-        $IDs = CBDB::SQLToArray(
-            'SELECT LOWER(HEX(ID)) FROM CBModels'
-        );
+    static function
+    CBInstall_install(
+    ): void {
+        $IDs = CBDB::SQLToArray(<<<EOT
+
+            SELECT
+            LOWER(HEX(ID))
+            FROM
+            CBModels
+
+        EOT);
 
         CBTasks2::restart(
             'CBModelUpgradeTask',
@@ -30,7 +38,9 @@ final class CBModelUpgradeTask {
     /**
      * @return [string]
      */
-    static function CBInstall_requiredClassNames(): array {
+    static function
+    CBInstall_requiredClassNames(
+    ): array {
         return [
             'CBModels',
             'CBTasks2'
@@ -49,23 +59,39 @@ final class CBModelUpgradeTask {
      *
      * @return ?object
      */
-    static function CBTasks2_run(
+    static function
+    CBTasks2_run(
         string $modelCBID
     ): ?stdClass {
-        $originalSpec = CBModels::fetchSpecByIDNullable($modelCBID);
+        $originalSpec = CBModels::fetchSpecByIDNullable(
+            $modelCBID
+        );
 
-        if ($originalSpec === null) {
-            CBTasks2::remove(__CLASS__, $modelCBID);
+        if (
+            $originalSpec === null
+        ) {
+            CBTasks2::remove(
+                __CLASS__,
+                $modelCBID
+            );
 
             return null;
         }
 
-        $upgradedSpec = CBModel::upgrade($originalSpec);
+        $upgradedSpec = CBModel::upgrade(
+            $originalSpec
+        );
 
-        if ($upgradedSpec != $originalSpec) {
+        if (
+            $upgradedSpec != $originalSpec
+        ) {
             CBDB::transaction(
-                function () use ($upgradedSpec) {
-                    CBModels::save($upgradedSpec);
+                function () use (
+                    $upgradedSpec
+                ) {
+                    CBModels::save(
+                        $upgradedSpec
+                    );
                 }
             );
         }
