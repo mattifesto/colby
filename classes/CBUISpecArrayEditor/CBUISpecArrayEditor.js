@@ -2,6 +2,7 @@
 /* jshint strict: global */
 /* exported CBUISpecArrayEditor */
 /* global
+    CB_UI,
     CBErrorHandler,
     CBException,
     CBUI,
@@ -526,19 +527,25 @@ var CBUISpecArrayEditor = {
             async function
             updateTitleAndDescription(
             ) {
-                let nonBreakingSpace = "\u00A0";
+                try {
+                    titleAndDescriptionPart.title = spec.className;
+                    titleAndDescriptionPart.description = "...";
 
-                titleAndDescriptionPart.title = spec.className;
-                titleAndDescriptionPart.description = "...";
+                    let description = await CBUISpec.specToDescription(
+                        spec
+                    );
 
-                let description = await CBUISpec.specToDescription(
-                    spec
-                );
-
-                titleAndDescriptionPart.description = (
-                    description ||
-                    nonBreakingSpace
-                );
+                    titleAndDescriptionPart.description = (
+                        description ||
+                        CB_UI.getNonBreakingSpaceCharacter()
+                    );
+                } catch (
+                    error
+                ) {
+                    CBErrorHandler.report(
+                        error
+                    );
+                }
             }
             /* updateTitleAndDescription() */
 

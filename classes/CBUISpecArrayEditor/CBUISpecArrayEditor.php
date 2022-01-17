@@ -39,8 +39,11 @@ CBUISpecArrayEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ) {
         return [
+            'CB_UI',
             'CBErrorHandler',
             'CBException',
             'CBUI',
