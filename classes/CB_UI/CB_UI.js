@@ -5,6 +5,11 @@
 */
 
 (function () {
+    "use strict";
+
+    window.CB_UI = {
+        getNonBreakingSpaceCharacter,
+    };
 
     if (
         CB_UI_CBSitePreferences_appearance === (
@@ -52,6 +57,18 @@
             setAutoAppearance();
         }
     );
+
+
+
+    /**
+     * @return string
+     */
+    function
+    getNonBreakingSpaceCharacter(
+    ) {
+        return "\u00A0";
+    }
+    /* getNonBreakingSpaceCharacter() */
 
 
 
