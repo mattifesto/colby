@@ -1,6 +1,3 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
 /* global
     CBUI,
     CBUINavigationView,
@@ -12,9 +9,25 @@
 */
 
 
+(function () {
+    "use strict";
 
-Colby.afterDOMContentLoaded(
-    function afterDOMContentLoaded() {
+    Colby.afterDOMContentLoaded(
+        function () {
+            afterDOMContentLoaded();
+        }
+    );
+
+    function
+    afterDOMContentLoaded() {
+        if (
+            document.getElementsByClassName(
+                "CBAdminPageForUserSettings_notFound"
+            ).length > 0
+        ) {
+            return;
+        }
+
         let mainElement = document.getElementsByTagName("main").item(0);
 
         mainElement.appendChild(
@@ -24,7 +37,9 @@ Colby.afterDOMContentLoaded(
         let rootElement = CBUI.createElement();
 
         CBAdminPageForUserSettings_userSettingsManagerClassNames.forEach(
-            function (className) {
+            function (
+                className
+            ) {
                 let element = CBUserSettingsManager.createElement(
                     {
                         className,
@@ -46,4 +61,5 @@ Colby.afterDOMContentLoaded(
         );
     }
     /* afterDOMContentLoaded() */
-);
+
+})();

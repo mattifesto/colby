@@ -1,6 +1,7 @@
 <?php
 
-final class CBAdminPageForUserSettings {
+final class
+CBAdminPageForUserSettings {
 
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
@@ -31,14 +32,18 @@ final class CBAdminPageForUserSettings {
     /**
      * @return void
      */
-    static function CBAdmin_render(): void {
+    static function
+    CBAdmin_render(
+    ): void {
         $targetUserCBID = $_GET['hash'];
 
         $userModel = CBModelCache::fetchModelByID(
             $targetUserCBID
         );
 
-        if ($userModel === null) {
+        if (
+            $userModel === null
+        ) {
             CBAdminPageForUserSettings::CBAdmin_render_notFound(
                 $targetUserCBID
             );
@@ -59,7 +64,8 @@ final class CBAdminPageForUserSettings {
      *
      * @return void
      */
-    static function CBAdmin_render_notFound(
+    static function
+    CBAdmin_render_notFound(
         string $targetUserID
     ): void {
         $targetUserIDAsMessage = CBMessageMarkup::stringToMessage(
@@ -99,7 +105,8 @@ final class CBAdminPageForUserSettings {
      *
      * @return void
      */
-    private static function CBAdmin_render_user(
+    private static function
+    CBAdmin_render_user(
         stdClass $userModel
     ): void {
         $userTitle = CBModel::valueToString(
@@ -133,11 +140,18 @@ final class CBAdminPageForUserSettings {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v570.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.50.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
