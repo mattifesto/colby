@@ -447,9 +447,12 @@ final class CBViewTests {
     /**
      * @return string
      */
-    static function testSubviewSearchText(): string {
-        return '42 CBTestView';
+    static function
+    testSubviewSearchText(
+    ): string {
+        return '42';
     }
+    /* testSubviewSearchText() */
 
 
 
