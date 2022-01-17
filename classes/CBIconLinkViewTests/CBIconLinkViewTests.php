@@ -1,6 +1,7 @@
 <?php
 
-final class CBIconLinkViewTests {
+final class
+CBIconLinkViewTests {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
@@ -11,7 +12,6 @@ final class CBIconLinkViewTests {
         return [
             (object)[
                 'name' => 'general',
-                'title' => 'CBIconLinkView',
                 'type' => 'server',
             ],
         ];
@@ -24,7 +24,9 @@ final class CBIconLinkViewTests {
     /**
      * @return object
      */
-    static function CBTest_general(): stdClass {
+    static function
+    general(
+    ): stdClass {
         $spec = (object)[
             'className' => 'CBIconLinkView',
             'image' => (object)[
@@ -58,10 +60,15 @@ final class CBIconLinkViewTests {
             );
         }
 
-        $searchText = CBModel::toSearchText($model);
-        $expectedSearchText = 'CBIconLinkView';
+        $searchText = CBModel::toSearchText(
+            $model
+        );
 
-        if ($searchText !== $expectedSearchText) {
+        $expectedSearchText = '';
+
+        if (
+            $searchText !== $expectedSearchText
+        ) {
             return CBTest::resultMismatchFailure(
                 'toSearchText',
                 $searchText,
@@ -80,6 +87,7 @@ final class CBIconLinkViewTests {
                 'height' => 700,
                 'width' => 900,
             ],
+            'CBModel_versionDate_property' => '2022_01_15',
         ];
 
         if ($upgradedSpec != $expectedUpgradedSpec) {
