@@ -546,7 +546,10 @@ CBPages {
      *
      * @return ?string
      */
-    static function searchClauseFromString($string): ?string {
+    static function
+    searchClauseFromString(
+        $string
+    ): ?string {
         $words = preg_split(
             '/[\s,]+/',
             $string,
@@ -556,17 +559,30 @@ CBPages {
 
         $clauses = [];
 
-        foreach ($words as $word) {
-            if (strlen($word) > 2) {
-                $wordAsSQL = CBDB::escapeString($word);
+        foreach (
+            $words as $word
+        ) {
+            if (
+                strlen($word) > 2
+            ) {
+                $wordAsSQL = CBDB::escapeString(
+                    $word
+                );
+
                 $clauses[] = "`searchText` LIKE '%{$wordAsSQL}%'";
             }
         }
 
-        if (empty($clauses)) {
+        if (
+            empty($clauses)
+        ) {
             return null;
         } else {
-            $clauses = implode(' AND ', $clauses);
+            $clauses = implode(
+                ' AND ',
+                $clauses
+            );
+
             return "({$clauses})";
         }
     }
