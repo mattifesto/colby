@@ -1,9 +1,15 @@
 <?php
 
+/**
+ * @deprecated 2022_01_15
+ *
+ *      This task is deprecated and is left in to handle any remaining scheduled
+ *      tasks. It can be removed in verion 676.
+ */
 final class
 CB_Task_GenerateUsername {
 
-    /* -- CBTasks2 interfaces -- -- -- -- -- */
+    /* -- CBTasks2 interfaces -- */
 
 
 
@@ -16,63 +22,6 @@ CB_Task_GenerateUsername {
     CBTasks2_run(
         string $userModelCBID
     ): ?stdClass {
-        $userModel = CBModels::fetchModelByCBID(
-            $userModelCBID
-        );
-
-
-        /**
-         * If the user model doesn't exist, complete the task.
-         */
-
-        if (
-            $userModel === null
-        ) {
-            return null;
-        }
-
-
-        /**
-         * If the model is not a user model, complete the task.
-         */
-
-        $userModelClassName = CBModel::getClassName(
-            $userModel
-        );
-
-        if (
-            $userModelClassName !== 'CBUser'
-        ) {
-            return null;
-        }
-
-
-        /**
-         * If the user doesn't have a username, assign them a randomly generated
-         * username.
-         */
-
-        $currentUsernameCBID = CB_Username::fetchUsernameCBIDByUserCBID(
-            $userModelCBID
-        );
-
-        if ($currentUsernameCBID === null) {
-            $newUsernameSpec = CB_Username::generateRandomUsernameSpec(
-                $userModelCBID
-            );
-
-            CBDB::transaction(
-                function (
-                ) use (
-                    $newUsernameSpec
-                ) {
-                    CBModels::save(
-                        $newUsernameSpec
-                    );
-                }
-            );
-        }
-
         return null;
     }
     /* CBTasks2_run() */
