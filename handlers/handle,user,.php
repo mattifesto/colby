@@ -10,31 +10,23 @@ return (function () {
         return 0;
     }
 
-    $prettyUsername = $stubs[1];
+    $requestedPrettyUsername = $stubs[1];
 
     if (
         !CB_Username::isPrettyUsernameValid(
-            $prettyUsername
+            $requestedPrettyUsername
         )
     ) {
         return 0;
     }
 
-    $usernameModelCBID = CB_Username::prettyUsernameToUsernameModelCBID(
-        $prettyUsername
+    $userModelCBID = CBUser::prettyUsernameToUserModelCBID(
+        $requestedPrettyUsername
     );
 
     if (
-        $usernameModelCBID === null
+        $userModelCBID === null
     ) {
-        return 0;
-    }
-
-    $userModelCBID = CB_Username::fetchUserCBIDByUsernameCBID(
-        $usernameModelCBID
-    );
-
-    if ($userModelCBID === null) {
         return 0;
     }
 
@@ -42,9 +34,27 @@ return (function () {
         $userModelCBID
     );
 
+    $userModelPrettyUsername = CBUser::getPrettyUsername(
+        $userModel
+    );
+
+    if (
+        $requestedPrettyUsername !== $userModelPrettyUsername
+    ) {
+        header(
+            "Location: /user/{$userModelPrettyUsername}/",
+            true,
+            301
+        );
+
+        return 1;
+    }
+
     $currentUserModelCBID = ColbyUser::getCurrentUserCBID();
 
-    if ($currentUserModelCBID !== $userModelCBID) {
+    if (
+        $currentUserModelCBID !== $userModelCBID
+    ) {
         $userPublicProfileIsEnabled = CBUser::getPublicProfileIsEnabled(
             $userModel
         );
