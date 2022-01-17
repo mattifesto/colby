@@ -181,7 +181,6 @@ CBSitePreferences {
             'facebookURL' => trim(
                 CBModel::valueToString($spec, 'facebookURL')
             ),
-            'frontPageID' => CBModel::valueAsID($spec, 'frontPageID'),
             'googleTagManagerID' => trim(
                 CBModel::valueToString($spec, 'googleTagManagerID')
             ),
@@ -267,6 +266,13 @@ CBSitePreferences {
         CBSitePreferences::setEnvironment(
             $model,
             CBSitePreferences::getEnvironment(
+                $spec
+            )
+        );
+
+        CBSitePreferences::setFrontPageModelCBID(
+            $model,
+            CBSitePreferences::getFrontPageModelCBID(
                 $spec
             )
         );
@@ -544,6 +550,57 @@ CBSitePreferences {
      *      Returns an empty string if the property value has not been set.
      */
     static function
+    getFrontPageModelCBID(
+        stdClass $sitePreferencesModel
+    ): ?string {
+        return CBModel::valueAsCBID(
+            $sitePreferencesModel,
+            'frontPageID'
+        );
+    }
+    /* getFrontPageModelCBID() */
+
+
+
+    /**
+     * @param object $sitePreferencesModel
+     * @param string $frontPageModelCBID
+     *
+     * @return void
+     */
+    static function
+    setFrontPageModelCBID(
+        stdClass $sitePreferencesModel,
+        ?string $frontPageModelCBID
+    ): void {
+        if (
+            $frontPageModelCBID !== null &&
+            !CBID::valueIsCBID($frontPageModelCBID)
+        ) {
+            throw new CBExceptionWithValue(
+                'The front page model CBID argument is not valid.',
+                (object)[
+                    'targetModel' => $sitePreferencesModel,
+                    'frontPageModelCBID' => $frontPageModelCBID,
+                ],
+                '2ca8a3dfa005d9247df9178ad21244ebbcf237d2'
+            );
+        }
+
+        $sitePreferencesModel->frontPageID = $frontPageModelCBID;
+    }
+    /* setFrontPageModelCBID() */
+
+
+
+    /**
+     * @param object $sitePreferencesModel
+     *
+     * @return string
+     *
+     *      Returns an empty string if the property value has not been set.
+     */
+    static function
     getYouTubeAPIKey(
         stdClass $sitePreferencesModel
     ): string {
@@ -659,12 +716,17 @@ CBSitePreferences {
 
 
     /**
+     * @TODO 2022_01_16
+     *
+     *      Deprecate this function and use the accessors.
+     *
      * @return CBID|null
      */
-    static function frontPageID(): ?string {
-        return CBModel::valueAsCBID(
-            CBSitePreferences::model(),
-            'frontPageID'
+    static function
+    frontPageID(
+    ): ?string {
+        return CBSitePreferences::getFrontPageModelCBID(
+            CBSitePreferences::model()
         );
     }
     /* frontPageID() */
@@ -1228,6 +1290,11 @@ CBSitePreferences {
 
 
     /**
+     * @TODO 2022_01_16
+     *
+     *      Deprecate this function and use the accessors and save just like you
+     *      would any other model.
+     *
      * @param CBID $frontPageModelCBID
      * @param CBID $testSitePreferencesModelCBID
      *
@@ -1241,16 +1308,6 @@ CBSitePreferences {
         string $testSitePreferencesModelCBID = null
     ): void {
         if (
-            !CBID::valueIsCBID(
-                $frontPageModelCBID
-            )
-        ) {
-            throw new InvalidArgumentException(
-                "'{$frontPageModelCBID}' is not a valid ID"
-            );
-        }
-
-        if (
             $testSitePreferencesModelCBID !== null
         ) {
             $sitePreferencesModelCBID = $testSitePreferencesModelCBID;
@@ -1259,10 +1316,13 @@ CBSitePreferences {
         }
 
         $sitePreferencesSpec = CBModels::fetchSpecByID(
-            CBSitePreferences::ID()
+            $sitePreferencesModelCBID
         );
 
-        $sitePreferencesSpec->frontPageID = $frontPageModelCBID;
+        CBSitePreferences::setFrontPageModelCBID(
+            $sitePreferencesSpec,
+            $frontPageModelCBID
+        );
 
         CBDB::transaction(
             function () use (
