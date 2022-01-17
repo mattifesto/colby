@@ -36,8 +36,11 @@
                     momentModelAsJSON
                 );
 
+                let isForMomentPage = true;
+
                 let momentView = CB_CBView_Moment.createStandardMoment(
-                    momentModel
+                    momentModel,
+                    isForMomentPage
                 );
 
                 let momentViewElement = (
