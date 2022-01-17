@@ -1,6 +1,9 @@
 <?php
 
-class CBExceptionWithValue extends CBException {
+class
+CBExceptionWithValue
+extends
+CBException {
 
     /**
      * @param string $message
