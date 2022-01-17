@@ -43,6 +43,7 @@ final class CBTextBoxViewTests {
 
         $expected = (object)[
             'className' => 'CBMessageView',
+            'CBModel_versionDate_property' => '2022_01_15',
             'markup' => <<<EOT
 
             --- h1
@@ -56,7 +57,7 @@ final class CBTextBoxViewTests {
             and the Willows}.
 
 
-            EOT
+            EOT,
         ];
 
         CBLog::bufferStart();
