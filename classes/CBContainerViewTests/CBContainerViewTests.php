@@ -1,6 +1,7 @@
 <?php
 
-final class CBContainerViewTests {
+final class
+CBContainerViewTests {
 
     /* -- CBTest interfaces -- -- -- -- -- */
 
@@ -11,7 +12,6 @@ final class CBContainerViewTests {
         return [
             (object)[
                 'type' => 'server',
-                'title' => 'CBContainerView',
                 'name' => 'general',
             ],
         ];
@@ -26,7 +26,9 @@ final class CBContainerViewTests {
     /**
      * @return object
      */
-    static function CBTest_general(): stdClass {
+    static function
+    general(
+    ): stdClass {
         $spec = (object)[
             'className' => 'CBContainerView',
             'subviews' => CBViewTests::testSubviewSpecs(),
@@ -85,10 +87,15 @@ final class CBContainerViewTests {
 
 
 
-        $searchText = CBModel::toSearchText($model);
-        $expectedSearchText = CBViewTests::testSubviewSearchText() . ' CBContainerView';
+        $searchText = CBModel::toSearchText(
+            $model
+        );
 
-        if ($searchText !== $expectedSearchText) {
+        $expectedSearchText = CBViewTests::testSubviewSearchText();
+
+        if (
+            $searchText !== $expectedSearchText
+        ) {
             return CBTest::resultMismatchFailure(
                 'toSearchText',
                 $searchText,
@@ -126,6 +133,7 @@ final class CBContainerViewTests {
                 'height' => 800,
                 'width' => 1000,
             ],
+            'CBModel_versionDate_property' => '2022_01_15',
         ];
 
         if ($upgradedSpec != $expectedUpgradedSpec) {
