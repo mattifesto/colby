@@ -44,6 +44,7 @@ final class CBImageTests {
             'extension' => 'jpeg',
             'height' => 600,
             'width' => 800,
+            'CBModel_versionDate_property' => '2022_01_15',
         ];
 
         $upgradedSpec = CBImage::fixAndUpgrade($originalSpec);
