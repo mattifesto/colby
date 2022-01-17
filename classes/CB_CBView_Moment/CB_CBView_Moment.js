@@ -192,7 +192,7 @@
         userLinkElement.className = "CB_CBView_Moment_userLink_element";
 
         userLinkElement.href = (
-            `/user/${publicProfile.CBUser_publicProfile_username}`
+            `/user/${publicProfile.CBUser_publicProfile_prettyUsername}`
         );
 
         headerElement.append(
@@ -216,7 +216,7 @@
         );
 
         userLinkElement.append(
-            " @" + publicProfile.CBUser_publicProfile_username
+            " @" + publicProfile.CBUser_publicProfile_prettyUsername
         );
 
         let timeContainerElement = document.createElement(
