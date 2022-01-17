@@ -16,7 +16,7 @@ CB_SettingsManager_Username {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.38.js',
+                'v675.50.js',
                 cbsysurl()
             ),
         ];

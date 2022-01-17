@@ -329,25 +329,27 @@
 
 
     /**
-     * @param CBID targetUserCBID
+     * @param CBID userModelCBID
      *
      * @return Promise -> string
      */
     async function
     fetchUsername(
-        targetUserCBID
+        userModelCBID
     ) {
         try {
-            let username = await CBAjax.call(
-                "CB_Username",
-                "CB_Username_ajax_fetchUsernameByUserCBID",
+            let publicProfile = await CBAjax.call(
+                "CBUser",
+                "fetchPublicProfileByUserModelCBID",
                 {
-                    targetUserCBID,
+                    userModelCBID,
                 }
             );
 
-            return username;
-        } catch (error) {
+            return publicProfile.CBUser_publicProfile_prettyUsername;
+        } catch (
+            error
+        ) {
             CBErrorHandler.report(
                 error
             );
