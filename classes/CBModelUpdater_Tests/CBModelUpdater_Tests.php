@@ -328,6 +328,18 @@ CBModelUpdater_Tests {
     ): stdClass {
         $modelID = 'dc325defccbfaeb390304b35e4073d2a8c19063a';
 
+        /* reset initial state */
+
+        CBDB::transaction(
+            function () use (
+                $modelID
+            ) {
+                CBModels::deleteByID(
+                    $modelID
+                );
+            }
+        );
+
         $spec = (object)[
             'className' => 'CBMessageView',
             'ID' => $modelID,
@@ -348,6 +360,7 @@ CBModelUpdater_Tests {
             'className' => 'CBMessageView',
             'ID' => $modelID,
             'version' => 1,
+            'CBModel_versionDate_property' => '2022_01_15',
         ];
 
         if (
@@ -395,6 +408,18 @@ CBModelUpdater_Tests {
                 $expectedResult
             );
         }
+
+        /* done */
+
+        CBDB::transaction(
+            function () use (
+                $modelID
+            ) {
+                CBModels::deleteByID(
+                    $modelID
+                );
+            }
+        );
 
         return (object)[
             'succeeded' => true,
