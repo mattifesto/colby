@@ -11,95 +11,6 @@ CB_Username {
      * @param object $args
      *
      *      {
-     *          targetUserCBID: CBID
-     *      }
-     *
-     * @return string
-     */
-    static function
-    CBAjax_CB_Username_ajax_fetchUsernameByUserCBID(
-        stdClass $args
-    ): string {
-        $targetUserCBID = CBModel::valueAsCBID(
-            $args,
-            'targetUserCBID'
-        );
-
-        if ($targetUserCBID === null) {
-            if ($targetUserCBID === null) {
-                throw new CBExceptionWithValue(
-                    'The "targetUserCBID" argument is not valid.',
-                    $args,
-                    '067baca0eb194029dccd3bc41b35ef4a8f10e70f'
-                );
-            }
-        }
-
-        $currentUserCBID = ColbyUser::getCurrentUserCBID();
-
-        if (
-            $targetUserCBID !== $currentUserCBID &&
-            !CBUserGroup::userIsMemberOfUserGroup(
-                $currentUserCBID,
-                'CBAdministratorsUserGroup'
-            )
-        ) {
-            throw new CBException(
-                CBConvert::stringToCleanLine(<<<EOT
-
-                    The current user does not have permission to call this ajax
-                    function.
-
-                EOT),
-                '',
-                '170dfc9a3a8e2824ef69137b9fa971e9472306cb'
-            );
-        }
-
-        $usernameModelCBID = CB_Username::fetchUsernameCBIDByUserCBID(
-            $targetUserCBID
-        );
-
-        if (
-            $usernameModelCBID === null
-        ) {
-            return '';
-        }
-
-        $usernameModel = CBModels::fetchModelByCBID(
-            $usernameModelCBID
-        );
-
-        if (
-            $usernameModel === null
-        ) {
-            return '';
-        }
-
-        return CB_Username::getPrettyUsername(
-            $usernameModel
-        );
-    }
-    /* CBAjax_CB_Username_ajax_fetchUsernameByUserCBID() */
-
-
-
-    /**
-     * @return string
-     */
-    static function
-    CBAjax_CB_Username_ajax_fetchUsernameByUserCBID_getUserGroupClassName(
-    ): string {
-        return 'CBPublicUserGroup';
-    }
-    /* CBAjax_CB_Username_ajax_fetchUsernameByUserCBID_getUserGroupClassName() */
-
-
-
-    /**
-     * @param object $args
-     *
-     *      {
      *          prettyUsername: string
      *      }
      *
@@ -163,66 +74,95 @@ CB_Username {
     CBAjax_CB_Username_ajax_setUsername(
         stdClass $args
     ): stdClass {
-        $targetUserCBID = CBModel::valueAsCBID(
+
+        /* verify target user CBID */
+
+        $targetUserModelCBID = CBModel::valueAsCBID(
             $args,
             'CB_Username_ajax_setUsername_targetUserCBID'
         );
 
         if (
-            !CBID::valueIsCBID($targetUserCBID)
+            !CBID::valueIsCBID(
+                $targetUserModelCBID
+            )
         ) {
             throw new CBExceptionWithValue(
-                'The "targetUserCBID" argument is not valid.',
+                'The target user model CBID argument is not valid.',
                 $args,
                 '0489d7de780341e68fea7f6ee5a107465693101e'
             );
         }
 
-        $requestedUsername = CBModel::valueToString(
+
+        /* verify requested pretty username */
+
+        $requestedPrettyUsername = CBModel::valueToString(
             $args,
             'CB_Username_ajax_setUsername_requestedUsername'
         );
 
         if (
             !CB_Username::isPrettyUsernameValid(
-                $requestedUsername
+                $requestedPrettyUsername
             )
         ) {
             return (object)[
                 'CB_Username_ajax_setUsername_message' => (
-                    "\"${requestedUsername}\" is not a valid username"
+                    "\"${requestedPrettyUsername}\" is not a valid username"
                 ),
             ];
         }
 
-        $newUsernameSpec = CB_Username::createSpec(
-            $requestedUsername,
-            $targetUserCBID
+        /* verify target user spec */
+
+        $targetUserSpec = CBModels::fetchSpecByCBID(
+            $targetUserModelCBID
         );
 
-        $newUsernameModelCBID = CBModel::getCBID(
-            $newUsernameSpec
-        );
-
-        $currentUsernameModelCBID = CB_Username::fetchUsernameCBIDByUserCBID(
-            $targetUserCBID
+        $targetUserSpecClassName = CBModel::getClassName(
+            $targetUserSpec
         );
 
         if (
-            $newUsernameModelCBID === $currentUsernameModelCBID
+            $targetUserSpecClassName !== 'CBUser'
+        ) {
+            return (object)[
+                'CB_Username_ajax_setUsername_message' => (
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        The target user model CBID is not the CBID of a user
+                        model.
+
+                    EOT)
+                ),
+            ];
+        }
+
+        /* verify the request pretty username is different */
+
+        $currentPrettyUsername = CBUser::getPrettyUsername(
+            $targetUserSpec
+        );
+
+        if (
+            $requestedPrettyUsername === $currentPrettyUsername
         ) {
             return (object)[
                 'CB_Username_ajax_setUsername_succeeded' => true,
             ];
         }
 
-        $newUsernameModel = CBModels::fetchModelByCBID(
-            CBModel::getCBID(
-                $newUsernameSpec
-            )
+        /* verify requested pretty username is available */
+
+        $userModelCBID = CBUser::prettyUsernameToUserModelCBID(
+            $requestedPrettyUsername
         );
 
-        if ($newUsernameModel !== null) {
+        if (
+            $userModelCBID !== null &&
+            $userModelCBID !== $targetUserModelCBID
+        ) {
             return (object)[
                 'CB_Username_ajax_setUsername_message' => (
                     'This username is not available.'
@@ -230,13 +170,21 @@ CB_Username {
             ];
         }
 
+
+        /* set and save the requested pretty username */
+
+        CBUser::setPrettyUsername(
+            $targetUserSpec,
+            $requestedPrettyUsername
+        );
+
         CBDB::transaction(
             function (
             ) use (
-                $newUsernameSpec
+                $targetUserSpec
             ) {
                 CBModels::save(
-                    $newUsernameSpec
+                    $targetUserSpec
                 );
             }
         );
@@ -261,11 +209,45 @@ CB_Username {
 
 
 
+    /* -- CBInstall interfaces -- */
+
+
+
+    static function
+    CBInstall_configure(
+    ): void {
+        $usernameCBIDs = CBModels::fetchCBIDsByClassName(
+            'CB_Username'
+        );
+
+        CBDB::transaction(
+            function () use (
+                $usernameCBIDs
+            ) {
+                CBModels::deleteByID(
+                    $usernameCBIDs
+                );
+
+                CBModelAssociations::delete(
+                    null,
+                    'CBUser_to_CB_Username_association'
+                );
+            }
+        );
+    }
     /* -- CBModel interfaces -- */
 
 
 
     /**
+     * @NOTE 2022_01_16
+     *
+     *      This function only exists so that if an existing CB_Username model
+     *      is altered during install before we delete all the CB_Username
+     *      mdoels there won't be a crash.
+     *
+     *      This function can be removed in version 676.
+     *
      * @param object $usernameSpec
      *
      * @return object
@@ -276,297 +258,15 @@ CB_Username {
     ): stdClass {
         $usernameModel = (object)[];
 
-        $usernameSpecActualCBID = CBModel::getCBID(
-            $usernameSpec
-        );
-
-        $usernameSpecPrettyUsername = CB_Username::getPrettyUsername(
-            $usernameSpec
-        );
-
-        $usernameSpecExpectedCBID = (
-            CB_Username::prettyUsernameToUsernameModelCBID(
-                $usernameSpecPrettyUsername
-            )
-        );
-
-        if (
-            $usernameSpecActualCBID !== $usernameSpecExpectedCBID
-        ) {
-            throw new CBExceptionWithValue(
-                'This CB_Username spec does not have a valid CBID',
-                $usernameSpec,
-                '7cb2fd61a8962760c88f6446e1eb3cad8d1f9bd1'
-            );
-        }
-
-        CB_Username::setPrettyUsername(
-            $usernameModel,
-            $usernameSpecPrettyUsername
-        );
-
-        CB_Username::setUserCBID(
-            $usernameModel,
-            CB_Username::getUserCBID(
-                $usernameSpec
-            )
-        );
-
         return $usernameModel;
     }
     /* CBModel_build() */
 
 
 
-    /* -- CBModels interfaces -- */
-
-
-
-    /**
-     * @param [object] $usernameModels
-     *
-     * @return void
-     */
-    static function
-    CBModels_willSave(
-        array $usernameModels
-    ): void {
-        foreach (
-            $usernameModels as $usernameModel
-        ) {
-            $userCBID = CB_Username::getUserCBID(
-                $usernameModel
-            );
-
-            $userModel = CBModels::fetchModelByCBID(
-                $userCBID
-            );
-
-            $userModelClassName = CBModel::getClassName(
-                $userModel
-            );
-
-            if (
-                $userModelClassName !== 'CBUser'
-            ) {
-                throw new CBExceptionWithValue(
-                    CBConvert::stringToCleanLine(<<<EOT
-
-                        The user CBID for this CB_Username model does is not the
-                        CBID of a CBUser model.
-
-                    EOT),
-                    $usernameModel,
-                    'e878f10b66ed483cf03f74551d101e01866fbfae'
-                );
-            }
-
-            $associations = CBModelAssociations::fetch(
-                $userCBID,
-                'CBUser_to_CB_Username_association'
-            );
-
-            /**
-             * Unless some sort of error has occurred, there will be at most one
-             * associated username for a user, but if there are multiple, they
-             * should all be deleted.
-             */
-            foreach (
-                $associations as $association
-            ) {
-                $associatedUsernameModelCBID = $association->associatedID;
-
-                CBModels::deleteByID(
-                    $associatedUsernameModelCBID
-                );
-            }
-
-            CBModelAssociations::add(
-                $userCBID,
-                'CBUser_to_CB_Username_association',
-                CBModel::getCBID(
-                    $usernameModel
-                )
-            );
-        }
-    }
-    /* CBModels_willSave() */
-
-
-
-    /**
-     * @param [CBID] $CBIDs
-     *
-     * @return void
-     */
-    static function
-    CBModels_willDelete(
-        array $usernameModelCBIDs
-    ): void {
-        foreach (
-            $usernameModelCBIDs as $usernameModelCBID
-        ) {
-            CBModelAssociations::delete(
-                null,
-                'CBUser_to_CB_Username_association',
-                $usernameModelCBID
-            );
-
-        }
-    }
-    /* CBModels_willDelete() */
-
-
-
-    /* -- accessors -- */
-
-
-
-    /**
-     * @param object $usernameModel
-     *
-     * @return string
-     */
-    static function
-    getPrettyUsername(
-        stdClass $usernameModel
-    ): string {
-        return CBModel::valueToString(
-            $usernameModel,
-            'CB_Username_prettyUsername'
-        );
-    }
-    /* getUsername() */
-
-
-
-    /**
-     * @param object $usernameModel
-     * @param string $passwordHash
-     *
-     * @return void
-     */
-    static function
-    setPrettyUsername(
-        stdClass $usernameModel,
-        string $prettyUsername
-    ): void {
-        $prettyUsernameIsValid = CB_Username::isPrettyUsernameValid(
-            $prettyUsername
-        );
-
-        if (
-            $prettyUsernameIsValid !== true
-        ) {
-            throw new CBExceptionWithValue(
-                CBConvert::stringToCleanLine(<<<EOT
-
-                    CB_Username::setPrettyUsername() can't be called with an
-                    invalid pretty username.
-
-                EOT),
-                $prettyUsername,
-                'bd58123f8ee2e8c45ac8014cdf30dd6a472b8813'
-            );
-        }
-
-        $canonicalUsername = CB_Username::prettyUsernameToCanonicalUsername(
-            $prettyUsername
-        );
-
-        $usernameModel->CB_Username_prettyUsername = $prettyUsername;
-        $usernameModel->CB_Username_canonicalUsername = $canonicalUsername;
-    }
-    /* setPrettyUsername() */
-
-
-
-    /**
-     * @param object $usernameModel
-     *
-     * @return string|null
-     */
-    static function
-    getUserCBID(
-        stdClass $usernameModel
-    ): ?string {
-        return CBModel::valueAsCBID(
-            $usernameModel,
-            'CB_Username_userCBID'
-        );
-    }
-    /* getUserCBID() */
-
-
-
-    /**
-     * @param object $usernameModel
-     *
-     * @return void
-     */
-    static function
-    setUserCBID(
-        stdClass $usernameModel,
-        string $userCBID
-    ): void {
-        $valueIsCBID = CBID::valueIsCBID(
-            $userCBID
-        );
-
-        if ($valueIsCBID !== true) {
-            throw new CBExceptionWithValue(
-                'The $userCBID argument is not a CBID.',
-                $userCBID,
-                'eb69683965e18e5c8f578463931ae355bb7fcb46'
-            );
-        }
-
-        $usernameModel->CB_Username_userCBID = $userCBID;
-    }
-    /* setUserCBID() */
-
-
-
     /* -- functions -- -- -- -- -- */
 
 
-
-    /**
-     * This function will return a spec with its CBID set to the appropriate
-     * CBID for the username.
-     *
-     * @param string $prettyUsername
-     * @param CBID $userCBID
-     *
-     * @return object
-     */
-    static function
-    createSpec(
-        string $prettyUsername,
-        string $userCBID
-    ): object {
-        $usernameModelCBID = CB_Username::prettyUsernameToUsernameModelCBID(
-            $prettyUsername
-        );
-
-        $usernameSpec = CBModel::createSpec(
-            'CB_Username',
-            $usernameModelCBID
-        );
-
-        CB_Username::setPrettyUsername(
-            $usernameSpec,
-            $prettyUsername
-        );
-
-        CB_Username::setUserCBID(
-            $usernameSpec,
-            $userCBID
-        );
-
-        return $usernameSpec;
-    }
-    /* createSpec() */
 
 
 
@@ -584,32 +284,22 @@ CB_Username {
         if (
             $currentUserPrettyUsername === false
         ) {
-            $currentUserCBID = ColbyUser::getCurrentUserCBID();
+            $currentUserModelCBID = ColbyUser::getCurrentUserCBID();
 
             if (
-                $currentUserCBID === null
+                $currentUserModelCBID === null
             ) {
                 $currentUserPrettyUsername = null;
-            } else {
-                $currentUserUsernameModelCBID = (
-                    CB_Username::fetchUsernameCBIDByUserCBID(
-                        $currentUserCBID
-                    )
+            }
+
+            else {
+                $currentUserModel = CBModels::fetchModelByCBID(
+                    $currentUserModelCBID
                 );
 
-                if (
-                    $currentUserUsernameModelCBID === null
-                ) {
-                    $currentUserPrettyUsername = null;
-                } else {
-                    $currentUserUsernameModel = CBModels::fetchModelByCBID(
-                        $currentUserUsernameModelCBID
-                    );
-
-                    $currentUserPrettyUsername = CB_Username::getPrettyUsername(
-                        $currentUserUsernameModel
-                    );
-                }
+                $currentUserPrettyUsername = CBUser::getPrettyUsername(
+                    $currentUserModel
+                );
             }
         }
 
@@ -657,48 +347,6 @@ CB_Username {
 
 
 
-    /**
-     * @return stdClass
-     *
-     *      The username in the returned spec been confirmed to be available.
-     */
-    static function
-    generateRandomUsernameSpec(
-        string $userCBID
-    ): stdClass {
-        $randomCBID = CBID::generateRandomCBID();
-
-        while (true) {
-            $randomPrettyUsername = (
-                'user_' .
-                mb_substr(
-                    $randomCBID,
-                    0,
-                    25
-                )
-            );
-
-            $randomUsernameSpec = CB_Username::createSpec(
-                $randomPrettyUsername,
-                $userCBID
-            );
-
-            $usernameModelCBID = CBModel::getCBID(
-                $randomUsernameSpec
-            );
-
-            $existingUsernameModel = CBModels::fetchModelByCBID(
-                $usernameModelCBID
-            );
-
-            if ($existingUsernameModel === null) {
-                break;
-            }
-        }
-
-        return $randomUsernameSpec;
-    }
-    /* generateRandomUsername() */
 
 
 
