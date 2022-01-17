@@ -739,7 +739,9 @@ CB_Moment {
             'CB_Timestamp'
         );
 
-        $momentModel->CB_Moment_cbtimestamp_property = $verifiedCBTimestampModel;
+        $momentModel->CB_Moment_cbtimestamp_property = (
+            $verifiedCBTimestampModel
+        );
     }
     /* setCBTimestamp() */
 
