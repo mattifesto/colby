@@ -13,7 +13,6 @@ final class CBTextViewTests {
         return [
             (object)[
                 'name' => 'upgrade',
-                'title' => 'CBTextView upgrade()',
                 'type' => 'server',
             ],
         ];
@@ -46,6 +45,7 @@ final class CBTextViewTests {
         $expected = (object)[
             'className' => 'CBMessageView',
             'markup' => CBMessageMarkup::stringToMarkup($text),
+            'CBModel_versionDate_property' => '2022_01_15',
         ];
 
         CBLog::bufferStart();
