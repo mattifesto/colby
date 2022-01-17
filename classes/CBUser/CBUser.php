@@ -280,6 +280,11 @@ CBUser {
      *      }
      *
      * @return object
+     *
+     *      {
+     *          CBUser_publicProfile_fullName: string
+     *          CBUser_publicProfile_prettyUsername: string
+     *      }
      */
     static function
     CBAjax_fetchPublicProfileByUserModelCBID(
