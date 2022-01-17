@@ -13,7 +13,6 @@ final class CBUsers_Tests {
         return [
             (object)[
                 'name' => 'upgrade',
-                'title' => 'CBUser upgrade',
                 'type' => 'server',
             ],
         ];
@@ -29,10 +28,13 @@ final class CBUsers_Tests {
     /**
      * @return object
      */
-    static function CBTest_upgrade(): stdClass {
+    static function
+    upgrade(
+    ): stdClass {
         $originalSpecs = [
             (object)[
                 'className' => 'CBUser',
+                'CBUser_prettyUsername_property' => 'BobBobberts',
             ],
             (object)[
                 'className' => 'CBUser',
@@ -40,6 +42,7 @@ final class CBUsers_Tests {
                     'name' => 'Bob',
                     'id' => '503',
                 ],
+                'CBUser_prettyUsername_property' => 'BobBobberts',
             ],
             (object)[
                 'className' => 'CBUser',
@@ -49,6 +52,7 @@ final class CBUsers_Tests {
                 ],
                 'facebookUserID' => 504,
                 'facebookName' => 'Chet',
+                'CBUser_prettyUsername_property' => 'BobBobberts',
             ],
         ];
 
@@ -57,16 +61,22 @@ final class CBUsers_Tests {
                 'className' => 'CBUser',
                 'facebookUserID' => null,
                 'facebookName' => '',
+                'CBUser_prettyUsername_property' => 'BobBobberts',
+                'CBModel_versionDate_property' => '2022_01_15',
             ],
             (object)[
                 'className' => 'CBUser',
                 'facebookUserID' => 503,
                 'facebookName' => 'Bob',
+                'CBUser_prettyUsername_property' => 'BobBobberts',
+                'CBModel_versionDate_property' => '2022_01_15',
             ],
             (object)[
                 'className' => 'CBUser',
                 'facebookUserID' => 504,
                 'facebookName' => 'Chet',
+                'CBUser_prettyUsername_property' => 'BobBobberts',
+                'CBModel_versionDate_property' => '2022_01_15',
             ],
         ];
 
