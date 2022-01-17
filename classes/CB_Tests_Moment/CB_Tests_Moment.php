@@ -373,7 +373,6 @@ CB_Tests_Moment {
 
         /* done */
 
-
         return (object)[
             'succeeded' => 'true',
         ];
