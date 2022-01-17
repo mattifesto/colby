@@ -54,29 +54,32 @@ CBModelsTests {
     ): array {
         return [
             (object)[
+                'name' => 'delete',
+                'type' => 'server',
+            ],
+            (object)[
                 'name' => 'fetchModelByID',
                 'type' => 'server',
             ],
-
             (object)[
                 'name' => 'fetchModelsByID',
                 'type' => 'server',
             ],
-
             (object)[
                 'name' => 'fetchModelsByID2_maintainPositions',
                 'type' => 'server',
             ],
-
             (object)[
                 'name' => 'saveSpecWithoutID',
                 'type' => 'server',
             ],
 
+
+            /* JavaScript */
+
             (object)[
                 'name' => 'general',
             ],
-
             (object)[
                 'name' => 'saveAfterSave',
             ],
@@ -87,6 +90,231 @@ CBModelsTests {
 
 
     /* -- tests -- -- -- -- -- */
+
+
+    /**
+     * @return object
+     */
+    static function
+    delete(
+    ): stdClass {
+         $momentModelCBID = 'aa944cec04cbd5ffb5a99b185f9f470ffa634e64';
+         $momentModelUnixTimestamp = 445647600;
+         $momentModelFemtoseconds = 355495993424675;
+
+         $momentModelCBIDAsSQL = CBID::toSQL(
+             $momentModelCBID
+         );
+
+         /* initialize state */
+
+         CBDB::transaction(
+             function () use (
+                 $momentModelCBID
+             ) {
+                 CBModels::deleteByID(
+                     $momentModelCBID
+                 );
+             }
+         );
+
+         $momentSpec = CBModel::createSpec(
+             'CB_Moment',
+             $momentModelCBID
+         );
+
+         CB_Moment::setAuthorUserModelCBID(
+             $momentSpec,
+             ColbyUser::getCurrentUserCBID()
+         );
+
+         CB_Moment::setText(
+             $momentSpec,
+             "test {$momentModelCBID}"
+         );
+
+         $momentCBTimestamp = CB_Timestamp::from(
+             $momentModelUnixTimestamp,
+             $momentModelFemtoseconds
+         );
+
+         CB_Timestamp::reserve(
+             $momentCBTimestamp,
+             $momentModelCBID
+         );
+
+         CB_Moment::setCBTimestamp(
+             $momentSpec,
+             $momentCBTimestamp
+         );
+
+         CBDB::transaction(
+             function () use (
+                 $momentSpec
+             ) {
+                 CBModels::save(
+                     $momentSpec
+                 );
+             }
+         );
+
+
+         /* --- */
+
+         $testName = 'CBModels2 row exists';
+
+         $SQL = <<<EOT
+
+            SELECT
+            COUNT(*)
+
+            FROM
+            CBModels2_table
+
+            WHERE
+            CBModels2_CBID_column = {$momentModelCBIDAsSQL}
+
+         EOT;
+
+         $expectedResult = '1';
+
+         $actualResult = CBDB::SQLToValue2(
+             $SQL
+         );
+
+         if (
+             $actualResult !== $expectedResult
+         ) {
+             return CBTest::resultMismatchFailure(
+                 $testName,
+                 $actualResult,
+                 $expectedResult
+             );
+         }
+
+
+         /* delete */
+
+         CBDB::transaction(
+             function () use (
+                 $momentModelCBID
+             ) {
+                 CBModels::deleteByID(
+                     $momentModelCBID
+                 );
+             }
+         );
+
+
+         /* --- */
+
+         $testName = 'CBModels2 row doesn\'t exist';
+
+         $SQL = <<<EOT
+
+            SELECT
+            COUNT(*)
+
+            FROM
+            CBModels2_table
+
+            WHERE
+            CBModels2_CBID_column = {$momentModelCBIDAsSQL}
+
+         EOT;
+
+         $expectedResult = '0';
+
+         $actualResult = CBDB::SQLToValue2(
+             $SQL
+         );
+
+         if (
+             $actualResult !== $expectedResult
+         ) {
+             return CBTest::resultMismatchFailure(
+                 $testName,
+                 $actualResult,
+                 $expectedResult
+             );
+         }
+
+
+         /* --- */
+
+         $testName = 'CBModels row doesn\'t exist';
+
+         $SQL = <<<EOT
+
+            SELECT
+            COUNT(*)
+
+            FROM
+            CBModels
+
+            WHERE
+            ID = {$momentModelCBIDAsSQL}
+
+         EOT;
+
+         $expectedResult = '0';
+
+         $actualResult = CBDB::SQLToValue2(
+             $SQL
+         );
+
+         if (
+             $actualResult !== $expectedResult
+         ) {
+             return CBTest::resultMismatchFailure(
+                 $testName,
+                 $actualResult,
+                 $expectedResult
+             );
+         }
+
+
+         /* --- */
+
+         $testName = 'CBModelVersions rows don\'t exist';
+
+         $SQL = <<<EOT
+
+            SELECT
+            COUNT(*)
+
+            FROM
+            CBModelVersions
+
+            WHERE
+            ID = {$momentModelCBIDAsSQL}
+
+         EOT;
+
+         $expectedResult = '0';
+
+         $actualResult = CBDB::SQLToValue2(
+             $SQL
+         );
+
+         if (
+             $actualResult !== $expectedResult
+         ) {
+             return CBTest::resultMismatchFailure(
+                 $testName,
+                 $actualResult,
+                 $expectedResult
+             );
+         }
+
+
+         /* done */
+
+         return (object)[
+             'succeeded' => 'true',
+         ];
+    }
+    /* delete() */
 
 
 
