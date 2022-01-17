@@ -1,6 +1,7 @@
 <?php
 
-final class CBBackgroundViewTests {
+final class
+CBBackgroundViewTests {
 
     /**
      * @return [object]
@@ -9,7 +10,6 @@ final class CBBackgroundViewTests {
         return [
             (object)[
                 'name' => 'general',
-                'title' => 'CBBackgroundView',
                 'type' => 'server',
             ],
         ];
@@ -22,7 +22,9 @@ final class CBBackgroundViewTests {
     /**
      * @return object
      */
-    static function CBTest_general(): stdClass {
+    static function
+    general(
+    ): stdClass {
         $spec = (object)[
             'className' => 'CBBackgroundView',
             'children' => CBViewTests::testSubviewSpecs(),
@@ -50,10 +52,15 @@ final class CBBackgroundViewTests {
             );
         }
 
-        $searchText = CBModel::toSearchText($model);
-        $expectedSearchText = CBViewTests::testSubviewSearchText() . ' CBBackgroundView';
+        $searchText = CBModel::toSearchText(
+            $model
+        );
 
-        if ($searchText !== $expectedSearchText) {
+        $expectedSearchText = CBViewTests::testSubviewSearchText();
+
+        if (
+            $searchText !== $expectedSearchText
+        ) {
             return CBTest::resultMismatchFailure(
                 'toSearchText',
                 $searchText,
@@ -65,6 +72,7 @@ final class CBBackgroundViewTests {
         $expectedUpgradedSpec = (object)[
             'className' => 'CBBackgroundView',
             'children' => CBViewTests::testSubviewUpgradedSpecs(),
+            'CBModel_versionDate_property' => '2022_01_15',
         ];
 
         if ($upgradedSpec != $expectedUpgradedSpec) {
