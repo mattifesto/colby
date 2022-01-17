@@ -1,6 +1,7 @@
 <?php
 
-final class CBView_CBSearchResults {
+final class
+CBView_CBSearchResults {
 
 
 
@@ -79,7 +80,9 @@ final class CBView_CBSearchResults {
          *      document here.
          */
 
-        if ($searchQuery === '') {
+        if (
+            $searchQuery === ''
+        ) {
             $searchQuery = trim(
                 cb_query_string_value(
                     'search-for'
@@ -87,7 +90,9 @@ final class CBView_CBSearchResults {
             );
         }
 
-        if ($searchQuery === '') {
+        if (
+            $searchQuery === ''
+        ) {
             return;
         }
 
@@ -98,11 +103,29 @@ final class CBView_CBSearchResults {
 
                 <?php
 
+                /* results from CBModels */
+
+                $searchResults = CBModels::fetchSearchResults(
+                    $searchQuery
+                );
+
+                foreach (
+                    $searchResults as $searchResult
+                ) {
+                    CBView_CBSearchResults::renderResult(
+                        $searchResult
+                    );
+                }
+
+                /* results from CBPages */
+
                 $searchClause = CBPages::searchClauseFromString(
                     $searchQuery
                 );
 
-                if (empty($searchClause)) {
+                if (
+                    empty($searchClause)
+                ) {
                     $pagesKeyValueData = [];
                 } else {
                     $SQL = <<<END
@@ -123,8 +146,12 @@ final class CBView_CBSearchResults {
                     );
                 }
 
-                if (count($pagesKeyValueData) > 0) {
-                    foreach ($pagesKeyValueData as $pageKeyValueData) {
+                if (
+                    count($pagesKeyValueData) > 0
+                ) {
+                    foreach (
+                        $pagesKeyValueData as $pageKeyValueData
+                    ) {
                         CBView_CBSearchResults::renderResult(
                             $pageKeyValueData
                         );
@@ -186,43 +213,66 @@ final class CBView_CBSearchResults {
 
 
     /**
-     * @param object $pageKeyValueData
+     * @param object $searchResult
      *
      * @return void
      */
     private static function
     renderResult(
-        stdClass $pageKeyValueData
+        stdClass $searchResult
     ): void {
-        $URI = CBModel::valueToString(
-            $pageKeyValueData,
-            'URI'
+        $className = CBModel::getClassName(
+            $searchResult
         );
 
-        $URL = cbsiteurl() . "/{$URI}/";
-
-        $title = CBModel::valueToString(
-            $pageKeyValueData,
-            'title'
-        );
-
-        $description = CBModel::valueToString(
-            $pageKeyValueData,
-            'description'
-        );
-
-        $imageURL = CBImage::valueToFlexpath(
-            $pageKeyValueData,
-            'image',
-            'rl320',
-            cbsiteurl()
-        );
-
-        if (empty($imageURL)) {
-            $imageURL = CBModel::valueToString(
-                $pageKeyValueData,
-                'thumbnailURL'
+        if (
+            $className === 'CB_SearchResult'
+        ) {
+            $URL = CB_SearchResult::getURL(
+                $searchResult
             );
+
+            $title = CB_SearchResult::getTitle(
+                $searchResult
+            );
+
+            $description = '';
+            $imageURL = '';
+        } else {
+            $pageKeyValueData = $searchResult;
+
+            $URI = CBModel::valueToString(
+                $pageKeyValueData,
+                'URI'
+            );
+
+            $URL = cbsiteurl() . "/{$URI}/";
+
+            $title = CBModel::valueToString(
+                $pageKeyValueData,
+                'title'
+            );
+
+            $description = CBModel::valueToString(
+                $pageKeyValueData,
+                'description'
+            );
+
+            $imageURL = CBImage::valueToFlexpath(
+                $pageKeyValueData,
+                'image',
+                'rl320',
+                cbsiteurl()
+            );
+
+            if (
+                empty($imageURL)
+            ) {
+                $imageURL = CBModel::valueToString(
+                    $pageKeyValueData,
+                    'thumbnailURL'
+                );
+            }
         }
 
         ?>
@@ -237,7 +287,11 @@ final class CBView_CBSearchResults {
 
                     <?php
 
-                    if (empty($imageURL)) {
+                    if (
+                        empty(
+                            $imageURL
+                        )
+                    ) {
                         CBArtworkElement::render(
                             [
                                 'aspectRatioWidth' => 1,
@@ -293,8 +347,13 @@ final class CBView_CBSearchResults {
         string $description,
         string $URL
     ): void {
-        $titleAsCBMessage = cbmessage($title);
-        $descriptionAsCBMessage = cbmessage($description);
+        $titleAsCBMessage = cbmessage(
+            $title
+        );
+
+        $descriptionAsCBMessage = cbmessage(
+            $description
+        );
 
         $cbmessage = <<<EOT
 
