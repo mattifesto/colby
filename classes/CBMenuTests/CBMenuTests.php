@@ -13,7 +13,6 @@ final class CBMenuTests {
         return [
             (object)[
                 'name' => 'general',
-                'title' => 'CBMenu',
                 'type' => 'server',
             ],
         ];
@@ -28,7 +27,9 @@ final class CBMenuTests {
     /**
      * @return object
      */
-    static function CBTest_general(): stdClass {
+    static function
+    general(
+    ): stdClass {
         $spec = (object)[
             'className' => 'CBMenu',
             'items' => [
@@ -67,10 +68,15 @@ final class CBMenuTests {
 
         /* toSearchText */
 
-        $actualSearchText = CBModel::toSearchText($actualModel);
-        $expectedSearchText = 'CBMenu';
+        $actualSearchText = CBModel::toSearchText(
+            $actualModel
+        );
 
-        if ($actualSearchText !== $expectedSearchText) {
+        $expectedSearchText = '';
+
+        if (
+            $actualSearchText !== $expectedSearchText
+        ) {
             return CBTest::resultMismatchFailure(
                 'toSearchText',
                 $actualSearchText,
@@ -91,6 +97,7 @@ final class CBMenuTests {
                     'value' => 42,
                 ],
             ],
+            'CBModel_versionDate_property' => '2022_01_15',
         ];
 
         if ($actualUpgradedSpec != $expectedUpgradedSpec) {
