@@ -116,14 +116,31 @@
 
     /**
      * @param object momentModel
+     * @param bool isForMomentPage
+     *
+     *      If this argument is true, the moment will not have click event
+     *      handlers to navigate to the moment page since we already are on the
+     *      moment page.
      *
      * @return CB_CBView_Moment
      */
     function
     createStandardMoment(
-        momentModel
+        momentModel,
+        isForMomentPage
     ) {
         let momentView = create();
+
+        /**
+         * If you select some of the moment text the "click" event will be
+         * raised after the text is selected. This code handles the
+         * "selectionchange" event by setting this variable to true so the next
+         * time the code handles the "click" event it knows to ignore the click.
+         *
+         * This is becuase users should be able to select the text of a moment
+         * without navigating to the moment page.
+         */
+        let ignoreClickEvent = false;
 
         momentView.CB_CBView_Moment_getElement().classList.add(
             "CB_CBView_Moment_standard_element"
@@ -133,14 +150,80 @@
             momentModel
         );
 
-        momentView.CB_CBView_Moment_getElement().addEventListener(
-            "click",
-            function () {
-                window.location.assign(
-                    `/moment/${momentModelCBID}`
-                );
-            }
-        );
+        if (
+            isForMomentPage !== true
+        ) {
+            momentView.CB_CBView_Moment_getElement().addEventListener(
+                "click",
+                function () {
+                    if (
+                        ignoreClickEvent
+                    ) {
+                        ignoreClickEvent = false;
+
+                        return;
+                    }
+
+                    window.location.assign(
+                        `/moment/${momentModelCBID}`
+                    );
+                }
+            );
+
+            document.addEventListener(
+                "selectionchange",
+                function () {
+                    let selection = document.getSelection();
+
+                    /**
+                     * If the selection started or ended on an element outside
+                     * the view element the click event we listen for will not
+                     * be raised.
+                     */
+
+                    let momentViewElement = (
+                        momentView.CB_CBView_Moment_getElement()
+                    );
+
+                    let momentViewElementContainsAnchorNode = momentViewElement.contains(
+                        selection.anchorNode
+                    );
+
+                    let momentViewElementContainsFocusNode = momentViewElement.contains(
+                        selection.focusNode
+                    );
+
+                    if (
+                        !momentViewElementContainsAnchorNode  ||
+                        !momentViewElementContainsFocusNode
+                    ) {
+                        /* reset ignoreClickEvent */
+                        ignoreClickEvent = false;
+
+                        return;
+                    }
+
+                    /**
+                     * If the user click on the text, that will be considered a
+                     * selection and we want it to be considered a click. So if
+                     * the selected text is empty, we treat it as a click.
+                     */
+
+                    let selectedText = selection.toString();
+
+                    if (
+                        selectedText === ""
+                    ) {
+                        /* reset ignoreClickEvent */
+                        ignoreClickEvent = false;
+
+                        return;
+                    }
+
+                    ignoreClickEvent = true;
+                }
+            );
+        }
 
         momentView.CB_CBView_Moment_append(
             createHeaderElement(
