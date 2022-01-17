@@ -220,7 +220,7 @@ CBAdminPageForPagesFind {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.49.js',
+                'v675.51.js',
                 cbsysurl()
             ),
         ];
@@ -285,6 +285,7 @@ CBAdminPageForPagesFind {
     CBHTMLOutput_requiredClassNames(
     ): array {
         return [
+            'CB_UI',
             'CBAjax',
             'CBConvert',
             'CBImage',

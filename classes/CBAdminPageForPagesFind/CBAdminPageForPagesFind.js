@@ -1,4 +1,5 @@
 /* globals
+    CB_UI,
     CBAjax,
     CBConvert,
     CBImage,
@@ -140,7 +141,10 @@
                     textElement2
                 );
 
-                textElement2.textContent =  page.keyValueData.description;
+                textElement2.textContent = (
+                    page.keyValueData.description ||
+                    CB_UI.getNonBreakingSpaceCharacter()
+                );
 
                 sectionItemElement.appendChild(
                     CBUI.createElement(
