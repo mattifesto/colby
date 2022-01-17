@@ -1682,7 +1682,7 @@ CBUser {
             true
         ) {
             $randomPrettyUsername = (
-                'user_' .
+                'user' .
                 mb_substr(
                     $randomCBID,
                     0,
