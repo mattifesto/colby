@@ -72,6 +72,12 @@
 
 
 
+.CBUIStringEditor2 textarea {
+    max-height: 50vh;
+}
+
+
+
 /*  Note 1:
 
     Setting the line height and min-height is important because of an odd edge
