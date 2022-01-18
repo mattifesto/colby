@@ -1086,19 +1086,31 @@ CBModels {
     static function
     fetchSitemapInformaton(
     ): array {
+        if (
+            CBConfiguration::secondaryDomainsShouldRedirectToPrimaryDomain()
+        ) {
+            $domain = CBConfiguration::primaryDomain();
+        } else {
+            $domain = CBRequest::requestDomain();
+        }
+
         $sitemapInformation = [
             (object)[
-                'CBModels_sitemapInformation_URL' => '/',
+                'CBModels_sitemapInformation_URL' => "https://{$domain}/",
                 'CBModels_sitemapInformation_modified' => null,
             ],
         ];
+
+        $domainAsSQL = CBDB::escapeString(
+            $domain
+        );
 
         $SQL = <<<EOT
 
             SELECT
 
             CONCAT(
-                "/",
+                "https://${domainAsSQL}/",
                 URI,
                 "/"
             )
@@ -1128,7 +1140,10 @@ CBModels {
 
             SELECT
 
-            CBModels2_URLPath_column
+            CONCAT(
+                "https://${domainAsSQL}",
+                CBModels2_URLPath_column
+            )
             AS CBModels_sitemapInformation_URL,
 
             CBModels2_modified_column
