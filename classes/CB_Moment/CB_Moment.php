@@ -52,6 +52,28 @@ CB_Moment {
             return $response;
         }
 
+        $currentUserModel = CBModelCache::fetchModelByID(
+            $currentUserModelCBID
+        );
+
+        $publicProfileIsEnabled = CBUser::getPublicProfileIsEnabled(
+            $currentUserModel
+        );
+
+        if (
+            $publicProfileIsEnabled !== true
+        ) {
+            $response->CB_Moment_create_userErrorMessage = (
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    You are not allowed to create public content.
+
+                EOT)
+            );
+
+            return $response;
+        }
+
         $text = trim(
             CBModel::valueToString(
                 $args,
@@ -235,6 +257,40 @@ CB_Moment {
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
+
+
+    /**
+     * @return [[<name>, <value>]]
+     */
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array {
+        $showMomentEditor = false;
+        $currentUserModelCBID = ColbyUser::getCurrentUserCBID();
+
+        if (
+            $currentUserModelCBID !== null
+        ) {
+            $currentUserModel = CBModelCache::fetchModelByID(
+                $currentUserModelCBID
+            );
+
+            $publicProfileIsEnabled = CBUser::getPublicProfileIsEnabled(
+                $currentUserModel
+            );
+
+            $showMomentEditor = $publicProfileIsEnabled;
+        }
+
+        return [
+            [
+                'CB_Moment_showMomentEditor_jsvariable',
+                $showMomentEditor,
+            ],
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptVariables() */
 
 
 
