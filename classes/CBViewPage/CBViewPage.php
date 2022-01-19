@@ -399,6 +399,29 @@ CBViewPage {
     ): stdClass {
 
         /**
+         * 2022_01_19
+         *
+         *      We now expect the URI to be in correct form when we build this
+         *      spec. This cause some issues with some existing pages that had
+         *      more slashes than they needed.
+         */
+
+        $URI = CBViewPage::getURI(
+            $spec
+        );
+
+        $URI = trim(
+            $URI,
+            "/ \n\r\t\v\x00"
+        );
+
+        CBViewPage::setURI(
+            $spec,
+            $URI
+        );
+
+
+        /**
          * @NOTE 2020_12_22 version 675
          *
          *      The selectedMainMenuItemName propery has been partially
@@ -427,7 +450,9 @@ CBViewPage {
             }
         }
 
-        unset($spec->selectedMainMenuItemName);
+        unset(
+            $spec->selectedMainMenuItemName
+        );
 
 
         /**
