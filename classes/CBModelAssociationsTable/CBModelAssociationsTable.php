@@ -97,6 +97,38 @@ CBModelAssociationsTable {
 
 
         /**
+         * Version 675.52.1
+         *
+         * If the column CBModelAssociations_sortingValueDifferentiator_column
+         * exists we need to remove the AUTOINCREMENT attribute first so that
+         * the unique index associated with it can be deleted.
+         */
+        if (
+            CBDBA::tableHasColumnNamed(
+                'CBModelAssociations',
+                'CBModelAssociations_sortingValueDifferentiator_column'
+            )
+        ) {
+            $SQL = <<<EOT
+
+                ALTER TABLE
+                CBModelAssociations
+
+                CHANGE COLUMN
+                CBModelAssociations_sortingValueDifferentiator_column
+                CBModelAssociations_sortingValueDifferentiator_column
+                BIGINT UNSIGNED NOT NULL DEFAULT 0
+
+            EOT;
+
+            Colby::query(
+                $SQL
+            );
+        }
+
+
+
+        /**
          * Version 675.48
          *
          * The index named CBModelAssociations_sortedListOfModels_key was
