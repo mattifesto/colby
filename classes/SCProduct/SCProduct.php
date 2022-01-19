@@ -43,15 +43,23 @@ SCProduct {
 
         $associationKey = 'CBModelToCBImageAssociation';
 
-        CBModelAssociations::replaceAssociatedID(
-            $productModel->ID,
-            $associationKey,
-            $mainArtworkImageModel->ID
-        );
+        CBDB::transaction(
+            function () use (
+                $productModel,
+                $associationKey,
+                $mainArtworkImageModel
+            ) {
+                CBModelAssociations::replaceAssociatedID(
+                    $productModel->ID,
+                    $associationKey,
+                    $mainArtworkImageModel->ID
+                );
 
-        SCProduct::updateProductPageThumbnail(
-            $productModel,
-            $mainArtworkImageModel
+                SCProduct::updateProductPageThumbnail(
+                    $productModel,
+                    $mainArtworkImageModel
+                );
+            }
         );
     }
     /* CBArtworkCollection_UpdatedTask_notify() */
@@ -406,6 +414,8 @@ SCProduct {
 
 
     /**
+     * You must call this function inside a database transaction.
+     *
      * @param object $productModel
      *
      *      This is the model for the product, not the spec.
