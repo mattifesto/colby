@@ -381,7 +381,9 @@ CBViewPageTests {
      *
      * @return object
      */
-    static function CBTest_upgrade(): stdClass {
+    static function
+    upgrade(
+    ): stdClass {
 
         /* test 1 */
 
@@ -403,6 +405,7 @@ CBViewPageTests {
             'sections' => CBViewTests::testSubviewSpecs(),
         ];
 
+
         /* test 1 */
 
         $actualUpgradedSpec = CBModel::upgrade($originalSpec);
@@ -420,11 +423,14 @@ CBViewPageTests {
             ],
             'publishedByUserCBID' => ColbyUser::getCurrentUserCBID(),
             'sections' => CBViewTests::testSubviewUpgradedSpecs(),
+            'URI' => '',
             'CBViewPage_versionDate' => '2020_11_11',
             'CBModel_versionDate_property' => '2022_01_15',
         ];
 
-        if ($actualUpgradedSpec != $expectedUpgradedSpec) {
+        if (
+            $actualUpgradedSpec != $expectedUpgradedSpec
+        ) {
             return CBTest::resultMismatchFailure(
                 'test 1',
                 $actualUpgradedSpec,
@@ -446,11 +452,14 @@ CBViewPageTests {
             'className' => 'CBViewPage',
             'classNameForSettings' => 'CBViewPageTests_PageSettings',
             'sections' => [],
+            'URI' => '',
             'CBViewPage_versionDate' => '2020_11_11',
             'CBModel_versionDate_property' => '2022_01_15',
         ];
 
-        if ($actualUpgradedSpec != $expectedUpgradedSpec) {
+        if (
+            $actualUpgradedSpec != $expectedUpgradedSpec
+        ) {
             return CBTest::resultMismatchFailure(
                 'test 2',
                 $actualUpgradedSpec,
@@ -476,11 +485,14 @@ CBViewPageTests {
             'classNameForSettings' => 'CBViewPageTests_PageSettings',
             'publishedByUserCBID' => $publishedByUserCBID,
             'sections' => [],
+            'URI' => '',
             'CBViewPage_versionDate' => '2020_11_11',
             'CBModel_versionDate_property' => '2022_01_15',
         ];
 
-        if ($actualUpgradedSpec != $expectedUpgradedSpec) {
+        if (
+            $actualUpgradedSpec != $expectedUpgradedSpec
+        ) {
             return CBTest::resultMismatchFailure(
                 'test 3',
                 $actualUpgradedSpec,
@@ -495,7 +507,7 @@ CBViewPageTests {
             'succeeded' => true,
         ];
     }
-    /* CBTest_upgrade() */
+    /* upgrade() */
 
 
 
