@@ -3,7 +3,10 @@
     CBAjax,
     CBErrorHandler,
     CBUIButton,
+    CBUIPanel,
     Colby,
+
+    CB_Moment_showMomentEditor_jsvariable,
 */
 
 
@@ -46,6 +49,12 @@
     function
     CB_CBView_MomentCreator_create(
     ) {
+        if (
+            CB_Moment_showMomentEditor_jsvariable !== true
+        ) {
+            return;
+        }
+
         let newMomentCallback;
 
         let element = document.createElement(
@@ -112,7 +121,7 @@
                 if (
                     response.CB_Moment_create_userErrorMessage !== null
                 ) {
-                    window.alert(
+                    CBUIPanel.displayText2(
                         response.CB_Moment_create_userErrorMessage
                     );
 
@@ -136,6 +145,12 @@
                 CBErrorHandler.report(
                     error
                 );
+
+                CBUIPanel.displayCBMessage(`
+
+                    An error occured. Site administrators have been notified.
+
+                `);
             } finally {
                 button.CBUIButton_setIsDisabled(
                     false

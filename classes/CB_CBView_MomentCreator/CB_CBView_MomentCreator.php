@@ -16,7 +16,7 @@ CB_CBView_MomentCreator {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.48.js',
+                'v675.52.js',
                 cbsysurl()
             ),
         ];
@@ -37,6 +37,7 @@ CB_CBView_MomentCreator {
             'CBAjax',
             'CBErrorHandler',
             'CBUIButton',
+            'CBUIPanel',
             'Colby',
         ];
     }
