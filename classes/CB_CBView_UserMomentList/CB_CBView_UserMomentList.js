@@ -90,26 +90,30 @@
             ) {
                 let momentCreator = CB_CBView_MomentCreator.create();
 
-                let momentCreatorElement = (
-                    momentCreator.CB_CBView_MomentCreator_getElement()
-                );
-
                 if (
-                    momentCreatorElement !== undefined
+                    momentCreator !== undefined
                 ) {
-                    element.append(
-                        momentCreatorElement
+                    let momentCreatorElement = (
+                        momentCreator.CB_CBView_MomentCreator_getElement()
                     );
 
-                    momentCreator.CB_CBView_MomentCreator_setNewMomentCallback(
-                        function (
-                            newMomentModel
-                        ) {
-                            renderNewMoment(
+                    if (
+                        momentCreatorElement !== undefined
+                    ) {
+                        element.append(
+                            momentCreatorElement
+                        );
+
+                        momentCreator.CB_CBView_MomentCreator_setNewMomentCallback(
+                            function (
                                 newMomentModel
-                            );
-                        }
-                    );
+                            ) {
+                                renderNewMoment(
+                                    newMomentModel
+                                );
+                            }
+                        );
+                    }
                 }
             }
 
