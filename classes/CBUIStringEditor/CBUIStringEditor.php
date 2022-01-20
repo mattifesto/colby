@@ -1,6 +1,7 @@
 <?php
 
-final class CBUIStringEditor {
+final class
+CBUIStringEditor {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -9,11 +10,13 @@ final class CBUIStringEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ) {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v646.css',
+                'v675.53.css',
                 cbsysurl()
             ),
         ];
