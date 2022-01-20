@@ -27,11 +27,12 @@ CBUIStringEditor2 {
      * @return [string]
      */
     static function
-    CBHTMLOutput_CSSURLs() {
+    CBHTMLOutput_CSSURLs(
+    ) {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.52.css',
+                'v675.53.css',
                 cbsysurl()
             ),
         ];
