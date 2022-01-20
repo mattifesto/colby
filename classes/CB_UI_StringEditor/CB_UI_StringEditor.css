@@ -70,6 +70,12 @@
 
 
 
+.CB_UI_StringEditor textarea {
+    max-height: 60vh;
+}
+
+
+
 /*  Note 1:
 
     Setting the line height and min-height is important because of an odd edge
