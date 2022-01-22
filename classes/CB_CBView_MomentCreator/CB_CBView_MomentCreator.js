@@ -2,6 +2,7 @@
     CB_UI_StringEditor,
     CBAjax,
     CBErrorHandler,
+    CBImage,
     CBUIButton,
     CBUIPanel,
     Colby,
@@ -79,21 +80,141 @@
             stringEditorElement
         );
 
-        let button = CBUIButton.create();
 
-        button.CBUIButton_setTextContent(
+        /* image */
+
+        let addImageButton;
+        let imageElement;
+        let imageFileInputElement;
+        let imageModel;
+
+        {
+            let imageContainerElement = document.createElement(
+                "div"
+            );
+
+            imageContainerElement.className = (
+                "CB_CBView_MomentCreator_imageContainer_element"
+            );
+
+            imageElement = document.createElement(
+                "img"
+            );
+
+            imageElement.className = "CB_CBView_MomentCreator_image_element";
+
+            imageContainerElement.append(
+                imageElement
+            );
+
+            element.append(
+                imageContainerElement
+            );
+
+            imageFileInputElement = document.createElement("input");
+            imageFileInputElement.type = "file";
+            imageFileInputElement.style.display = "none";
+            imageFileInputElement.accept="image/jpeg, image/png, image/gif";
+
+            element.append(
+                imageFileInputElement
+            );
+
+            imageFileInputElement.addEventListener(
+                "change",
+                async function () {
+                    try {
+                        imageModel = await CBAjax.call(
+                            "CBImages",
+                            "upload",
+                            {},
+                            imageFileInputElement.files[0]
+                        );
+
+                        let imageURL = CBImage.toURL(
+                            imageModel,
+                            "rw960"
+                        );
+
+                        if (
+                            imageURL === ""
+                        ) {
+                            /* do nothing */
+                        } else {
+                            imageElement.style.display = "block";
+                            imageElement.src = imageURL;
+                        }
+                    } catch (
+                        error
+                    ) {
+                        CBUIPanel.displayAndReportError(
+                            error
+                        );
+                    }
+                }
+            );
+
+            addImageButton = CBUIButton.create();
+
+            addImageButton.CBUIButton_setTextContent(
+                "Add Image"
+            );
+
+            addImageButton.CBUIButton_addClickEventListener(
+                function () {
+                    imageFileInputElement.click();
+                }
+            );
+        }
+        /* image */
+
+
+        let shareButton = CBUIButton.create();
+
+        shareButton.CBUIButton_setTextContent(
             "Share"
         );
 
-        button.CBUIButton_addClickEventListener(
+        shareButton.CBUIButton_addClickEventListener(
             function () {
                 createMoment();
             }
         );
 
-        element.append(
-            button.CBUIButton_getElement()
-        );
+
+        /* buttons */
+        {
+            let buttonBarContainerElement = document.createElement(
+                "div"
+            );
+
+            buttonBarContainerElement.className = (
+                "CB_CBView_MomentCreator_buttonBarContainer"
+            );
+
+            let buttonBarElement = document.createElement(
+                "div"
+            );
+
+            buttonBarElement.className = "CB_CBView_MomentCreator_buttonBar";
+
+            buttonBarElement.append(
+                addImageButton.CBUIButton_getElement()
+            );
+
+            buttonBarElement.append(
+                shareButton.CBUIButton_getElement()
+            );
+
+            buttonBarContainerElement.append(
+                buttonBarElement
+            );
+
+            element.append(
+                buttonBarContainerElement
+            );
+        }
+        /* buttons */
 
 
 
@@ -104,7 +225,7 @@
         createMoment(
         ) {
             try {
-                button.CBUIButton_setIsDisabled(
+                shareButton.CBUIButton_setIsDisabled(
                     true
                 );
 
@@ -112,7 +233,9 @@
                     "CB_Moment",
                     "create",
                     {
-                        CB_Moment_create_text: (
+                        CB_Moment_create_imageModel_parameter: imageModel,
+
+                        CB_Moment_create_text_parameter: (
                             stringEditor.CB_UI_StringEditor_getValue()
                         ),
                     }
@@ -127,6 +250,9 @@
 
                     return;
                 }
+
+                imageFileInputElement.value = "";
+                imageElement.style.display = "none";
 
                 stringEditor.CB_UI_StringEditor_setValue(
                     ""
@@ -152,7 +278,7 @@
 
                 `);
             } finally {
-                button.CBUIButton_setIsDisabled(
+                shareButton.CBUIButton_setIsDisabled(
                     false
                 );
             }

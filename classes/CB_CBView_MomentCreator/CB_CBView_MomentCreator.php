@@ -11,12 +11,30 @@ CB_CBView_MomentCreator {
      * @return [string]
      */
     static function
+    CBHTMLOutput_CSSURLs(
+    ): array {
+        return [
+            Colby::flexpath(
+                __CLASS__,
+                'v675.53.css',
+                cbsysurl()
+            ),
+        ];
+    }
+    /* CBHTMLOutput_CSSURLs() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
     CBHTMLOutput_JavaScriptURLs(
     ): array {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.52.js',
+                'v675.53.js',
                 cbsysurl()
             ),
         ];
@@ -36,6 +54,7 @@ CB_CBView_MomentCreator {
             'CB_UI_StringEditor',
             'CBAjax',
             'CBErrorHandler',
+            'CBImage',
             'CBUIButton',
             'CBUIPanel',
             'Colby',

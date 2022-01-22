@@ -1,0 +1,33 @@
+.CB_CBView_MomentCreator_buttonBarContainer {
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+
+
+.CB_CBView_MomentCreator_buttonBar {
+    display: flex;
+    justify-content: space-between;
+
+    box-sizing: border-box;
+    max-width: 200%;
+    width: var(--CB_UI_readableWidth);
+}
+
+
+
+.CB_CBView_MomentCreator_imageContainer_element {
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.CB_CBView_MomentCreator_image_element {
+    display: none;
+
+    border-radius: 5px;
+    width: var(--CB_UI_readableWidth);
+}
