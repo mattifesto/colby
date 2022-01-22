@@ -117,7 +117,8 @@ CB_Moment {
             $reservedCBTimestampModel
         );
 
-        /* @TODO: cleanse this image spec */
+
+        /* image */
 
         $imageModel = CBModel::valueAsModel(
             $args,
@@ -125,10 +126,49 @@ CB_Moment {
             'CBImage'
         );
 
+        $imageModelCBID = null;
+
+        if (
+            $imageModel !== null
+        ) {
+            $imageModelCBID = CBModel::getCBID(
+                $imageModel
+            );
+        }
+
+        $verifiedImageSpec = null;
+
+        if (
+            $imageModelCBID !== null
+        ) {
+            $verifiedImageSpec = CBModels::fetchSpecByCBID(
+                $imageModelCBID
+            );
+        }
+
+        if (
+            $imageModel !== null &&
+            $verifiedImageSpec === null
+        ) {
+            throw new CBExceptionWithValue(
+                'CB_Moment_create_imageModel_parameter is not valid',
+                $imageModel,
+                'f0a3a15573f7e32fb22a3d46c661d9552669dc31'
+            );
+        }
+
+        $verifiedImageSpec = CBConvert::valueAsModel(
+            $verifiedImageSpec,
+            'CBImage'
+        );
+
         CB_Moment::setImage(
             $momentSpec,
-            $imageModel
+            $verifiedImageSpec
         );
+
+        /* image */
+
 
         CB_Moment::setText(
             $momentSpec,
