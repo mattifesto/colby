@@ -981,7 +981,7 @@ CB_Moment {
     static function
     setImage(
         stdClass $momentModel,
-        ?stdClass $imageModel,
+        ?stdClass $imageModel
     ): void {
         if (
             $imageModel === null
