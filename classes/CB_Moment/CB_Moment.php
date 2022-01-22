@@ -11,7 +11,8 @@ CB_Moment {
      * @param $args
      *
      *      {
-     *          CB_CBView_Moment_text: string
+     *          CB_Moment_create_text_parameter: string
+     *          CB_Moment_create_imageModel_parameter: object
      *      }
      *
      *  @return object
@@ -77,7 +78,7 @@ CB_Moment {
         $text = trim(
             CBModel::valueToString(
                 $args,
-                'CB_Moment_create_text'
+                'CB_Moment_create_text_parameter'
             )
         );
 
@@ -114,6 +115,19 @@ CB_Moment {
         CB_Moment::setCBTimestamp(
             $momentSpec,
             $reservedCBTimestampModel
+        );
+
+        /* @TODO: cleanse this image spec */
+
+        $imageModel = CBModel::valueAsModel(
+            $args,
+            'CB_Moment_create_imageModel_parameter',
+            'CBImage'
+        );
+
+        CB_Moment::setImage(
+            $momentSpec,
+            $imageModel
         );
 
         CB_Moment::setText(
@@ -251,7 +265,7 @@ CB_Moment {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.48.js',
+                'v675.53.js',
                 cbsysurl()
             ),
         ];
@@ -368,6 +382,13 @@ CB_Moment {
                 )
             );
         }
+
+        CB_Moment::setImage(
+            $momentModel,
+            CB_Moment::getImage(
+                $momentSpec
+            )
+        );
 
         CB_Moment::setText(
             $momentModel,
@@ -889,6 +910,63 @@ CB_Moment {
         $momentModel->CB_Moment_createdTimestamp = $createdTimestamp;
     }
     /* setCreatedTimestamp() */
+
+
+
+    /**
+     * @param object $momentModel
+     *
+     * @return object|null
+     */
+    static function
+    getImage(
+        stdClass $momentModel
+    ): ?stdClass {
+        return CBModel::valueAsModel(
+            $momentModel,
+            'CB_Moment_imageModel_property',
+            'CBImage'
+        );
+    }
+    /* getImage() */
+
+
+
+    /**
+     * @param object $momentModel
+     * @param object $imageModel
+     *
+     * @return void
+     */
+    static function
+    setImage(
+        stdClass $momentModel,
+        ?stdClass $imageModel,
+    ): void {
+        if (
+            $imageModel === null
+        ) {
+            $verifiedImageModel = null;
+        } else {
+            $verifiedImageModel = CBConvert::valueAsModel(
+                $imageModel,
+                'CBImage'
+            );
+
+            if (
+                $verifiedImageModel === null
+            ) {
+                throw new CBExceptionWithValue(
+                    'The imageModel parameter is not valid.',
+                    $imageModel,
+                    'f24ac9f1f710c12988b4e99e3912bb21f674512a'
+                );
+            }
+        }
+
+        $momentModel->CB_Moment_imageModel_property = $verifiedImageModel;
+    }
+    /* setImage() */
 
 
 

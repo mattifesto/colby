@@ -6,15 +6,34 @@
 (function () {
 
     window.CB_Moment = {
-        getCBTimestamp,
         getAuthorUserModelCBID,
+        getCBTimestamp,
         getCreatedTimestamp,
+        getImage,
         getText,
     };
 
 
 
     /* -- accessors -- */
+
+
+
+    /**
+     * @param object momentModel
+     *
+     * @return CBID|undefined
+     */
+    function
+    getAuthorUserModelCBID(
+        momentModel
+    ) {
+        return CBModel.valueAsCBID(
+            momentModel,
+            'CB_Moment_authorUserModelCBID'
+        );
+    }
+    /* getAuthorUserModelCBID() */
 
 
 
@@ -34,24 +53,6 @@
         );
     }
     /* getCBTimestamp() */
-
-
-
-    /**
-     * @param object momentModel
-     *
-     * @return CBID|undefined
-     */
-    function
-    getAuthorUserModelCBID(
-        momentModel
-    ) {
-        return CBModel.valueAsCBID(
-            momentModel,
-            'CB_Moment_authorUserModelCBID'
-        );
-    }
-    /* getAuthorUserModelCBID() */
 
 
 
@@ -85,6 +86,25 @@
         return timestamp;
     }
     /* getCreatedTimestamp() */
+
+
+
+    /**
+     * @param object momentModel
+     *
+     * @return object|undefined
+     */
+    function
+    getImage(
+        momentModel
+    ) {
+        return CBModel.valueAsModel(
+            momentModel,
+            "CB_Moment_imageModel_property",
+            "CBImage"
+        );
+    }
+    /* getImage() */
 
 
 
