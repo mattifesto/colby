@@ -1,22 +1,21 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBImage */
 /* global
     CBDataStore,
     CBModel,
 */
 
-var CBImage = {
+
+(function () {
+    "use strict";
+
+    window.CBImage = {
+        toURL: CBImage_toUrl,
+    };
+
 
     /**
-     * @param object image
+     * @param object imageModel
      *
-     *      {
-     *          ID: ID
-     *          filename: string
-     *          extension: string
-     *      }
+     *      A CBImage model.
      *
      * @param string? filename
      *
@@ -29,28 +28,55 @@ var CBImage = {
      *
      *      Returns an empty string if there is an issue with the parameters.
      */
-    toURL: function (image, filename) {
-        let imageID = CBModel.valueAsID(image, "ID");
-
-        if (imageID === undefined) {
-            return "";
-        }
-
-        if (typeof filename !== "string") {
-            filename = CBModel.valueToString(image, "filename");
-        }
-
-        if (filename === "") {
-            return "";
-        }
-
-        if (typeof image.extension !== "string" || image.extension === "") {
-            return "";
-        }
-
-        return "/" + CBDataStore.flexpath(
-            imageID,
-            filename + "." + image.extension
+    function
+    CBImage_toUrl(
+        imageModel,
+        filename
+    ) {
+        let imageModelCBID = CBModel.getCBID(
+            imageModel,
         );
-    },
-};
+
+        if (
+            imageModelCBID === undefined
+        ) {
+            return "";
+        }
+
+        if (
+            typeof filename !== "string"
+        ) {
+            filename = CBModel.valueToString(
+                imageModel,
+                "filename"
+            );
+        }
+
+        if (
+            filename === ""
+        ) {
+            return "";
+        }
+
+        if (
+            typeof imageModel.extension !== "string" ||
+            imageModel.extension === ""
+        ) {
+            return "";
+        }
+
+        return (
+            "/" +
+            CBDataStore.flexpath(
+                imageModelCBID,
+                (
+                    filename +
+                    "." +
+                    imageModel.extension
+                )
+            )
+        );
+    }
+    /* CBImage_toUrl() */
+
+})();

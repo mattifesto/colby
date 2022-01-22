@@ -1,6 +1,7 @@
 <?php
 
-final class CBImage {
+final class
+CBImage {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -9,11 +10,18 @@ final class CBImage {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ) {
         return [
-            Colby::flexpath(__CLASS__, 'v480.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v480.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
