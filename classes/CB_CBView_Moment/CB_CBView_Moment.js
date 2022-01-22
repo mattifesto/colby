@@ -1,5 +1,6 @@
 /* global
     CB_Moment,
+    CBImage,
     CBModel,
     CBUser,
     Colby,
@@ -244,6 +245,42 @@
         momentView.CB_CBView_Moment_append(
             textElement
         );
+
+        let imageModel = CB_Moment.getImage(
+            momentModel
+        );
+
+        let imageURL = CBImage.toURL(
+            imageModel,
+            "rw1280"
+        );
+
+        if (
+            imageURL !== ""
+        ) {
+            let imageContainerElement = document.createElement(
+                "div"
+            );
+
+            imageContainerElement.className = (
+                "CB_CBView_Moment_imageContainer_element"
+            );
+
+            let imageElement = document.createElement(
+                "img"
+            );
+
+            imageElement.className = "CB_CBView_Moment_image_element";
+            imageElement.src = imageURL;
+
+            imageContainerElement.append(
+                imageElement
+            );
+
+            momentView.CB_CBView_Moment_append(
+                imageContainerElement
+            );
+        }
 
         return momentView;
     }

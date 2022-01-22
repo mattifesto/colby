@@ -70,3 +70,19 @@
 .CB_CBView_Moment_text_element {
     font-size: 150%;
 }
+
+
+
+.CB_CBView_Moment_imageContainer_element {
+    padding: 0 10px 10px;
+}
+
+
+
+.CB_CBView_Moment_image_element {
+    display: block;
+    box-sizing: border-box;
+
+    border-radius: 10px;
+    width: 100%;
+}
