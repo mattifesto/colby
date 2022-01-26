@@ -17,16 +17,28 @@ if (
     CBRequest::requestDomain() !== CBConfiguration::primaryDomain()
 ) {
 
-?>
+    echo <<<EOT
 
-User-agent: *
-Disallow: /
+    User-agent: *
+    Disallow: /
 
-<?php } else { ?>
+    EOT;
 
-User-agent: *
-Disallow: /admin/
-Disallow: /api/
-Disallow: /developer/
+} else {
 
-<?php }
+    /**
+     * @deprecated 2022_01_25
+     *
+     *      I'm pretty sure the /api/ URL below is no longer used and can be
+     *      removed.
+     */
+
+    echo <<<EOT
+
+    User-agent: *
+    Disallow: /admin/
+    Disallow: /api/
+
+    EOT;
+
+}
