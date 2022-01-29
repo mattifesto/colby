@@ -84,7 +84,7 @@ CB_CBView_MainHeader {
             $currentPrettyUsername === null
         ) {
             $userEmoji = '👤';
-            $userURL = '/colby/user/';
+            $userURL = CBUser::getSignInPageURL();
         } else {
             $userEmoji = '👨';
             $userURL = "/user/{$currentPrettyUsername}/";
