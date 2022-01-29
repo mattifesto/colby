@@ -103,27 +103,29 @@ ColbyRequest {
     static function
     handleRequest(
     ): void {
+        $canonicalEncodedPath = '';
+        $function = null;
+
         if (
             CBConfiguration::secondaryDomainsShouldRedirectToPrimaryDomain()
         ) {
             CBRequest::redirectSecondaryDomainsToPrimaryDomain();
         }
 
-        $canonicalEncodedPath = '';
-        $countOfStubs = count(ColbyRequest::$decodedStubs);
-        $function = null;
+        $countOfStubs = count(
+            ColbyRequest::$decodedStubs
+        );
+
+
 
         $isAjaxRequest = (
             $countOfStubs === 0 &&
             CBAjax::requestIsToCallAnAjaxFunction()
         );
 
-        if ($isAjaxRequest) {
-
-            /**
-             * CBAjax::handleCallAjaxFunctionRequest() will set the exception
-             * hander to a function that will respond with an Ajax response.
-             */
+        if (
+            $isAjaxRequest
+        ) {
             CBAjax::handleCallAjaxFunctionRequest();
 
             return;
