@@ -7,7 +7,8 @@ define(
 
 
 
-final class ColbyUser {
+final class
+ColbyUser {
 
     /* -- private static variables -- -- -- -- -- */
 
@@ -85,8 +86,14 @@ final class ColbyUser {
      *
      * @return void
      */
-    static function initialize(): void {
-        if (!isset($_COOKIE[CBUserCookieName])) {
+    static function
+    initialize(
+    ): void {
+        if (
+            !isset(
+                $_COOKIE[CBUserCookieName]
+            )
+        ) {
             return;
         }
 
@@ -94,11 +101,16 @@ final class ColbyUser {
 
         try {
             $cookie = CBConvert::valueAsObject(
-                Colby::decrypt($cookieCipherData)
+                Colby::decrypt(
+                    $cookieCipherData
+                )
             );
 
-            if ($cookie === null) {
+            if (
+                $cookie === null
+            ) {
                 ColbyUser::removeUserCookie();
+
                 return;
             }
 
@@ -107,8 +119,11 @@ final class ColbyUser {
                 'expirationTimestamp'
             ) ?? PHP_INT_MIN;
 
-            if (time() > $expirationTimestamp) {
+            if (
+                time() > $expirationTimestamp
+            ) {
                 ColbyUser::removeUserCookie();
+
                 return;
             }
 
@@ -117,15 +132,23 @@ final class ColbyUser {
                 'userCBID'
             );
 
-            if ($userCBID === null) {
+            if (
+                $userCBID === null
+            ) {
                 ColbyUser::removeUserCookie();
+
                 return;
             }
 
             /* Success, the user is now logged in. */
             ColbyUser::$currentUserCBID = $userCBID;
-        } catch (Throwable $exception) {
-            CBErrorHandler::report($exception);
+        } catch (
+            Throwable $exception
+        ) {
+            CBErrorHandler::report(
+                $exception
+            );
+
             ColbyUser::removeUserCookie();
         }
     }
