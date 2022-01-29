@@ -666,16 +666,6 @@ Colby {
      * developer should be able to read it to understand how the system gets
      * initialized.
      *
-     * Before this function runs, the following are available:
-     *
-     *      cbsitedir()             (<system directory>/init.php)
-     *      cbsysdir()              (<system directory>/init.php)
-     *      CBSiteVersionNumber     (<site directory>/version.php)
-     *      CBSystemVersionNumber   (<system directory>/version.php)
-     *
-     *      <system directory>/function.php has been included
-     *                              (<system directory>/init.php)
-     *
      * @return void
      */
     static function
