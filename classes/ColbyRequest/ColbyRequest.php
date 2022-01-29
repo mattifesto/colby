@@ -103,13 +103,18 @@ ColbyRequest {
     static function
     handleRequest(
     ): void {
-        $canonicalEncodedPath = '';
-        $function = null;
 
         if (
             CBConfiguration::secondaryDomainsShouldRedirectToPrimaryDomain()
         ) {
             CBRequest::redirectSecondaryDomainsToPrimaryDomain();
+
+            /**
+             * The function above exits so this exit is only here to make the
+             * story of this function clear.
+             */
+
+            exit;
         }
 
         $countOfStubs = count(
@@ -148,6 +153,9 @@ ColbyRequest {
          *      handler that will respond with HTML anyway.
          */
 
+         $canonicalEncodedPath = '';
+         $renderOutput = null;
+
         /* front page */
 
         if (
@@ -155,7 +163,7 @@ ColbyRequest {
         ) {
             $canonicalEncodedPath = '/';
 
-            $function = function() {
+            $renderOutput = function() {
                 CBRequest::setNoCacheHeaders();
 
                 $frontPageID = CBSitePreferences::frontPageID();
@@ -194,7 +202,7 @@ ColbyRequest {
             'ads.txt' === ColbyRequest::$decodedStubs[0]
         ) {
             $canonicalEncodedPath = '/ads.txt';
-            $function = function() {
+            $renderOutput = function() {
                 return include cbsysdir() .
                 '/handlers/handle-ads.php';
             };
@@ -209,7 +217,7 @@ ColbyRequest {
             'robots.txt' === ColbyRequest::$decodedStubs[0]
         ) {
             $canonicalEncodedPath = '/robots.txt';
-            $function = function() {
+            $renderOutput = function() {
                 return include cbsysdir() .
                 '/handlers/handle-robots.php';
             };
@@ -223,7 +231,7 @@ ColbyRequest {
             'sitemap.xml' === ColbyRequest::$decodedStubs[0]
         ) {
             $canonicalEncodedPath = '/sitemap.xml';
-            $function = function() {
+            $renderOutput = function() {
                 return include cbsysdir() .
                 '/handlers/handle-sitemap.php';
             };
@@ -255,8 +263,11 @@ ColbyRequest {
                     "handlers/handle,{$allStubs}.php"
                 )
             ) {
-                $function = function() use ($allStubsHandlerFilepath) {
+                $renderOutput = function() use (
+                    $allStubsHandlerFilepath
+                ) {
                     CBRequest::setNoCacheHeaders();
+
                     return include $allStubsHandlerFilepath;
                 };
             }
@@ -269,8 +280,11 @@ ColbyRequest {
                     "handlers/handle,{$firstStub},.php"
                 )
             ) {
-                $function = function() use ($firstStubHandlerFilepath) {
+                $renderOutput = function() use (
+                    $firstStubHandlerFilepath
+                ) {
                     CBRequest::setNoCacheHeaders();
+
                     return include $firstStubHandlerFilepath;
                 };
             }
@@ -297,7 +311,7 @@ ColbyRequest {
                         )
                     );
 
-                    $function = function() use (
+                    $renderOutput = function() use (
                         $pageModel
                     ) {
                         CBRequest::setNoCacheHeaders();
@@ -313,7 +327,7 @@ ColbyRequest {
         }
 
         if (
-            $function
+            $renderOutput
         ) {
             if (
                 ColbyRequest::$originalEncodedPath !== $canonicalEncodedPath
@@ -327,7 +341,11 @@ ColbyRequest {
 
                 exit;
             } else {
-                if (call_user_func($function) === 1) {
+                $renderOutputResult = call_user_func(
+                    $renderOutput
+                );
+
+                if ($renderOutputResult === 1) {
                     return;
                 }
             }
