@@ -3,7 +3,8 @@
 /**
  * This class is used to help render the /admin/ page.
  */
-final class CBStatusAdminPage {
+final class
+CBStatusAdminPage {
 
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
@@ -36,18 +37,41 @@ final class CBStatusAdminPage {
     /**
      * @return void
      */
-    static function CBAdmin_render(): void {
+    static function
+    CBAdmin_render(
+    ): void {
         CBHTMLOutput::pageInformation()->title = 'Website Status';
 
         $siteNameAsMessage = CBMessageMarkup::stringToMessage(
             CBSitePreferences::siteName()
         );
 
-        $siteTypeAsMessage = (
-            CBSitePreferences::getIsDevelopmentWebsite() ?
-            'Development' :
-            'Production'
+        $environment = CBSitePreferences::getEnvironment(
+            CBSitePreferences::model()
         );
+
+        switch (
+            $environment
+        ) {
+            case 'CBSitePreferences_environment_development':
+                $environmentAsMessage = 'Development';
+                break;
+
+            case 'CBSitePreferences_environment_testing':
+                $environmentAsMessage = 'Testing';
+                break;
+
+            case 'CBSitePreferences_environment_staging':
+                $environmentAsMessage = 'Staging';
+                break;
+
+            case 'CBSitePreferences_environment_production':
+                $environmentAsMessage = 'Production';
+                break;
+
+            default:
+                $environmentAsMessage = 'Unknown';
+        }
 
         $message = <<<EOT
 
@@ -61,9 +85,9 @@ final class CBStatusAdminPage {
                     ---
                     --- CBUI_container_leftAndRight
                         --- p CBUI_textColor2
-                        Site Type
+                        Site Environment
                         ---
-                        {$siteTypeAsMessage}
+                        {$environmentAsMessage}
                     ---
                 ---
             ---
@@ -73,7 +97,9 @@ final class CBStatusAdminPage {
             ---
         EOT;
 
-        echo CBMessageMarkup::messageToHTML($message);
+        echo CBMessageMarkup::messageToHTML(
+            $message
+        );
 
 
         /* status widgets */
@@ -83,23 +109,42 @@ final class CBStatusAdminPage {
         );
 
         $statusWidgetClassNames = array_map(
-            function ($filepath) {
-                return basename($filepath, '.php');
+            function (
+                $filepath
+            ) {
+                return basename(
+                    $filepath,
+                    '.php'
+                );
             },
             $statusWidgetFilepaths
         );
 
-        sort($statusWidgetClassNames);
+        sort(
+            $statusWidgetClassNames
+        );
 
         $statusWidgetMessage = '';
 
-        foreach ($statusWidgetClassNames as $statusWidgetClassName) {
+        foreach (
+            $statusWidgetClassNames as $statusWidgetClassName
+        ) {
             $functionName = "{$statusWidgetClassName}::CBStatusAdminPage_data";
 
-            if (is_callable($functionName)) {
-                $data = call_user_func($functionName);
-                $keyAsMessage = CBMessageMarkup::stringToMessage($data[0]);
-                $valueAsMessage = CBMessageMarkup::stringToMessage($data[2]);
+            if (
+                is_callable($functionName)
+            ) {
+                $data = call_user_func(
+                    $functionName
+                );
+
+                $keyAsMessage = CBMessageMarkup::stringToMessage(
+                    $data[0]
+                );
+
+                $valueAsMessage = CBMessageMarkup::stringToMessage(
+                    $data[2]
+                );
 
                 $statusWidgetMessage .= <<<EOT
 
@@ -115,7 +160,9 @@ final class CBStatusAdminPage {
             }
         }
 
-        if ($statusWidgetMessage !== '') {
+        if (
+            $statusWidgetMessage !== ''
+        ) {
             $statusWidgetMessage = <<<EOT
 
                 --- CBUI_sectionContainer
@@ -126,7 +173,9 @@ final class CBStatusAdminPage {
 
             EOT;
 
-            echo CBMessageMarkup::messageToHTML($statusWidgetMessage);
+            echo CBMessageMarkup::messageToHTML(
+                $statusWidgetMessage
+            );
         }
     }
     /* CBAdmin_render() */
