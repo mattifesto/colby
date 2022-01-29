@@ -160,13 +160,21 @@ ColbyRequest {
 
                 $frontPageID = CBSitePreferences::frontPageID();
 
-                if (isset($frontPageID)) {
-                    $model = CBModels::fetchModelByID($frontPageID);
+                if (
+                    isset($frontPageID)
+                ) {
+                    $model = CBModels::fetchModelByID(
+                        $frontPageID
+                    );
 
-                    if (!empty($model)) {
+                    if (
+                        !empty($model)
+                    ) {
                         $model->title = CBSitePreferences::siteName();
 
-                        CBPage::render($model);
+                        CBPage::render(
+                            $model
+                        );
 
                         return 1;
                     }
