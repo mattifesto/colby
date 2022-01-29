@@ -104,6 +104,12 @@ ColbyRequest {
     handleRequest(
     ): void {
 
+        /**
+         * SCENARIO
+         *
+         * redirect URLs to primary domain
+         */
+
         if (
             CBConfiguration::secondaryDomainsShouldRedirectToPrimaryDomain()
         ) {
@@ -122,6 +128,11 @@ ColbyRequest {
         );
 
 
+        /**
+         * SCENARIO
+         *
+         * handle ajax requests
+         */
 
         $isAjaxRequest = (
             $countOfStubs === 0 &&
@@ -136,6 +147,19 @@ ColbyRequest {
             return;
         }
 
+
+        /**
+         * SCENARIO
+         *
+         * handle site setup
+         *
+         * @deprecated 2022_01_29
+         *
+         *      Websites are no longer set up using this method, they are set up
+         *      fully using the cbt command in terminal. This code should be
+         *      removed during a larger task to remove the old setup code.
+         */
+
         if (
             CBSiteVersionNumber === 'setup' ||
             CBSiteIsConfigured === false
@@ -146,24 +170,44 @@ ColbyRequest {
         }
 
         /**
-         * @NOTE 2019_12_09
+         * @NOTE 2022_01_29
          *
-         *      At this point we can't quite assume that the request is
-         *      expecting an HTML response, but should probably set an exception
-         *      handler that will respond with HTML anyway.
+         *      Today this function was gardened fairly thoroughly in an effort
+         *      to find a point at which we know that HTML is going to be
+         *      rendered. The result of this effort was coming to the
+         *      understanding that we can't know whether HTML is going to be
+         *      rendered because handlers can render whatever they want and give
+         *      no indication of what they will render.
+         *
+         *      In the future, this could be changed, but it's a pretty big
+         *      change. The practical implication of this is that if you want to
+         *      perform a task when any HTML is rendered then you should
+         *      initiate that task from a JavaScript file that is included with
+         *      as many HTML pages as possible. This concept will most likely be
+         *      provided as a feature of Colby. (update this comment if
+         *      availabe)
+         *
+         *      I'm pretty sure covering all HTML pages is theoretically
+         *      impossible because Colby explicitly allows for HTML pages that
+         *      do whatever they want, including using no JavaScript.
          */
 
          $canonicalEncodedPath = '';
-         $renderOutput = null;
+         $renderOutputCallable = null;
 
-        /* front page */
+
+        /**
+         * SCENARIO
+         *
+         * front page
+         */
 
         if (
             ColbyRequest::currentRequestIsForTheFrontPage()
         ) {
             $canonicalEncodedPath = '/';
 
-            $renderOutput = function() {
+            $renderOutputCallable = function() {
                 CBRequest::setNoCacheHeaders();
 
                 $frontPageID = CBSitePreferences::frontPageID();
@@ -202,7 +246,7 @@ ColbyRequest {
             'ads.txt' === ColbyRequest::$decodedStubs[0]
         ) {
             $canonicalEncodedPath = '/ads.txt';
-            $renderOutput = function() {
+            $renderOutputCallable = function() {
                 return include cbsysdir() .
                 '/handlers/handle-ads.php';
             };
@@ -217,7 +261,7 @@ ColbyRequest {
             'robots.txt' === ColbyRequest::$decodedStubs[0]
         ) {
             $canonicalEncodedPath = '/robots.txt';
-            $renderOutput = function() {
+            $renderOutputCallable = function() {
                 return include cbsysdir() .
                 '/handlers/handle-robots.php';
             };
@@ -231,14 +275,18 @@ ColbyRequest {
             'sitemap.xml' === ColbyRequest::$decodedStubs[0]
         ) {
             $canonicalEncodedPath = '/sitemap.xml';
-            $renderOutput = function() {
+            $renderOutputCallable = function() {
                 return include cbsysdir() .
                 '/handlers/handle-sitemap.php';
             };
         }
 
 
-        /* interpret URI */
+        /**
+         * SCENARIO
+         *
+         * find handler or page model based on the URL
+         */
 
         else {
             $canonicalEncodedPath = implode(
@@ -263,7 +311,7 @@ ColbyRequest {
                     "handlers/handle,{$allStubs}.php"
                 )
             ) {
-                $renderOutput = function() use (
+                $renderOutputCallable = function() use (
                     $allStubsHandlerFilepath
                 ) {
                     CBRequest::setNoCacheHeaders();
@@ -280,7 +328,7 @@ ColbyRequest {
                     "handlers/handle,{$firstStub},.php"
                 )
             ) {
-                $renderOutput = function() use (
+                $renderOutputCallable = function() use (
                     $firstStubHandlerFilepath
                 ) {
                     CBRequest::setNoCacheHeaders();
@@ -311,7 +359,7 @@ ColbyRequest {
                         )
                     );
 
-                    $renderOutput = function() use (
+                    $renderOutputCallable = function() use (
                         $pageModel
                     ) {
                         CBRequest::setNoCacheHeaders();
@@ -327,25 +375,53 @@ ColbyRequest {
         }
 
         if (
-            $renderOutput
+            $renderOutputCallable
         ) {
+            /**
+             * We have a function to render the output, but if the URL is not
+             * canonical we will redirect to the canonical URL instead.
+             */
+
             if (
                 ColbyRequest::$originalEncodedPath !== $canonicalEncodedPath
             ) {
+                if (
+                    false
+                ) {
+                    error_log( /* allowed */
+                        ColbyRequest::$originalEncodedPath .
+                        ' --> ' .
+                        $canonicalEncodedPath
+                    );
+                }
+
                 $redirectURI = (
                     $canonicalEncodedPath .
                     CBRequest::requestURIToOriginalEncodedQueryString()
                 );
 
-                header('Location: ' . $redirectURI, true, 301);
-
-                exit;
-            } else {
-                $renderOutputResult = call_user_func(
-                    $renderOutput
+                header(
+                    'Location: ' . $redirectURI,
+                    true,
+                    301
                 );
 
-                if ($renderOutputResult === 1) {
+                exit;
+            }
+
+            /**
+             * The URL is canonical so we call the function to render the
+             * output.
+             */
+
+            else {
+                $renderOutputResult = call_user_func(
+                    $renderOutputCallable
+                );
+
+                if (
+                    $renderOutputResult === 1
+                ) {
                     return;
                 }
             }
@@ -353,8 +429,14 @@ ColbyRequest {
 
 
         /**
-         * If the path provided is for an image that exists already and for an
-         * approved automatic resize, then resize the image and send it back.
+         * SCENARIO
+         *
+         * If we reach this point in the function either no page or handler
+         * exists or the handler has declined to render any output.
+         *
+         * A scenario remains where the URL is for a resized version of a
+         * CBImage and the file for that resized image hasn't yet been
+         * generated.
          */
 
         $anImageWasMadeAndSent = CBImages::makeAndSendImageForPath(
@@ -369,8 +451,9 @@ ColbyRequest {
 
 
         /**
-         * Either no page was found or the function returned a value other than
-         * 1 which indicates that the page doesn't exist.
+         * SCENARIO
+         *
+         * 404
          */
 
         include Colby::findFile(
