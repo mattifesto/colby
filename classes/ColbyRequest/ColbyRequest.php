@@ -150,7 +150,9 @@ ColbyRequest {
 
         /* front page */
 
-        if (ColbyRequest::currentRequestIsForTheFrontPage()) {
+        if (
+            ColbyRequest::currentRequestIsForTheFrontPage()
+        ) {
             $canonicalEncodedPath = '/';
 
             $function = function() {
