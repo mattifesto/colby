@@ -333,21 +333,31 @@ ColbyRequest {
             }
         }
 
+
         /**
          * If the path provided is for an image that exists already and for an
          * approved automatic resize, then resize the image and send it back.
          */
 
-        if (CBImages::makeAndSendImageForPath(ColbyRequest::$decodedPath)) {
+        $anImageWasMadeAndSent = CBImages::makeAndSendImageForPath(
+            ColbyRequest::$decodedPath
+        );
+
+        if (
+            $anImageWasMadeAndSent
+        ) {
             return;
         }
+
 
         /**
          * Either no page was found or the function returned a value other than
          * 1 which indicates that the page doesn't exist.
          */
 
-        include Colby::findFile('handlers/handle-default.php');
+        include Colby::findFile(
+            'handlers/handle-default.php'
+        );
     }
     /* handleRequest() */
 
