@@ -315,7 +315,9 @@ ColbyRequest {
         if (
             $function
         ) {
-            if (ColbyRequest::$originalEncodedPath !== $canonicalEncodedPath) {
+            if (
+                ColbyRequest::$originalEncodedPath !== $canonicalEncodedPath
+            ) {
                 $redirectURI = (
                     $canonicalEncodedPath .
                     CBRequest::requestURIToOriginalEncodedQueryString()
