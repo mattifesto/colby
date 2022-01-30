@@ -183,7 +183,7 @@
                 let stackLine = stackLines[1];
 
                 let matches = stackLine.match(
-                    /at (.*) \((.+):([0-9]+):([0-9]+)\)$/
+                    /\s*at (.*) \((.+):([0-9]+):([0-9]+)\)$/
                 );
 
                 if (
