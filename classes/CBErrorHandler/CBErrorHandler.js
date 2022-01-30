@@ -145,28 +145,38 @@
             let errorDetails = {};
 
             /* Safari */
-            if (error.line !== undefined) {
+            if (
+                error.line !== undefined
+            ) {
                 errorDetails.sourceURL = error.sourceURL;
                 errorDetails.lineNumber = error.line;
                 errorDetails.columnNumber = error.column;
             }
 
             /* Firefox */
-            else if (error.lineNumber !== undefined) {
+            else if (
+                error.lineNumber !== undefined
+            ) {
                 errorDetails.sourceURL = error.fileName;
                 errorDetails.lineNumber = error.lineNumber;
                 errorDetails.columnNumber = error.columnNumber;
             }
 
             /* Chrome */
-            else if (typeof error.stack === "string") {
-                let stackLines = error.stack.split("\n");
+            else if (
+                typeof error.stack === "string"
+            ) {
+                let stackLines = error.stack.split(
+                    "\n"
+                );
 
                 /**
                  * The first line is the error message, the second is the code
                  * location.
                  */
-                if (stackLines.length < 2) {
+                if (
+                    stackLines.length < 2
+                ) {
                     return errorDetails;
                 }
 
@@ -176,13 +186,13 @@
                     /at (.*) \((.+):([0-9]+):([0-9]+)\)$/
                 );
 
-                if (matches === null) {
-                    return errorDetails;
+                if (
+                    matches !== null
+                ) {
+                    errorDetails.sourceURL = matches[2];
+                    errorDetails.lineNumber = matches[3];
+                    errorDetails.columnNumber = matches[4];
                 }
-
-                errorDetails.sourceURL = matches[2];
-                errorDetails.lineNumber = matches[3];
-                errorDetails.columnNumber = matches[4];
             }
 
             return errorDetails;

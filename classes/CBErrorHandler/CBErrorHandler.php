@@ -16,7 +16,7 @@ CBErrorHandler {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.13.js',
+                'v675.54.js',
                 cbsysurl()
             ),
         ];
