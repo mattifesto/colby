@@ -1,7 +1,3 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBErrorHandler */
 /* global
     CBAjax,
     console,
@@ -19,6 +15,7 @@
  *      This class should not have any user interface functionality.
  */
 (function () {
+    "use strict";
 
     /**
      * @NOTE 2019_06_14
@@ -26,15 +23,15 @@
      *      Browsers must natively support Promises. This requirement makes
      *      Internet Explorer 11 an unsupported browser.
      *
-     * @NOTE 2020_11_26
+     * @NOTE 2022_01_29
      *
      *      The currentBrowserIsSupported functionality has been moving slowly
-     *      to lower level classes. It may seem a bit odd here, but this is the
-     *      lowest level class that requires the functionality. If it becomes
-     *      necessary in the future, this functionality could move to a new
-     *      class that focuses on browser issues, maybe with a name like
-     *      CBBrowser.
+     *      to lower level classes. Today the CBJavaScript class was decided to
+     *      be the most base level JavaScript class and this should probably go
+     *      there if it is moved. However, I don't know that this code is even
+     *      necessary anymore. Something to consider.
      */
+
     let currentBrowserIsSupported = false;
 
     if (
