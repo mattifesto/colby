@@ -1,6 +1,17 @@
 <?php
 
-class CBJavaScript {
+/**
+ * @NOTE 2022_01_29
+ *
+ *      This class has been slightly adjusted to be a core class that implements
+ *      the very basics of functions that are used if you use JavaScript at all
+ *      in Colby.
+ *
+ *      This change was made so that these functions could be moved out of the
+ *      Colby class.
+ */
+class
+CBJavaScript {
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
@@ -23,7 +34,8 @@ class CBJavaScript {
      *
      * @return void
      */
-    static function CBAjax_reportError(
+    static function
+    CBAjax_reportError(
         stdClass $args
     ): void {
         $errorModel = CBModel::valueToObject(
@@ -226,14 +238,37 @@ class CBJavaScript {
 
 
 
-    /* -- functions -- -- -- -- -- */
+    /* -- CBHTMLOutput interfaces -- */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
+        return [
+            Colby::flexpath(
+                __CLASS__,
+                'v675.54.js',
+                cbsysurl()
+            ),
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+
+
+    /* -- functions -- */
 
 
 
     /**
      * @return bool
      */
-    static function shouldReportToDeveloper(
+    static function
+    shouldReportToDeveloper(
         stdClass $errorModel,
         array $hashes
     ): bool {
@@ -279,7 +314,8 @@ class CBJavaScript {
      *
      * @return string
      */
-    static function stackToMessage(
+    static function
+    stackToMessage(
         string $stack
     ): string {
         $lines = CBConvert::stringToLines($stack);
