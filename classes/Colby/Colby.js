@@ -5,6 +5,7 @@
 /* global
     CBAjax,
     CBErrorHandler,
+    CBException,
     CBID,
 */
 
@@ -416,21 +417,20 @@ var Colby = {
 
 
     /**
+     * @deprecated 2022_01_29
+     *
+     *      Use CBException.errorToOneLineErrorReport()
+     *
      * @param Error error
      *
      * @return string (text)
      */
-    errorToMessage: function (error) {
-        var message = error.message || "(no message)";
-
-        var basename =
-        error.sourceURL ?
-        error.sourceURL.split(/[\\/]/).pop() :
-        "(no sourceURL)";
-
-        var line = error.line || "(no line)";
-
-        return "\"" + message + "\" in " + basename + " line " + line;
+    errorToMessage(
+        error
+    ) {
+        return CBException.errorToOneLineErrorReport(
+            error
+        );
     },
     /* errorToMessage() */
 

@@ -98,7 +98,7 @@ Colby {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.45.js',
+                'v675.54.js',
                 cbsysurl()
             ),
         ];
@@ -116,6 +116,7 @@ Colby {
         return [
             'CBAjax',
             'CBErrorHandler',
+            'CBException',
             'CBID',
         ];
     }
