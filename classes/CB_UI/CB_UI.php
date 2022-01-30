@@ -41,7 +41,7 @@ CB_UI {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.51.js',
+                'v675.54.js',
                 cbsysurl()
             ),
         ];
@@ -76,7 +76,7 @@ CB_UI {
     CBHTMLOutput_requiredClassNames(
     ): array {
         return [
-            'Colby',
+            'CBJavaScript',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

@@ -1,5 +1,5 @@
 /* globals
-    Colby,
+    CBJavaScript,
 
     CB_UI_CBSitePreferences_appearance,
 */
@@ -16,7 +16,7 @@
             'CBSitePreferences_appearance_light'
         )
     ) {
-        Colby.afterDOMContentLoaded(
+        CBJavaScript.afterDOMContentLoaded(
             function () {
                 setLightAppearance();
             }
@@ -31,7 +31,7 @@
             'CBSitePreferences_appearance_dark'
         )
     ) {
-        Colby.afterDOMContentLoaded(
+        CBJavaScript.afterDOMContentLoaded(
             function () {
                 setDarkAppearance();
             }
@@ -52,7 +52,7 @@
         }
     );
 
-    Colby.afterDOMContentLoaded(
+    CBJavaScript.afterDOMContentLoaded(
         function () {
             setAutoAppearance();
         }
