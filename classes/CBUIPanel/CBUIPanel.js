@@ -1,7 +1,3 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 8 */
-/* exported CBUIPanel */
 /* global
     CBConvert,
     CBErrorHandler,
@@ -9,38 +5,34 @@
     CBMessageMarkup,
     CBModel,
     CBUI,
-    Colby,
 */
 
 
 (function () {
-
-    Colby.afterDOMContentLoaded(
-        afterDOMContentLoaded
-    );
-
-
+    "use strict";
 
     /**
-     * @return undefined
+     * @NOTE 2022_01_29
+     *
+     *      This global variable was previously defined only after the DOM
+     *      content had loaded, which is odd. But it is true that these APIs
+     *      modify the DOM and should not be called until after the DOM content
+     *      has loaded.
      */
-    function afterDOMContentLoaded() {
-        window.CBUIPanel = {
-            confirmText: init_confirmText,
-            displayAjaxResponse: CBUIPanel_displayAjaxResponse, /* deprecated */
-            displayAjaxResponse2: CBUIPanel_displayAjaxResponse2,
-            displayAndReportError: CBUIPanel_displayAndReportError,
-            displayBusyText: init_displayBusyText,
-            displayCBMessage: init_displayCBMessage,
-            displayElement: init_displayElement,
-            displayError: CBUIPanel_displayError, /* deprecated */
-            displayError2: CBUIPanel_displayError2,
-            displayText: CBUIPanel_displayText, /* deprecated */
-            displayText2: CBUIPanel_displayText2,
-            hidePanelWithContentElement: CBUIPanel_hidePanelWithContentElement,
-        };
-    }
-    /* afterDOMContentLoaded() */
+    window.CBUIPanel = {
+        confirmText: init_confirmText,
+        displayAjaxResponse: CBUIPanel_displayAjaxResponse, /* deprecated */
+        displayAjaxResponse2: CBUIPanel_displayAjaxResponse2,
+        displayAndReportError: CBUIPanel_displayAndReportError,
+        displayBusyText: init_displayBusyText,
+        displayCBMessage: init_displayCBMessage,
+        displayElement: init_displayElement,
+        displayError: CBUIPanel_displayError, /* deprecated */
+        displayError2: CBUIPanel_displayError2,
+        displayText: CBUIPanel_displayText, /* deprecated */
+        displayText2: CBUIPanel_displayText2,
+        hidePanelWithContentElement: CBUIPanel_hidePanelWithContentElement,
+    };
 
 
 

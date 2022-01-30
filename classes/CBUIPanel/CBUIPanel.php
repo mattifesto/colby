@@ -56,7 +56,6 @@ CBUIPanel {
             'CBMessageMarkup',
             'CBModel',
             'CBUI',
-            'Colby',
 
             'CBContentStyleSheet',
         ];
