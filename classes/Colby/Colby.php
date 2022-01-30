@@ -118,6 +118,7 @@ Colby {
             'CBErrorHandler',
             'CBException',
             'CBID',
+            'CBJavaScript',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

@@ -7,6 +7,7 @@
     CBErrorHandler,
     CBException,
     CBID,
+    CBJavaScript,
 */
 
 
@@ -75,24 +76,19 @@ var Colby = {
         'December',
     ],
 
-    /**
-     * @param function callback
-     *
-     * @return undefined
-     */
-    afterDOMContentLoaded: function (callback) {
-        if (!CBErrorHandler.getCurrentBrowserIsSupported()) {
-            return;
-        }
 
-        if (document.readyState === "loading") {
-            document.addEventListener(
-                "DOMContentLoaded",
-                callback
-            );
-        } else {
-            callback();
-        }
+
+    /**
+     * @deprecated 2022_01_29
+     *
+     *      Use CBJavaScript.afterDOMContentLoaded()
+     */
+    afterDOMContentLoaded(
+        callback
+    ) {
+        CBJavaScript.afterDOMContentLoaded(
+            callback
+        );
     },
     /* afterDOMContentLoaded() */
 
