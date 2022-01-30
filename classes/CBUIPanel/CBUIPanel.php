@@ -1,6 +1,7 @@
 <?php
 
-final class CBUIPanel {
+final class
+CBUIPanel {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -9,11 +10,18 @@ final class CBUIPanel {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs(): array {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v525.css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v525.css',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
 
 
 
@@ -26,7 +34,7 @@ final class CBUIPanel {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v674.js',
+                'v675.54.js',
                 cbsysurl()
             ),
         ];
@@ -38,7 +46,9 @@ final class CBUIPanel {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'CBConvert',
             'CBErrorHandler',

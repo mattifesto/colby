@@ -673,19 +673,27 @@
     CBUIPanel_displayError2(
         error
     ) {
-        if (!CBErrorHandler.getCurrentBrowserIsSupported()) {
+        if (
+            !CBErrorHandler.getCurrentBrowserIsSupported()
+        ) {
             return;
         }
 
-        if (error.ajaxResponse) {
+        if (
+            error.ajaxResponse
+        ) {
             return CBUIPanel_displayAjaxResponse2(
                 error.ajaxResponse
             );
-        } else {
+        }
+
+        else {
+            let oneLineErrorReport = CBException.errorToOneLineErrorReport(
+                error
+            );
+
             return CBUIPanel_displayText2(
-                Colby.errorToMessage(
-                    error
-                )
+                oneLineErrorReport
             );
         }
     }
