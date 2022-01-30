@@ -80,7 +80,7 @@
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.8.js',
+                'v675.54.js',
                 cbsysurl()
             ),
         ];

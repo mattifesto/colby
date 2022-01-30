@@ -1,10 +1,3 @@
-"use strict";
-/* jshint
-    esversion: 6,
-    strict: global,
-    undef: true,
-    unused: true
-*/
 /* global
     CBConvert,
     CBErrorHandler,
@@ -12,14 +5,25 @@
 */
 
 
-var CBException = {
+(function () {
+    "use strict";
+
+    window.CBException = {
+        errorToExtendedMessage,
+        errorToSourceCBID,
+        withError,
+        withValueRelatedError,
+    };
+
+
 
     /**
      * @param Error error
      *
      * @return cbmessage
      */
-    errorToExtendedMessage: function (
+    function
+    errorToExtendedMessage(
         error
     ) {
         let cbmessage = "";
@@ -39,7 +43,7 @@ var CBException = {
         }
 
         return cbmessage;
-    },
+    }
     /* errorToExtendedMessage() */
 
 
@@ -49,6 +53,7 @@ var CBException = {
      *
      * @return CBID|undefined
      */
+    function
     errorToSourceCBID(
         error
     ) {
@@ -61,7 +66,7 @@ var CBException = {
         }
 
         return sourceCBID;
-    },
+    }
     /* errorToSourceCBID() */
 
 
@@ -100,6 +105,7 @@ var CBException = {
      *
      * @return Error
      */
+    function
     withError(
         error,
         cbmessage,
@@ -156,7 +162,7 @@ var CBException = {
         );
 
         return error;
-    },
+    }
     /* withError() */
 
 
@@ -168,6 +174,7 @@ var CBException = {
      *
      * @return Error
      */
+    function
     withValueRelatedError(
         error,
         value,
@@ -190,12 +197,12 @@ var CBException = {
 
         `;
 
-        return CBException.withError(
+        return withError(
             error,
             cbmessage,
             sourceCBID
         );
-    },
+    }
     /* withValueRelatedError() */
 
-};
+})();
