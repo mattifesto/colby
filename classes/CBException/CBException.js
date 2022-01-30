@@ -10,10 +10,36 @@
 
     window.CBException = {
         errorToExtendedMessage,
+        errorToOneLineErrorReport: CBException_errorToOneLineErrorReport,
         errorToSourceCBID,
         withError,
         withValueRelatedError,
     };
+
+
+
+    /**
+     * @param Error error
+     *
+     * @return string (text)
+     */
+    function
+    CBException_errorToOneLineErrorReport(
+        error
+    ) {
+        let javascriptErrorModel = CBErrorHandler.errorToCBJavaScriptErrorModel(
+            error
+        );
+
+        return CBConvert.stringToCleanLine(`
+            "${javascriptErrorModel.message}"
+            in
+            ${javascriptErrorModel.sourceURL}
+            line
+            ${javascriptErrorModel.line}
+        `);
+    }
+    /* CBException_errorToOneLineErrorReport() */
 
 
 
