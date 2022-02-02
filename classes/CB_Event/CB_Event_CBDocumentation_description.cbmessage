@@ -1,0 +1,6 @@
+When you create a JavaScript class in Colby sometimes you want to expose events.
+This class can be used inside your class to add and remove event listeners and
+dispatch the event.
+
+The event functions built in to JavaScript tend to focus on DOM events which
+often is not appropriate for Colby JavaScript objects.
