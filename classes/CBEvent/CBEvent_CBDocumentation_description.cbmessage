@@ -1,2 +1,4 @@
+(@deprecated 2022_02_01 (b))((br))Use CB_Event
+
 The CBEvent class is used in JavaScript to create events that have
 addListener(), removeListener(), and dispatch() functions.
