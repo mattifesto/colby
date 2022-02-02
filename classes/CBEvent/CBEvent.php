@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @deprecated 2022_02_01
+ *
+ *      Use CB_Event
+ */
 final class CBEvent {
 
     /* -- CBHTMLOutput interfaces -- */

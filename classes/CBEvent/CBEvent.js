@@ -3,6 +3,12 @@
 /* jshint esversion: 6 */
 /* exported CBEvent */
 
+
+/**
+ * @deprecated 2022_02_01
+ *
+ *      Use CB_Event
+ */
 var CBEvent = {
 
     /**
