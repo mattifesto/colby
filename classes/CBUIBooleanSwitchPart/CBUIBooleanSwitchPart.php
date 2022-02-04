@@ -16,7 +16,7 @@ CBUIBooleanSwitchPart {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.38.css',
+                'v675.54.css',
                 cbsysurl()
             ),
         ];

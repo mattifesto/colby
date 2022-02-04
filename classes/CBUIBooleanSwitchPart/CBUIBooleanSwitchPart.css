@@ -9,8 +9,7 @@
 
 .CBUIBooleanSwitchPart .slider {
     align-items: center;
-    background-color: hsl(0, 0%, 95%);
-    border: 1px solid hsl(0, 0%, 90%);
+    background-color: hsl(0, 50%, 50%);
     border-radius: 14px;
     box-sizing: border-box;
     display: flex;
