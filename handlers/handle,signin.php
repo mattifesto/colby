@@ -122,11 +122,16 @@ if (ColbyUser::getCurrentUserCBID() !== null) {
 
 
 
-$pageSpec = CBModelTemplateCatalog::fetchLivePageTemplate(
-    (object)[
-        'title' => 'User',
-        'sections' => $viewSpecs,
-    ]
+$pageSpec = CBViewPage::standardPageTemplate();
+
+CBViewPage::setTitle(
+    $pageSpec,
+    'Sign In'
+);
+
+CBViewPage::setViews(
+    $pageSpec,
+    $viewSpecs
 );
 
 CBPage::render(
@@ -137,7 +142,8 @@ CBPage::render(
 
 
 
-final class SignInView {
+final class
+SignInView {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
