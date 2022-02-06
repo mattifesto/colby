@@ -1,6 +1,7 @@
 /* global
     CB_Moment,
     CBImage,
+    CBErrorHandler,
     CBModel,
     CBUser,
     Colby,
@@ -299,81 +300,88 @@
         headerElement,
         momentModel
     ) {
-        let publicProfile = await CBUser.fetchPublicProfileByUserModelCBID(
-            CB_Moment.getAuthorUserModelCBID(
+        try {
+            let publicProfile = await CBUser.fetchPublicProfileByUserModelCBID(
+                CB_Moment.getAuthorUserModelCBID(
+                    momentModel
+                )
+            );
+
+            let userLinkElement = document.createElement(
+                "a"
+            );
+
+            userLinkElement.className = "CB_CBView_Moment_userLink_element";
+
+            userLinkElement.href = (
+                `/user/${publicProfile.CBUser_publicProfile_prettyUsername}`
+            );
+
+            headerElement.append(
+                userLinkElement
+            );
+
+            let userFullNameElement = document.createElement(
+                "span"
+            );
+
+            userFullNameElement.classList.add(
+                "CB_CBView_Moment_fullName_element"
+            );
+
+            userFullNameElement.textContent = (
+                publicProfile.CBUser_publicProfile_fullName
+            );
+
+            userLinkElement.append(
+                userFullNameElement
+            );
+
+            userLinkElement.append(
+                " @" + publicProfile.CBUser_publicProfile_prettyUsername
+            );
+
+            let timeContainerElement = document.createElement(
+                "a"
+            );
+
+            timeContainerElement.className = (
+                "CB_CBView_Moment_timeContainer_element"
+            );
+
+            let momentModelCBID = CBModel.getCBID(
                 momentModel
-            )
-        );
+            );
 
-        let userLinkElement = document.createElement(
-            "a"
-        );
+            timeContainerElement.href = `/moment/${momentModelCBID}/`;
 
-        userLinkElement.className = "CB_CBView_Moment_userLink_element";
+            headerElement.append(
+                " • "
+            );
 
-        userLinkElement.href = (
-            `/user/${publicProfile.CBUser_publicProfile_prettyUsername}`
-        );
+            headerElement.append(
+                timeContainerElement
+            );
 
-        headerElement.append(
-            userLinkElement
-        );
+            let timeElement = Colby.unixTimestampToElement(
+                CB_Moment.getCreatedTimestamp(
+                    momentModel
+                ),
+                "",
+                "Colby_time_element_style_moment"
+            );
 
-        let userFullNameElement = document.createElement(
-            "span"
-        );
-
-        userFullNameElement.classList.add(
-            "CB_CBView_Moment_fullName_element"
-        );
-
-        userFullNameElement.textContent = (
-            publicProfile.CBUser_publicProfile_fullName
-        );
-
-        userLinkElement.append(
-            userFullNameElement
-        );
-
-        userLinkElement.append(
-            " @" + publicProfile.CBUser_publicProfile_prettyUsername
-        );
-
-        let timeContainerElement = document.createElement(
-            "a"
-        );
-
-        timeContainerElement.className = (
-            "CB_CBView_Moment_timeContainer_element"
-        );
-
-        let momentModelCBID = CBModel.getCBID(
-            momentModel
-        );
-
-        timeContainerElement.href = `/moment/${momentModelCBID}/`;
-
-        headerElement.append(
-            " • "
-        );
-
-        headerElement.append(
-            timeContainerElement
-        );
-
-        let timeElement = Colby.unixTimestampToElement(
-            CB_Moment.getCreatedTimestamp(
-                momentModel
-            ),
-            "",
-            "Colby_time_element_style_moment"
-        );
-
-        timeContainerElement.append(
-            timeElement
-        );
+            timeContainerElement.append(
+                timeElement
+            );
+        } catch (
+            error
+        ) {
+            CBErrorHandler.report(
+                error
+            );
+        }
     }
     /* populateHeaderElement() */
-
 
 })();
