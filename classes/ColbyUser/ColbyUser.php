@@ -166,11 +166,17 @@ ColbyUser {
      *
      * @return void
      */
-    static function loginUser(
-        string $userCBID
+    static function
+    loginUser(
+        string $userCBID,
+        bool $shouldKeepSignedIn = false,
     ): void {
+        $userModelCBIDIsACBID = CBID::valueIsCBID(
+            $userCBID
+        );
+
         if (
-            !CBID::valueIsCBID($userCBID)
+            $userModelCBIDIsACBID !== true
         ) {
             throw new CBExceptionWithValue(
                 'The $userCBID parameter is not a valid CBID.',
@@ -179,36 +185,47 @@ ColbyUser {
             );
         }
 
+
+
         /**
-         * Set the Colby user cookie data.
-         *
-         * The only realistic way to best prevent cookie hijacking is to use
-         * HTTPS. As soon as a site becomes relatively popular or makes
-         * enough money to cover the cost, switch. This is what Facebook and
-         * Twitter did. It doesn't prevent physical access attacks, but that's
-         * pretty tough to do.
+         * Set the Colby user cookie.
          */
+
+        if (
+            $shouldKeepSignedIn
+        ) {
+            /* 30 days from now */
+            $expirationTimestamp = time() + (60 * 60 * 24 * 30);
+        } else {
+            /* 10 hours from now */
+            $expirationTimestamp = time() + (60 * 60 * 10);
+        }
 
         $cookie = (object)[
             'userCBID' => $userCBID,
-
-            /* 24 hours from now */
-            'expirationTimestamp' => time() + (60 * 60 * 24),
+            'expirationTimestamp' => $expirationTimestamp,
         ];
 
-        $encryptedCookie = Colby::encrypt($cookie);
+        $encryptedCookie = Colby::encrypt(
+            $cookie
+        );
 
-        /**
-         * TODO: If site uses HTTPS set parameter that only allows cookies to
-         * be transmitted over secure connections.
-         */
+        /* 60 days from now */
+        $cookieExpirationTimestamp = time() + (60 * 60 * 24 * 60);
+        $path = '/';
+        $domain = '';
+        $secureConnectionsOnly = true;
 
         setcookie(
             CBUserCookieName,
             $encryptedCookie,
-            time() + (60 * 60 * 24 * 30),
-            '/'
+            $cookieExpirationTimestamp,
+            $path,
+            $domain,
+            $secureConnectionsOnly
         );
+
+
 
         ColbyUser::$currentUserCBID = $userCBID;
     }
