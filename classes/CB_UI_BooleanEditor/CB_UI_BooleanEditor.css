@@ -1,0 +1,32 @@
+.CB_UI_BooleanEditor_root_element {
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    padding: 10px 20px;
+}
+
+
+
+.CB_UI_BooleanEditor_content_element {
+    display: flex;
+
+    box-sizing: border-box;
+    max-width: 100%;
+
+    width: var(--CB_UI_readableWidth);
+}
+
+
+
+.CB_UI_BooleanEditor_textContainer_element {
+    flex-grow: 1;
+}
+
+
+
+.CB_UI_BooleanEditor_title_element {
+    font-weight: bold;
+    padding: 10px 0;
+}
