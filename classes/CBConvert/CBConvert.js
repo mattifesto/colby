@@ -1,14 +1,40 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBConvert */
 /* global
     CBConvert_stringToStubReplacements
 */
 
+(function () {
+    "use strict";
+
+    window.CBConvert = {
+        centsToDollars: CBConvert_centsToDollars,
+        dollarsAsCents: CBConvert_dollarsAsCents,
+        errorToCBJavaScriptErrorModel: CBConvert_errorToCBJavaScriptErrorModel,
+        errorToDescription: CBConvert_errorToDescription,
+        errorToErrorDetails: CBConvert_errorToErrorDetails,
+        errorToStackTrace: CBConvert_errorToStackTrace,
+        stringToCleanLine: CBConvert_stringToCleanLine,
+        stringToLines: CBConvert_stringToLines,
+        stringToStub: CBConvert_stringToStub,
+        stringToURI: CBConvert_stringToURI,
+        valueAsCBID: CBConvert_valueAsCBID,
+        valueAsEmail: CBConvert_valueAsEmail,
+        valueAsFunction: CBConvert_valueAsFunction,
+        valueAsID: CBConvert_valueAsID,
+        valueAsInt: CBConvert_valueAsInt,
+        valueAsModel: CBConvert_valueAsModel,
+        valueAsMoniker: CBConvert_valueAsMoniker,
+        valueAsName: CBConvert_valueAsName,
+        valueAsNumber: CBConvert_valueAsNumber,
+        valueAsObject: CBConvert_valueAsObject,
+        valueIsName: CBConvert_valueIsName,
+        valueToArray: CBConvert_valueToArray,
+        valueToBool: CBConvert_valueToBool,
+        valueToObject: CBConvert_valueToObject,
+        valueToPrettyJSON: CBConvert_valueToPrettyJSON,
+        valueToString: CBConvert_valueToString,
+    };
 
 
-var CBConvert = {
 
     /**
      * @param mixed cents
@@ -24,9 +50,12 @@ var CBConvert = {
      *      "  3500  "  => "35.00"
      *      " -3500  "  => "-35.00"
      */
-    centsToDollars: function (cents) {
+    function
+    CBConvert_centsToDollars(
+        cents
+    ) {
         let isNegative = false;
-        let centsAsInt = CBConvert.valueAsInt(cents);
+        let centsAsInt = CBConvert_valueAsInt(cents);
 
         if (centsAsInt === undefined) {
             throw new TypeError("The cents parameter is not a valid integer.");
@@ -41,7 +70,7 @@ var CBConvert = {
          * Convert to a string.
          */
 
-        let centsAsString = CBConvert.valueToString(centsAsInt);
+        let centsAsString = CBConvert_valueToString(centsAsInt);
 
         /**
          * Pad with zeros until the string is at least 3 digits long.
@@ -57,7 +86,10 @@ var CBConvert = {
             "." +
             centsAsString.substr(-2)
         );
-    },
+    }
+    /* CBConvert_centsToDollars() */
+
+
 
     /**
      * Convert valid dollar amounts, usually from a string, to an integer number
@@ -91,7 +123,10 @@ var CBConvert = {
      *
      * @return Number|undefined
      */
-    dollarsAsCents: function (dollars) {
+    function
+    CBConvert_dollarsAsCents(
+        dollars
+    ) {
         if (typeof dollars !== "string") {
             dollars = String(dollars);
         }
@@ -119,21 +154,79 @@ var CBConvert = {
         }
 
         return undefined;
-    },
+    }
+    /* CBConvert_dollarsAsCents() */
+
+
+
+    /**
+     * Converts an error object to a CBJavaScriptError model.
+     *
+     * Properties:
+     *
+     *      Safari          Firefox         Chrome
+     *      ------          -------         ------
+     *      column          columnNumber    no
+     *      line            lineNumber      no
+     *      sourceURL       fileName        no
+     *
+     * History:
+     *
+     *      An initial goal was to stringify and Error object and send it to an
+     *      ajax function. But when an Error object is stringified it doesn't
+     *      serialize all of its properties.
+     *
+     *      Additional information that is not contained in the Error object is
+     *      added to the model returned by this function.
+     *
+     *      The ErrorEvent object passed to the listener of the "error" event
+     *      has some standardized properties that are similar, but not all
+     *      errors are handled by an error event listener. The "stack" property
+     *      actually contains all the data but has a different format on Chrome
+     *      browsers.
+     *
+     * @param Error error
+     *
+     * @return object (CBJavaScriptError)
+     */
+    function
+    CBConvert_errorToCBJavaScriptErrorModel(
+        error
+    ) {
+        let errorDetails = CBConvert_errorToErrorDetails(
+            error
+        );
+
+        return {
+            className: 'CBJavaScriptError',
+            column: errorDetails.columnNumber,
+            line: errorDetails.lineNumber,
+            message: error.message,
+            pageURL: location.href,
+            sourceURL: errorDetails.sourceURL,
+            stack: error.stack,
+        };
+    }
+    /* CBConvert_errorToCBJavaScriptErrorModel() */
+
+
 
     /**
      * @param Error error
      *
      * @return string (plain text)
      */
-    errorToDescription: function (error) {
+    function
+    CBConvert_errorToDescription(
+        error
+    ) {
         let errorMessage = error.message;
 
         if (typeof errorMessage !== "string") {
             errorMessage = "no error message is available";
         }
 
-        let stack = CBConvert.errorToStackTrace(error);
+        let stack = CBConvert_errorToStackTrace(error);
 
         if (stack !== undefined) {
             let entry = stack.split("\n", 1)[0];
@@ -200,14 +293,94 @@ var CBConvert = {
                 columnNumber: captures[4],
             };
         }
-    },
+    }
+    /* CBConvert_errorToDescription() */
+
+
+
+    /**
+     * @param Error error
+     *
+     * @return object
+     *
+     *      {
+     *          sourceURL: string
+     *          lineNumber: int
+     *          columnNumber: int
+     *      }
+     */
+    function
+    CBConvert_errorToErrorDetails(
+        error
+    ) {
+        let errorDetails = {};
+
+        /* Safari */
+        if (
+            error.line !== undefined
+        ) {
+            errorDetails.sourceURL = error.sourceURL;
+            errorDetails.lineNumber = error.line;
+            errorDetails.columnNumber = error.column;
+        }
+
+        /* Firefox */
+        else if (
+            error.lineNumber !== undefined
+        ) {
+            errorDetails.sourceURL = error.fileName;
+            errorDetails.lineNumber = error.lineNumber;
+            errorDetails.columnNumber = error.columnNumber;
+        }
+
+        /* Chrome */
+        else if (
+            typeof error.stack === "string"
+        ) {
+            let stackLines = error.stack.split(
+                "\n"
+            );
+
+            /**
+             * The first line is the error message, the second is the code
+             * location.
+             */
+            if (
+                stackLines.length < 2
+            ) {
+                return errorDetails;
+            }
+
+            let stackLine = stackLines[1];
+
+            let matches = stackLine.match(
+                /\s*at (.*) \((.+):([0-9]+):([0-9]+)\)$/
+            );
+
+            if (
+                matches !== null
+            ) {
+                errorDetails.sourceURL = matches[2];
+                errorDetails.lineNumber = matches[3];
+                errorDetails.columnNumber = matches[4];
+            }
+        }
+
+        return errorDetails;
+    }
+    /* CBConvert_errorToErrorDetails() */
+
+
 
     /**
      * @param Error error
      *
      * @return string|undefined
      */
-    errorToStackTrace: function (error) {
+    function
+    CBConvert_errorToStackTrace(
+        error
+    ) {
         let stackTrace = error.stack;
 
         if (typeof stackTrace === "string") {
@@ -215,7 +388,8 @@ var CBConvert = {
         } else {
             return undefined;
         }
-    },
+    }
+    /* CBConvert_errorToStackTrace() */
 
 
 
@@ -240,9 +414,13 @@ var CBConvert = {
      *
      * @return string
      */
-    stringToCleanLine: function (value) {
+    function
+    CBConvert_stringToCleanLine(
+        value
+    ) {
         return value.replace(/\s+/g, " ").trim();
-    },
+    }
+    /* CBConvert_stringToCleanLine() */
 
 
 
@@ -251,9 +429,13 @@ var CBConvert = {
      *
      * @return [string]
      */
-    stringToLines: function (value) {
+    function
+    CBConvert_stringToLines(
+        value
+    ) {
         return value.split(/\r\n|\r|\n/);
-    },
+    }
+    /* CBConvert_stringToLines() */
 
 
 
@@ -262,10 +444,11 @@ var CBConvert = {
      *
      * @return string
      */
-    stringToStub(
+    function
+    CBConvert_stringToStub(
         originalString
     ) {
-        let stub = CBConvert.valueToString(
+        let stub = CBConvert_valueToString(
             originalString
         );
 
@@ -286,8 +469,8 @@ var CBConvert = {
         );
 
         return stub;
-    },
-    /* stringToStub() */
+    }
+    /* CBConvert_stringToStub() */
 
 
 
@@ -296,10 +479,11 @@ var CBConvert = {
      *
      * @return string
      */
-    stringToURI(
+    function
+    CBConvert_stringToURI(
         originalString
     ) {
-        originalString = CBConvert.valueToString(
+        originalString = CBConvert_valueToString(
             originalString
         );
 
@@ -311,7 +495,7 @@ var CBConvert = {
 
         originalStubs.forEach(
             function (originalStub) {
-                let stub = CBConvert.stringToStub(
+                let stub = CBConvert_stringToStub(
                     originalStub
                 );
 
@@ -328,8 +512,8 @@ var CBConvert = {
         );
 
         return URI;
-    },
-    /* stringToURI() */
+    }
+    /* CBConvert_stringToURI() */
 
 
 
@@ -338,7 +522,10 @@ var CBConvert = {
      *
      * @return CBID|undefined
      */
-    valueAsCBID: function (value) {
+    function
+    CBConvert_valueAsCBID(
+        value
+    ) {
         if (typeof value === "string") {
             if (value.match(/^[a-f0-9]{40}$/)) {
                 return value;
@@ -346,8 +533,8 @@ var CBConvert = {
         }
 
         return undefined;
-    },
-    /* valueAsCBID() */
+    }
+    /* CBConvert_valueAsCBID() */
 
 
 
@@ -356,8 +543,11 @@ var CBConvert = {
      *
      * @return string|undefined
      */
-    valueAsEmail: function (value) {
-        let email = CBConvert.valueToString(
+    function
+    CBConvert_valueAsEmail(
+        value
+    ) {
+        let email = CBConvert_valueToString(
             value
         ).trim();
 
@@ -366,8 +556,8 @@ var CBConvert = {
         } else {
             return undefined;
         }
-    },
-    /* valueAsEmail() */
+    }
+    /* CBConvert_valueAsEmail() */
 
 
 
@@ -376,22 +566,30 @@ var CBConvert = {
      *
      * @return function|undefined
      */
-    valueAsFunction: function (value) {
+    function
+    CBConvert_valueAsFunction(
+        value
+    ) {
         if (typeof value === "function") {
             return value;
         } else {
             return undefined;
         }
-    },
+    }
+    /* CBConvert_valueAsFunction() */
 
 
 
     /**
      * @deprecated use CBConvert.valueAsCBID()
      */
-    valueAsID: function (value) {
-        return CBConvert.valueAsCBID(value);
-    },
+    function
+    CBConvert_valueAsID(
+        value
+    ) {
+        return CBConvert_valueAsCBID(value);
+    }
+    /* CBConvert_valueAsID() */
 
 
 
@@ -400,16 +598,19 @@ var CBConvert = {
      *
      * @return Number|undefined
      */
-    valueAsInt: function (value) {
-        let number = CBConvert.valueAsNumber(value);
+    function
+    CBConvert_valueAsInt(
+        value
+    ) {
+        let number = CBConvert_valueAsNumber(value);
 
         if (Number.isInteger(number)) {
             return number;
         } else {
             return undefined;
         }
-    },
-    /* valueAsInt() */
+    }
+    /* CBConvert_valueAsInt() */
 
 
 
@@ -422,7 +623,8 @@ var CBConvert = {
      *
      * @return object|undefined
      */
-    valueAsModel(
+    function
+    CBConvert_valueAsModel(
         value,
         classNames
     ) {
@@ -440,7 +642,7 @@ var CBConvert = {
             classNames = [classNames];
         }
 
-        let potentialModel = CBConvert.valueAsObject(
+        let potentialModel = CBConvert_valueAsObject(
             value
         );
 
@@ -451,7 +653,7 @@ var CBConvert = {
         }
 
         if (
-            !CBConvert.valueIsName(
+            !CBConvert_valueIsName(
                 potentialModel.className
             )
         ) {
@@ -469,8 +671,8 @@ var CBConvert = {
         }
 
         return potentialModel;
-    },
-    /* valueAsModel() */
+    }
+    /* CBConvert_valueAsModel() */
 
 
 
@@ -481,15 +683,19 @@ var CBConvert = {
      *
      * @return string|undefined
      */
-    valueAsMoniker: function (value) {
-        let stringValue = CBConvert.valueToString(value).trim();
+    function
+    CBConvert_valueAsMoniker(
+        value
+    ) {
+        let stringValue = CBConvert_valueToString(value).trim();
 
         if (stringValue.match(/^[a-z0-9_]+$/) !== null) {
             return stringValue;
         } else {
             return undefined;
         }
-    },
+    }
+    /* CBConvert_valueAsMoniker() */
 
 
 
@@ -498,17 +704,21 @@ var CBConvert = {
      *
      * @return string|undefined
      */
-    valueAsName: function (value) {
-        let potentialName = CBConvert.valueToString(
+    function
+    CBConvert_valueAsName(
+        value
+    ) {
+        let potentialName = CBConvert_valueToString(
             value
         ).trim();
 
-        if (CBConvert.valueIsName(potentialName)) {
+        if (CBConvert_valueIsName(potentialName)) {
             return potentialName;
         } else {
             return undefined;
         }
-    },
+    }
+    /* CBConvert_valueAsName() */
 
 
 
@@ -534,7 +744,10 @@ var CBConvert = {
      *      If the value is determined to be a number, a Number is returned;
      *      otherwise undefined.
      */
-    valueAsNumber: function (value) {
+    function
+    CBConvert_valueAsNumber(
+        value
+    ) {
         if (typeof value === "number") {
             return Number.isFinite(value) ? value : undefined;
         }
@@ -563,7 +776,8 @@ var CBConvert = {
         }
 
         return undefined;
-    },
+    }
+    /* CBConvert_valueAsNumber() */
 
 
 
@@ -574,7 +788,10 @@ var CBConvert = {
      *
      * @return object|undefined
      */
-    valueAsObject: function (value) {
+    function
+    CBConvert_valueAsObject(
+        value
+    ) {
         if (
             typeof value === "object" &&
             value !== null &&
@@ -584,8 +801,8 @@ var CBConvert = {
         } else {
             return undefined;
         }
-    },
-    /* valueAsObject() */
+    }
+    /* CBConvert_valueAsObject() */
 
 
 
@@ -594,7 +811,8 @@ var CBConvert = {
      *
      * @return bool
      */
-    valueIsName(
+    function
+    CBConvert_valueIsName(
         value
     ) {
         if (
@@ -606,8 +824,8 @@ var CBConvert = {
         return /^[a-zA-Z0-9_]+$/.test(
             value
         );
-    },
-    /* valueIsName() */
+    }
+    /* CBConvert_valueIsName() */
 
 
 
@@ -619,13 +837,17 @@ var CBConvert = {
      *      If the value parameter is an array it is returned; otherwise an
      *      empty array is returned.
      */
-    valueToArray: function (value) {
+    function
+    CBConvert_valueToArray(
+        value
+    ) {
         if (Array.isArray(value)) {
             return value;
         } else {
             return [];
         }
-    },
+    }
+    /* CBConvert_valueToArray() */
 
 
 
@@ -653,7 +875,10 @@ var CBConvert = {
      *
      *      If the value parameter is truthy, true is returned; otherwise false.
      */
-    valueToBool: function (value) {
+    function
+    CBConvert_valueToBool(
+        value
+    ) {
         if (typeof value === "string") {
             value = value.trim();
 
@@ -677,7 +902,10 @@ var CBConvert = {
         } else {
             return true;
         }
-    },
+    }
+    /* CBConvert_valueToBool() */
+
+
 
     /**
      * This function does not consider null values or arrays to be objects.
@@ -689,15 +917,21 @@ var CBConvert = {
      *      If the value parameter is an object it will be returned; otherwise
      *      an empty object will be returned.
      */
-    valueToObject: function (value) {
-        let valueAsObject = CBConvert.valueAsObject(value);
+    function
+    CBConvert_valueToObject(
+        value
+    ) {
+        let valueAsObject = CBConvert_valueAsObject(value);
 
         if (valueAsObject === undefined) {
             return {};
         } else {
             return valueAsObject;
         }
-    },
+    }
+    /* CBConvert_valueToObject() */
+
+
 
     /**
      * @param mixed value
@@ -708,7 +942,10 @@ var CBConvert = {
      *      value returned will not always be valid JSON. It will return
      *      "undefined" for the value undefined which is not valid JSON.
      */
-    valueToPrettyJSON: function (value) {
+    function
+    CBConvert_valueToPrettyJSON(
+        value
+    ) {
         let result = JSON.stringify(value, undefined, 2);
 
         if (typeof result === "string") {
@@ -720,7 +957,10 @@ var CBConvert = {
              */
             return String(result);
         }
-    },
+    }
+    /* CBConvert_valueToPrettyJSON() */
+
+
 
     /**
      * This function exists to support Colby's idea of "to" conversions. To
@@ -737,7 +977,10 @@ var CBConvert = {
      *      boolean value either "1" or "" will be returned; otherwise "" will
      *      be returned.
      */
-    valueToString: function (value) {
+    function
+    CBConvert_valueToString(
+        value
+    ) {
         switch (typeof value) {
             case "string":
                 return value;
@@ -755,5 +998,7 @@ var CBConvert = {
             default:
                 return "";
         }
-    },
-};
+    }
+    /* CBConvert_valueToString() */
+
+})();
