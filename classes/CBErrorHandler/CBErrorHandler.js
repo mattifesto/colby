@@ -1,5 +1,7 @@
 /* global
     CBAjax,
+    CBConvert,
+
     console,
 */
 
@@ -50,7 +52,7 @@
 
 
     window.CBErrorHandler = {
-        errorToCBJavaScriptErrorModel,
+        errorToCBJavaScriptErrorModel, /* deprecated */
         getCurrentBrowserIsSupported,
         report,
 
@@ -72,130 +74,16 @@
 
 
     /**
-     * Converts an error object to a CBJavaScriptError model.
+     * @deprecated 2022_02_06
      *
-     * Properties:
-     *
-     *      Safari          Firefox         Chrome
-     *      ------          -------         ------
-     *      column          columnNumber    no
-     *      line            lineNumber      no
-     *      sourceURL       fileName        no
-     *
-     * History:
-     *
-     *      An initial goal was to stringify and Error object and send it to an
-     *      ajax function. But when an Error object is stringified it doesn't
-     *      serialize all of its properties.
-     *
-     *      Additional information that is not contained in the Error object is
-     *      added to the model returned by this function.
-     *
-     *      The ErrorEvent object passed to the listener of the "error" event
-     *      has some standardized properties that are similar, but not all
-     *      errors are handled by an error event listener. The "stack" property
-     *      actually contains all the data but has a different format on Chrome
-     *      browsers.
-     *
-     * @param Error error
-     *
-     * @return object (CBJavaScriptError)
+     *      Use CBConvert.errorToCBJavaScriptErrorModel()
      */
     function errorToCBJavaScriptErrorModel(
         error
     ) {
-        let errorDetails = errorToErrorDetails(
+        return CBConvert.errorToCBJavaScriptErrorModel(
             error
-        );
-
-        return {
-            className: 'CBJavaScriptError',
-            column: errorDetails.columnNumber,
-            line: errorDetails.lineNumber,
-            message: error.message,
-            pageURL: location.href,
-            sourceURL: errorDetails.sourceURL,
-            stack: error.stack,
-        };
-
-
-
-        /* -- closures -- -- -- -- -- */
-
-
-
-        /**
-         * @param Error error
-         *
-         * @return object
-         *
-         *      {
-         *          sourceURL: string
-         *          lineNumber: int
-         *          columnNumber: int
-         *      }
-         */
-        function
-        errorToErrorDetails(
-            error
-        ) {
-            let errorDetails = {};
-
-            /* Safari */
-            if (
-                error.line !== undefined
-            ) {
-                errorDetails.sourceURL = error.sourceURL;
-                errorDetails.lineNumber = error.line;
-                errorDetails.columnNumber = error.column;
-            }
-
-            /* Firefox */
-            else if (
-                error.lineNumber !== undefined
-            ) {
-                errorDetails.sourceURL = error.fileName;
-                errorDetails.lineNumber = error.lineNumber;
-                errorDetails.columnNumber = error.columnNumber;
-            }
-
-            /* Chrome */
-            else if (
-                typeof error.stack === "string"
-            ) {
-                let stackLines = error.stack.split(
-                    "\n"
-                );
-
-                /**
-                 * The first line is the error message, the second is the code
-                 * location.
-                 */
-                if (
-                    stackLines.length < 2
-                ) {
-                    return errorDetails;
-                }
-
-                let stackLine = stackLines[1];
-
-                let matches = stackLine.match(
-                    /\s*at (.*) \((.+):([0-9]+):([0-9]+)\)$/
-                );
-
-                if (
-                    matches !== null
-                ) {
-                    errorDetails.sourceURL = matches[2];
-                    errorDetails.lineNumber = matches[3];
-                    errorDetails.columnNumber = matches[4];
-                }
-            }
-
-            return errorDetails;
-        }
-        /* errorToErrorDetails() */
-
+        ) ;
     }
     /* errorToCBJavaScriptErrorModel() */
 

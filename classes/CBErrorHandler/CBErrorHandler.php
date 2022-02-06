@@ -3,7 +3,7 @@
 final class
 CBErrorHandler {
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
@@ -33,13 +33,14 @@ CBErrorHandler {
     ): array {
         return [
             'CBAjax',
+            'CBConvert',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
 
 
 
-    /* -- functions -- -- -- -- -- */
+    /* -- functions -- */
 
 
 
