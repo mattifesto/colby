@@ -1,15 +1,18 @@
 <?php
 
-final class CBAjax {
+final class
+CBAjax {
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
             Colby::flexpath(
                 __CLASS__,
@@ -34,8 +37,12 @@ final class CBAjax {
      *
      * @return void
      */
-    static function handleCallAjaxFunctionRequest(): void {
-        header('Content-type: application/json');
+    static function
+    handleCallAjaxFunctionRequest(
+    ): void {
+        header(
+            'Content-type: application/json'
+        );
 
         set_exception_handler(
             'CBAjax::handleCallAjaxFunctionRequest_handleError'
@@ -244,12 +251,18 @@ final class CBAjax {
     /**
      * @return bool
      */
-    static function requestIsToCallAnAjaxFunction(): bool {
+    static function
+    requestIsToCallAnAjaxFunction(
+    ): bool {
         $ajaxArgumentsAsJSON = trim(
-            cb_post_value('ajaxArgumentsAsJSON')
+            cb_post_value(
+                'ajaxArgumentsAsJSON'
+                )
         );
 
-        return !empty($ajaxArgumentsAsJSON);
+        return !empty(
+            $ajaxArgumentsAsJSON
+        );
     }
     /* requestIsToCallAnAjaxFunction() */
 
@@ -268,7 +281,8 @@ final class CBAjax {
      *
      * @return void
      */
-    static function validateAjaxArguments(
+    static function
+    validateAjaxArguments(
         stdClass $ajaxArguments
     ): void {
         /* function class name */

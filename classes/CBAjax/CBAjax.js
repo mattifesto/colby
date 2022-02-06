@@ -1,8 +1,5 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-
 (function () {
+    "use strict";
 
     window.CBAjax = {
         call,
@@ -22,7 +19,8 @@
      *
      * @return Promise
      */
-    function call(
+    function
+    call(
         functionClassName,
         functionName,
         functionArguments,
@@ -30,7 +28,9 @@
     ) {
         var formData = new FormData();
 
-        if (functionArguments === undefined) {
+        if (
+            functionArguments === undefined
+        ) {
             functionArguments = {};
         }
 
@@ -45,15 +45,22 @@
             )
         );
 
-        if (file !== undefined) {
-            formData.append("file", file);
+        if (
+            file !== undefined
+        ) {
+            formData.append(
+                "file",
+                file
+            );
         }
 
-        return fetchResponse(
+        return CBAjax_fetchResponse(
             "/",
             formData
         ).then(
-            function (response) {
+            function (
+                response
+            ) {
                 return response.value;
             }
         );
@@ -81,7 +88,8 @@
      *      JavaScript Error object is passed to reject handlers with an 'ajax
      *      response' object set to the Error's `ajaxResponse` propery.
      */
-    function fetchResponse(
+    function
+    CBAjax_fetchResponse(
         URL,
         data
     ) {
@@ -90,7 +98,7 @@
             URL === ""
         ) {
             throw TypeError(
-                "fetchResponse() was called with an invalid URL " +
+                "CBAjax_fetchResponse() was called with an invalid URL " +
                 "parameter value of: " +
                 JSON.stringify(URL)
             );
@@ -119,11 +127,23 @@
             /**
              * @return undefined
              */
-            function fetch() {
+            function
+            fetch(
+            ) {
                 xhr = new XMLHttpRequest();
-                xhr.onloadend = handleLoadEnd;
-                xhr.open("POST", URL);
-                xhr.send(data);
+
+                xhr.onloadend = function () {
+                    handleLoadEnd();
+                };
+
+                xhr.open(
+                    "POST",
+                    URL
+                );
+
+                xhr.send(
+                    data
+                );
 
                 fetchCount += 1;
             }
@@ -134,9 +154,15 @@
             /**
              * @return undefined
              */
-            function handleLoadEnd() {
-                if (xhr.status === 0 && fetchCount < 3) {
+            function
+            handleLoadEnd(
+            ) {
+                if (
+                    xhr.status === 0 &&
+                    fetchCount < 3
+                ) {
                     fetch();
+
                     return;
                 }
 
@@ -144,13 +170,22 @@
                     xhr
                 );
 
-                if (ajaxResponse.wasSuccessful) {
-                    resolve(ajaxResponse);
+                if (
+                    ajaxResponse.wasSuccessful
+                ) {
+                    resolve(
+                        ajaxResponse
+                    );
                 } else {
-                    let error = new Error(ajaxResponse.message);
+                    let error = new Error(
+                        ajaxResponse.message
+                    );
+
                     error.ajaxResponse = ajaxResponse;
 
-                    reject(error);
+                    reject(
+                        error
+                    );
                 }
             }
             /* handleLoadEnd() */
@@ -159,7 +194,7 @@
         /* executor() */
 
     }
-    /* fetchResponse() */
+    /* CBAjax_fetchResponse() */
 
 
 
@@ -174,7 +209,8 @@
      *          xhr: XMLHttpRequest,
      *      }
      */
-    function responseFromXMLHttpRequest(
+    function
+    responseFromXMLHttpRequest(
         xhr
     ) {
         let response;
