@@ -97,7 +97,6 @@
     ): array {
         return [
             'CBConvert',
-            'CBErrorHandler',
             'CBMessageMarkup',
         ];
     }

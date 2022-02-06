@@ -1,6 +1,5 @@
 /* global
     CBConvert,
-    CBErrorHandler,
     CBMessageMarkup,
 */
 
@@ -27,7 +26,7 @@
     CBException_errorToOneLineErrorReport(
         error
     ) {
-        let javascriptErrorModel = CBErrorHandler.errorToCBJavaScriptErrorModel(
+        let javascriptErrorModel = CBConvert.errorToCBJavaScriptErrorModel(
             error
         );
 
@@ -119,7 +118,7 @@
      * @param Error error
      *
      *      The reason the error is passed as a parameter is that the error
-     *      information is created with respect to excactly where the error
+     *      information is created with respect to exactly where the error
      *      object is created so the error object shouldn't be created in this
      *      function and file.
      *
@@ -137,27 +136,7 @@
         cbmessage,
         sourceCBID
     ) {
-        if (error.CBException !== undefined) {
-
-            /**
-             * Use CBErrorHandler.reportError() only after CBErrorHandler does
-             * not depend on CBUIPanel.
-             */
-            CBErrorHandler.report(
-                Error(
-                    CBConvert.stringToCleanLine(`
-
-                        CBException.withError() was called with an error that is
-                        already a CBException
-
-                    `)
-                )
-            );
-
-            return;
-        }
-
-        let pod = {
+        let api = {
             get extendedMessage() {
                 return cbmessage;
             },
@@ -182,7 +161,7 @@
             {
                 configurable: true,
                 enumerable: false,
-                value: pod,
+                value: api,
                 writable: false,
             }
         );
