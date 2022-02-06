@@ -1856,6 +1856,11 @@ CBUser {
     /**
      * @param string $emailAddress
      * @param string $password
+     * @param bool $shouldKeepSignedIn
+     *
+     *      This value should be determined by the user and should only be true
+     *      if the user feels their device is trusted and not openly
+     *      compromised.
      *
      * @return object
      *
@@ -1876,7 +1881,8 @@ CBUser {
     static function
     signIn(
         string $emailAddress,
-        string $password
+        string $password,
+        bool $shouldKeepSignedIn = false
     ): stdClass {
         $emailAddress = CBConvert::valueAsEmail(
             $emailAddress
@@ -1942,7 +1948,8 @@ CBUser {
         );
 
         ColbyUser::loginUser(
-            $userCBID
+            $userCBID,
+            $shouldKeepSignedIn
         );
 
         return (object)[
