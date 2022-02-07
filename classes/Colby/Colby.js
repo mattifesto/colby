@@ -102,9 +102,18 @@ var Colby = {
      *
      * @return function
      */
-    call: function (callbacks) {
-        callbacks.forEach(function (callback) { callback.call(); });
+    call(
+        callbacks
+    ) {
+        callbacks.forEach(
+            function (
+                callback
+            ) {
+                callback.call();
+            }
+        );
     },
+    /* call() */
 
 
 
@@ -113,16 +122,16 @@ var Colby = {
      *
      *      Use CBAjax.call().
      */
-    callAjaxFunction: function (
+    callAjaxFunction(
         functionClassName,
         functionName,
-        functionArguments,
+        executorArguments,
         file
     ) {
         return CBAjax.call(
             functionClassName,
             functionName,
-            functionArguments,
+            executorArguments,
             file
         );
     },
