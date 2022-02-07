@@ -51,7 +51,7 @@ CB_UI_BooleanEditor {
     ): array {
         return [
             'CBMessageMarkup',
-            'CBUIBooleanSwitchPart'
+            'CBUIBooleanSwitchPart',
 
             'CB_UI',
         ];
