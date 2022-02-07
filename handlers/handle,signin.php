@@ -1,9 +1,16 @@
 <?php
 
 try {
-    $stateAsJSON = cb_query_string_value('state');
-    $state = json_decode($stateAsJSON);
-} catch (Throwable $throwable) {
+    $stateAsJSON = cb_query_string_value(
+        'state'
+    );
+
+    $state = json_decode(
+        $stateAsJSON
+    );
+} catch (
+    Throwable $throwable
+) {
     $state = (object)[];
 }
 
@@ -14,63 +21,13 @@ $destinationURL = trim(
     )
 );
 
+
+
 /**
  * If the destination URL is empty, make the home page the destination.
  */
 if ($destinationURL === '') {
     $destinationURL = '/';
-}
-
-$cbmessage = '';
-
-$emailAddress = trim(
-    cb_post_value(
-        'emailAddress',
-        ''
-    )
-);
-
-$password = cb_post_value(
-    'password',
-    ''
-);
-
-
-
-/**
- * Try to sign the user in if they are not already signed in and there is an
- * email address available.
- */
-
-if (
-    ColbyUser::getCurrentUserCBID() === null &&
-    $emailAddress !== ''
-) {
-    $result = CBUser::signIn(
-        $emailAddress,
-        $password
-    );
-
-    /**
-     * If the sign in was successful, redirect the user to the destination URL.
-     */
-
-    if (ColbyUser::getCurrentUserCBID() !== null) {
-        header(
-            "Location: {$destinationURL}",
-            true,
-            302
-        );
-
-        exit();
-    }
-
-    /* error message */
-
-    $cbmessage = CBModel::valueToString(
-        $result,
-        'cbmessage'
-    );
 }
 
 
@@ -97,21 +54,27 @@ if (ColbyUser::getCurrentUserCBID() !== null) {
             'className' => 'CBSignOutView',
         ],
     ];
+
 } else {
 
     /**
      * If the user is not logged in display sign in views.
      */
 
+    $userSignInViewSpec = CBModel::createSpec(
+        'CB_CBView_UserSignIn'
+    );
+
+    CB_CBView_UserSignIn::setDestinationURL(
+        $userSignInViewSpec,
+        $destinationURL
+    );
+
     $viewSpecs = [
-        (object)[
-            'className' => 'CBMessageView',
-            'markup' => $cbmessage
-        ],
+        $userSignInViewSpec,
         (object)[
             'className' => 'SignInView',
             'destinationURL' => $destinationURL,
-            'emailAddress' => $emailAddress,
         ],
         (object)[
             'className' => 'CBFacebookSignInView',
@@ -179,10 +142,6 @@ SignInView {
                 $spec,
                 'destinationURL'
             ),
-            'emailAddress' => CBModel::valueToString(
-                $spec,
-                'emailAddress'
-            ),
         ];
     }
     /* CBModel_build() */
@@ -206,77 +165,11 @@ SignInView {
             'destinationURL'
         );
 
-        $emailAddress = CBModel::valueToString(
-            $viewModel,
-            'emailAddress'
-        );
-
-        $formActionURL = CBUser::getSignInPageURL(
-            $destinationURL
-        );
-
         $createAccountURL = CBUser::getCreateAccountPageURL(
             $destinationURL
         );
 
         ?>
-
-        <form
-            method="post"
-            action="<?= $formActionURL ?>"
-            style="padding-bottom: 44px;"
-        >
-            <div class="CBUI_sectionContainer">
-                <div class="CBUI_section">
-
-                    <div class="CBUIStringEditor">
-                        <div class="CBUIStringEditor_container">
-                            <label
-                                class="CBUIStringEditor_label"
-                                for="emailAddress"
-                            >
-                                Email Address
-                            </label>
-                            <input
-                                class="CBUIStringEditor_input"
-                                autocomplete="username"
-                                type="email"
-                                name="emailAddress"
-                                id="emailAddress"
-                                value="<?= cbhtml($emailAddress) ?>"
-                            />
-                        </div>
-                    </div>
-
-                    <div class="CBUIStringEditor">
-                        <div class="CBUIStringEditor_container">
-                            <label
-                                class="CBUIStringEditor_label"
-                                for="password"
-                            >
-                                Password
-                            </label>
-                            <input
-                                class="CBUIStringEditor_input"
-                                autocomplete="current-password"
-                                type="password"
-                                name="password"
-                                id="password"
-                            />
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="CBUI_container1">
-                <input
-                    class="CBUI_button1"
-                    type="submit"
-                    value="Sign In"
-                />
-            </div>
-        </form>
 
         <div class="CBUI_sectionContainer">
             <div class="CBUI_section">
