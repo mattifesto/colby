@@ -1,16 +1,23 @@
+/* global
+    CB_AjaxRequest,
+    CBModel,
+*/
+
+
 (function () {
     "use strict";
 
     window.CBAjax = {
         call,
+        call2: CBAjax_call2,
     };
 
 
 
     /**
-     * @param string className
-     * @param string functionName
-     * @param object args (optional)
+     * @param string executorFunctionClassName
+     * @param string executorFunctionName
+     * @param object executorArguments (optional)
      * @param File file (optional)
      *
      *      A File usually retrieved from an input element.
@@ -21,27 +28,42 @@
      */
     function
     call(
-        functionClassName,
-        functionName,
-        functionArguments,
+        executorFunctionClassName,
+        executorFunctionName,
+        executorArguments,
         file
     ) {
         var formData = new FormData();
 
         if (
-            functionArguments === undefined
+            executorArguments === undefined
         ) {
-            functionArguments = {};
+            executorArguments = {};
         }
 
+        let ajaxRequestModel = CBModel.createSpec(
+            'CB_AjaxRequest'
+        );
+
+        CB_AjaxRequest.setExecutorFunctionClassName(
+            ajaxRequestModel,
+            executorFunctionClassName
+        );
+
+        CB_AjaxRequest.setExecutorFunctionName(
+            ajaxRequestModel,
+            executorFunctionName
+        );
+
+        CB_AjaxRequest.setExecutorArguments(
+            ajaxRequestModel,
+            executorArguments
+        );
+
         formData.append(
-            "ajaxArgumentsAsJSON",
+            "CB_AjaxRequest_model_form_key",
             JSON.stringify(
-                {
-                    functionClassName: functionClassName,
-                    functionName: functionName,
-                    functionArguments: functionArguments,
-                }
+                ajaxRequestModel
             )
         );
 
@@ -66,6 +88,68 @@
         );
     }
     /* call() */
+
+
+
+    /**
+     * @param string executorClassName
+     * @param object executorArguments
+     * @param File file
+     *
+     * @return Promise -> mixed
+     */
+    async function
+    CBAjax_call2(
+        executorClassName,
+        executorArguments,
+        file
+    ) {
+        let formData = new FormData();
+
+        if (
+            executorArguments === undefined
+        ) {
+            executorArguments = {};
+        }
+
+        let ajaxRequestModel = CBModel.createSpec(
+            'CB_AjaxRequest'
+        );
+
+        CB_AjaxRequest.setExecutorClassName(
+            ajaxRequestModel,
+            executorClassName
+        );
+
+        CB_AjaxRequest.setExecutorArguments(
+            ajaxRequestModel,
+            executorArguments
+        );
+
+        formData.append(
+            "CB_AjaxRequest_model_form_key",
+            JSON.stringify(
+                ajaxRequestModel
+            )
+        );
+
+        if (
+            file !== undefined
+        ) {
+            formData.append(
+                "file",
+                file
+            );
+        }
+
+        let response = await CBAjax_fetchResponse(
+            "/",
+            formData
+        );
+
+        return response.value;
+    }
+    /* call2() */
 
 
 
