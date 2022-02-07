@@ -5,16 +5,12 @@
     max-width: 100%;
     overflow-wrap: break-word;
 
-    padding: 10px;
+    padding: 40px 20px;
 }
 
 
 
 .CB_CBView_Moment_content_element {
-    border-width: 1px;
-    border-color: var(--CB_UI_borderColor);
-    border-radius: 10px;
-    border-style: solid;
     box-sizing: border-box;
     max-width: 100%;
     overflow: hidden;
@@ -53,14 +49,13 @@
 .CB_CBView_Moment_standard_element
 .CB_CBView_Moment_header_element {
     color: var(--CBTextColor3);
-    padding: 5px 10px 0;
 }
 
 
 
 .CB_CBView_Moment_standard_element
 .CB_CBView_Moment_text_element {
-    padding: 10px;
+    padding: 10px 0 20px;
     white-space: pre-wrap;
 }
 
@@ -74,7 +69,7 @@
 
 
 .CB_CBView_Moment_imageContainer_element {
-    padding: 0 10px 10px;
+    xpadding: 0 10px 10px;
 }
 
 
@@ -83,6 +78,9 @@
     display: block;
     box-sizing: border-box;
 
+    border-width: 1px;
+    border-color: var(--CB_UI_borderColor);
     border-radius: 10px;
+    border-style: solid;
     width: 100%;
 }

@@ -16,7 +16,7 @@ CB_CBView_Moment {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.53.css',
+                'v675.54.css',
                 cbsysurl()
             ),
         ];
