@@ -107,10 +107,6 @@
                 imageElement
             );
 
-            element.append(
-                imageContainerElement
-            );
-
             imageFileInputElement = document.createElement("input");
             imageFileInputElement.type = "file";
             imageFileInputElement.style.display = "none";
@@ -139,10 +135,17 @@
                         if (
                             imageURL === ""
                         ) {
-                            /* do nothing */
-                        } else {
-                            imageElement.style.display = "block";
+                            element.remove(
+                                imageContainerElement
+                            );
+
                             imageElement.src = imageURL;
+                        } else {
+                            imageElement.src = imageURL;
+
+                            element.append(
+                                imageContainerElement
+                            );
                         }
                     } catch (
                         error

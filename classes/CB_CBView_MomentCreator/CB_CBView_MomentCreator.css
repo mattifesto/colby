@@ -21,13 +21,23 @@
 .CB_CBView_MomentCreator_imageContainer_element {
     display: flex;
     justify-content: center;
+
+    box-sizing: border-box;
+    max-width: 100%;
+    padding: 10px 20px;
 }
 
 
 
 .CB_CBView_MomentCreator_image_element {
-    display: none;
+    display: block;
+    box-sizing: border-box;
 
-    border-radius: 5px;
+    max-width: 100%;
     width: var(--CB_UI_readableWidth);
+
+    border-width: 1px;
+    border-color: var(--CB_UI_borderColor);
+    border-radius: 5px;
+    border-style: solid;
 }

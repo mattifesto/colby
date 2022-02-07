@@ -16,7 +16,7 @@ CB_CBView_MomentCreator {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.53.css',
+                'v675.54.css',
                 cbsysurl()
             ),
         ];
@@ -34,7 +34,7 @@ CB_CBView_MomentCreator {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.53.js',
+                'v675.54.js',
                 cbsysurl()
             ),
         ];
