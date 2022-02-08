@@ -1,6 +1,7 @@
 <?php
 
-final class CBMenu {
+final class
+CBMenu {
 
     /* -- CBModel interfaces -- */
 
@@ -39,25 +40,31 @@ final class CBMenu {
 
         ];
 
-        /* items */
 
-        $model->items = [];
+        /* menu items */
 
-        $itemSpecs = CBModel::valueToArray(
-            $spec,
-            'items'
+        $menuItemSpecs = CBMenu::getMenuItems(
+            $spec
         );
 
-        foreach ($itemSpecs as $itemSpec) {
-            $itemModel = CBModel::build(
-                $itemSpec
-            );
+        $menuItemModels = array_map(
+            function (
+                $menuItemSpec
+            ) {
+                return CBModel::build(
+                    $menuItemSpec
+                );
+            },
+            $menuItemSpecs
+        );
 
-            array_push(
-                $model->items,
-                $itemModel
-            );
-        }
+        CBMenu::setMenuItems(
+            $model,
+            $menuItemModels
+        );
+
+
+        /* done */
 
         return $model;
     }
@@ -90,6 +97,41 @@ final class CBMenu {
 
 
     /* -- accessors -- */
+
+
+
+    /**
+     * @param object $menuModel
+     *
+     * @return [object]
+     */
+    static function
+    getMenuItems(
+        stdClass $menuModel
+    ): array {
+        return CBModel::valueToArray(
+            $menuModel,
+            'items'
+        );
+    }
+    /* getMenuItems() */
+
+
+
+    /**
+     * @param object $menuModel
+     * @param [object] $menuItemModels
+     *
+     * @return void
+     */
+    static function
+    setMenuItems(
+        stdClass $menuModel,
+        array $menuItemModels
+    ): void {
+        $menuModel->items = $menuItemModels;
+    }
+    /* setMenuItems() */
 
 
 
