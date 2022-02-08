@@ -13,50 +13,56 @@ SCOrdersAdminMenu {
     static function
     CBInstall_install(
     ): void {
-        $adminMenuSpec = CBModels::fetchSpecByID(
+        /* add item to main admin menu */
+
+        $mainAdminMenuSpec = CBModels::fetchSpecByID(
             CBAdminMenu::ID()
         );
 
-        $adminMenuSpec->items[] = (object)[
-            'className' => 'CBMenuItem',
-            'name' => 'orders',
-            'submenuID' => SCOrdersAdminMenu::getModelCBID(),
-            'text' => 'Orders',
-            'URL' => CBAdmin::getAdminPageURL(
-                'CB_CBAdmin_NewOrders'
-            ),
-        ];
+        $mainAdminMenuItemSpecs = CBMenu::getMenuItems(
+            $mainAdminMenuSpec
+        );
 
-        $spec = (object)[
+        array_push(
+            $mainAdminMenuItemSpecs,
+            (object)[
+                'className' => 'CBMenuItem',
+                'name' => 'orders',
+                'submenuID' => SCOrdersAdminMenu::getModelCBID(),
+                'text' => 'Orders',
+                'URL' => CBAdmin::getAdminPageURL(
+                    'CB_CBAdmin_NewOrders'
+                )
+            ]
+        );
+
+        CBMenu::setMenuItems(
+            $mainAdminMenuSpec,
+            $mainAdminMenuItemSpecs
+        );
+
+
+        /* create orders admin menu */
+
+        $ordersAdminMenuSpec = (object)[
             'className' => 'CBMenu',
             'ID' => SCOrdersAdminMenu::getModelCBID(),
             'title' => 'Orders',
             'titleURI' => CBAdmin::getAdminPageURL(
                 'CB_CBAdmin_NewOrders'
             ),
-            'items' => [
-                (object)[
-                    'className' => 'CBMenuItem',
-                    'name' => 'new',
-                    'text' => 'New',
-                    'URL' => '/admin/orders/new/',
-                ],
-                (object)[
-                    'className' => 'CBMenuItem',
-                    'name' => 'archived',
-                    'text' => 'Archived',
-                    'URL' => '/admin/orders/archived/',
-                ],
-            ],
         ];
+
+
+        /* save */
 
         CBDB::transaction(
             function () use (
-                $adminMenuSpec,
-                $spec
+                $mainAdminMenuSpec,
+                $ordersAdminMenuSpec
             ) {
                 CBModels::save(
-                    $adminMenuSpec
+                    $mainAdminMenuSpec
                 );
 
                 CBModels::deleteByID(
@@ -64,7 +70,7 @@ SCOrdersAdminMenu {
                 );
 
                 CBModels::save(
-                    $spec
+                    $ordersAdminMenuSpec
                 );
             }
         );
