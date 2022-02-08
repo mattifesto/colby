@@ -276,7 +276,7 @@ CB_CBAdmin_ArchivedOrders {
         );
 
         $archivedOrdersMenuItemSpec->name = 'archived';
-        $archivedOrdersMenuItemSpec->text = 'Archived*';
+        $archivedOrdersMenuItemSpec->text = 'Archived';
 
         $archivedOrdersMenuItemSpec->URL = CBAdmin::getAdminPageURL(
             'CB_CBAdmin_ArchivedOrders'

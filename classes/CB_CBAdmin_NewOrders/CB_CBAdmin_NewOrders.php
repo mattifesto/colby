@@ -128,7 +128,7 @@ CB_CBAdmin_NewOrders {
         );
 
         $newOrdersMenuItemSpec->name = 'new';
-        $newOrdersMenuItemSpec->text = 'New*';
+        $newOrdersMenuItemSpec->text = 'New';
 
         $newOrdersMenuItemSpec->URL = CBAdmin::getAdminPageURL(
             'CB_CBAdmin_NewOrders'
