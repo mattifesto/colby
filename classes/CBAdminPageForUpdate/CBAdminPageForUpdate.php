@@ -484,7 +484,7 @@ final class CBAdminPageForUpdate {
     update(
     ): void {
         CBInstall::install();
-        
+
         CBLog::addMessage(
             'System',
             5,
