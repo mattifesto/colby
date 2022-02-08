@@ -181,7 +181,11 @@ CBMenuView {
             empty($menu) ||
             (
                 empty($menu->title) &&
-                empty($menu->items)
+                empty(
+                    CBMenu::getMenuItems(
+                        $menu
+                    )
+                )
             )
         ) {
             echo '<!-- CBMenuView: no menu items -->';
@@ -227,7 +231,13 @@ CBMenuView {
             $CSSClassNames[] = 'CBMenuView_default';
         }
 
-        if (count($menu->items) < 5) {
+        $menuItems = CBMenu::getMenuItems(
+            $menu
+        );
+
+        if (
+            count($menuItems) < 5
+        ) {
             $CSSClassNames[] = 'few';
         }
 
@@ -322,11 +332,14 @@ CBMenuView {
 
                         <?php
 
-                        $items = CBModel::valueToArray($menu, 'items');
 
                         array_walk(
-                            $items,
-                            function ($menuItemModel) use ($selectedItemName) {
+                            $menuItems,
+                            function (
+                                $menuItemModel
+                            ) use (
+                                $selectedItemName
+                            ) {
                                 CBMenuItem::render(
                                     $menuItemModel,
                                     $selectedItemName
