@@ -1,15 +1,18 @@
 <?php
 
-final class SCOrdersAdminMenu {
+final class
+SCOrdersAdminMenu {
 
-    /* -- CBInstall interfaces -- -- -- -- -- */
+    /* -- CBInstall interfaces -- */
 
 
 
     /**
      * @return void
      */
-    static function CBInstall_install(): void {
+    static function
+    CBInstall_install(
+    ): void {
         $adminMenuSpec = CBModels::fetchSpecByID(
             CBAdminMenu::ID()
         );
@@ -19,14 +22,18 @@ final class SCOrdersAdminMenu {
             'name' => 'orders',
             'submenuID' => SCOrdersAdminMenu::getModelCBID(),
             'text' => 'Orders',
-            'URL' => '/admin/orders/new/',
+            'URL' => CBAdmin::getAdminPageURL(
+                'CB_CBAdmin_NewOrders'
+            ),
         ];
 
         $spec = (object)[
             'className' => 'CBMenu',
             'ID' => SCOrdersAdminMenu::getModelCBID(),
             'title' => 'Orders',
-            'titleURI' => '/admin/orders/new/',
+            'titleURI' => CBAdmin::getAdminPageURL(
+                'CB_CBAdmin_NewOrders'
+            ),
             'items' => [
                 (object)[
                     'className' => 'CBMenuItem',
@@ -44,14 +51,21 @@ final class SCOrdersAdminMenu {
         ];
 
         CBDB::transaction(
-            function () use ($adminMenuSpec, $spec) {
-                CBModels::save($adminMenuSpec);
+            function () use (
+                $adminMenuSpec,
+                $spec
+            ) {
+                CBModels::save(
+                    $adminMenuSpec
+                );
 
                 CBModels::deleteByID(
                     SCOrdersAdminMenu::getModelCBID()
                 );
 
-                CBModels::save($spec);
+                CBModels::save(
+                    $spec
+                );
             }
         );
     }
@@ -73,16 +87,19 @@ final class SCOrdersAdminMenu {
 
 
 
-    /* -- functions -- -- -- -- -- */
+    /* -- functions -- */
 
 
 
     /**
      * @return CBID
      */
-    static function getModelCBID(): string {
+    static function
+    getModelCBID(
+    ): string {
         return 'dfb7b34446c44bf94adafe5b6854583300466e8d';
     }
+    /* getModelCBID() */
 
 
 
@@ -91,8 +108,11 @@ final class SCOrdersAdminMenu {
      *
      *      Use SCOrdersAdminMenu::getModelCBID().
      */
-    static function ID(): string {
+    static function
+    ID(
+    ): string {
         return SCOrdersAdminMenu::getModelCBID();
     }
+    /* ID() */
 
 }
