@@ -150,7 +150,7 @@ final class CBModelsImportAdmin {
 
                 $specsByClass = array_reduce(
                     $alteredSpecs,
-                    function (&$specsByClass, $spec) {
+                    function ($specsByClass, $spec) {
                         if (empty($specsByClass[$spec->className])) {
                             $specsByClass[$spec->className] = [];
                         }
