@@ -169,7 +169,7 @@ ColbyUser {
     static function
     loginUser(
         string $userCBID,
-        bool $shouldKeepSignedIn = false,
+        bool $shouldKeepSignedIn = false
     ): void {
         $userModelCBIDIsACBID = CBID::valueIsCBID(
             $userCBID
