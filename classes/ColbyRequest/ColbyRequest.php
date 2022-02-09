@@ -113,14 +113,10 @@ ColbyRequest {
         if (
             CBConfiguration::secondaryDomainsShouldRedirectToPrimaryDomain()
         ) {
-            CBRequest::redirectSecondaryDomainsToPrimaryDomain();
-
             /**
-             * The function above exits so this exit is only here to make the
-             * story of this function clear.
+             * If this functon decides to redirect it will also exit.
              */
-
-            exit;
+            CBRequest::redirectSecondaryDomainsToPrimaryDomain();
         }
 
         $countOfStubs = count(
