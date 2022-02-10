@@ -89,19 +89,18 @@ var CBMenuViewEditor = {
             CBUI.createSectionHeader(
                 {
                     paragraphs: [
+                        `View Specific CSS Class Names:`,
+                        `"CBMenuView_list1": vertical, single line`,
                         `
-                        View Specific CSS Class Names:
-                        `,`
-                        "submenu1": center the text.
-                        `,`
-                        "custom": disable the default view styles.
-                        `,`
-                        Supported CSS Class Names:
-                        `,`
-                        "CBLightTheme": light background and dark text.
-                        `,`
-                        "CBDarkTheme": dark background and light text.
+                            "CBMenuView_list2": vertical, multiple lines, good
+                            for sidebars
+                        `,
+                        `"CBMenuView_submenu1": horizontal`,
                         `
+                            "CBMenuView_default": horizontal, will be the style
+                            if you don't specify one or custom
+                        `,
+                        `"custom": don't use the default view style.`,
                     ],
                 }
             )

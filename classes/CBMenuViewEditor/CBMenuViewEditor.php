@@ -1,8 +1,9 @@
 <?php
 
-final class CBMenuViewEditor {
+final class
+CBMenuViewEditor {
 
-    /* -- CBHtMLOutput interfaces -- -- -- -- -- */
+    /* -- CBHtMLOutput interfaces -- */
 
 
 
@@ -15,7 +16,7 @@ final class CBMenuViewEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.7.js',
+                'v675.55.js',
                 cbsysurl()
             ),
         ];
