@@ -16,7 +16,7 @@ CBMenuView {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.37.css',
+                'v675.55.css',
                 cbsysurl()
             ),
         ];
@@ -223,11 +223,48 @@ CBMenuView {
             'CBHTMLOutput::requireClassName'
         );
 
-        if (in_array('list1', $CSSClassNames)) {
-            $CSSClassNames[] = 'CBMenuView_list1';
-        } else if (in_array('submenu1', $CSSClassNames)) {
-            $CSSClassNames[] = 'CBMenuView_submenu1';
-        } else if (!in_array('custom', $CSSClassNames)) {
+        $builtInClassNames = [
+            'custom',
+            'list1',
+            'CBMenuView_list1',
+            'CBMenuView_list2',
+            'submenu1',
+            'CBMenuView_submenu1',
+            'CBMenuView_default',
+        ];
+
+        if (
+            array_intersect(
+                $builtInClassNames,
+                $CSSClassNames
+            )
+        ) {
+            $hasList1ShortClassName = in_array(
+                'list1',
+                $CSSClassNames
+            );
+
+            if (
+                $hasList1ShortClassName
+            ) {
+                $CSSClassNames[] = 'CBMenuView_list1';
+            }
+
+            $hasSubmenu1ShortClassName = in_array(
+                'submenu1',
+                $CSSClassNames
+            );
+
+            if (
+                $hasSubmenu1ShortClassName
+            ) {
+                $CSSClassNames[] = 'CBMenuView_submenu1';
+            }
+        } else {
+            /**
+             * If none of the built in class names have been used, add the
+             * default style.
+             */
             $CSSClassNames[] = 'CBMenuView_default';
         }
 

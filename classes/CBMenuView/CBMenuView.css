@@ -353,6 +353,66 @@
 }
 
 
+
+/**
+ * CBMenuView_list2
+ *
+ * This style is meant to show menus appropriately for a sidebar (think mobile
+ * phone menu) specifically the Colby sidebars. This style will be altered and
+ * change over time to support the goal of working best in the sidebars.
+ */
+
+.CBMenuView_list2 {
+    box-sizing: border-box;
+    max-width: 100%;
+    padding: 20px;
+
+    font-size: 0.9em;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+.CBMenuView_list2 .CBMenuView_items {
+    max-width: 100%;
+}
+
+.CBMenuView.CBMenuView_list2 li a {
+    text-decoration: none;
+    white-space: normal;
+}
+
+.CBMenuView_list2 a:hover {
+    text-decoration: underline;
+}
+
+.CBMenuView_list2 ul {
+    list-style: none;
+    padding: 0;
+}
+
+.CBMenuView_list2 li {
+    min-height: 44px;
+    padding: 0;
+}
+
+.CBMenuView_list2 .CBMenuView_header,
+.CBMenuView_list2 .CBMenuView_containerTitle {
+    display: none;
+}
+
+.CBMenuView_list2 .CBMenuView_listItemTitle a {
+    color: inherit;
+    border-bottom: 1px solid var(--CBTextColor3);
+}
+
+.CBMenuView_list2 .CBMenuView_listItemTitle a:hover {
+    text-decoration: none;
+}
+
+
+
 /* -- CBMenuView_listOfOnlyItems -- -- -- -- -- */
 
 .CBMenuView_listOfOnlyItems .CBMenuView_containerTitle,
