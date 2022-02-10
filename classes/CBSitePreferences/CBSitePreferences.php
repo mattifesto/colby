@@ -210,6 +210,7 @@ CBSitePreferences {
             ),
         ];
 
+
         /* image for icon */
 
         $imageForIconSpec = CBModel::valueAsModel(
@@ -221,6 +222,15 @@ CBSitePreferences {
         if ($imageForIconSpec) {
             $model->imageForIcon = CBModel::build($imageForIconSpec);
         }
+
+
+        CBSitePreferences::setHeaderImage(
+            $model,
+            CBSitePreferences::getHeaderImage(
+                $spec
+            )
+        );
+
 
         /* administrator emails */
 
@@ -590,6 +600,44 @@ CBSitePreferences {
         $sitePreferencesModel->frontPageID = $frontPageModelCBID;
     }
     /* setFrontPageModelCBID() */
+
+
+
+    /**
+     * @param object $sitePreferencesModel
+     *
+     * @return object|null
+     */
+    static function
+    getHeaderImage(
+        stdClass $sitePreferencesModel
+    ): ?stdClass {
+        return CBModel::valueAsModel(
+            $sitePreferencesModel,
+            'CBSitePreferences_headerImage_property',
+            'CBImage'
+        );
+    }
+    /* getHeaderImage() */
+
+
+
+    /**
+     * @param object $sitePreferencesModel
+     * @param object $headerImageModel
+     *
+     * @return void
+     */
+    static function
+    setHeaderImage(
+        stdClass $sitePreferencesModel,
+        ?stdClass $headerImageModel
+    ): void {
+        $sitePreferencesModel->CBSitePreferences_headerImage_property = (
+            $headerImageModel
+        );
+    }
+    /* setHeaderImage() */
 
 
 
