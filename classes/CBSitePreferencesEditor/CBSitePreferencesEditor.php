@@ -16,7 +16,7 @@ CBSitePreferencesEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.41.js',
+                'v675.55.js',
                 cbsysurl()
             ),
         ];
