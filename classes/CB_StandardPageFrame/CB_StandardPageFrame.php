@@ -102,7 +102,7 @@ CB_StandardPageFrame {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.45.css',
+                'v675.55.css',
                 cbsysurl()
             ),
         ];
@@ -209,6 +209,8 @@ CB_StandardPageFrame {
         CBView::renderSpec(
             $mainHeaderViewSpec
         );
+
+        CB_StandardPageFrame::renderHeaderImage();
 
         $renderContent();
 
@@ -318,7 +320,7 @@ CB_StandardPageFrame {
 
 
 
-    /* -- functions -- */
+    /* -- accessors -- */
 
 
 
@@ -407,4 +409,41 @@ CB_StandardPageFrame {
     }
     /* setRightSidebarPageModelCBID() */
 
+
+
+    /* -- functions -- */
+
+
+
+    /**
+     * @return void
+     */
+    private static function
+    renderHeaderImage(
+    ): void {
+        $headerImageModel = CBSitePreferences::getHeaderImage(
+            CBSitePreferences::model()
+        );
+
+        if (
+            $headerImageModel === null
+        ) {
+            return;
+        }
+
+        $headerImageURL = CBImage::asFlexpath(
+            $headerImageModel,
+            "rw1600",
+            cbsiteurl()
+        );
+
+        ?>
+
+        <div class="CB_StandardPageFrame_headerImage_element">
+            <img src="<?= cbhtml($headerImageURL) ?>">
+        </div>
+
+        <?php
+    }
+    /* renderHeaderImage() */
 }
