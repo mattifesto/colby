@@ -103,11 +103,11 @@ CBErrorHandler {
      */
     static function
     renderErrorReportPage(
-        Throwable $throwable
+        Throwable $originalError
     ): void {
         try {
             CBExceptionView::pushThrowable(
-                $throwable
+                $originalError
             );
 
             $spec = CBModelTemplateCatalog::fetchLivePageTemplate();
@@ -119,17 +119,21 @@ CBErrorHandler {
                 ],
             ];
 
-            CBPage::renderSpec($spec);
+            CBPage::renderSpec(
+                $spec
+            );
 
             CBExceptionView::popThrowable();
-        } catch (Throwable $innerThrowable) {
+        } catch (
+            Throwable $innerError
+        ) {
             CBErrorHandler::report(
-                $innerThrowable
+                $innerError
             );
 
             CBErrorHandler::renderErrorReportPageForInnerErrorAndExit(
-                $throwable,
-                $innerThrowable
+                $originalError,
+                $innerError
             );
         }
     }
@@ -148,17 +152,19 @@ CBErrorHandler {
      *      exception handler will handle it which is fine.
      *
      *
-     * @param Throwable $firstError
-     * @param Throwable $secondError
+     * @param Throwable $originalError
+     * @param Throwable $innerError
      *
      * @return void
      */
     static function
     renderErrorReportPageForInnerErrorAndExit(
-        Throwable $firstError,
-        Throwable $secondError
+        Throwable $originalError,
+        Throwable $innerError
     ): void {
-        while (ob_get_level() > 0) {
+        while (
+            ob_get_level() > 0
+        ) {
             ob_end_clean();
         }
 
@@ -170,20 +176,20 @@ CBErrorHandler {
         if (
             $isDeveloper
         ) {
-            $oneLineErrorReports1 = cbhtml(
+            $oneLineErrorReportsForOriginalError = cbhtml(
                 implode(
                     "\n",
                     CBException::throwableToOneLineErrorReports(
-                        $firstError
+                        $originalError
                     )
                 )
             );
 
-            $oneLineErrorReports2 = cbhtml(
+            $oneLineErrorReportsForInnerError = cbhtml(
                 implode(
                     "\n",
                     CBException::throwableToOneLineErrorReports(
-                        $secondError
+                        $innerError
                     )
                 )
             );
@@ -194,13 +200,13 @@ CBErrorHandler {
 
                 <p>This page was rendered by {$method}()
 
-                <h3>First Error</h3>
+                <h3>Original Error</h3>
 
-                <pre>{$oneLineErrorReports1}</pre>
+                <pre>{$oneLineErrorReportsForOriginalError}</pre>
 
-                <h3>Second Error</h3>
+                <h3>Inner Error</h3>
 
-                <pre>{$oneLineErrorReports2}</pre>
+                <pre>{$oneLineErrorReportsForInnerError}</pre>
 
             EOT;
         } else {
