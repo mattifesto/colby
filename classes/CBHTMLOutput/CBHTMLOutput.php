@@ -59,6 +59,7 @@ CBHTMLOutput {
     private static $javaScriptSnippetFilenames;
     private static $javaScriptSnippetStrings;
     private static $javaScriptURLs;
+    private static $javaScriptURLs_immediate;
     private static $javaScriptURLsForRequiredClasses;
     private static $pageInformation;
     private static $requiredClassNames;
@@ -156,7 +157,11 @@ CBHTMLOutput {
     /**
      * @return null
      */
-    static function addJavaScriptURL($javaScriptURL, $options = 0) {
+    static function
+    addJavaScriptURL(
+        $javaScriptURL,
+        $options = 0
+    ) {
         /**
          * The options parameter used to be a boolean parameter indicating
          * whether the JavaScript was asynchronous or not.
@@ -177,15 +182,38 @@ CBHTMLOutput {
 
         CBHTMLOutput::$javaScriptURLs[$javaScriptURL] = $options;
     }
+    /* addJavaScriptURL() */
 
 
 
     /**
      * @return null
      */
-    private static function addJavaScriptURLForRequiredClass($javaScriptURL) {
+    private static function
+    addJavaScriptURLForRequiredClass(
+        $javaScriptURL
+    ) {
         CBHTMLOutput::$javaScriptURLsForRequiredClasses[$javaScriptURL] = 0;
     }
+    /* addJavaScriptURLForRequiredClass() */
+
+
+
+    /**
+     * @param string $javaScriptURL
+     *
+     * @return void
+     */
+    private static function
+    addJavaScriptURL_Immediate(
+        $javaScriptURL
+    ): void {
+        array_push(
+            CBHTMLOutput::$javaScriptURLs_immediate,
+            $javaScriptURL
+        );
+    }
+    /* addJavaScriptURL_Immediate() */
 
 
 
@@ -427,7 +455,8 @@ CBHTMLOutput {
     /**
      * @return null
      */
-    private static function processRequiredClassNames() {
+    private static function
+    processRequiredClassNames() {
         $requiredClassNames = array_keys(
             CBHTMLOutput::$requiredClassNames
         );
@@ -441,7 +470,9 @@ CBHTMLOutput {
             )
         );
 
-        foreach ($resolvedClassNames as $className) {
+        foreach (
+            $resolvedClassNames as $className
+        ) {
             if (
                 is_callable($function = "{$className}::CBHTMLOutput_CSSURLs") ||
                 is_callable($function = "{$className}::requiredCSSURLs")
@@ -456,18 +487,55 @@ CBHTMLOutput {
                 );
             }
 
+
+            /* CBHTMLOutput_JavaScriptURLs_Immediate */
+
+
+            $callable = CBConvert::classNameAndFunctionNameToCallable(
+                $className,
+                'CBHTMLOutput_JavaScriptURLs_Immediate'
+            );
+
+
+            if (
+                $callable !== null
+            ) {
+                $immediateJavaScriptURLs = call_user_func(
+                    $callable
+                );
+
+                foreach(
+                    $immediateJavaScriptURLs as $immediateJavaScriptURL
+                ) {
+                    CBHTMLOutput::addJavaScriptURL_Immediate(
+                        $immediateJavaScriptURL
+                    );
+                };
+            }
+
+
+            /* CBHTMLOutput_JavaScriptURLs */
+
             $functionName = "{$className}::CBHTMLOutput_JavaScriptURLs";
 
-            if (is_callable($functionName)) {
-                $URLs = call_user_func($functionName);
-
-                array_walk(
-                    $URLs,
-                    function ($URL) {
-                        CBHTMLOutput::addJavaScriptURLForRequiredClass($URL);
-                    }
+            if (
+                is_callable($functionName)
+            ) {
+                $javaScriptURLs = call_user_func(
+                    $functionName
                 );
+
+                foreach(
+                    $javaScriptURLs as $javaScriptURL
+                ) {
+                    CBHTMLOutput::addJavaScriptURLForRequiredClass(
+                        $javaScriptURL
+                    );
+                };
             }
+
+
+            /* CBHTMLOutput_JavaScriptVariables */
 
             $functionName = "{$className}::CBHTMLOutput_JavaScriptVariables";
 
@@ -726,30 +794,11 @@ CBHTMLOutput {
 
 
     /**
-     * @return null
+     * @return void
      */
-    private static function renderJavaScript() {
-        if (
-            !empty(CBHTMLOutput::$exportedVariables) ||
-            !empty(CBHTMLOutput::$exportedLists)
-        ) {
-            echo "<script>\n\"use strict\";\n";
-
-            foreach (CBHTMLOutput::$exportedVariables as $name => $value) {
-                echo "var {$name} = {$value};\n";
-            }
-
-            foreach (CBHTMLOutput::$exportedLists as $name => $list) {
-                echo "var {$name} = {};\n";
-
-                foreach ($list as $key => $value) {
-                    echo "{$name}[\"{$key}\"] = {$value};\n";
-                }
-            }
-
-            echo "</script>\n";
-        }
-
+    private static function
+    renderJavaScript(
+    ): void {
         foreach (
             CBHTMLOutput::$javaScriptURLsForRequiredClasses as $URL => $options
         ) {
@@ -799,29 +848,81 @@ CBHTMLOutput {
             }
         }
     }
+    /* renderJavaScript() */
 
 
 
     /**
      * @return void
      */
-    private static function renderJavaScriptInHead(): void {
-        foreach (CBHTMLOutput::$javaScriptURLs as $URL => $options) {
-            if ($options & CBHTMLOutput::JSInHeadElement) {
+    private static function
+    renderJavaScriptInHead(
+    ): void {
+        if (
+            !empty(CBHTMLOutput::$exportedVariables) ||
+            !empty(CBHTMLOutput::$exportedLists)
+        ) {
+            echo "<script>\n\"use strict\";\n";
+
+            foreach (CBHTMLOutput::$exportedVariables as $name => $value) {
+                echo "var {$name} = {$value};\n";
+            }
+
+            foreach (CBHTMLOutput::$exportedLists as $name => $list) {
+                echo "var {$name} = {};\n";
+
+                foreach ($list as $key => $value) {
+                    echo "{$name}[\"{$key}\"] = {$value};\n";
+                }
+            }
+
+            echo "</script>\n";
+        }
+
+        foreach (
+            CBHTMLOutput::$javaScriptURLs as $javaScriptURL => $options
+        ) {
+            if (
+                $options & CBHTMLOutput::JSInHeadElement
+            ) {
                 $async = $options & CBHTMLOutput::JSAsync ? 'async ' : '';
                 $defer = $options & CBHTMLOutput::JSDefer ? 'defer ' : '';
 
-                echo (
-                    '<script ' .
-                    $async .
-                    $defer .
-                    'src="' .
-                    $URL .
-                    '"></script>'
+                $javaScriptURLAsHTML = cbhtml(
+                    $javaScriptURL
                 );
+
+                echo CBConvert::stringToCleanLine(<<<EOT
+
+                    <script
+                        src="{$javaScriptURLAsHTML}"
+                        {$async} {$defer}
+                    >
+                    </script>
+
+                EOT);
             }
         }
+
+        foreach(
+            CBHTMLOutput::$javaScriptURLs_immediate as $javaScriptURL
+        ) {
+            $javaScriptURLAsHTML = cbhtml(
+                $javaScriptURL
+            );
+
+            echo CBConvert::stringToCleanLine(<<<EOT
+
+                <script
+                    src="{$javaScriptURLAsHTML}"
+                >
+                </script>
+
+            EOT);
+
+        }
     }
+    /* renderJavaScriptInHead() */
 
 
 
@@ -850,7 +951,9 @@ CBHTMLOutput {
     /**
      * @return void
      */
-    static function reset(): void {
+    static function
+    reset(
+    ): void {
         if (CBHTMLOutput::$isActive) {
             restore_exception_handler();
             ob_end_clean();
@@ -863,6 +966,7 @@ CBHTMLOutput {
         CBHTMLOutput::$javaScriptSnippetFilenames = array();
         CBHTMLOutput::$javaScriptSnippetStrings = array();
         CBHTMLOutput::$javaScriptURLs = [];
+        CBHTMLOutput::$javaScriptURLs_immediate = [];
         CBHTMLOutput::$javaScriptURLsForRequiredClasses = [];
         CBHTMLOutput::$pageInformation = (object)[];
         CBHTMLOutput::$requiredClassNames = [];

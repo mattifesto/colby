@@ -1,0 +1,55 @@
+--- h1
+Interfaces
+---
+
+
+
+--- h2
+CBHTMLOutput_JavaScriptURLs()
+---
+
+The JavaScript URLs returned by this interface will be included right before the
+end of the body tag.
+
+2022_02_12 These URLs will probably be moved into the <head> element with the
+"defer" attribute at some point.
+
+--- h3
+Parameters
+---
+
+None.
+
+
+--- h3
+Return Value
+---
+
+Should return an array of JavaScript URLs.
+
+
+
+--- h2
+CBHTMLOutput_JavaScriptURLs_Immediate()
+---
+
+The JavaScript URLs returned by this interface will be included in the <head>
+element without the "defer" or "async" attributes. This means they will be run
+immediately and stop HTML parsing.
+
+This behavior is important for scripts that need to do things before the first
+render to prevent flashes.
+
+
+--- h3
+Parameters
+---
+
+None.
+
+
+--- h3
+Return Value
+---
+
+Should return an array of JavaScript URLs.
