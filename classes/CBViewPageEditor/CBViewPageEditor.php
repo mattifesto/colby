@@ -16,7 +16,7 @@ CBViewPageEditor {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.38.js',
+                'v675.55.js',
                 cbsysurl()
             ),
         ];
@@ -65,13 +65,13 @@ CBViewPageEditor {
         return array_merge(
             $classNamesForEditors,
             [
-                'CB_Brick_Button',
                 'CBAjax',
                 'CBConvert',
                 'CBErrorHandler',
                 'CBImage',
                 'CBModel',
                 'CBUI',
+                'CBUIButton',
                 'CBUIPanel',
                 'CBUISpecArrayEditor',
                 'CBViewPageInformationEditor',

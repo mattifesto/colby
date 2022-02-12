@@ -1,12 +1,11 @@
-/* exported CBViewPageEditor */
 /* global
-    CB_Brick_Button,
     CBAjax,
     CBConvert,
     CBErrorHandler,
     CBImage,
     CBModel,
     CBUI,
+    CBUIButton,
     CBUIPanel,
     CBUISpecArrayEditor,
     CBViewPageInformationEditor,
@@ -103,24 +102,50 @@
             /* CBViewPageInformationEditor */
 
 
-            /* use views as right sidebar content */
+            /* use views as left sidebar content */
             {
-                let buttonBrick = CB_Brick_Button.create();
+                let button = CBUIButton.create();
 
-                buttonBrick.CB_Brick_Button_setTextContent(
-                    "Use Views as Right Sidebar Content"
+                button.CBUIButton_setTextContent(
+                    "Use Views as Left Sidebar Content"
                 );
 
                 editorContainer.append(
-                    buttonBrick.CB_Brick_Button_getElement()
+                    button.CBUIButton_getElement()
                 );
 
                 let pageModelCBID = spec.ID;
 
-                buttonBrick.CB_Brick_Button_setClickedCallback(
+                button.CBUIButton_addClickEventListener(
+                    function () {
+                        useViewsAsLeftSidebarContent(
+                            button,
+                            pageModelCBID
+                        );
+                    }
+                );
+            }
+            /* use views as left sidebar content */
+
+
+            /* use views as right sidebar content */
+            {
+                let button = CBUIButton.create();
+
+                button.CBUIButton_setTextContent(
+                    "Use Views as Right Sidebar Content"
+                );
+
+                editorContainer.append(
+                    button.CBUIButton_getElement()
+                );
+
+                let pageModelCBID = spec.ID;
+
+                button.CBUIButton_addClickEventListener(
                     function () {
                         useViewsAsRightSidebarContent(
-                            buttonBrick,
+                            button,
                             pageModelCBID
                         );
                     }
@@ -366,18 +391,81 @@
 
 
     /**
-     * @param object buttonBrick
+     * @param object button
+     * @param CBID pageModelCBID
+     *
+     * @return undefined
+     */
+    async function
+    useViewsAsLeftSidebarContent(
+        button,
+        pageModelCBID
+    ) {
+        if (
+            button.CBUIButton_getIsDisabled()
+        ) {
+            return;
+        }
+
+        {
+            let userConfirmed = window.confirm(
+                CBConvert.stringToCleanLine(`
+
+                    Are you sure you want to use the views of this page as the
+                    content of the left sidebar?
+
+                `)
+            );
+
+            if (
+                !userConfirmed
+            ) {
+                return;
+            }
+        }
+
+        button.CBUIButton_setIsDisabled(
+            true
+        );
+
+        try {
+            await CBAjax.call2(
+                "CB_Ajax_StandardPageFrame_SetLeftSidebarPage",
+                {
+                    CB_Ajax_StandardPageFrame_SetLeftSidebarPage_pageModelCBID: (
+                        pageModelCBID
+                    ),
+                }
+            );
+        } catch (
+            error
+        ) {
+            CBErrorHandler.report(
+                error
+            );
+        } finally {
+            button.CBUIButton_setIsDisabled(
+                false
+            );
+        }
+    }
+    /* useViewsAsLeftSidebarContent() */
+
+
+
+    /**
+     * @param object button
      * @param CBID pageModelCBID
      *
      * @return undefined
      */
     async function
     useViewsAsRightSidebarContent(
-        buttonBrick,
+        button,
         pageModelCBID
     ) {
         if (
-            buttonBrick.CB_Brick_Button_getIsDisabled()
+            button.CBUIButton_getIsDisabled()
         ) {
             return;
         }
@@ -399,7 +487,7 @@
             }
         }
 
-        buttonBrick.CB_Brick_Button_setIsDisabled(
+        button.CBUIButton_setIsDisabled(
             true
         );
 
@@ -411,12 +499,14 @@
                     pageModelCBID,
                 }
             );
-        } catch (error) {
+        } catch (
+            error
+        ) {
             CBErrorHandler.report(
                 error
             );
         } finally {
-            buttonBrick.CB_Brick_Button_setIsDisabled(
+            button.CBUIButton_setIsDisabled(
                 false
             );
         }
