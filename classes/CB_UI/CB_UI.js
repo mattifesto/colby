@@ -1,62 +1,54 @@
 /* globals
-    CBJavaScript,
-
     CB_UI_CBSitePreferences_appearance,
 */
 
 (function () {
     "use strict";
 
+    let doesBrowserPreferDarkMode;
+
+
     window.CB_UI = {
         getNonBreakingSpaceCharacter,
     };
+
 
     if (
         CB_UI_CBSitePreferences_appearance === (
             'CBSitePreferences_appearance_light'
         )
     ) {
-        CBJavaScript.afterDOMContentLoaded(
-            function () {
-                setLightAppearance();
-            }
-        );
-
-        return;
+        setLightAppearance();
     }
 
 
-    if (
+    else if (
         CB_UI_CBSitePreferences_appearance === (
             'CBSitePreferences_appearance_dark'
         )
     ) {
-        CBJavaScript.afterDOMContentLoaded(
-            function () {
-                setDarkAppearance();
-            }
-        );
-
-        return;
+        setDarkAppearance();
     }
 
 
-    let doesBrowserPreferDarkMode = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-    );
+    else {
+        doesBrowserPreferDarkMode = window.matchMedia(
+            "(prefers-color-scheme: dark)"
+        );
 
-    doesBrowserPreferDarkMode.addEventListener(
-        "change",
-        function () {
-            setAutoAppearance();
-        }
-    );
+        doesBrowserPreferDarkMode.addEventListener(
+            "change",
+            function () {
+                setAutoAppearance();
+            }
+        );
 
-    CBJavaScript.afterDOMContentLoaded(
-        function () {
-            setAutoAppearance();
-        }
-    );
+        setAutoAppearance();
+    }
+
+
+
+    /* -- functions -- */
 
 
 
@@ -78,7 +70,9 @@
     function
     setAutoAppearance(
     ) {
-        if (doesBrowserPreferDarkMode.matches) {
+        if (
+            doesBrowserPreferDarkMode.matches
+        ) {
             setDarkAppearance();
         } else {
             setLightAppearance();

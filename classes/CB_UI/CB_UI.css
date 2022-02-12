@@ -18,10 +18,11 @@ html {
 }
 
 
-
-html.CB_UI_browserPrefersDarkMode {
-    --CB_UI_paperColor: hsl(0, 0%, 12%);
-    --CB_UI_borderColor: hsl(0, 0%, 20%);
+@media screen {
+    html.CB_UI_browserPrefersDarkMode {
+        --CB_UI_paperColor: hsl(0, 0%, 12%);
+        --CB_UI_borderColor: hsl(0, 0%, 20%);
+    }
 }
 
 

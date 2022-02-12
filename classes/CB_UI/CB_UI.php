@@ -23,7 +23,7 @@ CB_UI {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.48.css',
+                'v675.55.css',
                 cbsysurl()
             ),
         ];
@@ -36,12 +36,12 @@ CB_UI {
      * @return [string]
      */
     static function
-    CBHTMLOutput_JavaScriptURLs(
+    CBHTMLOutput_JavaScriptURLs_Immediate(
     ): array {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.54.js',
+                'v675.55.js',
                 cbsysurl()
             ),
         ];
@@ -76,7 +76,6 @@ CB_UI {
     CBHTMLOutput_requiredClassNames(
     ): array {
         return [
-            'CBJavaScript',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
