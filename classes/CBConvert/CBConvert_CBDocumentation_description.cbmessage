@@ -1,3 +1,9 @@
+--- h1
+Functions
+---
+
+
+
 --- h2
 stringToStub( mixed $string )
 ---
@@ -6,8 +12,24 @@ Converts plain text to a single URL stub. A stub is a string that contains only
 the characters [0-9a-z-]. It replaces spaces with a hyphens and trims the
 string.
 
---- dl
 
+--- h3
+Parameters
+---
+
+--- dl
+    --- dt
+    string
+    ---
+    The original string which will be converted to a stub.
+---
+
+
+--- h3
+Usage Notes
+---
+
+--- dl
     --- dt
     Important
     ---
@@ -26,8 +48,13 @@ string.
     Example
     ---
     'Piñata Örtega' --> 'piata-rtega'
-
 ---
+
+
+--- h3
+Return Value
+---
+A string that is either a stub or an empty string.
 
 
 

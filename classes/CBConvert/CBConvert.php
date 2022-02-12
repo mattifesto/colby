@@ -99,6 +99,33 @@ CBConvert {
 
 
     /**
+     * @param string $className
+     * @param string $functionName
+     *
+     * @return callable|null
+     */
+    static function
+    classNameAndFunctionNameToCallable(
+        string $className,
+        string $functionName
+    ): ?callable {
+        $methodName = "{$className}::{$functionName}";
+
+        if (
+            is_callable(
+                $methodName
+            )
+        ) {
+            return $methodName;
+        } else {
+            return null;
+        }
+    }
+    /* classNameAndFunctionNameToCallable() */
+
+
+
+    /**
      * @param string $domain
      *
      *      Colby recommends that local network web servers use domains that
