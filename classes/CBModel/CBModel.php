@@ -463,17 +463,10 @@ CBModel {
             $model,
         );
 
-        $functionName = "{$className}::{$functionName}";
-
-        if (
-            is_callable(
-                $functionName
-            )
-        ) {
-            return $functionName;
-        } else {
-            return null;
-        }
+        return CBConvert::classNameAndFunctionNameToCallable(
+            $className,
+            $functionName
+        );
     }
     /* getClassFunction() */
 
