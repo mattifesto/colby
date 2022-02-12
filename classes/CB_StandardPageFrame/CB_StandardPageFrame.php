@@ -115,17 +115,17 @@ CB_StandardPageFrame {
      * @return [string]
      */
     static function
-    CBHTMLOutput_JavaScriptURLs(
+    CBHTMLOutput_JavaScriptURLs_Immediate(
     ) {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.39.js',
+                'v675.55.js',
                 cbsysurl()
             ),
         ];
     }
-    /* CBHTMLOutput_CSSURLs() */
+    /* CBHTMLOutput_JavaScriptURLs_Immediate() */
 
 
 
@@ -137,7 +137,6 @@ CB_StandardPageFrame {
     ): array {
         return [
             'CB_UI',
-            'Colby',
         ];
     }
     /* CBInstall_requiredClassNames() */
@@ -157,164 +156,34 @@ CB_StandardPageFrame {
     CBPageFrame_render(
         callable $renderContent
     ): void {
-        echo <<<EOT
-
-            <div class="CB_StandardPageFrame">
-                <div class="CB_StandardPageFrame_leftSidebar">
-
-        EOT;
-
-        $mainMenuModelCBID = (
-            CB_StandardPageFrame::getDefaultMainMenuModelCBID()
+        $rootElementCSSClassNames = implode(
+            ' ',
+            [
+                'CB_StandardPageFrame_element',
+            ]
         );
-
-        if (
-            $mainMenuModelCBID !== null
-        ) {
-            $menuViewSpec = CBModel::createSpec(
-                'CBMenuView'
-            );
-
-            CBMenuView::setCSSClassNames(
-                $menuViewSpec,
-                'custom CB_StandardPageFrame_mainMenu'
-            );
-
-            CBMenuView::setMenuModelCBID(
-                $menuViewSpec,
-                $mainMenuModelCBID
-            );
-
-            CBView::renderSpec(
-                $menuViewSpec
-            );
-        }
 
         echo <<<EOT
 
-                </div>
-                <div class="CB_StandardPageFrame_main">
+            <div class="${rootElementCSSClassNames}">
 
         EOT;
 
-        $mainHeaderViewSpec = CBModel::createSpec(
-            'CB_CBView_MainHeader'
+        CB_StandardPageFrame::renderLeftSidebar();
+
+        CB_StandardPageFrame::renderMain(
+            $renderContent
         );
 
-        CB_CBView_MainHeader::setContext(
-            $mainHeaderViewSpec,
-            'page'
-        );
-
-        CBView::renderSpec(
-            $mainHeaderViewSpec
-        );
-
-        CB_StandardPageFrame::renderHeaderImage();
-
-        $renderContent();
+        CB_StandardPageFrame::renderRightSidebar();
 
         echo <<<EOT
 
-                </div>
-                <div class="CB_StandardPageFrame_rightSidebar">
+            </div> <!-- ${rootElementCSSClassNames} -->
 
         EOT;
 
-        $rightSidebarPageModelCBID = (
-            CB_StandardPageFrame::getRightSidebarPageModelCBID()
-        );
-
-        if (
-            $rightSidebarPageModelCBID !== null
-        ) {
-            $viewPageModel = CBModelCache::fetchModelByID(
-                $rightSidebarPageModelCBID
-            );
-
-            if (
-                $viewPageModel !== null
-            ) {
-                $views = CBViewPage::getViews(
-                    $viewPageModel
-                );
-
-                array_walk(
-                    $views,
-                    function (
-                        $view
-                    ) {
-                        CBView::render(
-                            $view
-                        );
-                    }
-                );
-            }
-        }
-
-        echo <<<EOT
-
-                </div>
-            </div>
-
-        EOT;
-
-        /* -- TODO move this into another functon -- */
-
-
-        echo <<<EOT
-
-
-            <div class="CB_StandardPageFrame CB_StandardPageFrame_mainMenuPopup CBUI_panel">
-                <div class="CB_StandardPageFrame_leftSidebar">
-                </div>
-                <div class="CB_StandardPageFrame_main">
-
-        EOT;
-
-        $mainHeaderViewSpec = CBModel::createSpec(
-            'CB_CBView_MainHeader'
-        );
-
-        CB_CBView_MainHeader::setContext(
-            $mainHeaderViewSpec,
-            'menu'
-        );
-
-        CBView::renderSpec(
-            $mainHeaderViewSpec
-        );
-
-        if (
-            $mainMenuModelCBID !== null
-        ) {
-            $menuViewSpec = CBModel::createSpec(
-                'CBMenuView'
-            );
-
-            CBMenuView::setCSSClassNames(
-                $menuViewSpec,
-                'custom CB_StandardPageFrame_mainMenu'
-            );
-
-            CBMenuView::setMenuModelCBID(
-                $menuViewSpec,
-                $mainMenuModelCBID
-            );
-
-            CBView::renderSpec(
-                $menuViewSpec
-            );
-        }
-
-        echo <<<EOT
-
-                </div>
-                <div class="CB_StandardPageFrame_rightSidebar">
-                </div>
-            </div>
-
-        EOT;
+        CB_StandardPageFrame::renderMenuPanel();
     }
     /* CBPageFrame_render() */
 
@@ -381,6 +250,40 @@ CB_StandardPageFrame {
      * @return CBID|null
      */
     static function
+    getLeftSidebarPageModelCBID(
+    ): ?string {
+        return CBModelAssociations::fetchSingularSecondCBID(
+            CB_StandardPageFrame::getCBID(),
+            'CB_StandardPageFrame_leftSidebarPage'
+        );
+    }
+    /* getLeftSidebarPageModelCBID() */
+
+
+
+    /**
+     * @param CBID $newPageModelCBID
+     *
+     * @return void
+     */
+    static function
+    setLeftSidebarPageModelCBID(
+        string $newPageModelCBID
+    ): void {
+        CBModelAssociations::replaceAssociatedID(
+            CB_StandardPageFrame::getCBID(),
+            'CB_StandardPageFrame_leftSidebarPage',
+            $newPageModelCBID
+        );
+    }
+    /* setLeftSidebarPageModelCBID() */
+
+
+
+    /**
+     * @return CBID|null
+     */
+    static function
     getRightSidebarPageModelCBID(
     ): ?string {
         return CBModelAssociations::fetchSingularSecondCBID(
@@ -440,10 +343,238 @@ CB_StandardPageFrame {
         ?>
 
         <div class="CB_StandardPageFrame_headerImage_element">
-            <img src="<?= cbhtml($headerImageURL) ?>">
+            <a href="/">
+                <img src="<?= cbhtml($headerImageURL) ?>">
+            </a>
         </div>
 
         <?php
     }
     /* renderHeaderImage() */
+
+
+
+    /**
+     * @return void
+     */
+    private static function
+    renderLeftSidebar(
+    ): void {
+        $sidebarElementCSSClasses = implode(
+            ' ',
+            [
+                'CB_StandardPageFrame_leftSidebar_class',
+                'CB_StandardPageFrame_page_leftSidebar_element',
+            ]
+        );
+
+        $sidebarContentElementCSSClasses = implode(
+            ' ',
+            [
+                'CB_StandardPageFrame_leftSidebarContent_element',
+            ]
+        );
+
+        echo <<<EOT
+
+            <div class="${sidebarElementCSSClasses}">
+                <div class="${sidebarContentElementCSSClasses}">
+
+        EOT;
+
+        $leftSidebarPageModelCBID = (
+            CB_StandardPageFrame::getLeftSidebarPageModelCBID()
+        );
+
+        if (
+            $leftSidebarPageModelCBID !== null
+        ) {
+            $viewPageModel = CBModelCache::fetchModelByID(
+                $leftSidebarPageModelCBID
+            );
+
+            if (
+                $viewPageModel !== null
+            ) {
+                $viewModels = CBViewPage::getViews(
+                    $viewPageModel
+                );
+
+                foreach(
+                    $viewModels as $viewModel
+                ) {
+                    CBView::render(
+                        $viewModel
+                    );
+                }
+            }
+        }
+
+        echo <<<EOT
+
+                </div> <!-- ${sidebarContentElementCSSClasses} -->
+            </div> <!-- ${sidebarElementCSSClasses} -->
+
+        EOT;
+    }
+    /* renderLeftSidebar() */
+
+
+
+    /**
+     * @param callable $renderContent
+     *
+     * @return void
+     */
+    private static function
+    renderMain(
+        callable $renderContent
+    ): void {
+        $mainElementCSSClasses = implode(
+            ' ',
+            [
+                'CB_StandardPageFrame_main_element',
+            ]
+        );
+
+        echo <<<EOT
+
+            <div class="${mainElementCSSClasses}">
+
+        EOT;
+
+        $mainHeaderViewSpec = CBModel::createSpec(
+            'CB_CBView_MainHeader'
+        );
+
+        CB_CBView_MainHeader::setContext(
+            $mainHeaderViewSpec,
+            'page'
+        );
+
+        CBView::renderSpec(
+            $mainHeaderViewSpec
+        );
+
+        CB_StandardPageFrame::renderHeaderImage();
+
+        $renderContent();
+
+        echo <<<EOT
+
+            </div> <!-- ${mainElementCSSClasses} -->
+
+        EOT;
+    }
+    /* renderMain() */
+
+
+
+    /**
+     * @return void
+     */
+    private static function
+    renderMenuPanel(
+    ): void {
+        echo <<<EOT
+
+
+            <div class="CB_StandardPageFrame_element CB_StandardPageFrame_menuPanel_element">
+                <div class="CB_StandardPageFrame_leftSidebar_class">
+                </div>
+                <div class="CB_StandardPageFrame_main_element CB_StandardPageFrame_menuPopup_main_element">
+
+        EOT;
+
+        $mainHeaderViewSpec = CBModel::createSpec(
+            'CB_CBView_MainHeader'
+        );
+
+        CB_CBView_MainHeader::setContext(
+            $mainHeaderViewSpec,
+            'menu'
+        );
+
+        CBView::renderSpec(
+            $mainHeaderViewSpec
+        );
+
+        echo <<<EOT
+
+                </div>
+                <div class="CB_StandardPageFrame_rightSidebar_element">
+                </div>
+            </div>
+
+        EOT;
+    }
+    /* renderMenuPanel() */
+
+
+
+    /**
+     * @return void
+     */
+    private static function
+    renderRightSidebar(
+    ): void {
+        $sidebarElementCSSClassNames = implode(
+            ' ',
+            [
+                'CB_StandardPageFrame_rightSidebar_element',
+                'CB_StandardPageFrame_page_rightSidebar_element',
+            ]
+        );
+
+        $sidebarContentElementCSSClassNames = implode(
+            ' ',
+            [
+                'CB_StandardPageFrame_rightSidebarContent_element'
+            ]
+        );
+
+        echo <<<EOT
+
+            <div class="${sidebarElementCSSClassNames}">
+                <div class="${sidebarContentElementCSSClassNames}">
+
+        EOT;
+
+        $rightSidebarPageModelCBID = (
+            CB_StandardPageFrame::getRightSidebarPageModelCBID()
+        );
+
+        if (
+            $rightSidebarPageModelCBID !== null
+        ) {
+            $viewPageModel = CBModelCache::fetchModelByID(
+                $rightSidebarPageModelCBID
+            );
+
+            if (
+                $viewPageModel !== null
+            ) {
+                $viewModels = CBViewPage::getViews(
+                    $viewPageModel
+                );
+
+                foreach(
+                    $viewModels as $viewModel
+                ) {
+                    CBView::render(
+                        $viewModel
+                    );
+                }
+            }
+        }
+
+        echo <<<EOT
+
+                </div> <!-- ${sidebarContentElementCSSClassNames} -->
+            </div> <!-- ${sidebarElementCSSClassNames} -->
+
+        EOT;
+    }
+    /* renderRightSidebar() */
+
 }
