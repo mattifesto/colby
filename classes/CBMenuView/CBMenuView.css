@@ -393,8 +393,7 @@
 }
 
 .CBMenuView_list2 li {
-    min-height: 44px;
-    padding: 0;
+    padding: 0 0 10px;
 }
 
 .CBMenuView_list2 .CBMenuView_header,
@@ -404,7 +403,6 @@
 
 .CBMenuView_list2 .CBMenuView_listItemTitle a {
     color: inherit;
-    border-bottom: 1px solid var(--CBTextColor3);
 }
 
 .CBMenuView_list2 .CBMenuView_listItemTitle a:hover {
