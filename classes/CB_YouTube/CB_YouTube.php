@@ -9,9 +9,20 @@ CB_YouTube {
 
     /**
      * @param string $functionName
+     *
+     *      examples:
+     *          'activites'
+     *          'captions'
+     *          'channelbanners'
+     *          'channels'
+     *
      * @param object $arguments
      *
-     * @return object
+     *      properties:
+     *          'part' => <string>
+     *          'id' => YouTube channel ID
+     *          'key' => YouTube api key
+     *
      */
     static function
     call(
