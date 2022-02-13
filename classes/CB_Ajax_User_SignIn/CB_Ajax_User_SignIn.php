@@ -87,7 +87,7 @@ CB_Ajax_User_SignIn {
 
 
     /**
-     * @param CBID userModelCBID
+     * @param CBID callingUserModelCBID
      *
      * @return bool
      */
