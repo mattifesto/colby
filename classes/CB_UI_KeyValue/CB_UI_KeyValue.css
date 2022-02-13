@@ -1,0 +1,22 @@
+.CB_UI_KeyValue_element {
+    display: flex;
+    justify-content: center;
+
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    padding: 10px 20px;
+}
+
+
+
+.CB_UI_KeyValue_content_element {
+    max-width: 100%;
+    width: var(--CB_UI_readableWidth);
+}
+
+
+
+.CB_UI_KeyValue_value_element {
+    color: var(--CBTextColor2);
+}
