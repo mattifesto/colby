@@ -1,6 +1,3 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
 /* global
     CBAjax,
     CBModel,
@@ -11,8 +8,8 @@
 */
 
 
-
 (function () {
+    "use strict";
 
     let mainElement;
     let statusTextElement;
