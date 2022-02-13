@@ -43,7 +43,7 @@ CB_Ajax_StandardPageFrame_SetLeftSidebarPage {
 
 
     /**
-     * @param CBID userModelCBID
+     * @param CBID callingUserModelCBID
      *
      * @return bool
      */
@@ -51,7 +51,6 @@ CB_Ajax_StandardPageFrame_SetLeftSidebarPage {
     CBAjax_userModelCBIDCanExecute(
         ?string $callingUserModelCBID = null
     ): bool {
-
         $userIsAnAdministrator = (
             $callingUserModelCBID !== null &&
             CBUserGroup::userIsMemberOfUserGroup(
