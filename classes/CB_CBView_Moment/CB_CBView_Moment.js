@@ -41,6 +41,7 @@
         );
 
         let api = {
+            CB_CBView_Moment_addContentClickEventListener,
             CB_CBView_Moment_getElement,
             CB_CBView_Moment_append,
         };
@@ -81,6 +82,24 @@
             );
         }
         /* CB_CBView_Moment_append() */
+
+
+
+        /**
+         * @param function callback
+         *
+         * @return undefined
+         */
+        function
+        CB_CBView_Moment_addContentClickEventListener(
+            callback
+        ) {
+            contentElement.addEventListener(
+                "click",
+                callback
+            );
+        }
+        /* CB_CBView_Moment_addContentClickEventListener() */
 
 
 
@@ -155,9 +174,9 @@
         if (
             isForMomentPage !== true
         ) {
-            momentView.CB_CBView_Moment_getElement().addEventListener(
-                "click",
-                function () {
+            momentView.CB_CBView_Moment_addContentClickEventListener(
+                function (
+                ) {
                     if (
                         ignoreClickEvent
                     ) {
