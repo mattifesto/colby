@@ -63,6 +63,9 @@ CBAdminPageForPagesFind {
                 $conditions[] = '`classNameForKind` IS NULL';
             }
 
+
+            /* current front page */
+
             else if (
                 $parameters->classNameForKind === 'currentFrontPage'
             ) {
@@ -75,6 +78,44 @@ CBAdminPageForPagesFind {
                     $conditions[] = "`archiveID` = {$frontPageIDForSQL}";
                 }
             }
+
+
+            /* current left sidebar page */
+
+            else if (
+                $parameters->classNameForKind === (
+                    'CBAdminPageForPagesFind_kind_leftSidebarPage'
+                )
+            ) {
+                $leftSidebarPageModelCBID = (
+                    CB_StandardPageFrame::getLeftSidebarPageModelCBID()
+                );
+
+                if (
+                    $leftSidebarPageModelCBID !== null
+                ) {
+                    $leftSidebarPageModelCBIDAsSQL = CBID::toSQL(
+                        $leftSidebarPageModelCBID
+                    );
+
+                    array_push(
+                        $conditions,
+                        "archiveID = {$leftSidebarPageModelCBIDAsSQL}"
+                    );
+                } else {
+                    /**
+                     * The search results should contain no pages.
+                     */
+
+                    array_push(
+                        $conditions,
+                        "FALSE"
+                    );
+                }
+            }
+
+
+            /* current right sidebar page */
 
             else if (
                 $parameters->classNameForKind === (
@@ -96,28 +137,58 @@ CBAdminPageForPagesFind {
                         $conditions,
                         "archiveID = {$rightSidebarPageModelCBIDAsSQL}"
                     );
+                } else {
+                    /**
+                     * The search results should contain no pages.
+                     */
+
+                    array_push(
+                        $conditions,
+                        "FALSE"
+                    );
                 }
             }
+
+
+            /* pages of a specified kind class name */
 
             else {
                 $classNameForKindAsSQL = CBDB::stringToSQL(
                     $parameters->classNameForKind
                 );
-                $conditions[] = "`classNameForKind` = {$classNameForKindAsSQL}";
+
+                array_push(
+                    $conditions,
+                    "classNameForKind = {$classNameForKindAsSQL}"
+                );
             }
         }
 
+
         /* published */
-        if (isset($parameters->published)) {
-            if ($parameters->published === true) {
+
+        if (
+            isset($parameters->published)
+        ) {
+            if (
+                $parameters->published === true
+            ) {
                 $conditions[] = '`published` IS NOT NULL';
-            } else if ($parameters->published === false) {
+            } else if (
+                $parameters->published === false
+            ) {
                 $conditions[] = '`published` IS NULL';
             }
         }
 
+
         /* sorting */
-        $sorting = CBModel::value($parameters, 'sorting');
+
+        $sorting = CBModel::value(
+            $parameters,
+            'sorting'
+        );
+
         switch ($sorting) {
             case 'modifiedAscending':
                 $order = '`modified` ASC';
@@ -133,39 +204,77 @@ CBAdminPageForPagesFind {
                 break;
         }
 
+
         /* search */
-        $search = CBModel::value($parameters, 'search', '', 'trim');
-        if ($clause = CBPages::searchClauseFromString($search)) {
+
+        $search = CBModel::value(
+            $parameters,
+            'search',
+            '',
+            'trim'
+        );
+
+        if (
+            $clause = CBPages::searchClauseFromString($search)
+        ) {
             $conditions[] = $clause;
         };
 
-        $conditions = implode(' AND ', $conditions);
-        if ($conditions) { $conditions = "WHERE {$conditions}"; }
+        $conditions = implode(
+            ' AND ',
+            $conditions
+        );
+
+        if (
+            $conditions
+        ) {
+            $conditions = "WHERE {$conditions}";
+        }
 
         $SQL = <<<EOT
 
-            SELECT LOWER(HEX(`archiveID`)) AS `ID`, `className`, `keyValueData`
-            FROM `ColbyPages`
+            SELECT
+            LOWER(HEX(archiveID)) AS ID,
+            className,
+            keyValueData
+
+            FROM
+            ColbyPages
+
             {$conditions}
-            ORDER BY {$order}
-            LIMIT 20
+
+            ORDER BY
+            {$order}
+
+            LIMIT
+            20
 
         EOT;
 
-        $pages = CBDB::SQLToObjects($SQL);
+        $pages = CBDB::SQLToObjects(
+            $SQL
+        );
 
         $pages = array_map(
-            function ($item) {
-                if (empty($item->keyValueData)) {
+            function (
+                $item
+            ) {
+                if (
+                    empty($item->keyValueData)
+                ) {
                     $item->keyValueData = (object)[
                         'ID' => $item->ID,
                         'title' => 'Page Needs to be Updated',
                     ];
                 } else {
-                    $item->keyValueData = json_decode($item->keyValueData);
+                    $item->keyValueData = json_decode(
+                        $item->keyValueData
+                    );
                 }
 
-                if (empty($item->className)) {
+                if (
+                    empty($item->className)
+                ) {
                     $item->className = 'CBViewPage';
                 }
 
@@ -263,6 +372,10 @@ CBAdminPageForPagesFind {
             (object)[
                 'title' => 'Current Front Page',
                 'value' => 'currentFrontPage',
+            ],
+            (object)[
+                'title' => 'Current Left Sidebar Page',
+                'value' => 'CBAdminPageForPagesFind_kind_leftSidebarPage',
             ],
             (object)[
                 'title' => 'Current Right Sidebar Page',
