@@ -9,6 +9,12 @@
 
 
 
+.CB_CBView_MainHeader a.CB_CBView_MainHeader_item:hover {
+    text-decoration: none;
+}
+
+
+
 .CB_CBView_MainHeader_group {
     display: flex;
 }
