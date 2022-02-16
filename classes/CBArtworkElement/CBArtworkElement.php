@@ -1,7 +1,30 @@
 <?php
 
 final class
-CBArtworkElement {
+CBArtworkElement
+{
+
+    /* -- CBAdmin_CBDocumentationForClass interfaces -- */
+
+
+
+    /**
+     * @return void
+     */
+    static function
+    CBAdmin_CBDocumentationForClass_render(
+    )
+    : void
+    {
+        include_once(
+            __DIR__ . '/CBArtworkElement_Documentation.php'
+        );
+
+        CBArtworkElement_Documentation::render();
+    }
+    /* CBAdmin_CBDocumentationForClass_render() */
+
+
 
     /* -- CBHTMLOutput interfaces -- */
 
