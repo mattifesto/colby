@@ -301,41 +301,78 @@ CBImages {
 
 
     /**
-     * @param string $ID
+     * @param string $imageModelCBID
      *
      * @return object|false
      *
      *      CBImage model
      */
-    static function makeModelForID(string $ID) {
-        $IDAsSQL = CBID::toSQL($ID);
-        $extension = CBDB::SQLToValue(
-            "SELECT `extension` FROM `CBImages` WHERE `ID` = {$IDAsSQL}"
+    static function
+    makeModelForID(
+        string $imageModelCBID
+    ) /* : mixed */
+    {
+        $imageModelCBIDAsSQL = CBID::toSQL(
+            $imageModelCBID
         );
 
-        if ($extension === false) {
+        $SQL = <<<EOT
+
+            SELECT
+            extension
+
+            FROM
+            CBImages
+
+            WHERE
+            ID = {$imageModelCBIDAsSQL}
+
+        EOT;
+
+        $imageExtension = CBDB::SQLToValue(
+            $SQL
+        );
+
+        if (
+            $imageExtension === false
+        ) {
             return false;
         }
 
         $originalImageFilepath = CBDataStore::flexpath(
-            $ID,
-            "original.{$extension}",
+            $imageModelCBID,
+            "original.{$imageExtension}",
             cbsitedir()
         );
 
-        $size = CBImage::getimagesize($originalImageFilepath);
+        $size = CBImage::getimagesize(
+            $originalImageFilepath
+        );
 
-        if ($size === false) {
+        if (
+            $size === false
+        ) {
             return false;
         }
 
         return (object)[
-            'className' => 'CBImage',
-            'extension' => $extension,
-            'filename' => 'original',
-            'height' => $size[1],
-            'ID' => $ID,
-            'width' => $size[0],
+            'className' =>
+            'CBImage',
+
+            'ID' =>
+            $imageModelCBID,
+
+            'extension' =>
+            $imageExtension,
+
+            'filename' =>
+            'original',
+
+            'height' =>
+            $size[1],
+
+            'width' =>
+            $size[0],
         ];
     }
     /* makeModelForID() */
