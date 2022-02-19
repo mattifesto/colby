@@ -15,7 +15,8 @@ CBSitePreferences {
     /* deprecated use CBSitePreferences::ID() */
     const ID = '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
 
-    const defaultResizeOperations = [
+    private const
+    defaultResizeOperations = [
         'rl320',        /* long edge of 160pt */
         'rl640',        /* long edge of 320pt */
         'rl960',        /* long edge of 480pt */
@@ -1280,17 +1281,46 @@ CBSitePreferences {
 
     /**
      * @return [string]
-     *  An array of image resize operations that are allowed to be completed
-     *  when the specific image size URL is first requested.
+     *
+     *      An array of image resize operations that are allowed to be completed
+     *      when the specific image size URL is first requested.
      */
-    static function onDemandImageResizeOperations() {
+    static function
+    onDemandImageResizeOperations(
+    ) {
         $model = CBSitePreferences::model();
-        $operations = CBModel::value($model, 'onDemandImageResizeOperations', [], function ($value) {
-            $operations = preg_split('/[\s,]+/', $value, -1, PREG_SPLIT_NO_EMPTY);
-            return is_array($operations) ? $operations : [];
-        });
-        return array_unique(array_merge($operations, CBSitePreferences::defaultResizeOperations));
+
+        $operations = CBModel::value(
+            $model,
+            'onDemandImageResizeOperations',
+            [],
+            function (
+                $value
+            ) {
+                $operations = preg_split(
+                    '/[\s,]+/',
+                    $value,
+                    -1,
+                    PREG_SPLIT_NO_EMPTY
+                );
+
+                return (
+                    is_array($operations) ?
+                    $operations :
+                    []
+                );
+            }
+        );
+
+        return array_unique(
+            array_merge(
+                $operations,
+                CBSitePreferences::defaultResizeOperations
+            )
+        );
     }
+    /* onDemandImageResizeOperations() */
+
 
 
     /**
