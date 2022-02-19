@@ -136,25 +136,49 @@ CBImages {
 
 
     /**
-     * @param CBID $ID
+     * @param CBID $imageModelCBID
      *
      * @return string|false
      *
-     *      The original image filepath or false if the image doesn't exist
+     *      The original image filepath or false if the image doesn't exist.
      */
-    static function IDToOriginalFilepath(
-        $ID
-    ) {
-        $filepaths = glob(
-            $s = CBDataStore::filepath(
-                [
-                    'ID' => $ID,
-                    'filename' => 'original.*'
-                ]
-            )
+    static function
+    IDToOriginalFilepath(
+        $imageModelCBID
+    ) /* : mixed */
+    {
+        $globPattern = CBDataStore::filepath(
+            [
+                'ID' => $imageModelCBID,
+                'filename' => 'original.*'
+            ]
         );
 
-        if (empty($filepaths)) {
+        $filepaths = glob(
+            $globPattern
+        );
+
+        if (
+            count($filepaths) > 1
+        ) {
+            CBErrorHandler::report(
+                new CBExceptionWithValue(
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        CBImage models should have only one original image
+                        file. The CBImage with the model CBID ${imageModelCBID}
+                        has more than one.
+
+                    EOT),
+                    $filepaths,
+                    '6884537431f0037947d27ed05fae36a3db20bcc9'
+                )
+            );
+        }
+
+        if (
+            empty($filepaths)
+        ) {
             return false;
         } else {
             return $filepaths[0];
