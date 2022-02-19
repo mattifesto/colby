@@ -261,27 +261,46 @@ CBImage {
      *      This function will return null if the required properties are not
      *      available.
      */
-    static function asFlexpath(
+    static function
+    asFlexpath(
         stdClass $image,
         string $filename = '',
-        string $flexdir = ''
+        string $flexdir = '',
+        string $requestedExtension = '',
     ): ?string {
-        $ID = CBModel::valueAsID($image, 'ID');
-
-        if (empty($ID)) {
-            return null;
-        }
-
-        $extension = CBModel::valueToString(
+        $ID = CBModel::valueAsID(
             $image,
-            'extension'
+            'ID'
         );
 
-        if (empty($extension)) {
+        if (
+            empty($ID)
+        ) {
             return null;
         }
 
-        if (empty($filename)) {
+        $extension = CBConvert::valueAsName(
+            $requestedExtension
+        );
+
+        if (
+            $extension === null
+        ) {
+            $extension = CBModel::valueToString(
+                $image,
+                'extension'
+            );
+        }
+
+        if (
+            empty($extension)
+        ) {
+            return null;
+        }
+
+        if (
+            empty($filename)
+        ) {
             $filename = CBModel::valueToString(
                 $image,
                 'filename'
