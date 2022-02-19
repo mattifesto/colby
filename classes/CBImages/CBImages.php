@@ -47,23 +47,38 @@ CBImages {
 
 
 
-    /* -- CBInstall interfaces -- -- -- -- -- */
+    /* -- CBInstall interfaces -- */
 
 
 
     /**
      * @return void
      */
-    static function CBInstall_install(): void {
+    static function
+    CBInstall_install(
+    ): void
+    {
         $SQL = <<<EOT
 
-            CREATE TABLE IF NOT EXISTS `CBImages` (
-                `ID`        BINARY(20) NOT NULL,
-                `created`   BIGINT NOT NULL,
-                `extension` VARCHAR(10) NOT NULL,
-                `modified`  BIGINT NOT NULL,
+            CREATE TABLE IF NOT EXISTS
+            CBImages
 
-                PRIMARY KEY (`ID`)
+            (
+                ID
+                BINARY(20) NOT NULL,
+
+                created
+                BIGINT NOT NULL,
+
+                extension
+                VARCHAR(10) NOT NULL,
+
+                modified
+                BIGINT NOT NULL,
+
+                PRIMARY KEY (
+                    ID
+                )
             )
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
@@ -71,7 +86,9 @@ CBImages {
 
         EOT;
 
-        Colby::query($SQL);
+        Colby::query(
+            $SQL
+        );
     }
     /* CBInstall_install() */
 
