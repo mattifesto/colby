@@ -136,7 +136,10 @@ CBImages {
      *
      *  Returns true if an image was generated and sent; otherwise false.
      */
-    static function makeAndSendImageForPath($path) {
+    static function
+    makeAndSendImageForPath(
+        $path
+    ) {
         if (
             !preg_match(
                 '%^/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/([^/]+)$%',
@@ -247,7 +250,12 @@ CBImages {
      *
      *      CBImage model
      */
-    static function reduceImage($ID, $extension, $operation) {
+    static function
+    reduceImage(
+        $ID,
+        $extension,
+        $operation
+    ) {
         $sourceFilepath = CBDataStore::flexpath(
             $ID,
             "original.{$extension}",
@@ -260,10 +268,22 @@ CBImages {
             cbsitedir()
         );
 
-        if (!is_file($destinationFilepath)) {
-            $size = CBImage::getimagesize($sourceFilepath);
-            $projection = CBProjection::withSize($size[0], $size[1]);
-            $projection = CBProjection::applyOpString($projection, $operation);
+        if (
+            !is_file($destinationFilepath)
+        ) {
+            $size = CBImage::getimagesize(
+                $sourceFilepath
+            );
+
+            $projection = CBProjection::withSize(
+                $size[0],
+                $size[1]
+            );
+
+            $projection = CBProjection::applyOpString(
+                $projection,
+                $operation
+            );
 
             CBImages::reduceImageFile(
                 $sourceFilepath,
@@ -272,7 +292,9 @@ CBImages {
             );
         }
 
-        $size = CBImage::getimagesize($destinationFilepath);
+        $size = CBImage::getimagesize(
+            $destinationFilepath
+        );
 
         return (object)[
             'className' => 'CBImage',
