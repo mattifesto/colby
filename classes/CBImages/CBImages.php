@@ -94,7 +94,7 @@ CBImages {
 
 
 
-    /* -- functions -- -- -- -- -- */
+    /* -- functions -- */
 
 
 
@@ -102,18 +102,36 @@ CBImages {
      * This function is called by CBImage::CBModels_willDelete() and shouldn't
      * be called otherwise. To delete an image call
      *
-     *      CBModels::deleteByID(<imageID>)
+     *      CBModels::deleteByID(<imageModelCBID>)
      *
-     * @param string $ID
+     * @param CBID $imageModelCBID
      *
      * @return void
      */
-    static function deleteByID(string $ID): void {
-        $IDAsSQL = CBID::toSQL($ID);
-        $SQL = "DELETE FROM `CBImages` WHERE `ID` = {$IDAsSQL}";
+    static function
+    deleteByID(
+        string $imageModelCBID
+    ): void
+    {
+        $imageModelCBIDAsSQL = CBID::toSQL(
+            $imageModelCBID
+        );
 
-        Colby::query($SQL);
+        $SQL = <<<EOT
+
+            DELETE FROM
+            CBImages
+
+            WHERE
+            ID = {$imageModelCBIDAsSQL}
+
+        EOT;
+
+        Colby::query(
+            $SQL
+        );
     }
+    /* deleteByID() */
 
 
 
