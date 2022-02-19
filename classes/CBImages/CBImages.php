@@ -194,51 +194,70 @@ CBImages {
      * request for that URL will just return the image file that's been saved
      * to disk.
      *
-     * @param string $path
+     * @param string $requestedImageURLPath
      *
-     *  Example: "/data/28/12/580870551ac6833f1ea589a9490d37d48302/rw400.png"
+     *      Example:
+     *      /data/28/12/580870551ac6833f1ea589a9490d37d48302/rw400.png
      *
-     *  This parameter may be any path, the function determines where it can
-     *  react to the path.
+     *      This parameter may be any path, the function determines where it can
+     *      react to the path.
      *
      * @return bool
      *
-     *  Returns true if an image was generated and sent; otherwise false.
+     *      Returns true if an image was generated and sent; otherwise false.
      */
     static function
     makeAndSendImageForPath(
-        $path
-    ) {
+        $requestedImageURLPath
+    ): bool
+    {
         if (
             !preg_match(
                 '%^/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/([^/]+)$%',
-                $path,
+                $requestedImageURLPath,
                 $matches
             )
         ) {
             return false;
         }
 
-        $ID = "{$matches[1]}{$matches[2]}{$matches[3]}";
-        $basename = $matches[4];
-        $pathinfo = pathinfo($basename);
-        $operation = $pathinfo['filename'];
-        $extension = $pathinfo['extension'];
+        $requestedImageModelCBID = "{$matches[1]}{$matches[2]}{$matches[3]}";
+        $requestedImageBasename = $matches[4];
+
+        $pathinfo = pathinfo(
+            $requestedImageBasename
+        );
+
+        $requestedImageResizeOperation = $pathinfo['filename'];
+        $requestedImageExtension = $pathinfo['extension'];
 
         if (
             !in_array(
-                $operation,
+                $requestedImageResizeOperation,
                 CBSitePreferences::onDemandImageResizeOperations()
             )
         ) {
             return false;
         }
 
+        /**
+         * @TODO 2022_02_19
+         *
+         *      The following check needs to take place with the original image
+         *      extension, not the requested extension. But we can just use
+         *      CBImages::IDToOriginalFilepath() to do this check.
+         */
+
+        /**
+         * If there is no original image file, we can't generate a reduced or
+         * converted image file.
+         */
+
         if (
             !file_exists(
                 CBDataStore::flexpath(
-                    $ID,
-                    "original.{$extension}",
+                    $requestedImageModelCBID,
+                    "original.{$requestedImageExtension}",
                     cbsitedir()
                 )
             )
@@ -246,15 +265,34 @@ CBImages {
             return false;
         }
 
-        CBImages::reduceImage($ID, $extension, $operation);
+        CBImages::reduceImage(
+            $requestedImageModelCBID,
+            $requestedImageExtension,
+            $requestedImageResizeOperation
+        );
 
-        $reducedFilepath = cbsitedir() . $path;
-        $size = CBImage::getimagesize($reducedFilepath);
-        $mimeType = image_type_to_mime_type($size[2]);
+        $reducedImageFilepath = (
+            cbsitedir() .
+            $requestedImageURLPath
+        );
+
+        $size = CBImage::getimagesize(
+            $reducedImageFilepath
+        );
+
+        $mimeType = image_type_to_mime_type(
+            $size[2]
+        );
 
         /* serve image to browser */
-        header('Content-Type:' . $mimeType);
-        readfile($reducedFilepath);
+        header(
+            'Content-Type:' .
+            $mimeType
+        );
+
+        readfile(
+            $reducedImageFilepath
+        );
 
         return true;
     }
