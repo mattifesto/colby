@@ -1,6 +1,7 @@
 <?php
 
-final class CBImagesTests {
+final class
+CBImagesTests {
 
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
@@ -9,18 +10,27 @@ final class CBImagesTests {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array {
         return [
-            Colby::flexpath(__CLASS__, 'v656.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v656.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ):array {
         return [
             'CBAjax',
             'CBDataStore',
@@ -40,20 +50,27 @@ final class CBImagesTests {
     /**
      * @return [object]
      */
-    static function CBTest_getTests(): array {
+    static function
+    CBTest_getTests(
+    ): array {
         return [
+
+            /**
+             * @NOTE 2022_02_18
+             *
+             *      These tests run in the order they are specified, and for
+             *      this class the order is intentional and required.
+             */
+
             (object)[
                 'name' => 'upload',
-                'title' => 'CBImages 01 upload',
             ],
             (object)[
                 'name' => 'resize',
-                'title' => 'CBImages 02 resize',
                 'type' => 'server',
             ],
             (object)[
                 'name' => 'deleteByID',
-                'title' => 'CBImages 99 deleteByID',
             ],
         ];
     }
@@ -75,29 +92,38 @@ final class CBImagesTests {
      *
      * @return object
      */
-    static function CBTest_resize(): stdClass {
+    static function
+    resize(
+    ): stdClass {
         CBImages::reduceImage(
-            CBTestAdmin::testImageID(),
+            CBImagesTests::getTestImageModelCBID(),
             'jpeg',
             'rw5000rh5000'
         );
 
         $filepath1 = CBDataStore::flexpath(
-            CBTestAdmin::testImageID(),
+            CBImagesTests::getTestImageModelCBID(),
             'original.jpeg',
             cbsitedir()
         );
 
         $filepath2 = CBDataStore::flexpath(
-            CBTestAdmin::testImageID(),
+            CBImagesTests::getTestImageModelCBID(),
             'rw5000rh5000.jpeg',
             cbsitedir()
         );
 
-        $sha1 = sha1_file($filepath1);
-        $sha2 = sha1_file($filepath2);
+        $sha1 = sha1_file(
+            $filepath1
+        );
 
-        if ($sha1 !== $sha2) {
+        $sha2 = sha1_file(
+            $filepath2
+        );
+
+        if (
+            $sha1 !== $sha2
+        ) {
             return CBTest::resultMismatchFailure(
                 'sha',
                 $sha1,
@@ -109,6 +135,25 @@ final class CBImagesTests {
             'succeeded' => true,
         ];
     }
-    /* CBTest_resize() */
+    /* resize() */
+
+
+
+    /**
+     * @NOTE 2022_02_18
+     *
+     *      This CBID is also specified in CBTestAdmin.js and I'm not sure why
+     *      it's specified there. There are also comments saying this class
+     *      depends on CBTestAdmin and if it's just for this CBID that
+     *      dependency should be removed. I'm too busy now to investigate.
+     *
+     * @return CBID
+     */
+    static function
+    getTestImageModelCBID(
+    ): string {
+        return '3dd8e721048bbe8ea5f0c043fab73277a0b0044c';
+    }
+    /* getTestImageModelCBID() */
 
 }
