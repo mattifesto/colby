@@ -13,7 +13,7 @@
 final class
 CBImages {
 
-    /* -- CBAjax interfaces -- -- -- -- -- */
+    /* -- CBAjax interfaces -- */
 
 
 
@@ -22,18 +22,28 @@ CBImages {
      *
      *      Returns a CBImage model.
      */
-    static function CBAjax_upload(): stdClass {
-        return CBImages::uploadImageWithName('file');
+    static function
+    CBAjax_upload(
+    ): stdClass
+    {
+        return CBImages::uploadImageWithName(
+            'file'
+        );
     }
+    /* CBAjax_upload() */
 
 
 
     /**
      * @return string
      */
-    static function CBAjax_upload_getUserGroupClassName(): string {
+    static function
+    CBAjax_upload_getUserGroupClassName(
+    ): string
+    {
         return 'CBAdministratorsUserGroup';
     }
+    /* CBAjax_upload_getUserGroupClassName() */
 
 
 
