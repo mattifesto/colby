@@ -136,6 +136,19 @@ CBImages {
 
 
     /**
+     * @return [string]
+     */
+    static function
+    getAllowedDestinationImageExtensions(
+    ): array
+    {
+        return [];
+    }
+    /* getAllowedDestinationImageExtensions() */
+
+
+
+    /**
      * @param CBID $imageModelCBID
      *
      * @return string|false
@@ -240,30 +253,24 @@ CBImages {
             return false;
         }
 
-        /**
-         * @TODO 2022_02_19
-         *
-         *      The following check needs to take place with the original image
-         *      extension, not the requested extension. But we can just use
-         *      CBImages::IDToOriginalFilepath() to do this check.
-         */
+
 
         /**
          * If there is no original image file, we can't generate a reduced or
          * converted image file.
          */
 
+        $originalImageFilepath = CBImages::IDToOriginalFilepath(
+            $requestedImageModelCBID
+        );
+
         if (
-            !file_exists(
-                CBDataStore::flexpath(
-                    $requestedImageModelCBID,
-                    "original.{$requestedImageExtension}",
-                    cbsitedir()
-                )
-            )
+            $originalImageFilepath === false
         ) {
             return false;
         }
+
+
 
         CBImages::reduceImage(
             $requestedImageModelCBID,
@@ -383,12 +390,17 @@ CBImages {
      * Creates a reduced image for an operation only if the reduced image
      * doesn't already exist.
      *
-     * @param string $ID
-     *  The image ID
-     * @param string $extension
-     *  The image extension
-     * @param string $operation
-     *  The reduction operation, example: "rs200clc200"
+     * @param string $imageModelCBID
+     *
+     *      The image model CBID
+     *
+     * @param string $requestedImageExtension
+     *
+     *      The destination image extension
+     *
+     * @param string $requestedImageResizeOperation
+     *
+     *      The reduction operation, example: "rs200clc200"
      *
      * @return object
      *
@@ -396,27 +408,63 @@ CBImages {
      */
     static function
     reduceImage(
-        $ID,
-        $extension,
-        $operation
+        $imageModelCBID,
+        $requestedImageExtension,
+        $requestedImageResizeOperation
     ) {
-        $sourceFilepath = CBDataStore::flexpath(
-            $ID,
-            "original.{$extension}",
-            cbsitedir()
+        $originalImageFilepath = CBImages::IDToOriginalFilepath(
+            $imageModelCBID
         );
 
-        $destinationFilepath = CBDataStore::flexpath(
-            $ID,
-            "{$operation}.{$extension}",
+        $originalImageExtension = pathinfo(
+            $originalImageFilepath,
+            PATHINFO_EXTENSION
+        );
+
+        if (
+            $originalImageExtension !== $requestedImageExtension
+        ) {
+            $conversionIsAllowed = in_array(
+                $requestedImageExtension,
+                CBImages::getAllowedDestinationImageExtensions()
+            );
+
+            if (
+                $conversionIsAllowed !== true
+            ) {
+                throw new CBExceptionWithValue(
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        The image extension "${requestedImageExtension}" is not
+                        an allowed destination image extension.
+
+                    EOT),
+                    (object)[
+                        'imageModelCBID' =>
+                        $imageModelCBID,
+
+                        'requestedImageExtension' =>
+                        $requestedImageExtension,
+
+                        'requestedImageResizeOperation' =>
+                        $requestedImageResizeOperation
+                    ],
+                    '65ef3f2f6f214e4ac72f5567864377e50dcc9973'
+                );
+            }
+        }
+
+        $requestedImageFilepath = CBDataStore::flexpath(
+            $imageModelCBID,
+            "{$requestedImageResizeOperation}.{$requestedImageExtension}",
             cbsitedir()
         );
 
         if (
-            !is_file($destinationFilepath)
+            !is_file($requestedImageFilepath)
         ) {
             $size = CBImage::getimagesize(
-                $sourceFilepath
+                $originalImageFilepath
             );
 
             $projection = CBProjection::withSize(
@@ -426,27 +474,38 @@ CBImages {
 
             $projection = CBProjection::applyOpString(
                 $projection,
-                $operation
+                $requestedImageResizeOperation
             );
 
             CBImages::reduceImageFile(
-                $sourceFilepath,
-                $destinationFilepath,
+                $originalImageFilepath,
+                $requestedImageFilepath,
                 $projection
             );
         }
 
         $size = CBImage::getimagesize(
-            $destinationFilepath
+            $requestedImageFilepath
         );
 
         return (object)[
-            'className' => 'CBImage',
-            'extension' => $extension,
-            'filename' => $operation,
-            'height' => $size[1],
-            'ID' => $ID,
-            'width' => $size[0],
+            'className' =>
+            'CBImage',
+
+            'ID' =>
+            $imageModelCBID,
+
+            'extension' =>
+            $requestedImageExtension,
+
+            'filename' =>
+            $requestedImageResizeOperation,
+
+            'height' =>
+            $size[1],
+
+            'width' =>
+            $size[0],
         ];
     }
     /* reduceImage() */
