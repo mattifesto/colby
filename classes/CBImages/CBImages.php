@@ -518,58 +518,124 @@ CBImages {
      *
      * @return void
      */
-    static function reduceImageFile(
+    static function
+    reduceImageFile(
         $sourceFilepath,
         $destinationFilepath,
         $projection,
         $args = []
-    ): void {
+    ): void
+    {
         $quality = null;
-        extract($args, EXTR_IF_EXISTS);
 
-        ini_set('memory_limit', '256M');
+        extract(
+            $args,
+            EXTR_IF_EXISTS
+        );
 
-        $size = CBImage::getimagesize($sourceFilepath);
+        ini_set(
+            'memory_limit',
+            '256M'
+        );
 
-        if (CBProjection::isNoOpForSize($projection, $size[0], $size[1])) {
-            copy($sourceFilepath, $destinationFilepath);
+        $size = CBImage::getimagesize(
+            $sourceFilepath
+        );
+
+        if (
+            CBProjection::isNoOpForSize(
+                $projection,
+                $size[0],
+                $size[1]
+            )
+        ) {
+            copy(
+                $sourceFilepath,
+                $destinationFilepath
+            );
+
             return;
         }
 
         $src = $projection->source;
         $dst = $projection->destination;
-        $output = imagecreatetruecolor($dst->width, $dst->height);
 
-        switch ($size[2]) {
+        $output = imagecreatetruecolor(
+            $dst->width,
+            $dst->height
+        );
+
+        switch (
+            $size[2]
+        ) {
             case IMAGETYPE_GIF:
-                $input = imagecreatefromgif($sourceFilepath);
+                $input = imagecreatefromgif(
+                    $sourceFilepath
+                );
 
                 break;
 
             case IMAGETYPE_JPEG:
-                $input = imagecreatefromjpeg($sourceFilepath);
-                $exif = CBImage::exif_read_data($sourceFilepath);
+                $input = imagecreatefromjpeg(
+                    $sourceFilepath
+                );
 
-                $orientation =
-                empty($exif['Orientation']) ?
-                1 :
-                $exif['Orientation'];
+                $exif = CBImage::exif_read_data(
+                    $sourceFilepath
+                );
 
-                if ($orientation == 3) {
-                    $input = imagerotate($input, 180, 0);
-                } else if ($orientation == 6) {
-                    $input = imagerotate($input, -90, 0);
-                } else if ($orientation == 8) {
-                    $input = imagerotate($input, 90, 0);
+                $orientation = (
+                    empty($exif['Orientation']) ?
+                    1 :
+                    $exif['Orientation']
+                );
+
+                if (
+                    $orientation == 3
+                ) {
+                    $input = imagerotate(
+                        $input,
+                        180,
+                        0
+                    );
+                }
+
+                else if (
+                    $orientation == 6
+                ) {
+                    $input = imagerotate(
+                        $input,
+                        -90,
+                        0
+                    );
+                }
+
+                else if (
+                    $orientation == 8
+                ) {
+                    $input = imagerotate(
+                        $input,
+                        90,
+                        0
+                    );
                 }
 
                 break;
 
             case IMAGETYPE_PNG:
-                $input = imagecreatefrompng($sourceFilepath);
+                $input = imagecreatefrompng(
+                    $sourceFilepath
+                );
 
-                imagealphablending($output, false);
-                imagesavealpha($output, true);
+                imagealphablending(
+                    $output,
+                    false
+                );
+
+                imagesavealpha(
+                    $output,
+                    true
+                );
 
                 $transparent = imagecolorallocatealpha(
                     $output,
@@ -591,9 +657,15 @@ CBImages {
                 break;
 
             default:
-                throw new RuntimeException(
-                    "The image type for the file \"{$sourceFilepath}\" is " .
-                    "not supported."
+                throw new CBExceptionWithValue(
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        The image type for the file "${sourceFilepath}" is not
+                        supported.
+
+                    EOT),
+                    $sourceFilepath,
+                    'adb83498239264db71247a97a83c16de79a2343b'
                 );
 
                 break;
@@ -605,23 +677,42 @@ CBImages {
             $dst->width, $dst->height, $src->width, $src->height
         );
 
-        switch ($size[2]) {
+        switch (
+            $size[2]
+        ) {
             case IMAGETYPE_GIF:
-                imagegif($output, $destinationFilepath);
+                imagegif(
+                    $output,
+                    $destinationFilepath
+                );
 
                 break;
 
             case IMAGETYPE_JPEG:
-                if ($quality === null) {
-                    imagejpeg($output, $destinationFilepath);
-                } else {
-                    imagejpeg($output, $destinationFilepath, $quality);
+                if (
+                    $quality === null
+                ) {
+                    imagejpeg(
+                        $output,
+                        $destinationFilepath
+                    );
+                }
+
+                else {
+                    imagejpeg(
+                        $output,
+                        $destinationFilepath,
+                        $quality
+                    );
                 }
 
                 break;
 
             case IMAGETYPE_PNG:
-                imagepng($output, $destinationFilepath);
+                imagepng(
+                    $output,
+                    $destinationFilepath
+                );
 
                 break;
         }
