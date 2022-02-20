@@ -136,15 +136,43 @@ CBImages {
 
 
     /**
+     * If an on demand image request wants to convert the image from its
+     * original type to another type, this function returns the image extensions
+     * that are allowed to be the extension of the on demand image.
+     *
      * @return [string]
      */
     static function
-    getAllowedDestinationImageExtensions(
+    getAllowedOnDemandConversionImageExtensions(
     ): array
     {
-        return [];
+        return [
+            'webp'
+        ];
     }
-    /* getAllowedDestinationImageExtensions() */
+    /* getAllowedOnDemandConversionImageExtensions() */
+
+
+
+    /**
+     * If an on demand image resize is requested, these are the extensions that
+     * are allowed to be resized. Most notable about this function is that only
+     * "jpeg" is allowed, not "jpg".
+     *
+     * @return [string]
+     */
+    static function
+    getAllowedOnDemandImageExtensions(
+    ): array
+    {
+        return [
+            'gif',
+            'jpeg',
+            'png',
+            'webp',
+        ];
+    }
+    /* getAllowedOnDemandImageExtensions() */
 
 
 
@@ -241,14 +269,32 @@ CBImages {
             $requestedImageBasename
         );
 
+
+
         $requestedImageResizeOperation = $pathinfo['filename'];
-        $requestedImageExtension = $pathinfo['extension'];
+
+        $requestedImageResizeOperationIsAllowed = in_array(
+            $requestedImageResizeOperation,
+            CBSitePreferences::onDemandImageResizeOperations()
+        );
 
         if (
-            !in_array(
-                $requestedImageResizeOperation,
-                CBSitePreferences::onDemandImageResizeOperations()
-            )
+            $requestedImageResizeOperationIsAllowed !== true
+        ) {
+            return false;
+        }
+
+
+
+        $requestedImageExtension = $pathinfo['extension'];
+
+        $requestedImageExtensionIsAllowed = in_array(
+            $requestedImageExtension,
+            CBImages::getAllowedOnDemandImageExtensions()
+        );
+
+        if (
+            $requestedImageExtensionIsAllowed !== true
         ) {
             return false;
         }
@@ -268,6 +314,32 @@ CBImages {
             $originalImageFilepath === false
         ) {
             return false;
+        }
+
+
+
+        /**
+         *  If the image is being converted, make sure conversion is allowed.
+         */
+
+        $originalImageExtension = pathinfo(
+            $originalImageFilepath,
+            PATHINFO_EXTENSION
+        );
+
+        if (
+            $requestedImageExtension !== $originalImageExtension
+        ) {
+            $conversionIsAllowed = in_array(
+                $requestedImageExtension,
+                CBImages::getAllowedOnDemandConversionImageExtensions()
+            );
+
+            if (
+                $conversionIsAllowed !== true
+            ) {
+                return false;
+            }
         }
 
 
@@ -426,7 +498,7 @@ CBImages {
         ) {
             $conversionIsAllowed = in_array(
                 $requestedImageExtension,
-                CBImages::getAllowedDestinationImageExtensions()
+                CBImages::getAllowedOnDemandConversionImageExtensions()
             );
 
             if (
@@ -520,13 +592,40 @@ CBImages {
      */
     static function
     reduceImageFile(
-        $sourceFilepath,
-        $destinationFilepath,
+        $sourceImageFilepath,
+        $destinationImageFilepath,
         $projection,
         $args = []
     ): void
     {
-        $quality = null;
+        $destinationImageExtension = pathinfo(
+            $destinationImageFilepath,
+            PATHINFO_EXTENSION
+        );
+
+        $destinationImageExtensionIsAllowed = in_array(
+            $destinationImageExtension,
+            CBImages::getAllowedOnDemandImageExtensions()
+        );
+
+        if (
+            $destinationImageExtensionIsAllowed !== true
+        ) {
+            throw new CBExceptionWithValue(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The extenstion of the destinationImageFilepath argument
+                    "${destinationImageExtension}" is not allowed.
+
+                EOT),
+                $destinationImageFilepath,
+                'f0e1cec4e4e31e6fa5adc55d81aa9be628ced856'
+            );
+        }
+
+
+
+        $quality = -1;
 
         extract(
             $args,
@@ -539,19 +638,23 @@ CBImages {
         );
 
         $size = CBImage::getimagesize(
-            $sourceFilepath
+            $sourceImageFilepath
         );
+
+        $sourceImageWidth = $size[0];
+        $sourceImageHeight = $size[1];
+        $sourceImageType = $size[2];
 
         if (
             CBProjection::isNoOpForSize(
                 $projection,
-                $size[0],
-                $size[1]
+                $sourceImageWidth,
+                $sourceImageHeight
             )
         ) {
             copy(
-                $sourceFilepath,
-                $destinationFilepath
+                $sourceImageFilepath,
+                $destinationImageFilepath
             );
 
             return;
@@ -566,22 +669,22 @@ CBImages {
         );
 
         switch (
-            $size[2]
+            $sourceImageType
         ) {
             case IMAGETYPE_GIF:
                 $input = imagecreatefromgif(
-                    $sourceFilepath
+                    $sourceImageFilepath
                 );
 
                 break;
 
             case IMAGETYPE_JPEG:
                 $input = imagecreatefromjpeg(
-                    $sourceFilepath
+                    $sourceImageFilepath
                 );
 
                 $exif = CBImage::exif_read_data(
-                    $sourceFilepath
+                    $sourceImageFilepath
                 );
 
                 $orientation = (
@@ -624,7 +727,7 @@ CBImages {
 
             case IMAGETYPE_PNG:
                 $input = imagecreatefrompng(
-                    $sourceFilepath
+                    $sourceImageFilepath
                 );
 
                 imagealphablending(
@@ -660,11 +763,11 @@ CBImages {
                 throw new CBExceptionWithValue(
                     CBConvert::stringToCleanLine(<<<EOT
 
-                        The image type for the file "${sourceFilepath}" is not
-                        supported.
+                        The image type for the file "${sourceImageFilepath}" is
+                        not supported.
 
                     EOT),
-                    $sourceFilepath,
+                    $sourceImageFilepath,
                     'adb83498239264db71247a97a83c16de79a2343b'
                 );
 
@@ -678,40 +781,38 @@ CBImages {
         );
 
         switch (
-            $size[2]
+            $destinationImageExtension
         ) {
-            case IMAGETYPE_GIF:
+            case 'gif':
                 imagegif(
                     $output,
-                    $destinationFilepath
+                    $destinationImageFilepath
                 );
 
                 break;
 
-            case IMAGETYPE_JPEG:
-                if (
-                    $quality === null
-                ) {
-                    imagejpeg(
-                        $output,
-                        $destinationFilepath
-                    );
-                }
-
-                else {
-                    imagejpeg(
-                        $output,
-                        $destinationFilepath,
-                        $quality
-                    );
-                }
+            case 'jpeg':
+                imagejpeg(
+                    $output,
+                    $destinationImageFilepath,
+                    $quality
+                );
 
                 break;
 
-            case IMAGETYPE_PNG:
+            case 'png':
                 imagepng(
                     $output,
-                    $destinationFilepath
+                    $destinationImageFilepath
+                );
+
+                break;
+
+            case 'webp':
+                imagewebp(
+                    $output,
+                    $destinationImageFilepath,
+                    $quality
                 );
 
                 break;
