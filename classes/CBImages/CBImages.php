@@ -961,6 +961,13 @@ CBImages {
 
 
     /**
+     * @NOTE 2022_02_21
+     *
+     *      This function will import any image file located on the local disk.
+     *      It will create a CBImage model and copy the file to the proper place
+     *      that a CBImage file belongs. It will translate local URLs to local
+     *      disk filepaths so it can import images from URLs of this website.
+     *
      * References to images should be stored as CBImage models not URLs. If the
      * caller has only a URL, they can pass it to this function to convert it to
      * an CBImage model to use at that moment or hopefully instead to upgrade
@@ -978,7 +985,8 @@ CBImages {
     static function
     URIToCBImage(
         string $imageURI
-    ): ?stdClass {
+    ): ?stdClass
+    {
         $imageCBID = CBDataStore::URLToCBID(
             $imageURI
         );
