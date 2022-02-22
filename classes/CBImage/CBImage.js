@@ -45,7 +45,7 @@
      *
      *      A CBImage model.
      *
-     * @param string? filename
+     * @param string? imageResizeOperation
      *
      *      If specified, this value will be used instead of the filename
      *      property value in the image model. This allows the caller to specify
@@ -59,8 +59,11 @@
     function
     CBImage_toUrl(
         imageModel,
-        filename
+        imageResizeOperation,
+        imageExtension
     ) {
+        let filename;
+        
         let imageModelCBID = CBModel.getCBID(
             imageModel,
         );
@@ -72,8 +75,12 @@
         }
 
         if (
-            typeof filename !== "string"
+            typeof imageResizeOperation === "string"
         ) {
+            filename = imageResizeOperation;
+        }
+
+        else {
             filename = CBModel.valueToString(
                 imageModel,
                 "filename"
@@ -87,8 +94,15 @@
         }
 
         if (
-            typeof imageModel.extension !== "string" ||
-            imageModel.extension === ""
+            typeof imageExtension !== "string"
+        ) {
+            imageExtension = CBImage_getExtension(
+                imageModel
+            );
+        }
+
+        if (
+            imageExtension === ""
         ) {
             return "";
         }
@@ -100,7 +114,7 @@
                 (
                     filename +
                     "." +
-                    imageModel.extension
+                    imageExtension
                 )
             )
         );
