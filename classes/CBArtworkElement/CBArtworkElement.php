@@ -35,7 +35,8 @@ CBArtworkElement
      */
     static function
     CBHTMLOutput_CSSURLs(
-    ): array {
+    ): array
+    {
         return [
             Colby::flexpath(
                 __CLASS__,
@@ -53,11 +54,12 @@ CBArtworkElement
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
+    ): array
+    {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v624.js',
+                'v675.60.js',
                 cbsysurl()
             ),
         ];
@@ -71,7 +73,8 @@ CBArtworkElement
      */
     static function
     CBHTMLOutput_requiredClassNames(
-    ): array {
+    ): array
+    {
         return [
             'CBModel',
         ];

@@ -1,17 +1,16 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBArtworkElement */
 /* globals
     CBModel,
 */
 
 
 (function () {
+    "use strict";
 
     window.CBArtworkElement = {
         create,
     };
+
+
 
     /**
      * For a better understanding of this function and CBArtworkElement, view
@@ -48,7 +47,8 @@
      *
      * @return Element
      */
-    function create(
+    function
+    create(
         args
     ) {
         let imageURL = CBModel.valueToString(
