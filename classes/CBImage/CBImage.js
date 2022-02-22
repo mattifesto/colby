@@ -8,8 +8,36 @@
     "use strict";
 
     window.CBImage = {
+        getExtension: CBImage_getExtension,
         toURL: CBImage_toUrl,
     };
+
+
+
+    /* -- accessors -- */
+
+
+
+    /**
+     * @param object imageModel
+     *
+     * @return string
+     */
+    function
+    CBImage_getExtension(
+        imageModel
+    ) {
+        return CBModel.valueToString(
+            imageModel,
+            "extension"
+        );
+    }
+    /* CBImage_getExtension() */
+
+
+
+    /* -- functions -- */
+
 
 
     /**

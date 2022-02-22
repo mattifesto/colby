@@ -1,9 +1,9 @@
 <?php
 
 final class
-CBImage {
-
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+CBImage
+{
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
@@ -12,11 +12,12 @@ CBImage {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ) {
+    ): array
+    {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v480.js',
+                'v675.60.js',
                 cbsysurl()
             ),
         ];
@@ -28,12 +29,16 @@ CBImage {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
         return [
             'CBDataStore',
             'CBModel',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 
 
 
