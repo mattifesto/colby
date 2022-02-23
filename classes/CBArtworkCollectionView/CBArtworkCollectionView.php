@@ -1,7 +1,8 @@
 <?php
 
-final class CBArtworkCollectionView {
-
+final class
+CBArtworkCollectionView
+{
     /* -- CBHTMLOutput interfaces -- */
 
 
@@ -9,29 +10,48 @@ final class CBArtworkCollectionView {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs(): array {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
         return [
-            Colby::flexpath(__CLASS__, 'v632.css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.60.css',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_CSSURLs() */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
         return [
-            Colby::flexpath(__CLASS__, 'v637.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.60.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
         return [
             'CBArtwork',
             'CBArtworkElement',
@@ -57,15 +77,19 @@ final class CBArtworkCollectionView {
      *
      * @return void
      */
-    static function CBView_render(
+    static function
+    CBView_render(
         stdClass $viewModel
-    ): void {
+    ): void
+    {
         $artworks = CBModel::valueToArray(
             $viewModel,
             'artworkCollection.artworks'
         );
 
-        if (count($artworks) === 0) {
+        if (
+            count($artworks) === 0
+        ) {
             return;
         }
 
@@ -85,7 +109,9 @@ final class CBArtworkCollectionView {
 
         array_walk(
             $CSSClassNames,
-            function ($CSSClassName) {
+            function (
+                $CSSClassName
+            ) {
                 CBHTMLOutput::requireClassName(
                     $CSSClassName
                 );

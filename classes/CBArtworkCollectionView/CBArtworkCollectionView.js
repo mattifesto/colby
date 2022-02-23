@@ -1,6 +1,3 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
 /* globals
     CBArtwork,
     CBArtworkElement,
@@ -10,6 +7,7 @@
 
 
 (function () {
+    "use strict";
 
     Colby.afterDOMContentLoaded(
         afterDOMContentLoaded
@@ -20,15 +18,26 @@
     /**
      * @return undefined
      */
-    function afterDOMContentLoaded() {
+    function
+    afterDOMContentLoaded(
+    ) /* -> undefined */
+    {
         let elements = document.getElementsByClassName(
             "CBArtworkCollectionView"
         );
 
-        for (let index = 0; index < elements.length; index += 1) {
-            let element = elements.item(index);
+        for (
+            let index = 0;
+            index < elements.length;
+            index += 1
+        ) {
+            let element = elements.item(
+                index
+            );
 
-            initializeElement(element);
+            initializeElement(
+                element
+            );
         }
     }
     /* afterDOMContentLoaded() */
@@ -38,10 +47,12 @@
     /**
      * @return Element
      */
-    function createThumbnailsElement(
+    function
+    createThumbnailsElement(
         artworks,
         thumbnailClickedCallback
-    ) {
+    ) /* -> Element */
+    {
         let elements = CBUI.createElementTree(
             "CBArtworkCollectionView_thumbnails"
         );
@@ -61,7 +72,9 @@
                 artwork
             );
 
-            if (thumbnailImageURL === "") {
+            if (
+                thumbnailImageURL === ""
+            ) {
                 continue;
             }
 
@@ -108,9 +121,11 @@
      *
      * @return undefined
      */
-    function initializeElement(
+    function
+    initializeElement(
         element
-    ) {
+    ) /* -> undefined */
+    {
         let artworks = JSON.parse(
             element.dataset.artworks
         );
@@ -136,8 +151,12 @@
         contentElement.appendChild(
             createThumbnailsElement(
                 artworks,
-                function (index) {
-                    showArtworkAtIndex(index);
+                function (
+                    index
+                ) {
+                    showArtworkAtIndex(
+                        index
+                    );
                 }
             )
         );
@@ -145,16 +164,17 @@
         showArtworkAtIndex(0);
 
 
-        /* -- closures -- */
-
-
 
         /**
+         * @param int index
          *
+         * @return undefined
          */
-        function showArtworkAtIndex(
+        function
+        showArtworkAtIndex(
             index
-        ) {
+        ) /* -> undefined */
+        {
             let artwork = artworks[index];
 
             let mediumImageURL = CBArtwork.getMediumImageURL(
