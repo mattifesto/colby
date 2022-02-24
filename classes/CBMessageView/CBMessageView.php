@@ -1,7 +1,8 @@
 <?php
 
-final class CBMessageView {
-
+final class
+CBMessageView
+{
     /* -- CBHTMLOutput interfaces -- */
 
 
@@ -11,11 +12,12 @@ final class CBMessageView {
      */
     static function
     CBHTMLOutput_CSSURLs(
-    ) {
+    ): array
+    {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'css',
+                'v675.60.css',
                 cbsysurl()
             ),
         ];
@@ -24,7 +26,7 @@ final class CBMessageView {
 
 
 
-    /* -- CBInstall interfaces -- -- -- -- -- */
+    /* -- CBInstall interfaces -- */
 
 
 
@@ -33,7 +35,8 @@ final class CBMessageView {
      */
     static function
     CBInstall_install(
-    ): void {
+    ): void
+    {
         CBViewCatalog::installView(
             __CLASS__
         );
@@ -47,7 +50,8 @@ final class CBMessageView {
      */
     static function
     CBInstall_requiredClassNames(
-    ): array {
+    ): array
+    {
         return [
             'CBViewCatalog',
         ];
@@ -56,7 +60,7 @@ final class CBMessageView {
 
 
 
-    /* -- CBModel interfaces -- -- -- -- -- */
+    /* -- CBModel interfaces -- */
 
 
 
@@ -68,22 +72,26 @@ final class CBMessageView {
     static function
     CBModel_build(
         stdClass $spec
-    ): ?stdClass {
+    ): ?stdClass
+    {
         $model = (object)[
 
-            'html' => CBMessageMarkup::markupToHTML(
+            'html' =>
+            CBMessageMarkup::markupToHTML(
                 CBModel::valueToString(
                     $spec,
                     'markup'
                 )
             ),
 
-            'markup' => CBModel::valueToString(
+            'markup' =>
+            CBModel::valueToString(
                 $spec,
                 'markup'
             ),
 
-            'CSSClassNames' => CBModel::valueToNames(
+            'CSSClassNames' =>
+            CBModel::valueToNames(
                 $spec,
                 'CSSClassNames'
             ),
@@ -138,7 +146,9 @@ final class CBMessageView {
     CBModel_toSearchText(
         stdClass $model
     ) {
-        if (isset($model->markup)) {
+        if (
+            isset($model->markup)
+        ) {
             return CBMessageMarkup::markupToText(
                 $model->markup
             );
@@ -162,8 +172,11 @@ final class CBMessageView {
     static function
     CBView_render(
         stdClass $model
-    ): void {
-        if (empty($model->html)) {
+    ): void
+    {
+        if (
+            empty($model->html)
+        ) {
             echo '<!-- CBMessageView with no content. -->';
             return;
         }
@@ -173,7 +186,9 @@ final class CBMessageView {
             'CSSClassNames'
         );
 
-        if (!in_array('custom', $CSSClassNames)) {
+        if (
+            !in_array('custom', $CSSClassNames)
+        ) {
             $CSSClassNames[] = 'CBMessageView_default';
             $CSSClassNames[] = 'CBContentStyleSheet';
         }
@@ -183,17 +198,31 @@ final class CBMessageView {
             'CBHTMLOutput::requireClassName'
         );
 
-        if (!empty($model->CSS)) {
+        if (
+            !empty($model->CSS)
+        ) {
             CBHTMLOutput::addCSS(
                 $model->CSS
             );
         }
 
+        $CSSClassNamesAsHTML = cbhtml(
+            implode(
+                ' ',
+                $CSSClassNames
+            )
+        );
+
+        $cbmessageAsHTML = CBModel::valueToString(
+            $model,
+            'html'
+        );
+
         ?>
 
-        <div class="CBMessageView <?= implode(' ', $CSSClassNames) ?>">
-            <div class="content">
-                <?= CBModel::value($model, 'html', '') ?>
+        <div class="CBMessageView_root_element <?= $CSSClassNamesAsHTML ?>">
+            <div class="CBMessageView_content_element">
+                <?= $cbmessageAsHTML ?>
             </div>
         </div>
 
@@ -215,7 +244,8 @@ final class CBMessageView {
     static function
     getCBMessage(
         stdClass $messageViewModel
-    ): string {
+    ): string
+    {
         return CBModel::valueToString(
             $messageViewModel,
             'markup'
@@ -235,7 +265,8 @@ final class CBMessageView {
     setCBMessage(
         stdClass $messageViewSpec,
         string $cbmessage
-    ): void {
+    ): void
+    {
         $messageViewSpec->markup = $cbmessage;
     }
     /* setCBMessage() */
@@ -248,10 +279,12 @@ final class CBMessageView {
      *
      * @return void
      */
-    static function setCSSClassNames(
+    static function
+    setCSSClassNames(
         stdClass $messageViewSpec,
         string $CSSClassNames
-    ): void {
+    ): void
+    {
         $names = CBConvert::valueAsNames(
             $CSSClassNames
         );
