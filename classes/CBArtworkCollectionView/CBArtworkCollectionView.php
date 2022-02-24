@@ -82,9 +82,12 @@ CBArtworkCollectionView
         stdClass $viewModel
     ): void
     {
-        $artworks = CBModel::valueToArray(
-            $viewModel,
-            'artworkCollection.artworks'
+        $artworkCollectionModel = CBArtworkCollectionView::getArtworkCollection(
+            $viewModel
+        );
+
+        $artworks = CBArtworkCollection::getArtworks(
+            $artworkCollectionModel
         );
 
         if (
@@ -139,5 +142,48 @@ CBArtworkCollectionView
         <?php
     }
     /* CBView_render() */
+
+
+
+    /* -- accessors -- */
+
+
+    /**
+     * @param object $artworkCollectionViewModel
+     *
+     * @return object|null
+     */
+    static function
+    getArtworkCollection(
+        stdClass $artworkCollectionViewModel
+    ): ?stdClass
+    {
+        return CBModel::valueAsModel(
+            $artworkCollectionViewModel,
+            'artworkCollection',
+            'CBArtworkCollection'
+        );
+    }
+    /* getArtworkCollection() */
+
+
+
+    /**
+     * @param object $artworkCollectionViewModel
+     * @param object $artworkCollectionModel
+     *
+     * @return void
+     */
+    static function
+    setArtworkCollection(
+        stdClass $artworkCollectionViewModel,
+        stdClass $artworkCollectionModel
+    ): void
+    {
+        $artworkCollectionViewModel->artworkCollection = (
+            $artworkCollectionModel
+        );
+    }
+    /* setArtworkCollection() */
 
 }
