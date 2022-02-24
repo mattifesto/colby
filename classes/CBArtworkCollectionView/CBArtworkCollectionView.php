@@ -55,8 +55,7 @@ CBArtworkCollectionView
         return [
             'CBArtwork',
             'CBArtworkElement',
-            'CBUI',
-            'Colby',
+            'CBJavaScript',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
@@ -134,9 +133,11 @@ CBArtworkCollectionView
         ?>
 
         <div
-            class="CBArtworkCollectionView CBUI_view <?= $CSSClassNames ?>"
+            class="CBArtworkCollectionView_root_element <?= $CSSClassNames ?>"
             data-artworks="<?= $artworksAsData ?>"
         >
+            <div class="CBArtworkCollectionView_content_element">
+            </div>
         </div>
 
         <?php

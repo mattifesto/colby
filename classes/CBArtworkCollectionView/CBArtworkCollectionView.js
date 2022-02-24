@@ -1,15 +1,14 @@
 /* globals
     CBArtwork,
     CBArtworkElement,
-    CBUI,
-    Colby,
+    CBJavaScript,
 */
 
 
 (function () {
     "use strict";
 
-    Colby.afterDOMContentLoaded(
+    CBJavaScript.afterDOMContentLoaded(
         afterDOMContentLoaded
     );
 
@@ -23,7 +22,7 @@
     ) /* -> undefined */
     {
         let elements = document.getElementsByClassName(
-            "CBArtworkCollectionView"
+            "CBArtworkCollectionView_root_element"
         );
 
         for (
@@ -53,11 +52,11 @@
         thumbnailClickedCallback
     ) /* -> Element */
     {
-        let elements = CBUI.createElementTree(
-            "CBArtworkCollectionView_thumbnails"
+        let element = document.createElement(
+            "div"
         );
 
-        let element = elements[0];
+        element.className = "CBArtworkCollectionView_thumbnails";
 
         for (
             let artworkIndex = 0;
@@ -78,11 +77,11 @@
                 continue;
             }
 
-            let elements = CBUI.createElementTree(
-                "CBArtworkCollectionView_thumbnail"
+            let thumbnailElement = document.createElement(
+                "div"
             );
 
-            let thumbnailElement = elements[0];
+            thumbnailElement.className = "CBArtworkCollectionView_thumbnail";
 
             element.appendChild(
                 thumbnailElement
@@ -130,17 +129,15 @@
             element.dataset.artworks
         );
 
-        let contentElement = CBUI.createElement(
-            "CBArtworkCollectionView_content CBUI_viewContent"
+        let contentElement = element.getElementsByClassName(
+            "CBArtworkCollectionView_content_element"
+        )[0];
+
+        let imageContainerElement = document.createElement(
+            "div"
         );
 
-        contentElement.style.width = "640px";
-
-        element.appendChild(
-            contentElement
-        );
-
-        let imageContainerElement = CBUI.createElement(
+        imageContainerElement.className = (
             "CBArtworkCollectionView_imageContainer"
         );
 

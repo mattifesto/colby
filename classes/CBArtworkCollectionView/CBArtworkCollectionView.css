@@ -1,3 +1,22 @@
+.CBArtworkCollectionView_root_element
+{
+    display: flex;
+    justify-content: center;
+
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+
+
+.CBArtworkCollectionView_content_element {
+    max-width: 100%;
+    width: 640px;
+}
+
+
+
 .CBArtworkCollectionView_imageContainer {
     box-sizing: border-box;
     padding: 20px;
