@@ -1,6 +1,8 @@
 <?php
 
-final class CBMessageMarkup {
+final class
+CBMessageMarkup
+{
 
     const encodedBackslash = '836f784bf25aa0e5663779c36899c61efbaa114e';
     const encodedOpenBracket = 'f5a6328bda8575b25bbc5f0ece0181df57e54ed1';
@@ -9,42 +11,62 @@ final class CBMessageMarkup {
 
 
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
         return [
-            Colby::flexpath(__CLASS__, 'v634.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.60.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
         return [
             'CBConvert',
+            'Colby',
         ];
     }
+    /* CBHTMLOutput_requiredClassNames() */
 
 
 
-    /* -- functions -- -- -- -- -- */
+    /* -- functions -- */
 
 
 
     /**
      * @deprecated use CBMessageMarkup::messageToHTML()
      */
-    static function convert(string $markup): string {
-        return CBMessageMarkup::messageToHTML($markup);
+    static function
+    convert(
+        string $markup
+    ): string
+    {
+        return CBMessageMarkup::messageToHTML(
+            $markup
+        );
     }
+    /* convert() */
 
 
 
@@ -61,7 +83,11 @@ final class CBMessageMarkup {
      *          tagName: string
      *      }
      */
-    static function createElement(array &$stack) {
+    static function
+    createElement(
+        array &$stack
+    ): stdClass
+    {
         $element = (object)[
             'children' => [],
             'classNamesAsHTML' => '',
@@ -70,8 +96,13 @@ final class CBMessageMarkup {
             'tagName' => '',
         ];
 
-        if (!empty($stack)) {
-            $parentElement = end($stack);
+        if (
+            !empty($stack)
+        ) {
+            $parentElement = end(
+                $stack
+            );
+
             $parentElement->children[] = $element;
         }
 
@@ -91,7 +122,11 @@ final class CBMessageMarkup {
      *
      * @return string
      */
-    static function decodeEncodedCharacters(string $markup): string {
+    static function
+    decodeEncodedCharacters(
+        string $markup
+    ): string
+    {
         $encodedBackslash = CBMessageMarkup::encodedBackslash;
         $encodedOpenBracket = CBMessageMarkup::encodedOpenBracket;
         $encodedCloseBracket = CBMessageMarkup::encodedCloseBracket;
@@ -103,6 +138,7 @@ final class CBMessageMarkup {
             "/{$encodedCloseBracket}/",
             "/{$encodedHyphen}/",
         ];
+
         $replacements = [
             '\\',
             '(',
@@ -110,7 +146,11 @@ final class CBMessageMarkup {
             '-',
         ];
 
-        return preg_replace($patterns, $replacements, $markup);
+        return preg_replace(
+            $patterns,
+            $replacements,
+            $markup
+        );
     }
     /* decodeEncodedCharacters() */
 
@@ -121,23 +161,37 @@ final class CBMessageMarkup {
      *
      * @return object|null
      */
-    static function elementFinish(array &$stack) {
+    static function
+    elementFinish(
+        array &$stack
+    ): ?stdClass
+    {
         $element = array_pop($stack);
         $html = '';
 
-        foreach ($element->children as $child) {
-            if (isset($child->html)) {
+        foreach (
+            $element->children as $child
+        ) {
+            if (
+                isset($child->html)
+            ) {
                 $html .= $child->html;
             } else {
-                if (!is_string($child)) {
+                if (
+                    !is_string($child)
+                ) {
                     throw new RuntimeException(
                         'This element child should be a string.'
                     );
                 }
 
-                $paragraphAsHTML = CBMessageMarkup::paragraphToHTML($child);
+                $paragraphAsHTML = CBMessageMarkup::paragraphToHTML(
+                    $child
+                );
 
-                switch ($element->defaultChildTagName) {
+                switch (
+                    $element->defaultChildTagName
+                ) {
                     case '':
                         $html .= $paragraphAsHTML;
                         break;
@@ -153,17 +207,23 @@ final class CBMessageMarkup {
             }
         }
 
-        if (empty($stack)) {
+        if (
+            empty($stack)
+        ) {
             /* root element */
             $element->html = $html;
         } else {
-            if ($element->classNamesAsHTML) {
+            if (
+                $element->classNamesAsHTML
+            ) {
                 $classAttribute = " class=\"{$element->classNamesAsHTML}\"";
             } else {
                 $classAttribute = '';
             }
 
-            switch ($element->tagName) {
+            switch (
+                $element->tagName
+            ) {
                 case 'p':
                     $element->html = (
                         "<{$element->tagName}{$classAttribute}>{$html}"
@@ -179,7 +239,17 @@ final class CBMessageMarkup {
             }
         }
 
-        return end($stack);
+        $end = end(
+            $stack
+        );
+
+        if (
+            $end === false
+        ) {
+            return null;
+        }
+
+        return $end;
     }
     /* elementFinish() */
 
@@ -193,7 +263,11 @@ final class CBMessageMarkup {
      *
      * @return string
      */
-    static function encodeEscapedCharacters(string $markup): string {
+    static function
+    encodeEscapedCharacters(
+        string $markup
+    ): string
+    {
         /* double backslash */
         $escapedBackslashExpression = '/\\\\\\\\/' ;
 
@@ -212,6 +286,7 @@ final class CBMessageMarkup {
             $escapedCloseBracketExpression,
             $escapedCommandExpression,
         ];
+
         $replacements = [
             CBMessageMarkup::encodedBackslash,
             CBMessageMarkup::encodedOpenBracket,
@@ -219,7 +294,11 @@ final class CBMessageMarkup {
             CBMessageMarkup::encodedHyphen,
         ];
 
-        return preg_replace($patterns, $replacements, $markup);
+        return preg_replace(
+            $patterns,
+            $replacements,
+            $markup
+        );
     }
     /* encodeEscapedCharacters() */
 
@@ -246,8 +325,14 @@ final class CBMessageMarkup {
      *
      * @return string
      */
-    static function inlineElementToHTML(array $matches): string {
-        $inlineContent = trim($matches[1]);
+    static function
+    inlineElementToHTML(
+        array $matches
+    ): string
+    {
+        $inlineContent = trim(
+            $matches[1]
+        );
 
         $inlineTagData = preg_split(
             '/\s+/',
@@ -264,7 +349,9 @@ final class CBMessageMarkup {
             ''
         );
 
-        switch ($inlineTagName) {
+        switch (
+            $inlineTagName
+        ) {
             case 'br':
             case 'wbr':
                 return "<{$inlineTagName}>";
@@ -376,8 +463,14 @@ final class CBMessageMarkup {
      *
      * @return string
      */
-    static function inlineElementToText(array $matches): string {
-        $inlineContent = trim($matches[1]);
+    static function
+    inlineElementToText(
+        array $matches
+    ): string
+    {
+        $inlineContent = trim(
+            $matches[1]
+        );
 
         $inlineTagData = preg_split(
             '/\s+/',
@@ -394,7 +487,9 @@ final class CBMessageMarkup {
             ''
         );
 
-        switch ($inlineTagName) {
+        switch (
+            $inlineTagName
+        ) {
             case 'br':
                 return "\n";
                 break;
@@ -420,28 +515,53 @@ final class CBMessageMarkup {
      *          tagName: string
      *      }
      */
-    private static function lineToCommand(string $line): ?stdClass {
+    private static function
+    lineToCommand(
+        string $line
+    ): ?stdClass
+    {
         $properties = (object)[];
 
-        if (1 !== preg_match('/^\s*---(\s.*)?$/', $line, $matches)) {
+        if (
+            1 !== preg_match(
+                '/^\s*---(\s.*)?$/',
+                $line,
+                $matches
+            )
+        ) {
             return null;
         }
 
-        $classNames = isset($matches[1]) ? trim($matches[1]) : '';
+        $classNames = (
+            isset($matches[1]) ?
+            trim($matches[1]) :
+            ''
+        );
 
-        if ($classNames === '') {
+        if (
+            $classNames === ''
+        ) {
             $classNames = [];
             $tagName = "";
         } else {
-            $classNames = preg_split('/\s+/', $classNames);
+            $classNames = preg_split(
+                '/\s+/',
+                $classNames
+            );
 
             /**
              * The first word will be used as the tag name if it is a valid tag
              * name. otherwise the tag name will be "div".
              */
 
-            if (CBMessageMarkup::tagNameIsAllowedBlockElement($classNames[0])) {
-                $tagName = array_shift($classNames);
+            if (
+                CBMessageMarkup::tagNameIsAllowedBlockElement(
+                    $classNames[0]
+                )
+            ) {
+                $tagName = array_shift(
+                    $classNames
+                );
             } else {
                 $tagName = 'div';
             }
@@ -459,18 +579,32 @@ final class CBMessageMarkup {
     /**
      * @deprecated use messageToHTML()
      */
-    static function markupToHTML(string $message): string {
-        return CBMessageMarkup::messageToHTML($message);
+    static function
+    markupToHTML(
+        string $message
+    ): string
+    {
+        return CBMessageMarkup::messageToHTML(
+            $message
+        );
     }
+    /* markupToHTML() */
 
 
 
     /**
      * @deprecated use messageToText()
      */
-    static function markupToText(string $message): string {
-        return CBMessageMarkup::messageToText($message);
+    static function
+    markupToText(
+        string $message
+    ): string
+    {
+        return CBMessageMarkup::messageToText(
+            $message
+        );
     }
+    /* markupToText() */
 
 
 
@@ -479,34 +613,66 @@ final class CBMessageMarkup {
      *
      * @return string
      */
-    static function messageToHTML(string $markup): string {
-        $markup = CBMessageMarkup::encodeEscapedCharacters($markup);
+    static function
+    messageToHTML(
+        string $markup
+    ): string
+    {
+        $markup = CBMessageMarkup::encodeEscapedCharacters(
+            $markup
+        );
+
         $content = null;
-        $lines = preg_split("/\r\n|\n|\r/", $markup);
+
+        $lines = preg_split(
+            "/\r\n|\n|\r/",
+            $markup
+        );
+
         $stack = [];
-        $rootElement = CBMessageMarkup::createElement($stack);
+
+        $rootElement = CBMessageMarkup::createElement(
+            $stack
+        );
+
         $rootElement->defaultChildTagName = 'p';
         $rootElement->tagName = 'root';
         $currentElement = $rootElement;
 
-        for ($index = 0; $index < count($lines); $index++) {
+        for (
+            $index = 0;
+            $index < count($lines);
+            $index++
+        ) {
             $line = $lines[$index];
-            $command = CBMessageMarkup::lineToCommand($line);
+
+            $command = CBMessageMarkup::lineToCommand(
+                $line
+            );
 
             // Command lines
 
-            if ($command !== null) {
+            if (
+                $command !== null
+            ) {
                 $parentAllows = CBMessageMarkup::tagNameAllowsBlockChildren(
                     $currentElement->tagName
                 );
 
-                if ($parentAllows && $command->tagName !== '') {
-                    if ($content !== null) {
+                if (
+                    $parentAllows &&
+                    $command->tagName !== ''
+                ) {
+                    if (
+                        $content !== null
+                    ) {
                         $currentElement->children[] = $content;
                         $content = null;
                     }
 
-                    $currentElement = CBMessageMarkup::createElement($stack);
+                    $currentElement = CBMessageMarkup::createElement(
+                        $stack
+                    );
 
                     $currentElement->classNamesAsHTML = cbhtml(
                         implode(
@@ -517,7 +683,9 @@ final class CBMessageMarkup {
 
                     $currentElement->tagName = $command->tagName;
 
-                    switch ($command->tagName) {
+                    switch (
+                        $command->tagName
+                    ) {
                         case 'dl':
                             $currentElement->defaultChildTagName = 'dd';
                             break;
@@ -546,12 +714,16 @@ final class CBMessageMarkup {
                     $command->tagName === '' &&
                     $currentElement !== $rootElement
                 ) {
-                    if ($content !== null) {
+                    if (
+                        $content !== null
+                    ) {
                         $currentElement->children[] = $content;
                         $content = null;
                     }
 
-                    $currentElement = CBMessageMarkup::elementFinish($stack);
+                    $currentElement = CBMessageMarkup::elementFinish(
+                        $stack
+                    );
                 }
 
                 continue;
@@ -559,14 +731,21 @@ final class CBMessageMarkup {
 
             // Content lines
 
-            if ($currentElement->isPreformatted || trim($line) !== '') {
-                if ($content === null) {
+            if (
+                $currentElement->isPreformatted ||
+                trim($line) !== ''
+            ) {
+                if (
+                    $content === null
+                ) {
                     $content = '';
                 }
 
                 $content .= "{$line}\n";
             } else {
-                if ($content !== null) {
+                if (
+                    $content !== null
+                ) {
                     $currentElement->children[] = $content;
                     $content = null;
                 }
@@ -575,16 +754,24 @@ final class CBMessageMarkup {
 
         // After processing every line
 
-        if ($content !== null) {
+        if (
+            $content !== null
+        ) {
             $currentElement->children[] = $content;
             $content = null;
         }
 
-        while (!empty($stack)) {
-            $currentElement = CBMessageMarkup::elementFinish($stack);
+        while (
+            !empty($stack)
+        ) {
+            $currentElement = CBMessageMarkup::elementFinish(
+                $stack
+            );
         }
 
-        $html = CBMessageMarkup::decodeEncodedCharacters($rootElement->html);
+        $html = CBMessageMarkup::decodeEncodedCharacters(
+            $rootElement->html
+        );
 
         return $html;
     }
@@ -600,30 +787,56 @@ final class CBMessageMarkup {
      *
      * @return string
      */
-    static function messageToText(string $markup): string {
-        $markup = CBMessageMarkup::encodeEscapedCharacters($markup);
+    static function
+    messageToText(
+        string $markup
+    ): string
+    {
+        $markup = CBMessageMarkup::encodeEscapedCharacters(
+            $markup
+        );
+
         $paragraphs = [];
         $paragraph = null;
-        $lines = CBConvert::stringToLines($markup);
 
-        for ($index = 0; $index < count($lines); $index++) {
+        $lines = CBConvert::stringToLines(
+            $markup
+        );
+
+        for (
+            $index = 0;
+            $index < count($lines);
+            $index++
+        ) {
             $line = $lines[$index];
-            $command = CBMessageMarkup::lineToCommand($line);
+
+            $command = CBMessageMarkup::lineToCommand(
+                $line
+            );
 
             /**
              * TODO: Add support for recognizing preformatted elements.
              */
 
-            if ($command !== null || trim($line) === '') {
-                if ($paragraph !== null) {
-                    $paragraph = CBMessageMarkup::paragraphToText($paragraph);
+            if (
+                $command !== null ||
+                trim($line) === ''
+            ) {
+                if (
+                    $paragraph !== null
+                ) {
+                    $paragraph = CBMessageMarkup::paragraphToText(
+                        $paragraph
+                    );
 
                     $paragraphs[] = $paragraph;
 
                     $paragraph = null;
                 }
             } else {
-                if ($paragraph === null) {
+                if (
+                    $paragraph === null
+                ) {
                     $paragraph = '';
                 }
 
@@ -633,8 +846,12 @@ final class CBMessageMarkup {
 
         // After processing every line
 
-        if ($paragraph !== null) {
-            $paragraph = CBMessageMarkup::paragraphToText($paragraph);
+        if (
+            $paragraph !== null
+        ) {
+            $paragraph = CBMessageMarkup::paragraphToText(
+                $paragraph
+            );
 
             $paragraphs[] = $paragraph;
 
@@ -642,13 +859,19 @@ final class CBMessageMarkup {
         }
 
         $paragraphs = array_map(
-            function ($paragraph) {
+            function (
+                $paragraph
+            ) {
                 $paragraph = CBMessageMarkup::decodeEncodedCharacters(
                     $paragraph
                 );
 
                 return trim(
-                    preg_replace('/\s+/', ' ', $paragraph)
+                    preg_replace(
+                        '/\s+/',
+                        ' ',
+                        $paragraph
+                    )
                 );
             },
             $paragraphs
@@ -668,8 +891,14 @@ final class CBMessageMarkup {
      *
      * @return string
      */
-    static function paragraphToHTML(string $markup): string {
-        $content = cbhtml($markup);
+    static function
+    paragraphToHTML(
+        string $markup
+    ): string
+    {
+        $content = cbhtml(
+            $markup
+        );
 
         $openBracket = '\\(';
         $closeBracket = '\\)';
@@ -703,7 +932,9 @@ final class CBMessageMarkup {
                 -1,
                 $count
             );
-        } while ($count > 0);
+        } while (
+            $count > 0
+        );
 
         return $content;
     }
@@ -728,7 +959,10 @@ final class CBMessageMarkup {
      *
      * @return string
      */
-    static function paragraphToText(string $markup) {
+    static function
+    paragraphToText(
+        string $markup
+    ) {
         $content = $markup;
 
         $openBracket = '\\(';
@@ -763,7 +997,9 @@ final class CBMessageMarkup {
                 -1,
                 $count
             );
-        } while ($count > 0);
+        } while (
+            $count > 0
+        );
 
         return $content;
     }
@@ -774,9 +1010,15 @@ final class CBMessageMarkup {
     /**
      * @deprecated use stringToMessage()
      */
-    static function stringToMarkup(string $value): string {
-        return CBMessageMarkup::stringToMessage($value);
+    static function
+    stringToMarkup(
+        string $value
+    ): string {
+        return CBMessageMarkup::stringToMessage(
+            $value
+        );
     }
+    /* stringToMarkup() */
 
 
 
@@ -803,7 +1045,8 @@ final class CBMessageMarkup {
     static function
     stringToMessage(
         string $value
-    ): string {
+    ): string
+    {
         $patterns = [
             '/\\\\/',   /* single backslack */
             '/-/',      /* hyphen */
@@ -833,7 +1076,11 @@ final class CBMessageMarkup {
      *
      * @return bool
      */
-    static function tagNameAllowsBlockChildren(string $tagName): bool {
+    static function
+    tagNameAllowsBlockChildren(
+        string $tagName
+    ): bool
+    {
         return in_array(
             $tagName,
             [
@@ -859,7 +1106,11 @@ final class CBMessageMarkup {
      *
      * @return bool
      */
-    static function tagNameIsAllowedBlockElement(string $tagName): bool {
+    static function
+    tagNameIsAllowedBlockElement(
+        string $tagName
+    ): bool
+    {
         return in_array(
             $tagName,
             [
