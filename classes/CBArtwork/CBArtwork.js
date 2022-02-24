@@ -1,6 +1,3 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
 /* globals
     CBImage,
     CBModel,
@@ -8,6 +5,7 @@
 
 
 (function () {
+    "use strict";
 
     window.CBArtwork = {
         getMediumImageURL,
@@ -17,17 +15,21 @@
 
 
     /**
-     *
+     * @return string
      */
-    function getMediumImageURL(
+    function
+    getMediumImageURL(
         artworkModel
-    ) {
+    ) /* -> string */
+    {
         let imageURL = CBImage.toURL(
             artworkModel.image,
             "rl1280"
         );
 
-        if (imageURL !== "") {
+        if (
+            imageURL !== ""
+        ) {
             return imageURL;
         }
 
@@ -36,7 +38,9 @@
             "mediumImageURL"
         );
 
-        if (imageURL !== "") {
+        if (
+            imageURL !== ""
+        ) {
             return imageURL;
         }
 
@@ -45,7 +49,9 @@
             "largeImageURL"
         );
 
-        if (imageURL !== "") {
+        if (
+            imageURL !== ""
+        ) {
             return imageURL;
         }
 
@@ -67,15 +73,19 @@
      *
      *      Returns an empty string if no URL is available.
      */
-    function getThumbnailImageURL(
+    function
+    getThumbnailImageURL(
         artworkModel
-    ) {
+    ) /* -> string */
+    {
         let imageURL = CBImage.toURL(
             artworkModel.image,
             "rl320"
         );
 
-        if (imageURL !== "") {
+        if (
+            imageURL !== ""
+        ) {
             return imageURL;
         }
 
@@ -84,7 +94,9 @@
             "thumbnailImageURL"
         );
 
-        if (imageURL !== "") {
+        if (
+            imageURL !== ""
+        ) {
             return imageURL;
         }
 
@@ -93,7 +105,9 @@
             "mediumImageURL"
         );
 
-        if (imageURL !== "") {
+        if (
+            imageURL !== ""
+        ) {
             return imageURL;
         }
 
@@ -105,6 +119,5 @@
         return imageURL;
     }
     /* getThumbnailImageURL() */
-
 
 })();

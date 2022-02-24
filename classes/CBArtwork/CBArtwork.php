@@ -1,7 +1,8 @@
 <?php
 
-final class CBArtwork {
-
+final class
+CBArtwork
+{
     /* -- CBHTMLOutput interfaces -- */
 
 
@@ -9,18 +10,28 @@ final class CBArtwork {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
         return [
-            Colby::flexpath(__CLASS__, 'v632.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.60.js',
+                cbsysurl()
+            ),
         ];
     }
+    /* CBHTMLOutput_JavaScriptURLs() */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array {
         return [
             'CBImage',
             'CBModel',
@@ -39,9 +50,11 @@ final class CBArtwork {
      *
      * @return object
      */
-    static function CBModel_build(
+    static function
+    CBModel_build(
         stdClass $artworkSpec
-    ): stdClass {
+    ): stdClass
+    {
         $imageSpec = CBModel::valueAsModel(
             $artworkSpec,
             'image',
@@ -55,7 +68,9 @@ final class CBArtwork {
         $mediumImageURL = null;
         $largeImageURL = null;
 
-        if ($imageSpec !== null) {
+        if (
+            $imageSpec !== null
+        ) {
             $imageModel = CBModel::build(
                 $imageSpec
             );
@@ -100,11 +115,13 @@ final class CBArtwork {
     /**
      * @param object $artworkModel
      *
-     * @return stdClass|null
+     * @return object|null
      */
-    static function getImageModel(
+    static function
+    getImageModel(
         stdClass $artworkModel
-    ): ?stdClass {
+    ): ?stdClass
+    {
         return CBModel::valueAsModel(
             $artworkModel,
             'image'
@@ -121,9 +138,11 @@ final class CBArtwork {
      *
      *      Returns an empty string if no URL is available.
      */
-    static function getThumbnailImageURL(
+    static function
+    getThumbnailImageURL(
         $artworkModel
-    ): string {
+    ): string
+    {
         $imageURL = '';
 
         $image = CBModel::valueAsModel(
@@ -131,14 +150,18 @@ final class CBArtwork {
             'image'
         );
 
-        if ($image !== null) {
+        if (
+            $image !== null
+        ) {
             $imageURL = CBImage::asFlexpath(
                 $image,
                 'rl320',
                 cbsiteurl()
             );
 
-            if ($imageURL !== '') {
+            if (
+                $imageURL !== ''
+            ) {
                 return $imageURL;
             }
         }
@@ -148,7 +171,9 @@ final class CBArtwork {
             'thumbnailImageURL'
         );
 
-        if ($imageURL !== '') {
+        if (
+            $imageURL !== ''
+        ) {
             return $imageURL;
         }
 
@@ -157,7 +182,9 @@ final class CBArtwork {
             'mediumImageURL'
         );
 
-        if ($imageURL !== '') {
+        if (
+            $imageURL !== ''
+        ) {
             return $imageURL;
         }
 
