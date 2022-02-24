@@ -215,4 +215,35 @@ CBArtworkCollection
     }
     /* getMainArtwork() */
 
+
+
+    /**
+     * @param array $imageSpecs
+     *
+     *      An array of CBImage specs.
+     */
+    static function
+    fromImageSpecs(
+        array $imageSpecs
+    ): stdClass
+    {
+        $artworkCollectionSpec = CBModel::createSpec(
+            'CBArtworkCollection'
+        );
+
+        $artworkCollectionSpec->artworks = array_map(
+            function (
+                $imageSpec
+            ) {
+                return CBArtwork::fromImageSpec(
+                    $imageSpec
+                );
+            },
+            $imageSpecs
+        );
+
+        return $artworkCollectionSpec;
+    }
+    /* fromImageSpecs() */
+
 }
