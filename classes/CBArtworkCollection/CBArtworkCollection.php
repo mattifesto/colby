@@ -9,8 +9,9 @@
  * CBArtworkCollection's CBID based on its own CBID or use the associations
  * table.
  */
-final class CBArtworkCollection {
-
+final class
+CBArtworkCollection
+{
     /* -- CBModel interfaces -- */
 
 
@@ -20,10 +21,11 @@ final class CBArtworkCollection {
      *
      * @return object
      */
-    static function CBModel_build(
+    static function
+    CBModel_build(
         stdClass $artworkCollectionSpec
-    ): stdClass {
-
+    ): stdClass
+    {
         /* artworks */
 
         $potentailArtworkSpecs = CBModel::valueToArray(
@@ -33,7 +35,9 @@ final class CBArtworkCollection {
 
         $artworkModels = [];
 
-        foreach ($potentailArtworkSpecs as $potentialArtworkSpec) {
+        foreach (
+            $potentailArtworkSpecs as $potentialArtworkSpec
+        ) {
             $artworkSpec = CBConvert::valueAsModel(
                 $potentialArtworkSpec,
                 [
@@ -41,7 +45,9 @@ final class CBArtworkCollection {
                 ]
             );
 
-            if ($artworkSpec !== null) {
+            if (
+                $artworkSpec !== null
+            ) {
                 $artworkModel = CBModel::build(
                     $artworkSpec
                 );
@@ -50,7 +56,9 @@ final class CBArtworkCollection {
                     $artworkModel
                 );
 
-                if ($thumbnailImageURL !== '') {
+                if (
+                    $thumbnailImageURL !== ''
+                ) {
                     array_push(
                         $artworkModels,
                         $artworkModel
@@ -88,15 +96,19 @@ final class CBArtworkCollection {
      *
      * @return void
      */
-    static function CBModels_willDelete(
+    static function
+    CBModels_willDelete(
         array $artworkCollectionModelCBIDs
-    ): void {
+    ): void
+    {
         $artworkCollectionModels = CBModels::fetchModelsByID2(
             $artworkCollectionModelCBIDs
         );
 
         $associatedModelCBIDs = array_map(
-            function ($artworkCollectionModel) {
+            function (
+                $artworkCollectionModel
+            ) {
                 return CBModel::valueAsCBID(
                     $artworkCollectionModel,
                     'associatedModelCBID'
@@ -123,11 +135,14 @@ final class CBArtworkCollection {
      *
      * @return void
      */
-    static function CBModels_willSave(
+    static function
+    CBModels_willSave(
         array $artworkCollectionModels
     ): void {
         $associatedModelCBIDs = array_map(
-            function ($artworkCollectionModel) {
+            function (
+                $artworkCollectionModel
+            ) {
                 return CBModel::valueAsCBID(
                     $artworkCollectionModel,
                     'associatedModelCBID'
@@ -158,15 +173,19 @@ final class CBArtworkCollection {
      *
      * @return object|null
      */
-    static function getMainArtwork(
+    static function
+    getMainArtwork(
         ?stdClass $artworkCollectionModel
-    ): ?stdClass {
+    ): ?stdClass
+    {
         $artworks = CBModel::valueToArray(
             $artworkCollectionModel,
             'artworks'
         );
 
-        if (count($artworks) > 0) {
+        if (
+            count($artworks) > 0
+        ) {
             return $artworks[0];
         } else {
             return null;
