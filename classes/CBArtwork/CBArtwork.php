@@ -133,6 +133,24 @@ CBArtwork
 
     /**
      * @param object $artworkModel
+     * @param object $imageModel
+     *
+     * @return void
+     */
+    static function
+    setImageModel(
+        stdClass $artworkModel,
+        stdClass $imageModel
+    ): void
+    {
+        $artworkModel->image = $imageModel;
+    }
+    /* setImageModel() */
+
+
+
+    /**
+     * @param object $artworkModel
      *
      * @return string
      *
