@@ -756,6 +756,71 @@ CBModels {
 
 
     /**
+     * This function was created to get a set of random models for testing and
+     * documentation. Literally, the first use is to get 10 random CBImage
+     * models.
+     *
+     * @param string $modelClassName
+     * @param int $count
+     *
+     * @return [object]
+     */
+    static function
+    fetchRandomModelsByClassName(
+        string $modelClassName,
+        int $count
+    ): array
+    {
+        $classNameAsSQL = CBDB::stringToSQL(
+            $modelClassName
+        );
+
+        $SQL = <<<EOT
+
+            SELECT
+            v.modelAsJSON
+
+            FROM
+            CBModels as m
+
+            JOIN
+            CBModelVersions as v ON
+            m.ID = v.ID AND
+            m.version = v.version
+
+            WHERE
+            m.className = {$classNameAsSQL}
+
+            ORDER BY
+            RAND()
+
+            LIMIT
+            ${count}
+
+        EOT;
+
+        $modelsAsJSON = CBDB::SQLToArrayOfNullableStrings(
+            $SQL
+        );
+
+        $models = array_map(
+            function (
+                $modelAsJSON
+            ) {
+                return CBConvert::JSONToValue(
+                    $modelAsJSON
+                );
+            },
+            $modelsAsJSON
+        );
+
+        return $models;
+    }
+    /* fetchRandomModelsByClassName() */
+
+
+
+    /**
      * @deprecated use fetchModelsByID2()
      *
      * @param [ID] $IDs
