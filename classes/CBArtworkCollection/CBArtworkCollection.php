@@ -28,9 +28,8 @@ CBArtworkCollection
     {
         /* artworks */
 
-        $potentailArtworkSpecs = CBModel::valueToArray(
-            $artworkCollectionSpec,
-            'artworks'
+        $potentailArtworkSpecs = CBArtworkCollection::getArtworks(
+            $artworkCollectionSpec
         );
 
         $artworkModels = [];
@@ -161,6 +160,29 @@ CBArtworkCollection
         );
     }
     /* CBModels_willSave() */
+
+
+
+    /* -- accessors -- */
+
+
+
+    /**
+     * @param object $artworkCollectionModel
+     *
+     * @return [object]
+     */
+    static function
+    getArtworks(
+        $artworkCollectionModel
+    ): array
+    {
+        return CBModel::valueToArray(
+            $artworkCollectionModel,
+            'artworks'
+        );
+    }
+    /* getArtworks() */
 
 
 
