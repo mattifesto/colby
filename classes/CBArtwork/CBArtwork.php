@@ -113,6 +113,31 @@ CBArtwork
 
 
     /**
+     * @param object $imageSpec
+     *
+     * @return object
+     */
+    static function
+    fromImageSpec(
+        stdClass $imageSpec
+    ): stdClass
+    {
+        $artworkSpec = CBModel::createSpec(
+            'CBArtwork'
+        );
+
+        CBArtwork::setImageModel(
+            $artworkSpec,
+            $imageSpec
+        );
+
+        return $artworkSpec;
+    }
+    /* fromImageSpec() */
+
+
+
+    /**
      * @param object $artworkModel
      *
      * @return object|null
