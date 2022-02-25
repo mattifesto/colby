@@ -13,6 +13,7 @@
         errorToErrorDetails: CBConvert_errorToErrorDetails,
         errorToStackTrace: CBConvert_errorToStackTrace,
         stringToCleanLine: CBConvert_stringToCleanLine,
+        stringToHTML: CBConvert_stringToHTML,
         stringToLines: CBConvert_stringToLines,
         stringToStub: CBConvert_stringToStub,
         stringToURI: CBConvert_stringToURI,
@@ -421,6 +422,47 @@
         return value.replace(/\s+/g, " ").trim();
     }
     /* CBConvert_stringToCleanLine() */
+
+
+
+    /**
+     * @param string originalString
+     *
+     * @return string
+     */
+    function
+    CBConvert_stringToHTML(
+        originalString
+    ) // -> string
+    {
+        if (
+            CBConvert_stringToHTML.static_map === undefined
+        ) {
+            CBConvert_stringToHTML.static_map = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                "'": "&#039;",
+                '"': "&quot;",
+            };
+
+            CBConvert_stringToHTML.static_getReplacementSubstring =
+            function (
+                originalSubstring
+            ) // -> string
+            {
+                return CBConvert_stringToHTML.static_map[
+                    originalSubstring
+                ];
+            };
+        }
+
+        return originalString.replace(
+            /[&<>"']/g,
+            CBConvert_stringToHTML.static_getReplacementSubstring
+        );
+    }
+    /* stringToHTML() */
 
 
 

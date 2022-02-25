@@ -1,9 +1,9 @@
 <?php
 
 final class
-CBConvert {
-
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+CBConvert
+{
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
@@ -12,11 +12,12 @@ CBConvert {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
+    ): array
+    {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.54.js',
+                'v675.60.js',
                 cbsysurl()
             ),
         ];
@@ -30,7 +31,8 @@ CBConvert {
      */
     static function
     CBHTMLOutput_JavaScriptVariables(
-    ): array {
+    ): array
+    {
         return [
             [
                 'CBConvert_stringToStubReplacements',
@@ -42,7 +44,7 @@ CBConvert {
 
 
 
-    /* -- functions -- -- -- -- -- */
+    /* -- functions -- */
 
 
 
