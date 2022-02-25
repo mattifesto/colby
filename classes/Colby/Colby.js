@@ -726,6 +726,10 @@ var Colby = {
 
 
     /**
+     * @deprecated 2022_02_24
+     *
+     *      Use CBConvert.stringToHTML()
+     *
      * @param string text
      *
      * @return string

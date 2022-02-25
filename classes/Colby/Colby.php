@@ -36,8 +36,8 @@ Colby::initialize();
  *
  */
 final class
-Colby {
-
+Colby
+{
     /**
      * @deprecated 2021_06_04
      *
@@ -67,7 +67,7 @@ Colby {
 
 
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
@@ -76,7 +76,8 @@ Colby {
      */
     static function
     CBHTMLOutput_CSSURLs(
-    ): array {
+    ): array
+    {
         return [
             Colby::flexpath(
                 __CLASS__,
@@ -94,11 +95,12 @@ Colby {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
+    ): array
+    {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.54.js',
+                'v675.60.js',
                 cbsysurl()
             ),
         ];
@@ -112,7 +114,8 @@ Colby {
      */
     static function
     CBHTMLOutput_requiredClassNames(
-    ): array {
+    ): array
+    {
         return [
             'CBAjax',
             'CBErrorHandler',
@@ -125,7 +128,7 @@ Colby {
 
 
 
-    /* -- functions -- -- -- -- -- */
+    /* -- functions -- */
 
 
 
