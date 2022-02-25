@@ -26,6 +26,42 @@ CBMessageView
 
 
 
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
+        return [
+            Colby::flexpath(
+                __CLASS__,
+                'v675.60.js',
+                cbsysurl()
+            ),
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptURLs() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        return [
+            'CBMessageMarkup',
+
+            'CBContentStyleSheet',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
+
+
+
     /* -- CBInstall interfaces -- */
 
 
