@@ -8,14 +8,14 @@
 (function () {
     "use strict";
 
-    window.CBMessageMarkup = {
+    window.CBMessageMarkup =
+    {
+        cbmessageToHTML: CBMessageMarkup_cbmessageToHTML,
 
-        /**
-         * @deprecated use CBMessageMarkup.messageToHTML()
-         */
-        convert: function (message) {
-            return CBMessageMarkup.messageToHTML(message);
-        },
+        /* deprecated */
+        convert: CBMessageMarkup_cbmessageToHTML,
+        markupToHTML: CBMessageMarkup_cbmessageToHTML,
+        messageToHTML: CBMessageMarkup_cbmessageToHTML,
 
 
 
@@ -415,12 +415,6 @@
 
 
 
-        /**
-         * @deprecated use messageToHTML
-         */
-        markupToHTML: function (message) {
-            return CBMessageMarkup.messageToHTML(message);
-        },
 
 
 
@@ -430,140 +424,6 @@
         markupToText: function (message) {
             return CBMessageMarkup.messageToText(message);
         },
-
-
-
-        /**
-         * @param string cbmessage
-         *
-         * @return string
-         */
-        messageToHTML: function (
-            cbmessage
-        ) {
-            if (typeof cbmessage !== "string") {
-                throw TypeError("The cbmessage parameter is not a string.");
-            }
-
-            cbmessage = CBMessageMarkup.encodeEscapedCharacters(cbmessage);
-
-            var content, line;
-            var lines = cbmessage.split(/\r?\n/);
-            var stack = [];
-            var root = CBMessageMarkup.createElement(stack);
-            root.defaultChildTagName = "p";
-            root.tagName = "root";
-            var current = root;
-
-            for (var index = 0; index < lines.length; index++) {
-                line = lines[index];
-                var command = CBMessageMarkup.lineToCommand(line);
-
-                if (command !== null) {
-                    var parentAllows = CBMessageMarkup.tagNameAllowsBlockChildren(
-                        current.tagName
-                    );
-
-                    if (parentAllows && command.tagName !== '') {
-                        if (content !== undefined) {
-                            current.children.push(content);
-                            content = undefined;
-                        }
-
-                        current = CBMessageMarkup.createElement(stack);
-
-                        current.classNamesAsHTML = CBConvert.stringToHTML(
-                            command.classNames.join(" ")
-                        );
-
-                        current.tagName = command.tagName;
-
-                        switch(command.tagName) {
-                            case "dl":
-                                current.defaultChildTagName = "dd";
-                                break;
-                            case "h1":
-                            case "h2":
-                            case "h3":
-                            case "h4":
-                            case "h5":
-                            case "h6":
-                            case "p":
-                                break;
-                            case "ol":
-                            case "ul":
-                                current.defaultChildTagName = "li";
-                                break;
-                            case "pre":
-                                current.isPreformatted = true;
-                                break;
-                            default:
-                                current.defaultChildTagName = "p";
-                                break;
-                        }
-                    }
-
-                    if (command.tagName === "" && current !== root) {
-                        if (content !== undefined) {
-                            current.children.push(content);
-                            content = undefined;
-                        }
-
-                        current = CBMessageMarkup.elementFinish(stack);
-                    }
-
-                    continue;
-                }
-
-                /* blocks that accept preformatted content */
-
-                if (current.isPreformatted) {
-
-                    /**
-                     * The current block wants preformatted content.
-                     */
-
-                    if (content === undefined) {
-                        content = "";
-                    }
-
-                    content += line + "\n";
-                } else if (line.trim() !== "") {
-
-                    /**
-                     * The current line is a line in a content paragraph.
-                     */
-
-                    if (content === undefined) {
-                        content = "";
-                    }
-
-                    content += line + "\n";
-                } else {
-
-                    /**
-                     * The current line ends a content paragraph.
-                     */
-
-                    if (content) {
-                        current.children.push(content);
-                        content = undefined;
-                    }
-                }
-            }
-
-            if (content) {
-                current.children.push(content);
-                content = undefined;
-            }
-
-            while (current !== undefined) {
-                current = CBMessageMarkup.elementFinish(stack);
-            }
-
-            return CBMessageMarkup.decodeEncodedCharacters(root.html);
-        },
-        /* messageToHTML() */
 
 
 
@@ -819,5 +679,213 @@
         },
 
     };
+
+    /**
+     * @param string cbmessage
+     *
+     * @return string
+     */
+    function
+    CBMessageMarkup_cbmessageToHTML(
+        cbmessage
+    ) // -> string
+    {
+        if (
+            typeof cbmessage !== "string"
+        ) {
+            throw TypeError(
+                "The cbmessage parameter is not a string."
+            );
+        }
+
+        cbmessage = CBMessageMarkup.encodeEscapedCharacters(
+            cbmessage
+        );
+
+        var content, line;
+
+        var lines = cbmessage.split(
+            /\r?\n/
+        );
+
+        var stack = [];
+
+        var root = CBMessageMarkup.createElement(
+            stack
+        );
+
+        root.defaultChildTagName = "p";
+        root.tagName = "root";
+
+        var current = root;
+
+        for (
+            let index = 0;
+            index < lines.length;
+            index++
+        ) {
+            line = lines[index];
+
+            var command = CBMessageMarkup.lineToCommand(
+                line
+            );
+
+            if (
+                command !== null
+            ) {
+                var parentAllows = CBMessageMarkup.tagNameAllowsBlockChildren(
+                    current.tagName
+                );
+
+                if (
+                    parentAllows &&
+                    command.tagName !== ''
+                ) {
+                    if (
+                        content !== undefined
+                    ) {
+                        current.children.push(
+                            content
+                        );
+
+                        content = undefined;
+                    }
+
+                    current = CBMessageMarkup.createElement(
+                        stack
+                    );
+
+                    current.classNamesAsHTML = CBConvert.stringToHTML(
+                        command.classNames.join(
+                            " "
+                        )
+                    );
+
+                    current.tagName = command.tagName;
+
+                    switch (
+                        command.tagName
+                    ) {
+                        case "dl":
+                            current.defaultChildTagName = "dd";
+                            break;
+                        case "h1":
+                        case "h2":
+                        case "h3":
+                        case "h4":
+                        case "h5":
+                        case "h6":
+                        case "p":
+                            break;
+                        case "ol":
+                        case "ul":
+                            current.defaultChildTagName = "li";
+                            break;
+                        case "pre":
+                            current.isPreformatted = true;
+                            break;
+                        default:
+                            current.defaultChildTagName = "p";
+                            break;
+                    }
+                }
+
+                if (
+                    command.tagName === "" &&
+                    current !== root
+                ) {
+                    if (
+                        content !== undefined
+                    ) {
+                        current.children.push(
+                            content
+                        );
+
+                        content = undefined;
+                    }
+
+                    current = CBMessageMarkup.elementFinish(
+                        stack
+                    );
+                }
+
+                continue;
+            }
+
+            /* blocks that accept preformatted content */
+
+            if (
+                current.isPreformatted
+            ) {
+                /**
+                 * The current block wants preformatted content.
+                 */
+
+                if (
+                    content === undefined
+                ) {
+                    content = "";
+                }
+
+                content += line + "\n";
+            }
+
+            else if (
+                line.trim() !== ""
+            ) {
+                /**
+                 * The current line is a line in a content paragraph.
+                 */
+
+                if (
+                    content === undefined
+                ) {
+                    content = "";
+                }
+
+                content += line + "\n";
+            }
+
+            else {
+
+                /**
+                 * The current line ends a content paragraph.
+                 */
+
+                if (
+                    content
+                ) {
+                    current.children.push(
+                        content
+                    );
+
+                    content = undefined;
+                }
+            }
+        }
+
+        if (
+            content
+        ) {
+            current.children.push(
+                content
+            );
+
+            content = undefined;
+        }
+
+        while (
+            current !== undefined
+        ) {
+            current = CBMessageMarkup.elementFinish(
+                stack
+            );
+        }
+
+        return CBMessageMarkup.decodeEncodedCharacters(
+            root.html
+        );
+    }
+    /* CBMessageMarkup_cbmessageToHTML() */
 
 })();
