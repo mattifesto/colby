@@ -3,7 +3,6 @@
 final class
 CBMessageMarkup
 {
-
     const encodedBackslash = '836f784bf25aa0e5663779c36899c61efbaa114e';
     const encodedOpenBracket = 'f5a6328bda8575b25bbc5f0ece0181df57e54ed1';
     const encodedCloseBracket = 'edc679d4ac06a45884a23160030c4cb2d4b2ebf1';
@@ -43,7 +42,6 @@ CBMessageMarkup
     {
         return [
             'CBConvert',
-            'Colby',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

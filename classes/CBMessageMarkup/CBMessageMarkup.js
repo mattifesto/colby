@@ -1,6 +1,5 @@
 /* global
     CBConvert,
-    Colby,
 
     CBMessageMarkup
 */
@@ -473,7 +472,7 @@
 
                         current = CBMessageMarkup.createElement(stack);
 
-                        current.classNamesAsHTML = Colby.textToHTML(
+                        current.classNamesAsHTML = CBConvert.stringToHTML(
                             command.classNames.join(" ")
                         );
 
@@ -642,7 +641,7 @@
          * @return string
          */
         paragraphToHTML: function (cbmessage) {
-            var content = Colby.textToHTML(cbmessage);
+            var content = CBConvert.stringToHTML(cbmessage);
             var openBracket = "\\(";
             var closeBracket = "\\)";
             var notBracket = "[^\\(\\)]";
