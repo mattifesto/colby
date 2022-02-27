@@ -82,6 +82,66 @@ var CBConvertTests = {
     /**
      * @return object|Promise
      */
+    CBTest_countLeadingSpaceCharacters: function () {
+        let tests = [
+            [
+                "",
+                undefined,
+            ],
+            [
+                "          ",
+                undefined,
+            ],
+            [
+                "a",
+                0,
+            ],
+            [
+                "    b",
+                4,
+            ],
+            [
+                "      c",
+                6,
+            ],
+        ];
+
+
+        for (
+            let index = 0;
+            index < tests.length;
+            index += 1
+        ) {
+            let test = tests[index];
+            let expectedResult = test[1];
+
+            let actualResult = CBConvert.countLeadingSpaceCharacters(
+                test[0]
+            );
+
+            if (
+                actualResult !== expectedResult
+            ) {
+                return CBTest.resultMismatchFailure(
+                    `text index ${index}`,
+                    actualResult,
+                    expectedResult
+                );
+            }
+
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_countLeadingSpaceCharacters() */
+
+
+
+    /**
+     * @return object|Promise
+     */
     CBTest_dollarsAsCents: function () {
         let tests = [
             ["68.21", 6821],
@@ -158,6 +218,74 @@ var CBConvertTests = {
         };
     },
     /* CBTest_dollarsAsCents() */
+
+
+
+    /**
+     * @return object|Promise
+     */
+    CBTest_removeLeadingSpaceCharacters: function () {
+        let tests = [
+            [
+                "",
+                "",
+            ],
+            [
+                "          ",
+                "",
+            ],
+            [
+                "  \n a \n  \n",
+                "\na \n\n",
+            ],
+            [
+                `
+                    a
+                    b
+                `,
+                "\na\nb\n",
+            ],
+            [
+                `
+                    a
+                     b
+
+                      c
+                `,
+                "\na\n b\n\n  c\n",
+            ],
+        ];
+
+
+        for (
+            let index = 0;
+            index < tests.length;
+            index += 1
+        ) {
+            let test = tests[index];
+            let expectedResult = test[1];
+
+            let actualResult = CBConvert.removeLeadingSpaceCharacters(
+                test[0]
+            );
+
+            if (
+                actualResult !== expectedResult
+            ) {
+                return CBTest.resultMismatchFailure(
+                    `text index ${index}`,
+                    actualResult,
+                    expectedResult
+                );
+            }
+
+        }
+
+        return {
+            succeeded: true,
+        };
+    },
+    /* CBTest_removeLeadingSpaceCharacters() */
 
 
 

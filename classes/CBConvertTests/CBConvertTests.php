@@ -16,7 +16,7 @@ CBConvertTests {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.38.js',
+                'v675.60.js',
                 cbsysurl()
             ),
         ];
@@ -142,7 +142,13 @@ CBConvertTests {
                 'name' => 'centsToDollars',
             ],
             (object)[
+                'name' => 'countLeadingSpaceCharacters',
+            ],
+            (object)[
                 'name' => 'dollarsAsCents',
+            ],
+            (object)[
+                'name' => 'removeLeadingSpaceCharacters',
             ],
             (object)[
                 'name' => 'stringToCleanLine',
