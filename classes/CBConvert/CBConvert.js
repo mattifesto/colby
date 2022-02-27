@@ -7,11 +7,13 @@
 
     window.CBConvert = {
         centsToDollars: CBConvert_centsToDollars,
+        countLeadingSpaceCharacters: CBConvert_countLeadingSpaceCharacters,
         dollarsAsCents: CBConvert_dollarsAsCents,
         errorToCBJavaScriptErrorModel: CBConvert_errorToCBJavaScriptErrorModel,
         errorToDescription: CBConvert_errorToDescription,
         errorToErrorDetails: CBConvert_errorToErrorDetails,
         errorToStackTrace: CBConvert_errorToStackTrace,
+        removeLeadingSpaceCharacters: CBConvert_removeLeadingSpaceCharacters,
         stringToCleanLine: CBConvert_stringToCleanLine,
         stringToHTML: CBConvert_stringToHTML,
         stringToLines: CBConvert_stringToLines,
@@ -89,6 +91,40 @@
         );
     }
     /* CBConvert_centsToDollars() */
+
+
+
+    /**
+     * @param string originalString
+     *
+     * @return int|undefined
+     *
+     *      If the original string contains a non-space character this function
+     *      will return the count of space characters before the first non-space
+     *      character; otherwise it will return undefined.
+     */
+    function
+    CBConvert_countLeadingSpaceCharacters(
+        originalString
+    ) // -> int|undefined
+    {
+        if (
+            originalString.trim() === ""
+        ) {
+            return;
+        }
+
+        let result = originalString.match(/^ +/);
+
+        if (
+            result === null
+        ) {
+            return 0;
+        }
+
+        return result[0].length;
+    }
+    /* CBConvert_countLeadingSpaceCharacters() */
 
 
 
@@ -391,6 +427,129 @@
         }
     }
     /* CBConvert_errorToStackTrace() */
+
+
+
+    /**
+     * This function removes the initial space characters to unindent a string
+     * of text. For instance, if the bar characters represent the beginning of
+     * the line:
+     *
+     *      |   a
+     *      |  b
+     *      |    c
+     *
+     * will become:
+     *
+     *      | a
+     *      |b
+     *      |  c
+     *
+     * @NOTE
+     *
+     *      1. Lines of all whitespace will become empty lines.
+     *      2. Tab and other whitespace characters or not handled gracefully.
+     *
+     * @param string originalString
+     *
+     * @return string
+     */
+    function
+    CBConvert_removeLeadingSpaceCharacters(
+        originalString
+    ) // -> string
+    {
+        let minimumLeadingSpaceCharacterCount;
+
+        let lines = CBConvert_stringToLines(
+            originalString
+        );
+
+        for (
+            let index = 0;
+            index < lines.length;
+            index += 1
+        ) {
+            let line = lines[index];
+
+            let count = CBConvert_countLeadingSpaceCharacters(
+                line
+            );
+
+            if (
+                count !== undefined
+            ) {
+                if (
+                    minimumLeadingSpaceCharacterCount === undefined
+                ) {
+                    minimumLeadingSpaceCharacterCount = count;
+                } else {
+                    minimumLeadingSpaceCharacterCount = Math.min(
+                        minimumLeadingSpaceCharacterCount,
+                        count
+                    );
+                }
+            }
+        }
+
+        if (
+            minimumLeadingSpaceCharacterCount === undefined
+        ) {
+            minimumLeadingSpaceCharacterCount = 0;
+        }
+
+        let pattern = new RegExp(
+            "^" +
+
+            " ".repeat(
+                minimumLeadingSpaceCharacterCount
+            ) +
+
+            "(.*)"
+        );
+
+        let newLines = [];
+
+        for (
+            let index = 0;
+            index < lines.length;
+            index += 1
+        ) {
+            let originalLine = lines[index];
+
+            /**
+             * If the original line is all whitespace it is converted to an
+             * empty line.
+             */
+
+            if (
+                originalLine.trim() === ""
+            ) {
+                newLines.push(
+                    ""
+                );
+
+                continue;
+            }
+
+            /**
+             * At this point in the code, every line should have a match.
+             */
+
+            let result = originalLine.match(
+                pattern
+            );
+
+            newLines.push(
+                result[1]
+            );
+        }
+
+        return newLines.join(
+            "\n"
+        );
+    }
+    /* CBConvert_removeLeadingSpaceCharacters() */
 
 
 
