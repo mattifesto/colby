@@ -1,8 +1,56 @@
 <?php
 
+/**
+ * @NOTE 2022_03_02
+ *
+ *      This is an odd view because it doesn't implement the CBModel interfaces.
+ *      If a view is never saved as a model, this is okay, but in the future the
+ *      CBModel interfaces should be implemented or this should move away from
+ *      being a "view" and just be a class that has a function that renders
+ *      HTML.
+ */
 final class
 CBArtworkCollectionView
 {
+    /* -- CBAdmin_CBDocumentationForClass interfaces -- */
+
+
+
+    /**
+     * @return void
+     */
+    static function
+    CBAdmin_CBDocumentationForClass_render(
+    ): void
+    {
+        CBHTMLOutput::requireClassName(
+            'CB_Documentation_ArtworkCollectionView'
+        );
+
+        $imageModels = CBModels::fetchRandomModelsByClassName(
+            'CBImage',
+            10
+        );
+
+        $artworkCollectionViewModel = CBModel::createSpec(
+            'CBArtworkCollectionView'
+        );
+
+        CBArtworkCollectionView::setArtworkCollection(
+            $artworkCollectionViewModel,
+            CBArtworkCollection::fromImageSpecs(
+                $imageModels
+            )
+        );
+
+        CBView::render(
+            $artworkCollectionViewModel
+        );
+    }
+    /* CBAdmin_CBDocumentationForClass_render() */
+
+
+
     /* -- CBHTMLOutput interfaces -- */
 
 
@@ -54,8 +102,7 @@ CBArtworkCollectionView
     {
         return [
             'CBArtwork',
-            'CBArtworkElement',
-            'CBJavaScript',
+            'CBImage',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

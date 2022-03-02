@@ -1,25 +1,16 @@
 /* globals
     CBArtwork,
-    CBArtworkElement,
-    CBJavaScript,
+    CBImage,
 */
 
 
 (function () {
     "use strict";
 
-    CBJavaScript.afterDOMContentLoaded(
-        afterDOMContentLoaded
-    );
+    window.CBArtworkCollectionView = {
+        create: CBArtworkCollectionView_create,
+    };
 
-
-
-    /**
-     * @return undefined
-     */
-    function
-    afterDOMContentLoaded(
-    ) /* -> undefined */
     {
         let elements = document.getElementsByClassName(
             "CBArtworkCollectionView_root_element"
@@ -39,7 +30,29 @@
             );
         }
     }
-    /* afterDOMContentLoaded() */
+
+
+
+    /* -- functions -- */
+
+
+
+    /**
+     * @return Element
+     */
+    function
+    CBArtworkCollectionView_create(
+    ) /* -> Element */
+    {
+        let rootElement = document.createElement(
+            "div"
+        );
+
+        rootElement.className = "CBArtworkCollectionView_root_element";
+
+        return rootElement;
+    }
+    /* CBArtworkCollectionView_create() */
 
 
 
@@ -52,11 +65,12 @@
         thumbnailClickedCallback
     ) /* -> Element */
     {
-        let element = document.createElement(
+        let thumbnailsContainerElement = document.createElement(
             "div"
         );
 
-        element.className = "CBArtworkCollectionView_thumbnails";
+        thumbnailsContainerElement.className =
+        "CBArtworkCollectionView_thumbnailsContainer_element";
 
         for (
             let artworkIndex = 0;
@@ -65,29 +79,36 @@
         ) {
             const currentArtworkIndex = artworkIndex;
             const currentThumbnailClickedCallback = thumbnailClickedCallback;
-            let artwork = artworks[artworkIndex];
 
-            let thumbnailImageURL = CBArtwork.getThumbnailImageURL(
-                artwork
+
+
+            let thumbnailPictureElement;
+            let artworkModel = artworks[artworkIndex];
+
+            let imageModel = CBArtwork.getImage(
+                artworkModel
             );
 
             if (
-                thumbnailImageURL === ""
+                imageModel !== undefined
             ) {
-                continue;
+                thumbnailPictureElement = CBImage.createPictureElement(
+                    imageModel,
+                    'rw1280'
+                );
+            } else {
+                thumbnailPictureElement = CBImage.createPictureElement(
+                    CBArtwork.getThumbnailImageURL(
+                        artworkModel
+                    )
+                );
             }
 
-            let thumbnailElement = document.createElement(
-                "div"
+            thumbnailPictureElement.className = (
+                "CBArtworkCollectionView_thumbnailPicture_element"
             );
 
-            thumbnailElement.className = "CBArtworkCollectionView_thumbnail";
-
-            element.appendChild(
-                thumbnailElement
-            );
-
-            thumbnailElement.addEventListener(
+            thumbnailPictureElement.addEventListener(
                 "click",
                 function () {
                     currentThumbnailClickedCallback(
@@ -96,20 +117,12 @@
                 }
             );
 
-            /* image */
-
-            let artworkElement = CBArtworkElement.create(
-                {
-                    URL: thumbnailImageURL,
-                }
-            );
-
-            thumbnailElement.appendChild(
-                artworkElement
+            thumbnailsContainerElement.appendChild(
+                thumbnailPictureElement
             );
         }
 
-        return element;
+        return thumbnailsContainerElement;
     }
     /* createThumbnailsElement() */
 
@@ -133,20 +146,20 @@
             "CBArtworkCollectionView_content_element"
         )[0];
 
-        let imageContainerElement = document.createElement(
+        let mainPictureContainerElement = document.createElement(
             "div"
         );
 
-        imageContainerElement.className = (
-            "CBArtworkCollectionView_imageContainer"
+        mainPictureContainerElement.className = (
+            "CBArtworkCollectionView_mainPictureContainer_element"
         );
 
         contentElement.appendChild(
-            imageContainerElement
+            mainPictureContainerElement
         );
 
-        contentElement.appendChild(
-            createThumbnailsElement(
+        {
+            let thumbnailsContainerElement = createThumbnailsElement(
                 artworks,
                 function (
                     index
@@ -155,8 +168,12 @@
                         index
                     );
                 }
-            )
-        );
+            );
+
+            contentElement.appendChild(
+                thumbnailsContainerElement
+            );
+        }
 
         showArtworkAtIndex(0);
 
@@ -172,22 +189,36 @@
             index
         ) /* -> undefined */
         {
-            let artwork = artworks[index];
+            let mainPictureElement;
+            let artworkModel = artworks[index];
 
-            let mediumImageURL = CBArtwork.getMediumImageURL(
-                artwork
+            let imageModel = CBArtwork.getImage(
+                artworkModel
             );
 
-            let artworkElement = CBArtworkElement.create(
-                {
-                    URL: mediumImageURL,
-                }
+            if (
+                imageModel !== undefined
+            ) {
+                mainPictureElement = CBImage.createPictureElement(
+                    imageModel,
+                    'rw1280'
+                );
+            } else {
+                mainPictureElement = CBImage.createPictureElement(
+                    CBArtwork.getMediumImageURL(
+                        artworkModel
+                    )
+                );
+            }
+
+            mainPictureElement.className = (
+                "CBArtworkCollectionView_mainPicture_element"
             );
 
-            imageContainerElement.textContent = "";
+            mainPictureContainerElement.textContent = "";
 
-            imageContainerElement.appendChild(
-                artworkElement
+            mainPictureContainerElement.append(
+                mainPictureElement
             );
         }
         /* showArtworkAtIndex() */

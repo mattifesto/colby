@@ -10,35 +10,72 @@
 
 
 
-.CBArtworkCollectionView_content_element {
+.CBArtworkCollectionView_content_element
+{
     max-width: 100%;
-    width: 640px;
 }
 
 
 
-.CBArtworkCollectionView_imageContainer {
-    box-sizing: border-box;
+
+/**
+ * @NOTE 2022_03_01
+ *
+ * Safari has a bug that will cause it to resize the img element when it's
+ * clicked or scrolled or other unknown reasons. The work around is to apply
+ * the aspect ratio to the picture element and make the image element have a
+ * width and height of 100%.
+ */
+
+.CBArtworkCollectionView_mainPictureContainer_element
+{
+    display: flex;
+    justify-content: center;
+}
+
+.CBArtworkCollectionView_mainPicture_element
+{
+    display: block;
+    aspect-ratio: 1/1;
+
+    width: 640px;
+    max-width: 100%;
+
     padding: 20px;
 }
 
 
 
-.CBArtworkCollectionView_thumbnails {
+.CBArtworkCollectionView_mainPicture_element img
+{
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+
+
+.CBArtworkCollectionView_thumbnailsContainer_element
+{
     display: flex;
     flex-wrap: wrap;
 }
 
 
 
-.CBArtworkCollectionView_thumbnail {
-    box-sizing: border-box;
+.CBArtworkCollectionView_thumbnailPicture_element
+{
     padding: 5px;
-    width: 75px;
 }
 
 
 
-.CBArtworkCollectionView_theme1 .CBArtworkCollectionView_imageContainer {
-    background-color: var(--CBBackgroundOffsetColor);
+.CBArtworkCollectionView_thumbnailPicture_element img
+{
+    aspect-ratio: 1/1;
+    object-fit: contain;
+
+    max-width: 100%;
+    width: 75px;
 }
