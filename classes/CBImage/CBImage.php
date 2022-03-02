@@ -56,18 +56,23 @@ CBImage
     static function
     CBModel_build(
         stdClass $spec
-    ): stdClass {
+    ): stdClass
+    {
         $extension = CBModel::valueToString(
             $spec,
             'extension'
         );
 
-        if ($extension === '') {
+        if (
+            $extension === ''
+        ) {
             throw new CBExceptionWithValue(
-                (
-                    'This spec can\'t be built because it has an invalid ' .
-                    '"extension" property value.'
-                ),
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    This spec can't be built because it has an invalid
+                    "extension" property value.
+
+                EOT),
                 $spec,
                 'c2bcc7c228c1433577f9b4b3c7ea4e2702c7b1d5'
             );
@@ -78,12 +83,16 @@ CBImage
             'filename'
         );
 
-        if ($filename === '') {
+        if (
+            $filename === ''
+        ) {
             throw new CBExceptionWithValue(
-                (
-                    'This spec can\'t be built because it has an invalid ' .
-                    '"filename" property value.'
-                ),
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    This spec can't be built because it has an invalid
+                    "filename" property value.
+
+                EOT),
                 $spec,
                 '2bc70fc87dd47cb4707395b4af6225b5cf2f0acd'
             );
@@ -94,12 +103,17 @@ CBImage
             'height'
         );
 
-        if ($height === null || $height < 1) {
+        if (
+            $height === null ||
+            $height < 1
+        ) {
             throw new CBExceptionWithValue(
-                (
-                    'This spec can\'t be built because it has an invalid ' .
-                    '"height" property value.'
-                ),
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    This spec can't be built because it has an invalid
+                    "height" property value.
+
+                EOT),
                 $spec,
                 'c6b95f62d68542095335ef2175689dc1cb4f2b90'
             );
@@ -110,12 +124,16 @@ CBImage
             'ID'
         );
 
-        if ($imageCBID === null) {
+        if (
+            $imageCBID === null
+        ) {
             throw new CBExceptionWithValue(
-                (
-                    'This spec can\'t be built because it has an invalid ' .
-                    '"ID" property value.'
-                ),
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    This spec can't be built because it has an invalid
+                    "ID" property value.
+
+                EOT),
                 $spec,
                 'ed759d15d41064ae2a3659639298383e6c429b9c'
             );
@@ -126,7 +144,8 @@ CBImage
         );
 
         if (
-            $originalWidth === null || $originalWidth < 1
+            $originalWidth === null ||
+            $originalWidth < 1
         ) {
             throw new CBExceptionWithValue(
                 CBConvert::stringToCleanLine(<<<EOT
@@ -141,10 +160,17 @@ CBImage
         }
 
         $imageModel = (object)[
-            'extension' => $extension,
-            'filename' => $filename,
-            'height' => $height,
-            'ID' => $imageCBID,
+            'extension' =>
+            $extension,
+
+            'filename' =>
+            $filename,
+
+            'height' =>
+            $height,
+
+            'ID' =>
+            $imageCBID,
         ];
 
         CBImage::setOriginalWidth(
@@ -163,14 +189,25 @@ CBImage
      *
      * @return object
      */
-    static function CBModel_upgrade(stdClass $spec): stdClass {
-        if (empty($spec->filename) && !empty($spec->base)) {
+    static function
+    CBModel_upgrade(
+        stdClass $spec
+    ): stdClass
+    {
+        if (
+            empty($spec->filename) &&
+            !empty($spec->base)
+        ) {
             $spec->filename = $spec->base;
-            unset($spec->base);
+
+            unset(
+                $spec->base
+            );
         }
 
         return $spec;
     }
+    /* CBModel_upgrade() */
 
 
 
@@ -183,11 +220,20 @@ CBImage
      *
      * @return void
      */
-    static function CBModels_willDelete(array $IDs): void {
-        foreach ($IDs as $ID) {
-            CBImages::deleteByID($ID);
+    static function
+    CBModels_willDelete(
+        array $IDs
+    ): void
+    {
+        foreach (
+            $IDs as $ID
+        ) {
+            CBImages::deleteByID(
+                $ID
+            );
         }
     }
+    /* CBModels_willDelete() */
 
 
 
@@ -196,8 +242,13 @@ CBImage
      *
      * @return null
      */
-    static function CBModels_willSave(array $models) {
-        foreach ($models as $model) {
+    static function
+    CBModels_willSave(
+        array $models
+    ) {
+        foreach (
+            $models as $model
+        ) {
             CBImages::updateRow(
                 $model->ID,
                 time(),
@@ -205,6 +256,7 @@ CBImage
             );
         }
     }
+    /* CBModels_willSave() */
 
 
 
@@ -220,7 +272,8 @@ CBImage
     static function
     getOriginalWidth(
         stdClass $imageModel
-    ): ?int {
+    ): ?int
+    {
         return CBModel::valueAsInt(
             $imageModel,
             'width'
@@ -240,14 +293,15 @@ CBImage
     setOriginalWidth(
         stdClass $imageModel,
         int $originalWidth
-    ): void {
+    ): void
+    {
         $imageModel->width = $originalWidth;
     }
     /* setOriginalWidth() */
 
 
 
-    /* -- functions -- -- -- -- -- */
+    /* -- functions -- */
 
 
 
@@ -274,7 +328,8 @@ CBImage
         string $filename = '',
         string $flexdir = '',
         string $requestedExtension = '',
-    ): ?string {
+    ): ?string
+    {
         $ID = CBModel::valueAsID(
             $image,
             'ID'
@@ -336,13 +391,22 @@ CBImage
      *
      * @return [string => mixed]|false
      */
-    static function exif_read_data($filepath) {
+    static function
+    exif_read_data(
+        $filepath
+    ) // -> array|false
+    {
         try {
-            return exif_read_data($filepath);
-        } catch (Throwable $throwable) {
+            return exif_read_data(
+                $filepath
+            );
+        } catch (
+            Throwable $throwable
+        ) {
             return false;
         }
     }
+    /* exif_read_data() */
 
 
 
@@ -351,18 +415,30 @@ CBImage
      * designed to ensure a spec does have a className and then upgrade the
      * spec.
      *
-     * @param model $spec
+     * @param object $spec
      *
-     * @return model
+     * @return object
      */
-    static function fixAndUpgrade(stdClass $spec): stdClass {
-        if (empty($spec->className)) {
-            $spec = CBModel::clone($spec);
+    static function
+    fixAndUpgrade(
+        stdClass $spec
+    ): stdClass
+    {
+        if (
+            empty($spec->className)
+        ) {
+            $spec = CBModel::clone(
+                $spec
+            );
+
             $spec->className = 'CBImage';
         }
 
-        return CBModel::upgrade($spec);
+        return CBModel::upgrade(
+            $spec
+        );
     }
+    /* fixAndUpgrade() */
 
 
 
@@ -376,22 +452,29 @@ CBImage
     static function
     getimagesize(
         string $filepath
-    ) {
+    ) // -> array|false
+    {
         $data = getimagesize(
             $filepath
         );
 
-        if (!is_array($data)) {
+        if (
+            !is_array($data)
+        ) {
             return false;
         }
 
-        if ($data[2] == IMG_JPEG) {
+        if (
+            $data[2] == IMG_JPEG
+        ) {
             $exif = CBImage::exif_read_data(
                 $filepath
             );
 
             $orientation = (
-                empty($exif['Orientation']) ?
+                empty(
+                    $exif['Orientation']
+                ) ?
                 1 :
                 $exif['Orientation']
             );
@@ -429,33 +512,59 @@ CBImage
      *
      * @return string|false
      */
-    static function valueToFlexpath(
+    static function
+    valueToFlexpath(
         stdClass $model,
         $keyPath,
         $operation = null,
         $flexdir = null
-    ) {
-        $ID = CBModel::value($model, "{$keyPath}.ID");
+    ) // -> string|false
+    {
+        $ID = CBModel::value(
+            $model,
+            "{$keyPath}.ID"
+        );
 
-        if (!CBID::valueIsCBID($ID)) {
+        if (
+            !CBID::valueIsCBID($ID)
+        ) {
             return false;
         }
 
-        $extension = CBModel::value($model, "{$keyPath}.extension");
+        $extension = CBModel::value(
+            $model,
+            "{$keyPath}.extension"
+        );
 
-        if (empty($extension)) {
+        if (
+            empty($extension)
+        ) {
             return false;
         }
 
-        if ($operation) {
+        if (
+            $operation
+        ) {
             $filename = $operation;
-        } else {
-            $filename = CBModel::value($model, "{$keyPath}.filename");
+        }
 
-            if (empty($filename)) {
-                $filename = CBModel::value($model, "{$keyPath}.base"); // deprecated
+        else {
+            $filename = CBModel::value(
+                $model,
+                "{$keyPath}.filename"
+            );
 
-                if (empty($filename)) {
+            if (
+                empty($filename)
+            ) {
+                $filename = CBModel::value(
+                    $model,
+                    "{$keyPath}.base"
+                ); // deprecated
+
+                if (
+                    empty($filename)
+                ) {
                     return false;
                 }
             }
