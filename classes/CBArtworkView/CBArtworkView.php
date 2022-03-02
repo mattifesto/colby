@@ -1,9 +1,9 @@
 <?php
 
 final class
-CBArtworkView {
-
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+CBArtworkView
+{
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
@@ -11,11 +11,13 @@ CBArtworkView {
      * @return [string]
      */
     static function
-    CBHTMLOutput_CSSURLs() {
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.45.css',
+                'v675.60.css',
                 cbsysurl()
             ),
         ];
@@ -24,14 +26,17 @@ CBArtworkView {
 
 
 
-    /* -- CBInstall interfaces -- -- -- -- -- */
+    /* -- CBInstall interfaces -- */
 
 
 
     /**
      * @return void
      */
-    static function CBInstall_install(): void {
+    static function
+    CBInstall_install(
+    ): void
+    {
         CBViewCatalog::installView(
             __CLASS__
         );
@@ -43,7 +48,10 @@ CBArtworkView {
     /**
      * @return [string]
      */
-    static function CBInstall_requiredClassNames(): array {
+    static function
+    CBInstall_requiredClassNames(
+    ): array
+    {
         return [
             'CBViewCatalog',
         ];
@@ -52,7 +60,7 @@ CBArtworkView {
 
 
 
-    /* -- CBModel interfaces -- -- -- -- -- */
+    /* -- CBModel interfaces -- */
 
 
 
@@ -86,23 +94,28 @@ CBArtworkView {
     static function
     CBModel_build(
         stdClass $spec
-    ): stdClass {
+    ): stdClass
+    {
         $model = (object)[
-            'alternativeText' => trim(
+            'alternativeText' =>
+            trim(
                 CBModel::valueToString($spec, 'alternativeText')
             ),
 
-            'CSSClassNames' => CBModel::valueToNames(
+            'CSSClassNames' =>
+            CBModel::valueToNames(
                 $spec,
                 'CSSClassNames'
             ),
 
-            'renderImageOnly' => CBModel::valueToBool(
+            'renderImageOnly' =>
+            CBModel::valueToBool(
                 $spec,
                 'renderImageOnly'
             ),
 
-            'size' => CBModel::valueAsName(
+            'size' =>
+            CBModel::valueAsName(
                 $spec,
                 'size'
             ),
@@ -119,8 +132,12 @@ CBArtworkView {
             ]
         );
 
-        if ($imageSpec !== null) {
-            $model->image = CBModel::build($imageSpec);
+        if (
+            $imageSpec !== null
+        ) {
+            $model->image = CBModel::build(
+                $imageSpec
+            );
         }
 
 
@@ -131,12 +148,15 @@ CBArtworkView {
             'captionAsCBMessage'
         );
 
-        if (trim($captionAsCBMessage) !== '') {
+        if (
+            trim($captionAsCBMessage) !== ''
+        ) {
             $model->captionAsHTML = CBMessageMarkup::messageToHTML(
                 $captionAsCBMessage
             );
-        } else {
+        }
 
+        else {
             /**
              * @deprecated 2019_10_01
              */
@@ -159,9 +179,13 @@ CBArtworkView {
 
         $model->captionAsCBMessage = $captionAsCBMessage;
 
-        if (empty($model->alternativeText)) {
+        if (
+            empty($model->alternativeText)
+        ) {
             $model->alternativeText = mb_substr(
-                CBMessageMarkup::messageToText($captionAsCBMessage),
+                CBMessageMarkup::messageToText(
+                    $captionAsCBMessage
+                ),
                 0,
                 100
             );
@@ -180,11 +204,22 @@ CBArtworkView {
      *
      * @return object
      */
-    static function CBModel_upgrade(
+    static function
+    CBModel_upgrade(
         stdClass $spec
-    ): stdClass {
-        if ($imageSpec = CBModel::valueAsObject($spec, 'image')) {
-            $spec->image = CBImage::fixAndUpgrade($imageSpec);
+    ): stdClass
+    {
+        $imageSpec = CBModel::valueAsObject(
+            $spec,
+            'image'
+        );
+
+        if (
+            $imageSpec !== null
+        ) {
+            $spec->image = CBImage::fixAndUpgrade(
+                $imageSpec
+            );
         }
 
         return $spec;
@@ -198,9 +233,11 @@ CBArtworkView {
      *
      * @return string
      */
-    static function CBModel_toSearchText(
+    static function
+    CBModel_toSearchText(
         stdClass $model
-    ) {
+    ): string
+    {
         $alternativeText = CBModel::valueToString(
             $model,
             'alternativeText'
@@ -244,7 +281,8 @@ CBArtworkView {
     static function
     CBView_render(
         stdClass $model
-    ): void {
+    ): void
+    {
         if (
             empty($model->image)
         ) {
@@ -325,7 +363,9 @@ CBArtworkView {
             'size'
         ) ?? 'rw1600';
 
-        switch ($size) {
+        switch (
+            $size
+        ) {
             case 'rw320':
                 $filename = $size;
                 $maxWidth = 160;

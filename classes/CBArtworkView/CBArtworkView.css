@@ -5,7 +5,9 @@
  * elements should be constrained by their parent element's width in this
  * scenario.
  */
-.CBArtworkView {
+
+.CBArtworkView
+{
     align-items: center;
     box-sizing: border-box;
     display: flex;
@@ -14,7 +16,10 @@
     padding: 20px;
 }
 
-.CBArtworkView .CBArtworkView_caption {
+
+
+.CBArtworkView .CBArtworkView_caption
+{
     box-sizing: border-box;
     color: var(--CBTextColor2);
     font-size: 80%;
@@ -41,7 +46,8 @@
 
 
 
-.CBArtworkView .CBArtworkView_socialMedia {
+.CBArtworkView .CBArtworkView_socialMedia
+{
     border-top: 0.5px solid var(--CBTextColor3);
     box-sizing: border-box;
     font-size: 80%;
@@ -50,18 +56,28 @@
     text-align: center;
 }
 
-.CBArtworkView.hideSocial .CBArtworkView_socialMedia {
+
+
+.CBArtworkView.hideSocial .CBArtworkView_socialMedia
+{
     display: none;
 }
+
+
 
 /**
  * This should be the default cursor but I think Pinterest JavaScript is doing
  * something to change it.
  */
-.CBArtworkView a {
+
+.CBArtworkView a
+{
     cursor: pointer;
 }
 
-.CBArtworkView a:hover {
+
+
+.CBArtworkView a:hover
+{
     text-decoration: underline;
 }
