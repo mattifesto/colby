@@ -95,14 +95,20 @@
 
 
 
-.CB_CBView_Moment_image_element
-{
-    display: block;
-    box-sizing: border-box;
+.CB_CBView_Moment_picture_element {
+    display: flex;
+    justify-content: center;
 
-    border-width: 1px;
-    border-color: var(--CB_UI_borderColor);
+    max-width: 100%;
+}
+
+
+
+.CB_CBView_Moment_picture_element img {
+    max-width: 100%;
+    height: auto;
+
+    border: 1px solid var(--CB_UI_borderColor);
     border-radius: 10px;
-    border-style: solid;
-    width: 100%;
+    box-sizing: border-box;
 }

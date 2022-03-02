@@ -270,35 +270,24 @@
             momentModel
         );
 
-        let imageURL = CBImage.toURL(
-            imageModel,
-            "rw1280"
-        );
-
         if (
-            imageURL !== ""
+            imageModel !== undefined
         ) {
-            let imageContainerElement = document.createElement(
-                "div"
+            let pictureElement = CBImage.createPictureElementWithImageSize(
+                imageModel,
+                "rw1280",
+                CBImage.getWidth(
+                    imageModel
+                ),
+                CBImage.getHeight(
+                    imageModel
+                )
             );
 
-            imageContainerElement.className = (
-                "CB_CBView_Moment_imageContainer_element"
-            );
-
-            let imageElement = document.createElement(
-                "img"
-            );
-
-            imageElement.className = "CB_CBView_Moment_image_element";
-            imageElement.src = imageURL;
-
-            imageContainerElement.append(
-                imageElement
-            );
+            pictureElement.className = "CB_CBView_Moment_picture_element";
 
             momentView.CB_CBView_Moment_append(
-                imageContainerElement
+                pictureElement
             );
         }
 

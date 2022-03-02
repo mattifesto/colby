@@ -16,7 +16,7 @@ CB_CBView_Moment {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.57.css',
+                'v675.60.css',
                 cbsysurl()
             ),
         ];
@@ -34,7 +34,7 @@ CB_CBView_Moment {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.58.js',
+                'v675.60.js',
                 cbsysurl()
             ),
         ];
@@ -51,12 +51,13 @@ CB_CBView_Moment {
     ): array {
         return [
             'CB_Moment',
-            'CB_UI',
             'CBImage',
             'CBErrorHandler',
             'CBModel',
             'CBUser',
             'Colby',
+
+            'CB_UI',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
