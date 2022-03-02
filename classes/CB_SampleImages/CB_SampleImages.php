@@ -33,6 +33,10 @@ CB_SampleImages
     CBHTMLOutput_JavaScriptVariables(
     ): array
     {
+        $imageModel1000x5000 = CBModels::fetchModelByCBID(
+            CB_SampleImages::getSampleImageModelCBID_1000x5000()
+        );
+
         $imageModel5000x1000 = CBModels::fetchModelByCBID(
             CB_SampleImages::getSampleImageModelCBID_5000x1000()
         );
@@ -41,6 +45,10 @@ CB_SampleImages
             [
                 'CB_SampleImages_5000x1000_imageModel_jsvariable',
                 $imageModel5000x1000,
+            ],
+            [
+                'CB_SampleImages_1000x5000_imageModel_jsvariable',
+                $imageModel1000x5000,
             ],
         ];
     }
@@ -60,24 +68,138 @@ CB_SampleImages
     CBInstall_install(
     ): void
     {
-        $directoryPath = (
-            cb_document_root_directory() .
-            '/tmp/generated_images'
+        CB_SampleImages::generate5000x1000SampleImage();
+
+        CB_SampleImages::generate1000x5000SampleImage();
+    }
+    /* CBInstall_install() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBInstall_requiredClassNames(
+    ): array
+    {
+        return [
+            'CB_ModelAssociation',
+            'CBImages',
+            'CBModel',
+            'CBModelAssociations',
+        ];
+    }
+    /* CBInstall_requiredClassNames() */
+
+
+
+    /* -- functions -- */
+
+
+
+    /**
+     * @return void
+     */
+    static function
+    generate1000x5000SampleImage(
+    ): void
+    {
+        $generatedImageDirectory =
+        CB_SampleImages::getGeneratedImageDirectory();
+
+        $image = imagecreatetruecolor(
+            1000,
+            5000
         );
 
-        $directoryDoesExist = is_dir(
-            $directoryPath
+        $red = imagecolorallocate(
+            $image,
+            255,
+            127,
+            127
         );
 
-        if (
-            !$directoryDoesExist
-        ) {
-            mkdir(
-                $directoryPath,
-                0777, /* mode */
-                true, /* recursive */
-            );
-        }
+        imagefill(
+            $image,
+            0,
+            0,
+            $red
+        );
+
+        $white = imagecolorallocate(
+            $image,
+            255,
+            255,
+            255,
+        );
+
+        imagestring(
+            $image,
+            5,
+            100,
+            100,
+            'CB_SampleImages PNG 1000 x 5000',
+            $white
+        );
+
+        $imageFilepath =
+        "${generatedImageDirectory}/CB_SampleImages_1000x5000.png";
+
+        imagepng(
+            $image,
+            $imageFilepath
+        );
+
+        $imageModel = CBImages::URIToCBImage(
+            $imageFilepath
+        );
+
+        $imageModelCBID = CBModel::getCBID(
+            $imageModel
+        );
+
+        $modelAssociation = CBModel::createSpec(
+            'CB_ModelAssociation'
+        );
+
+        CB_ModelAssociation::setFirstCBID(
+            $modelAssociation,
+            CB_SampleImages::getModelAssociationFirstCBID()
+        );
+
+        CB_ModelAssociation::setAssociationKey(
+            $modelAssociation,
+            'CB_SampleImages_1000x5000_association'
+        );
+
+        CB_ModelAssociation::setSecondCBID(
+            $modelAssociation,
+            $imageModelCBID
+        );
+
+        CBModelAssociations::delete(
+            CB_SampleImages::getModelAssociationFirstCBID(),
+            'CB_SampleImages_1000x5000_association'
+        );
+
+        CBModelAssociations::insertOrUpdate(
+            $modelAssociation
+        );
+    }
+    /* generate1000x5000SampleImage() */
+
+
+
+    /**
+     * @return void
+     */
+    static function
+    generate5000x1000SampleImage(
+    ): void
+    {
+        $generatedImageDirectory =
+        CB_SampleImages::getGeneratedImageDirectory();
 
         $image = imagecreatetruecolor(
             5000,
@@ -114,7 +236,8 @@ CB_SampleImages
             $uwGold
         );
 
-        $imageFilepath = "${directoryPath}/CB_SampleImages_5000x1000.png";
+        $imageFilepath =
+        "${generatedImageDirectory}/CB_SampleImages_5000x1000.png";
 
         imagepng(
             $image,
@@ -157,29 +280,39 @@ CB_SampleImages
             $modelAssociation
         );
     }
-    /* CBInstall_install() */
+    /* generate5000x1000SampleImage() */
 
 
 
     /**
-     * @return [string]
+     * @return string
      */
     static function
-    CBInstall_requiredClassNames(
-    ): array
+    getGeneratedImageDirectory(
+    ): string
     {
-        return [
-            'CB_ModelAssociation',
-            'CBImages',
-            'CBModel',
-            'CBModelAssociations',
-        ];
+        $generatedImageDirectory = (
+            cb_document_root_directory() .
+            '/tmp/generated_images'
+        );
+
+        $directoryDoesExist = is_dir(
+            $generatedImageDirectory
+        );
+
+        if (
+            !$directoryDoesExist
+        ) {
+            mkdir(
+                $generatedImageDirectory,
+                0777, /* mode */
+                true, /* recursive */
+            );
+        }
+
+        return $generatedImageDirectory;
     }
-    /* CBInstall_requiredClassNames() */
-
-
-
-    /* -- functions -- */
+    /* getGeneratedImageDirectory() */
 
 
 
@@ -197,6 +330,27 @@ CB_SampleImages
         return '179949916203a795cf630923b5a5dc80aa216956';
     }
     /* getModelAssociationFirstCBID() */
+
+
+
+    /**
+     * @return CBID
+     *
+     *      Returns the image model CBID of the sample image that is 5000 x 1000
+     *      pixels.
+     */
+    static function
+    getSampleImageModelCBID_1000x5000(
+    ): string
+    {
+        $data = CBModelAssociations::fetchOne(
+            CB_SampleImages::getModelAssociationFirstCBID(),
+            'CB_SampleImages_1000x5000_association'
+        );
+
+        return $data->associatedID;
+    }
+    /* getSampleImageCBID_5000x1000() */
 
 
 
