@@ -1,8 +1,8 @@
 <?php
 
 final class
-CB_CBView_MostRecentUserMoment {
-
+CB_CBView_MostRecentUserMoment
+{
     /* -- CBHTMLOutput interfaces -- */
 
 
@@ -34,7 +34,7 @@ CB_CBView_MostRecentUserMoment {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.47.js',
+                'v675.60.js',
                 cbsysurl()
             ),
         ];
@@ -54,7 +54,6 @@ CB_CBView_MostRecentUserMoment {
             'CBAjax',
             'CBConvert',
             'CBErrorHandler',
-            'Colby',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

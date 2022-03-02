@@ -3,32 +3,18 @@
     CBAjax,
     CBConvert,
     CBErrorHandler,
-    Colby,
 */
 
 
-(function () {
+(function ()
+{
+    "use strict";
 
     window.CB_CBView_MostRecentUserMoment = {
         setUserModelCBID,
     };
 
-
-
-    Colby.afterDOMContentLoaded(
-        function () {
-            initialize();
-        }
-    );
-
-
-
-    /**
-     * @return undefined
-     */
-    function
-    initialize(
-    ) {
+    {
         let elements = Array.from(
             document.getElementsByClassName(
                 "CB_CBView_MostRecentUserMoment"
@@ -45,7 +31,32 @@
             }
         );
     }
-    /* initialize() */
+
+
+
+    /* -- accessors -- */
+
+
+
+    /**
+     * @param object viewModel
+     * @param CBID|null userModelCBID
+     *
+     * @return undefined
+     */
+    function
+    setUserModelCBID(
+        viewModel,
+        userModelCBID
+    ) // -> undefined
+    {
+        viewModel.CB_CBView_MostRecentUserMoment_userModelCBID = userModelCBID;
+    }
+    /* setUserModelCBID() */
+
+
+
+    /* -- functions -- */
 
 
 
@@ -57,7 +68,8 @@
     async function
     initializeElement(
         element
-    ) {
+    ) // -> Promise -> undefined
+    {
         let userModelCBID;
 
         try {
@@ -102,26 +114,5 @@
         }
     }
     /* initializeElement() */
-
-
-
-    /* -- accessors -- */
-
-
-
-    /**
-     * @param object viewModel
-     * @param CBID|null userModelCBID
-     *
-     * @return undefined
-     */
-    function
-    setUserModelCBID(
-        viewModel,
-        userModelCBID
-    ) {
-        viewModel.CB_CBView_MostRecentUserMoment_userModelCBID = userModelCBID;
-    }
-    /* setUserModelCBID() */
 
 })();
