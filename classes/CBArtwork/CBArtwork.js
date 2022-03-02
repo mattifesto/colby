@@ -8,9 +8,34 @@
     "use strict";
 
     window.CBArtwork = {
+        getImage: CBArtwork_getImage,
         getMediumImageURL,
         getThumbnailImageURL,
     };
+
+
+
+    /* -- accessors -- */
+
+
+
+    /**
+     * @param object artworkModel
+     *
+     * @return object|undefined
+     */
+    function
+    CBArtwork_getImage(
+        artworkModel
+    ) // -> object|undefined
+    {
+        return CBModel.valueAsModel(
+            artworkModel,
+            "image",
+            'CBImage'
+        );
+    }
+    /* CBArtwork_getImage() */
 
 
 
