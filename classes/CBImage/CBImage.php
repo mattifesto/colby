@@ -34,7 +34,9 @@ CBImage
     ): array
     {
         return [
+            'CBConvert',
             'CBDataStore',
+            'CBException',
             'CBModel',
         ];
     }
