@@ -414,7 +414,7 @@ CBArtworkView
 
         ?>
 
-        <div class="CBArtworkView <?= $CSSClassNames ?>">
+        <div class="CBArtworkView_root_element <?= $CSSClassNames ?>">
 
             <?php
 

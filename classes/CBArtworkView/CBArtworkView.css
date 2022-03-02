@@ -6,19 +6,21 @@
  * scenario.
  */
 
-.CBArtworkView
+.CBArtworkView_root_element
 {
-    align-items: center;
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    align-items: center;
+
+    box-sizing: border-box;
     max-width: 100%;
     padding: 20px;
 }
 
 
 
-.CBArtworkView .CBArtworkView_caption
+.CBArtworkView_root_element
+.CBArtworkView_caption
 {
     box-sizing: border-box;
     color: var(--CBTextColor2);
@@ -30,23 +32,30 @@
 
 
 
-.CBArtworkView.left .CBArtworkView_caption,
-.CBArtworkView.CBArtworkView_captionLeft .CBArtworkView_caption
+.CBArtworkView_root_element.left
+.CBArtworkView_caption,
+
+.CBArtworkView_root_element.CBArtworkView_captionLeft
+.CBArtworkView_caption
 {
     text-align: left;
 }
 
 
 
-.CBArtworkView.right .CBArtworkView_caption
-.CBArtworkView.CBArtworkView_captionRight .CBArtworkView_caption
+.CBArtworkView_root_element.right
+.CBArtworkView_caption,
+
+.CBArtworkView_root_element.CBArtworkView_captionRight
+.CBArtworkView_caption
 {
     text-align: right;
 }
 
 
 
-.CBArtworkView .CBArtworkView_socialMedia
+.CBArtworkView_root_element
+.CBArtworkView_socialMedia
 {
     border-top: 0.5px solid var(--CBTextColor3);
     box-sizing: border-box;
@@ -58,7 +67,8 @@
 
 
 
-.CBArtworkView.hideSocial .CBArtworkView_socialMedia
+.CBArtworkView_root_element.hideSocial
+.CBArtworkView_socialMedia
 {
     display: none;
 }
@@ -70,14 +80,16 @@
  * something to change it.
  */
 
-.CBArtworkView a
+.CBArtworkView_root_element
+a
 {
     cursor: pointer;
 }
 
 
 
-.CBArtworkView a:hover
+.CBArtworkView_root_element
+a:hover
 {
     text-decoration: underline;
 }
