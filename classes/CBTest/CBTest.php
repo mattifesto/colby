@@ -1,7 +1,13 @@
 <?php
 
 final class
-CBTest {
+CBTest
+{
+    private static
+    $isInTestingMode =
+    false;
+
+
 
     /* -- CBAjax interfaces -- -- -- -- -- */
 
@@ -540,6 +546,19 @@ CBTest {
 
 
     /**
+     * @return bool
+     */
+    static function
+    isInTestingMode(
+    ): bool
+    {
+        return CBTest::$isInTestingMode;
+    }
+    // isInTestingMode
+
+
+
+    /**
      * @deprecated 2019_11_03
      *
      *      Implement CBTest_getTests() instead of CBTest_PHPTests().
@@ -750,6 +769,48 @@ CBTest {
         ];
     }
     /* resultMismatchFailureDiff() */
+
+
+
+    /**
+     * This function exists so that functions can operate differently if they
+     * are called in testing mode. One example is if a setup function saves a
+     * model, in testing mode it can save a model with a test model CBID so that
+     * the production model is not altered, but the logic of the function can
+     * still be tested.
+     *
+     * @param callable $callable
+     *
+     * @return mixed
+     */
+    static function
+    runInTestingMode(
+        callable $callable
+    ) // -> mixed
+    {
+        try
+        {
+            CBTest::$isInTestingMode =
+            true;
+
+            return call_user_func(
+                $callable
+            );
+        }
+
+        catch (
+            Throwable $throwable
+        ) {
+            throw $throwable;
+        }
+
+        finally
+        {
+            CBTest::$isInTestingMode =
+            false;
+        }
+    }
+    // runInTestingMode()
 
 
 
