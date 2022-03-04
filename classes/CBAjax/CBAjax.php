@@ -1,8 +1,8 @@
 <?php
 
 final class
-CBAjax {
-
+CBAjax
+{
     /* -- CBHTMLOutput interfaces -- */
 
 
@@ -12,7 +12,8 @@ CBAjax {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
+    ): array
+    {
         return [
             Colby::flexpath(
                 __CLASS__,
@@ -30,7 +31,8 @@ CBAjax {
      */
     static function
     CBHTMLOutput_requiredClassNames(
-    ) {
+    ): array
+    {
         return [
             'CB_AjaxRequest',
             'CBModel',
@@ -40,7 +42,7 @@ CBAjax {
 
 
 
-    /* -- functions -- -- -- -- -- */
+    /* -- functions -- */
 
 
 
@@ -54,11 +56,17 @@ CBAjax {
     executeForAjaxClassName(
         $ajaxClassName,
         $args
-    ): stdClass {
+    ): stdClass
+    {
         $response = (object)[
-            'className' => 'CBAjaxResponse',
-            'wasSuccessful' => false,
-            'message' => CBConvert::stringToCleanLine(<<<EOT
+            'className' =>
+            'CBAjaxResponse',
+
+            'wasSuccessful' =>
+            false,
+
+            'message' =>
+            CBConvert::stringToCleanLine(<<<EOT
 
                 A call was made to CBAjax::executeForAjaxClassName() which was
                 not able to complete its duties, one of which is to either clear
@@ -67,11 +75,14 @@ CBAjax {
             EOT),
         ];
 
-        $currentUserModelCBID = ColbyUser::getCurrentUserCBID();
+        $currentUserModelCBID =
+        ColbyUser::getCurrentUserCBID();
 
-        $functionName = "${ajaxClassName}::CBAjax_userModelCBIDCanExecute";
+        $functionName =
+        "${ajaxClassName}::CBAjax_userModelCBIDCanExecute";
 
-        $canExecute = call_user_func(
+        $canExecute =
+        call_user_func(
             $functionName,
             $currentUserModelCBID
         );
@@ -79,29 +90,36 @@ CBAjax {
         if (
             $canExecute !== true
         ) {
-            $response->message = CBConvert::stringToCleanLine(<<<EOT
+            $response->message =
+            CBConvert::stringToCleanLine(<<<EOT
 
                 The current user is not allowed to execute the function
-                implemented by the ${ajaxClassName} Ajax class name.
+                implemented by the ${ajaxClassName} class name.
 
             EOT);
 
-            $response->wasSuccessful = true;
+            $response->wasSuccessful =
+            false;
 
             return $response;
         }
 
 
 
-        $functionName = "${ajaxClassName}::CBAjax_execute";
+        $functionName =
+        "${ajaxClassName}::CBAjax_execute";
 
-        $response->value = call_user_func(
+        $response->value =
+        call_user_func(
             $functionName,
             $args
         );
 
-        $response->wasSuccessful = true;
-        $response->message = '';
+        $response->wasSuccessful =
+        true;
+
+        $response->message =
+        '';
 
         return $response;
     }
@@ -119,7 +137,8 @@ CBAjax {
      */
     static function
     handleCallAjaxFunctionRequest(
-    ): void {
+    ): void
+    {
         header(
             'Content-type: application/json'
         );
@@ -128,13 +147,15 @@ CBAjax {
             'CBAjax::handleCallAjaxFunctionRequest_handleError'
         );
 
-        $ajaxRequestModelAsJSON = trim(
+        $ajaxRequestModelAsJSON =
+        trim(
             cb_post_value(
                 'CB_AjaxRequest_model_form_key'
             )
         );
 
-        $ajaxRequestModel = json_decode(
+        $ajaxRequestModel =
+        json_decode(
             $ajaxRequestModelAsJSON
         );
 
@@ -145,18 +166,21 @@ CBAjax {
 
         /* executor class name requests */
 
-        $executorClassName = CB_AjaxRequest::getExecutorClassName(
+        $executorClassName =
+        CB_AjaxRequest::getExecutorClassName(
             $ajaxRequestModel
         );
 
         if (
             $executorClassName !== null
         ) {
-            $executorArguments = CB_AjaxRequest::getExecutorArguments(
+            $executorArguments =
+            CB_AjaxRequest::getExecutorArguments(
                 $ajaxRequestModel
             );
 
-            $response = CBAjax::executeForAjaxClassName(
+            $response =
+            CBAjax::executeForAjaxClassName(
                 $executorClassName,
                 $executorArguments
             );
@@ -167,31 +191,42 @@ CBAjax {
 
         /* deprecated style ajax requests */
 
-        $response = (object)[
-            'className' => 'CBAjaxResponse',
-            'message' => '',
-            'wasSuccessful' => false,
+        $response =
+        (object)[
+            'className' =>
+            'CBAjaxResponse',
+
+            'message'
+            => '',
+
+            'wasSuccessful'
+            => false,
         ];
 
-        $executorFunctionClassName = (
-            CB_AjaxRequest::getExecutorFunctionClassName(
-                $ajaxRequestModel
-            )
-        );
-
-        $executorFunctionName = CB_AjaxRequest::getExecutorFunctionName(
+        $executorFunctionClassName =
+        CB_AjaxRequest::getExecutorFunctionClassName(
             $ajaxRequestModel
         );
 
-        $executorArguments = CB_AjaxRequest::getExecutorArguments(
+        $executorFunctionName =
+        CB_AjaxRequest::getExecutorFunctionName(
             $ajaxRequestModel
         );
 
-        $interfaceName = "CBAjax_{$executorFunctionName}";
+        $executorArguments =
+        CB_AjaxRequest::getExecutorArguments(
+            $ajaxRequestModel
+        );
 
-        $callable = "{$executorFunctionClassName}::{$interfaceName}";
+        $interfaceName =
+        "CBAjax_{$executorFunctionName}";
 
-        if (!is_callable($callable)) {
+        $callable =
+        "{$executorFunctionClassName}::{$interfaceName}";
+
+        if (
+            !is_callable($callable)
+        ) {
             throw new CBExceptionWithValue(
                 CBConvert::stringToCleanLine(<<<EOT
 
@@ -205,23 +240,31 @@ CBAjax {
             );
         }
 
-        $userIsMemberOfUserGroup = false;
+        $userIsMemberOfUserGroup =
+        false;
 
-        $getUserGroupClassNameFunctionName = (
+        $getUserGroupClassNameFunctionName =
+        (
             $executorFunctionClassName .
             "::CBAjax_{$executorFunctionName}_getUserGroupClassName"
         );
 
-        if (is_callable($getUserGroupClassNameFunctionName)) {
-            $userGroupClassName = call_user_func(
+        if (
+            is_callable($getUserGroupClassNameFunctionName)
+        ) {
+            $userGroupClassName =
+            call_user_func(
                 $getUserGroupClassNameFunctionName
             );
 
-            $userIsMemberOfUserGroup = CBUserGroup::userIsMemberOfUserGroup(
+            $userIsMemberOfUserGroup =
+            CBUserGroup::userIsMemberOfUserGroup(
                 ColbyUser::getCurrentUserCBID(),
                 $userGroupClassName
             );
-        } else {
+        }
+
+        else {
             throw new CBExceptionWithValue(
                 (
                     'The CBAjax_function_getUserGroupClassName() ' .
@@ -234,53 +277,66 @@ CBAjax {
         }
 
 
-        if (!$userIsMemberOfUserGroup) {
-            if (ColbyUser::getCurrentUserCBID() === null) {
-                $response->message = (
+        if (
+            !$userIsMemberOfUserGroup
+        ) {
+            if (
+                ColbyUser::getCurrentUserCBID() === null
+            ) {
+                $response->message =
+                (
                     'The requested Ajax function cannot be called ' .
                     'because you are not currently logged in, possibly ' .
                     'because your session has timed out. Reloading ' .
                     'the current page will usually remedy this.'
                 );
 
-                $response->sourceCBID = (
-                    'e7041967a2b8b1643aff0009c961265fcf1a5453'
-                );
+                $response->sourceCBID =
+                'e7041967a2b8b1643aff0009c961265fcf1a5453';
 
-                $response->userMustLogIn = true;
+                $response->userMustLogIn =
+                true;
 
-                echo json_encode(
+                echo
+                json_encode(
                     CBModel::build(
                         $response
                     )
                 );
 
                 return;
-            } else {
-                $isDeveloper = CBUserGroup::currentUserIsMemberOfUserGroup(
+            }
+
+            else {
+                $isDeveloper =
+                CBUserGroup::currentUserIsMemberOfUserGroup(
                     'CBDevelopersUserGroup'
                 );
 
-                if ($isDeveloper) {
-                    $response->message = CBConvert::stringToCleanLine(<<<EOT
+                if (
+                    $isDeveloper
+                ) {
+                    $response->message =
+                    CBConvert::stringToCleanLine(<<<EOT
 
                         You do not have permission to call the Ajax function
                         with the class "{$executorFunctionClassName}" and the
                         name "{$executorFunctionName}".
 
                     EOT);
-                } else {
-                    $response->message = (
-                        'You do not have permission to call a requested ' .
-                        'Ajax function.'
-                    );
                 }
 
-                $response->sourceCBID = (
-                    '596da90f52ad2590f67d65e885d6d5e85ca590dd'
-                );
+                else {
+                    $response->message =
+                    'You do not have permission to call a requested ' .
+                    'Ajax function.';
+                }
 
-                echo json_encode(
+                $response->sourceCBID =
+                '596da90f52ad2590f67d65e885d6d5e85ca590dd';
+
+                echo
+                json_encode(
                     CBModel::build(
                         $response
                     )
@@ -290,16 +346,19 @@ CBAjax {
             }
         }
 
-        $response->value = call_user_func(
+        $response->value =
+        call_user_func(
             $callable,
             $executorArguments
         );
 
-        $response->wasSuccessful = true;
+        $response->wasSuccessful =
+        true;
 
         done:
 
-        echo json_encode(
+        echo
+        json_encode(
             CBModel::build(
                 $response
             )
@@ -317,17 +376,25 @@ CBAjax {
      *
      * @return void
      */
-    static function handleCallAjaxFunctionRequest_handleError(
+    static function
+    handleCallAjaxFunctionRequest_handleError(
         Throwable $error
-    ): void {
-        CBErrorHandler::report($error);
+    ): void
+    {
+        CBErrorHandler::report(
+            $error
+        );
 
-        $response = (object)[
-            'className' => 'CBAjaxResponse',
+        $response =
+        (object)[
+            'className' =>
+            'CBAjaxResponse',
 
-            'wasSuccessful' => false,
+            'wasSuccessful' =>
+            false,
 
-            'sourceCBID' => CBException::throwableToSourceCBID(
+            'sourceCBID' =>
+            CBException::throwableToSourceCBID(
                 $error
             ),
         ];
@@ -347,21 +414,25 @@ CBAjax {
          * that has one message for developers and one for users.
          */
 
-        $response->message = $error->getMessage();
+        $response->message =
+        $error->getMessage();
 
-        $isDeveloper = CBUserGroup::currentUserIsMemberOfUserGroup(
+        $isDeveloper =
+        CBUserGroup::currentUserIsMemberOfUserGroup(
             'CBDevelopersUserGroup'
         );
 
-        if ($isDeveloper) {
-            $response->stackTrace = (
-                CBErrorHandler::throwableToPlainTextIteratedStackTrace(
-                    $error
-                )
+        if (
+            $isDeveloper
+        ) {
+            $response->stackTrace =
+            CBErrorHandler::throwableToPlainTextIteratedStackTrace(
+                $error
             );
         }
 
-        echo json_encode(
+        echo
+        json_encode(
             CBModel::build(
                 $response
             )
@@ -376,14 +447,17 @@ CBAjax {
      */
     static function
     requestIsToCallAnAjaxFunction(
-    ): bool {
-        $ajaxRequestModelAsJSON = trim(
+    ): bool
+    {
+        $ajaxRequestModelAsJSON =
+        trim(
             cb_post_value(
                 'CB_AjaxRequest_model_form_key'
             )
         );
 
-        return !empty(
+        return
+        !empty(
             $ajaxRequestModelAsJSON
         );
     }
@@ -406,24 +480,26 @@ CBAjax {
     static function
     validateAjaxArguments(
         stdClass $ajaxRequestModel
-    ): void {
-        $executorClassName = CB_AjaxRequest::getExecutorClassName(
+    ): void
+    {
+        $executorClassName =
+        CB_AjaxRequest::getExecutorClassName(
             $ajaxRequestModel
         );
 
         if (
             $executorClassName === null
         ) {
-            $executorFunctionClassName = (
-                CB_AjaxRequest::getExecutorFunctionClassName(
-                    $ajaxRequestModel
-                )
+            $executorFunctionClassName =
+            CB_AjaxRequest::getExecutorFunctionClassName(
+                $ajaxRequestModel
             );
 
             if (
                 $executorFunctionClassName === null
             ) {
-                throw new CBExceptionWithValue(
+                throw
+                new CBExceptionWithValue(
                     CBConvert::stringToCleanLine(<<<EOT
 
                         A CB_AjaxRequest model has an invalid executor function
@@ -437,14 +513,16 @@ CBAjax {
 
 
 
-            $executorFunctionName = CB_AjaxRequest::getExecutorFunctionName(
+            $executorFunctionName =
+            CB_AjaxRequest::getExecutorFunctionName(
                 $ajaxRequestModel
             );
 
             if (
                 $executorFunctionName === null
             ) {
-                throw new CBExceptionWithValue(
+                throw
+                new CBExceptionWithValue(
                     CBConvert::stringToCleanLine(<<<EOT
 
                         A CB_AjaxRequest model has an invalid executor function
@@ -459,14 +537,16 @@ CBAjax {
 
 
 
-        $executorArguments = CB_AjaxRequest::getExecutorArguments(
+        $executorArguments =
+        CB_AjaxRequest::getExecutorArguments(
             $ajaxRequestModel
         );
 
         if (
             $executorArguments === null
         ) {
-            throw new CBExceptionWithValue(
+            throw
+            new CBExceptionWithValue(
                 CBConvert::stringToCleanLine(<<<EOT
 
                     A CB_AjaxRequest model has invalid executor arguments.
