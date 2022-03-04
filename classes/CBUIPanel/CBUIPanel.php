@@ -34,7 +34,7 @@ CBUIPanel {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.54.js',
+                'v675.60.js',
                 cbsysurl()
             ),
         ];

@@ -19,20 +19,46 @@
      *      modify the DOM and should not be called until after the DOM content
      *      has loaded.
      */
-    window.CBUIPanel = {
-        confirmText: CBUIPanel_confirmText,
-        displayAjaxResponse2: CBUIPanel_displayAjaxResponse2,
-        displayAndReportError: CBUIPanel_displayAndReportError,
-        displayBusyText: CBUIPanel_displayBusyText,
-        displayCBMessage: CBUIPanel_displayCBMessage,
-        displayElement: CBUIPanel_displayElement,
-        displayError2: CBUIPanel_displayError2,
-        displayText2: CBUIPanel_displayText2,
-        hidePanelWithContentElement: CBUIPanel_hidePanelWithContentElement,
+    window.CBUIPanel =
+    {
+        confirmText:
+        CBUIPanel_confirmText,
 
-        displayAjaxResponse: CBUIPanel_displayAjaxResponse, /* deprecated */
-        displayError: CBUIPanel_displayError, /* deprecated */
-        displayText: CBUIPanel_displayText, /* deprecated */
+        displayAjaxResponse2:
+        CBUIPanel_displayAjaxResponse2,
+
+        displayAndReportError:
+        CBUIPanel_displayAndReportError,
+
+        displayBusyText:
+        CBUIPanel_displayBusyText,
+
+        displayCBMessage:
+        CBUIPanel_displayCBMessage,
+
+        displayElement:
+        CBUIPanel_displayElement,
+
+        displayError2:
+        CBUIPanel_displayError2,
+
+        displayText2:
+        CBUIPanel_displayText2,
+
+        hidePanelWithContentElement:
+        CBUIPanel_hidePanelWithContentElement,
+
+        /* deprecated */
+        displayAjaxResponse:
+        CBUIPanel_displayAjaxResponse,
+
+        /* deprecated */
+        displayError:
+        CBUIPanel_displayError,
+
+        /* deprecated */
+        displayText:
+        CBUIPanel_displayText,
     };
 
 
@@ -49,8 +75,11 @@
     function
     CBUIPanel_hidePanelWithContentElement(
         contentElement
-    ) {
-        if (typeof contentElement.CBUIPanel_hidePanel === "function") {
+    ) // -> undefined
+    {
+        if (
+            typeof contentElement.CBUIPanel_hidePanel === "function"
+        ) {
             contentElement.CBUIPanel_hidePanel();
         }
     }
@@ -66,14 +95,17 @@
     function
     CBUIPanel_confirmText(
         textContent
-    ) {
+    ) // -> Promise -> bool
+    {
         let cancel, confirm;
 
-        let promise = new Promise(
+        let promise =
+        new Promise(
             CBUIPanel_confirmText_execute
         );
 
-        promise.CBUIPanel = {
+        promise.CBUIPanel =
+        {
             cancel: cancel,
             confirm: confirm,
         };
@@ -82,7 +114,7 @@
 
 
 
-        /* -- closures -- -- -- -- -- */
+        /* -- closures -- */
 
 
 
@@ -96,17 +128,24 @@
         CBUIPanel_confirmText_execute(
             resolve,
             reject
-        ) {
-            try {
-                cancel = function () {
-                    try {
+        ) // -> undefined
+        {
+            try
+            {
+                cancel =
+                function () {
+                    try
+                    {
                         CBUIPanel_hidePanelWithContentElement(
                             element
                         );
 
-                        promise.CBUIPanel = undefined;
+                        promise.CBUIPanel =
+                        undefined;
 
-                        resolve(false);
+                        resolve(
+                            false
+                        );
                     } catch (error) {
                         reject(error);
                     }
@@ -174,12 +213,15 @@
     function
     CBUIPanel_createButtonElement(
         args
-    ) {
-        let containerElement = CBUI.createElement(
+    ) // -> Element
+    {
+        let containerElement =
+        CBUI.createElement(
             "CBUI_container1"
         );
 
-        let buttonElement = CBUI.createElement(
+        let buttonElement =
+        CBUI.createElement(
             "CBUI_button1"
         );
 
@@ -187,12 +229,14 @@
             buttonElement
         );
 
-        buttonElement.textContent = CBModel.valueToString(
+        buttonElement.textContent =
+        CBModel.valueToString(
             args,
             "title"
         );
 
-        let callback = CBModel.valueAsFunction(
+        let callback =
+        CBModel.valueAsFunction(
             args,
             "callback"
         );
@@ -227,12 +271,15 @@
     function
     CBUIPanel_createCBMessageElement(
         cbmessage
-    ) {
-        let sectionContainerElement = CBUI.createElement(
+    ) // -> Element
+    {
+        let sectionContainerElement =
+        CBUI.createElement(
             "CBUI_sectionContainer CBUI_padding_half"
         );
 
-        let sectionElement = CBUI.createElement(
+        let sectionElement =
+        CBUI.createElement(
             "CBUI_section CBUI_section_noborder"
         );
 
@@ -240,7 +287,8 @@
             sectionElement
         );
 
-        let contentElement = CBUI.createElement(
+        let contentElement =
+        CBUI.createElement(
             "CBUI_content CBContentStyleSheet"
         );
 
@@ -248,7 +296,8 @@
             contentElement
         );
 
-        contentElement.innerHTML = CBMessageMarkup.messageToHTML(
+        contentElement.innerHTML =
+        CBMessageMarkup.messageToHTML(
             cbmessage
         );
 
@@ -266,28 +315,35 @@
     function
     CBUIPanel_createPanelElement(
         contentElement
-    ) {
-        let panelElement = document.createElement(
+    ) // -> Element
+    {
+        let panelElement =
+        document.createElement(
             "div"
         );
 
-        panelElement.className = "CBUIPanel CBUIPanel_showing";
+        panelElement.className =
+        "CBUIPanel CBUIPanel_showing";
 
-        let backgroundElement = document.createElement(
+        let backgroundElement =
+        document.createElement(
             "div"
         );
 
-        backgroundElement.className = "CBUIPanel_background";
+        backgroundElement.className =
+        "CBUIPanel_background";
 
         panelElement.appendChild(
             backgroundElement
         );
 
-        let surfaceElement = document.createElement(
+        let surfaceElement =
+        document.createElement(
             "div"
         );
 
-        surfaceElement.className = "CBUIPanel_surface2";
+        surfaceElement.className =
+        "CBUIPanel_surface2";
 
         backgroundElement.appendChild(
             surfaceElement
@@ -314,12 +370,15 @@
     function
     CBUIPanel_createTextElement(
         textContent
-    ) {
-        let sectionContainerElement = CBUI.createElement(
+    ) // -> Element
+    {
+        let sectionContainerElement =
+        CBUI.createElement(
             "CBUI_sectionContainer CBUI_padding_half"
         );
 
-        let sectionElement = CBUI.createElement(
+        let sectionElement =
+        CBUI.createElement(
             "CBUI_section CBUI_section_noborder"
         );
 
@@ -327,7 +386,8 @@
             sectionElement
         );
 
-        let textContainerElement = CBUI.createElement(
+        let textContainerElement =
+        CBUI.createElement(
             "CBUI_container_topAndBottom"
         );
 
@@ -335,9 +395,11 @@
             textContainerElement
         );
 
-        let textElement = CBUI.createElement();
+        let textElement =
+        CBUI.createElement();
 
-        textElement.textContent = textContent;
+        textElement.textContent =
+        textContent;
 
         textContainerElement.appendChild(
             textElement
@@ -359,7 +421,8 @@
     async function
     CBUIPanel_displayAjaxResponse(
         ajaxResponse
-    ) {
+    ) // -> Promise -> undefined
+    {
         return CBUIPanel_displayAjaxResponse2(
             ajaxResponse
         ).CBUIPanel_getClosePromise();
@@ -383,10 +446,12 @@
     function
     CBUIPanel_displayAjaxResponse2(
         ajaxResponse
-    ) {
+    ) // -> object
+    {
         let resolve;
 
-        let promise = new Promise(
+        let promise =
+        new Promise(
             function (
                 resolveCallback
             ) {
@@ -394,12 +459,14 @@
             }
         );
 
-        let element = CBUI.createElement();
+        let element =
+        CBUI.createElement();
 
 
         /* message */
         {
-            let textContent = CBModel.valueToString(
+            let textContent =
+            CBModel.valueToString(
                 ajaxResponse,
                 "message"
             );
@@ -417,27 +484,34 @@
         {
             let buttonElement;
 
-            let versionMismatchSourceCBID = (
-                "a567dc90ccb59fb918ced4ae7f82e6d1b556f932"
-            );
+            let versionMismatchSourceCBID =
+            "a567dc90ccb59fb918ced4ae7f82e6d1b556f932";
 
             if (
                 ajaxResponse.sourceCBID === versionMismatchSourceCBID ||
                 ajaxResponse.userMustLogIn
             ) {
-                buttonElement = CBUIPanel_createButtonElement(
+                buttonElement =
+                CBUIPanel_createButtonElement(
                     {
-                        callback: function () {
+                        callback:
+                        function () {
                             location.reload();
                         },
-                        title: "Reload",
+
+                        title:
+                        "Reload",
                     }
                 );
             } else {
-                buttonElement = CBUIPanel_createButtonElement(
+                buttonElement =
+                CBUIPanel_createButtonElement(
                     {
-                        callback: CBUIPanel_close,
-                        title: "OK",
+                        callback:
+                        CBUIPanel_close,
+
+                        title:
+                        "OK",
                     }
                 );
             }
@@ -452,17 +526,20 @@
         if (
             ajaxResponse.stackTrace
         ) {
-            let titleElement = CBUI.createElement(
+            let titleElement =
+            CBUI.createElement(
                 "CBUI_title1"
             );
 
-            titleElement.textContent = "Stack Trace";
+            titleElement.textContent =
+            "Stack Trace";
 
             element.appendChild(
                 titleElement
             );
 
-            let sectionContainerElement = CBUI.createElement(
+            let sectionContainerElement =
+            CBUI.createElement(
                 "CBUI_sectionContainer CBUI_padding_half"
             );
 
@@ -470,7 +547,8 @@
                 sectionContainerElement
             );
 
-            let sectionElement = CBUI.createElement(
+            let sectionElement =
+            CBUI.createElement(
                 "CBUI_section CBUI_section_inner"
             );
 
@@ -478,7 +556,8 @@
                 sectionElement
             );
 
-            let textContainerElement = CBUI.createElement(
+            let textContainerElement =
+            CBUI.createElement(
                 "CBUI_container_topAndBottom"
             );
 
@@ -486,11 +565,13 @@
                 textContainerElement
             );
 
-            let textElement = CBUI.createElement(
+            let textElement =
+            CBUI.createElement(
                 "CBUI_whiteSpace_preWrap"
             );
 
-            textElement.textContent = CBModel.valueToString(
+            textElement.textContent =
+            CBModel.valueToString(
                 ajaxResponse,
                 "stackTrace"
             );
@@ -509,7 +590,8 @@
         return {
             CBUIPanel_close,
 
-            CBUIPanel_getClosePromise: function () {
+            CBUIPanel_getClosePromise:
+            function () {
                 return promise;
             },
         };
@@ -519,7 +601,10 @@
         /**
          * @return undefined
          */
-        function CBUIPanel_close() {
+        function
+        CBUIPanel_close(
+        ) // -> undefined
+        {
             CBUIPanel_hidePanelWithContentElement(
                 element
             );
@@ -545,8 +630,10 @@
     function
     CBUIPanel_displayBusyText(
         textContent
-    ) {
-        let element = CBUI.createElement();
+    ) // -> object
+    {
+        let element =
+        CBUI.createElement();
 
         element.appendChild(
             CBUIPanel_createTextElement(
@@ -574,21 +661,26 @@
      *
      *      The promise resolves when the user clicks the button.
      */
-    async function CBUIPanel_displayCBMessage(
+    async function
+    CBUIPanel_displayCBMessage(
         cbmessage,
         buttonTextContent
-    ) {
+    ) // -> Promise -> undefined
+    {
         let resolve;
 
-        let promise = new Promise(
+        let promise =
+        new Promise(
             function (
                 resolveCallback
             ) {
-                resolve = resolveCallback;
+                resolve =
+                resolveCallback;
             }
         );
 
-        let element = CBUI.createElement();
+        let element =
+        CBUI.createElement();
 
         element.appendChild(
             CBUIPanel_createCBMessageElement(
@@ -596,27 +688,32 @@
             )
         );
 
-        buttonTextContent = CBConvert.valueToString(
+        buttonTextContent =
+        CBConvert.valueToString(
             buttonTextContent
         ).trim();
 
         if (
             buttonTextContent === ""
         ) {
-            buttonTextContent = "OK";
+            buttonTextContent =
+            "OK";
         }
 
         element.appendChild(
             CBUIPanel_createButtonElement(
                 {
-                    callback: function () {
+                    callback:
+                    function () {
                         CBUIPanel_hidePanelWithContentElement(
                             element
                         );
 
                         resolve();
                     },
-                    title: buttonTextContent,
+
+                    title:
+                    buttonTextContent,
                 }
             )
         );
@@ -639,11 +736,13 @@
     function
     CBUIPanel_displayElement(
         contentElement
-    ) {
+    ) // -> undefined
+    {
         if (
             contentElement.CBUIPanel_hidePanel !== undefined
         ) {
-            let message = CBConvert.stringToCleanLine(`
+            let message =
+            CBConvert.stringToCleanLine(`
 
                 The contentElement argument is already being displayed.
 
@@ -656,7 +755,8 @@
             );
         }
 
-        let panelElement = CBUIPanel_createPanelElement(
+        let panelElement =
+        CBUIPanel_createPanelElement(
             contentElement
         );
 
@@ -675,11 +775,17 @@
             contentElement,
             "CBUIPanel",
             {
-                configurable: true,
-                enumerable: false,
-                value: {
+                configurable:
+                true,
+
+                enumerable:
+                false,
+
+                value:
+                {
                     hide: CBUIPanel_hidePanel,
                 },
+
                 writable: false,
             }
         );
@@ -689,10 +795,17 @@
             contentElement,
             "CBUIPanel_hidePanel",
             {
-                configurable: true,
-                enumerable: false,
-                value: CBUIPanel_hidePanel,
-                writable: false,
+                configurable:
+                true,
+
+                enumerable:
+                false,
+
+                value:
+                CBUIPanel_hidePanel,
+
+                writable:
+                false,
             }
         );
 
@@ -703,7 +816,8 @@
          */
         function
         CBUIPanel_hidePanel(
-        ) {
+        )  // -> undefined
+        {
             document.body.removeChild(
                 panelElement
             );
@@ -712,8 +826,11 @@
                 contentElement
             );
 
-            delete contentElement.CBUIPanel;
-            delete contentElement.CBUIPanel_hidePanel;
+            delete
+            contentElement.CBUIPanel;
+
+            delete
+            contentElement.CBUIPanel_hidePanel;
         }
         /* CBUIPanel_hidePanel() */
 
@@ -730,7 +847,8 @@
     async function
     CBUIPanel_displayError(
         error
-    ) {
+    ) // -> undefined
+    {
         return CBUIPanel_displayError2(
             error
         ).CBUIPanel_getClosePromise();
@@ -752,7 +870,8 @@
     function
     CBUIPanel_displayError2(
         error
-    ) {
+    ) // -> object
+    {
         if (
             !CBErrorHandler.getCurrentBrowserIsSupported()
         ) {
@@ -768,7 +887,8 @@
         }
 
         else {
-            let oneLineErrorReport = CBException.errorToOneLineErrorReport(
+            let oneLineErrorReport =
+            CBException.errorToOneLineErrorReport(
                 error
             );
 
@@ -789,7 +909,8 @@
     function
     CBUIPanel_displayAndReportError(
         error
-    ) {
+    ) // Promise -> undefined
+    {
         CBErrorHandler.report(
             error
         );
@@ -816,7 +937,8 @@
     CBUIPanel_displayText(
         textContent,
         buttonTextContent
-    ) {
+    ) // -> Promise -> undefined
+    {
         return CBUIPanel_displayText2(
             textContent,
             buttonTextContent
@@ -843,16 +965,23 @@
     CBUIPanel_displayText2(
         textContent,
         buttonTextContent
-    ) {
+    ) // -> object
+    {
         let resolve;
 
-        let promise = new Promise(
-            function (resolveCallback) {
-                resolve = resolveCallback;
+        let promise =
+        new Promise(
+            function (
+                resolveCallback
+            ) // -> undefined
+            {
+                resolve =
+                resolveCallback;
             }
         );
 
-        let element = CBUI.createElement();
+        let element =
+        CBUI.createElement();
 
         element.appendChild(
             CBUIPanel_createTextElement(
@@ -860,21 +989,26 @@
             )
         );
 
-        buttonTextContent = CBConvert.valueToString(
+        buttonTextContent =
+        CBConvert.valueToString(
             buttonTextContent
         ).trim();
 
         if (
             buttonTextContent === ""
         ) {
-            buttonTextContent = "OK";
+            buttonTextContent =
+            "OK";
         }
 
         element.appendChild(
             CBUIPanel_createButtonElement(
                 {
-                    callback: CBUIPanel_close,
-                    title: buttonTextContent,
+                    callback:
+                    CBUIPanel_close,
+
+                    title:
+                    buttonTextContent,
                 }
             )
         );
@@ -886,7 +1020,10 @@
         return {
             CBUIPanel_close,
 
-            CBUIPanel_getClosePromise: function () {
+            CBUIPanel_getClosePromise:
+            function (
+            ) // -> Promise
+            {
                 return promise;
             },
         };
@@ -896,7 +1033,10 @@
         /**
          * @return undefined
          */
-        function CBUIPanel_close() {
+        function
+        CBUIPanel_close(
+        ) // -> undefined
+        {
             CBUIPanel_hidePanelWithContentElement(
                 element
             );
