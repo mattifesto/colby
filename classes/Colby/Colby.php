@@ -1203,13 +1203,16 @@ cbmessage(
  */
 function
 cbsiteurl(
-): string {
+): string
+{
     /**
      * If this function is called from a process initiated from the comman line
      * interface there is conceptually no site URL so an empty string is
      * returned.
      */
-    if (php_sapi_name() === 'cli') {
+    if (
+        php_sapi_name() === 'cli'
+    ) {
         return '';
     }
 
