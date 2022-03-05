@@ -396,10 +396,10 @@ CBViewPage {
     static function
     CBModel_upgrade(
         stdClass $spec
-    ): stdClass {
-
+    ): stdClass
+    {
         /**
-         * 2022_01_19
+         * @NOTE 2022_01_19
          *
          *      We now expect the URI to be in correct form when we build this
          *      spec. This cause some issues with some existing pages that had
@@ -413,6 +413,23 @@ CBViewPage {
         $URI = trim(
             $URI,
             "/ \n\r\t\v\x00"
+        );
+
+        /**
+         * @NOTE 2022_03_05
+         *
+         *      The maximum length of a URI is 100 characters. Some older
+         *      CBViewPage models somehow had URIs that were longer and need to
+         *      be trimmed so that the model to be saved after upgrade.
+         *
+         *      A longer URI would never have been the actual URI used because
+         *      the CBPages table has a limit of 100 characters.
+         */
+
+        $URI = substr(
+            $URI,
+            0,
+            100
         );
 
         CBViewPage::setURI(
