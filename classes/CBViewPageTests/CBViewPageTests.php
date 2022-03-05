@@ -32,6 +32,10 @@ CBViewPageTests {
                 'name' => 'upgradeSelectedMainMenuItemName',
                 'type' => 'server',
             ],
+            (object)[
+                'name' => 'upgradeURI',
+                'type' => 'server',
+            ],
         ];
     }
     /* CBTest_getTests() */
@@ -595,6 +599,90 @@ CBViewPageTests {
     }
     /* CBTest_upgradeSelectedMainMenuItemName() */
 
+
+
+    /**
+     * @return object
+     */
+    static function
+    upgradeURI(
+    ): stdClass {
+        $testModelCBID =
+        '5c165b79a9dbbd13966f01c0b63412c1cf96be9e';
+
+        CBDB::transaction(
+            function () use (
+                $testModelCBID
+            ) {
+                CBModels::deleteByID(
+                    $testModelCBID
+                );
+            }
+        );
+
+        // prepare
+        {
+            $originalSpec =
+            CBModel::createSpec(
+                'CBViewPage',
+                $testModelCBID
+            );
+
+            CBViewPage::setPageSettingsClassName(
+                $originalSpec,
+                'CB_Placeholder'
+            );
+        }
+        // prepare
+
+        $originalSpec->URI =
+        'a123456789a123456789a123456789a123456789a123456789' .
+        'a123456789a123456789a123456789a123456789a123456789' .
+        'a123456789a123456789a123456789a123456789a123456789';
+
+        $upgradedSpec = CBModel::upgrade(
+            $originalSpec
+        );
+
+        $expectedResult =
+        'a123456789a123456789a123456789a123456789a123456789' .
+        'a123456789a123456789a123456789a123456789a123456789';
+
+        $actualResult =
+        CBViewPage::getURI(
+            $upgradedSpec
+        );
+
+        if (
+            $actualResult !== $expectedResult
+        ) {
+            return CBTest::resultMismatchFailure(
+                "upgrade URI",
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+        CBDB::transaction(
+            function () use (
+                $testModelCBID,
+                $upgradedSpec
+            ) {
+                CBModels::save(
+                    $upgradedSpec
+                );
+
+                CBModels::deleteByID(
+                    $testModelCBID
+                );
+            }
+        );
+
+        return (object)[
+            'succeeded' => true,
+        ];
+    }
+    // upgradeURI()
 }
 
 
