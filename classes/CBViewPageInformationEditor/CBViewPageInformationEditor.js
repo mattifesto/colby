@@ -400,10 +400,26 @@ var CBViewPageInformationEditor = {
                                     "URI"
                                 ).trim();
 
-                                if (URI === "") {
-                                    spec.URI = CBConvert.stringToStub(
+                                if (
+                                    URI === ""
+                                ) {
+                                    let stub = CBConvert.stringToStub(
                                         spec.title
                                     );
+
+                                    /**
+                                     * Currently URIs are only allowed to be 100
+                                     * characters long. We trim it down even
+                                     * further since the user isn't explicitly
+                                     * setting the URI in this scenario.
+                                     */
+
+                                    stub = stub.substring(
+                                        0,
+                                        90
+                                    );
+
+                                    spec.URI = stub;
 
                                     URIEditor2.CBUIStringEditor2_setValue(
                                         spec.URI
