@@ -573,15 +573,25 @@ CBLog {
      *
      * @return void
      */
-    static function log(stdClass $args): void {
-        $preparedEntry = CBLog::prepareEntry($args);
+    static function
+    log(
+        stdClass $args
+    ): void
+    {
+        $preparedEntry = CBLog::prepareEntry(
+            $args
+        );
 
-        if (empty(CBLog::$bufferStack)) {
+        if (
+            empty(CBLog::$bufferStack)
+        ) {
             CBLog::logForReals(
                 $preparedEntry
             );
         } else {
-            $buffer = array_pop(CBLog::$bufferStack);
+            $buffer = array_pop(
+                CBLog::$bufferStack
+            );
 
             array_push(
                 $buffer,
@@ -610,9 +620,11 @@ CBLog {
      *      This function can probably be changed to only accept official
      *      CBLogEntry specs or models as its parameter.
      */
-    private static function logForReals(
+    private static function
+    logForReals(
         stdClass $args
-    ): void {
+    ): void
+    {
         /* sourceClassName */
 
         $sourceClassName = CBModel::valueToString(
