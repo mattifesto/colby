@@ -1,46 +1,61 @@
 <?php
 
-final class CBImageVerificationTask {
-
-    /* -- CBAjax interfaces -- -- -- -- -- */
+final class
+CBImageVerificationTask
+{
+    /* -- CBAjax interfaces -- */
 
 
 
     /**
      * @return void
      */
-    static function CBAjax_startForAllImages(): void {
+    static function
+    CBAjax_startForAllImages(
+    ): void
+    {
         CBImageVerificationTask::startForAllImages();
     }
+    // CBAjax_startForAllImages()
 
 
 
     /**
      * @return string
      */
-    static function CBAjax_startForAllImages_getUserGroupClassName(): string {
+    static function
+    CBAjax_startForAllImages_getUserGroupClassName(
+    ): string
+    {
         return 'CBDevelopersUserGroup';
     }
+    // CBAjax_startForAllImages_getUserGroupClassName()
 
 
 
-    /* -- CBInstall interfaces -- -- -- -- -- */
+    /* -- CBInstall interfaces -- */
 
 
 
     /**
      * @return void
      */
-    static function CBInstall_install(): void {
+    static function
+    CBInstall_install(
+    ): void
+    {
         CBImageVerificationTask::startForAllImages();
     }
+    // CBInstall_install()
 
 
 
     /**
      * @return [string]
      */
-    static function CBInstall_requiredClassNames(): array {
+    static function
+    CBInstall_requiredClassNames(
+    ): array {
         return [
             'CBImages',
             'CBLog',
@@ -49,10 +64,11 @@ final class CBImageVerificationTask {
             'CBTasks2',
         ];
     }
+    // CBInstall_requiredClassNames()
 
 
 
-    /* -- CBTasks2 interfaces -- -- -- -- -- */
+    /* -- CBTasks2 interfaces -- */
 
 
 
@@ -61,32 +77,59 @@ final class CBImageVerificationTask {
      *
      * @return void
      */
-    static function CBTasks2_run(string $ID): void {
-        $severity = 7;
+    static function
+    CBTasks2_run(
+        string $ID
+    ): void
+    {
+        $severity =
+        7;
 
-        $messages = [
+        $messages =
+        [
             "Image {$ID} verified",
             "(inspect > (a /admin/?c=CBModelInspector&ID={$ID}))",
         ];
 
-        $IDAsSQL = CBID::toSQL($ID);
+        $IDAsSQL =
+        CBID::toSQL(
+            $ID
+        );
 
-        $SQL = <<<EOT
+        $SQL =
+        <<<EOT
 
-            SELECT  extension
-            FROM    CBImages
-            WHERE   ID = {$IDAsSQL}
+            SELECT
+            extension
+
+            FROM
+            CBImages
+
+            WHERE
+            ID = {$IDAsSQL}
 
         EOT;
 
-        $CBImagesTableFileExtension = CBDB::SQLToValue($SQL);
+        $CBImagesTableFileExtension =
+        CBDB::SQLToValue(
+            $SQL
+        );
 
-        if ($CBImagesTableFileExtension === false) {
-            $severity = min(3, $severity);
-            $messages[] = 'The `CBImages` row for this image no longer exists.';
+        if (
+            $CBImagesTableFileExtension === false
+        ) {
+            $severity =
+            min(
+                3,
+                $severity
+            );
+
+            $messages[] =
+            'The `CBImages` row for this image no longer exists.';
         }
 
-        $originalFilenames = glob(
+        $originalFilenames =
+        glob(
             CBDataStore::flexpath(
                 $ID,
                 'original.*',
@@ -94,11 +137,23 @@ final class CBImageVerificationTask {
             )
         );
 
-        $originalFilenamesCount = count($originalFilenames);
+        $originalFilenamesCount =
+        count(
+            $originalFilenames
+        );
 
-        if ($originalFilenamesCount === 1) {
-            $pathinfo = pathinfo($originalFilenames[0]);
-            $fileExtension = $pathinfo['extension'];
+        if (
+            $originalFilenamesCount === 1
+        ) {
+            $pathinfo =
+            pathinfo(
+                $originalFilenames[0]
+            );
+
+            $fileExtension =
+            $pathinfo[
+                'extension'
+            ];
 
             if (
                 $CBImagesTableFileExtension &&
@@ -118,8 +173,14 @@ final class CBImageVerificationTask {
 
                 return;
             }
-        } else if ($originalFilenamesCount === 0) {
-            CBImageVerificationTask::reportNoOriginalImageFile($ID);
+        }
+
+        else if (
+            $originalFilenamesCount === 0
+        ) {
+            CBImageVerificationTask::reportNoOriginalImageFile(
+                $ID
+            );
 
             /**
              * The presence of no original image file is an odd situation. An
@@ -128,8 +189,14 @@ final class CBImageVerificationTask {
              */
 
             return;
-        } else if ($originalFilenamesCount > 1) {
-            CBImageVerificationTask::reportMultipleOriginalImageFiles($ID);
+        }
+
+        else if (
+            $originalFilenamesCount > 1
+        ) {
+            CBImageVerificationTask::reportMultipleOriginalImageFiles(
+                $ID
+            );
 
             /**
              * The presence of multiple original image files is an odd
@@ -140,33 +207,88 @@ final class CBImageVerificationTask {
             return;
         }
 
-        $spec = CBModels::fetchSpecByID($ID);
+        $spec =
+        CBModels::fetchSpecByID(
+            $ID
+        );
 
-        if (empty($spec)) {
-            $severity = min(6, $severity);
-            $imagesize = CBImage::getimagesize($originalFilenames[0]);
-            $spec = (object)[
-                'ID' => $ID,
-                'className' => 'CBImage',
-                'filename' => 'original',
-                'height' => $imagesize[1],
-                'extension' => $CBImagesTableFileExtension,
-                'width' => $imagesize[0],
+        if (
+            empty($spec)
+        ) {
+            $severity =
+            min(
+                6,
+                $severity
+            );
+
+            $imagesize =
+            CBImage::getimagesize(
+                $originalFilenames[0]
+            );
+
+            // @BUG imagesize can be false
+
+            $spec =
+            (object)[
+                'ID' =>
+                $ID,
+
+                'className' =>
+                'CBImage',
+
+                'filename' =>
+                'original',
+
+                'height' =>
+                $imagesize[1],
+
+                'extension' =>
+                $CBImagesTableFileExtension,
+
+                'width' =>
+                $imagesize[0],
             ];
 
-            try {
-                CBDB::transaction(function () use ($spec) {
-                    CBModels::save([$spec]);
-                });
+            try
+            {
+                CBDB::transaction(
+                    function () use (
+                        $spec
+                    ) {
+                        CBModels::save(
+                            $spec
+                        );
+                    }
+                );
 
-                $message = 'The model was saved for the first time.';
-                $messages[] = $message;
-            } catch (Throwable $throwable) {
-                $errorMessage = CBConvert::throwableToMessage($throwable);
-                $stackTrace = CBConvert::throwabletoStackTrace($throwable);
-                $severity = min(3, $severity);
+                $message =
+                'The model was saved for the first time.';
 
-                $messages[] = <<<EOT
+                $messages[] =
+                $message;
+            }
+
+            catch (
+                Throwable $throwable
+            ) {
+                $errorMessage =
+                CBConvert::throwableToMessage(
+                    $throwable
+                );
+
+                $stackTrace =
+                CBConvert::throwabletoStackTrace(
+                    $throwable
+                );
+
+                $severity =
+                min(
+                    3,
+                    $severity
+                );
+
+                $messages[] =
+                <<<EOT
 
                     --- h1
                     CBModels::save(\$spec) Failed
@@ -184,11 +306,23 @@ final class CBImageVerificationTask {
 
         CBLog::log(
             (object)[
-                'message' => implode("\n\n", $messages),
-                'modelID' => $ID,
-                'severity' => $severity,
-                'sourceClassName' => __CLASS__,
-                'sourceID' => 'f9c392f85b3593c9df5a3fc065ea12cce789c4db',
+                'message' =>
+                implode(
+                    "\n\n",
+                    $messages
+                ),
+
+                'modelID' =>
+                $ID,
+
+                'severity' =>
+                $severity,
+
+                'sourceClassName' =>
+                __CLASS__,
+
+                'sourceID' =>
+                'f9c392f85b3593c9df5a3fc065ea12cce789c4db',
             ]
         );
     }
@@ -196,17 +330,22 @@ final class CBImageVerificationTask {
 
 
 
-    /* -- functions -- -- -- -- -- */
+    /* -- functions -- */
 
 
 
     /**
-     * @param ID $ID
+     * @param CBID $ID
      *
      * @return void
      */
-    private static function reportMultipleOriginalImageFiles(string $ID): void {
-        $message = <<<EOT
+    private static function
+    reportMultipleOriginalImageFiles(
+        string $ID
+    ): void
+    {
+        $message =
+        <<<EOT
 
             Multiple original image files were found for the CBImage with the ID
             ($ID(code)).
@@ -215,11 +354,20 @@ final class CBImageVerificationTask {
 
         CBLog::log(
             (object)[
-                'message' => $message,
-                'modelID' => $ID,
-                'severity' => 3,
-                'sourceClassName' => __CLASS__,
-                'sourceID' => '8c15c3984a4779b8740321033e5844142edac22e',
+                'message' =>
+                $message,
+
+                'modelID' =>
+                $ID,
+
+                'severity' =>
+                3,
+
+                'sourceClassName' =>
+                __CLASS__,
+
+                'sourceID' =>
+                '8c15c3984a4779b8740321033e5844142edac22e',
             ]
         );
     }
@@ -228,12 +376,17 @@ final class CBImageVerificationTask {
 
 
     /**
-     * @param ID $ID
+     * @param CBID $ID
      *
      * @return void
      */
-    private static function reportNoOriginalImageFile(string $ID): void {
-        $message = <<<EOT
+    private static function
+    reportNoOriginalImageFile(
+        string $ID
+    ): void
+    {
+        $message =
+        <<<EOT
 
             There was no original image file found for the CBImage with the ID
             ($ID(code)).
@@ -245,11 +398,20 @@ final class CBImageVerificationTask {
 
         CBLog::log(
             (object)[
-                'message' => $message,
-                'modelID' => $ID,
-                'severity' => 3,
-                'sourceClassName' => __CLASS__,
-                'sourceID' => '020a81f55950e037072dc1a168c6ca4db890a347',
+                'message' =>
+                $message,
+
+                'modelID' =>
+                $ID,
+
+                'severity' =>
+                3,
+
+                'sourceClassName' =>
+                __CLASS__,
+
+                'sourceID' =>
+                '020a81f55950e037072dc1a168c6ca4db890a347',
             ]
         );
     }
@@ -269,20 +431,25 @@ final class CBImageVerificationTask {
      *
      * @return void
      */
-    private static function reportOriginalImageFileExtensionMismatch(
+    private static function
+    reportOriginalImageFileExtensionMismatch(
         string $ID,
         string $fileExtension,
         string $CBImagesTableFileExtension
-    ): void {
-        $fileExtensionAsMessage = CBMessageMarkup::stringToMessage(
+    ): void
+    {
+        $fileExtensionAsMessage =
+        CBMessageMarkup::stringToMessage(
             $fileExtension
         );
 
-        $CBImagesTableFileExtensionAsMessage = CBMessageMarkup::stringToMessage(
+        $CBImagesTableFileExtensionAsMessage =
+        CBMessageMarkup::stringToMessage(
             $CBImagesTableFileExtension
         );
 
-        $message = <<<EOT
+        $message =
+        <<<EOT
 
             The extension of the original image file,
             "{$fileExtensionAsMessage}", does no match the extension stored in
@@ -293,11 +460,20 @@ final class CBImageVerificationTask {
 
         CBLog::log(
             (object)[
-                'message' => $message,
-                'modelID' => $ID,
-                'severity' => 3,
-                'sourceClassName' => __CLASS__,
-                'sourceID' => '87ab5b91d861c43c3e06ac72b9c315ad049928f0',
+                'message' =>
+                $message,
+
+                'modelID' =>
+                $ID,
+
+                'severity' =>
+                3,
+
+                'sourceClassName' =>
+                __CLASS__,
+
+                'sourceID' =>
+                '87ab5b91d861c43c3e06ac72b9c315ad049928f0',
             ]
         );
     }
@@ -307,17 +483,28 @@ final class CBImageVerificationTask {
 
     /**
      * Start or restart the image verification task for all existing images.
+     *
+     * @return void
      */
-    static function startForAllImages() {
-        $SQL = <<<EOT
+    static function
+    startForAllImages(
+    ): void
+    {
+        $SQL =
+        <<<EOT
 
-            SELECT  LOWER(HEX(ID)) as ID
+            SELECT
+            LOWER(HEX(ID)) as ID
 
-            FROM    CBImages
+            FROM
+            CBImages
 
         EOT;
 
-        $IDs = CBDB::SQLToArray($SQL);
+        $IDs =
+        CBDB::SQLToArray(
+            $SQL
+        );
 
         CBTasks2::restart(
             __CLASS__,
