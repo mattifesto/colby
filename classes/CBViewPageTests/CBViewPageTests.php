@@ -640,9 +640,49 @@ CBViewPageTests {
         'a123456789a123456789a123456789a123456789a123456789' .
         'a123456789a123456789a123456789a123456789a123456789';
 
-        $upgradedSpec = CBModel::upgrade(
-            $originalSpec
-        );
+        try
+        {
+            CBSlack::disable();
+            CBLog::bufferStart();
+
+            $upgradedSpec = CBModel::upgrade(
+                $originalSpec
+            );
+
+            $actualCountOfLogEntries =
+            count(
+                CBLog::bufferContents()
+            );
+
+            $expectedCountOfLogEntries =
+            1;
+
+            CBLog::bufferEndClean();
+
+            if (
+                $actualCountOfLogEntries !== $expectedCountOfLogEntries
+            ) {
+                return CBTest::resultMismatchFailure(
+                    "count of log entries",
+                    $actualCountOfLogEntries,
+                    $expectedCountOfLogEntries
+                );
+            }
+        }
+
+        catch (
+            Throwable $throwable
+        ) {
+            CBLog::bufferEndFlush();
+
+            throw $throwable;
+        }
+
+        finally
+        {
+            CBSlack::enable();
+        }
+
 
         $expectedResult =
         'a123456789a123456789a123456789a123456789a123456789' .
