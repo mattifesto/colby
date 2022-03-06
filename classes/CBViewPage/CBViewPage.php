@@ -399,43 +399,57 @@ CBViewPage {
     ): stdClass
     {
         /**
-         * @NOTE 2022_01_19
+         * @NOTE 2022_03_05
          *
-         *      We now expect the URI to be in correct form when we build this
-         *      spec. This cause some issues with some existing pages that had
-         *      more slashes than they needed.
+         *      After working through a number of task failures on a client
+         *      website I've come to the understanding that it is a basic
+         *      requirement that upgrade be able to always repair invalid
+         *      values.
+         *
+         *      Code that generates invalid URIs or allows invalid URIs to pass
+         *      through should be fixed, but upgrade will always create a valid
+         *      URI from an invalid URI.
          */
 
-        $URI = CBViewPage::getURI(
+        $originalURI = CBViewPage::getURI(
             $spec
         );
 
-        $URI = trim(
-            $URI,
-            "/ \n\r\t\v\x00"
-        );
-
-        /**
-         * @NOTE 2022_03_05
-         *
-         *      The maximum length of a URI is 100 characters. Some older
-         *      CBViewPage models somehow had URIs that were longer and need to
-         *      be trimmed so that the model to be saved after upgrade.
-         *
-         *      A longer URI would never have been the actual URI used because
-         *      the CBPages table has a limit of 100 characters.
-         */
-
-        $URI = substr(
-            $URI,
+        $updatedURI = substr(
+            $originalURI,
             0,
             100
         );
 
-        CBViewPage::setURI(
-            $spec,
-            $URI
+        $updatedURI = CBConvert::stringToURI(
+            $updatedURI
         );
+
+        if (
+            $updatedURI !== $originalURI
+        ) {
+            CBErrorHandler::report(
+                new CBExceptionWithValue(
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        The URI property of a CBViewPage spec was invalid, so it
+                        was changed from "${originalURI}" to "${updatedURI}"
+                        when the spec was upgraded. Developers should discover
+                        the original source of the invalid URI and fix it.
+
+                    EOT),
+                    $spec,
+                    '34be5ffa0c84d1efec14bc368c398d3ee1b66da9'
+                )
+            );
+
+            CBViewPage::setURI(
+                $spec,
+                $updatedURI
+            );
+        }
+        // if
+
 
 
         /**
