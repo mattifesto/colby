@@ -136,6 +136,54 @@ CBImages {
 
 
     /**
+     * @param CBID $imageCBID
+     *
+     * @return object|null
+     */
+    static function
+    fetchRowForImageCBID(
+        $imageCBID
+    ): ?stdClass
+    {
+        $imageCBIDAsSQL = CBID::toSQL(
+            $imageCBID
+        );
+
+        $SQL =
+        <<<EOT
+
+            SELECT
+
+            LOWER(HEX(ID))
+            AS CBImages_CBID_column,
+
+            extension
+            AS CBImages_extension_column,
+
+            created
+            AS CBImages_created_column,
+
+            modified
+            AS CBImages_modified_column
+
+            FROM
+            CBImages
+
+            WHERE
+            ID = ${imageCBIDAsSQL}
+
+        EOT;
+
+        return
+        CBDB::SQLToObjectNullable(
+            $SQL
+        );
+    }
+    // fetchRowForImageCBID()
+
+
+
+    /**
      * If an on demand image request wants to convert the image from its
      * original type to another type, this function returns the image extensions
      * that are allowed to be the extension of the on demand image.
@@ -826,33 +874,67 @@ CBImages {
      * This function is called by CBImage::CBModels_willSave() and shouldn't
      * be called otherwise. Saving an image model will call this function.
      *
-     *      CBModels::save([<imageSpec])
+     *      CBModels::save(<imageSpec>);
      *
      * @return void
      */
-    static function updateRow($ID, $timestamp, $extension): void {
-        $extensionAsSQL = CBDB::escapeString($extension);
-        $extensionAsSQL = "'{$extension}'";
-        $IDAsSQL = CBDB::escapeString($ID);
-        $IDAsSQL = "UNHEX('{$IDAsSQL}')";
-        $timestampAsSQL = (int)$timestamp;
-        $SQL = <<<EOT
+    static function
+    updateRow(
+        $ID,
+        $timestamp,
+        $extension
+    ): void
+    {
+        $extensionAsSQL =
+        CBDB::escapeString(
+            $extension
+        );
 
-            INSERT INTO `CBImages`
-                (`ID`, `created`, `extension`, `modified`)
+        $extensionAsSQL =
+        "'{$extension}'";
+
+        $IDAsSQL =
+        CBDB::escapeString(
+            $ID
+        );
+
+        $IDAsSQL =
+        "UNHEX('{$IDAsSQL}')";
+
+        $timestampAsSQL =
+        (int)$timestamp;
+
+        $SQL =
+        <<<EOT
+
+            INSERT INTO
+            CBImages
+
+            (
+                ID,
+                created,
+                extension,
+                modified
+            )
+
             VALUES
-                (
-                    {$IDAsSQL},
-                    {$timestampAsSQL},
-                    {$extensionAsSQL},
-                    {$timestampAsSQL}
-                )
+
+            (
+                {$IDAsSQL},
+                {$timestampAsSQL},
+                {$extensionAsSQL},
+                {$timestampAsSQL}
+            )
+
             ON DUPLICATE KEY UPDATE
-                `modified` = {$timestampAsSQL}
+            extension = {$extensionAsSQL},
+            modified = {$timestampAsSQL}
 
         EOT;
 
-        Colby::query($SQL);
+        Colby::query(
+            $SQL
+        );
     }
     /* updateRow() */
 
