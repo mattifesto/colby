@@ -226,7 +226,29 @@ CBImageVerificationTask
                 $originalFilenames[0]
             );
 
-            // @BUG imagesize can be false
+            if (
+                $imagesize === false
+            ) {
+                array_push(
+                    $messages,
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        CBImage::getimagesize() returned false for the original
+                        image filepath.
+
+                    EOT)
+                );
+
+                CBImages::deleteByID(
+                    $ID
+                );
+
+                CBDataStore::deleteByID(
+                    $ID
+                );
+
+                goto done;
+            }
 
             $spec =
             (object)[
@@ -303,6 +325,8 @@ CBImageVerificationTask
                 EOT;
             }
         }
+
+        done:
 
         CBLog::log(
             (object)[
