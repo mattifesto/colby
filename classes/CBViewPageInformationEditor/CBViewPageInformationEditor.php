@@ -7,9 +7,9 @@
  *      This is not an editor of a CBViewPageInformation spec.
  */
 final class
-CBViewPageInformationEditor {
-
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+CBViewPageInformationEditor
+{
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
@@ -18,11 +18,12 @@ CBViewPageInformationEditor {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
+    ): array
+    {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.60.2.js',
+                'v675.60.3.js',
                 cbsysurl()
             ),
         ];

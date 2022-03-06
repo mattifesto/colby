@@ -347,27 +347,42 @@ var CBViewPageInformationEditor = {
             );
 
             URIEditor2.CBUIStringEditor2_setChangedEventListener(
-                function () {
-                    let editorElement = (
-                        URIEditor2.CBUIStringEditor2_getElement()
+                function ()
+                {
+                    let editorElement =
+                    URIEditor2.CBUIStringEditor2_getElement();
+
+                    let enteredURI =
+                    URIEditor2.CBUIStringEditor2_getValue();
+
+                    enteredURI =
+                    enteredURI.trim();
+
+                    let validatedURI =
+                    enteredURI.substring(
+                        0,
+                        100
                     );
 
-                    let enteredURI = URIEditor2.CBUIStringEditor2_getValue();
-                    enteredURI = enteredURI.trim();
-
-                    let validatedURI = CBConvert.stringToURI(
-                        enteredURI
+                    validatedURI =
+                    CBConvert.stringToURI(
+                        validatedURI
                     );
 
-                    if (validatedURI === enteredURI) {
+                    if (
+                        validatedURI === enteredURI
+                    ) {
                         editorElement.classList.remove(
                             "CBUIStringEditor2_error"
                         );
 
-                        spec.URI = validatedURI;
+                        spec.URI =
+                        validatedURI;
 
                         specChangedCallback();
-                    } else {
+                    }
+
+                    else {
                         editorElement.classList.add(
                             "CBUIStringEditor2_error"
                         );
@@ -375,62 +390,91 @@ var CBViewPageInformationEditor = {
                 }
             );
 
-            var publicationDateEditor = CBUIUnixTimestampEditor.create(
+            var publicationDateEditor =
+            CBUIUnixTimestampEditor.create(
                 {
-                    labelText: "Publication Date",
-                    propertyName: "publicationTimeStamp",
-                    spec: spec,
-                    specChangedCallback: specChangedCallback,
+                    labelText:
+                    "Publication Date",
+
+                    propertyName:
+                    "publicationTimeStamp",
+
+                    spec:
+                    spec,
+
+                    specChangedCallback:
+                    specChangedCallback,
                 }
             );
 
 
-            /* is published */
+            /* is published block */
             {
-                let item = CBUI.createSectionItem();
-                let isPublishedEditor = CBUIBooleanEditor.create(
+                let item =
+                CBUI.createSectionItem();
+
+                let isPublishedEditor =
+                CBUIBooleanEditor.create(
                     {
-                        labelText: "Published",
-                        propertyName: "isPublished",
-                        spec: spec,
-                        specChangedCallback: function () {
-                            if (spec.isPublished) {
-                                let URI = CBModel.valueToString(
+                        labelText:
+                        "Published",
+
+                        propertyName:
+                        "isPublished",
+
+                        spec:
+                        spec,
+
+                        specChangedCallback:
+                        function ()
+                        {
+                            if (
+                                spec.isPublished
+                            ) {
+                                let currentURIPropertyValue =
+                                CBModel.valueToString(
                                     spec,
                                     "URI"
                                 ).trim();
 
                                 if (
-                                    URI === ""
+                                    currentURIPropertyValue === ""
                                 ) {
-                                    let stub = CBConvert.stringToStub(
-                                        spec.title
-                                    );
+                                    let currentTitlePropertyValue =
+                                    CBModel.valueToString(
+                                        spec,
+                                        "title"
+                                    ).trim();
 
                                     /**
-                                     * Currently URIs are only allowed to be 100
-                                     * characters long. We trim it down even
-                                     * further since the user isn't explicitly
-                                     * setting the URI in this scenario.
+                                     * CBViewPage URIs are currently allowed to
+                                     * be at most 100 characters long.
                                      */
 
-                                    stub = stub.substring(
+                                    let newURIPropertyValue =
+                                    currentTitlePropertyValue.substring(
                                         0,
-                                        90
+                                        100
                                     );
 
-                                    spec.URI = stub;
+                                    newURIPropertyValue =
+                                    CBConvert.stringToStub(
+                                        newURIPropertyValue
+                                    );
+
+                                    spec.URI = newURIPropertyValue;
 
                                     URIEditor2.CBUIStringEditor2_setValue(
                                         spec.URI
                                     );
                                 }
 
-                                if (spec.publicationTimeStamp === undefined) {
-                                    spec.publicationTimeStamp = (
-                                        Math.floor(
-                                            Date.now() / 1000
-                                        )
+                                if (
+                                    spec.publicationTimeStamp === undefined
+                                ) {
+                                    spec.publicationTimeStamp =
+                                    Math.floor(
+                                        Date.now() / 1000
                                     );
 
                                     publicationDateEditor.refresh();
@@ -439,16 +483,21 @@ var CBViewPageInformationEditor = {
 
                             specChangedCallback();
                         },
+                        // specChangedCallback property value
                     }
+                    // object
                 );
+                // CBUIBooleanEditor.create()
 
                 item.appendChild(
                     isPublishedEditor.element
                 );
 
-                sectionElement.appendChild(item);
+                sectionElement.appendChild(
+                    item
+                );
             }
-            /* is published */
+            /* is published block */
 
 
             sectionElement.appendChild(
