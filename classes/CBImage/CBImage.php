@@ -454,9 +454,22 @@ CBImage
         string $filepath
     ) // -> array|false
     {
-        $data = getimagesize(
-            $filepath
-        );
+        try
+        {
+            $data = getimagesize(
+                $filepath
+            );
+        }
+
+        catch (
+            Throwable $throwable
+        ) {
+            CBErrorHandler::report(
+                $throwable
+            );
+
+            return false;
+        }
 
         if (
             !is_array($data)
