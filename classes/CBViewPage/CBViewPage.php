@@ -442,13 +442,13 @@ CBViewPage {
                     '34be5ffa0c84d1efec14bc368c398d3ee1b66da9'
                 )
             );
-
-            CBViewPage::setURI(
-                $spec,
-                $updatedURI
-            );
         }
         // if
+
+        CBViewPage::setURI(
+            $spec,
+            $updatedURI
+        );
 
 
 
