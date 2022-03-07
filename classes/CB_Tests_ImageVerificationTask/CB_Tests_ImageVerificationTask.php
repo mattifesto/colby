@@ -84,10 +84,25 @@ CB_Tests_ImageVerificationTask
             function () use (
                 $testImageCBID
             ) {
-                CBTasks2::runSpecificTask(
-                    'CBImageVerificationTask',
-                    $testImageCBID
-                );
+                try {
+                    CBSlack::disable();
+
+                    CBTasks2::runSpecificTask(
+                        'CBImageVerificationTask',
+                        $testImageCBID
+                    );
+                }
+
+                catch (
+                    Throwable $throwable
+                ) {
+                    throw $throwable;
+                }
+
+                finally
+                {
+                    CBSlack::enable();
+                }
             }
         );
 
