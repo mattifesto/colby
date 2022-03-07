@@ -1,8 +1,5 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported SCPreferencesEditor */
 /* global
+    CB_UI_StringEditor,
     CBAjax,
     CBErrorHandler,
     CBException,
@@ -17,6 +14,7 @@
 
 
 (function () {
+    "use strict";
 
     window.SCPreferencesEditor = {
         CBUISpecEditor_createEditorElement,
@@ -215,6 +213,7 @@
         }
         /* email section */
 
+
         element.appendChild(
             createSendOrderNotificationsToEmailAddressesEditor(
                 spec,
@@ -224,6 +223,13 @@
 
         element.appendChild(
             CBUISpecEditor_createEditorElement_createOrderKindSectionElement()
+        );
+
+        element.append(
+            SCPreferencesEditor_createSpecialInstructionsCBMessageEditor(
+                spec,
+                callback
+            )
         );
 
         return element;
@@ -451,5 +457,47 @@
         return rootElement;
     }
     /* createSendOrderNotificationsToEmailAddressesEditor() */
+
+
+
+    /**
+     * @param object preferencesSpec
+     * @param function specChangedCallback
+     *
+     * @return Element
+     */
+    function
+    SCPreferencesEditor_createSpecialInstructionsCBMessageEditor(
+        preferencesSpec,
+        specChangedCallback
+    ) // -> Element
+    {
+        let stringEditor =
+        CB_UI_StringEditor.create();
+
+        stringEditor.CB_UI_StringEditor_setTitle(
+            "Special Instructions CBMessage"
+        );
+
+        stringEditor.CB_UI_StringEditor_setValue(
+            CBModel.valueToString(
+                preferencesSpec,
+                'SCPreferences_specialInstructionsCBMessage_property'
+            )
+        );
+
+        stringEditor.CB_UI_StringEditor_setChangedEventListener(
+            function ()
+            {
+                preferencesSpec.SCPreferences_specialInstructionsCBMessage_property =
+                stringEditor.CB_UI_StringEditor_getValue();
+
+                specChangedCallback();
+            }
+        );
+
+        return stringEditor.CB_UI_StringEditor_getElement();
+    }
+    // SCPreferencesEditor_createSpecialInstructionsCBMessageEditor()
 
 })();

@@ -1,7 +1,8 @@
 <?php
 
-final class SCPreferencesEditor {
-
+final class
+SCPreferencesEditor
+{
     /* -- CBHTMLOutput interfaces -- */
 
 
@@ -11,12 +12,13 @@ final class SCPreferencesEditor {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
+    ): array
+    {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.2.js',
-                scliburl()
+                'v675.60.4.js',
+                cbsysurl()
             ),
         ];
     }
@@ -51,8 +53,12 @@ final class SCPreferencesEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
         return [
+            'CB_UI_StringEditor',
             'CBAjax',
             'CBErrorHandler',
             'CBException',
