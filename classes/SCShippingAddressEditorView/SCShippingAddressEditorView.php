@@ -1,19 +1,28 @@
 <?php
 
-final class SCShippingAddressEditorView {
-
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+final class
+SCShippingAddressEditorView
+{
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs(): array {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
         return [
-            Colby::flexpath(__CLASS__, 'v137.css', scliburl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v137.css',
+                cbsysurl()
+            ),
         ];
     }
+    // CBHTMLOutput_CSSURLs()
 
 
 
@@ -22,11 +31,12 @@ final class SCShippingAddressEditorView {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
+    ): array
+    {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.13.js',
+                'v675.60.4.js',
                 cbsysurl()
             ),
         ];
@@ -36,31 +46,52 @@ final class SCShippingAddressEditorView {
 
 
     /**
-     * @return [[<global variable name>, <value>]]
+     * @return [[<name>, <value>]]
      */
-    static function CBHTMLOutput_JavaScriptVariables(): array {
-        $preferencesModel = CBModelCache::fetchModelByID(
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array
+    {
+        $preferencesModel =
+        CBModelCache::fetchModelByID(
             SCPreferences::ID()
         );
 
-        $orderKindClassName = CBModel::valueToString(
+        $orderKindClassName =
+        CBModel::valueToString(
             $preferencesModel,
             'defaultOrderKindClassName'
         );
 
-        if ($orderKindClassName === '') {
-            $countryOptions = [];
-        } else {
-            $countryOptions = SCOrderKind::countryOptions(
+        if (
+            $orderKindClassName === ''
+        ) {
+            $countryOptions =
+            [];
+        }
+
+        else {
+            $countryOptions =
+            SCOrderKind::countryOptions(
                 $orderKindClassName
             );
         }
 
-        return [
+        $specialInstructionCBMessage =
+        SCPreferences::getSpecialInstructionCBMessage(
+            $preferencesModel
+        );
+
+        return
+        [
             [
                 'SCShippingAddressEditorView_countryOptions',
                 $countryOptions,
-            ]
+            ],
+            [
+                'SCShippingAddressEditorView_specialInstructionCBMessage_jsvariable',
+                $specialInstructionCBMessage,
+            ],
         ];
     }
     /* CBHTMLOutput_JavaScriptVariables() */
@@ -72,9 +103,11 @@ final class SCShippingAddressEditorView {
      */
     static function
     CBHTMLOutput_requiredClassNames(
-    ): array {
+    ): array
+    {
         return [
             'CBEvent',
+            'CBMessageView',
             'CBModel',
             'CBUI',
             'CBUIMessagePart',

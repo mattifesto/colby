@@ -2,6 +2,7 @@
     SCShippingAddressEditorView,
 
     CBEvent,
+    CBMessageView,
     CBModel,
     CBUI,
     CBUIMessagePart,
@@ -14,6 +15,7 @@
     SCShippingAddress,
 
     SCShippingAddressEditorView_countryOptions,
+    SCShippingAddressEditorView_specialInstructionCBMessage_jsvariable,
 */
 
 
@@ -225,9 +227,39 @@
                 createEditorSectionItem_phone().element
             );
 
-            sectionElement.appendChild(
-                createEditorSectionItem_specialInstructions().element
-            );
+            {
+                let elements =
+                CBUI.createElementTree(
+                    "SCShippingAddressEditorView_specialInstructions_root_element",
+                    "CBUI_sectionContainer",
+                    "CBUI_section"
+                );
+
+                let rootElement =
+                elements[0];
+
+                let sectionElement =
+                elements[2];
+
+                element.append(
+                    rootElement
+                );
+
+                sectionElement.appendChild(
+                    createEditorSectionItem_specialInstructions().element
+                );
+
+                let messageViewElement =
+                CBMessageView.create();
+
+                messageViewElement.CBMessageView_setCBMessage(
+                    SCShippingAddressEditorView_specialInstructionCBMessage_jsvariable
+                );
+
+                rootElement.append(
+                    messageViewElement
+                );
+            }
 
 
             {
