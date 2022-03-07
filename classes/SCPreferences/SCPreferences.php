@@ -1,7 +1,8 @@
 <?php
 
-final class SCPreferences {
-
+final class
+SCPreferences
+{
     /**
      * This variable will be set to a substitute ID to be used by SCPreferences
      * while tests are running.
@@ -98,7 +99,8 @@ final class SCPreferences {
     static function
     CBModel_build(
         stdClass $spec
-    ): stdClass {
+    ): stdClass
+    {
         $orderNotificationsEmailAddresses = (
             SCPreferences::stringToArrayOfEmailAddresses(
                 SCPreferences::getOrderNotificationsEmailAddressesCSV(
@@ -107,7 +109,8 @@ final class SCPreferences {
             )
         );
 
-        return (object)[
+        $preferencesModel =
+        (object)[
             'cartItemCartViewClassNames' => CBModel::valueToArray(
                 $spec,
                 'cartItemCartViewClassNames'
@@ -166,6 +169,17 @@ final class SCPreferences {
                 $orderNotificationsEmailAddresses
             ),
         ];
+
+
+        SCPreferences::setSpecialInstructionCBMessage(
+            $preferencesModel,
+            SCPreferences::getSpecialInstructionCBMessage(
+                $spec
+            )
+        );
+
+
+        return $preferencesModel;
     }
     /* CBModel_build() */
 
@@ -225,7 +239,45 @@ final class SCPreferences {
 
 
 
-    /* -- functions -- -- -- -- -- */
+    /**
+     * @param object $preferencesModel
+     *
+     * @return string
+     */
+    static function
+    getSpecialInstructionCBMessage(
+        stdClass $preferencesModel
+    ): string
+    {
+        return CBModel::valueToString(
+            $preferencesModel,
+            'SCPreferences_specialInstructionsCBMessage_property'
+        );
+    }
+    // getSpecialInstructionCBMessage()
+
+
+
+    /**
+     * @param object $preferencesModel
+     * @param string $newSpecialInstructionsCBMessage
+     *
+     * @return void
+     */
+    static function
+    setSpecialInstructionCBMessage(
+        stdClass $preferencesModel,
+        string $newSpecialInstructionsCBMessage
+    ): void
+    {
+        $preferencesModel->SCPreferences_specialInstructionsCBMessage_property =
+        $newSpecialInstructionsCBMessage;
+    }
+    // setSpecialInstructionCBMessage()
+
+
+
+    /* -- functions -- */
 
 
 
