@@ -8,8 +8,8 @@
  *      different sites.
  */
 final class
-CB_UI {
-
+CB_UI
+{
     /* -- CBHTMLOutput interfaces -- */
 
 
@@ -19,11 +19,13 @@ CB_UI {
      */
     static function
     CBHTMLOutput_CSSURLs(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
-                'v675.55.css',
+                'v675.61.css',
                 cbsysurl()
             ),
         ];
@@ -37,8 +39,10 @@ CB_UI {
      */
     static function
     CBHTMLOutput_JavaScriptURLs_Immediate(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
                 'v675.55.js',
@@ -55,8 +59,10 @@ CB_UI {
      */
     static function
     CBHTMLOutput_JavaScriptVariables(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             [
                 'CB_UI_CBSitePreferences_appearance',
                 CBSitePreferences::getAppearance(
@@ -66,18 +72,5 @@ CB_UI {
         ];
     }
     /* CBHTMLOutput_JavaScriptVariables() */
-
-
-
-    /**
-     * @return [string]
-     */
-    static function
-    CBHTMLOutput_requiredClassNames(
-    ): array {
-        return [
-        ];
-    }
-    /* CBHTMLOutput_requiredClassNames() */
 
 }

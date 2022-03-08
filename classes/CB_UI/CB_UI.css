@@ -1,32 +1,47 @@
-html {
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Helvetica Neue",
-        Helvetica,
-        Arial,
-        sans-serif;
+html
+{
+    --CB_UI_paperColor:
+    hsl(0, 0%, 100%);
 
-    --CB_UI_paperColor: hsl(0, 0%, 100%);
-    --CB_UI_borderColor: hsl(0, 0%, 94%);
+    --CB_UI_borderColor:
+    hsl(0, 0%, 94%);
 
-    --CB_UI_spotColor: hsl(210, 80%, 50%);
-    --CB_UI_disabledSpotColor: hsl(210, 0%, 50%);
+    --CB_UI_spotColor:
+    hsl(210, 80%, 50%);
 
-    --CB_UI_readableWidth: 500px;
+    --CB_UI_disabledSpotColor:
+    hsl(210, 0%, 50%);
+
+    --CB_UI_readableWidth:
+    500px;
 }
 
 
-@media screen {
-    html.CB_UI_browserPrefersDarkMode {
-        --CB_UI_paperColor: hsl(0, 0%, 12%);
-        --CB_UI_borderColor: hsl(0, 0%, 20%);
+@media screen
+{
+    html.CB_UI_browserPrefersDarkMode
+    {
+        --CB_UI_paperColor:
+        hsl(0, 0%, 12%);
+
+        --CB_UI_borderColor:
+        hsl(0, 0%, 20%);
     }
 }
 
 
 
-.CB_UI {
-    background-color: var(--CB_UI_paperColor);
+.CB_UI
+{
+    background-color:
+    var(--CB_UI_paperColor);
+
+    font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    sans-serif;
 }
