@@ -1,12 +1,13 @@
-main.CBDocumentation {
-    background-color: var(--CBBackgroundColor);
-}
-
-.CBDocumentation_container {
+.CBDocumentation_container 
+{
     text-align: center;
 }
 
-.CBDocumentation_container a {
+
+
+.CBDocumentation_container
+a
+{
     display: flex;
     align-items: center;
     justify-content: center;

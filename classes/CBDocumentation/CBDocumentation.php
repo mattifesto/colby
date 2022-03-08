@@ -1,8 +1,9 @@
 <?php
 
-final class CBDocumentation {
-
-    /* -- CBAdmin interfaces -- -- -- -- -- */
+final class
+CBDocumentation
+{
+    /* -- CBAdmin interfaces -- */
 
 
 
@@ -87,11 +88,19 @@ final class CBDocumentation {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
         return [
-            Colby::flexpath(__CLASS__, 'v635.css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.61.css',
+                cbsysurl()
+            ),
         ];
     }
+    // CBHTMLOutput_CSSURLs()
 
 }
 /* CBDocumentation */
