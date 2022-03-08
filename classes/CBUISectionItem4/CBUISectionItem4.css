@@ -1,5 +1,6 @@
-.CBUISectionItem4 {
-    background-color: var(--CBBackgroundColor);
+.CBUISectionItem4
+{
+    background-color: var(--CB_UI_paperColor);
     cursor: default;
     display: flex;
     min-height: 44px;
@@ -25,10 +26,13 @@
     -webkit-user-select: none;
 }
 
+
+
 /**
  * TODO: 2018.01.24 change "auto" to "contain" once contain works
  */
-.CBUISectionItem4 .selectable {
+.CBUISectionItem4 .selectable
+{
     cursor: auto;
     user-select: auto;
     -moz-user-select: auto;

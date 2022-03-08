@@ -1,24 +1,67 @@
 <?php
 
-final class CBUISectionItem4 {
+final class
+CBUISectionItem4
+{
+    /* -- CBHTMLOutput interfaces -- */
+
+
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
         return [
-            Colby::flexpath(__CLASS__, 'v469.css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.61.css',
+                cbsysurl()
+            ),
         ];
     }
+    // CBHTMLOutput_CSSURLs()
+
+
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
         return [
-            Colby::flexpath(__CLASS__, 'v368.js', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v368.js',
+                cbsysurl()
+            ),
         ];
     }
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        return [
+            'CB_UI',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
+
+
+
+    /* -- functions -- */
+
+
 
     /**
      * @return void
