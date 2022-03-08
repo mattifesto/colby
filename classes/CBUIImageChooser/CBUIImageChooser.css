@@ -1,45 +1,75 @@
-.CBUIImageChooser {
+.CBUIImageChooser
+{
     box-sizing: border-box;
     flex: 1 1 auto;
     max-width: 100%;
 }
 
-.CBUIImageChooser > .CBUIImageChooser_container {
+
+
+.CBUIImageChooser >
+.CBUIImageChooser_container
+{
     display: flex;
     justify-content: center;
     height: 240px;
     padding: 10px 20px;
 }
 
-.CBUIImageChooser.CBUIImageChooser_thumbnail > .CBUIImageChooser_container {
+
+
+.CBUIImageChooser.CBUIImageChooser_thumbnail >
+.CBUIImageChooser_container
+{
     height: 120px;
     padding: 10px;
 }
 
-.CBUIImageChooser img {
+
+
+.CBUIImageChooser
+img
+{
     display: block;
     object-fit: contain;
     height: 240px;
     width: 100%;
 }
 
-.CBUIImageChooser.CBUIImageChooser_thumbnail img {
+
+
+.CBUIImageChooser.CBUIImageChooser_thumbnail
+img
+{
     height: 120px;
 }
 
-.CBUIImageChooser .CBUIImageChooser_caption {
+
+
+.CBUIImageChooser
+.CBUIImageChooser_caption 
+{
     padding: 5px 10px;
     text-align: center;
 }
 
-.CBUIImageChooser .CBUIImageChooser_commands {
+
+
+.CBUIImageChooser
+.CBUIImageChooser_commands
+{
     color: hsl(30, 100%, 50%);
     color: var(--CBTextColorForLinks);
     display: flex;
     justify-content: center;
 }
 
-.CBUIImageChooser .CBUIImageChooser_commands > * {
+
+
+.CBUIImageChooser
+.CBUIImageChooser_commands >
+*
+{
     cursor: pointer;
     padding: 5px 10px;
 }

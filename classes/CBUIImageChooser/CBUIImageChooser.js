@@ -1,8 +1,3 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBUIImageChooser */
-
 /**
  * This class provides the user interface for selecting and removing images. To
  * maximize usefulness, longevity, and its functional nature, this class is
@@ -22,7 +17,22 @@
  *  - The imageRemovedCallback should generally just unset the spec variables
  *    related to the image.
  */
-var CBUIImageChooser = {
+(function () {
+    "use strict";
+
+    window.CBUIImageChooser =
+    {
+        create:
+        CBUIImageChooser_create,
+
+        createFullSizedChooser:
+        CBUIImageChooser_createFullSizeChooser,
+
+        createThumbnailSizedChooser:
+        CBUIImageChooser_createThumbnailSizedChooser,
+    };
+
+
 
     /**
      * @return object
@@ -35,11 +45,14 @@ var CBUIImageChooser = {
      *          src: string (get, set)
      *      }
      */
-    create: function () {
+    function
+    CBUIImageChooser_create(
+    ) // -> object
+    {
         var chosen, removed, src;
 
         var element = document.createElement("div");
-        element.className = "CBUIImageChooser CBDarkTheme";
+        element.className = "CBUIImageChooser";
 
         var inputElement = document.createElement("input");
         inputElement.type = "file";
@@ -227,7 +240,9 @@ var CBUIImageChooser = {
         };
 
         return api;
-    },
+    }
+    // CBUIImageChooser_create()
+
 
 
     /**
@@ -249,8 +264,13 @@ var CBUIImageChooser = {
      *          setImageURLCallback: function (deprecated)
      *      }
      */
-    createFullSizedChooser: function (args) {
-        let chooser = CBUIImageChooser.create();
+    function
+    CBUIImageChooser_createFullSizeChooser(
+        args
+    ) // -> object
+    {
+        let chooser =
+        CBUIImageChooser_create();
 
         chooser.chosen = args.imageChosenCallback;
         chooser.removed = args.imageRemovedCallback;
@@ -268,7 +288,9 @@ var CBUIImageChooser = {
         }; /* deprecated */
 
         return chooser;
-    },
+    }
+    // CBUIImageChooser_createFullSizeChooser()
+
 
 
     /**
@@ -290,8 +312,14 @@ var CBUIImageChooser = {
      *          setImageURLCallback: function (deprecated)
      *      }
      */
-    createThumbnailSizedChooser: function (args) {
-        let chooser = CBUIImageChooser.create();
+    function
+    CBUIImageChooser_createThumbnailSizedChooser(
+        args
+    ) // -> object
+    {
+        let chooser =
+        CBUIImageChooser_create();
+        
         chooser.element.classList.add("CBUIImageChooser_thumbnail");
 
         chooser.chosen = args.imageChosenCallback;
@@ -310,5 +338,7 @@ var CBUIImageChooser = {
         }; /* deprecated */
 
         return chooser;
-    },
-};
+    }
+    // CBUIImageChooser_createThumbnailSizedChooser()
+
+})();
