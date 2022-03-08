@@ -1,17 +1,42 @@
-.CBAdminPageFooterView {
-    border-top:     1px solid hsl(0, 0%, 80%);
-    color:          hsl(0, 0%, 60%);
-    font-size:      12px;
-    font-weight:    400;
-    padding:        5px 10px;
+.CBAdminPageFooterView
+{
+    border-top:
+    1px solid var(--CB_UI_borderColor);
+
+    color:
+    hsl(0, 0%, 60%);
+
+    font-size:
+    12px;
+
+    font-weight:
+    400;
+
+    padding:
+    5px 10px;
 }
 
-.CBAdminPageFooterView ul {
-    padding:    0;
-    text-align: center;
+
+
+.CBAdminPageFooterView
+ul
+{
+    padding:
+    0;
+
+    text-align:
+    center;
 }
 
-.CBAdminPageFooterView ul li {
-    display:        inline-block;
-    margin:         5px 20px;
+
+
+.CBAdminPageFooterView
+ul
+li
+{
+    display:
+    inline-block;
+
+    margin:
+    5px 20px;
 }

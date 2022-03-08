@@ -4,24 +4,49 @@
  * This view is meant to be used directly by all admin page handlers to render
  * the standard administration page footer.
  */
-final class CBAdminPageFooterView {
-
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+final class
+CBAdminPageFooterView
+{
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs(): array {
-        return [
-            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
+        return
+        [
+            Colby::flexpath(
+                __CLASS__,
+                'v675.61.css',
+                cbsysurl()
+            ),
         ];
     }
+    // CBHTMLOutput_CSSURLs()
 
 
 
-    /* -- CBView interfaces -- -- -- -- -- */
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        return [
+            'CB_UI',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
+
+
+
+    /* -- CBView interfaces -- */
 
 
 
