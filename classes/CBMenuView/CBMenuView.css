@@ -11,7 +11,7 @@
  */
 
 .CBMenuView_default {
-    background-color: var(--CBBackgroundColor1);
+    background-color: var(--CB_UI_paperColor);
     box-sizing: border-box;
     max-width: 100%;
 
@@ -152,7 +152,7 @@
  */
 
 .CBMenuView_submenu1 {
-    background-color: var(--CBBackgroundColor);
+    background-color: var(--CB_UI_paperColor);
     box-sizing: border-box;
     max-width: 100%;
 

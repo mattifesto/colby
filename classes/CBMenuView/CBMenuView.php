@@ -1,9 +1,9 @@
 <?php
 
 final class
-CBMenuView {
-
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+CBMenuView
+{
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
@@ -16,7 +16,7 @@ CBMenuView {
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.55.css',
+                'v675.61.css',
                 cbsysurl()
             ),
         ];
