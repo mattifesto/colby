@@ -5,16 +5,31 @@
  *
  *      Use CBUI.createElement() with the "CBUI_section" class name.
  */
-final class CBUISection {
+final class
+CBUISection
+{
+    /* -- CBHTMLOutput interfaces -- */
+
+
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs(): array {
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
         return [
-            Colby::flexpath(__CLASS__, 'v440.css', cbsysurl()),
+            Colby::flexpath(
+                __CLASS__,
+                'v675.61.css',
+                cbsysurl()
+            ),
         ];
     }
+    // CBHTMLOutput_CSSURLs()
+
+
 
     /**
      * @return [string]
@@ -24,4 +39,20 @@ final class CBUISection {
             Colby::flexpath(__CLASS__, 'v440.js', cbsysurl()),
         ];
     }
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        return [
+            'CB_UI',
+        ];
+    }
+    /* CBHTMLOutput_requiredClassNames() */
+
 }
