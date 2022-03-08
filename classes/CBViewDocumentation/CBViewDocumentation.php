@@ -1,7 +1,8 @@
 <?php
 
-final class CBViewDocumentation {
-
+final class
+CBViewDocumentation
+{
     /**
      * @return string
      */
@@ -25,28 +26,34 @@ final class CBViewDocumentation {
     /**
      * @return void
      */
-    static function CBAdmin_render(): void {
-        CBHTMLOutput::pageInformation()->title = 'CBView Documentation';
+    static function
+    CBAdmin_render(
+    ): void
+    {
+        CBHTMLOutput::pageInformation()->title =
+        'CBView Documentation';
 
-        $CSS = <<<EOT
+        CBView::renderSpec(
+            (object)[
+                'className' =>
+                'CBPageTitleAndDescriptionView',
+            ]
+        );
 
-            main.CBUIRoot {
-                background-color: var(--CBBackgroundColor);
-            }
+        CBView::renderSpec(
+            (object)[
+                'className' =>
+                'CBMessageView',
 
-        EOT;
-
-        CBHTMLOutput::addCSS($CSS);
-
-        CBView::renderSpec((object)[
-            'className' => 'CBPageTitleAndDescriptionView',
-        ]);
-
-        CBView::renderSpec((object)[
-            'className' => 'CBMessageView',
-            'markup' => file_get_contents(__DIR__ . '/CBViewDocumentation.mmk'),
-        ]);
+                'markup' =>
+                file_get_contents(
+                    __DIR__ .
+                    '/CBViewDocumentation.mmk'
+                ),
+            ]
+        );
     }
+    // CBAdmin_render()
 
 
 
