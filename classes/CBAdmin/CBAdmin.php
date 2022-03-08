@@ -114,7 +114,7 @@ CBAdmin {
 
         try {
             CBHTMLOutput::pageInformation()->classNameForPageSettings = (
-                'CBPageSettingsForResponsivePages'
+                'CB_StandardPageSettings'
             );
 
             CBHTMLOutput::requireClassName(
