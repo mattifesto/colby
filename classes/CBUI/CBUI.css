@@ -205,7 +205,7 @@ a.CBUI_action {
 }
 
 .CBUI_container_horizontalEqual > * + * {
-    border-left: 1px solid var(--CBUIBorderColor);
+    border-left: 1px solid var(--CB_UI_borderColor);
 }
 
 
@@ -443,8 +443,8 @@ a.CBUI_action {
 
 
 .CBUI_section {
-    background-color: var(--CBBackgroundColor);
-    border-color: var(--CBUIBorderColor);
+    background-color: var(--CB_UI_paperColor);
+    border-color: var(--CB_UI_borderColor);
     border-style: solid;
     border-width: 1px 0;
     box-sizing: border-box;
@@ -469,7 +469,7 @@ a.CBUI_action {
 }
 
 .CBUI_section > * + * {
-    border-top-color: var(--CBUIBorderColor);
+    border-top-color: var(--CB_UI_borderColor);
     border-top-style: solid;
     border-top-width: 1px;
 }
@@ -541,7 +541,7 @@ a.CBUI_action {
  * 2019_03_23
  */
 .CBUI_sectionItem_separated > * + * {
-    border-left-color: var(--CBUIBorderColor);
+    border-left-color: var(--CB_UI_borderColor);
     border-left-style: solid;
     border-left-width: 1px;
 }
@@ -675,7 +675,7 @@ a.CBUI_sectionItem {
  *      buy button on a tall product builder page.
  */
 .CBUI_sticky_top {
-    background-color: var(--CBBackgroundColor);
+    background-color: var(--CB_UI_paperColor);
     margin-bottom: 40px;
     position: -webkit-sticky;
     position: sticky;
@@ -849,35 +849,34 @@ a.CBUI_sectionItem {
 
 /* old style classes */
 
-.CBUIRoot {
-    background-color: var(--CBUIBackgroundColor);
+.CBUIRoot
+{
+    background-color: var(--CB_UI_paperColor);
     /* can grow, cannot shrink, therefore can fill a flexible container */
     flex: 1 0 auto;
 }
 
 
 
-/**
- * On CB_UI pages the CBUIRoot background color should be the paper color.
- */
-.CB_UI .CBUIRoot {
-    background-color: var(--CB_UI_paperColor);
-}
-
-
-
-
-.CBUIRoot + .flex-fill {
+.CBUIRoot +
+.flex-fill
+{
     display: none;
 }
 
-.CBUIHalfSpace {
+
+
+.CBUIHalfSpace
+{
     height: 22px;
 }
 
-.CBUIHeader {
-    background-color: var(--CBBackgroundColor);
-    border-bottom-color: var(--CBUIBorderColor);
+
+
+.CBUIHeader
+{
+    background-color: var(--CB_UI_paperColor);
+    border-bottom-color: var(--CB_UI_borderColor);
     border-bottom-style: solid;
     border-bottom-width: 1px;
     display: flex;
@@ -988,7 +987,7 @@ a.CBUI_sectionItem {
 }
 
 .CBUISectionItem {
-    background-color: var(--CBBackgroundColor);
+    background-color: var(--CB_UI_paperColor);
     min-height: 44px;
 }
 
@@ -1083,7 +1082,7 @@ a.CBUI_sectionItem {
 
 .CBUISectionItem2 > .CBUIDropdown > .button {
     align-items: center;
-    border-left-color: var(--CBUIBorderColor);
+    border-left-color: var(--CB_UI_borderColor);
     border-left-style: solid;
     border-left-width: 1px;
     box-sizing: border-box;
