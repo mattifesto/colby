@@ -1,4 +1,34 @@
 /**
+ * @TODO 2022_03_08
+ *
+ *      This comment is and should remain exactly duplicated in CB_UI.css.
+ *
+ *      CBEqualizePageSettingsPart and CB_UI currently are working together and
+ *      competing with each other over the concept of the most basic look and
+ *      feel of a website. This includes fonts, background and text colors, and
+ *      choice of an "accent" color which is also the link color.
+ *
+ *      This is a work in progress because CB_UI thought it was restarting this
+ *      process, but just kind of added more ideas to the mix. As a result we
+ *      still have two themes call CBLightTheme and CBDarkTheme although we also
+ *      have the concept of using the system preferred light or dark mode.
+ *
+ *      The concept of at least a light and dark theme will continue and
+ *      possibly allowing other themes as well. Alter this comment as needed.
+ *
+ *      Known requirements:
+ *
+ *          - Allow a basic theme to be specified on any element which will
+ *          modify the background and text colors. This theme may match the
+ *          current user or site selected theme which is just the way things
+ *          are.
+ *
+ *          - Allow a page settings class to completely withdraw from loading
+ *          this file and CB_UI and CBUI.
+ *
+ *
+ *
+ *
  * This file is used to give all platforms and browsers an equal starting point
  * for CSS. If there is anything very basic that's different among platforms or
  * browsers then rules should be added to this file to equalize and make the
@@ -48,8 +78,16 @@ html {
 }
 
 
-@media screen {
-    .CBDarkTheme {
+@media screen
+{
+    .CBDarkTheme
+    {
+        --CB_UI_paperColor:
+        hsl(0, 0%, 12%);
+
+        --CB_UI_borderColor:
+        hsl(0, 0%, 20%);
+
         --CBBackgroundColor1: hsl(0, 0%, 10%);
         --CBBackgroundColor2: hsl(0, 0%, 15%);
         --CBBackgroundColor3: hsl(0, 0%, 20%);
@@ -88,7 +126,14 @@ html {
 
 
 
-.CBLightTheme {
+.CBLightTheme
+{
+    --CB_UI_paperColor:
+    hsl(0, 0%, 100%);
+
+    --CB_UI_borderColor:
+    hsl(0, 0%, 94%);
+
     --CBBackgroundColor1: hsl(0, 0%, 100%);
     --CBBackgroundColor2: hsl(0, 0%, 95%);
     --CBBackgroundColor3: hsl(0, 0%, 90%);
