@@ -6,6 +6,11 @@
  *      This class was created in part to replace CBUI, but mostly to represent
  *      the new common look of Colby websites that is more standardized across
  *      different sites.
+ *
+ * @TODO 2022_03_08
+ *
+ *      This file works together with CBEqualizePageSettingsPart. See that file
+ *      for more informaton.
  */
 final class
 CB_UI
@@ -25,7 +30,7 @@ CB_UI
         [
             Colby::flexpath(
                 __CLASS__,
-                'v675.61.css',
+                'v675.61.1.css',
                 cbsysurl()
             ),
         ];
