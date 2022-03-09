@@ -16,7 +16,7 @@ CBMenuView
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.61.css',
+                'v675.61.2.css',
                 cbsysurl()
             ),
         ];
