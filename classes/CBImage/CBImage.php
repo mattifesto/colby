@@ -58,26 +58,6 @@ CBImage
         stdClass $spec
     ): stdClass
     {
-        $extension = CBModel::valueToString(
-            $spec,
-            'extension'
-        );
-
-        if (
-            $extension === ''
-        ) {
-            throw new CBExceptionWithValue(
-                CBConvert::stringToCleanLine(<<<EOT
-
-                    This spec can't be built because it has an invalid
-                    "extension" property value.
-
-                EOT),
-                $spec,
-                'c2bcc7c228c1433577f9b4b3c7ea4e2702c7b1d5'
-            );
-        }
-
         $filename = CBModel::valueToString(
             $spec,
             'filename'
@@ -160,18 +140,24 @@ CBImage
         }
 
         $imageModel = (object)[
-            'extension' =>
-            $extension,
-
             'filename' =>
             $filename,
-
-            'height' =>
-            $height,
 
             'ID' =>
             $imageCBID,
         ];
+
+        CBImage::setExtension(
+            $imageModel,
+            CBImage::getExtension(
+                $spec
+            )
+        );
+
+        CBImage::setOriginalHeight(
+            $imageModel,
+            $height
+        );
 
         CBImage::setOriginalWidth(
             $imageModel,
@@ -261,6 +247,104 @@ CBImage
 
 
     /* -- accessors -- */
+
+
+
+    /**
+     * @param object $imageModel
+     *
+     * @return string
+     */
+    static function
+    getExtension(
+        stdClass $imageModel
+    ): string
+    {
+        return
+        CBModel::valueToString(
+            $imageModel,
+            'extension'
+        );
+    }
+    // getExtension()
+
+
+
+    /**
+     * @param object $imageModel
+     * @param string $newExtension
+     *
+     * @return void
+     */
+    static function
+    setExtension(
+        stdClass $imageModel,
+        string $newExtension
+    ): void
+    {
+        $isNewExensionAllowed =
+        in_array(
+            $newExtension,
+            CBImage::getAllowedImageExtensions()
+        );
+
+        if (
+            $isNewExensionAllowed !== true
+        ) {
+            throw new CBExceptionWithValue(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The image extension "${newExtension}" is not allowed and
+                    can't be set as the extension property value on this image
+                    model.
+
+                EOT),
+                $imageModel,
+                '068a2e5026d748280a93275244cead131935da7b'
+            );
+        }
+
+        $imageModel->extension = $newExtension;
+    }
+    // setExtension()
+
+
+
+    /**
+     * @param object $imageModel
+     *
+     * @return int|null
+     */
+    static function
+    getOriginalHeight(
+        stdClass $imageModel
+    ): ?int
+    {
+        return CBModel::valueAsInt(
+            $imageModel,
+            'height'
+        );
+    }
+    /* getOriginalHeight() */
+
+
+
+    /**
+     * @param object $imageModel
+     * @param int $originalWidth
+     *
+     * @return void
+     */
+    static function
+    setOriginalHeight(
+        stdClass $imageModel,
+        int $originalHeight
+    ): void
+    {
+        $imageModel->height =
+        $originalHeight;
+    }
+    /* setOriginalHeight() */
 
 
 
@@ -443,6 +527,24 @@ CBImage
 
 
     /**
+     * @return [string]
+     */
+    static function
+    getAllowedImageExtensions(
+    ): array
+    {
+        return [
+            'gif',
+            'jpeg',
+            'png',
+            'webp',
+        ];
+    }
+    // getAllowedImageExtensions()
+
+
+
+    /**
      * Use this function instead of getimagesize() because it properly returns
      * width and height for images that are rotated via the Orientation EXIF
      * property.
@@ -506,6 +608,85 @@ CBImage
         return $data;
     }
     /* getimagesize() */
+
+
+
+    /**
+     * @param object $imageModel
+     * @param string $imageResizeOperation
+     * @param int $imageWidth
+     * @param int $imageHeight
+     * @param string $alternativeText
+     *
+     * @return void
+     */
+    static function
+    renderPictureElementWithSize(
+        stdClass $imageModel,
+        string $imageResizeOperation,
+        int $imageWidth,
+        int $imageHeight,
+        string $alternativeText = ''
+    ): void
+    {
+        echo
+        "<picture>";
+
+        $originalImageExtension =
+        CBImage::getExtension(
+            $imageModel
+        );
+
+        if (
+            $originalImageExtension !== 'webp'
+        ) {
+            $webpImageURL =
+            CBImage::asFlexpath(
+                $imageModel,
+                $imageResizeOperation,
+                cbsiteurl(),
+                'webp'
+            );
+
+            echo
+            CBConvert::stringToCleanLine(<<<EOT
+
+                <source
+                srcset="${webpImageURL}"
+                >
+
+            EOT);
+        }
+
+        $imageURL =
+        CBImage::asFlexpath(
+            $imageModel,
+            $imageResizeOperation,
+            cbsiteurl()
+        );
+
+        $alternativeTextAsHTML =
+        cbhtml(
+            $alternativeText
+        );
+
+        echo
+        CBConvert::stringToCleanLine(<<<EOT
+
+            <img
+            src="${imageURL}"
+            width="${imageWidth}"
+            height="${imageHeight}"
+            alt="${alternativeTextAsHTML}"
+            >
+
+        EOT);
+
+
+        echo
+        "</picture>";
+    }
+    // renderPictureElementWithSize()
 
 
 
