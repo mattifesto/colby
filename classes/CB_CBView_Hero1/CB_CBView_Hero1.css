@@ -1,0 +1,32 @@
+.CB_CBView_Hero1_root_element
+{
+    display:
+    flex;
+
+    justify-content:
+    center;
+
+    box-sizing:
+    border-box;
+
+    max-width:
+    100%;
+
+    overflow-wrap:
+    break-word;
+
+    padding:
+    20px;
+}
+
+
+
+.CB_CBView_Hero1_root_element
+img
+{
+    height:
+    auto;
+
+    max-width:
+    100%;
+}
