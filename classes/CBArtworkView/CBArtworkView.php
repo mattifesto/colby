@@ -349,10 +349,6 @@ CBArtworkView
             );
         }
 
-        $alternativeTextAsHTML = cbhtml(
-            $alternativeText
-        );
-
         $captionAsHTML = CBModel::valueToString(
             $model,
             'captionAsHTML'
@@ -496,7 +492,8 @@ CBArtworkView
                 $imageModel,
                 $imageResizeOperation,
                 $maxWidth,
-                $maxHeight
+                $maxHeight,
+                $alternativeText
             );
 
             if (
@@ -532,7 +529,7 @@ CBArtworkView
                 >
                     <a href="https://www.pinterest.com/pin/create/button/"
                        data-pin-custom="true"
-                       data-pin-description="<?= $alternativeTextAsHTML ?>"
+                       data-pin-description="<?= cbhtml($alternativeText) ?>"
                        data-pin-do="buttonPin"
                        data-pin-media="<?= $pinterestImageURL ?>">
                         Pin to Pinterest
