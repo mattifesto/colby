@@ -1,0 +1,96 @@
+.CB_UI_ImageChooser_root_element
+{
+    display:
+    flex;
+
+    justify-content:
+    center;
+
+    box-sizing:
+    border-box;
+
+    max-width:
+    100%;
+
+    overflow-wrap:
+    break-word;
+
+    padding:
+    10px 20px;
+}
+
+
+
+.CB_UI_ImageChooser_content_element
+{
+    border-color:
+    var(--CB_UI_borderColor);
+
+    border-radius:
+    5px;
+
+    border-style:
+    solid;
+
+    border-width:
+    2px;
+
+    box-sizing:
+    border-box;
+
+    max-width:
+    100%;
+
+    width:
+    var(--CB_UI_readableWidth);
+}
+
+
+
+.CB_UI_ImageChooser_title_element
+{
+    color:
+    var(--CBTextColor2);
+
+    padding:
+    3px 10px 5px;
+}
+
+
+/* this may not be necessary */
+.CB_UI_ImageChooser_imageContainer_element
+{
+    display:
+    flex;
+
+    justify-content:
+    center;
+
+    padding:
+    0 10px;
+}
+
+
+
+.CB_UI_ImageChooser_imageContainer_element
+img
+{
+    border:
+    1px solid var(--CB_UI_borderColor);
+
+    box-sizing:
+    border-box;
+}
+
+
+
+.CB_UI_ImageChooser_buttonContainer_element {
+    display:
+    flex;
+
+    justify-content:
+    center;
+
+    flex-wrap:
+    wrap;
+}
