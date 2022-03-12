@@ -30,6 +30,9 @@
         createPictureElementWithImageSize:
         CBImage_createPictureElementWithImageSize,
 
+        createPictureElementWithMaximumDisplayWidthAndHeight:
+        CBImage_createPictureElementWithMaximumDisplayWidthAndHeight,
+
         toURL:
         CBImage_toURL,
     };
@@ -95,6 +98,46 @@
 
 
     /* -- functions -- */
+
+
+
+    /**
+     * @param number maximumDisplayWidthInCSSPixels
+     * @param number maximumDisplayHeightInCSSPixels
+     * @param number aspectRatioWidth
+     * @param number aspectRatioHeight
+     *
+     * @return number
+     */
+    function
+    CBImage_calculateMaximumImageStyleWidthInCSSPixels(
+        /* number */ maximumDisplayWidthInCSSPixels,
+        /* number */ maximumDisplayHeightInCSSPixels,
+        /* number */ aspectRatioWidth,
+        /* number */ aspectRatioHeight
+    ) // -> number
+    {
+        /**
+         * If the image were displayed at its maximum height, what would the
+         * width be.
+         */
+
+        let widthInCSSPixelsAtMaximumHeight =
+        maximumDisplayHeightInCSSPixels *
+        (
+            aspectRatioWidth /
+            aspectRatioHeight
+        );
+
+        let maximumImageStyleWidthInCSSPixels =
+        Math.min(
+            widthInCSSPixelsAtMaximumHeight,
+            maximumDisplayWidthInCSSPixels
+        );
+
+        return maximumImageStyleWidthInCSSPixels;
+    }
+    // CBImage_calculateMaximumImageStyleWidthInCSSPixels()
 
 
 
@@ -231,6 +274,80 @@
 
         imgElement.width = imageWidth;
         imgElement.height = imageHeight;
+
+        return pictureElement;
+    }
+    /* CBImage_createPictureElementWithImageSize() */
+
+
+
+    /**
+     * @param object imageModel
+     *
+     *      A CBImage model.
+     *
+     * @param string imageResizeOperation
+     * @param int maximumDisplayWidthInCSSPixels
+     * @param int maximumDisplayHeightInCSSPixels
+     *
+     * @return Element
+     *
+     *      {
+     *          CBImage_getImgElement() -> Element
+     *      }
+     */
+    function
+    CBImage_createPictureElementWithMaximumDisplayWidthAndHeight(
+        /* object */ imageModel,
+        /* string */ imageResizeOperation,
+        /* int */ maximumDisplayWidthInCSSPixels,
+        /* int */ maximumDisplayHeightInCSSPixels,
+        /* string */ alternativeText
+    ) // -> Element
+    {
+        let pictureElement =
+        CBImage_createPictureElement(
+            imageModel,
+            imageResizeOperation
+        );
+
+        let imgElement =
+        pictureElement.CBImage_getImgElement();
+
+        let intrinsicImageWidth =
+        imageModel.width;
+
+        let intrinsicImageHeight =
+        imageModel.height;
+
+        imgElement.alt =
+        alternativeText;
+
+        imgElement.width =
+        intrinsicImageWidth;
+
+        imgElement.height =
+        intrinsicImageHeight;
+
+        imgElement.style.display =
+        "block";
+
+        imgElement.style.height =
+        "auto";
+
+        imgElement.style.maxWidth =
+        "100%";
+
+        let maximumImageStyleWidthInCSSPixels =
+        CBImage_calculateMaximumImageStyleWidthInCSSPixels(
+            maximumDisplayWidthInCSSPixels,
+            maximumDisplayHeightInCSSPixels,
+            intrinsicImageWidth,
+            intrinsicImageHeight
+        );
+
+        imgElement.style.width =
+        `${maximumImageStyleWidthInCSSPixels}px`;
 
         return pictureElement;
     }

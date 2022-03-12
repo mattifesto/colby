@@ -17,7 +17,7 @@ CBImage
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.60.js',
+                'v675.61.3.js',
                 cbsysurl()
             ),
         ];
@@ -468,6 +468,46 @@ CBImage
 
 
     /**
+     * @param int $maximumDisplayWidthInCSSPixels
+     * @param int $maximumDisplayHeightInCSSPixels
+     * @param int aspectRatioWidth
+     * @param int aspectRatioHeight
+     *
+     * @return int
+     */
+    static function
+    calculateMaximumImageStyleWidthInCSSPixels(
+        int $maximumDisplayWidthInCSSPixels,
+        int $maximumDisplayHeightInCSSPixels,
+        int $aspectRatioWidth,
+        int $aspectRatioHeight
+    ): int
+    {
+        /**
+         * If the image were displayed at its maximum height, what would the
+         * width be.
+         */
+
+        $widthInCSSPixelsAtMaximumHeight =
+        $maximumDisplayHeightInCSSPixels *
+        (
+            $aspectRatioWidth /
+            $aspectRatioHeight
+        );
+
+        $maximumImageStyleWidthInCSSPixels =
+        min(
+            $widthInCSSPixelsAtMaximumHeight,
+            $maximumDisplayWidthInCSSPixels
+        );
+
+        return $maximumImageStyleWidthInCSSPixels;
+    }
+    // calculateMaximumImageStyleWidthInCSSPixels()
+
+
+
+    /**
      * Use the function instead of exif_read_data() because exif_read_data()
      * throws errors for many image files.
      *
@@ -608,6 +648,122 @@ CBImage
         return $data;
     }
     /* getimagesize() */
+
+
+
+    /**
+     * @param object $imageModel
+     * @param string $imageResizeOperation
+     * @param int $maximumDisplayWidthInCSSPixels
+     * @param int $maximumDisplayHeightInCSSPixels
+     *
+     * @return void
+     */
+    static function
+    renderPictureElementWithMaximumDisplayWidthAndHeight(
+        stdClass $imageModel,
+        string  $imageResizeOperation,
+        int $maximumDisplayWidthInCSSPixels,
+        int $maximumDisplayHeightInCSSPixels,
+        string $alternativeText = ''
+    ): void
+    {
+        echo
+        "<picture>";
+
+        $originalImageExtension =
+        CBImage::getExtension(
+            $imageModel
+        );
+
+        if (
+            $originalImageExtension !== 'webp'
+        ) {
+            $webpImageURL =
+            CBImage::asFlexpath(
+                $imageModel,
+                $imageResizeOperation,
+                cbsiteurl(),
+                'webp'
+            );
+
+            echo
+            CBConvert::stringToCleanLine(<<<EOT
+
+                <source
+                srcset="${webpImageURL}"
+                >
+
+            EOT);
+        }
+
+        $imageURL =
+        CBImage::asFlexpath(
+            $imageModel,
+            $imageResizeOperation,
+            cbsiteurl()
+        );
+
+        $intrinsicImageWidth = CBImage::getOriginalWidth(
+            $imageModel
+        );
+
+        $intrinsicImageHeight = CBImage::getOriginalHeight(
+            $imageModel
+        );
+
+        $alternativeTextAsHTML =
+        cbhtml(
+            $alternativeText
+        );
+
+        $maximumImageStyleWidthInCSSPixels =
+        CBImage::calculateMaximumImageStyleWidthInCSSPixels(
+            $maximumDisplayWidthInCSSPixels,
+            $maximumDisplayHeightInCSSPixels,
+            $intrinsicImageWidth,
+            $intrinsicImageHeight
+        );
+
+        echo
+        CBConvert::stringToCleanLine(<<<EOT
+
+            <img
+                src =
+                "${imageURL}"
+
+                width =
+                "${intrinsicImageWidth}"
+
+                height =
+                "${intrinsicImageHeight}"
+
+                alt =
+                "${alternativeTextAsHTML}"
+
+                style=
+                "
+                    display:
+                    block;
+
+                    height:
+                    auto;
+
+                    max-width:
+                    100%;
+
+                    width:
+                    ${maximumDisplayWidthInCSSPixels}px
+                "
+            >
+
+        EOT);
+
+
+        echo
+        "</picture>";
+    }
+    // renderPictureElementWithMaximumDisplayWidthAndHeight()
 
 
 
