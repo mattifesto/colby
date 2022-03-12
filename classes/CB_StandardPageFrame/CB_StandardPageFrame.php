@@ -1,8 +1,8 @@
 <?php
 
 final class
-CB_StandardPageFrame {
-
+CB_StandardPageFrame
+{
     /* -- CBAjax interfaces -- */
 
 
@@ -98,11 +98,13 @@ CB_StandardPageFrame {
      */
     static function
     CBHTMLOutput_CSSURLs(
-    ) {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
-                'v675.55.css',
+                'v675.61.4.css',
                 cbsysurl()
             ),
         ];
@@ -323,8 +325,10 @@ CB_StandardPageFrame {
      */
     private static function
     renderHeaderImage(
-    ): void {
-        $headerImageModel = CBSitePreferences::getHeaderImage(
+    ): void
+    {
+        $headerImageModel =
+        CBSitePreferences::getHeaderImage(
             CBSitePreferences::model()
         );
 
@@ -334,17 +338,22 @@ CB_StandardPageFrame {
             return;
         }
 
-        $headerImageURL = CBImage::asFlexpath(
-            $headerImageModel,
-            "rw1600",
-            cbsiteurl()
-        );
-
         ?>
 
         <div class="CB_StandardPageFrame_headerImage_element">
             <a href="/">
-                <img src="<?= cbhtml($headerImageURL) ?>">
+
+            <?php
+
+            CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
+                $headerImageModel,
+                "rw1600",
+                720,
+                720
+            );
+
+            ?>
+
             </a>
         </div>
 
