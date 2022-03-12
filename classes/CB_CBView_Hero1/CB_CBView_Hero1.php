@@ -17,7 +17,7 @@ CB_CBView_Hero1
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.61.2.css',
+                'v675.61.3.css',
                 cbsysurl()
             ),
         ];
@@ -88,6 +88,20 @@ CB_CBView_Hero1
     {
         $viewModel = (object)[];
 
+        CB_CBView_Hero1::setAlternativeText(
+            $viewModel,
+            CB_CBView_Hero1::getAlternativeText(
+                $viewSpec
+            )
+        );
+
+        CB_CBView_Hero1::setNarrowImage(
+            $viewModel,
+            CB_CBView_Hero1::getNarrowImage(
+                $viewSpec
+            )
+        );
+
         CB_CBView_Hero1::setWideImage(
             $viewModel,
             CB_CBView_Hero1::getWideImage(
@@ -115,30 +129,48 @@ CB_CBView_Hero1
         stdClass $viewModel
     ): void
     {
-        $wideImage =
+        echo
+        '<div class="CB_CBView_Hero1_root_element">';
+
+        $wideImageModel =
         CB_CBView_Hero1::getWideImage(
             $viewModel
         );
 
+        $narrowImageModel =
+        CB_CBView_Hero1::getNarrowImage(
+            $viewModel
+        ) ?? $wideImageModel;
+
         if (
-            $wideImage === null
+            $wideImageModel === null
         ) {
-            return;
+            $wideImageModel =
+            $narrowImageModel;
         }
 
-        echo
-        '<div class="CB_CBView_Hero1_root_element">';
+        if (
+            $wideImageModel !== null
+        ) {
+            CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
+                $wideImageModel,
+                'rw2560',
+                10000,
+                10000
+            );
+        }
 
-        CBImage::renderPictureElementWithSize(
-            $wideImage,
-            'rw2560',
-            CBImage::getOriginalWidth(
-                $wideImage
-            ),
-            CBImage::getOriginalHeight(
-                $wideImage
-            )
-        );
+
+        if (
+            $narrowImageModel !== null
+        ) {
+            CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
+                $narrowImageModel,
+                'rw1280',
+                1000,
+                1000
+            );
+        }
 
         echo
         '</div>';
@@ -152,7 +184,84 @@ CB_CBView_Hero1
 
 
     /**
-     * @oaram object $viewModel
+     * @param object $viewModel
+     *
+     * @return string
+     */
+    static function
+    getAlternativeText(
+        stdClass $viewModel
+    ): string
+    {
+        return CBModel::valueToString(
+            $viewModel,
+            'CB_CBView_Hero1_alternativeText_property',
+        );
+    }
+    // getAlternativeText()
+
+
+
+    /**
+     * @param object $viewModel
+     * @param string $newAlternativeText
+     *
+     * @return void
+     */
+    static function
+    setAlternativeText(
+        stdClass $viewModel,
+        string $newAlternativeText
+    ): void
+    {
+        $viewModel->CB_CBView_Hero1_alternativeText_property =
+        $newAlternativeText;
+    }
+    // setAlternativeText()
+
+
+
+    /**
+     * @param object $viewModel
+     *
+     * @return object|null
+     */
+    static function
+    getNarrowImage(
+        stdClass $viewModel
+    ): ?stdClass
+    {
+        return CBModel::valueAsModel(
+            $viewModel,
+            'CB_CBView_Hero1_narrowImage_property',
+            'CBImage'
+        );
+    }
+    // getNarrowImage()
+
+
+
+    /**
+     * @param object $viewModel
+     * @param object|null $newNarrowImageModel
+     *
+     * @return void
+     */
+    static function
+    setNarrowImage(
+        stdClass $viewModel,
+        ?stdClass $newNarrowImageModel
+    ): void
+    {
+        $viewModel->CB_CBView_Hero1_narrowImage_property =
+        $newNarrowImageModel;
+    }
+    // setNarrowImage()
+
+
+
+    /**
+     * @param object $viewModel
      *
      * @return object|null
      */

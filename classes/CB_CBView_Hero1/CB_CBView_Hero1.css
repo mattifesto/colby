@@ -30,3 +30,34 @@ img
     max-width:
     100%;
 }
+
+
+
+.CB_CBView_Hero1_root_element
+picture:nth-of-type(2)
+{
+    display:
+    none;
+}
+
+
+
+@media
+(max-width: 640px)
+{
+    .CB_CBView_Hero1_root_element
+    picture
+    {
+        display:
+        none;
+    }
+
+
+
+    .CB_CBView_Hero1_root_element
+    picture:nth-of-type(2)
+    {
+        display:
+        block;
+    }
+}
