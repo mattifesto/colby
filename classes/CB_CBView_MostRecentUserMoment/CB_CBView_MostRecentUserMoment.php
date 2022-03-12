@@ -12,11 +12,13 @@ CB_CBView_MostRecentUserMoment
      */
     static function
     CBHTMLOutput_CSSURLs(
-    ) {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
-                'v675.45.css',
+                'v675.61.4.css',
                 cbsysurl()
             ),
         ];
