@@ -17,7 +17,7 @@ CB_CBView_Hero1Editor
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.61.2.js',
+                'v675.61.3.js',
                 cbsysurl()
             ),
         ];
@@ -34,10 +34,9 @@ CB_CBView_Hero1Editor
     ): array
     {
         return [
+            'CB_UI_ImageChooser',
+            'CB_UI_StringEditor',
             'CBAjax',
-            'CBImage',
-            'CBUI',
-            'CBUIImageChooser',
             'CBUIPanel',
         ];
     }

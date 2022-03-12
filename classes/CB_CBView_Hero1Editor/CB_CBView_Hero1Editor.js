@@ -1,8 +1,7 @@
 /* global
+    CB_UI_ImageChooser,
+    CB_UI_StringEditor,
     CBAjax,
-    CBImage,
-    CBUI,
-    CBUIImageChooser,
     CBUIPanel,
 */
 
@@ -36,11 +35,22 @@
         rootEditorElement.className =
         "CB_CBView_Hero1Editor_root_element";
 
-        rootEditorElement.textContent =
-        "hero 1 editor";
+        rootEditorElement.append(
+            CB_CBView_Hero1Editor_createWideImageEditorElement(
+                spec,
+                specChangedCallback
+            )
+        );
 
         rootEditorElement.append(
-            CB_CBView_Hero1Editor_createImageEditorElement(
+            CB_CBView_Hero1Editor_createNarrowImageEditorElement(
+                spec,
+                specChangedCallback
+            )
+        );
+
+        rootEditorElement.append(
+            CB_CBView_Hero1Editor_createAlternativeTextEditorElement(
                 spec,
                 specChangedCallback
             )
@@ -52,6 +62,83 @@
 
 
 
+    /**
+     * @param object spec
+     * @param function specChangedCallback
+     *
+     * @return Element
+     */
+    function
+    CB_CBView_Hero1Editor_createAlternativeTextEditorElement(
+        spec,
+        specChangedCallback
+    ) // -> Element
+    {
+        let stringEditor =
+        CB_UI_StringEditor.create();
+
+        stringEditor.CB_UI_StringEditor_setTitle(
+            "Alternative Text"
+        );
+
+        stringEditor.CB_UI_StringEditor_setChangedEventListener(
+            function ()
+            {
+                let newAlternativeText =
+                stringEditor.CB_UI_StringEditor_getValue().trim();
+
+                spec.CB_CBView_Hero1_alternativeText_property =
+                newAlternativeText;
+
+                specChangedCallback();
+            }
+        );
+
+        return stringEditor.CB_UI_StringEditor_getElement();
+    }
+    //CB_CBView_Hero1Editor_createAlternativeTextEditorElement()
+
+
+
+    /**
+     * @param object spec
+     * @param functon specChangedCallback
+     *
+     * @return Element
+     */
+    function
+    CB_CBView_Hero1Editor_createNarrowImageEditorElement(
+        spec,
+        specChangedCallback
+    ) // -> Element
+    {
+        let imageChooser =
+        CB_UI_ImageChooser.create();
+
+        imageChooser.CB_UI_ImageChooser_setTitle(
+            "Narrow Image"
+        );
+
+        imageChooser.CB_UI_ImageChooser_setImage(
+            spec.CB_CBView_Hero1_narrowImage_property
+        );
+
+        imageChooser.CB_UI_ImageChooser_setImageWasChosenCallback(
+            function ()
+            {
+                CB_CBView_Hero1Editor_handleNarrowImageWasChosen(
+                    imageChooser,
+                    spec,
+                    specChangedCallback
+                );
+            }
+        );
+
+        return imageChooser.CB_UI_ImageChooser_getElement();
+    }
+    // CB_CBView_Hero1Editor_createNarrowImageEditorElement()
+
+
 
     /**
      * @param object spec
@@ -60,76 +147,41 @@
      * @return Element
      */
     function
-    CB_CBView_Hero1Editor_createImageEditorElement(
+    CB_CBView_Hero1Editor_createWideImageEditorElement(
         spec,
         specChangedCallback
     ) // -> Element
     {
-        let rootImageEditorElement =
-        document.createElement(
-            "div"
-        );
-
-        rootImageEditorElement.className =
-        "CB_CBView_Hero1Editor_root_element";
-
-        let sectionElement =
-        CBUI.createSection();
-
-        rootImageEditorElement.appendChild(
-            sectionElement
-        );
-
         let imageChooser =
-        CBUIImageChooser.create();
+        CB_UI_ImageChooser.create();
 
-        {
-            let imageURL =
-            CBImage.toURL(
-                spec.CB_CBView_Hero1_wideImage_property,
-                "rw960",
-                "webp"
-            );
-
-            if (
-                imageURL !== ""
-            ) {
-                imageChooser.src =
-                imageURL;
-            }
-        }
-
-        imageChooser.chosen =
-        function ()
-        {
-            CB_CBView_Hero1Editor_handleImageChosen(
-                imageChooser,
-                spec,
-                specChangedCallback
-            );
-        };
-
-        //imageChooser.removed = createEditor_handleImageRemoved;
-
-        sectionElement.appendChild(
-            imageChooser.element
+        imageChooser.CB_UI_ImageChooser_setTitle(
+            "Wide Image"
         );
 
-        return rootImageEditorElement;
+        imageChooser.CB_UI_ImageChooser_setImage(
+            spec.CB_CBView_Hero1_wideImage_property
+        );
+
+        imageChooser.CB_UI_ImageChooser_setImageWasChosenCallback(
+            function ()
+            {
+                CB_CBView_Hero1Editor_handleWideImageWasChosen(
+                    imageChooser,
+                    spec,
+                    specChangedCallback
+                );
+            }
+        );
+
+        return imageChooser.CB_UI_ImageChooser_getElement();
     }
-    // CB_CBView_Hero1Editor_createImageEditorElement()
+    // CB_CBView_Hero1Editor_createWideImageEditorElement()
 
 
 
-    /**
-     * @param object imageChooser
-     * @param object spec
-     * @param function specChangedCallback
-     *
-     * @return undefined
-     */
     async function
-    CB_CBView_Hero1Editor_handleImageChosen(
+    CB_CBView_Hero1Editor_handleNarrowImageWasChosen(
         imageChooser,
         spec,
         specChangedCallback
@@ -137,26 +189,26 @@
     {
         try
         {
-            imageChooser.caption = "uploading...";
+            // imageChooser.caption = "uploading...";
+
+            let imageFile =
+            imageChooser.CB_UI_ImageChooser_getImageFile();
 
             let imageModel =
             await CBAjax.call(
                 "CBImages",
                 "upload",
                 {},
-                imageChooser.file
+                imageFile
             );
 
-            spec.CB_CBView_Hero1_wideImage_property =
+            spec.CB_CBView_Hero1_narrowImage_property =
             imageModel;
 
             specChangedCallback();
 
-            imageChooser.src =
-            CBImage.toURL(
-                imageModel,
-                "rw960",
-                "webp"
+            imageChooser.CB_UI_ImageChooser_setImage(
+                imageModel
             );
         }
 
@@ -170,9 +222,65 @@
 
         finally
         {
-            imageChooser.caption = "";
+            // imageChooser.caption = "";
         }
     }
-    // CB_CBView_Hero1Editor_handleImageChosen()
+    // -> CB_CBView_Hero1Editor_handleNarrowImageWasChosen()
+
+
+
+    /**
+     * @param object imageChooser
+     * @param object spec
+     * @param function specChangedCallback
+     *
+     * @return undefined
+     */
+    async function
+    CB_CBView_Hero1Editor_handleWideImageWasChosen(
+        imageChooser,
+        spec,
+        specChangedCallback
+    ) // -> undefined
+    {
+        try
+        {
+            // imageChooser.caption = "uploading...";
+
+            let imageFile =
+            imageChooser.CB_UI_ImageChooser_getImageFile();
+
+            let imageModel =
+            await CBAjax.call(
+                "CBImages",
+                "upload",
+                {},
+                imageFile
+            );
+
+            spec.CB_CBView_Hero1_wideImage_property =
+            imageModel;
+
+            specChangedCallback();
+
+            imageChooser.CB_UI_ImageChooser_setImage(
+                imageModel
+            );
+        }
+
+        catch (
+            error
+        ) {
+            CBUIPanel.displayAndReportError(
+                error
+            );
+        }
+
+        finally
+        {
+            // imageChooser.caption = "";
+        }
+    }
+    // CB_CBView_Hero1Editor_handleWideImageWasChosen()
 
 })();
