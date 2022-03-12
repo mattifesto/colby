@@ -17,7 +17,7 @@ CBImage
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.61.3.js',
+                'v675.61.4.js',
                 cbsysurl()
             ),
         ];

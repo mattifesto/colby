@@ -305,6 +305,13 @@
         /* string */ alternativeText
     ) // -> Element
     {
+        if (
+            typeof alternativeText !== "string"
+        ) {
+            alternativeText =
+            "";
+        }
+
         let pictureElement =
         CBImage_createPictureElement(
             imageModel,
