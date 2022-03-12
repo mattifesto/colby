@@ -1,8 +1,8 @@
 <?php
 
 final class
-CB_CBView_MainHeader {
-
+CB_CBView_MainHeader
+{
     /* -- CBHTMLOutput interfaces -- */
 
 
@@ -12,11 +12,13 @@ CB_CBView_MainHeader {
      */
     static function
     CBHTMLOutput_CSSURLs(
-    ) {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
-                'v675.60.css',
+                'v675.61.4.css',
                 cbsysurl()
             ),
         ];
@@ -28,8 +30,12 @@ CB_CBView_MainHeader {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
-        return [
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        return
+        [
             'CB_UI',
         ];
     }
@@ -49,7 +55,8 @@ CB_CBView_MainHeader {
     static function
     CBModel_build(
         stdClass $viewSpec
-    ): stdClass {
+    ): stdClass
+    {
         $viewModel = (object)[];
 
         CB_CBView_MainHeader::setContext(
@@ -78,26 +85,35 @@ CB_CBView_MainHeader {
     CBView_render(
         stdClass $viewModel
     ): void {
-        $currentPrettyUsername = CB_Username::fetchCurrentUserPrettyUsername();
+        $currentPrettyUsername =
+        CB_Username::fetchCurrentUserPrettyUsername();
 
         if (
             $currentPrettyUsername === null
         ) {
-            $userEmoji = '👤';
-            $userURL = CBUser::getSignInPageURL();
+            $userEmoji =
+            '👤';
+
+            $userURL =
+            CBUser::getSignInPageURL();
         } else {
-            $userEmoji = '👨';
-            $userURL = "/user/{$currentPrettyUsername}/";
+            $userEmoji =
+            '👨';
+
+            $userURL =
+            "/user/{$currentPrettyUsername}/";
         }
 
-        echo <<<EOT
+        echo
+        <<<EOT
 
             <header class="CB_CBView_MainHeader CB_UI">
                 <div class="CB_CBView_MainHeader_group">
 
         EOT;
 
-        $context = CB_CBView_MainHeader::getContext(
+        $context =
+        CB_CBView_MainHeader::getContext(
             $viewModel
         );
 
@@ -123,40 +139,49 @@ CB_CBView_MainHeader {
             $userURL,
         );
 
-        echo <<<EOT
+        echo
+        <<<EOT
 
             </div>
             <div class="CB_CBView_MainHeader_group">
 
         EOT;
 
-        $isAdministator = CBUserGroup::currentUserIsMemberOfUserGroup(
+        $isAdministator =
+        CBUserGroup::currentUserIsMemberOfUserGroup(
             'CBAdministratorsUserGroup'
         );
 
-        if ($isAdministator) {
+        if (
+            $isAdministator
+        ) {
             CB_CBView_MainHeader::renderItem(
                 '🔨',
                 '/admin/'
             );
         }
 
-        $stripePreferencesModel = CBModelCache::fetchModelByID(
+        $stripePreferencesModel =
+        CBModelCache::fetchModelByID(
             SCStripePreferences::ID()
         );
 
-        $livePublishableKey = SCStripePreferences::getLivePublishableKey(
+        $livePublishableKey =
+        SCStripePreferences::getLivePublishableKey(
             $stripePreferencesModel
         );
 
-        if ($livePublishableKey !== null) {
+        if (
+            $livePublishableKey !== null
+        ) {
             CB_CBView_MainHeader::renderItem(
                 '🛍',
                 '/view-cart/'
             );
         }
 
-        echo <<<EOT
+        echo
+        <<<EOT
 
                 </div>
             </header>
@@ -181,8 +206,10 @@ CB_CBView_MainHeader {
     static function
     getContext(
         stdClass $viewModel
-    ): ?string {
-        return CBModel::valueAsName(
+    ): ?string
+    {
+        return
+        CBModel::valueAsName(
             $viewModel,
             'CB_CBView_MainHeader_context'
         );
@@ -205,11 +232,13 @@ CB_CBView_MainHeader {
         stdClass $viewModel,
         ?string $context
     ): void {
-        $context = CBConvert::valueAsName(
+        $context =
+        CBConvert::valueAsName(
             $context
         );
 
-        $viewModel->CB_CBView_MainHeader_context = $context;
+        $viewModel->CB_CBView_MainHeader_context =
+        $context;
     }
     /* setContext() */
 
@@ -233,15 +262,18 @@ CB_CBView_MainHeader {
         string $CSSClass = '',
         ?string $context = null
     ): void {
-        $emojiAsHTML = cbhtml(
+        $emojiAsHTML =
+        cbhtml(
             $emoji
         );
 
-        $CSSClasses = [
+        $CSSClasses =
+        [
             'CB_CBView_MainHeader_item'
         ];
 
-        $CSSClass = CBConvert::valueAsName(
+        $CSSClass =
+        CBConvert::valueAsName(
             $CSSClass
         );
 
@@ -258,7 +290,11 @@ CB_CBView_MainHeader {
             ) {
                 array_push(
                     $CSSClasses,
-                    $CSSClass . '_' . $context
+                    (
+                        $CSSClass .
+                        '_' .
+                        $context
+                    )
                 );
             }
         }
@@ -266,20 +302,32 @@ CB_CBView_MainHeader {
         if (
             $url !== null
         ) {
-            $url = cbhtml($url);
-            $tag = 'a';
-            $hrefAttribute = "href=\"{$url}\"";
+            $url =
+            cbhtml(
+                $url
+            );
+
+            $tag =
+            'a';
+
+            $hrefAttribute =
+            "href=\"{$url}\"";
         } else {
-            $tag = 'div';
-            $hrefAttribute = '';
+            $tag =
+            'div';
+
+            $hrefAttribute =
+            '';
         }
 
-        $CSSClasses = implode(
+        $CSSClasses =
+        implode(
             ' ',
             $CSSClasses
         );
 
-        echo <<<EOT
+        echo
+        <<<EOT
 
             <{$tag} class="{$CSSClasses}" {$hrefAttribute}>
                 <div class="CB_CBView_MainHeader_icon">$emojiAsHTML</div>
