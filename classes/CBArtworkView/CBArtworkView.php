@@ -367,50 +367,124 @@ CBArtworkView
             $size
         ) {
             case 'rw320':
-                $filename = $size;
-                $maxWidth = 160;
+
+                $imageResizeOperation =
+                $size;
+
+                $maxWidth =
+                160;
+
                 break;
+
             case 'rw640':
-                $filename = $size;
-                $maxWidth = 320;
+                $imageResizeOperation =
+                $size;
+
+                $maxWidth =
+                320;
+
                 break;
+
             case 'rw960':
-                $filename = $size;
-                $maxWidth = 480;
+
+                $imageResizeOperation =
+                $size;
+
+                $maxWidth =
+                480;
+
                 break;
+
             case 'rw1280':
-                $filename = $size;
-                $maxWidth = 640;
+
+                $imageResizeOperation =
+                $size;
+
+                $maxWidth =
+                640;
+
                 break;
+
             case 'rw1920':
-                $filename = $size;
-                $maxWidth = 960;
+
+                $imageResizeOperation =
+                $size;
+
+                $maxWidth =
+                960;
+
                 break;
+
             case 'rw2560':
-                $filename = $size;
-                $maxWidth = 1280;
+
+                $imageResizeOperation =
+                $size;
+
+                $maxWidth =
+                1280;
+
                 break;
+
+            /**
+             * @NOTE 2022_03_12
+             *
+             *      We won't actually show the original image because it may be
+             *      too big or the file size may be too large. This option may
+             *      be renamed at some point.
+             *
+             *      The user may theoretically want to display a small image at
+             *      it's small original size and we won't do that either.
+             */
             case 'original':
-                $filename = $size;
-                $maxWidth = $model->image->width / 2; // retina
+
+                $imageResizeOperation =
+                'rw3200';
+
+                $maxWidth =
+                1600;
+
                 break;
+
             case 'page':
-                $filename = 'original';
-                $maxWidth = null;
+
+                $imageResizeOperation =
+                'rw3200';
+
+                $maxWidth =
+                10000;
+
                 break;
+
             default:
-                $filename = 'rw1600';
-                $maxWidth = 800;
+
+                $imageResizeOperation =
+                'rw1600';
+
+                $maxWidth =
+                800;
+
                 break;
         }
 
         if (
             $maxWidth
         ) {
-            $captionDeclarations = "max-width: {$maxWidth}px";
+            $captionDeclarations =
+            "max-width: {$maxWidth}px";
         } else {
-            $captionDeclarations = '';
+            $captionDeclarations =
+            '';
         }
+
+        /**
+         * @NOTE 2022_03_12
+         *
+         *      This view should actually have options for max height too, but
+         *      for now it doesn't.
+         */
+
+        $maxHeight =
+        10000;
 
         ?>
 
@@ -418,15 +492,11 @@ CBArtworkView
 
             <?php
 
-            CBArtworkElement::render(
-                [
-                    'imageModel' => $imageModel,
-
-                    'alternativeText' => $alternativeText,
-                    'height' => $imageModel->height,
-                    'maxWidth' => $maxWidth,
-                    'width' => $imageModel->width,
-                ]
+            CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
+                $imageModel,
+                $imageResizeOperation,
+                $maxWidth,
+                $maxHeight
             );
 
             if (
