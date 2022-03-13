@@ -1,114 +1,144 @@
 .CB_CBView_Moment_root_element
 {
-    display: flex;
-    justify-content: center;
-    box-sizing: border-box;
-    max-width: 100%;
-    overflow-wrap: break-word;
+    display:
+    flex;
 
-    padding: 40px 20px;
+    justify-content:
+    center;
+
+    box-sizing:
+    border-box;
+
+    max-width:
+    100%;
+
+    overflow-wrap:
+    break-word;
+
+    padding:
+    40px 20px;
 }
 
 
 
 .CB_CBView_Moment_content_element
 {
-    box-sizing: border-box;
-    max-width: 100%;
-    overflow: hidden;
+    box-sizing:
+    border-box;
+
+    max-width:
+    100%;
+
+    overflow:
+    hidden;
+}
+
+
+
+.CB_CBView_Moment_userLink_element
+{
+    color:
+    inherit;
+}
+
+
+
+.CB_CBView_Moment_timeContainer_element
+{
+    color:
+    inherit;
+}
+
+
+
+.CB_CBView_Moment_content_element
+{
+    width:
+    var(--CB_UI_readableWidth);
+}
+
+
+
+.CB_CBView_Moment_momentPage
+.CB_CBView_Moment_content_element
+{
+    width:
+    40em;
+}
+
+
+
+.CB_CBView_Moment_header_element
+{
+    color:
+    var(--CBTextColor3);
+}
+
+
+
+.CB_CBView_Moment_userLink_element:hover
+.CB_CBView_Moment_fullName_element
+{
+    text-decoration:
+    underline;
+}
+
+
+
+.CB_CBView_Moment_timeContainer_element:hover
+time
+{
+    text-decoration:
+    underline;
+}
+
+
+
+.CB_CBView_Moment_text_element
+{
+    padding:
+    0 0 20px;
+
+    white-space:
+    pre-wrap;
+}
+
+
+
+.CB_CBView_Moment_momentPage
+.CB_CBView_Moment_text_element
+{
+    font-size:
+    150%;
+}
+
+
+
+.CB_CBView_Moment_picture_element
+{
+    display:
+    flex;
+
+    justify-content:
+    start;
+
+    max-width:
+    100%;
 }
 
 
 
 .CB_CBView_Moment_root_element
-    .CB_CBView_Moment_userLink_element
+img
 {
-    color: inherit;
-}
+    border:
+    1px
+    solid
+    var(--CB_UI_borderColor);
 
+    border-radius:
+    10px;
 
-
-.CB_CBView_Moment_root_element
-    .CB_CBView_Moment_timeContainer_element
-{
-    color: inherit;
-}
-
-
-
-.CB_CBView_Moment_standard_element
-    .CB_CBView_Moment_content_element
-{
-    width: var(--CB_UI_readableWidth);
-}
-
-
-
-.CB_CBView_Moment_standard_element.CB_CBView_Moment_momentPage
-    .CB_CBView_Moment_content_element
-{
-    width: 40em;
-}
-
-
-
-.CB_CBView_Moment_standard_element
-    .CB_CBView_Moment_header_element
-{
-    color: var(--CBTextColor3);
-}
-
-
-
-.CB_CBView_Moment_standard_element
-    .CB_CBView_Moment_userLink_element:hover
-        .CB_CBView_Moment_fullName_element
-{
-    text-decoration: underline;
-}
-
-
-
-.CB_CBView_Moment_standard_element
-    .CB_CBView_Moment_timeContainer_element:hover
-        time
-{
-    text-decoration: underline;
-}
-
-
-
-.CB_CBView_Moment_standard_element
-    .CB_CBView_Moment_text_element
-{
-    padding: 0 0 20px;
-    white-space: pre-wrap;
-}
-
-
-
-.CB_CBView_Moment_standard_element.CB_CBView_Moment_momentPage
-    .CB_CBView_Moment_text_element
-{
-    font-size: 150%;
-}
-
-
-
-.CB_CBView_Moment_picture_element {
-    display: flex;
-    justify-content: center;
-
-    max-width: 100%;
-}
-
-
-
-.CB_CBView_Moment_picture_element img {
-    max-width: 100%;
-    height: auto;
-
-    border: 1px solid var(--CB_UI_borderColor);
-    border-radius: 10px;
-    box-sizing: border-box;
+    box-sizing:
+    border-box;
 }

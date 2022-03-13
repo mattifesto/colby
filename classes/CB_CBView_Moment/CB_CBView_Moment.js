@@ -193,7 +193,8 @@
 
             document.addEventListener(
                 "selectionchange",
-                function () {
+                function ()
+                {
                     let selection = document.getSelection();
 
                     /**
@@ -206,11 +207,13 @@
                         momentView.CB_CBView_Moment_getElement()
                     );
 
-                    let momentViewElementContainsAnchorNode = momentViewElement.contains(
+                    let momentViewElementContainsAnchorNode =
+                    momentViewElement.contains(
                         selection.anchorNode
                     );
 
-                    let momentViewElementContainsFocusNode = momentViewElement.contains(
+                    let momentViewElementContainsFocusNode =
+                    momentViewElement.contains(
                         selection.focusNode
                     );
 
@@ -273,18 +276,26 @@
         if (
             imageModel !== undefined
         ) {
-            let pictureElement = CBImage.createPictureElementWithImageSize(
+            let alternativeText =
+            "Image";
+
+            let maximumDisplayWidthInCSSPixels =
+            1280;
+
+            let maximumDisplayHeightInCSSPixels =
+            500;
+
+            let pictureElement =
+            CBImage.createPictureElementWithMaximumDisplayWidthAndHeight(
                 imageModel,
                 "rw1280",
-                CBImage.getWidth(
-                    imageModel
-                ),
-                CBImage.getHeight(
-                    imageModel
-                )
+                maximumDisplayWidthInCSSPixels,
+                maximumDisplayHeightInCSSPixels,
+                alternativeText
             );
 
-            pictureElement.className = "CB_CBView_Moment_picture_element";
+            pictureElement.className =
+            "CB_CBView_Moment_picture_element";
 
             momentView.CB_CBView_Moment_append(
                 pictureElement
@@ -322,7 +333,7 @@
             userLinkElement.className = "CB_CBView_Moment_userLink_element";
 
             userLinkElement.href = (
-                `/user/${publicProfile.CBUser_publicProfile_prettyUsername}`
+                `/user/${publicProfile.CBUser_publicProfile_prettyUsername}/`
             );
 
             headerElement.append(
