@@ -326,6 +326,10 @@ CBImageVerificationTask
             }
         }
 
+        CBImageVerificationTask::checkForInvalidWebPFiles(
+            $ID
+        );
+
         done:
 
         CBLog::log(
@@ -355,6 +359,54 @@ CBImageVerificationTask
 
 
     /* -- functions -- */
+
+
+
+    /**
+     * @param CBID $imageModelCBID
+     */
+    private static function
+    checkForInvalidWebPFiles(
+        string $imageModelCBID
+    ): void
+    {
+        $pattern =
+        CBDataStore::flexpath(
+            $imageModelCBID,
+            '*.webp',
+            cb_document_root_directory()
+        );
+
+        $arrayOfWebPImageFilepaths =
+        glob(
+            $pattern
+        );
+
+        foreach (
+            $arrayOfWebPImageFilepaths as
+            $imageFilepath
+        ) {
+            $imageInformation =
+            getimagesize(
+                $imageFilepath
+            );
+
+            $expectedResult =
+            IMAGETYPE_WEBP;
+
+            $actualResult =
+            $imageInformation[2];
+
+            if (
+                $actualResult !== $expectedResult
+            ) {
+                unlink(
+                    $imageFilepath
+                );
+            }
+        }
+    }
+    // checkForInvalidWebPFiles()
 
 
 
