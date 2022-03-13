@@ -149,6 +149,11 @@ CB_CBView_Hero1
             $narrowImageModel;
         }
 
+        $alternativeText =
+        CB_CBView_Hero1::getAlternativeText(
+            $viewModel
+        );
+
         if (
             $wideImageModel !== null
         ) {
@@ -156,7 +161,8 @@ CB_CBView_Hero1
                 $wideImageModel,
                 'rw2560',
                 10000,
-                10000
+                10000,
+                $alternativeText
             );
         }
 
@@ -168,7 +174,8 @@ CB_CBView_Hero1
                 $narrowImageModel,
                 'rw1280',
                 1000,
-                1000
+                1000,
+                $alternativeText
             );
         }
 
