@@ -227,7 +227,8 @@ CB_Moment {
     static function
     CBAjax_fetchMomentsForUserModelCBID(
         stdClass $args
-    ): array {
+    ): array
+    {
         $userModelCBID = CBModel::valueAsCBID(
             $args,
             'userModelCBID'
@@ -249,32 +250,26 @@ CB_Moment {
         );
 
         if (
-            $maxModelsCount === null ||
-            $maxModelsCount < 1 ||
-            $maxModelsCount > 50
+            $maxUnixTimestamp === null
         ) {
-            $maxModelsCount = 10;
+            $cbtimestamp = null;
         }
 
-        $modelAssociations = (
-            CBModelAssociations::fetchModelAssociationsByFirstCBIDAndAssociationKey(
-                $userModelCBID,
-                'CB_Moment_userMoments',
-                'descending',
-                $maxModelsCount,
-                null,
+        else
+        {
+            $cbtimestamp =
+            CB_Timestamp::from(
                 $maxUnixTimestamp,
-                null,
-                $maxFemtoseconds,
-            )
-        );
+                $maxFemtoseconds
+            );
+        }
 
-        $momentModels = CBModelAssociations::fetchSecondModels(
-            $modelAssociations,
-            true /* maintainPositions */
+        return
+        CB_Moment::fetchMomentsForUserModelCBID(
+            $userModelCBID,
+            $maxModelsCount,
+            $cbtimestamp
         );
-
-        return $momentModels;
     }
     /* CBAjax_fetchMomentsForUserModelCBID() */
 
@@ -793,13 +788,13 @@ CB_Moment {
         $viewSpecs =
         [];
 
-        $momentPageViewSpec =
+        $momentViewSpec =
         CBModel::createSpec(
             'CB_CBView_Moment'
         );
 
         CB_CBView_Moment::setMomentModelCBID(
-            $momentPageViewSpec,
+            $momentViewSpec,
             CBModel::getCBID(
                 $momentModel
             )
@@ -807,7 +802,7 @@ CB_Moment {
 
         array_push(
             $viewSpecs,
-            $momentPageViewSpec
+            $momentViewSpec
         );
 
         CBViewPage::setViews(
@@ -1046,5 +1041,81 @@ CB_Moment {
         $momentModel->CB_Moment_text = $text;
     }
     /* setText() */
+
+
+
+    /* -- functions -- */
+
+
+
+    /**
+     * @param CBID $userModelCBID
+     * @param int|null $maxModelsCount
+     * @param object|null $maxCBTimestamp
+     *
+     * @return [object]
+     */
+    static function
+    fetchMomentsForUserModelCBID(
+        string $userModelCBID,
+        ?int $maxModelsCount = null,
+        ?object $maxCBTimestamp = null
+    ): array
+    {
+        if (
+            $maxCBTimestamp !== null
+        )
+        {
+            $maxUnixTimestamp =
+            CB_Timestamp::getUnixTimestamp(
+                $maxCBTimestamp
+            );
+
+            $maxFemtoseconds =
+            CB_Timestamp::getFemtoseconds(
+                $maxCBTimestamp
+            );
+        }
+
+        else
+        {
+            $maxUnixTimestamp =
+            null;
+
+            $maxFemtoseconds =
+            null;
+        }
+
+        if (
+            $maxModelsCount === null ||
+            $maxModelsCount < 1 ||
+            $maxModelsCount > 50
+        )
+        {
+            $maxModelsCount =
+            10;
+        }
+
+        $modelAssociations =
+        CBModelAssociations::fetchModelAssociationsByFirstCBIDAndAssociationKey(
+            $userModelCBID,
+            'CB_Moment_userMoments',
+            'descending',
+            $maxModelsCount,
+            null,
+            $maxUnixTimestamp,
+            null,
+            $maxFemtoseconds,
+        );
+
+        $momentModels =
+        CBModelAssociations::fetchSecondModels(
+            $modelAssociations,
+            true /* maintainPositions */
+        );
+
+        return $momentModels;
+    }
+    // fetchMomentsForUserModelCBID()
 
 }
