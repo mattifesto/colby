@@ -693,7 +693,13 @@ CBImages {
         $sourceImageHeight = $size[1];
         $sourceImageType = $size[2];
 
+        $sourceImageExtension = pathinfo(
+            $sourceImageFilepath,
+            PATHINFO_EXTENSION
+        );
+
         if (
+            $destinationImageExtension === $sourceImageExtension &&
             CBProjection::isNoOpForSize(
                 $projection,
                 $sourceImageWidth,
