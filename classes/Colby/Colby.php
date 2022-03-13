@@ -78,7 +78,8 @@ Colby
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        return [
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
                 'v357.css',
@@ -100,7 +101,7 @@ Colby
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.60.js',
+                'v675.61.4.js',
                 cbsysurl()
             ),
         ];

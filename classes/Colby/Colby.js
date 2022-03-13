@@ -825,6 +825,8 @@ var Colby = {
 
 
     /**
+     * This function parallels ColbyConvert::timestampToHTML()
+     *
      * If you want to receive the time update callback directly instead of using
      * the element returned by this function use Colby.requestTimeUpdate().
      *
@@ -845,20 +847,30 @@ var Colby = {
         unixTimestamp,
         defaultTextContent,
         className
-    ) {
-        let element = document.createElement(
+    ) // -> Element
+    {
+        let element =
+        document.createElement(
             "time"
         );
 
         if (
             typeof className === "string"
-        ) {
-            element.className = "time " + className;
-        } else {
-            element.className = "time";
+        )
+        {
+            element.className =
+            "time " +
+            className;
         }
 
-        unixTimestamp = Number(
+        else
+        {
+            element.className =
+            "time";
+        }
+
+        unixTimestamp =
+        Number(
             unixTimestamp
         );
 
@@ -866,14 +878,19 @@ var Colby = {
             Number.isInteger(
                 unixTimestamp
             )
-        ) {
-            element.dataset.timestamp = unixTimestamp * 1000;
+        )
+        {
+            element.dataset.timestamp =
+            unixTimestamp *
+            1000;
 
             Colby.updateTimes(
                 /* restart: */ true
             );
         } else {
-            element.dataset.nulltextcontent = defaultTextContent || "";
+            element.dataset.nulltextcontent =
+            defaultTextContent ||
+            "";
         }
 
         Colby.updateCBTimeElementTextContent(
