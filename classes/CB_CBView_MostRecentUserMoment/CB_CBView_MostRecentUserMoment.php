@@ -31,27 +31,11 @@ CB_CBView_MostRecentUserMoment
      * @return [string]
      */
     static function
-    CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
-            Colby::flexpath(
-                __CLASS__,
-                'v675.60.js',
-                cbsysurl()
-            ),
-        ];
-    }
-    /* CBHTMLOutput_JavaScriptURLs() */
-
-
-
-    /**
-     * @return [string]
-     */
-    static function
     CBHTMLOutput_requiredClassNames(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             'CB_CBView_Moment',
             'CBAjax',
             'CBConvert',
@@ -128,22 +112,40 @@ CB_CBView_MostRecentUserMoment
     static function
     CBView_render(
         stdClass $viewModel
-    ): void {
-        $userModelCBID = cbhtml(
-            CB_CBView_MostRecentUserMoment::getUserModelCBID(
-                $viewModel
-            )
+    ): void
+    {
+        $userModelCBID =
+        CB_CBView_MostRecentUserMoment::getUserModelCBID(
+            $viewModel
         );
 
-        ?>
+        if (
+            $userModelCBID === null
+        ) {
+            return;
+        }
 
-        <div
-            class="CB_CBView_MostRecentUserMoment"
-            data-user-model-c-b-i-d="<?= $userModelCBID ?>"
-        >
-        </div>
+        $moments =
+        CB_Moment::fetchMomentsForUserModelCBID(
+            $userModelCBID,
+            1
+        );
 
-        <?php
+        if (
+            count($moments) === 0
+        ) {
+            return;
+        }
+
+        echo
+        '<div class="CB_CBView_MostRecentUserMoment">';
+
+        CB_CBView_Moment::renderFullSizeMoment(
+            $moments[0]
+        );
+
+        echo
+        '</div>';
     }
     /* CBView_render() */
 
@@ -182,9 +184,8 @@ CB_CBView_MostRecentUserMoment
         stdClass $viewModel,
         ?string $userModelCBID
     ): void {
-        $viewModel->CB_CBView_MostRecentUserMoment_userModelCBID = (
-            $userModelCBID
-        );
+        $viewModel->CB_CBView_MostRecentUserMoment_userModelCBID =
+        $userModelCBID;
     }
     /* setUserModelCBID() */
 
