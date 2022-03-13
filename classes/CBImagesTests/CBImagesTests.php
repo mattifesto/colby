@@ -1,9 +1,9 @@
 <?php
 
 final class
-CBImagesTests {
-
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+CBImagesTests
+{
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
@@ -52,9 +52,10 @@ CBImagesTests {
      */
     static function
     CBTest_getTests(
-    ): array {
-        return [
-
+    ): array
+    {
+        return
+        [
             /**
              * @NOTE 2022_02_18
              *
@@ -72,13 +73,145 @@ CBImagesTests {
             (object)[
                 'name' => 'deleteByID',
             ],
+
+            /* order no longer matters after this */
+
+            (object)
+            [
+                'name' =>
+                'convertToWebP',
+
+                'type' =>
+                'server',
+            ],
         ];
     }
     /* CBTest_getTests() */
 
 
 
-    /* -- tests -- -- -- -- -- */
+    /* -- tests -- */
+
+
+
+    /**
+     * @return object
+     */
+    static function
+    convertToWebP(
+    ): stdClass
+    {
+        $sampleImageModelCBID =
+        CB_SampleImages::getSampleImageModelCBID_1000x5000();
+
+        $sampleWebPImageFilepath =
+        CBDataStore::flexpath(
+            $sampleImageModelCBID,
+            'rw2000.webp',
+            cb_document_root_directory()
+        );
+
+
+
+        if (
+            file_exists(
+                $sampleWebPImageFilepath
+            )
+        ) {
+            $expectedResult =
+            true;
+
+            $actualResult =
+            unlink(
+                $sampleWebPImageFilepath
+            );
+
+            if (
+                $actualResult !== $expectedResult
+            ) {
+                return CBTest::resultMismatchFailure(
+                    'prepare for test',
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+
+
+        CBImages::reduceImage(
+            $sampleImageModelCBID,
+            'webp',
+            'rw2000'
+        );
+
+        $imageInformation =
+        getimagesize(
+            $sampleWebPImageFilepath
+        );
+
+        $expectedResult =
+        IMAGETYPE_WEBP;
+
+        $actualResult =
+        $imageInformation[2];
+
+        if (
+            $actualResult !== $expectedResult
+        ) {
+            return CBTest::resultMismatchFailure(
+                'image type check',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+
+
+        $expectedResult =
+        1000;
+
+        $actualResult =
+        $imageInformation[0];
+
+        if (
+            $actualResult !== $expectedResult
+        ) {
+            return CBTest::resultMismatchFailure(
+                'image type check',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+
+
+        $expectedResult =
+        5000;
+
+        $actualResult =
+        $imageInformation[1];
+
+        if (
+            $actualResult !== $expectedResult
+        ) {
+            return CBTest::resultMismatchFailure(
+                'image type check',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+
+
+        return
+        (object)
+        [
+            'succeeded' =>
+            true,
+        ];
+    }
+    // convertToWebP()
 
 
 
