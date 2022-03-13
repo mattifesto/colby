@@ -761,8 +761,10 @@ CB_Moment {
     static function
     CBPage_render(
         stdClass $momentModel
-    ): void {
-        $viewPageSpec = CBModel::createSpec(
+    ): void
+    {
+        $viewPageSpec =
+        CBModel::createSpec(
             'CBViewPage'
         );
 
@@ -788,13 +790,15 @@ CB_Moment {
             )
         );
 
-        $viewSpecs = [];
+        $viewSpecs =
+        [];
 
-        $momentPageViewSpec = CBModel::createSpec(
-            'CB_CBView_MomentPage'
+        $momentPageViewSpec =
+        CBModel::createSpec(
+            'CB_CBView_Moment'
         );
 
-        CB_CBView_MomentPage::setMomentModelCBID(
+        CB_CBView_Moment::setMomentModelCBID(
             $momentPageViewSpec,
             CBModel::getCBID(
                 $momentModel
