@@ -2,6 +2,7 @@
     CB_UI_ImageChooser,
     CB_UI_StringEditor,
     CBAjax,
+    CBModel,
     CBUIPanel,
 */
 
@@ -79,6 +80,13 @@
 
         stringEditor.CB_UI_StringEditor_setTitle(
             "Alternative Text"
+        );
+
+        stringEditor.CB_UI_StringEditor_setValue(
+            CBModel.valueToString(
+                spec,
+                'CB_CBView_Hero1_alternativeText_property'
+            )
         );
 
         stringEditor.CB_UI_StringEditor_setChangedEventListener(

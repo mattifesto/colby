@@ -14,10 +14,11 @@ CB_CBView_Hero1Editor
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        return [
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
-                'v675.61.3.js',
+                'v675.61.5.js',
                 cbsysurl()
             ),
         ];
@@ -33,10 +34,12 @@ CB_CBView_Hero1Editor
     CBHTMLOutput_requiredClassNames(
     ): array
     {
-        return [
+        return
+        [
             'CB_UI_ImageChooser',
             'CB_UI_StringEditor',
             'CBAjax',
+            'CBModel',
             'CBUIPanel',
         ];
     }
