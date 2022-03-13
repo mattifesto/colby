@@ -1,8 +1,9 @@
 <?php
 
-final class ColbyConvert {
-
-    /* -- functions -- -- -- -- -- */
+final class
+ColbyConvert
+{
+    /* -- functions -- */
 
 
 
@@ -183,27 +184,73 @@ final class ColbyConvert {
 
 
     /**
+     * This function parallels Colby.unixTimestampToElement()
+     *
      * @param int? $timestamp
      * @param string? $nullTextContent
      *
      * @return string
      */
-    static function timestampToHTML($timestamp = null, $nullTextContent = null) {
-        $classAttribute = 'class="time"';
+    static function
+    timestampToHTML(
+        $timestamp = null,
+        $nullTextContent = null,
+        string $className = ''
+    ): string
+    {
+        $classAttribute =
+        'class="time ' .
+        cbhtml(
+            $className
+        ) .
+        '"';
 
-        if (is_numeric($timestamp)) {
-            $datetime = gmdate('c', $timestamp);
-            $datetimeAttribute = "datetime=\"{$datetime}\"";
-            $timestampForJavaScript = $timestamp * 1000;
-            $timestampAttribute = "data-timestamp=\"{$timestampForJavaScript}\"";
+        if (
+            is_numeric($timestamp)
+        )
+        {
+            $datetime =
+            gmdate(
+                'c',
+                $timestamp
+            );
 
-            return "<time {$classAttribute} {$datetimeAttribute} {$timestampAttribute}></time>";
-        } else {
-            $nullTextContentAttribute = 'data-nulltextcontent="' . cbhtml($nullTextContent). '"';
+            $datetimeAttribute =
+            "datetime=\"{$datetime}\"";
 
-            return "<span {$classAttribute} {$nullTextContentAttribute}></span>";
+            $timestampForJavaScript =
+            $timestamp *
+            1000;
+
+            $timestampAttribute =
+            "data-timestamp=\"{$timestampForJavaScript}\"";
+
+            return CBConvert::stringToCleanLine(<<<EOT
+
+                <time
+                    ${classAttribute}
+                    ${datetimeAttribute}
+                    ${timestampAttribute}
+                >
+                </time>
+
+            EOT);
+        }
+
+        else
+        {
+            $nullTextContentAttribute =
+            'data-nulltextcontent="' .
+            cbhtml(
+                $nullTextContent
+            ) .
+            '"';
+
+            return
+            "<span {$classAttribute} {$nullTextContentAttribute}></span>";
         }
     }
+    // timestampToHTML()
 
 
 
