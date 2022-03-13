@@ -15,9 +15,17 @@ CB_Tests_ImageVerificationTask
     ): array
     {
         return [
-            (object)[
+            (object)
+            [
                 'name' =>
                 'realWorldScenario1',
+
+                'type' =>
+                'server',
+            ],
+            (object)[
+                'name' =>
+                'checkForInvalidWebPFiles',
 
                 'type' =>
                 'server',
@@ -29,6 +37,203 @@ CB_Tests_ImageVerificationTask
 
 
     /* -- tests -- */
+
+
+
+    /**
+     * At one point if a larger-than-original webp version of a non-webp
+     * original image was requested the original non-webp file would be copied
+     * and have the extension changed to webp. This was a bug.
+     * CBImageVerificationTask now checks for webp files that aren't actually
+     * webp files and deletes them so that they can be regenerated as actual
+     * webp files.
+     *
+     * @return object
+     */
+    static function
+    checkForInvalidWebPFiles(
+    ): stdClass
+    {
+        $sampleImageModelCBID =
+        CB_SampleImages::getSampleImageModelCBID_1000x5000();
+
+        $badWebPImageFilepath =
+        CBDataStore::flexpath(
+            $sampleImageModelCBID,
+            'rw2100.webp',
+            cb_document_root_directory()
+        );
+
+
+
+        if (
+            file_exists(
+                $badWebPImageFilepath
+            )
+        ) {
+            $expectedResult =
+            true;
+
+            $actualResult =
+            unlink(
+                $badWebPImageFilepath
+            );
+
+            if (
+                $actualResult !== $expectedResult
+            ) {
+                return CBTest::resultMismatchFailure(
+                    'prepare for test',
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+
+
+        $goodWebPImageFilepath =
+        CBDataStore::flexpath(
+            $sampleImageModelCBID,
+            'rw320.webp',
+            cb_document_root_directory()
+        );
+
+        if (
+            file_exists(
+                $goodWebPImageFilepath
+            )
+        ) {
+            $expectedResult =
+            true;
+
+            $actualResult =
+            unlink(
+                $goodWebPImageFilepath
+            );
+
+            if (
+                $actualResult !== $expectedResult
+            ) {
+                return CBTest::resultMismatchFailure(
+                    'prepare for test filepath 2',
+                    $actualResult,
+                    $expectedResult
+                );
+            }
+        }
+
+
+
+        $sampleOriginalImageFilepath =
+        CBDataStore::flexpath(
+            $sampleImageModelCBID,
+            'original.png',
+            cb_document_root_directory()
+        );
+
+
+
+        $expectedResult =
+        true;
+
+        $actualResult =
+        copy(
+            $sampleOriginalImageFilepath,
+            $badWebPImageFilepath
+        );
+
+        if (
+            $actualResult !== $expectedResult
+        ) {
+            return CBTest::resultMismatchFailure(
+                'copy original file to webp filepath',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+
+
+        $expectedResult =
+        true;
+
+        $actualResult =
+        file_exists(
+            $badWebPImageFilepath
+        );
+
+        if (
+            $actualResult !== $expectedResult
+        ) {
+            return CBTest::resultMismatchFailure(
+                'verify that the bad image file exists',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+
+
+        CBImages::reduceImage(
+            $sampleImageModelCBID,
+            'webp',
+            'rw320'
+        );
+
+        CBTasks2::runSpecificTask(
+            'CBImageVerificationTask',
+            $sampleImageModelCBID
+        );
+
+        $expectedResult =
+        false;
+
+        $actualResult =
+        file_exists(
+            $badWebPImageFilepath
+        );
+
+        if (
+            $actualResult !== $expectedResult
+        ) {
+            return CBTest::resultMismatchFailure(
+                'the bad image file was not deleted',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+
+
+        $expectedResult =
+        true;
+
+        $actualResult =
+        file_exists(
+            $goodWebPImageFilepath
+        );
+
+        if (
+            $actualResult !== $expectedResult
+        ) {
+            return CBTest::resultMismatchFailure(
+                'the good image file was not preserved',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+
+
+        /* done */
+
+        return
+        (object)[
+            'succeeded' => true,
+        ];
+    }
+    // checkForInvalidWebPFiles()
 
 
 
@@ -171,4 +376,5 @@ CB_Tests_ImageVerificationTask
         ];
     }
     // realWorldScenario1()
+
 }
