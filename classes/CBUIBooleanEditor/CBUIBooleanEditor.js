@@ -18,7 +18,7 @@ var CBUIBooleanEditor = {
      *          specChangedCallback: function
      *          valueShouldChangeCallback: function
      *
-     *              This functon will be called after the user has clicked the
+     *              This function will be called after the user has clicked the
      *              button but before the value changes. It returns true to
      *              proceed with the change or false to cancel it.
      *      }

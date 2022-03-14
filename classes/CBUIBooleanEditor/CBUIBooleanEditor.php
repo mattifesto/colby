@@ -5,14 +5,27 @@
  *
  *      Use CBUIBooleanEditor2
  */
-final class CBUIBooleanEditor {
+final class
+CBUIBooleanEditor
+{
+    /* -- CBHTMLOutput interfaces -- */
+
+
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'v485.css', cbsysurl()),
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
+        return
+        [
+            Colby::flexpath(
+                __CLASS__,
+                'v485.css',
+                cbsysurl()
+            ),
         ];
     }
     /* CBHTMLOutput_CSSURLs() */
@@ -24,11 +37,13 @@ final class CBUIBooleanEditor {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
-                'v675.14.js',
+                'v675.61.5.js',
                 cbsysurl()
             ),
         ];
@@ -40,11 +55,16 @@ final class CBUIBooleanEditor {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
-        return [
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        return
+        [
             'CBUI',
         ];
     }
+    // CBInstall_requiredClassNames()
 
 }
 /* CBUIBooleanEditor */
