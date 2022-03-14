@@ -114,7 +114,7 @@ ColbyRequest {
             CBConfiguration::secondaryDomainsShouldRedirectToPrimaryDomain()
         ) {
             /**
-             * If this functon decides to redirect it will also exit.
+             * If this function decides to redirect it will also exit.
              */
             CBRequest::redirectSecondaryDomainsToPrimaryDomain();
         }
