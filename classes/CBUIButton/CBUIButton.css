@@ -26,7 +26,7 @@
     var(--CB_UI_spotColor);
 
     border-radius:
-    1000px;
+    5px;
 
     box-sizing:
     border-box;
@@ -38,7 +38,7 @@
     44px;
 
     padding:
-    5px 40px;
+    5px 20px;
 
     text-align:
     center;
