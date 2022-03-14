@@ -1,9 +1,9 @@
 <?php
 
 final class
-CBUISelectableItemContainer {
-
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+CBUISelectableItemContainer
+{
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
@@ -12,11 +12,13 @@ CBUISelectableItemContainer {
      */
     static function
     CBHTMLOutput_CSSURLs(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
-                'v675.41.css',
+                'v675.61.5.css',
                 cbsysurl()
             ),
         ];
@@ -28,11 +30,20 @@ CBUISelectableItemContainer {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'v371.js', cbsysurl())
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
+        return
+        [
+            Colby::flexpath(
+                __CLASS__,
+                'v675.61.5.js',
+                cbsysurl()
+            )
         ];
     }
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
@@ -41,8 +52,10 @@ CBUISelectableItemContainer {
      */
     static function
     CBHTMLOutput_requiredClassNames(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             'CB_UI',
             'CBUICommandPart',
             'CBUIStringsPart'

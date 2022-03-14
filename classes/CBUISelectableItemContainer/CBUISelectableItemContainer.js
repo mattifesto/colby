@@ -1,12 +1,17 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBUISelectableItemContainer */
 /* global
     CBUICommandPart,
-    CBUIStringsPart */
+    CBUIStringsPart,
+*/
 
-var CBUISelectableItemContainer = {
+(function () {
+    "use strict";
+
+    window.CBUISelectableItemContainer =
+    {
+        create: CBUISelectableItemContainer_create,
+    };
+
+
 
     /**
      * @return object
@@ -24,11 +29,20 @@ var CBUISelectableItemContainer = {
      *              Changes the container from normal mode to selectable mode.
      *
      *          selectionChangedCallback: function
-     *          splice(int startIndex, int deleteCount, CBUISelectableItem selectableItem1) -> [CBUISelectableItem]
+     *
+     *          splice(
+     *              int startIndex,
+     *              int deleteCount,
+     *              CBUISelectableItem selectableItem1
+     *          ) -> [CBUISelectableItem]
+     *
      *          title: string
      *      }
      */
-    create: function () {
+    function
+    CBUISelectableItemContainer_create(
+    ) // -> object
+    {
         var selectable = false;
         var selectionChangedCallback;
         var element = document.createElement("div");
@@ -262,5 +276,7 @@ var CBUISelectableItemContainer = {
         element.CBUISelectableItemContainer = o;
 
         return o;
-    },
-};
+    }
+    // CBUISelectableItemContainer_create()
+
+})();
