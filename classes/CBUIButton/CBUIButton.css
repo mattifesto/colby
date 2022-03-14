@@ -1,39 +1,71 @@
-.CBUIButton {
-    display: flex;
-    justify-content: center;
+.CBUIButton
+{
+    display:
+    flex;
 
-    padding: 10px 20px;
+    justify-content:
+    center;
+
+
+    padding:
+    10px 20px;
 }
 
 
 
-.CBUIButton_button {
-    display: flex;
-    align-items: center;
+.CBUIButton_button
+{
+    display:
+    flex;
 
-    background-color: var(--CB_UI_spotColor);
-    border-radius: 1000px;
-    box-sizing: border-box;
-    color: white;
-    min-height: 44px;
-    padding: 5px 40px;
-    text-align: center;
+    align-items:
+    center;
 
-    cursor: default;
 
-    user-select: none;
-    -webkit-user-select: none;
+    background-color:
+    var(--CB_UI_spotColor);
+
+    border-radius:
+    1000px;
+
+    box-sizing:
+    border-box;
+
+    color:
+    white;
+
+    min-height:
+    44px;
+
+    padding:
+    5px 40px;
+
+    text-align:
+    center;
+
+    cursor:
+    default;
+
+    user-select:
+    none;
+
+    -webkit-user-select:
+    none;
 }
 
 
 
 .CBUIButton.CBUIButton_disabled
-.CBUIButton_button {
-    background-color: var(--CB_UI_disabledSpotColor);
+.CBUIButton_button
+{
+    background-color:
+    var(--CB_UI_disabledSpotColor);
 }
 
 
 
-.CBUIButton_content {
-    flex: 1 1 auto;
+.CBUIButton_content
+{
+    flex:
+    1 1 auto;
 }

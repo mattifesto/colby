@@ -1,18 +1,24 @@
 <?php
 
 final class
-CBUIButton {
+CBUIButton
+{
+    // -- CBHTMLOutput interfaces
+
+
 
     /**
      * @return [string]
      */
     static function
     CBHTMLOutput_CSSURLs(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
-                'v675.48.css',
+                'v675.61.5.css',
                 cbsysurl()
             ),
         ];
@@ -26,8 +32,10 @@ CBUIButton {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
                 'v675.48.js',
@@ -44,8 +52,10 @@ CBUIButton {
      */
     static function
     CBHTMLOutput_requiredClassNames(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             'CB_UI',
         ];
     }
