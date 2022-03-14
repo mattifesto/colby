@@ -70,7 +70,7 @@
         );
 
         headerElement.className =
-        "header";
+        "CBUISelectableItemContainer_header_element";
 
         let stringsPart =
         CBUIStringsPart.create();
@@ -170,7 +170,7 @@
                 selectNoneCommand.disabled =
                 true;
 
-                o.selectable =
+                api.selectable =
                 false;
             }
 
@@ -185,7 +185,7 @@
                 selectNoneCommand.disabled =
                 false;
 
-                o.selectable =
+                api.selectable =
                 true;
             }
         };
@@ -226,7 +226,9 @@
             containerElement
         );
 
-        let o = {
+        let api = {
+            CBUISelectableItemContainer_setTitle,
+
             commands:
             {
 
@@ -283,8 +285,8 @@
             function (
                 selectableItem
             ) {
-                o.splice(
-                    o.length,
+                api.splice(
+                    api.length,
                     0,
                     selectableItem
                 );
@@ -454,28 +456,64 @@
                 );
             },
 
-            /**
-             * @return string
-             */
+
+
+            // -- deprecated
+
+
+
             get title() {
-                return stringsPart.string1;
+                return CBUISelectableItemContainer_getTitle();
             },
 
-            /**
-             * @param string value
-             */
             set title(
                 value
             )
             {
-                stringsPart.string1 = value;
+                CBUISelectableItemContainer_setTitle(
+                    value
+                );
             },
         };
 
         element.CBUISelectableItemContainer =
-        o;
+        api;
 
-        return o;
+
+
+        /**
+         * @param string newTitle
+         *
+         * @return undefined
+         */
+        function
+        CBUISelectableItemContainer_getTitle(
+        ) // -> string
+        {
+            return stringsPart.string1;
+        }
+        // CBUISelectableItemContainer_getTitle()
+
+
+
+        /**
+         * @param string newTitle
+         *
+         * @return undefined
+         */
+        function
+        CBUISelectableItemContainer_setTitle(
+            newTitle
+        ) // -> undefined
+        {
+            stringsPart.string1 =
+            newTitle;
+        }
+        // CBUISelectableItemContainer_setTitle()
+
+
+
+        return api;
     }
     // CBUISelectableItemContainer_create()
 
