@@ -43,97 +43,214 @@
     CBUISelectableItemContainer_create(
     ) // -> object
     {
-        var selectable = false;
-        var selectionChangedCallback;
-        var element = document.createElement("div");
-        element.className = "CBUISelectableItemContainer";
-        var containerElement = document.createElement("div");
-        containerElement.className = "container";
+        let selectable =
+        false;
 
-        var headerElement = document.createElement("div");
-        headerElement.className = "header";
+        let selectionChangedCallback;
 
-        let stringsPart = CBUIStringsPart.create();
+        let element =
+        document.createElement(
+            "div"
+        );
 
-        headerElement.appendChild(stringsPart.element);
+        element.className =
+        "CBUISelectableItemContainer";
 
-        var headerCommandsElement = document.createElement("div");
-        headerCommandsElement.className = "commands";
+        let containerElement =
+        document.createElement(
+            "div"
+        );
 
-        headerElement.appendChild(headerCommandsElement);
+        containerElement.className =
+        "container";
 
-        var selectAllCommand = CBUICommandPart.create();
-        selectAllCommand.disabled = true;
-        selectAllCommand.title = "All";
-        selectAllCommand.callback = function () {
-            let length = itemsElement.children.length;
+        let headerElement =
+        document.createElement(
+            "div"
+        );
 
-            for (let i = 0; i < length; i++) {
-                itemsElement.children[i].CBUISelectableItem.selected = true;
+        headerElement.className =
+        "header";
+
+        let stringsPart =
+        CBUIStringsPart.create();
+
+        headerElement.appendChild(
+            stringsPart.element
+        );
+
+        let headerCommandsElement =
+        document.createElement(
+            "div"
+        );
+
+        headerCommandsElement.className =
+        "commands";
+
+        headerElement.appendChild(
+            headerCommandsElement
+        );
+
+        let selectAllCommand =
+        CBUICommandPart.create();
+
+        selectAllCommand.disabled =
+        true;
+
+        selectAllCommand.title =
+        "All";
+
+        selectAllCommand.callback =
+        function ()
+        {
+            let length =
+            itemsElement.children.length;
+
+            for (
+                let i = 0;
+                i < length;
+                i++)
+            {
+                itemsElement.children[i].CBUISelectableItem.selected =
+                true;
             }
         };
 
-        headerCommandsElement.appendChild(selectAllCommand.element);
+        headerCommandsElement.appendChild(
+            selectAllCommand.element
+        );
 
-        var selectNoneCommand = CBUICommandPart.create();
-        selectNoneCommand.disabled = true;
-        selectNoneCommand.title = "None";
-        selectNoneCommand.callback = function () {
-            let length = itemsElement.children.length;
+        let selectNoneCommand =
+        CBUICommandPart.create();
 
-            for (let i = 0; i < length; i++) {
-                itemsElement.children[i].CBUISelectableItem.selected = false;
+        selectNoneCommand.disabled =
+        true;
+
+        selectNoneCommand.title =
+        "None";
+
+        selectNoneCommand.callback =
+        function ()
+        {
+            let length =
+            itemsElement.children.length;
+
+            for (
+                let i = 0;
+                i < length;
+                i++
+            ) {
+                itemsElement.children[i].CBUISelectableItem.selected =
+                false;
             }
         };
 
-        headerCommandsElement.appendChild(selectNoneCommand.element);
+        headerCommandsElement.appendChild(
+            selectNoneCommand.element
+        );
 
-        var editCommand = CBUICommandPart.create();
-        editCommand.title = "Edit";
-        editCommand.callback = function () {
-            if (selectable) {
-                editCommand.title = "Edit";
-                selectAllCommand.disabled = true;
-                selectNoneCommand.disabled = true;
-                o.selectable = false;
-            } else {
-                editCommand.title = "Done";
-                selectAllCommand.disabled = false;
-                selectNoneCommand.disabled = false;
-                o.selectable = true;
+        let editCommand =
+        CBUICommandPart.create();
+
+        editCommand.title =
+        "Edit";
+
+        editCommand.callback =
+        function ()
+        {
+            if (
+                selectable
+            ) {
+                editCommand.title =
+                "Edit";
+
+                selectAllCommand.disabled =
+                true;
+
+                selectNoneCommand.disabled =
+                true;
+
+                o.selectable =
+                false;
+            }
+
+            else
+            {
+                editCommand.title =
+                "Done";
+
+                selectAllCommand.disabled =
+                false;
+
+                selectNoneCommand.disabled =
+                false;
+
+                o.selectable =
+                true;
             }
         };
 
-        headerCommandsElement.appendChild(editCommand.element);
+        headerCommandsElement.appendChild(
+            editCommand.element
+        );
 
-        var itemsElement = document.createElement("div");
-        itemsElement.className = "items";
+        let itemsElement =
+        document.createElement(
+            "div"
+        );
 
-        var footerElement = document.createElement("div");
-        footerElement.className = "footer";
+        itemsElement.className =
+        "items";
 
-        containerElement.appendChild(headerElement);
-        containerElement.appendChild(itemsElement);
-        containerElement.appendChild(footerElement);
-        element.appendChild(containerElement);
+        let footerElement =
+        document.createElement(
+            "div"
+        );
 
-        var o = {
-            commands: {
+        footerElement.className =
+        "footer";
+
+        containerElement.appendChild(
+            headerElement
+        );
+
+        containerElement.appendChild(
+            itemsElement
+        );
+
+        containerElement.appendChild(
+            footerElement
+        );
+
+        element.appendChild(
+            containerElement
+        );
+
+        let o = {
+            commands:
+            {
 
                 /**
                  * @param CBUICommandPart commandPart
                  *
                  * @return undefined
                  */
-                push: function (commandPart) {
-                    footerElement.appendChild(commandPart.element);
+                push:
+                function (
+                    commandPart
+                )
+                {
+                    footerElement.appendChild(
+                        commandPart.element
+                    );
                 }
             },
 
             /**
              * @return Element
              */
-            get element() {
+            get element()
+            {
                 return element;
             },
 
@@ -142,7 +259,11 @@
              *
              * @return CBUISelectableItem
              */
-            item: function(index) {
+            item:
+            function (
+                index
+            )
+            {
                 return itemsElement.children.item(index).CBUISelectableItem;
             },
 
@@ -158,8 +279,15 @@
              *
              * @return undefined
              */
-            push: function (selectableItem) {
-                o.splice(o.length, 0, selectableItem);
+            push:
+            function (
+                selectableItem
+            ) {
+                o.splice(
+                    o.length,
+                    0,
+                    selectableItem
+                );
             },
 
             /**
@@ -172,26 +300,49 @@
             /**
              * @param bool value
              */
-            set selectable(value) {
-                if (value) {
-                    element.classList.add("selectable");
+            set selectable(
+                value
+            )
+            {
+                if (
+                    value
+                ) {
+                    element.classList.add(
+                        "selectable"
+                    );
 
-                    for (let i = 0; i < itemsElement.children.length; i++) {
-                        itemsElement.children[i].CBUISelectableItem.selectable = true;
+                    for (
+                        let i = 0;
+                        i < itemsElement.children.length;
+                        i++
+                    ) {
+                        itemsElement.children[i].CBUISelectableItem.selectable =
+                        true;
                     }
 
-                    selectable = true;
+                    selectable =
+                    true;
                 } else {
-                    element.classList.remove("selectable");
+                    element.classList.remove(
+                        "selectable"
+                    );
 
-                    for (let i = 0; i < itemsElement.children.length; i++) {
-                        itemsElement.children[i].CBUISelectableItem.selectable = false;
+                    for (
+                        let i = 0;
+                        i < itemsElement.children.length;
+                        i++
+                    ) {
+                        itemsElement.children[i].CBUISelectableItem.selectable =
+                        false;
                     }
 
-                    selectable = false;
+                    selectable =
+                    false;
                 }
 
-                if (selectionChangedCallback !== undefined) {
+                if (
+                    selectionChangedCallback !== undefined
+                ) {
                     selectionChangedCallback();
                 }
             },
@@ -213,11 +364,20 @@
              *      it will be called even though the actual selected items
              *      haven't changed.
              */
-            set selectionChangedCallback(callback) {
-                if (typeof callback === "function") {
-                    selectionChangedCallback = callback;
-                } else {
-                    selectionChangedCallback = undefined;
+            set selectionChangedCallback(
+                callback
+            )
+            {
+                if (
+                    typeof callback === "function"
+                ) {
+                    selectionChangedCallback =
+                    callback;
+                }
+
+                else {
+                    selectionChangedCallback =
+                    undefined;
                 }
             },
 
@@ -228,34 +388,70 @@
              *
              * @return [CBUISelectableItem]
              */
-            splice: function (startIndex, deleteCount, selectableItem1) {
-                var removedElements = [];
+            splice:
+            function (
+                startIndex,
+                deleteCount,
+                selectableItem1
+            )
+            {
+                let removedElements =
+                [];
 
-                if (deleteCount == 1) {
-                    let length = itemsElement.children.length;
+                if (
+                    deleteCount == 1
+                ) {
+                    let length =
+                    itemsElement.children.length;
 
-                    if (startIndex < length) {
-                        let element = itemsElement.children.item(startIndex);
+                    if (
+                        startIndex < length
+                    ) {
+                        let element =
+                        itemsElement.children.item(
+                            startIndex
+                        );
 
-                        removedElements.push(element);
-                        itemsElement.removeChild(element);
+                        removedElements.push(
+                            element
+                        );
+
+                        itemsElement.removeChild(
+                            element
+                        );
                     }
                 }
 
-                if (selectableItem1 !== undefined) {
-                    selectableItem1.selectable = selectable;
+                if (
+                    selectableItem1 !== undefined
+                ) {
+                    selectableItem1.selectable =
+                    selectable;
 
-                    let length = itemsElement.children.length;
-                    let referenceNode = null;
+                    let length =
+                    itemsElement.children.length;
 
-                    if (startIndex < length) {
-                        referenceNode = itemsElement.children.item(startIndex);
+                    let referenceNode =
+                    null;
+
+                    if (
+                        startIndex < length
+                    ) {
+                        referenceNode =
+                        itemsElement.children.item(
+                            startIndex
+                        );
                     }
 
-                    itemsElement.insertBefore(selectableItem1.element, referenceNode);
+                    itemsElement.insertBefore(
+                        selectableItem1.element,
+                        referenceNode
+                    );
                 }
 
-                return removedElements.map(element => element.CBUISelectableItem);
+                return removedElements.map(
+                    element => element.CBUISelectableItem
+                );
             },
 
             /**
@@ -268,12 +464,16 @@
             /**
              * @param string value
              */
-            set title(value) {
+            set title(
+                value
+            )
+            {
                 stringsPart.string1 = value;
             },
         };
 
-        element.CBUISelectableItemContainer = o;
+        element.CBUISelectableItemContainer =
+        o;
 
         return o;
     }
