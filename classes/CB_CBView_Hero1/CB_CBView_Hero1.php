@@ -86,7 +86,8 @@ CB_CBView_Hero1
         stdClass $viewSpec
     ): stdClass
     {
-        $viewModel = (object)[];
+        $viewModel =
+        (object)[];
 
         CB_CBView_Hero1::setAlternativeText(
             $viewModel,
@@ -100,6 +101,30 @@ CB_CBView_Hero1
             CB_CBView_Hero1::getNarrowImage(
                 $viewSpec
             )
+        );
+
+        $subviewSpecs =
+        CB_CBView_Hero1::getSubviews(
+            $viewSpec
+        );
+
+        $subviewModels =
+        array_map(
+            function (
+                $subviewSpec
+            ): stdClass
+            {
+                return
+                CBModel::build(
+                    $subviewSpec
+                );
+            },
+            $subviewSpecs
+        );
+
+        CB_CBView_Hero1::setSubviews(
+            $viewModel,
+            $subviewModels
         );
 
         CB_CBView_Hero1::setWideImage(
@@ -130,7 +155,13 @@ CB_CBView_Hero1
     ): void
     {
         echo
-        '<div class="CB_CBView_Hero1_root_element">';
+        CBConvert::stringToCleanLine(<<<EOT
+
+            <div class="CB_CBView_Hero1_root_element">
+                <div class="CB_CBView_Hero1_content_element">
+
+        EOT);
+
 
         $wideImageModel =
         CB_CBView_Hero1::getWideImage(
@@ -166,7 +197,6 @@ CB_CBView_Hero1
             );
         }
 
-
         if (
             $narrowImageModel !== null
         ) {
@@ -179,8 +209,24 @@ CB_CBView_Hero1
             );
         }
 
+        $subviewModels =
+        CB_CBView_Hero1::getSubviews(
+            $viewModel
+        );
+
+        array_walk(
+            $subviewModels,
+            function (
+                $subviewModel
+            ): void {
+                CBView::render(
+                    $subviewModel
+                );
+            }
+        );
+
         echo
-        '</div>';
+        '</div></div>';
     }
     /* CBView_render() */
 
@@ -264,6 +310,44 @@ CB_CBView_Hero1
         $newNarrowImageModel;
     }
     // setNarrowImage()
+
+
+
+    /**
+     * @param object $viewModel
+     *
+     * @return [object]
+     */
+    static function
+    getSubviews(
+        stdClass $viewModel
+    ): array
+    {
+        return CBModel::valueToArray(
+            $viewModel,
+            'CB_CBView_Hero1_subviews_property'
+        );
+    }
+    // getSubviews()
+
+
+
+    /**
+     * @param object $viewModel
+     * @param [object] $newSubviews
+     *
+     * @return void
+     */
+    static function
+    setSubviews(
+        stdClass $viewModel,
+        array $newSubviews
+    ): void
+    {
+        $viewModel->CB_CBView_Hero1_subviews_property =
+        $newSubviews;
+    }
+    // setSubviews()
 
 
 

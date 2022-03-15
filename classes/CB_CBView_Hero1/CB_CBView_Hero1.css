@@ -1,11 +1,5 @@
 .CB_CBView_Hero1_root_element
 {
-    display:
-    flex;
-
-    justify-content:
-    center;
-
     box-sizing:
     border-box;
 
@@ -17,6 +11,29 @@
 
     padding:
     20px;
+}
+
+
+
+.CB_CBView_Hero1_content_element
+{
+    background-color:
+    var(--CB_UI_accentPaperColorGray);
+
+    border:
+    1px solid var(--CB_UI_accentPaperColorGray);
+
+    border-radius:
+    10px;
+
+    box-sizing:
+    border-box;
+
+    max-width:
+    100%;
+
+    overflow:
+    hidden;
 }
 
 
