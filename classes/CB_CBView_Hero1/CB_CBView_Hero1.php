@@ -140,6 +140,85 @@ CB_CBView_Hero1
 
 
 
+    /**
+     * @param object $viewModel
+     *
+     * @return string
+     */
+    static function
+    CBModel_toSearchText(
+        stdClass $viewModel
+    ): string
+    {
+        $subviewModels =
+        CB_CBView_Hero1::getSubviews(
+            $viewModel
+        );
+
+        $subviewSearchTexts =
+        array_map(
+            function (
+                stdClass $subviewModel
+            ): string
+            {
+                return
+                CBModel::toSearchText(
+                    $subviewModel
+                );
+            },
+            $subviewModels
+        );
+
+        return
+        implode(
+            ' ',
+            $subviewSearchTexts
+        );
+    }
+    // CBModel_toSearchText()
+
+
+
+    /**
+     * @param object $viewSpec
+     *
+     * @return object
+     */
+    static function
+    CBModel_upgrade(
+        stdClass $originalViewSpec
+    ): stdClass
+    {
+        $originalSubviewSpecs =
+        CB_CBView_Hero1::getSubviews(
+            $originalViewSpec
+        );
+
+        $upgradedSubviewSpecs =
+        array_map(
+            function (
+                stdClass $originalSubviewSpec
+            ): stdClass
+            {
+                return
+                CBModel::upgrade(
+                    $originalSubviewSpec
+                );
+            },
+            $originalSubviewSpecs
+        );
+
+        CB_CBView_Hero1::setSubviews(
+            $originalViewSpec,
+            $upgradedSubviewSpecs
+        );
+
+        return $originalViewSpec;
+    }
+    // CBModel_upgrade()
+
+
+
     /* -- CBView interfaces -- */
 
 
@@ -345,7 +424,9 @@ CB_CBView_Hero1
     ): void
     {
         $viewModel->CB_CBView_Hero1_subviews_property =
-        $newSubviews;
+        array_values(
+            $newSubviews
+        );
     }
     // setSubviews()
 
