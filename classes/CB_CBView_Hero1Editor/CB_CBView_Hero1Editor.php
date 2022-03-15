@@ -41,6 +41,7 @@ CB_CBView_Hero1Editor
             'CBAjax',
             'CBModel',
             'CBUIPanel',
+            'CBUISpecArrayEditor',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

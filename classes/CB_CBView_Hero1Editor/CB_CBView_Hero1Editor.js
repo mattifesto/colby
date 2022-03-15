@@ -4,6 +4,7 @@
     CBAjax,
     CBModel,
     CBUIPanel,
+    CBUISpecArrayEditor,
 */
 
 
@@ -52,6 +53,13 @@
 
         rootEditorElement.append(
             CB_CBView_Hero1Editor_createAlternativeTextEditorElement(
+                spec,
+                specChangedCallback
+            )
+        );
+
+        rootEditorElement.append(
+            CB_CBView_Hero1Editor_createSubviewsEditorElement(
                 spec,
                 specChangedCallback
             )
@@ -110,7 +118,7 @@
 
     /**
      * @param object spec
-     * @param functon specChangedCallback
+     * @param function specChangedCallback
      *
      * @return Element
      */
@@ -145,6 +153,52 @@
         return imageChooser.CB_UI_ImageChooser_getElement();
     }
     // CB_CBView_Hero1Editor_createNarrowImageEditorElement()
+
+
+
+    /**
+     * @param object spec
+     * @param function specChangedCallback
+     *
+     * @return Element
+     */
+    function
+    CB_CBView_Hero1Editor_createSubviewsEditorElement(
+        spec,
+        specChangedCallback
+    ) // -> Element
+    {
+        if (
+            !Array.isArray(
+                spec.CB_CBView_Hero1_subviews_property
+            )
+        ) {
+            spec.CB_CBView_Hero1_subviews_property =
+            [];
+        }
+
+        let specArrayEditor =
+        CBUISpecArrayEditor.create(
+            {
+                addableClassNames:
+                [
+                    'CBMessageView',
+                ],
+
+                specs:
+                spec.CB_CBView_Hero1_subviews_property,
+
+                specsChangedCallback:
+                specChangedCallback,
+            }
+        );
+
+        specArrayEditor.title =
+        "Subviews";
+
+        return specArrayEditor.element;
+    }
+    // CB_CBView_Hero1Editor_createSubviewsEditorElement()
 
 
 
