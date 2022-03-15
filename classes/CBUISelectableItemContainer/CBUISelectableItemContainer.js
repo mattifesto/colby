@@ -17,6 +17,9 @@
      * @return object
      *
      *      {
+     *          CBUISelectableItemContainer_getTitle()
+     *          CBUISelectableItemContainer_setTitle()
+     *
      *          commands: {
      *              push(CBUICommandPart commandPart)
      *          }
@@ -35,6 +38,8 @@
      *              int deleteCount,
      *              CBUISelectableItem selectableItem1
      *          ) -> [CBUISelectableItem]
+     *
+     *          -- deprecated
      *
      *          title: string
      *      }
