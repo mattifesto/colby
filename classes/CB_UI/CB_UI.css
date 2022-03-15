@@ -22,7 +22,18 @@ html
 
     --CB_UI_readableWidth:
     500px;
+
+
+
+    /* under development */
+
+    --CB_UI_accentPaperColorGray:
+    hsl(0, 0%, 96%);
+
+    --CB_UI_accentPaperColorRed:
+    hsl(0, 50%, 96%);
 }
+
 
 
 @media screen
@@ -34,6 +45,16 @@ html
 
         --CB_UI_borderColor:
         hsl(0, 0%, 20%);
+
+
+
+        /* under development */
+
+        --CB_UI_accentPaperColorGray:
+        hsl(0, 0%, 16%);
+
+        --CB_UI_accentPaperColorRed:
+        hsl(0, 10%, 16%);
     }
 }
 
