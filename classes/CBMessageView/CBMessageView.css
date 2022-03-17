@@ -1,20 +1,43 @@
 .CBMessageView_default
 {
-    display: flex;
-    justify-content: center;
+    display:
+    flex;
 
-    box-sizing: border-box;
-    max-width: 100%;
-    overflow-wrap: break-word;
-    padding: 20px;
+    justify-content:
+    center;
 
-    line-height: 1.5;
+    box-sizing:
+    border-box;
+
+    max-width:
+    100%;
+
+    overflow-wrap:
+    break-word;
+
+    padding:
+    20px;
+
+    line-height:
+    1.5;
 }
 
 
 
-.CBMessageView_default .CBMessageView_content_element
+.CBMessageView_default
+.CBMessageView_content_element
 {
-    max-width: 100%;
-    width: 36em;
+    max-width:
+    100%;
+
+    width:
+    36em;
+}
+
+
+
+.CBMessageView_root_element.CBMessageView_removeTopAndBottomPadding
+{
+    padding-top: 0;
+    padding-bottom: 0;
 }

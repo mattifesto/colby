@@ -14,10 +14,11 @@ CBMessageView
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        return [
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
-                'v675.60.css',
+                'v675.61.6.css',
                 cbsysurl()
             ),
         ];
@@ -33,7 +34,8 @@ CBMessageView
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        return [
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
                 'v675.60.js',
@@ -52,7 +54,8 @@ CBMessageView
     CBHTMLOutput_requiredClassNames(
     ): array
     {
-        return [
+        return
+        [
             'CBMessageMarkup',
 
             'CBContentStyleSheet',
