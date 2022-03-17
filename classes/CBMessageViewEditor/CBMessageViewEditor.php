@@ -1,7 +1,8 @@
 <?php
 
-final class CBMessageViewEditor {
-
+final class
+CBMessageViewEditor
+{
     /* -- CBHTMLOutput interfaces -- */
 
 
@@ -11,11 +12,13 @@ final class CBMessageViewEditor {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
-                'v675.7.js',
+                'v675.61.6.js',
                 cbsysurl()
             ),
         ];
@@ -29,8 +32,10 @@ final class CBMessageViewEditor {
      */
     static function
     CBHTMLOutput_requiredClassNames(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             'CBMessageMarkup',
             'CBUI',
             'CBUIStringEditor2',

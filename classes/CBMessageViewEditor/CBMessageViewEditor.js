@@ -1,14 +1,19 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBMessageViewEditor */
 /* global
     CBMessageMarkup,
     CBUI,
     CBUIStringEditor2,
 */
 
-var CBMessageViewEditor = {
+
+(function () {
+    "use strict";
+
+    window.CBMessageViewEditor = {
+        CBUISpecEditor_createEditorElement2,
+        CBUISpec_toDescription,
+    };
+
+
 
     /**
      * @param object args
@@ -20,10 +25,12 @@ var CBMessageViewEditor = {
      *
      * @return Element
      */
-    CBUISpecEditor_createEditorElement: function (args) {
-        let spec = args.spec;
-        let specChangedCallback = args.specChangedCallback;
-
+    function
+    CBUISpecEditor_createEditorElement2(
+        spec,
+        specChangedCallback
+    ) // -> Element
+    {
         let element;
 
         {
@@ -53,18 +60,36 @@ var CBMessageViewEditor = {
         element.appendChild(
             CBUI.createSectionHeader(
                 {
-                    paragraphs: [
+                    paragraphs:
+                    [
                         `
                         View Specific CSS Class Names:
-                        `,`
-                        "custom": disable the default view styles.
-                        `,`
-                        Supported CSS Class Names:
-                        `,`
-                        "CBLightTheme": light background and dark text.
-                        `,`
-                        "CBDarkTheme": dark background and light text.
+                        `,
+
                         `
+                        "CBMessageView_removeTopAndBottomPadding":
+
+                        This class name will remove the outermost top and bottom
+                        padding which is useful at times when a message view is
+                        embedded in another view and the natural vertical
+                        spacing is not helpful.
+                        `,
+
+                        `
+                        "custom": disable the default view styles.
+                        `,
+
+                        `
+                        Supported CSS Class Names:
+                        `,
+
+                        `
+                        "CBLightTheme": light background and dark text.
+                        `,
+
+                        `
+                        "CBDarkTheme": dark background and light text.
+                        `,
                     ],
                 }
             )
@@ -117,7 +142,7 @@ var CBMessageViewEditor = {
         }
 
         return element;
-    },
+    }
     /* CBUISpecEditor_createEditorElement() */
 
 
@@ -127,7 +152,11 @@ var CBMessageViewEditor = {
      *
      * @return string|undefined
      */
-    CBUISpec_toDescription: function (spec) {
+    function
+    CBUISpec_toDescription(
+        spec
+    ) // -> string|undefined
+    {
         if (spec.markup) {
             var text = CBMessageMarkup.markupToText(spec.markup);
 
@@ -141,7 +170,7 @@ var CBMessageViewEditor = {
         }
 
         return undefined;
-    },
+    }
     /* CBUISpec_toDescription() */
 
-};
+})();
