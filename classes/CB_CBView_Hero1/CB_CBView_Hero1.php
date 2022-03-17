@@ -17,26 +17,12 @@ CB_CBView_Hero1
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.61.3.css',
+                'v675.61.8.css',
                 cbsysurl()
             ),
         ];
     }
     /* CBHTMLOutput_CSSURLs() */
-
-
-
-    /**
-     * @return [string]
-     */
-    static function
-    CBHTMLOutput_requiredClassNames(
-    ): array
-    {
-        return [
-        ];
-    }
-    /* CBHTMLOutput_requiredClassNames() */
 
 
 

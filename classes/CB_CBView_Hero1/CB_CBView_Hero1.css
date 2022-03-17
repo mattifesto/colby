@@ -10,7 +10,7 @@
     break-word;
 
     padding:
-    20px;
+    10px 20px;
 }
 
 
@@ -38,19 +38,7 @@
 
 
 
-.CB_CBView_Hero1_root_element
-img
-{
-    height:
-    auto;
-
-    max-width:
-    100%;
-}
-
-
-
-.CB_CBView_Hero1_root_element
+.CB_CBView_Hero1_content_element >
 picture:nth-of-type(2)
 {
     display:
@@ -62,7 +50,7 @@ picture:nth-of-type(2)
 @media
 (max-width: 640px)
 {
-    .CB_CBView_Hero1_root_element
+    .CB_CBView_Hero1_content_element >
     picture
     {
         display:
@@ -71,7 +59,7 @@ picture:nth-of-type(2)
 
 
 
-    .CB_CBView_Hero1_root_element
+    .CB_CBView_Hero1_content_element >
     picture:nth-of-type(2)
     {
         display:
