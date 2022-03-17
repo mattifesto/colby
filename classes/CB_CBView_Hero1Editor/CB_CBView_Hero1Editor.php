@@ -18,12 +18,31 @@ CB_CBView_Hero1Editor
         [
             Colby::flexpath(
                 __CLASS__,
-                'v675.61.5.js',
+                'v675.61.7.js',
                 cbsysurl()
             ),
         ];
     }
     /* CBHTMLOutput_JavaScriptURLs() */
+
+
+
+    /**
+     * @return [[<name>, <value>]]
+     */
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array
+    {
+        return
+        [
+            [
+                'CB_CBView_Hero1Editor_addableClassNames',
+                CBPagesPreferences::classNamesForAddableViews(),
+            ]
+        ];
+    }
+    /* CBHTMLOutput_JavaScriptVariables() */
 
 
 

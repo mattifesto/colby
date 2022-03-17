@@ -5,6 +5,8 @@
     CBModel,
     CBUIPanel,
     CBUISpecArrayEditor,
+
+    CB_CBView_Hero1Editor_addableClassNames,
 */
 
 
@@ -181,9 +183,7 @@
         CBUISpecArrayEditor.create(
             {
                 addableClassNames:
-                [
-                    'CBMessageView',
-                ],
+                CB_CBView_Hero1Editor_addableClassNames,
 
                 specs:
                 spec.CB_CBView_Hero1_subviews_property,
