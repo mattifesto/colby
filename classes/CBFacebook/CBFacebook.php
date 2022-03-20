@@ -8,7 +8,6 @@
 final class
 CBFacebook
 {
-
     /**
      * https://bit.ly/32zPqWq
      *
