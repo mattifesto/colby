@@ -5,7 +5,9 @@
  * has relatively frequent version upgrades and if the Facebook interaction is
  * spread around, updates are more difficult.
  */
-final class CBFacebook {
+final class
+CBFacebook
+{
 
     /**
      * https://bit.ly/32zPqWq
@@ -34,7 +36,7 @@ final class CBFacebook {
         );
 
         $URL = (
-            'https://graph.facebook.com/v3.3/oauth/access_token' .
+            'https://graph.facebook.com/v13.0/oauth/access_token' .
             '?client_id=' . CBFacebookPreferences::getAppID() .
             '&redirect_uri=' . urlencode($redirectURI) .
             '&client_secret=' . CBFacebookPreferences::getAppSecret() .
@@ -114,19 +116,25 @@ final class CBFacebook {
      *
      * @return object
      */
-    static function fetchUserProperties(string $accessToken): stdClass {
-        $fields = 'fields=name,metadata{type}';
-
+    static function
+    fetchUserProperties(
+        string $accessToken
+    ): stdClass
+    {
         /**
          * Here "me" is translated by Facebook into the user ID of the user
          * associated with the access token.
          */
 
         $URL =
-        "https://graph.facebook.com/v3.3/me?access_token=" .
-        "{$accessToken}&metadata=1&{$fields}";
+        'https://graph.facebook.com/v13.0/me' .
+        "?access_token={$accessToken}" .
+        "&fields=id,name";
 
-        return CBFacebook::fetchGraphAPIResponse($URL);
+        return
+        CBFacebook::fetchGraphAPIResponse(
+            $URL
+        );
     }
     /* fetchUserProperties() */
 
@@ -154,7 +162,7 @@ final class CBFacebook {
         );
 
         $oauthURLAtFacebookWebsite = (
-            'https://www.facebook.com/v3.3/dialog/oauth' .
+            'https://www.facebook.com/v13.0/dialog/oauth' .
             '?client_id=' .
             urlencode(
                 CBFacebookPreferences::getAppID()
@@ -214,7 +222,7 @@ final class CBFacebook {
         string $facebookID
     ): string {
         $userImageURL =
-        "https://graph.facebook.com/v3.3/{$facebookID}/picture?type=large";
+        "https://graph.facebook.com/v13.0/{$facebookID}/picture?type=large";
 
         return $userImageURL;
     }
