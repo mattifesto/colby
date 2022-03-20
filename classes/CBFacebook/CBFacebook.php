@@ -17,11 +17,12 @@ CBFacebook
      *
      * @return object
      */
-    static function fetchAccessTokenObject(
+    static function
+    fetchAccessTokenObject(
         string $code,
         string $destinationURL
-    ): stdClass {
-
+    ): stdClass
+    {
         /**
          * @NOTE: 2017_03_28
          *
@@ -31,19 +32,22 @@ CBFacebook
          *      provided the $code value.
          */
 
-        $redirectURI = CBFacebook::redirectURI(
+        $redirectURI =
+        CBFacebook::redirectURI(
             $destinationURL
         );
 
-        $URL = (
-            'https://graph.facebook.com/v13.0/oauth/access_token' .
-            '?client_id=' . CBFacebookPreferences::getAppID() .
-            '&redirect_uri=' . urlencode($redirectURI) .
-            '&client_secret=' . CBFacebookPreferences::getAppSecret() .
-            '&code=' . $code
-        );
+        $URL =
+        'https://graph.facebook.com/v13.0/oauth/access_token' .
+        '?client_id=' . CBFacebookPreferences::getAppID() .
+        '&redirect_uri=' . urlencode($redirectURI) .
+        '&client_secret=' . CBFacebookPreferences::getAppSecret() .
+        '&code=' . $code;
 
-        return CBFacebook::fetchGraphAPIResponse($URL);
+        return
+        CBFacebook::fetchGraphAPIResponse(
+            $URL
+        );
     }
     /* fetchAccessTokenObject() */
 
@@ -54,14 +58,31 @@ CBFacebook
      *
      * @return object
      */
-    static function fetchGraphAPIResponse(
+    static function
+    fetchGraphAPIResponse(
         string $URL
-    ): stdClass {
-        $curlHandle = curl_init();
+    ): stdClass
+    {
+        $curlHandle =
+        curl_init();
 
-        curl_setopt($curlHandle, CURLOPT_URL, $URL);
-        curl_setopt($curlHandle, CURLOPT_HEADER, 0);
-        curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt(
+            $curlHandle,
+            CURLOPT_URL,
+            $URL
+        );
+
+        curl_setopt(
+            $curlHandle,
+            CURLOPT_HEADER,
+            0
+        );
+
+        curl_setopt(
+            $curlHandle,
+            CURLOPT_RETURNTRANSFER,
+            1
+        );
 
         /**
          * @NOTE 2014_08_03
@@ -75,23 +96,48 @@ CBFacebook
          *      importance of this.
          */
 
-        curl_setopt($curlHandle, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt(
+            $curlHandle,
+            CURLOPT_CONNECTTIMEOUT,
+            5
+        );
 
-        $response = curl_exec($curlHandle);
+        $response =
+        curl_exec(
+            $curlHandle
+        );
 
-        if ($response === false) {
-            $error = curl_errno($curlHandle);
-            curl_close($curlHandle);
+        if (
+            $response === false
+        ) {
+            $error =
+            curl_errno(
+                $curlHandle
+            );
+
+            curl_close(
+                $curlHandle
+            );
+
             throw new RuntimeException(
                 "Facebook OAuth: The request to exchange a code for an " .
                 "access token failed with the error: {$error}"
             );
         }
 
-        $httpCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
+        $httpCode =
+        curl_getinfo(
+            $curlHandle,
+            CURLINFO_HTTP_CODE
+        );
 
-        if ($httpCode === 400) {
-            $object = json_decode($response);
+        if (
+            $httpCode === 400
+        ) {
+            $object =
+            json_decode(
+                $response
+            );
 
             throw new RuntimeException(
                 'Error retrieving Facebook Graph API response: ' .
@@ -101,9 +147,14 @@ CBFacebook
             );
         }
 
-        curl_close($curlHandle);
+        curl_close(
+            $curlHandle
+        );
 
-        return json_decode($response);
+        return
+        json_decode(
+            $response
+        );
     }
     /* fetchGraphAPIResponse() */
 
@@ -154,24 +205,27 @@ CBFacebook
      *
      * @return string
      */
-    static function oauthURLAtFacebookWebsite(
+    static function
+    oauthURLAtFacebookWebsite(
         string $destinationURL = '/'
-    ): string {
-        $redirectURI = CBFacebook::redirectURI(
+    ): string
+    {
+        $redirectURI =
+        CBFacebook::redirectURI(
             $destinationURL
         );
 
-        $oauthURLAtFacebookWebsite = (
-            'https://www.facebook.com/v13.0/dialog/oauth' .
-            '?client_id=' .
-            urlencode(
-                CBFacebookPreferences::getAppID()
-            ) .
-            '&redirect_uri=' .
-            urlencode($redirectURI)
-        );
+        $oauthURLAtFacebookWebsite =
+        'https://www.facebook.com/v13.0/dialog/oauth' .
+        '?client_id=' .
+        urlencode(
+            CBFacebookPreferences::getAppID()
+        ) .
+        '&redirect_uri=' .
+        urlencode($redirectURI);
 
-        return $oauthURLAtFacebookWebsite;
+        return
+        $oauthURLAtFacebookWebsite;
     }
     /* oauthURLAtFacebookWebsite() */
 
@@ -185,27 +239,36 @@ CBFacebook
      *
      * @return string
      */
-    static function redirectURI(
+    static function
+    redirectURI(
         string $destinationURL = '/'
-    ): string {
-        $state = (object)[
-            'destinationURL' => $destinationURL,
+    ): string
+    {
+        $state =
+        (object)[
+            'destinationURL' =>
+            $destinationURL,
         ];
 
-        $stateAsJSON = json_encode($state);
+        $stateAsJSON =
+        json_encode(
+            $state
+        );
 
         /**
          * The $redirectURI holds the URL that Facebook will redirect to after
          * a Facebook login is attempted.
          */
 
-        $redirectURI = (
-            cbsiteurl() .
-            '/colby/facebook-oauth-handler/?state=' .
-            (urlencode($stateAsJSON))
+        $redirectURI =
+        cbsiteurl() .
+        '/colby/facebook-oauth-handler/?state=' .
+        urlencode(
+            $stateAsJSON
         );
 
-        return $redirectURI;
+        return
+        $redirectURI;
     }
     /* redirectURI() */
 
@@ -218,13 +281,16 @@ CBFacebook
      *
      * @return string
      */
-    static function userImageURL(
+    static function
+    userImageURL(
         string $facebookID
-    ): string {
+    ): string
+    {
         $userImageURL =
         "https://graph.facebook.com/v13.0/{$facebookID}/picture?type=large";
 
-        return $userImageURL;
+        return
+        $userImageURL;
     }
     /* userImageURL() */
 
