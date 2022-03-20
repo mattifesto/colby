@@ -16,15 +16,29 @@
  */
 
 try {
-    $stateAsJSON = cb_query_string_value('state');
-    $state = json_decode($stateAsJSON);
+    $stateAsJSON =
+    cb_query_string_value(
+        'state'
+    );
 
-    $destinationURL = CBModel::valueToString(
+    $state =
+    json_decode(
+        $stateAsJSON
+    );
+
+    $destinationURL =
+    CBModel::valueToString(
         $state,
         'destinationURL'
     );
-} catch (Throwable $throwable) {
-    CBErrorHandler::report($throwable);
+}
+
+catch (
+    Throwable $throwable
+) {
+    CBErrorHandler::report(
+        $throwable
+    );
 
     $destinationURL = '/';
 }
@@ -91,12 +105,14 @@ if (
     );
 }
 
-$facebookUserID = CBModel::valueAsInt(
+$facebookUserID =
+CBModel::valueAsInt(
     $facebookUserProperties,
     'id'
 );
 
-$facebookName = trim(
+$facebookName =
+trim(
     CBModel::valueToString(
         $facebookUserProperties,
         'name'
