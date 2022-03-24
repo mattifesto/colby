@@ -18,7 +18,7 @@ CB_CBView_Hero1Editor
         [
             Colby::flexpath(
                 __CLASS__,
-                'v675.61.7.js',
+                'v675.63.js',
                 cbsysurl()
             ),
         ];
@@ -58,8 +58,10 @@ CB_CBView_Hero1Editor
             'CB_UI_ImageChooser',
             'CB_UI_StringEditor',
             'CBAjax',
+            'CBImage',
             'CBModel',
             'CBUIPanel',
+            'CBUISpec',
             'CBUISpecArrayEditor',
         ];
     }
