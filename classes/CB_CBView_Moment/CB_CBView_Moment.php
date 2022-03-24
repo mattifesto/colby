@@ -18,7 +18,7 @@ CB_CBView_Moment
         [
             Colby::flexpath(
                 __CLASS__,
-                'v675.61.4.css',
+                'v675.62.css',
                 cbsysurl()
             ),
         ];
@@ -38,7 +38,7 @@ CB_CBView_Moment
         [
             Colby::flexpath(
                 __CLASS__,
-                'v675.61.4.js',
+                'v675.62.js',
                 cbsysurl()
             ),
         ];
@@ -57,13 +57,18 @@ CB_CBView_Moment
         return
         [
             'CB_Moment',
+            'CBAjax',
+            'CBConvert',
             'CBImage',
             'CBErrorHandler',
             'CBModel',
+            'CBUIButton',
+            'CBUIPanel',
             'CBUser',
             'Colby',
 
             'CB_UI',
+            'CBAdministratorsUserGroup',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */
@@ -200,13 +205,25 @@ CB_CBView_Moment
         stdClass $momentModel
     ): void
     {
+        $momentModelAsJSONAsHTML =
+        cbhtml(
+            json_encode(
+                $momentModel
+            )
+        );
+
         echo CBConvert::stringToCleanLine(<<<EOT
 
             <div
-                class="
+                class=
+                "
                     CB_CBView_Moment_root_element
                     CB_CBView_Moment_momentPage
+                    CB_CBView_Moment_uninitialized
                 "
+
+                data-momentmodelasjson0959d46fd2=
+                "${momentModelAsJSONAsHTML}"
             >
                 <div
                     class="CB_CBView_Moment_content_element"
@@ -292,7 +309,7 @@ CB_CBView_Moment
             $cbtimestamp
         );
 
-        $timestampHTML =
+        $timestampElementAsHTML =
         ColbyConvert::timestampToHTML(
             $unixTimestamp,
             '',
@@ -313,23 +330,41 @@ CB_CBView_Moment
         CBConvert::stringToCleanLine(<<<EOT
 
             <div class="CB_CBView_Moment_header_element">
-                <a
-                    class="CB_CBView_Moment_userLink_element"
-                    href="${userPageURLAsHTML}"
-                >
-                    <span class="CB_CBView_Moment_fullName_element">
-                        ${userFullNameAsHTML}
+
+                <div class="CB_CBView_Moment_information_element">
+
+                    <a
+                        class="CB_CBView_Moment_userLink_element"
+                        href="${userPageURLAsHTML}"
+                    >
+                        <span class="CB_CBView_Moment_fullName_element">
+                            ${userFullNameAsHTML}
+                        </span>
+
+                        <span class="CB_CBView_Moment_prettyUsername_element">
+                            @${userPrettyUsernameAsHTML}
+                        </span>
+                    </a>
+
+                    <span>
+                    •
                     </span>
 
-                    @${userPrettyUsernameAsHTML}
-                </a>
-                •
-                <a
-                    class="CB_CBView_Moment_timeContainer_element"
-                    href="${momentURLAsHTML}"
-                >
-                    ${timestampHTML}
-                </a>
+                    <a
+                        class="CB_CBView_Moment_timeContainer_element"
+                        href="${momentURLAsHTML}"
+                    >
+                        ${timestampElementAsHTML}
+                    </a>
+
+                </div>
+
+                <div class="CB_CBView_Moment_ellipsis_element">
+
+                    &nbsp;
+
+                </div>
+
             </div>
 
         EOT);

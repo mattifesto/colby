@@ -70,6 +70,12 @@
 
 .CB_CBView_Moment_header_element
 {
+    display:
+    flex;
+
+    justify-content:
+    space-between;
+    
     color:
     var(--CBTextColor3);
 }
