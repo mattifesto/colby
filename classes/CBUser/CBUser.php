@@ -1,9 +1,9 @@
 <?php
 
 final class
-CBUser {
-
-    /* -- CBAjax interfaces -- -- -- -- -- */
+CBUser
+{
+    /* -- CBAjax interfaces -- */
 
 
 
@@ -632,10 +632,12 @@ CBUser {
      */
     static function
     CBHTMLOutput_JavaScriptVariables(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             [
-                'CUser_currentUserModelCBID_jsvariable',
+                'CBUser_currentUserModelCBID_jsvariable',
                 ColbyUser::getCurrentUserCBID(),
             ],
         ];
