@@ -75,6 +75,13 @@ CB_CBView_Hero1
         $viewModel =
         (object)[];
 
+        CB_CBView_Hero1::setAdministrativeTitle(
+            $viewModel,
+            CB_CBView_Hero1::getAdministrativeTitle(
+                $viewSpec
+            )
+        );
+
         CB_CBView_Hero1::setAlternativeText(
             $viewModel,
             CB_CBView_Hero1::getAlternativeText(
@@ -136,29 +143,35 @@ CB_CBView_Hero1
         stdClass $viewModel
     ): string
     {
+        $searchTextSnippets = [
+            CB_CBView_Hero1::getAdministrativeTitle(
+                $viewModel
+            ),
+            CB_CBView_Hero1::getAlternativeText(
+                $viewModel
+            ),
+        ];
+
         $subviewModels =
         CB_CBView_Hero1::getSubviews(
             $viewModel
         );
 
-        $subviewSearchTexts =
-        array_map(
-            function (
-                stdClass $subviewModel
-            ): string
-            {
-                return
+        foreach (
+            $subviewModels as $subviewModel
+        ) {
+            array_push(
+                $searchTextSnippets,
                 CBModel::toSearchText(
                     $subviewModel
-                );
-            },
-            $subviewModels
-        );
-
+                )
+            );
+        }
+        
         return
         implode(
             ' ',
-            $subviewSearchTexts
+            $searchTextSnippets
         );
     }
     // CBModel_toSearchText()
@@ -298,6 +311,44 @@ CB_CBView_Hero1
 
 
     /* -- accessors -- */
+
+
+
+    /**
+     * @param object $viewModel
+     *
+     * @return string
+     */
+    static function
+    getAdministrativeTitle(
+        stdClass $viewModel
+    ): string
+    {
+        return CBModel::valueToString(
+            $viewModel,
+            'CB_CBView_Hero1_administrativeTitle_property',
+        );
+    }
+    // getAdministrativeTitle()
+
+
+
+    /**
+     * @param object $viewModel
+     * @param string $newAdministrativeTitle
+     *
+     * @return void
+     */
+    static function
+    setAdministrativeTitle(
+        stdClass $viewModel,
+        string $newAdministrativeTitle
+    ): void
+    {
+        $viewModel->CB_CBView_Hero1_administrativeTitle_property =
+        $newAdministrativeTitle;
+    }
+    // setAdministrativeTitle()
 
 
 
