@@ -29,21 +29,34 @@
 }
 
 
+
 /**
  * The background element has the transparent black background and 10px of
  * padding to draw a translucent border around the surface element. It is a
  * flexbox so that the surface element can grow to fill its height it it is
  * shorter.
  */
-.CBUIPanel_background {
-    display: flex;
-    flex-direction: column;
+.CBUIPanel_background
+{
+    display:
+    flex;
 
-    background-color: hsla(0, 0%, 0%, 0.5);
-    box-sizing: border-box;
-    min-height: 100vh;
-    padding: 10px;
+    flex-direction:
+    column;
+
+    background-color:
+    hsla(0, 0%, 0%, 0.8);
+
+    box-sizing:
+    border-box;
+
+    min-height:
+    100vh;
+
+    padding:
+    3%;
 }
+
 
 
 /**
@@ -66,25 +79,45 @@
 }
 
 
+
 /**
  * The surface element has a white background and rounded corners. It's single
  * child element will be styled to fill its full area.
  */
-.CBUIPanel_surface2 {
-    display: flex;
+.CBUIPanel_surface2
+{
+    display:
+    flex;
 
-    background-color: var(--CBBackgroundColor);
-    border-radius: 10px;
-    box-sizing: border-box;
-    color: var(--CBTextColor);
-    flex: 1 0 auto;
-    overflow: hidden;
+    background-color:
+    var(--CB_UI_paperColor);
+
+    border:
+    1px solid var(--CB_UI_borderColor);
+
+    border-radius:
+    10px;
+
+    box-sizing:
+    border-box;
+
+    color:
+    var(--CBTextColor);
+
+    flex:
+    1 0 auto;
+
+    overflow:
+    hidden;
 }
+
+
 
 .CBUIPanel_surface2 > * {
     flex: 1 1 auto;
     max-width: 100%;
 }
+
 
 
 /**

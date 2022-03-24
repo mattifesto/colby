@@ -1,9 +1,9 @@
 <?php
 
 final class
-CBUIPanel {
-
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+CBUIPanel
+{
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
@@ -12,11 +12,13 @@ CBUIPanel {
      */
     static function
     CBHTMLOutput_CSSURLs(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
-                'v525.css',
+                'v675.62.css',
                 cbsysurl()
             ),
         ];
