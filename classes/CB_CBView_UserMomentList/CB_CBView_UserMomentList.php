@@ -1,8 +1,8 @@
 <?php
 
 final class
-CB_CBView_UserMomentList {
-
+CB_CBView_UserMomentList
+{
     /* -- CBHTMLOutput interfaces -- */
 
 
@@ -12,11 +12,13 @@ CB_CBView_UserMomentList {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
-                'v675.52.js',
+                'v675.62.js',
                 cbsysurl()
             ),
         ];

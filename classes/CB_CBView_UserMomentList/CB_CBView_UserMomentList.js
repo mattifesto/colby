@@ -8,7 +8,7 @@
     CBErrorHandler,
     Colby,
 
-    CUser_currentUserModelCBID_jsvariable,
+    CBUser_currentUserModelCBID_jsvariable,
 */
 
 (function () {
@@ -85,7 +85,7 @@
 
             if (
                 userModelCBID !== undefined &&
-                userModelCBID === CUser_currentUserModelCBID_jsvariable &&
+                userModelCBID === CBUser_currentUserModelCBID_jsvariable &&
                 showMomentCreator
             ) {
                 let momentCreator = CB_CBView_MomentCreator.create();
