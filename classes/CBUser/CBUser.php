@@ -839,12 +839,19 @@ CBUser
         }
 
 
-        $userModel = (object)[
-            'description' => trim(
-                CBModel::valueToString($spec, 'description')
+        $userModel =
+        (object)
+        [
+            'description' =>
+            trim(
+                CBModel::valueToString(
+                    $spec,
+                    'description'
+                )
             ),
 
-            'email' => $email,
+            'email' =>
+            $email,
 
             /**
              * @deprecated 2019_11_12
@@ -855,22 +862,28 @@ CBUser
              *      object from the spec. Therefore this property can be
              *      completely removed in a few months.
              */
-            'facebook' => $facebook,
+            'facebook' =>
+            $facebook,
 
-            'facebookAccessToken' => CBModel::valueToString(
-                $spec,
-                'facebookAccessToken'
-            ),
+            'facebookUserID' =>
+            $facebookUserID,
 
-            'facebookUserID' => $facebookUserID,
-
-            'lastLoggedIn' => CBModel::valueAsInt(
+            'lastLoggedIn' =>
+            CBModel::valueAsInt(
                 $spec,
                 'lastLoggedIn'
             ),
 
-            'passwordHash' => $passwordHash,
+            'passwordHash' =>
+            $passwordHash,
         ];
+
+        CBUser::setFacebookAccessToken(
+            $userModel,
+            CBUser::getFacebookAccessToken(
+                $spec
+            )
+        );
 
         CBUser::setFacebookName(
             $userModel,
@@ -1367,6 +1380,51 @@ CBUser
         $userModel->email = $emailAddress;
     }
     /* setEmailAddress() */
+
+
+
+    /**
+     * @param object $userModel
+     *
+     * @return string
+     *
+     *      Returns an empty string if no access token is available.
+     */
+    static function
+    getFacebookAccessToken(
+        stdClass $userModel
+    ): string
+    {
+        $facebookAccessToken =
+        trim(
+            CBModel::valueToString(
+                $userModel,
+                'facebookAccessToken'
+            )
+        );
+
+        return $facebookAccessToken;
+    }
+    /* getFacebookAccessToken() */
+
+
+
+    /**
+     * @param object $userModel
+     * @param string $newFacebookAccessToken
+     *
+     * @return void
+     */
+    static function
+    setFacebookAccessToken(
+        stdClass $userModel,
+        string $newFacebookAccessToken
+    ): void
+    {
+        $userModel->facebookAccessToken =
+        $newFacebookAccessToken;
+    }
+    /* setFacebookAccessToken() */
 
 
 
