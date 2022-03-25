@@ -8,28 +8,35 @@ define(
 
 
 final class
-ColbyUser {
-
-    /* -- private static variables -- -- -- -- -- */
+ColbyUser
+{
+    /* -- private static variables -- */
 
 
 
     /**
      * If a user is logged in we store their user CBID.
      */
-    private static $currentUserCBID = null;
+
+    private static
+    $currentUserCBID =
+    null;
 
 
 
-    /* -- functions -- -- -- -- -- */
+    /* -- functions -- */
 
 
 
     /**
      * @return bool
      */
-    static function currentUserIsLoggedIn(): bool {
-        return !empty(
+    static function
+    currentUserIsLoggedIn(
+    ): bool
+    {
+        return
+        !empty(
             ColbyUser::$currentUserCBID
         );
     }
@@ -43,8 +50,12 @@ ColbyUser {
      *      Returns the current user's CBID if a user is logged in; otherwise
      *      null.
      */
-    static function getCurrentUserCBID(): ?string {
-        return ColbyUser::$currentUserCBID;
+    static function
+    getCurrentUserCBID(
+    ): ?string
+    {
+        return
+        ColbyUser::$currentUserCBID;
     }
     /* getCurrentUserCBID() */
 
@@ -53,8 +64,12 @@ ColbyUser {
     /**
      * @deprecated use ColbyUser::getCurrentUserCBID()
      */
-    static function getCurrentUserID(): ?string {
-        return ColbyUser::getCurrentUserCBID();
+    static function
+    getCurrentUserID(
+    ): ?string
+    {
+        return
+        ColbyUser::getCurrentUserCBID();
     }
     /* getCurrentUserID() */
 
@@ -65,7 +80,11 @@ ColbyUser {
      *
      * @return string|false
      */
-    static function groupNameToTableName($groupName) {
+    static function
+    groupNameToTableName(
+        $groupName
+    )
+    {
         if (
             !preg_match(
                 '/^[a-zA-Z0-9]+$/',
@@ -75,8 +94,10 @@ ColbyUser {
             return false;
         }
 
-        return "ColbyUsersWhoAre{$groupName}";
+        return
+        "ColbyUsersWhoAre{$groupName}";
     }
+    // groupNameToTableName()
 
 
 
@@ -88,7 +109,8 @@ ColbyUser {
      */
     static function
     initialize(
-    ): void {
+    ): void
+    {
         if (
             !isset(
                 $_COOKIE[CBUserCookieName]
@@ -97,10 +119,13 @@ ColbyUser {
             return;
         }
 
-        $cookieCipherData = $_COOKIE[CBUserCookieName];
+        $cookieCipherData =
+        $_COOKIE[CBUserCookieName];
 
-        try {
-            $cookie = CBConvert::valueAsObject(
+        try
+        {
+            $cookie =
+            CBConvert::valueAsObject(
                 Colby::decrypt(
                     $cookieCipherData
                 )
@@ -114,10 +139,12 @@ ColbyUser {
                 return;
             }
 
-            $expirationTimestamp = CBModel::valueAsInt(
+            $expirationTimestamp =
+            CBModel::valueAsInt(
                 $cookie,
                 'expirationTimestamp'
-            ) ?? PHP_INT_MIN;
+            ) ??
+            PHP_INT_MIN;
 
             if (
                 time() > $expirationTimestamp
@@ -127,7 +154,8 @@ ColbyUser {
                 return;
             }
 
-            $userCBID = CBModel::valueAsCBID(
+            $userCBID =
+            CBModel::valueAsCBID(
                 $cookie,
                 'userCBID'
             );
@@ -141,8 +169,11 @@ ColbyUser {
             }
 
             /* Success, the user is now logged in. */
-            ColbyUser::$currentUserCBID = $userCBID;
-        } catch (
+            ColbyUser::$currentUserCBID =
+            $userCBID;
+        }
+
+        catch (
             Throwable $exception
         ) {
             CBErrorHandler::report(
@@ -171,7 +202,8 @@ ColbyUser {
         string $userCBID,
         bool $shouldKeepSignedIn = false
     ): void {
-        $userModelCBIDIsACBID = CBID::valueIsCBID(
+        $userModelCBIDIsACBID =
+        CBID::valueIsCBID(
             $userCBID
         );
 
@@ -195,26 +227,61 @@ ColbyUser {
             $shouldKeepSignedIn
         ) {
             /* 30 days from now */
-            $expirationTimestamp = time() + (60 * 60 * 24 * 30);
-        } else {
-            /* 10 hours from now */
-            $expirationTimestamp = time() + (60 * 60 * 10);
+            $expirationTimestamp =
+            time() +
+            (
+                60 *
+                60 *
+                24 *
+                30
+            );
         }
 
-        $cookie = (object)[
-            'userCBID' => $userCBID,
-            'expirationTimestamp' => $expirationTimestamp,
+        else
+        {
+            /* 10 hours from now */
+            $expirationTimestamp =
+            time() +
+            (
+                60 *
+                60 *
+                10
+            );
+        }
+
+        $cookie =
+        (object)
+        [
+            'userCBID' =>
+            $userCBID,
+
+            'expirationTimestamp' =>
+            $expirationTimestamp,
         ];
 
-        $encryptedCookie = Colby::encrypt(
+        $encryptedCookie =
+        Colby::encrypt(
             $cookie
         );
 
         /* 60 days from now */
-        $cookieExpirationTimestamp = time() + (60 * 60 * 24 * 60);
-        $path = '/';
-        $domain = '';
-        $secureConnectionsOnly = true;
+        $cookieExpirationTimestamp =
+        time() +
+        (
+            60 *
+            60 *
+            24 *
+            60
+        );
+
+        $path =
+        '/';
+
+        $domain =
+        '';
+
+        $secureConnectionsOnly =
+        true;
 
         setcookie(
             CBUserCookieName,
@@ -227,7 +294,8 @@ ColbyUser {
 
 
 
-        ColbyUser::$currentUserCBID = $userCBID;
+        ColbyUser::$currentUserCBID =
+        $userCBID;
     }
     /* loginUser() */
 
@@ -247,26 +315,45 @@ ColbyUser {
      *
      * @return void
      */
-    static function loginFacebookUser(
+    static function
+    loginFacebookUser(
         int $facebookUserID,
         string $facebookAccessToken,
         string $facebookName
-    ): void {
-        $userCBID = CBUser::facebookUserIDToUserCBID(
+    ): void
+    {
+        $userCBID =
+        CBUser::facebookUserIDToUserCBID(
             $facebookUserID
         );
 
-        if ($userCBID === null) {
-            $userCBID = CBID::generateRandomCBID();
+        if (
+            $userCBID === null
+        ) {
+            $userCBID =
+            CBID::generateRandomCBID();
         }
 
-        $userSpecUpdates = (object)[
-            'className' => 'CBUser',
-            'ID' => $userCBID,
-            'facebookAccessToken' => $facebookAccessToken,
-            'facebookName' => $facebookName,
-            'facebookUserID' => $facebookUserID,
-            'lastLoggedIn' => time(),
+        $userSpecUpdates =
+        (object)
+        [
+            'className' =>
+            'CBUser',
+
+            'ID' =>
+            $userCBID,
+
+            'facebookAccessToken' =>
+            $facebookAccessToken,
+
+            'facebookName' =>
+            $facebookName,
+
+            'facebookUserID' =>
+            $facebookUserID,
+
+            'lastLoggedIn' =>
+            time(),
         ];
 
         CBModelUpdater::update(
@@ -285,9 +372,12 @@ ColbyUser {
      * This function must be called before any output is generated because it
      * sets a cookie.
      */
-    static function logoutCurrentUser() {
+    static function
+    logoutCurrentUser(
+    ) {
         ColbyUser::removeUserCookie();
     }
+    // logoutCurrentUser()
 
 
 
@@ -301,7 +391,9 @@ ColbyUser {
      * This function must be called before any output is generated because it
      * sets a cookie.
      */
-    private static function removeUserCookie() {
+    private static function
+    removeUserCookie(
+    ) {
         $value = '';
         $expirationTimestamp = time() - (60 * 60 * 24);
         $path = '/';
