@@ -1,48 +1,71 @@
 <?php
 
-final class CBFacebookTests {
+final class
+CBFacebookTests
+{
 
-    /* -- CBTest interfaces -- -- -- -- -- */
+    /* -- CBTest interfaces -- */
 
 
 
     /**
      * @return [object]
      */
-    static function CBTest_getTests(): array {
-        return [
-            (object)[
-                'name' => 'fetchUserProperties',
-                'type' => 'server',
+    static function
+    CBTest_getTests(
+    ): array
+    {
+        return
+        [
+            (object)
+            [
+                'name' =>
+                'fetchUserProperties',
+
+                'type' =>
+                'server',
             ],
         ];
     }
+    // CBTest_getTests()
 
 
 
-    /* -- tests -- -- -- -- -- */
+    /* -- tests -- */
 
 
 
     /**
      * @return object
      */
-    static function CBTest_fetchUserProperties(): stdClass {
-        $currentUserID = ColbyUser::getCurrentUserCBID();
+    static function
+    fetchUserProperties(
+    ): stdClass
+    {
+        $currentUserID =
+        ColbyUser::getCurrentUserCBID();
 
-        $currentUserModel = CBModelCache::fetchModelByID(
+        $currentUserModel =
+        CBModelCache::fetchModelByID(
             $currentUserID
         );
 
-        $facebookAccessToken = CBModel::valueToString(
+        $facebookAccessToken =
+        CBModel::valueToString(
             $currentUserModel,
             'facebookAccessToken'
         );
 
-        if (empty($facebookAccessToken)) {
-            return (object)[
-                'succeeded' => true,
-                'message' => <<<EOT
+        if (
+            empty($facebookAccessToken)
+        ) {
+            return
+            (object)
+            [
+                'succeeded' =>
+                true,
+                'message' =>
+                <<<EOT
 
                     This test was not run beacuse the current user does not have
                     a Facebook access token.
@@ -51,23 +74,28 @@ final class CBFacebookTests {
             ];
         }
 
-        $facebookUserProperties = CBFacebook::fetchUserProperties(
+        $facebookUserProperties =
+        CBFacebook::fetchUserProperties(
             $facebookAccessToken
         );
 
-        $actualKeys = array_keys(
+        $actualKeys =
+        array_keys(
             get_object_vars(
                 $facebookUserProperties
             )
         );
 
-        $expectedKeys = [
+        $expectedKeys =
+        [
             'name',
             'metadata',
             'id',
         ];
 
-        if ($actualKeys !== $expectedKeys) {
+        if (
+            $actualKeys !== $expectedKeys
+        ) {
             return CBTest::resultMismatchFailure(
                 'keys',
                 $actualKeys,
@@ -75,17 +103,28 @@ final class CBFacebookTests {
             );
         }
 
-        $currentUserModelAsCBMessage = CBMessageMarkup::stringToMessage(
-            CBConvert::valueToPrettyJSON($currentUserModel)
+        $currentUserModelAsCBMessage =
+        CBMessageMarkup::stringToMessage(
+            CBConvert::valueToPrettyJSON(
+                $currentUserModel
+            )
         );
 
-        $facebookUserPropertiesAsCBMessage = CBMessageMarkup::stringToMessage(
-            CBConvert::valueToPrettyJSON($facebookUserProperties)
+        $facebookUserPropertiesAsCBMessage =
+        CBMessageMarkup::stringToMessage(
+            CBConvert::valueToPrettyJSON(
+                $facebookUserProperties
+            )
         );
 
-        return (object)[
-            'succeeded' => true,
-            'message' => <<<EOT
+        return
+        (object)
+        [
+            'succeeded' =>
+            true,
+
+            'message' =>
+            <<<EOT
 
                 --- pre\n{$facebookUserPropertiesAsCBMessage}
                 ---
@@ -96,6 +135,6 @@ final class CBFacebookTests {
             EOT,
         ];
     }
-    /* CBTest_fetchUserProperties() */
+    /* fetchUserProperties() */
 
 }
