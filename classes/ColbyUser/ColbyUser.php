@@ -134,7 +134,7 @@ ColbyUser
             if (
                 $cookie === null
             ) {
-                ColbyUser::removeUserCookie();
+                ColbyUser::logoutCurrentUser();
 
                 return;
             }
@@ -149,7 +149,7 @@ ColbyUser
             if (
                 time() > $expirationTimestamp
             ) {
-                ColbyUser::removeUserCookie();
+                ColbyUser::logoutCurrentUser();
 
                 return;
             }
@@ -163,7 +163,7 @@ ColbyUser
             if (
                 $userCBID === null
             ) {
-                ColbyUser::removeUserCookie();
+                ColbyUser::logoutCurrentUser();
 
                 return;
             }
@@ -180,7 +180,7 @@ ColbyUser
                 $exception
             );
 
-            ColbyUser::removeUserCookie();
+            ColbyUser::logoutCurrentUser();
         }
     }
     /* initialize() */
@@ -374,7 +374,30 @@ ColbyUser
      */
     static function
     logoutCurrentUser(
-    ) {
+    ): void
+    {
+        $userSpecUpdater =
+        new CBModelUpdater(
+            ColbyUser::getCurrentUserCBID()
+        );
+
+        $userSpec =
+        $userSpecUpdater->getSpec();
+
+        CBUser::setFacebookAccessToken(
+            $userSpec,
+            ''
+        );
+
+        CBDB::transaction(
+            function () use (
+                $userSpecUpdater
+            ): void
+            {
+                $userSpecUpdater->save2();
+            }
+        );
+
         ColbyUser::removeUserCookie();
     }
     // logoutCurrentUser()
@@ -393,10 +416,21 @@ ColbyUser
      */
     private static function
     removeUserCookie(
-    ) {
-        $value = '';
-        $expirationTimestamp = time() - (60 * 60 * 24);
-        $path = '/';
+    ): void
+    {
+        $value =
+        '';
+
+        $expirationTimestamp =
+        time() -
+        (
+            60 *
+            60 *
+            24
+        );
+
+        $path =
+        '/';
 
         setcookie(
             CBUserCookieName,
