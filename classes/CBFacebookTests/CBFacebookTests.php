@@ -88,9 +88,8 @@ CBFacebookTests
 
         $expectedKeys =
         [
-            'name',
-            'metadata',
             'id',
+            'name',
         ];
 
         if (
