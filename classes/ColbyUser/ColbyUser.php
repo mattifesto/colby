@@ -376,27 +376,34 @@ ColbyUser
     logoutCurrentUser(
     ): void
     {
-        $userSpecUpdater =
-        new CBModelUpdater(
-            ColbyUser::getCurrentUserCBID()
-        );
+        $currentUserModelCBID =
+        ColbyUser::getCurrentUserCBID();
 
-        $userSpec =
-        $userSpecUpdater->getSpec();
+        if (
+            $currentUserModelCBID !== null
+        ) {
+            $userSpecUpdater =
+            new CBModelUpdater(
+                $currentUserModelCBID
+            );
 
-        CBUser::setFacebookAccessToken(
-            $userSpec,
-            ''
-        );
+            $userSpec =
+            $userSpecUpdater->getSpec();
 
-        CBDB::transaction(
-            function () use (
-                $userSpecUpdater
-            ): void
-            {
-                $userSpecUpdater->save2();
-            }
-        );
+            CBUser::setFacebookAccessToken(
+                $userSpec,
+                ''
+            );
+
+            CBDB::transaction(
+                function () use (
+                    $userSpecUpdater
+                ): void
+                {
+                    $userSpecUpdater->save2();
+                }
+            );
+        }
 
         ColbyUser::removeUserCookie();
     }
