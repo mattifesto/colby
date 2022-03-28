@@ -14,20 +14,22 @@ CBGoogleTagManagerPageSettingsPart
     CBPageSettings_renderHeadElementHTML(
     ): void
     {
+        $environment =
+        CBSitePreferences::getEnvironment(
+            CBSitePreferences::model()
+        );
 
         /**
-         * If the site is NOT a development website and the user is an
-         * administrator, don't send Google Analytics events for the current
-         * page.
+         * If the site is a production website and the user is an administrator,
+         * don't send Google Analytics events for the current page.
          */
         if (
-            CBSitePreferences::getIsDevelopmentWebsite() !== true
+            $environment === 'CBSitePreferences_environment_production'
         ) {
-            $currentUserIsAnAdministrator = (
-                CBUserGroup::userIsMemberOfUserGroup(
-                    ColbyUser::getCurrentUserCBID(),
-                    'CBAdministratorsUserGroup'
-                )
+            $currentUserIsAnAdministrator =
+            CBUserGroup::userIsMemberOfUserGroup(
+                ColbyUser::getCurrentUserCBID(),
+                'CBAdministratorsUserGroup'
             );
 
             if (
