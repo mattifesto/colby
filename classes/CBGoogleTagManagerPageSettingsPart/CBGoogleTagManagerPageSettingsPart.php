@@ -1,7 +1,8 @@
 <?php
 
-final class CBGoogleTagManagerPageSettingsPart {
-
+final class
+CBGoogleTagManagerPageSettingsPart
+{
     /* -- CBPageSettings interfaces -- */
 
 
@@ -11,14 +12,17 @@ final class CBGoogleTagManagerPageSettingsPart {
      */
     static function
     CBPageSettings_renderHeadElementHTML(
-    ): void {
+    ): void
+    {
 
         /**
          * If the site is NOT a development website and the user is an
          * administrator, don't send Google Analytics events for the current
          * page.
          */
-        if (CBSitePreferences::getIsDevelopmentWebsite() !== true) {
+        if (
+            CBSitePreferences::getIsDevelopmentWebsite() !== true
+        ) {
             $currentUserIsAnAdministrator = (
                 CBUserGroup::userIsMemberOfUserGroup(
                     ColbyUser::getCurrentUserCBID(),
@@ -26,35 +30,70 @@ final class CBGoogleTagManagerPageSettingsPart {
                 )
             );
 
-            if ($currentUserIsAnAdministrator) {
+            if (
+                $currentUserIsAnAdministrator
+            ) {
                 return;
             }
         }
 
-        $googleTagManagerID = CBSitePreferences::googleTagManagerID();
+        $googleTagManagerID =
+        CBSitePreferences::googleTagManagerID();
 
-        $isUniversalAnalyticsID = preg_match(
+        $isUniversalAnalyticsID =
+        preg_match(
             '/^UA-/',
             $googleTagManagerID
         );
 
-        if ($isUniversalAnalyticsID) {
+        if (
+            $isUniversalAnalyticsID
+        ) {
+            $googleGTagScriptURL =
+            'https://www.googletagmanager.com/gtag/js?id=' .
+            cbhtml(
+                $googleTagManagerID
+            );
+
             ?>
 
             <!-- Global site tag (gtag.js) - Google Analytics -->
-            <script async src="https://www.googletagmanager.com/gtag/js?id=<?= $googleTagManagerID ?>"></script>
-            <script>
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
 
-              gtag('config', '<?= $googleTagManagerID ?>');
+            <script
+                async
+                src="<?= $googleGTagScriptURL ?>"
+            >
+            </script>
+
+            <script>
+              window.dataLayer =
+              window.dataLayer ||
+              [];
+
+              function gtag()
+              {
+                  dataLayer.push(
+                      arguments
+                  );
+              }
+
+              gtag(
+                  'js',
+                  new Date()
+              );
+
+              gtag(
+                  'config',
+                  '<?= $googleTagManagerID ?>'
+              );
             </script>
 
             <?php
         }
 
-        else if ($googleTagManagerID !== '') {
+        else if (
+            $googleTagManagerID !== ''
+        ) {
             ?>
 
             <!-- Google Tag Manager -->
@@ -75,34 +114,60 @@ final class CBGoogleTagManagerPageSettingsPart {
     /**
      * @return void
      */
-    static function CBPageSettings_renderPreContentHTML(
-    ): void {
-        $currentUserIsAnAdministrator = CBUserGroup::userIsMemberOfUserGroup(
+    static function
+    CBPageSettings_renderPreContentHTML(
+    ): void
+    {
+        $currentUserIsAnAdministrator =
+        CBUserGroup::userIsMemberOfUserGroup(
             ColbyUser::getCurrentUserCBID(),
             'CBAdministratorsUserGroup'
         );
 
-        if ($currentUserIsAnAdministrator) {
+        if (
+            $currentUserIsAnAdministrator
+        ) {
             return;
         }
 
-        $googleTagManagerID = CBSitePreferences::googleTagManagerID();
+        $googleTagManagerID =
+        CBSitePreferences::googleTagManagerID();
 
-        $isUniversalAnalyticsID = preg_match(
+        $isUniversalAnalyticsID =
+        preg_match(
             '/^UA-/',
             $googleTagManagerID
         );
 
-        if ($isUniversalAnalyticsID) {
+        if (
+            $isUniversalAnalyticsID
+        ) {
             return;
         }
 
-        else if ($googleTagManagerID !== '') {
+        else if (
+            $googleTagManagerID !== ''
+        ) {
+            $googleTagManagerFrameURL =
+            '//www.googletagmanager.com/ns.html?id=' .
+            cbhtml(
+                $googleTagManagerID
+            );
+
             ?>
 
             <!-- Google Tag Manager -->
-            <noscript><iframe src="//www.googletagmanager.com/ns.html?id=<?= $googleTagManagerID ?>"
-            height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+            <noscript>
+                <iframe
+                    src="<?= $googleTagManagerFrameURL ?>"
+                    height="0"
+                    width="0"
+                    style="display:none;visibility:hidden"
+                >
+                </iframe>
+            </noscript>
+
             <!-- End Google Tag Manager -->
 
             <?php
