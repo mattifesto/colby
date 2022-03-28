@@ -41,8 +41,7 @@ CBGoogleTagManagerPageSettingsPart
         CBSitePreferences::googleTagManagerID();
 
         $isUniversalAnalyticsID =
-        preg_match(
-            '/^UA-/',
+        CBGoogleTagManagerPageSettingsPart::stringIsGoogleAnalyticsID(
             $googleTagManagerID
         );
 
@@ -134,8 +133,7 @@ CBGoogleTagManagerPageSettingsPart
         CBSitePreferences::googleTagManagerID();
 
         $isUniversalAnalyticsID =
-        preg_match(
-            '/^UA-/',
+        CBGoogleTagManagerPageSettingsPart::stringIsGoogleAnalyticsID(
             $googleTagManagerID
         );
 
@@ -174,5 +172,35 @@ CBGoogleTagManagerPageSettingsPart
         }
     }
     /* CBPageSettings_renderPreContentHTML() */
+
+
+
+    // -- functions
+
+
+
+    /**
+     * @return bool
+     *
+     *      This function will return true if the $ID argument is an analytics
+     *      ID and specifically not a Google Tag Manager ID.
+     */
+    static function
+    stringIsGoogleAnalyticsID(
+        string $ID
+    ): bool
+    {
+        $result =
+        preg_match(
+            '/^(G|UA)-/',
+            $ID
+        );
+
+        return
+        (
+            $result === 1
+        );
+    }
+    // stringIsGoogleAnalyticsID
 
 }
