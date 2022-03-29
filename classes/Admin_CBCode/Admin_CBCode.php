@@ -1684,17 +1684,27 @@ final class Admin_CBCode {
                 /**
                  * 2019_07_27
                  */
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => (
-                        'CBUIImageChooser.createThumbnailSizedChooser\\('
-                    ),
-                    'severity' => 4,
-                    'title' => (
-                        'Replace ' .
-                        'CBUIImageChooser.createThumbnailSizedChooser() ' .
-                        'with CBUIImageChooser.create().'
-                    ),
+                (object)
+                [
+                    'CBCodeSearch_CBID' =>
+                    'ae25c327b6cce0a7c4f720b4d13027ac5f5836ff',
+
+                    'filetype' =>
+                    'js',
+
+                    'regex' =>
+                    'CBUIImageChooser\\.createThumbnailSizedChooser\\(',
+
+                    'severity' =>
+                    4,
+
+                    'title' =>
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        Replace CBUIImageChooser.createThumbnailSizedChooser()
+                        with CBUIImageChooser.create().
+
+                    EOT),
                 ],
 
 
