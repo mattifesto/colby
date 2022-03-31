@@ -981,16 +981,13 @@ CBModel {
                 return '';
             }
 
-            $normalizedURLPath = (
-                '/' .
-                CBConvert::stringToURI(
-                    $potentialURLPath
-                ) .
-                '/'
+            $isValid =
+            CB_URL::potentialURLPathIsValid(
+                $potentialURLPath
             );
-
+            
             if (
-                $potentialURLPath !== $normalizedURLPath
+                $isValid !== true
             ) {
                 throw new CBExceptionWithValue(
                     CBConvert::stringToCleanLine(<<<EOT
