@@ -1006,12 +1006,14 @@ CBUser
     static function
     CBModel_upgrade(
         stdClass $originalSpec
-    ): stdClass {
+    ): stdClass
+    {
         /**
          * version 675 upgrades can be removed in version 676
          */
 
-        $upgradedSpec = CBModel::clone(
+        $upgradedSpec =
+        CBModel::clone(
             $originalSpec
         );
 
@@ -1021,7 +1023,8 @@ CBUser
         if (
             !isset($upgradedSpec->facebookUserID)
         ) {
-            $upgradedSpec->facebookUserID = CBModel::valueAsInt(
+            $upgradedSpec->facebookUserID =
+            CBModel::valueAsInt(
                 $upgradedSpec,
                 'facebook.id'
             );
@@ -1033,7 +1036,8 @@ CBUser
         if (
             !isset($upgradedSpec->facebookName)
         ) {
-            $upgradedSpec->facebookName = CBModel::valueToString(
+            $upgradedSpec->facebookName =
+            CBModel::valueToString(
                 $upgradedSpec,
                 'facebook.name'
             );
@@ -1054,18 +1058,21 @@ CBUser
          *      If the user doesn't have a username, generate one for them.
          */
 
-        $userModelCBID = CBModel::getCBID(
+        $userModelCBID =
+        CBModel::getCBID(
             $originalSpec
         );
 
-        $currentUsername = CBUser::getPrettyUsername(
+        $currentUsername =
+        CBUser::getPrettyUsername(
             $originalSpec
         );
 
         if (
             $currentUsername === ''
         ) {
-            $randomUsername = CBUser::generateRandomAvailablePrettyUsername(
+            $randomUsername =
+            CBUser::generateRandomAvailablePrettyUsername(
                 $userModelCBID
             );
 
@@ -1075,9 +1082,27 @@ CBUser
             );
         }
 
+
+
+        /**
+         * The model version date is updated when every single model with this
+         * class name needs to be updated. Document the reason for each change
+         * in this comment.
+         *
+         *      2022_03_30 When users would change their username, the old
+         *      username association was not being removed. The bug was fixed
+         *      and re-saving will fix any user models that are affected.
+         */
+
+        $upgradedSpec->CBUser_versionDate_property =
+        '2022_03_30';
+
+
+
         /* done */
 
-        return $upgradedSpec;
+        return
+        $upgradedSpec;
     }
     /* CBModel_upgrade() */
 
@@ -1148,98 +1173,113 @@ CBUser
     static function
     CBModels_willSave(
         array $userModels
-    ): void {
+    ): void
+    {
         foreach (
             $userModels as $userModel
         ) {
-            $userModelCBID = CBModel::getCBID(
+            $userModelCBID =
+            CBModel::getCBID(
                 $userModel
             );
 
-            $userModelCBIDAsSQL = CBID::toSQL(
+            $userModelCBIDAsSQL =
+            CBID::toSQL(
                 $userModelCBID
             );
 
 
-            /* username */
 
-            $prettyUsername = CBUser::getPrettyUsername(
+            /**
+             * @NOTE 2022_03_30
+             *
+             *      It's important to know that we are inside a transaction when
+             *      this function is called because the queries below are very
+             *      risky if we are not.
+             */
+
+            $prettyUsername =
+            CBUser::getPrettyUsername(
                 $userModel
             );
 
+            /**
+             * Delete previous username. This actually works to delete
+             * multiple usernames that may be associated with a user due
+             * to a bug (that has been fixed).
+             */
+
+            CBModelAssociations::delete(
+                $userModelCBID,
+                'CBUser_username_association'
+            );
+
+            /**
+             * User models will soon be required to have usernames but
+             * at this time they aren't.
+             */
 
             if (
-                $prettyUsername === ''
+                $prettyUsername !== ''
             ) {
-                CBModelAssociations::delete(
-                    $userModelCBID,
-                    'CBUser_username_association'
-                );
-            }
-
-            else {
-                $usernameCBID = CB_Username::prettyUsernameToUsernameModelCBID(
+                $potentialUsernameCBID =
+                CB_Username::prettyUsernameToUsernameModelCBID(
                     $prettyUsername
                 );
 
-                $existingAssociation = CBModelAssociations::fetchOne(
+                $existingUsernameAssociation =
+                CBModelAssociations::fetchOne(
                     null,
                     'CBUser_username_association',
-                    $usernameCBID
+                    $potentialUsernameCBID
                 );
 
                 /**
-                 * If there is no association, create one to reserved the
-                 * username.
+                 * Since we've already delete any username associations for this
+                 * user if a username association exists it means the username is
+                 * associated with another user and is therefore not available.
                  */
 
                 if (
-                    $existingAssociation === null
+                    $existingUsernameAssociation !== null
                 ) {
-                    $newAssociation = CBModel::createSpec(
-                        'CB_ModelAssociation'
-                    );
-
-                    CB_ModelAssociation::setFirstCBID(
-                        $newAssociation,
-                        $userModelCBID
-                    );
-
-                    CB_ModelAssociation::setAssociationKey(
-                        $newAssociation,
-                        'CBUser_username_association'
-                    );
-
-                    CB_ModelAssociation::setSecondCBID(
-                        $newAssociation,
-                        $usernameCBID
-                    );
-
-                    CBModelAssociations::insertOrUpdate(
-                        $newAssociation
-                    );
-                }
-
-                /**
-                 * Otherwise, if the username has been reserved by another user
-                 * throw an exception.
-                 */
-
-                else if (
-                    $existingAssociation->ID !== $userModelCBID
-                ) {
-                    throw new CBExceptionWithValue(
+                    throw
+                    new CBExceptionWithValue(
                         CBConvert::stringToCleanLine(<<<EOT
 
                             The username in this user model has already been
-                            reserved by another user.
+                            associated with another user.
 
                         EOT),
                         $userModel,
                         '6b9e8d649985a7fdd993eaefd94220a8de53bebb'
                     );
                 }
+
+                $newAssociation = CBModel::createSpec(
+                    'CB_ModelAssociation'
+                );
+
+                CB_ModelAssociation::setFirstCBID(
+                    $newAssociation,
+                    $userModelCBID
+                );
+
+                CB_ModelAssociation::setAssociationKey(
+                    $newAssociation,
+                    'CBUser_username_association'
+                );
+
+                CB_ModelAssociation::setSecondCBID(
+                    $newAssociation,
+                    $potentialUsernameCBID
+                );
+
+                CBModelAssociations::insertOrUpdate(
+                    $newAssociation
+                );
             }
+
 
 
             /* email */
