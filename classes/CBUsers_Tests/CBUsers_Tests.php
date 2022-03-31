@@ -1,8 +1,9 @@
 <?php
 
-final class CBUsers_Tests {
-
-    /* -- CBTest interfaces -- -- -- -- -- */
+final class
+CBUsers_Tests
+{
+    /* -- CBTest interfaces -- */
 
 
 
@@ -30,8 +31,10 @@ final class CBUsers_Tests {
      */
     static function
     upgrade(
-    ): stdClass {
-        $originalSpecs = [
+    ): stdClass
+    {
+        $originalSpecs =
+        [
             (object)[
                 'className' => 'CBUser',
                 'CBUser_prettyUsername_property' => 'BobBobberts',
@@ -56,27 +59,40 @@ final class CBUsers_Tests {
             ],
         ];
 
-        $upgradedSpecs = [
-            (object)[
+        $upgradedSpecs =
+        [
+            (object)
+            [
                 'className' => 'CBUser',
                 'facebookUserID' => null,
                 'facebookName' => '',
                 'CBUser_prettyUsername_property' => 'BobBobberts',
                 'CBModel_versionDate_property' => '2022_01_15',
+
+                'CBUser_versionDate_property' =>
+                '2022_03_30',
             ],
-            (object)[
+            (object)
+            [
                 'className' => 'CBUser',
                 'facebookUserID' => 503,
                 'facebookName' => 'Bob',
                 'CBUser_prettyUsername_property' => 'BobBobberts',
                 'CBModel_versionDate_property' => '2022_01_15',
+
+                'CBUser_versionDate_property' =>
+                '2022_03_30',
             ],
-            (object)[
+            (object)
+            [
                 'className' => 'CBUser',
                 'facebookUserID' => 504,
                 'facebookName' => 'Chet',
                 'CBUser_prettyUsername_property' => 'BobBobberts',
                 'CBModel_versionDate_property' => '2022_01_15',
+
+                'CBUser_versionDate_property' =>
+                '2022_03_30',
             ],
         ];
 
