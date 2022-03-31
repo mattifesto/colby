@@ -401,6 +401,11 @@ CBConvert
 
 
     /**
+     * This function will produce a preferred stub. This means underscores will
+     * be converted to hyphens. However underscores are allowed in URLs so you
+     * should not use this function if you want a URL that must contain an
+     * underscore.
+     *
      * @see documentation
      *
      * @param mixed $string
@@ -465,6 +470,14 @@ CBConvert
 
 
     /**
+     * This function will produce a "preferred" URL which does not contain
+     * underscores. Underscores are allowed in URLs but are discouraged, so if
+     * you want them, do not use this function.
+     *
+     * Scenarios: Page editors would use this function to generate the page URL.
+     * Usernames can contain underscores so the URLs for user pages would not
+     * be generated using this function.
+     *
      * @see documentation
      *
      * @param string $string
