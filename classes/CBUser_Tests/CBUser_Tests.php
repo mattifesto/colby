@@ -16,6 +16,10 @@ CBUser_Tests
     {
         return
         [
+            // -- server
+
+
+
             (object)
             [
                 'name' =>
@@ -32,6 +36,21 @@ CBUser_Tests
                 'type' =>
                 'server',
             ],
+            (object)
+            [
+                'name' =>
+                'usernameChange',
+
+                'type' =>
+                'server'
+            ],
+
+
+
+            // -- interactive
+
+
+
             (object)[
                 'description' =>
                 <<<EOT
@@ -47,6 +66,7 @@ CBUser_Tests
                 'type' =>
                 'interactive_server',
             ],
+
         ];
     }
     /* CBTest_getTests() */
@@ -364,5 +384,186 @@ CBUser_Tests
         ];
     }
     /* CBTest_resetTestFacebookUser() */
+
+
+
+    /**
+     * @NOTE 2022_03_30
+     *
+     *      This test exists because of a bug where usernames were not being
+     *      unregistered when the switched to a new username.
+     */
+    static function
+    usernameChange(
+    ): stdClass
+    {
+        $testUserModelCBID =
+        '6f1bc18361f1e3a30a4fcb41ea1115684d1c4e4c';
+
+        $testUserPrettyUsername1 =
+        CBUser::generateRandomAvailablePrettyUsername();
+
+        $testUserPrettyUsername2 =
+        CBUser::generateRandomAvailablePrettyUsername();
+
+
+
+        // -- prepare
+
+        CBDB::transaction(
+            function () use (
+                $testUserModelCBID
+            ) {
+                CBModels::deleteByID(
+                    $testUserModelCBID
+                );
+            }
+        );
+
+        $testUserSpec =
+        CBModel::createSpec(
+            'CBUser',
+            $testUserModelCBID
+        );
+
+        CBUser::setEmailAddress(
+            $testUserSpec,
+            "${testUserModelCBID}@example.com"
+        );
+
+        CBUser::setPrettyUsername(
+            $testUserSpec,
+            $testUserPrettyUsername1
+        );
+
+        CBDB::transaction(
+            function () use (
+                $testUserSpec
+            ) {
+                CBModels::save(
+                    $testUserSpec
+                );
+            }
+        );
+
+
+
+        // -- username 1
+
+        $expectedResult =
+        CB_Username::prettyUsernameToUsernameModelCBID(
+            $testUserPrettyUsername1
+        );
+
+        $association =
+        CBModelAssociations::fetchOne(
+            $testUserModelCBID,
+            'CBUser_username_association'
+        );
+
+        $actualResult =
+        $association->associatedID;
+
+        if (
+            $actualResult !== $expectedResult
+        ) {
+            return
+            CBTest::resultMismatchFailure(
+                'username 1',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+
+
+        // -- prepare
+
+        $newVersion =
+        CBModel::getVersion(
+            $testUserSpec
+        ) +
+        1;
+
+        CBModel::setVersion(
+            $testUserSpec,
+            $newVersion
+        );
+
+        CBUser::setPrettyUsername(
+            $testUserSpec,
+            $testUserPrettyUsername2
+        );
+
+        CBDB::transaction(
+            function () use (
+                $testUserSpec
+            ) {
+                CBModels::save(
+                    $testUserSpec
+                );
+            }
+        );
+
+
+
+        // -- username 2
+
+        $expectedResult =
+        CB_Username::prettyUsernameToUsernameModelCBID(
+            $testUserPrettyUsername2
+        );
+
+        /**
+         * With the original bug, this call to fetchOne() would fail because
+         * there was more than one username associated with the user.
+         */
+         
+        $association =
+        CBModelAssociations::fetchOne(
+            $testUserModelCBID,
+            'CBUser_username_association'
+        );
+
+        $actualResult =
+        $association->associatedID;
+
+        if (
+            $actualResult !== $expectedResult
+        ) {
+            return
+            CBTest::resultMismatchFailure(
+                'username 2',
+                $actualResult,
+                $expectedResult
+            );
+        }
+
+
+
+        // -- clean up
+
+        CBDB::transaction(
+            function () use (
+                $testUserModelCBID
+            ) {
+                CBModels::deleteByID(
+                    $testUserModelCBID
+                );
+            }
+        );
+
+
+
+        // -- done
+
+        return
+        (object)
+        [
+            'succeeded' =>
+            true,
+        ];
+    }
+    // usernameChange()
 
 }
