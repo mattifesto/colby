@@ -1,28 +1,49 @@
 <?php
 
-final class SCOrderListView {
+final class
+SCOrderListView
+{
+    /* -- CBHTMLOutput interfaces -- */
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs(): array {
-        return [
-            Colby::flexpath(__CLASS__, 'v675.68.css', scliburl()),
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
+        return
+        [
+            Colby::flexpath(
+                __CLASS__,
+                'v675.68.css',
+                scliburl()
+            ),
         ];
     }
+    // CBHTMLOutput_CSSURLs()
+
+
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
-        return [
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        return
+        [
             'CBUI',
         ];
     }
+    // CBHTMLOutput_requiredClassNames()
 
-    /* -- CBView interfaces -- -- -- -- -- */
+
+
+    /* -- CBView interfaces -- */
 
     /**
      * @param object $viewModel
@@ -33,10 +54,20 @@ final class SCOrderListView {
      *
      * @return void
      */
-    static function CBView_render(stdClass $viewModel): void {
-        $orderModels = CBModel::valueToArray($viewModel, 'orderModels');
+    static function
+    CBView_render(
+        stdClass $viewModel
+    ): void
+    {
+        $orderModels =
+        CBModel::valueToArray(
+            $viewModel,
+            'orderModels'
+        );
 
-        if (empty($orderModels)) {
+        if (
+            empty($orderModels)
+        ) {
             return;
         }
 
@@ -47,8 +78,12 @@ final class SCOrderListView {
 
                 <?php
 
-                foreach ($orderModels as $orderModel) {
-                    SCOrderListView::renderOrderSectionItem($orderModel);
+                foreach (
+                    $orderModels as $orderModel
+                ) {
+                    SCOrderListView::renderOrderSectionItem(
+                        $orderModel
+                    );
                 }
 
                 ?>
@@ -61,15 +96,23 @@ final class SCOrderListView {
 
                 <?php
 
-                $totalAuthorizedCents = array_reduce(
+                $totalAuthorizedCents =
+                array_reduce(
                     $orderModels,
-                    function ($accumulatedAuthorizedCents, $orderModel) {
-                        $authorizedCents = CBModel::valueAsInt(
+                    function (
+                        $accumulatedAuthorizedCents,
+                        $orderModel
+                    ) {
+                        $authorizedCents =
+                        CBModel::valueAsInt(
                             $orderModel,
                             'orderPaymentAuthorizedAmountInCents'
-                        ) ?? 0;
+                        ) ??
+                        0;
 
-                        return $accumulatedAuthorizedCents + $authorizedCents;
+                        return
+                        $accumulatedAuthorizedCents +
+                        $authorizedCents;
                     },
                     0
                 );
@@ -77,15 +120,25 @@ final class SCOrderListView {
                 ?>
 
                 <div class="CBUI_sectionItem">
-                    <div class="CBUI_sectionItemPart_titleDescription CBUI_flexGrow">
+                    <div class="
+                        CBUI_sectionItemPart_titleDescription
+                        CBUI_flexGrow
+                    ">
                         <div class="CBUI_ellipsis">
                             Total Authorized
                         </div>
                     </div>
-                    <div class="CBUI_sectionItemPart_titleDescription CBUI_flexNone">
+                    <div class="
+                        CBUI_sectionItemPart_titleDescription
+                        CBUI_flexNone
+                    ">
                         <div>
                             $<?=
-                            CBConvert::centsToDollars($totalAuthorizedCents)
+
+                            CBConvert::centsToDollars(
+                                $totalAuthorizedCents
+                            )
+
                             ?>
                         </div>
                     </div>
@@ -93,15 +146,23 @@ final class SCOrderListView {
 
                 <?php
 
-                $totalCapturedCents = array_reduce(
+                $totalCapturedCents =
+                array_reduce(
                     $orderModels,
-                    function ($accumulatedCapturedCents, $orderModel) {
-                        $capturedCents = CBModel::valueAsInt(
+                    function (
+                        $accumulatedCapturedCents,
+                        $orderModel
+                    ) {
+                        $capturedCents =
+                        CBModel::valueAsInt(
                             $orderModel,
                             'orderPaymentCapturedAmountInCents'
-                        ) ?? 0;
+                        ) ??
+                        0;
 
-                        return $accumulatedCapturedCents + $capturedCents;
+                        return
+                        $accumulatedCapturedCents +
+                        $capturedCents;
                     },
                     0
                 );
@@ -109,15 +170,25 @@ final class SCOrderListView {
                 ?>
 
                 <div class="CBUI_sectionItem">
-                    <div class="CBUI_sectionItemPart_titleDescription CBUI_flexGrow">
+                    <div class="
+                        CBUI_sectionItemPart_titleDescription
+                        CBUI_flexGrow
+                    ">
                         <div class="CBUI_ellipsis">
                             Total Captured
                         </div>
                     </div>
-                    <div class="CBUI_sectionItemPart_titleDescription CBUI_flexNone">
+                    <div class="
+                        CBUI_sectionItemPart_titleDescription
+                        CBUI_flexNone
+                    ">
                         <div>
                             $<?=
-                            CBConvert::centsToDollars($totalCapturedCents)
+
+                            CBConvert::centsToDollars(
+                                $totalCapturedCents
+                            )
+
                             ?>
                         </div>
                     </div>
@@ -128,33 +199,49 @@ final class SCOrderListView {
 
         <?php
     }
+    // CBView_render()
+
+
 
     /**
      * @param object $orderModel
      *
      * @return void
      */
-    static function renderOrderSectionItem(stdClass $orderModel): void {
-        $orderID = $orderModel->ID;
-        $href = cbsiteurl() . "/admin/?c=SCOrderInspector&ID={$orderID}";
+    static function
+    renderOrderSectionItem(
+        stdClass $orderModel
+    ): void
+    {
+        $orderID =
+        $orderModel->ID;
+
+        $href =
+        cbsiteurl() .
+        "/admin/?c=SCOrderInspector&ID={$orderID}";
 
         /* wholesale */
 
-        $sectionItemClassNames = 'CBUI_sectionItem';
+        $sectionItemClassNames =
+        'CBUI_sectionItem';
 
         $isWholesaleOrder =
         !empty(
             $orderModel->isWholesale
         );
 
-        if ($isWholesaleOrder) {
-            $sectionItemClassNames .= ' SCOrderListView_wholesale';
+        if (
+            $isWholesaleOrder
+        ) {
+            $sectionItemClassNames .=
+            ' SCOrderListView_wholesale';
         }
 
 
         /* amount section item part */
 
-        $amountPartClassNames = implode(
+        $amountPartClassNames =
+        implode(
             ' ',
             [
                 'CBUI_sectionItemPart_titleDescription',
@@ -162,52 +249,109 @@ final class SCOrderListView {
             ]
         );
 
-        $capturedCents = CBModel::valueAsInt(
+        $capturedCents =
+        CBModel::valueAsInt(
             $orderModel,
             'orderPaymentCapturedAmountInCents'
         );
 
-        if ($capturedCents === null) {
-            $amountPartClassNames .= ' SCOrderListView_authorized';
+        if (
+            $capturedCents === null
+        ) {
+            $amountPartClassNames .=
+            ' SCOrderListView_authorized';
 
-            $authorizedCents = CBModel::valueAsInt(
+            $authorizedCents =
+            CBModel::valueAsInt(
                 $orderModel,
                 'orderPaymentAuthorizedAmountInCents'
-            ) ?? 0;
+            ) ??
+            0;
 
-            $amountInDollars = CBConvert::centsToDollars($authorizedCents);
-        } else {
-            $amountPartClassNames .= ' SCOrderListView_captured';
-            $amountInDollars = CBConvert::centsToDollars($capturedCents);
+            $amountInDollars =
+            CBConvert::centsToDollars(
+                $authorizedCents
+            );
+        }
+
+        else
+        {
+            $amountPartClassNames .=
+            ' SCOrderListView_captured';
+
+            $amountInDollars =
+            CBConvert::centsToDollars(
+                $capturedCents
+            );
         }
 
 
         /* amount section item part: payment method */
 
-        $orderPaymentMethod = CBModel::valueToString(
+        $orderPaymentMethod =
+        CBModel::valueToString(
             $orderModel,
             'orderPaymentMethod'
         );
 
-        if ($orderPaymentMethod === 'Net30') {
-            $amountPartClassNames .= ' SCOrderListView_net30';
-        } else {
-            $amountPartClassNames .= ' SCOrderListView_creditCard';
+        if (
+            $orderPaymentMethod === 'Net30'
+        ) {
+            $amountPartClassNames .=
+            ' SCOrderListView_net30';
         }
 
+        else
+        {
+            $amountPartClassNames .=
+            ' SCOrderListView_creditCard';
+        }
 
+        $orderRowNumber =
+        CBModel::valueAsInt(
+            $orderModel,
+            'orderRowId'
+        ) ??
+        'error';
 
-        $orderRowNumber = CBModel::valueAsInt($orderModel, 'orderRowId') ?? 'error';
-        $createdTimestamp = CBModel::valueAsInt($orderModel, 'orderCreated');
-        $name = CBModel::valueToString($orderModel, 'shipOrderToFullName');
-        $email = CBModel::valueToString($orderModel, 'shipOrderToEmail');
+        $createdTimestamp =
+        CBModel::valueAsInt(
+            $orderModel,
+            'orderCreated'
+        );
+
+        $name =
+        CBModel::valueToString(
+            $orderModel,
+            'shipOrderToFullName'
+        );
+
+        $email =
+        CBModel::valueToString(
+            $orderModel,
+            'shipOrderToEmail'
+        );
 
         ?>
 
-        <a class="<?= $sectionItemClassNames ?>" href="<?= cbhtml($href) ?>">
+        <a
+            class="<?= $sectionItemClassNames ?>"
+            href="<?= cbhtml($href) ?>"
+        >
             <div class="CBUI_sectionItemPart_titleDescription CBUI_flexGrow">
                 <div class="CBUI_ellipsis">
-                    <?= cbhtml($name), ' (', cbhtml($email), ')' ?>
+                    <?=
+
+                    cbhtml(
+                        $name
+                    ),
+                    ' (',
+                    cbhtml(
+                        $email
+                    ),
+                    ')'
+
+                    ?>
                 </div>
                 <div class="CBUI_ellipsis">
                     <?php
@@ -242,4 +386,6 @@ final class SCOrderListView {
 
         <?php
     }
+    // renderOrderSectionItem()
+
 }
