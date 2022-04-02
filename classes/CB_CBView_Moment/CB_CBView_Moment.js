@@ -282,32 +282,16 @@
 
     /**
      * @param object momentModel
-     * @param bool isForMomentPage
-     *
-     *      If this argument is true, the moment will not have click event
-     *      handlers to navigate to the moment page since we already are on the
-     *      moment page.
      *
      * @return object
      */
     function
     CB_CBView_Moment_createStandardMoment(
-        momentModel,
-        isForMomentPage
+        momentModel
     ) // -> object
     {
-        let momentView = CB_CBView_Moment_create();
-
-        /**
-         * If you select some of the moment text the "click" event will be
-         * raised after the text is selected. This code handles the
-         * "selectionchange" event by setting this variable to true so the next
-         * time the code handles the "click" event it knows to ignore the click.
-         *
-         * This is because users should be able to select the text of a moment
-         * without navigating to the moment page.
-         */
-        let ignoreClickEvent = false;
+        let momentView =
+        CB_CBView_Moment_create();
 
         let momentViewElement =
         momentView.CB_CBView_Moment_getElement();
@@ -322,84 +306,6 @@
         {
             return momentModel;
         };
-
-        let momentModelCBID = CBModel.getCBID(
-            momentModel
-        );
-
-        if (
-            isForMomentPage !== true
-        ) {
-            momentView.CB_CBView_Moment_addContentClickEventListener(
-                function (
-                ) {
-                    if (
-                        ignoreClickEvent
-                    ) {
-                        ignoreClickEvent = false;
-
-                        return;
-                    }
-
-                    window.location.assign(
-                        `/moment/${momentModelCBID}`
-                    );
-                }
-            );
-
-            document.addEventListener(
-                "selectionchange",
-                function ()
-                {
-                    let selection = document.getSelection();
-
-                    /**
-                     * If the selection started or ended on an element outside
-                     * the view element the click event we listen for will not
-                     * be raised.
-                     */
-
-                    let momentViewElementContainsAnchorNode =
-                    momentViewElement.contains(
-                        selection.anchorNode
-                    );
-
-                    let momentViewElementContainsFocusNode =
-                    momentViewElement.contains(
-                        selection.focusNode
-                    );
-
-                    if (
-                        !momentViewElementContainsAnchorNode  ||
-                        !momentViewElementContainsFocusNode
-                    ) {
-                        /* reset ignoreClickEvent */
-                        ignoreClickEvent = false;
-
-                        return;
-                    }
-
-                    /**
-                     * If the user click on the text, that will be considered a
-                     * selection and we want it to be considered a click. So if
-                     * the selected text is empty, we treat it as a click.
-                     */
-
-                    let selectedText = selection.toString();
-
-                    if (
-                        selectedText === ""
-                    ) {
-                        /* reset ignoreClickEvent */
-                        ignoreClickEvent = false;
-
-                        return;
-                    }
-
-                    ignoreClickEvent = true;
-                }
-            );
-        }
 
         momentView.CB_CBView_Moment_append(
             createHeaderElement(
@@ -421,38 +327,26 @@
             textElement
         );
 
-        let imageModel = CB_Moment.getImage(
+
+
+        // image
+
+        let imageElement =
+        CB_CBView_Moment_createImageElement(
             momentModel
         );
 
         if (
-            imageModel !== undefined
+            imageElement !== undefined
         ) {
-            let alternativeText =
-            "Image";
-
-            let maximumDisplayWidthInCSSPixels =
-            1280;
-
-            let maximumDisplayHeightInCSSPixels =
-            500;
-
-            let pictureElement =
-            CBImage.createPictureElementWithMaximumDisplayWidthAndHeight(
-                imageModel,
-                "rw1280",
-                maximumDisplayWidthInCSSPixels,
-                maximumDisplayHeightInCSSPixels,
-                alternativeText
-            );
-
-            pictureElement.className =
-            "CB_CBView_Moment_picture_element";
-
             momentView.CB_CBView_Moment_append(
-                pictureElement
+                imageElement
             );
         }
+
+
+
+        // done
 
         return momentView;
     }
