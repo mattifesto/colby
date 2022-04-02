@@ -283,6 +283,77 @@
     /**
      * @param object momentModel
      *
+     * @return Element|undefined
+     */
+    function
+    CB_CBView_Moment_createImageElement(
+        momentModel
+    ) // -> Element|undefined
+    {
+        let imageModel =
+        CB_Moment.getImage(
+            momentModel
+        );
+
+        if (
+            imageModel === undefined
+        ) {
+            return;
+        }
+
+        let momentModelCBID =
+        CBModel.getCBID(
+            momentModel
+        );
+
+        let imageLinkElement =
+        document.createElement(
+            "a"
+        );
+
+        imageLinkElement.className =
+        "CB_CBView_Moment_imageLinkToMomentPage_element";
+
+        imageLinkElement.href =
+        `/moment/${momentModelCBID}`;
+
+        imageLinkElement.style.display =
+        "block";
+
+        let alternativeText =
+        "Image";
+
+        let maximumDisplayWidthInCSSPixels =
+        1280;
+
+        let maximumDisplayHeightInCSSPixels =
+        500;
+
+        let pictureElement =
+        CBImage.createPictureElementWithMaximumDisplayWidthAndHeight(
+            imageModel,
+            "rw1280",
+            maximumDisplayWidthInCSSPixels,
+            maximumDisplayHeightInCSSPixels,
+            alternativeText
+        );
+
+        pictureElement.className =
+        "CB_CBView_Moment_picture_element";
+
+        imageLinkElement.append(
+            pictureElement
+        );
+
+        return imageLinkElement;
+    }
+    // CB_CBView_Moment_createImageElement()
+
+
+
+    /**
+     * @param object momentModel
+     *
      * @return object
      */
     function
