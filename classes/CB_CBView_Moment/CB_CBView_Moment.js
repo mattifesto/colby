@@ -304,7 +304,7 @@
          * "selectionchange" event by setting this variable to true so the next
          * time the code handles the "click" event it knows to ignore the click.
          *
-         * This is becuase users should be able to select the text of a moment
+         * This is because users should be able to select the text of a moment
          * without navigating to the moment page.
          */
         let ignoreClickEvent = false;
@@ -677,7 +677,6 @@
 
 
 
-
     /**
      * This function will schedule the initialization of any uninitialized
      * CB_CBView_Moment elements to take place in the near future.
@@ -824,7 +823,7 @@
         return CB_CBView_Moment_innerScheduleInitialization;
     }
     )();
-    // CB_CBView_Moment_initialize()
+    // CB_CBView_Moment_scheduleInitialization()
 
 }
 )();
