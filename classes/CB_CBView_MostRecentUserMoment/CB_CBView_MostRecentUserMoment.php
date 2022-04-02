@@ -140,8 +140,12 @@ CB_CBView_MostRecentUserMoment
         echo
         '<div class="CB_CBView_MostRecentUserMoment">';
 
+        $shouldIncludeLinksToMomentPage =
+        true;
+
         CB_CBView_Moment::renderFullSizeMoment(
-            $moments[0]
+            $moments[0],
+            $shouldIncludeLinksToMomentPage
         );
 
         echo
