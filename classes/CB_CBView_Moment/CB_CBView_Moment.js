@@ -20,7 +20,8 @@
 {
     "use strict";
 
-    window.CB_CBView_Moment = {
+    window.CB_CBView_Moment =
+    {
         createStandardMoment:
         CB_CBView_Moment_createStandardMoment,
     };
@@ -283,6 +284,61 @@
     /**
      * @param object momentModel
      *
+     * @return Element
+     */
+    function
+    CB_CBView_Moment_createFooterElement(
+        momentModel
+    ) // -> Element
+    {
+        let footerElement =
+        document.createElement(
+            "div"
+        );
+
+        footerElement.className =
+        "CB_CBView_Moment_footer_element";
+
+
+
+        // moment page link
+
+        let momentModelCBID =
+        CBModel.getCBID(
+            momentModel
+        );
+
+        let momentPageLinkElement =
+        document.createElement(
+            "a"
+        );
+
+        footerElement.append(
+            momentPageLinkElement
+        );
+
+        momentPageLinkElement.textContent =
+        "📄";
+
+        momentPageLinkElement.title =
+        "go to moment page";
+
+        momentPageLinkElement.href =
+        `/moment/${momentModelCBID}`;
+
+
+
+        // done
+
+        return footerElement;
+    }
+    // CB_CBView_Moment_createFooterElement()
+
+
+
+    /**
+     * @param object momentModel
+     *
      * @return Element|undefined
      */
     function
@@ -312,7 +368,7 @@
         );
 
         imageLinkElement.className =
-        "CB_CBView_Moment_imageLinkToMomentPage_element";
+        "CB_CBView_Moment_pictureContainer_element";
 
         imageLinkElement.href =
         `/moment/${momentModelCBID}`;
@@ -414,6 +470,16 @@
                 imageElement
             );
         }
+
+
+
+        // footer
+
+        momentView.CB_CBView_Moment_append(
+            CB_CBView_Moment_createFooterElement(
+                momentModel
+            )
+        );
 
 
 

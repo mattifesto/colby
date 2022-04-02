@@ -402,7 +402,7 @@ CB_CBView_Moment
             '<a href="',
             $momentURLAsHTML,
             '" ',
-            'class="CB_CBView_Moment_imageLinkToMomentPage_element" ',
+            'class="CB_CBView_Moment_pictureContainer_element" ',
             'style="display: block;" ',
             '>';
         }
@@ -411,7 +411,7 @@ CB_CBView_Moment
         {
             echo
             '<div ',
-            'class = "CB_CBView_Moment_imageLinkToMomentPage_element"',
+            'class="CB_CBView_Moment_pictureContainer_element"',
             '>';
         }
 

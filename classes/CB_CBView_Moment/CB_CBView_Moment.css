@@ -75,7 +75,7 @@
 
     justify-content:
     space-between;
-    
+
     color:
     var(--CBTextColor3);
 }
@@ -103,7 +103,7 @@ time
 .CB_CBView_Moment_text_element
 {
     padding:
-    0 0 20px;
+    0;
 
     white-space:
     pre-wrap;
@@ -116,6 +116,13 @@ time
 {
     font-size:
     150%;
+}
+
+
+
+.CB_CBView_Moment_pictureContainer_element
+{
+    padding-top: 10px;
 }
 
 
@@ -147,4 +154,27 @@ img
 
     box-sizing:
     border-box;
+}
+
+
+
+.CB_CBView_Moment_footer_element
+{
+    padding-top:
+    10px;
+}
+
+
+
+.CB_CBView_Moment_footer_element >
+a
+{
+    font-size:
+    200%;
+
+    min-height:
+    44px;
+
+    padding:
+    0 10px;
 }
