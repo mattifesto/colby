@@ -6,6 +6,9 @@
     color: hsl(220, 100%, 60%);
 }
 
-.SCOrderListView_wholesale {
-    background-color: hsl(60, 100%, 95%);
+
+
+.SCOrderListView_wholesale >
+div:first-child {
+    color: hsl(120, 100%, 40%);
 }

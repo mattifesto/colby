@@ -9,7 +9,7 @@ final class SCOrderListView {
      */
     static function CBHTMLOutput_CSSURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v90.css', scliburl()),
+            Colby::flexpath(__CLASS__, 'v675.68.css', scliburl()),
         ];
     }
 
@@ -142,7 +142,12 @@ final class SCOrderListView {
 
         $sectionItemClassNames = 'CBUI_sectionItem';
 
-        if(!empty($orderModel->isWholesale)) {
+        $isWholesaleOrder =
+        !empty(
+            $orderModel->isWholesale
+        );
+
+        if ($isWholesaleOrder) {
             $sectionItemClassNames .= ' SCOrderListView_wholesale';
         }
 
@@ -205,7 +210,22 @@ final class SCOrderListView {
                     <?= cbhtml($name), ' (', cbhtml($email), ')' ?>
                 </div>
                 <div class="CBUI_ellipsis">
-                    <?= cbhtml($orderRowNumber) ?> |
+                    <?php
+
+                        echo
+                        cbhtml(
+                            $orderRowNumber
+                        ),
+                        ' | ';
+
+                        if (
+                            $isWholesaleOrder
+                        ) {
+                            echo
+                            'wholesale | ';
+                        }
+
+                    ?>
                     <span
                         class="time compact"
                         data-timestamp="<?= $createdTimestamp * 1000 ?>"
