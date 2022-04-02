@@ -1,14 +1,21 @@
-.SCOrderListView_creditCard.SCOrderListView_authorized {
-    color: hsl(30, 100%, 60%);
+.SCOrderListView_creditCard.SCOrderListView_authorized
+{
+    color:
+    hsl(30, 100%, 60%);
 }
 
-.SCOrderListView_net30 {
-    color: hsl(220, 100%, 60%);
+
+
+.SCOrderListView_net30
+{
+    color:
+    hsl(220, 100%, 60%);
 }
 
 
 
 .SCOrderListView_wholesale >
 div:first-child {
-    color: hsl(120, 100%, 40%);
+    color:
+    hsl(120, 100%, 40%);
 }
