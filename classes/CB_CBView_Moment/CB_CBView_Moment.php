@@ -197,12 +197,14 @@ CB_CBView_Moment
 
     /**
      * @param object $momentModel
+     * @param bool $shouldIncludeLinksToMomentPage
      *
      * @return void
      */
     static function
     renderFullSizeMoment(
-        stdClass $momentModel
+        stdClass $momentModel,
+        bool $shouldIncludeLinksToMomentPage = false
     ): void
     {
         $momentModelAsJSONAsHTML =
@@ -212,7 +214,8 @@ CB_CBView_Moment
             )
         );
 
-        echo CBConvert::stringToCleanLine(<<<EOT
+        echo
+        CBConvert::stringToCleanLine(<<<EOT
 
             <div
                 class=
@@ -239,24 +242,10 @@ CB_CBView_Moment
             $momentModel
         );
 
-        $imageModel =
-        CB_Moment::getImage(
-            $momentModel
+        CB_CBView_Moment::renderLargeImage(
+            $momentModel,
+            $shouldIncludeLinksToMomentPage
         );
-
-        if (
-            $imageModel !== null
-        ) {
-            $alternativeText = "Image";
-
-            CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
-                $imageModel,
-                'rw1600',
-                800,
-                2400,
-                $alternativeText
-            );
-        }
 
         echo
         '</div></div>';
@@ -373,6 +362,92 @@ CB_CBView_Moment
 
 
 
+    /**
+     * @param object $momentModel
+     * @param object $shouldIncludeLinksToMomentPage
+     *
+     * @return void
+     */
+    private static function
+    renderLargeImage(
+        $momentModel,
+        bool $shouldIncludeLinksToMomentPage = false
+    ): void
+    {
+        $imageModel =
+        CB_Moment::getImage(
+            $momentModel
+        );
+
+        if (
+            $imageModel === null
+        ) {
+            return;
+        }
+
+        if (
+            $shouldIncludeLinksToMomentPage
+        ) {
+            $momentModelCBID =
+            CBModel::getCBID(
+                $momentModel
+            );
+
+            $momentURLAsHTML =
+            cbhtml(
+                "/moment/${momentModelCBID}/"
+            );
+
+            echo
+            '<a href="',
+            $momentURLAsHTML,
+            '" ',
+            'class="CB_CBView_Moment_imageLinkToMomentPage_element" ',
+            'style="display: block;" ',
+            '>';
+        }
+
+        else
+        {
+            echo
+            '<div ',
+            'class = "CB_CBView_Moment_imageLinkToMomentPage_element"',
+            '>';
+        }
+
+        $alternativeText =
+        "Image";
+
+        CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
+            $imageModel,
+            'rw1600',
+            800,
+            2400,
+            $alternativeText
+        );
+
+        if (
+            $shouldIncludeLinksToMomentPage
+        ) {
+            echo
+            '</a>';
+        }
+
+        else
+        {
+            echo
+            '</div>';
+        }
+    }
+    // renderLargeImage()
+
+
+
+    /**
+     * @param object $momentModel
+     *
+     * @return void
+     */
     private static function
     renderText(
         stdClass $momentModel
