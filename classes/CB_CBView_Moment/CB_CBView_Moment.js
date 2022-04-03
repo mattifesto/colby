@@ -324,7 +324,39 @@
         "go to moment page";
 
         momentPageLinkElement.href =
-        `/moment/${momentModelCBID}`;
+        `/moment/${momentModelCBID}/`;
+
+
+
+        // email
+
+        let sendEmailElement =
+        document.createElement(
+            "a"
+        );
+
+        footerElement.append(
+            sendEmailElement
+        );
+
+        sendEmailElement.textContent =
+        "✉️";
+
+        sendEmailElement.title =
+        "share using email";
+
+        let momentTextAsURIComponent =
+        encodeURIComponent(
+            CB_Moment.getText(
+                momentModel
+            ) +
+            "\n\n" +
+            document.location.origin +
+            `/moment/${momentModelCBID}/`
+        );
+
+        sendEmailElement.href =
+        `mailto:?subject=Moment&body=${momentTextAsURIComponent}`;
 
 
 
@@ -371,7 +403,7 @@
         "CB_CBView_Moment_pictureContainer_element";
 
         imageLinkElement.href =
-        `/moment/${momentModelCBID}`;
+        `/moment/${momentModelCBID}/`;
 
         imageLinkElement.style.display =
         "block";
