@@ -21,6 +21,27 @@
 
 
 
+.CB_CBView_Moment_root_element
+a
+{
+    text-decoration:
+    none;
+}
+
+
+
+.CB_CBView_Moment_root_element
+a:hover
+{
+    border-color:
+    var(--CBTextColorForLinks);
+
+    color:
+    var(--CBTextColorForLinks);
+}
+
+
+
 .CB_CBView_Moment_content_element
 {
     box-sizing:
@@ -82,28 +103,10 @@
 
 
 
-.CB_CBView_Moment_userLink_element:hover
-.CB_CBView_Moment_fullName_element
-{
-    text-decoration:
-    underline;
-}
-
-
-
-.CB_CBView_Moment_timeContainer_element:hover
-time
-{
-    text-decoration:
-    underline;
-}
-
-
-
 .CB_CBView_Moment_text_element
 {
     padding:
-    0;
+    10px 0 0;
 
     white-space:
     pre-wrap;
