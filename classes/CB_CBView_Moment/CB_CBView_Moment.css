@@ -122,7 +122,8 @@ time
 
 .CB_CBView_Moment_pictureContainer_element
 {
-    padding-top: 10px;
+    padding-top:
+    10px;
 }
 
 
@@ -160,8 +161,11 @@ img
 
 .CB_CBView_Moment_footer_element
 {
+    display:
+    flex;
+
     padding-top:
-    10px;
+    20px;
 }
 
 
@@ -169,12 +173,30 @@ img
 .CB_CBView_Moment_footer_element >
 a
 {
-    font-size:
-    200%;
+    border:
+    2px solid var(--CB_UI_borderColor);
 
-    min-height:
+    border-radius:
+    1000px;
+
+    display:
+    flex;
+
+    justify-content:
+    center;
+
+    align-items:
+    center;
+
+    font-size:
+    150%;
+
+    height:
     44px;
 
-    padding:
-    0 10px;
+    margin:
+    0 20px;
+
+    width:
+    44px;
 }

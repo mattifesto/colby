@@ -345,7 +345,7 @@
         sendEmailElement.title =
         "share using email";
 
-        let momentTextAsURIComponent =
+        let emailBodyAsURIComponent =
         encodeURIComponent(
             CB_Moment.getText(
                 momentModel
@@ -356,7 +356,7 @@
         );
 
         sendEmailElement.href =
-        `mailto:?subject=Moment&body=${momentTextAsURIComponent}`;
+        `mailto:?subject=Moment&body=${emailBodyAsURIComponent}`;
 
 
 

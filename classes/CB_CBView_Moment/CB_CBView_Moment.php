@@ -202,6 +202,90 @@ CB_CBView_Moment
      * @return void
      */
     static function
+    renderFooter(
+        stdClass $momentModel,
+        bool $shouldIncludeLinksToMomentPage = false
+    ): void
+    {
+        echo
+        '<div class="CB_CBView_Moment_footer_element">';
+
+        $momentModelCBID =
+        CBModel::getCBID(
+            $momentModel
+        );
+
+
+
+        // moment page link
+
+        if (
+            $shouldIncludeLinksToMomentPage
+        ) {
+            echo
+            <<<EOT
+
+            <a
+                href="/moment/${momentModelCBID}/"
+                title="go to moment page"
+            >
+                📄
+            </a>
+
+            EOT;
+        }
+
+
+
+        // email
+
+        $emailBodyAsURIComponent =
+        rawurlencode(
+            CB_Moment::getText(
+                $momentModel
+            ) .
+            "\n\n" .
+            cbsiteurl() .
+            "/moment/${momentModelCBID}/"
+        );
+
+        $hrefAsHTML =
+        cbhtml(
+            'mailto:' .
+            '?subject=Moment' .
+            '&body=' .
+            $emailBodyAsURIComponent
+        );
+
+        echo
+        <<<EOT
+
+        <a
+            href="${hrefAsHTML}"
+            title="share using email"
+        >
+            ✉️
+        </a>
+        EOT;
+
+
+
+        // done
+
+        echo
+        '</div>';
+    }
+    // renderFooter()
+
+
+
+    /**
+     * @param object $momentModel
+     * @param bool $shouldIncludeLinksToMomentPage
+     *
+     * @return void
+     */
+    static function
     renderFullSizeMoment(
         stdClass $momentModel,
         bool $shouldIncludeLinksToMomentPage = false
@@ -243,6 +327,11 @@ CB_CBView_Moment
         );
 
         CB_CBView_Moment::renderLargeImage(
+            $momentModel,
+            $shouldIncludeLinksToMomentPage
+        );
+
+        CB_CBView_Moment::renderFooter(
             $momentModel,
             $shouldIncludeLinksToMomentPage
         );
