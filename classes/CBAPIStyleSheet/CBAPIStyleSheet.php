@@ -1,7 +1,8 @@
 <?php
 
-final class CBAPIStyleSheet {
-
+final class
+CBAPIStyleSheet
+{
     /* -- CBHTMLOutput interfaces -- */
 
 
@@ -9,10 +10,19 @@ final class CBAPIStyleSheet {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs(): array {
-        return [
-            Colby::flexpath(__CLASS__, 'v374.css', cbsysurl())
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
+        return
+        [
+            Colby::flexpath(
+                __CLASS__,
+                'v374.css',
+                cbsysurl()
+            )
         ];
     }
+    // CBHTMLOutput_CSSURLs()
 
 }
