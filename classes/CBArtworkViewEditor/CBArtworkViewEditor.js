@@ -126,6 +126,13 @@
                         },
                         {
                             title:
+                            "240 CSS pixels",
+
+                            value:
+                            "rw480",
+                        },
+                        {
+                            title:
                             "320 CSS pixels",
 
                             value:

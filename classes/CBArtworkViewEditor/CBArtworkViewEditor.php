@@ -18,7 +18,7 @@ CBArtworkViewEditor
         [
             Colby::flexpath(
                 __CLASS__,
-                'v675.45.js',
+                'v675.70.js',
                 cbsysurl()
             ),
         ];

@@ -372,6 +372,16 @@ CBArtworkView
 
                 break;
 
+            case 'rw480':
+
+                $imageResizeOperation =
+                $size;
+
+                $maxWidth =
+                240;
+
+                break;
+
             case 'rw640':
                 $imageResizeOperation =
                 $size;
