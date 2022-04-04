@@ -16,7 +16,8 @@
 (function () {
     "use strict";
 
-    window.CBArtworkViewEditor = {
+    window.CBArtworkViewEditor =
+    {
         CBUISpecEditor_createEditorElement,
         CBUISpec_toDescription,
     };
@@ -36,12 +37,18 @@
     function
     CBUISpecEditor_createEditorElement(
         args
-    ) {
-        let spec = args.spec;
-        let specChangedCallback = args.specChangedCallback;
+    ) // -> Element
+    {
+        let spec =
+        args.spec;
+
+        let specChangedCallback =
+        args.specChangedCallback;
+
         let sectionElement, item;
 
-        let element = CBUI.createElement(
+        let element =
+        CBUI.createElement(
             "CBArtworkViewEditor"
         );
 
@@ -49,15 +56,24 @@
             CBUI.createHalfSpace()
         );
 
-        sectionElement = CBUI.createSection();
+        sectionElement =
+        CBUI.createSection();
 
-        element.appendChild(sectionElement);
+        element.appendChild(
+            sectionElement
+        );
 
-        let imageChooser = CBUIImageChooser.create();
-        imageChooser.chosen = createEditor_handleImageChosen;
-        imageChooser.removed = createEditor_handleImageRemoved;
+        let imageChooser =
+        CBUIImageChooser.create();
 
-        item = CBUI.createSectionItem();
+        imageChooser.chosen =
+        createEditor_handleImageChosen;
+
+        imageChooser.removed =
+        createEditor_handleImageRemoved;
+
+        item =
+        CBUI.createSectionItem();
 
         item.appendChild(
             imageChooser.element
@@ -90,74 +106,116 @@
 
         /* maximum display width */
 
-        item = CBUI.createSectionItem();
+        item =
+        CBUI.createSectionItem();
 
         item.appendChild(
             CBUISelector.create(
                 {
-                    labelText: "Maximum Display Width",
-                    options: [
+                    labelText:
+                    "Maximum Display Width",
+
+                    options:
+                    [
                         {
-                            title: "160 CSS pixels",
-                            value: "rw320",
+                            title:
+                            "160 CSS pixels",
+
+                            value:
+                            "rw320",
                         },
                         {
-                            title: "320 CSS pixels",
-                            value: "rw640",
+                            title:
+                            "320 CSS pixels",
+
+                            value:
+                            "rw640",
                         },
                         {
-                            title: "480 CSS pixels",
-                            value: "rw960",
+                            title:
+                            "480 CSS pixels",
+
+                            value:
+                            "rw960",
                         },
                         {
-                            title: "640 CSS pixels",
-                            value: "rw1280",
+                            title:
+                            "640 CSS pixels",
+
+                            value:
+                            "rw1280",
                         },
                         {
-                            title: "800 CSS pixels (default)",
+                            title:
+                            "800 CSS pixels (default)",
                         },
                         {
-                            title: "960 CSS pixels",
-                            value: "rw1920",
+                            title:
+                            "960 CSS pixels",
+
+                            value:
+                            "rw1920",
                         },
                         {
-                            title: "1280 CSS pixels",
-                            value: "rw2560",
+                            title:
+                            "1280 CSS pixels",
+
+                            value:
+                            "rw2560",
                         },
                         {
-                            title: "Image Width",
-                            description: CBConvert.stringToCleanLine(`
+                            title:
+                            "Image Width",
+
+                            description:
+                            CBConvert.stringToCleanLine(`
 
                                 The maximum width in CSS pixels is half the
                                 count of horizontal pixels of the uploaded
                                 image.
 
                             `),
-                            value: "original",
+
+                            value:
+                            "original",
                         },
                         {
-                            title: "Page Width",
-                            description: CBConvert.stringToCleanLine(`
+                            title:
+                            "Page Width",
+
+                            description:
+                            CBConvert.stringToCleanLine(`
 
                                 The uploaded image will always use the full
                                 width of the page regardless of its size.
 
                             `),
-                            value: "page",
+
+                            value:
+                            "page",
                         },
                     ],
-                    propertyName: "size",
-                    spec: args.spec,
-                    specChangedCallback: args.specChangedCallback,
+
+                    propertyName:
+                    "size",
+
+                    spec:
+                    args.spec,
+
+                    specChangedCallback:
+                    args.specChangedCallback,
                 }
             ).element
         );
 
-        sectionElement.appendChild(item);
+        sectionElement.appendChild(
+            item
+        );
 
         /* render image only */
 
-        let elements = CBUI.createElementTree(
+        let elements =
+        CBUI.createElementTree(
             "CBUI_sectionItem CBArtworkViewEditor_renderImageOnly",
             "CBUI_container_topAndBottom CBUI_flexGrow",
             "label"
@@ -167,17 +225,24 @@
             elements[0]
         );
 
-        elements[2].textContent = "Render Image Only";
+        elements[2].textContent =
+        "Render Image Only";
 
-        let renderImageOnlyEditor = CBUIBooleanSwitchPart.create();
+        let renderImageOnlyEditor =
+        CBUIBooleanSwitchPart.create();
 
-        renderImageOnlyEditor.value = CBModel.valueToBool(
+        renderImageOnlyEditor.value =
+        CBModel.valueToBool(
             spec,
             'renderImageOnly'
         );
 
-        renderImageOnlyEditor.changed = function () {
-            spec.renderImageOnly = renderImageOnlyEditor.value;
+        renderImageOnlyEditor.changed =
+        function ()
+        {
+            spec.renderImageOnly =
+            renderImageOnlyEditor.value;
+
             specChangedCallback();
         };
 
@@ -195,8 +260,11 @@
 
         /* set thumbnail */
 
-        if (args.spec.image) {
-            imageChooser.src = CBImage.toURL(
+        if (
+            args.spec.image
+        ) {
+            imageChooser.src =
+            CBImage.toURL(
                 args.spec.image,
                 "rw960"
             );
@@ -211,8 +279,10 @@
          */
         function
         createEditor_handleImageChosen(
-        ) {
-            imageChooser.caption = "uploading...";
+        ) // -> undefined
+        {
+            imageChooser.caption =
+            "uploading...";
 
             CBAjax.call(
                 "CBImages",
@@ -222,22 +292,28 @@
             ).then(
                 function (
                     imageModel
-                ) {
-                    args.spec.image = imageModel;
+                ) // -> undefined
+                {
+                    args.spec.image =
+                    imageModel;
 
                     args.specChangedCallback();
 
-                    imageChooser.src = CBImage.toURL(
+                    imageChooser.src =
+                    CBImage.toURL(
                         imageModel,
                         "rw960"
                     );
 
-                    let suggestThumbnailImage = CBModel.valueAsFunction(
+                    let suggestThumbnailImage =
+                    CBModel.valueAsFunction(
                         window.CBViewPageEditor,
                         "suggestThumbnailImage"
                     );
 
-                    if (suggestThumbnailImage) {
+                    if (
+                        suggestThumbnailImage
+                    ) {
                         suggestThumbnailImage(
                             imageModel
                         );
@@ -246,14 +322,18 @@
             ).catch(
                 function (
                     error
-                ) {
+                ) // -> undefined
+                {
                     CBUIPanel.displayAndReportError(
                         error
                     );
                 }
             ).finally(
-                function () {
-                    imageChooser.caption = "";
+                function (
+                ) // -> undefined
+                {
+                    imageChooser.caption =
+                    "";
                 }
             );
         }
@@ -264,8 +344,13 @@
         /**
          * @return undefined
          */
-        function createEditor_handleImageRemoved() {
-            args.spec.image = undefined;
+        function
+        createEditor_handleImageRemoved(
+        ) // -> undefined
+        {
+            args.spec.image =
+            undefined;
+
             args.specChangedCallback();
         }
         /* createEditor_handleImageRemoved() */
@@ -286,35 +371,48 @@
     function
     CBUISpec_toDescription(
         spec
-    ) {
-        let alternativeText = CBModel.valueToString(
+    ) // -> string|undefined
+    {
+        let alternativeText =
+        CBModel.valueToString(
             spec,
             "alternativeText"
         ).trim();
 
-        if (alternativeText !== "") {
+        if (
+            alternativeText !== ""
+        ) {
             return alternativeText;
         }
 
-        let captionAsMarkdown = CBModel.valueToString(
+        let captionAsMarkdown =
+        CBModel.valueToString(
             spec,
             "captionAsMarkdown"
         ).trim();
 
-        if (captionAsMarkdown !== "") {
+        if (
+            captionAsMarkdown !== ""
+        ) {
             return captionAsMarkdown;
         }
 
-        let cbmessage = CBMessageMarkup.messageToText(
+        let cbmessage =
+        CBMessageMarkup.messageToText(
             CBModel.valueToString(
                 spec,
                 "captionAsCBMessage"
             )
         ).trim();
 
-        if (cbmessage === "") {
+        if (
+            cbmessage === ""
+        ) {
             return undefined;
-        } else {
+        }
+
+        else
+        {
             return cbmessage;
         }
     }
@@ -329,8 +427,10 @@
     createAlternativeTextEditorElement(
         spec,
         specChangedCallback
-    ) {
-        let stringEditor = CBUIStringEditor2.create();
+    ) // -> Element
+    {
+        let stringEditor =
+        CBUIStringEditor2.create();
 
         stringEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
             spec,
@@ -352,24 +452,38 @@
     createCaptionEditorElement(
         spec,
         specChangedCallback
-    ) {
+    ) // -> Element
+    {
         let propertyName;
         let title;
 
-        let captionAsMarkdown = CBModel.valueToString(
+        let captionAsMarkdown =
+        CBModel.valueToString(
             spec,
             "captionAsMarkdown"
         );
 
-        if (captionAsMarkdown.trim() === "") {
-            title = "Caption (cbmessage)";
-            propertyName = "captionAsCBMessage";
-        } else {
-            title = "Caption (markdown)";
-            propertyName = "captionAsMarkdown";
+        if (
+            captionAsMarkdown.trim() === ""
+        ) {
+            title =
+            "Caption (cbmessage)";
+
+            propertyName =
+            "captionAsCBMessage";
         }
 
-        let stringEditor = CBUIStringEditor2.create();
+        else
+        {
+            title =
+            "Caption (markdown)";
+
+            propertyName =
+            "captionAsMarkdown";
+        }
+
+        let stringEditor =
+        CBUIStringEditor2.create();
 
         stringEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
             spec,
@@ -391,8 +505,10 @@
     createCSSClassNamesEditorElement(
         spec,
         specChangedCallback
-    ) {
-        let element = CBUI.createElement(
+    ) // -> Element
+    {
+        let element =
+        CBUI.createElement(
             "CBArtworkViewEditor_CSSClassNamesEditor"
         );
 
@@ -418,7 +534,8 @@
             `)
         );
 
-        let elements = CBUI.createElementTree(
+        let elements =
+        CBUI.createElementTree(
             "CBUI_sectionContainer",
             "CBUI_section"
         );
@@ -427,9 +544,11 @@
             elements[0]
         );
 
-        let sectionElement = elements[1];
+        let sectionElement =
+        elements[1];
 
-        let stringEditor = CBUIStringEditor2.create();
+        let stringEditor =
+        CBUIStringEditor2.create();
 
         stringEditor.CBUIStringEditor2_initializeObjectPropertyEditor(
             spec,
