@@ -18,7 +18,7 @@ CBAPIStyleSheet
         [
             Colby::flexpath(
                 __CLASS__,
-                'v374.css',
+                'v675.69.css',
                 cbsysurl()
             )
         ];
