@@ -454,6 +454,12 @@ Admin_CBCode
 
 
     /**
+     * @NOTE 2022_04_03
+     *
+     *      This file is getting too large. When possible implement the
+     *      CBCodeAdmin_searches() interface in individual classes to specify
+     *      searches.
+     *
      * @return [object]
      */
     static function
