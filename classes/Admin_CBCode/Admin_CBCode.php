@@ -1,42 +1,58 @@
 <?php
 
-final class Admin_CBCode {
-
-    /* -- CBAdmin interfaces -- -- -- -- -- */
+final class
+Admin_CBCode
+{
+    /* -- CBAdmin interfaces -- */
 
 
 
     /**
      * @return string
      */
-    static function CBAdmin_getUserGroupClassName(): string {
-        return 'CBDevelopersUserGroup';
+    static function
+    CBAdmin_getUserGroupClassName(
+    ): string
+    {
+        return
+        'CBDevelopersUserGroup';
     }
+    // CBAdmin_getUserGroupClassName()
 
 
 
     /**
      * @return [string]
      */
-    static function CBAdmin_menuNamePath(): array {
-        return [
+    static function
+    CBAdmin_menuNamePath(
+    ): array
+    {
+        return
+        [
             'develop',
             'code',
         ];
     }
+    // CBAdmin_menuNamePath()
 
 
 
     /**
      * @return void
      */
-    static function CBAdmin_render(): void {
-        CBHTMLOutput::pageInformation()->title = 'Code Administration';
+    static function
+    CBAdmin_render(
+    ): void
+    {
+        CBHTMLOutput::pageInformation()->title =
+        'Code Administration';
     }
+    // CBAdmin_render()
 
 
 
-    /* -- CBAjax interfaces -- -- -- -- -- */
+    /* -- CBAjax interfaces -- */
 
 
 
@@ -57,27 +73,40 @@ final class Admin_CBCode {
      *          results: [string]
      *      }
      */
-    static function CBAjax_search(
+    static function
+    CBAjax_search(
         stdClass $args
-    ): object {
-        $index = CBModel::valueAsInt(
+    ): object
+    {
+        $index =
+        CBModel::valueAsInt(
             $args,
             'index'
         );
 
-        $searchModel = Admin_CBCode::searches()[$index];
+        $searchModel =
+        Admin_CBCode::searches()[
+            $index
+        ];
 
-        $searchCommand = Admin_CBCode::searchModelToSearchCommand(
+        $searchCommand =
+        Admin_CBCode::searchModelToSearchCommand(
             $searchModel
         );
 
-        $searchResults = Admin_CBCode::searchCommandToSearchResults(
+        $searchResults =
+        Admin_CBCode::searchCommandToSearchResults(
             $searchCommand
         );
 
-        return (object)[
-            'command' => $searchCommand,
-            'results' => $searchResults,
+        return
+        (object)
+        [
+            'command' =>
+            $searchCommand,
+
+            'results' =>
+            $searchResults,
         ];
     }
     /* CBAjax_search() */
@@ -87,35 +116,58 @@ final class Admin_CBCode {
     /**
      * @return string
      */
-    static function CBAjax_search_getUserGroupClassName(): string {
-        return 'CBAdministratorsUserGroup';
+    static function
+    CBAjax_search_getUserGroupClassName(
+    ): string
+    {
+        return
+        'CBAdministratorsUserGroup';
     }
+    //CBAjax_search_getUserGroupClassName()
 
 
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+    /* -- CBHTMLOutput interfaces -- */
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'v500.css', cbsysurl()),
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
+        return
+        [
+            Colby::flexpath(
+                __CLASS__,
+                'v500.css',
+                cbsysurl()
+            ),
         ];
     }
+    // CBHTMLOutput_CSSURLs()
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'v576.js', cbsysurl()),
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
+        return
+        [
+            Colby::flexpath(
+                __CLASS__,
+                'v576.js',
+                cbsysurl()
+            ),
         ];
     }
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
@@ -124,8 +176,10 @@ final class Admin_CBCode {
      */
     static function
     CBHTMLOutput_JavaScriptVariables(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             [
                 'Admin_CBCode_searches',
                 Admin_CBCode::searches(),
@@ -145,8 +199,12 @@ final class Admin_CBCode {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
-        return [
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        return
+        [
             'CBErrorHandler',
             'CBMessageMarkup',
             'CBModel',
@@ -156,43 +214,62 @@ final class Admin_CBCode {
             'Colby',
         ];
     }
+    // CBHTMLOutput_requiredClassNames()
 
 
 
-    /* -- CBInstall interfaces -- -- -- -- -- */
+    /* -- CBInstall interfaces -- */
 
 
 
     /**
      * @return void
      */
-    static function CBInstall_install(): void {
-        $developAdminMenuSpec = CBModels::fetchSpecByID(
+    static function
+    CBInstall_install(
+    ): void
+    {
+        $developAdminMenuSpec =
+        CBModels::fetchSpecByID(
             CBDevelopAdminMenu::ID()
         );
 
-        $items = CBModel::valueToArray(
+        $items =
+        CBModel::valueToArray(
             $developAdminMenuSpec,
             'items'
         );
 
         array_push(
             $items,
-            (object)[
-                'className' => 'CBMenuItem',
-                'name' => 'code',
-                'text' => 'Code',
-                'URL' => CBAdmin::getAdminPageURL(
+            (object)
+            [
+                'className' =>
+                'CBMenuItem',
+
+                'name' =>
+                'code',
+
+                'text' =>
+                'Code',
+
+                'URL' =>
+                CBAdmin::getAdminPageURL(
                     'Admin_CBCode'
                 ),
             ]
         );
 
-        $developAdminMenuSpec->items = $items;
+        $developAdminMenuSpec->items =
+        $items;
 
         CBDB::transaction(
-            function () use ($developAdminMenuSpec) {
-                CBModels::save($developAdminMenuSpec);
+            function () use (
+                $developAdminMenuSpec
+            ) {
+                CBModels::save(
+                    $developAdminMenuSpec
+                );
             }
         );
     }
@@ -203,15 +280,20 @@ final class Admin_CBCode {
     /**
      * @return [string]
      */
-    static function CBInstall_requiredClassNames(): array {
-        return [
+    static function
+    CBInstall_requiredClassNames(
+    ): array
+    {
+        return
+        [
             'CBDevelopAdminMenu',
         ];
     }
+    // CBInstall_requiredClassNames()
 
 
 
-    /* -- functions -- -- -- -- -- */
+    /* -- functions -- */
 
 
 
@@ -245,10 +327,13 @@ final class Admin_CBCode {
      *
      * @return string
      */
-    static function searchModelToSearchCommand(
+    static function
+    searchModelToSearchCommand(
         stdClass $searchModel
-    ): string {
-        $searchCommand = implode(
+    ): string
+    {
+        $searchCommand =
+        implode(
             ' ',
             [
                 'ack',
@@ -276,12 +361,15 @@ final class Admin_CBCode {
             ]
         );
 
-        $filetype = CBModel::valueToString(
+        $filetype =
+        CBModel::valueToString(
             $searchModel,
             'filetype'
         );
 
-        switch ($filetype) {
+        switch (
+            $filetype
+        ) {
             case 'js':
 
                 $searchCommand .= ' --js';
@@ -314,32 +402,49 @@ final class Admin_CBCode {
      *
      * @return [string]
      */
-    static function searchCommandToSearchResults(
+    static function
+    searchCommandToSearchResults(
         string $searchCommand
-    ): array {
-        $searchResults = [];
+    ): array
+    {
+        $searchResults =
+        [];
 
-        $pwd = getcwd();
+        $pwd =
+        getcwd();
 
-        chdir(cbsitedir());
+        chdir(
+            cbsitedir()
+        );
 
-        try {
+        try
+        {
             exec(
                 "{$searchCommand} 2>&1",
                 $searchResults,
                 $exitCode
             );
 
-            if ($exitCode === 0) {
+            if (
+                $exitCode === 0
+            ) {
 
-            } else if ($exitCode !== 1){
+            }
+
+            else if (
+                $exitCode !== 1
+            ) {
                 array_push(
                     $searchResults,
                     "! returned exit code: {$exitCode}"
                 );
             }
-        } finally {
-            chdir($pwd);
+        }
+
+        finally {
+            chdir(
+                $pwd
+            );
         }
 
         return $searchResults;
@@ -351,46 +456,67 @@ final class Admin_CBCode {
     /**
      * @return [object]
      */
-    static function searches(): array {
-        $searches = [];
-        $allClassNames = CBAdmin::fetchClassNames();
+    static function
+    searches(
+    ): array
+    {
+        $searches =
+        [];
 
-        foreach ($allClassNames as $className) {
-            $function = "{$className}::CBCodeAdmin_searches";
+        $allClassNames =
+        CBAdmin::fetchClassNames();
 
-            if (is_callable($function)) {
-                $searches = array_merge(
+        foreach (
+            $allClassNames as $className
+        ) {
+            $function =
+            "{$className}::CBCodeAdmin_searches";
+
+            if (
+                is_callable($function)
+            ) {
+                $searches =
+                array_merge(
                     $searches,
-                    call_user_func($function)
+                    call_user_func(
+                        $function
+                    )
                 );
             }
         }
 
-        return array_merge(
+        return
+        array_merge(
             $searches,
             [
                 /* -- errors -- -- -- -- -- */
 
 
 
-                (object)[
-                    'filetype' => 'js',
-                    'regex' => (
-                        'SCShippingAddressEditorView\.storedShippingAddressModel\('
-                    ),
-                    'severity' => 3,
-                    'title' => (
-                        'SCShippingAddressEditorView.storedShippingAddressModel()'
-                    ),
+                (object)
+                [
+                    'filetype' =>
+                    'js',
 
-                    'cbmessage' => <<<EOT
+                    'regex' =>
+                    'SCShippingAddressEditorView\.storedShippingAddressModel\(',
+
+                    'severity' =>
+                    3,
+
+                    'title' =>
+                     'SCShippingAddressEditorView.storedShippingAddressModel()',
+
+                    'cbmessage' =>
+                    <<<EOT
 
                         This function was replaced by
                         SCShippingAddress.fetchLocalSpec().
 
                     EOT,
 
-                    'errorStartDate' => '2021/02/11',
+                    'errorStartDate' =>
+                    '2021/02/11',
                 ],
 
 
@@ -2385,5 +2511,6 @@ final class Admin_CBCode {
         );
     }
     /* searches() */
+
 }
 /* Admin_CBCode */
