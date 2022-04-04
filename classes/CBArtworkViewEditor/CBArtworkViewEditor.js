@@ -18,7 +18,7 @@
 
     window.CBArtworkViewEditor =
     {
-        CBUISpecEditor_createEditorElement,
+        CBUISpecEditor_createEditorElement2,
         CBUISpec_toDescription,
     };
 
@@ -35,16 +35,11 @@
      * @return Element
      */
     function
-    CBUISpecEditor_createEditorElement(
-        args
+    CBUISpecEditor_createEditorElement2(
+        spec,
+        specChangedCallback
     ) // -> Element
     {
-        let spec =
-        args.spec;
-
-        let specChangedCallback =
-        args.specChangedCallback;
-
         let sectionElement, item;
 
         let element =
@@ -207,10 +202,10 @@
                     "size",
 
                     spec:
-                    args.spec,
+                    spec,
 
                     specChangedCallback:
-                    args.specChangedCallback,
+                    specChangedCallback,
                 }
             ).element
         );
@@ -268,11 +263,11 @@
         /* set thumbnail */
 
         if (
-            args.spec.image
+            spec.image
         ) {
             imageChooser.src =
             CBImage.toURL(
-                args.spec.image,
+                spec.image,
                 "rw960"
             );
         }
@@ -301,10 +296,10 @@
                     imageModel
                 ) // -> undefined
                 {
-                    args.spec.image =
+                    spec.image =
                     imageModel;
 
-                    args.specChangedCallback();
+                    specChangedCallback();
 
                     imageChooser.src =
                     CBImage.toURL(
@@ -355,10 +350,10 @@
         createEditor_handleImageRemoved(
         ) // -> undefined
         {
-            args.spec.image =
+            spec.image =
             undefined;
 
-            args.specChangedCallback();
+            specChangedCallback();
         }
         /* createEditor_handleImageRemoved() */
 
