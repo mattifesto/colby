@@ -36,6 +36,7 @@ CBArtworkViewEditor
     {
         return
         [
+            'CB_UI_StringEditor',
             'CBAjax',
             'CBConvert',
             'CBImage',

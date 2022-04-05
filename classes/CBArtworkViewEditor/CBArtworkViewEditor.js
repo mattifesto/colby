@@ -1,4 +1,5 @@
 /* globals
+    CB_UI_StringEditor,
     CBAjax,
     CBConvert,
     CBImage,
@@ -252,12 +253,24 @@
             renderImageOnlyEditor.element
         );
 
+
+
+        element.append(
+            CBArtworkViewEditor_createImageDestinationURLEditorElement(
+                spec,
+                specChangedCallback
+            )
+        );
+
+
+
         element.appendChild(
             createCSSClassNamesEditorElement(
                 spec,
                 specChangedCallback
             )
         );
+
 
 
         /* set thumbnail */
@@ -566,5 +579,50 @@
         return element;
     }
     /* createCSSClassNamesEditorElement() */
+
+
+
+    /**
+     * @param object spec
+     * @param function specChangedCallback
+     *
+     * @return Element
+     */
+    function
+    CBArtworkViewEditor_createImageDestinationURLEditorElement(
+        spec,
+        specChangedCallback
+    ) // -> Element
+    {
+        let stringEditor =
+        CB_UI_StringEditor.create();
+
+        stringEditor.CB_UI_StringEditor_setTitle(
+            "Image Destination URL"
+        );
+
+        stringEditor.CB_UI_StringEditor_setValue(
+            CBModel.valueToString(
+                spec,
+                'CBArtworkView_imageDestinationURL_property'
+            )
+        );
+
+        stringEditor.CB_UI_StringEditor_setChangedEventListener(
+            function ()
+            {
+                let newImageDestinationURL =
+                stringEditor.CB_UI_StringEditor_getValue().trim();
+
+                spec.CBArtworkView_imageDestinationURL_property =
+                newImageDestinationURL;
+
+                specChangedCallback();
+            }
+        );
+
+        return stringEditor.CB_UI_StringEditor_getElement();
+    }
+    // CBArtworkViewEditor_createImageDestinationURLEditorElement()
 
 })();
