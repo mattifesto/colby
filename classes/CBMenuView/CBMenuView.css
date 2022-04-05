@@ -391,8 +391,10 @@
     padding: 0;
 }
 
-.CBMenuView_list2 li {
-    padding: 0 0 10px;
+.CBMenuView_list2 li + li
+{
+    padding:
+    10px 0 0;
 }
 
 .CBMenuView_list2 .CBMenuView_header,
