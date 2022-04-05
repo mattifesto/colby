@@ -188,6 +188,13 @@
         );
 
         rootEditorElement.append(
+            CB_CBView_Hero1Editor_createImageDestinationURLEditorElement(
+                spec,
+                specChangedCallback
+            )
+        );
+
+        rootEditorElement.append(
             CB_CBView_Hero1Editor_createSubviewsEditorElement(
                 spec,
                 specChangedCallback
@@ -287,6 +294,51 @@
         return stringEditor.CB_UI_StringEditor_getElement();
     }
     // CB_CBView_Hero1Editor_createAlternativeTextEditorElement()
+
+
+
+    /**
+     * @param object spec
+     * @param function specChangedCallback
+     *
+     * @return Element
+     */
+    function
+    CB_CBView_Hero1Editor_createImageDestinationURLEditorElement(
+        spec,
+        specChangedCallback
+    ) // -> Element
+    {
+        let stringEditor =
+        CB_UI_StringEditor.create();
+
+        stringEditor.CB_UI_StringEditor_setTitle(
+            "Image Destination URL"
+        );
+
+        stringEditor.CB_UI_StringEditor_setValue(
+            CBModel.valueToString(
+                spec,
+                'CB_CBView_Hero1_imageDestinationURL_property'
+            )
+        );
+
+        stringEditor.CB_UI_StringEditor_setChangedEventListener(
+            function ()
+            {
+                let newImageDestinationURL =
+                stringEditor.CB_UI_StringEditor_getValue().trim();
+
+                spec.CB_CBView_Hero1_imageDestinationURL_property =
+                newImageDestinationURL;
+
+                specChangedCallback();
+            }
+        );
+
+        return stringEditor.CB_UI_StringEditor_getElement();
+    }
+    // CB_CBView_Hero1Editor_createImageDestinationURLEditorElement()
 
 
 

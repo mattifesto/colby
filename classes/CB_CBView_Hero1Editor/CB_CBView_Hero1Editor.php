@@ -18,7 +18,7 @@ CB_CBView_Hero1Editor
         [
             Colby::flexpath(
                 __CLASS__,
-                'v675.63.js',
+                'v675.70.js',
                 cbsysurl()
             ),
         ];
