@@ -523,25 +523,26 @@ CBArtworkView
                 );
 
                 echo
-                <<<EOT
+                CBConvert::stringToCleanLine(<<<EOT
 
                     <a
                         href="${imageDestinationURLAsHTML}"
                         class="CBArtworkView_imageWrapper_element"
                     >
 
-                EOT;
+                EOT);
             }
 
             else
             {
                 echo
-                <<<EOT
+                CBConvert::stringToCleanLine(<<<EOT
 
                     <div
                         class="CBArtworkView_imageWrapper_element"
                     >
-                EOT;
+
+                EOT);
             }
 
 
