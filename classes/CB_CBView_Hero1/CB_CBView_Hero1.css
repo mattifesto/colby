@@ -38,7 +38,7 @@
 
 
 
-.CB_CBView_Hero1_content_element >
+.CB_CBView_Hero1_imageWrapper_element >
 picture:nth-of-type(2)
 {
     display:
@@ -50,7 +50,7 @@ picture:nth-of-type(2)
 @media
 (max-width: 640px)
 {
-    .CB_CBView_Hero1_content_element >
+    .CB_CBView_Hero1_imageWrapper_element >
     picture
     {
         display:
@@ -59,7 +59,7 @@ picture:nth-of-type(2)
 
 
 
-    .CB_CBView_Hero1_content_element >
+    .CB_CBView_Hero1_imageWrapper_element >
     picture:nth-of-type(2)
     {
         display:

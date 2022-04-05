@@ -17,7 +17,7 @@ CB_CBView_Hero1
         return [
             Colby::flexpath(
                 __CLASS__,
-                'v675.61.8.css',
+                'v675.70.css',
                 cbsysurl()
             ),
         ];
@@ -85,6 +85,13 @@ CB_CBView_Hero1
         CB_CBView_Hero1::setAlternativeText(
             $viewModel,
             CB_CBView_Hero1::getAlternativeText(
+                $viewSpec
+            )
+        );
+
+        CB_CBView_Hero1::setImageDestinationURL(
+            $viewModel,
+            CB_CBView_Hero1::getImageDestinationURL(
                 $viewSpec
             )
         );
@@ -167,7 +174,7 @@ CB_CBView_Hero1
                 )
             );
         }
-        
+
         return
         implode(
             ' ',
@@ -241,6 +248,49 @@ CB_CBView_Hero1
         EOT);
 
 
+
+        // open wrapper
+
+        $imageDestinationURL =
+        CB_CBView_Hero1::getImageDestinationURL(
+            $viewModel
+        );
+
+        if (
+            $imageDestinationURL !== ''
+        ) {
+            $imageDestinationURLAsHTML =
+            cbhtml(
+                $imageDestinationURL
+            );
+
+            echo
+            CBConvert::stringToCleanLine(<<<EOT
+
+                <a
+                    href="${imageDestinationURLAsHTML}"
+                    class="CB_CBView_Hero1_imageWrapper_element"
+                >
+
+            EOT);
+        }
+
+        else
+        {
+            echo
+            CBConvert::stringToCleanLine(<<<EOT
+
+                <div
+                    class="CB_CBView_Hero1_imageWrapper_element"
+                >
+
+            EOT);
+        }
+
+
+
+        // images
+
         $wideImageModel =
         CB_CBView_Hero1::getWideImage(
             $viewModel
@@ -286,6 +336,27 @@ CB_CBView_Hero1
                 $alternativeText
             );
         }
+
+
+
+        // close wrapper
+
+        if (
+            $imageDestinationURL !== ''
+        ) {
+            echo
+            '</a>';
+        }
+
+        else
+        {
+            echo
+            '</div>';
+        }
+
+
+
+        // subviews
 
         $subviewModels =
         CB_CBView_Hero1::getSubviews(
@@ -387,6 +458,49 @@ CB_CBView_Hero1
         $newAlternativeText;
     }
     // setAlternativeText()
+
+
+
+    /**
+     * @param objedt $viewModel
+     *
+     * @return string
+     *
+     *      Returns '' if there is no image destination URL.
+     */
+    static function
+    getImageDestinationURL(
+        stdClass $viewModel
+    ): string
+    {
+        return
+        trim(
+            CBModel::valueToString(
+                $viewModel,
+                'CB_CBView_Hero1_imageDestinationURL_property'
+            )
+        );
+    }
+    // getImageDestinationURL()
+
+
+
+    /**
+     * @param $viewModel
+     * @param string $newImageDestinationURL
+     *
+     * @return void
+     */
+    static function
+    setImageDestinationURL(
+        stdClass $viewModel,
+        string $newImageDestinationURL
+    ): void
+    {
+        $viewModel->CB_CBView_Hero1_imageDestinationURL_property =
+        $newImageDestinationURL;
+    }
+    // setImageDestinationURL()
 
 
 
