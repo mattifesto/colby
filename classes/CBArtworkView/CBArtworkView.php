@@ -191,6 +191,15 @@ CBArtworkView
             );
         }
 
+        CBArtworkView::setImageDestinationURL(
+            $model,
+            CBArtworkView::getImageDestinationURL(
+                $spec
+            )
+        );
+
+
+
         /* done */
 
         return $model;
@@ -498,6 +507,47 @@ CBArtworkView
 
             <?php
 
+            // open wrapper
+
+            $imageDestinationURL =
+            CBArtworkView::getImageDestinationURL(
+                $model
+            );
+
+            if (
+                $imageDestinationURL !== ''
+            ) {
+                $imageDestinationURLAsHTML =
+                cbhtml(
+                    $imageDestinationURL
+                );
+
+                echo
+                <<<EOT
+
+                    <a
+                        href="${imageDestinationURLAsHTML}"
+                        class="CBArtworkView_imageWrapper_element"
+                    >
+
+                EOT;
+            }
+
+            else
+            {
+                echo
+                <<<EOT
+
+                    <div
+                        class="CBArtworkView_imageWrapper_element"
+                    >
+                EOT;
+            }
+
+
+
+            // image
+
             CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
                 $imageModel,
                 $imageResizeOperation,
@@ -505,6 +555,27 @@ CBArtworkView
                 $maxHeight,
                 $alternativeText
             );
+
+
+
+            // close wrapper
+
+            if (
+                $imageDestinationURL !== ''
+            ) {
+                echo
+                '</a>';
+            }
+
+            else
+            {
+                echo
+                '</div>';
+            }
+
+
+
+            // caption
 
             if (
                 !$renderImageOnly &&
@@ -556,5 +627,52 @@ CBArtworkView
         <?php
     }
     /* CBView_render() */
+
+
+
+    // -- accessors
+
+
+
+    /**
+     * @param objedt $viewModel
+     *
+     * @return string
+     *
+     *      Returns '' if there is no image destination URL.
+     */
+    static function
+    getImageDestinationURL(
+        stdClass $viewModel
+    ): string
+    {
+        return
+        trim(
+            CBModel::valueToString(
+                $viewModel,
+                'CBArtworkView_imageDestinationURL_property'
+            )
+        );
+    }
+    // getImageDestinationURL()
+
+
+
+    /**
+     * @param $viewModel
+     * @param string $newImageDestinationURL
+     *
+     * @return void
+     */
+    static function
+    setImageDestinationURL(
+        stdClass $viewModel,
+        string $newImageDestinationURL
+    ): void
+    {
+        $viewModel->CBArtworkView_imageDestinationURL_property =
+        $newImageDestinationURL;
+    }
+    // setImageDestinationURL()
 
 }
