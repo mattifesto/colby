@@ -10,8 +10,8 @@
     CBUIExpander,
     Colby,
 
-    Admin_CBCode_CBCodeSearch_CBID,
-    Admin_CBCode_searches,
+    CB_CBAdmin_Code_CBCodeSearch_CBID,
+    CB_CBAdmin_Code_searches,
 */
 
 
@@ -32,7 +32,7 @@
      */
     async function afterDOMContentLoaded() {
         let elements = document.getElementsByClassName(
-            "Admin_CBCode"
+            "CB_CBAdmin_Code"
         );
 
         if (elements.length === 0) {
@@ -47,16 +47,16 @@
 
         for (
             let index = 0;
-            index < Admin_CBCode_searches.length;
+            index < CB_CBAdmin_Code_searches.length;
             index += 1
         ) {
             try {
-                let codeSearchModel = Admin_CBCode_searches[index];
+                let codeSearchModel = CB_CBAdmin_Code_searches[index];
 
                 if (
-                    Admin_CBCode_CBCodeSearch_CBID !== "" &&
+                    CB_CBAdmin_Code_CBCodeSearch_CBID !== "" &&
                     (
-                        Admin_CBCode_CBCodeSearch_CBID !==
+                        CB_CBAdmin_Code_CBCodeSearch_CBID !==
                         codeSearchModel.CBCodeSearch_CBID
                     )
                 ) {
@@ -127,11 +127,11 @@
         switchPart.changed = function () {
             if (switchPart.value) {
                 rootElement.classList.add(
-                    "Admin_CBCode_showSearchesWithNoResults"
+                    "CB_CBAdmin_Code_showSearchesWithNoResults"
                 );
             } else {
                 rootElement.classList.remove(
-                    "Admin_CBCode_showSearchesWithNoResults"
+                    "CB_CBAdmin_Code_showSearchesWithNoResults"
                 );
             }
         };
@@ -167,7 +167,7 @@
         );
 
         let response = await Colby.callAjaxFunction(
-            "Admin_CBCode",
+            "CB_CBAdmin_Code",
             "search",
             {
                 index: index,
@@ -238,7 +238,7 @@
             searchOnlyForThisCodeCBMessage = `
 
                 Search only for this code: (link (a
-                /admin/?c=Admin_CBCode&CBCodeSearch_CBID=${searchCBID}))
+                /admin/?c=CB_CBAdmin_Code&CBCodeSearch_CBID=${searchCBID}))
 
             `;
         }

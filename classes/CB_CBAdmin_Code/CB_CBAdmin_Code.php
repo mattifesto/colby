@@ -1,7 +1,7 @@
 <?php
 
 final class
-Admin_CBCode
+CB_CBAdmin_Code
 {
     /* -- CBAdmin interfaces -- */
 
@@ -85,17 +85,17 @@ Admin_CBCode
         );
 
         $searchModel =
-        Admin_CBCode::searches()[
+        CB_CBAdmin_Code::searches()[
             $index
         ];
 
         $searchCommand =
-        Admin_CBCode::searchModelToSearchCommand(
+        CB_CBAdmin_Code::searchModelToSearchCommand(
             $searchModel
         );
 
         $searchResults =
-        Admin_CBCode::searchCommandToSearchResults(
+        CB_CBAdmin_Code::searchCommandToSearchResults(
             $searchCommand
         );
 
@@ -142,7 +142,7 @@ Admin_CBCode
         [
             Colby::flexpath(
                 __CLASS__,
-                'v500.css',
+                'v675.71.css',
                 cbsysurl()
             ),
         ];
@@ -162,7 +162,7 @@ Admin_CBCode
         [
             Colby::flexpath(
                 __CLASS__,
-                'v576.js',
+                'v675.71.js',
                 cbsysurl()
             ),
         ];
@@ -181,11 +181,11 @@ Admin_CBCode
         return
         [
             [
-                'Admin_CBCode_searches',
-                Admin_CBCode::searches(),
+                'CB_CBAdmin_Code_searches',
+                CB_CBAdmin_Code::searches(),
             ],
             [
-                'Admin_CBCode_CBCodeSearch_CBID',
+                'CB_CBAdmin_Code_CBCodeSearch_CBID',
                 cb_query_string_value(
                     'CBCodeSearch_CBID'
                 ),
@@ -255,7 +255,7 @@ Admin_CBCode
 
                 'URL' =>
                 CBAdmin::getAdminPageURL(
-                    'Admin_CBCode'
+                    'CB_CBAdmin_Code'
                 ),
             ]
         );
@@ -351,7 +351,7 @@ Admin_CBCode
                  *      file from the files to be searched.
                  */
                 '--ignore-file=match:CodeAdmin',
-                '--ignore-file=match:Admin_CBCode',
+                '--ignore-file=match:CB_CBAdmin_Code',
 
                 '--sort-files',
                 CBModel::valueToString(
@@ -2519,4 +2519,4 @@ Admin_CBCode
     /* searches() */
 
 }
-/* Admin_CBCode */
+/* CB_CBAdmin_Code */

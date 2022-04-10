@@ -1,0 +1,15 @@
+.CB_CBAdmin_Code
+.CBUIExpander.severity6
+{
+    display:
+    none;
+}
+
+
+
+.CB_CBAdmin_Code.CB_CBAdmin_Code_showSearchesWithNoResults
+.CBUIExpander.severity6
+{
+    display:
+    block;
+}
