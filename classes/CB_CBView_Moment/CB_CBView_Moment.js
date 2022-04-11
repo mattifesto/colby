@@ -185,24 +185,38 @@
                     true
                 );
 
-                let momentModelCBID =
-                CBModel.getCBID(
-                    momentModel
+                let wasConfirmed =
+                await
+                CBUIPanel.confirmText(
+                    "Are you sure you want to delete this moment?"
                 );
 
-                await CBAjax.call2(
-                    "CB_Ajax_Moment_Delete",
-                    {
-                        CB_Ajax_Moment_Delete_momentModelCBID:
-                        momentModelCBID,
-                    }
-                );
+                if (
+                    wasConfirmed
+                ) {
+                    let momentModelCBID =
+                    CBModel.getCBID(
+                        momentModel
+                    );
+
+                    await CBAjax.call2(
+                        "CB_Ajax_Moment_Delete",
+                        {
+                            CB_Ajax_Moment_Delete_momentModelCBID:
+                            momentModelCBID,
+                        }
+                    );
+                }
 
                 deleteButton.CBUIButton_setIsDisabled(
                     false
                 );
 
-                afterDeletedCallback();
+                if (
+                    wasConfirmed
+                ) {
+                    afterDeletedCallback();
+                }
             }
 
             catch (
