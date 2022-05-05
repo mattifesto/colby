@@ -476,7 +476,8 @@
                         "navigate to the models admin page."
                     ).then(
                         function () {
-                            window.location = "/admin/?c=CBModelsAdmin";
+                            window.location =
+                            "/admin/?c=Admin_CBModelClassList";
                         }
                     ).catch(
                         function (error) {

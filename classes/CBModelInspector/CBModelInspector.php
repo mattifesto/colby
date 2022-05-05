@@ -105,11 +105,13 @@ final class CBModelInspector {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
-                'v675.7.js',
+                'v2022.05.05.1651769012.js',
                 cbsysurl()
             ),
         ];
