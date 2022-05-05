@@ -33,7 +33,31 @@
  * different.
  */
 final class
-CBAdmin {
+CBAdmin
+{
+    // -- CBHTMLOutput interfaces
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
+        return
+        [
+            Colby::flexpath(
+                __CLASS__,
+                'v2022.05.03.1651603788.css',
+                cbsysurl()
+            ),
+        ];
+    }
+    // CBHTMLOutput_CSSURLs()
+
+
 
     /* -- functions -- -- -- -- -- */
 
@@ -112,7 +136,8 @@ CBAdmin {
 
         CBHTMLOutput::begin();
 
-        try {
+        try
+        {
             CBHTMLOutput::pageInformation()->classNameForPageSettings = (
                 'CB_StandardPageSettings'
             );
@@ -129,9 +154,6 @@ CBAdmin {
                 $className
             );
 
-            $menuViewModel = (object)[
-                'className' => 'CBAdminPageMenuView',
-            ];
 
             if (is_callable($function = "{$className}::CBAdmin_initialize")) {
                 call_user_func(
@@ -150,15 +172,36 @@ CBAdmin {
                 );
             }
 
-            CBView::renderSpec(
-                (object)[
-                    'className' => 'CB_CBView_MainHeader',
-                ]
+
+            // main header view
+
+            $mainHeaderViewSpec =
+            CBModel::createSpec(
+                'CB_CBView_MainHeader'
             );
 
-            CBView::render(
-                $menuViewModel
+            CB_CBView_MainHeader::setContext(
+                $mainHeaderViewSpec,
+                'CBAdmin'
             );
+
+            CBView::renderSpec(
+                $mainHeaderViewSpec
+            );
+
+
+            // menu view
+
+            $menuViewSpec =
+            CBModel::createSpec(
+                'CBAdminPageMenuView'
+            );
+
+            CBView::renderSpec(
+                $menuViewSpec
+            );
+
+
 
             ?>
 
@@ -179,6 +222,8 @@ CBAdmin {
             </main>
 
             <?php
+
+
 
             CBView::render(
                 (object)[
