@@ -44,7 +44,7 @@ final class CBModelInspector {
      * @param object $args
      *
      *      {
-     *          ID: hex160
+     *          ID: CBID
      *      }
      *
      * @return object
@@ -54,34 +54,76 @@ final class CBModelInspector {
      *          versions: [object]
      *      }
      */
-    static function CBAjax_fetchModelData(stdClass $args) {
-        $ID = CBModel::valueAsID($args, 'ID');
+    static function
+    CBAjax_fetchModelData(
+        stdClass $args
+    ): stdClass
+    {
+        $ID =
+        CBModel::valueAsID(
+            $args,
+            'ID'
+        );
 
-        if ($ID === null) {
+        if (
+            $ID === null
+        ) {
             throw CBException::createModelIssueException(
-                'The function arguments object has an invalid "ID" ' .
-                'property value.',
+                CBConvert::stringToCleanLine(<<<EOT
+
+                The arguments object for this Ajax function has an invalid "ID"
+                property value.
+
+                EOT),
                 $args,
                 '334244b01b8d5fa31e4f4371f8d8af2f0a0c8be8'
             );
         }
 
-        $object = (object)[
-            'className' => 'CBModelInspector_fetchModelData',
+        $object =
+        (object)
+        [
+            'className' =>
+            'CBModelInspector_fetchModelData',
 
-            'associations' => CBModelAssociations::fetch($ID),
+            'associations' =>
+            CBModelAssociations::fetch(
+                $ID
+            ),
 
-            'associatedWith' => CBModelAssociations::fetch(null, null, $ID),
+            'associatedWith' =>
+            CBModelAssociations::fetch(
+                null,
+                null,
+                $ID
+            ),
 
-            'modelID' => $ID,
+            'modelID' =>
+            $ID,
         ];
 
-        $object->dataStoreFiles = CBModelInspector::fetchDataStoreFiles($ID);
-        $object->modelVersions = CBModelInspector::fetchModelVersions($ID);
-        $object->rowFromCBImages = CBModelInspector::fetchRowFromCBImages($ID);
-        $object->rowFromColbyPages = CBModelInspector::fetchRowFromColbyPages($ID);
+        $object->dataStoreFiles =
+        CBModelInspector::fetchDataStoreFiles(
+            $ID
+        );
 
-        return $object;
+        $object->modelVersions =
+        CBModelInspector::fetchModelVersions(
+            $ID
+        );
+
+        $object->rowFromCBImages =
+        CBModelInspector::fetchRowFromCBImages(
+            $ID
+        );
+
+        $object->rowFromColbyPages =
+        CBModelInspector::fetchRowFromColbyPages(
+            $ID
+        );
+
+        return
+        $object;
     }
     /* CBAjax_fetchModelData() */
 
@@ -90,8 +132,12 @@ final class CBModelInspector {
     /**
      * @return string
      */
-    static function CBAjax_fetchModelData_getUserGroupClassName(): string {
-        return 'CBAdministratorsUserGroup';
+    static function
+    CBAjax_fetchModelData_getUserGroupClassName(
+    ): string
+    {
+        return
+        'CBAdministratorsUserGroup';
     }
 
 
