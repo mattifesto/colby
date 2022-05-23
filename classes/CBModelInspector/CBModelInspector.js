@@ -366,8 +366,11 @@
             section.appendChild(
                 CBUI.createKeyValueSectionItem(
                     {
-                        key: "Title",
-                        value: model.title,
+                        key:
+                        "Administrative Title",
+
+                        value:
+                        modelData.CBModelInspector_modelAdministrativeTitle,
                     }
                 ).element
             );
@@ -375,8 +378,11 @@
             section.appendChild(
                 CBUI.createKeyValueSectionItem(
                     {
-                        key: "Description",
-                        value: model.description,
+                        key:
+                        "Title",
+
+                        value:
+                        modelData.CBModelInspector_modelTitle,
                     }
                 ).element
             );

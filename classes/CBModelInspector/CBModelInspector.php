@@ -122,6 +122,21 @@ final class CBModelInspector {
             $ID
         );
 
+        $mostRecentModel =
+        json_decode(
+            $object->modelVersions[0]->modelAsJSON
+        );
+
+        $object->CBModelInspector_modelTitle =
+        CBModel::getTitle(
+            $mostRecentModel
+        );
+
+        $object->CBModelInspector_modelAdministrativeTitle =
+        CBModel::getAdministrativeTitle(
+            $mostRecentModel
+        );
+
         return
         $object;
     }
@@ -157,7 +172,7 @@ final class CBModelInspector {
         [
             Colby::flexpath(
                 __CLASS__,
-                'v2022.05.05.1651769012.js',
+                'v2022.05.23.1653334795.js',
                 cbsysurl()
             ),
         ];
