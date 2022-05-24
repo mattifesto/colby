@@ -488,6 +488,36 @@ CBModels {
 
 
     /**
+     * @return [string]
+     */
+    static function
+    fetchAllModelClassNames(
+    ): array
+    {
+        $SQL =
+        <<<EOT
+
+            SELECT
+            DISTINCT className
+
+            FROM
+            CBModels
+
+        EOT;
+
+        $allModelClassNames =
+        CBDB::SQLToArray(
+            $SQL
+        );
+
+        return
+        $allModelClassNames;
+    }
+    // fetchAllModelClassNames()
+
+
+
+    /**
      * There can be multiple CBIDs associated with a URLPath. This is not a
      * great situation but it is possible. This function always selects the CBID
      * that was created first.
