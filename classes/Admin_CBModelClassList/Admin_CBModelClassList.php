@@ -54,20 +54,17 @@ final class Admin_CBModelClassList {
     /**
      * @return [[<name>, <value>]]
      */
-    static function CBHTMLOutput_JavaScriptVariables(): array {
-        $SQL = <<<EOT
-
-            SELECT  DISTINCT className
-            FROM    CBModels
-
-        EOT;
-
-        $modelClassNames = CBDB::SQLToArray($SQL);
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array
+    {
+        $allModelClassNames =
+        CBModels::fetchAllModelClassNames();
 
         return [
             [
                 'Admin_CBModelClassList_modelClassNames',
-                $modelClassNames,
+                $allModelClassNames,
             ],
         ];
     }
