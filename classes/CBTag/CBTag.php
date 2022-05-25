@@ -1,6 +1,10 @@
 <?php
 
 /**
+ * @deprecated 2022_05_09
+ *
+ *      Use CB_Tag.
+ *
  * A tag should be associated with a model whenever you want to associate a
  * simple string with a model. The association key will be used to differentiate
  * between different contexts of tags.
@@ -9,7 +13,57 @@
  * allowed for various contexts.
  */
 final class
-CBTag {
+CBTag
+{
+    // -- CB_CBAdmin_Code interfaces
+
+
+
+    /**
+     * @return [object]
+     */
+    static function
+    CBCodeAdmin_searches(
+    ): array
+    {
+        $searchForClassName =
+        (object)
+        [
+            'args' =>
+            '--ignore-file=match:/^CBTag\./',
+
+            'cbmessage' =>
+            <<<EOT
+
+                Use CB_Tag.
+
+            EOT,
+
+            'noticeStartDate' =>
+            '2022/05/09',
+
+            'regex' =>
+            '\\bCBTag\\b',
+
+            'severity' =>
+            5,
+
+            'title' =>
+            'CBTag',
+        ];
+
+        return
+        [
+            $searchForClassName,
+        ];
+    }
+    // CBCodeAdmin_searches()
+
+
+
+    // -- functions
+
+
 
     /**
      * @param ID $ID
