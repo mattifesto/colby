@@ -450,6 +450,39 @@ CBModel {
 
     /**
      * @param object $model
+     *
+     * @return string
+     */
+    static function
+    getAdministrativeTitle(
+        stdClass $model
+    ): ?string
+    {
+        $callable =
+        CBModel::getClassFunction(
+            $model,
+            'CBModel_getAdministrativeTitle'
+        );
+
+        if (
+            $callable !== null
+        ) {
+            return
+            call_user_func(
+                $callable,
+                $model
+            );
+        }
+
+        return
+        null;
+    }
+    // getAdministrativeTitle()
+
+
+
+    /**
+     * @param object $model
      * @param string $functionName
      *
      * @return callable|null
