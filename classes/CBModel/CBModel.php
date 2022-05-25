@@ -252,6 +252,57 @@ CBModel {
 
 
     /**
+     * @param object $model
+     *
+     * @return object
+     */
+    static function
+    convertModelToAdministrativeSearchResult(
+        stdClass $model
+    ): stdClass
+    {
+        $administrativeSearchResult =
+        (object)[];
+
+        $administrativeSearchResult->
+        CB_AdministrativeSearchResult_CBID =
+        CBModel::getCBID(
+            $model
+        );
+
+        $administrativeSearchResult->
+        CB_AdministrativeSearchResult_className =
+        CBModel::getClassName(
+            $model
+        );
+
+        $administrativeSearchResult->
+        CB_AdministrativeSearchResult_administrativeTitle =
+        CBModel::getAdministrativeTitle(
+            $model
+        );
+
+        $administrativeSearchResult->
+        CB_AdministrativeSearchResult_title =
+        CBModel::getTitle(
+            $model
+        );
+
+        $administrativeSearchResult->
+        CB_AdministrativeSearchResult_associatedImageModel =
+        CBModelToCBImageAssociation::fetchAssociatedImageModelByModelCBID(
+            $administrativeSearchResult->
+            CB_AdministrativeSearchResult_CBID
+        );
+
+        return
+        $administrativeSearchResult;
+    }
+    // convertModelToAdministrativeSearchResult()
+
+
+
+    /**
      * This function returns a copy of the $spec parameter.
      *
      * Copies of model specs are further processed by model classes that
@@ -1018,7 +1069,7 @@ CBModel {
             CB_URL::potentialURLPathIsValid(
                 $potentialURLPath
             );
-            
+
             if (
                 $isValid !== true
             ) {
