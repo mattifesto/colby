@@ -488,6 +488,45 @@ CBModels {
 
 
     /**
+     * @param [CBID] $foundModelCBIDs
+     *
+     * @return [object]
+     */
+    static function
+    fetchAdministrativeSearchResults(
+        array $foundModelCBIDs
+    ): array
+    {
+        $foundModels =
+        CBModels::fetchModelsByID2(
+            $foundModelCBIDs
+        );
+
+        $administrativeSearchResults =
+        [];
+
+        foreach (
+            $foundModels as $foundModel
+        ) {
+            $administrativeSearchResult =
+            CBModel::convertModelToAdministrativeSearchResult(
+                $foundModel
+            );
+
+            array_push(
+                $administrativeSearchResults,
+                $administrativeSearchResult
+            );
+        }
+
+        return
+        $administrativeSearchResults;
+    }
+    // fetchAdministrativeSearchResults()
+
+
+
+    /**
      * @return [string]
      */
     static function
