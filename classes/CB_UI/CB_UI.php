@@ -30,7 +30,7 @@ CB_UI
         [
             Colby::flexpath(
                 __CLASS__,
-                'v675.61.1.css',
+                'v2022.05.26.1653599619.css',
                 cbsysurl()
             ),
         ];

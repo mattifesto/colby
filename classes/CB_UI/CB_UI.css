@@ -28,10 +28,7 @@ html
     /* under development */
 
     --CB_UI_accentPaperColorGray:
-    hsl(0, 0%, 96%);
-
-    --CB_UI_accentPaperColorRed:
-    hsl(0, 50%, 96%);
+    hsl(0, 0%, 97%);
 }
 
 
@@ -51,10 +48,7 @@ html
         /* under development */
 
         --CB_UI_accentPaperColorGray:
-        hsl(0, 0%, 16%);
-
-        --CB_UI_accentPaperColorRed:
-        hsl(0, 10%, 16%);
+        hsl(0, 0%, 15%);
     }
 }
 
