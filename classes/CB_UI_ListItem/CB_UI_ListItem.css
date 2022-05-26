@@ -1,0 +1,62 @@
+.CB_UI_ListItem_root_element
+{
+    display:
+    flex;
+
+    justify-content:
+    center;
+
+    padding:
+    10px;
+}
+
+
+
+.CB_UI_ListItem_content_element
+{
+    box-sizing:
+    border-box;
+
+    width:
+    var(--CB_UI_readableWidth);
+}
+
+
+
+.CB_UI_ListItem_administrativeTitle_element
+{
+    color:
+    var(--CBTextColor2);
+}
+
+
+
+.CB_UI_ListItem_CBID_element,
+.CB_UI_ListItem_className_element
+{
+    color:
+    var(--CBTextColor2);
+
+    font-family:
+    var(--CBMonospaceFontFamily);
+
+    font-size:
+    80%;
+}
+
+
+
+.CB_UI_ListItem_root_element
+a
+{
+    display:
+    inline-block;
+}
+
+
+
+.CB_UI_ListItem_inspect_element
+{
+    margin-left:
+    20px;
+}
