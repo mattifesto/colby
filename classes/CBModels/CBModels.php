@@ -1094,6 +1094,113 @@ CBModels {
 
     /**
      * @param string $searchQuery
+     * @param string $modelClassName
+     *
+     * @return [CBID]
+     */
+    static function
+    fetchModelCBIDsBySearch(
+        string $searchQuery,
+        string $modelClassName = '',
+    ): array
+    {
+        $words = preg_split(
+            '/[\s,]+/',
+            $searchQuery,
+            null,
+            PREG_SPLIT_NO_EMPTY
+        );
+
+        $clauses =
+        [];
+
+        if (
+            $modelClassName !== ''
+        ) {
+            $modelClassNameAsSQL =
+            CBDB::stringToSQL(
+                $modelClassName
+            );
+
+            $clause =
+            "CBModels2_className_column = ${modelClassNameAsSQL}";
+
+            array_push(
+                $clauses,
+                $clause
+            );
+        }
+
+        foreach (
+            $words as $word
+        ) {
+            if (
+                strlen($word) > 2
+            ) {
+                $wordAsSQL =
+                CBDB::escapeString(
+                    $word
+                );
+
+                $clause =
+                "CBModels2_searchText_column LIKE '%{$wordAsSQL}%'";
+
+                array_push(
+                    $clauses,
+                    $clause
+                );
+            }
+        }
+
+        if (
+            empty($clauses)
+        ) {
+            return
+            [];
+        }
+
+        else
+        {
+            $clauses =
+            implode(
+                ' AND ',
+                $clauses
+            );
+        }
+
+        $SQL =
+        <<<EOT
+
+            SELECT
+            LOWER(HEX(CBModels2_CBID_column))
+            AS
+            CBModels2_CBID_column
+
+            FROM
+            CBModels2_table
+
+            WHERE
+            {$clauses}
+
+            LIMIT
+            50
+
+        EOT;
+
+        $foundModelCBIDs =
+        CBDB::SQLToArrayOfNullableStrings(
+            $SQL
+        );
+
+        return
+        $foundModelCBIDs;
+    }
+    // fetchModelCBIDsBySearch()
+
+
+
+    /**
+     * @param string $searchQuery
      *
      * @return [CB_SearchResult]
      */
