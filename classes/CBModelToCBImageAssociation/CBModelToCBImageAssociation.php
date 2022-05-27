@@ -36,4 +36,31 @@ final class CBModelToCBImageAssociation {
         return 'CBAdministratorsUserGroup';
     }
 
+
+
+    // -- functions
+
+
+
+    /**
+     * @param CBID $modelCBID
+     *
+     * @return CBID|null
+     */
+    static function
+    fetchAssociatedImageModelCBIDByModelCBID(
+        string $modelCBID
+    ): ?string
+    {
+        $associationKey =
+        'CBModelToCBImageAssociation';
+
+        return
+        CBModelAssociations::fetchSingularSecondCBID(
+            $modelCBID,
+            $associationKey
+        );
+    }
+    // fetchAssociatedImageCBIDByModelCBID()
+
 }
