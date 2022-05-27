@@ -1,8 +1,9 @@
 <?php
 
-final class CBModelToCBImageAssociation {
-
-    /* -- CBAjax interfaces -- -- -- -- -- */
+final class
+CBModelToCBImageAssociation
+{
+    // -- CBAjax interfaces
 
 
 
@@ -16,7 +17,11 @@ final class CBModelToCBImageAssociation {
      *
      * @return void
      */
-    static function CBAjax_replaceImageID(stdClass $args): void {
+    static function
+    CBAjax_replaceImageID(
+        stdClass $args
+    ): void
+    {
         $associationKey =
         'CBModelToCBImageAssociation';
 
@@ -26,17 +31,22 @@ final class CBModelToCBImageAssociation {
             $args->imageID
         );
     }
-    /* CBAjax_replaceImageID() */
+    // CBAjax_replaceImageID()
 
 
 
     /**
      * @return string
      */
-    static function CBAjax_replaceImageID_getUserGroupClassName(): string {
-        return 'CBAdministratorsUserGroup';
+    static function
+    CBAjax_replaceImageID_getUserGroupClassName(
+    ): string
+    {
+        return
+        'CBAdministratorsUserGroup';
     }
-
+    // CBAjax_replaceImageID_getUserGroupClassName()
+    
 
 
     // -- functions
