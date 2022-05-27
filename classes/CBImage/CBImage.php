@@ -753,7 +753,7 @@ CBImage
                     100%;
 
                     width:
-                    ${maximumDisplayWidthInCSSPixels}px
+                    ${maximumImageStyleWidthInCSSPixels}px
                 "
             >
 
