@@ -1,4 +1,5 @@
 /* global
+    CB_UI_StringEditor,
     CBAjax,
     CBConvert,
     CBErrorHandler,
@@ -69,6 +70,13 @@
                     createFrontPageNotificationElement()
                 );
             }
+
+            editorContainer.append(
+                CBViewPageEditor_createAdministrativeTitleEditorElement(
+                    spec,
+                    specChangedCallback
+                )
+            );
 
             /* CBViewPageInformationEditor */
             {
@@ -387,6 +395,54 @@
 
 
     window.CBViewPageEditor = CBViewPageEditor;
+
+
+
+    /**
+     * @param object spec
+     * @param function specChangedCallback
+     *
+     * @return Element
+     */
+    function
+    CBViewPageEditor_createAdministrativeTitleEditorElement(
+        spec,
+        specChangedCallback
+    ) // -> Element
+    {
+        let stringEditor =
+        CB_UI_StringEditor.create();
+
+        stringEditor.CB_UI_StringEditor_setTitle(
+            "Administrative Title"
+        );
+
+        stringEditor.CB_UI_StringEditor_setValue(
+            CBModel.valueToString(
+                spec,
+                'CBViewPage_administrativeTitle_property'
+            )
+        );
+
+        stringEditor.CB_UI_StringEditor_setChangedEventListener(
+            function (
+            ) // -> undefined
+            {
+                let newAdministrativeTitle =
+                stringEditor.CB_UI_StringEditor_getValue();
+
+                spec.CBViewPage_administrativeTitle_property =
+                newAdministrativeTitle;
+
+                specChangedCallback();
+            }
+        );
+
+        return (
+            stringEditor.CB_UI_StringEditor_getElement()
+        );
+    }
+    // CBViewPageEditor_createAdministrativeTitleEditorElement()
 
 
 

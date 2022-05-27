@@ -1,8 +1,8 @@
 <?php
 
 final class
-CBViewPageEditor {
-
+CBViewPageEditor
+{
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
 
@@ -12,16 +12,18 @@ CBViewPageEditor {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
-                'v675.55.js',
+                'v2022.05.22.1653192151.js',
                 cbsysurl()
             ),
         ];
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
@@ -65,6 +67,7 @@ CBViewPageEditor {
         return array_merge(
             $classNamesForEditors,
             [
+                'CB_UI_StringEditor',
                 'CBAjax',
                 'CBConvert',
                 'CBErrorHandler',
