@@ -46,6 +46,37 @@ final class CBModelToCBImageAssociation {
     /**
      * @param CBID $modelCBID
      *
+     * @return object|null
+     */
+    static function
+    fetchAssociatedImageModelByModelCBID(
+        string $modelCBID
+    ): ?stdClass
+    {
+        $associatedImageModelCBID =
+        CBModelToCBImageAssociation::fetchAssociatedImageModelCBIDByModelCBID(
+            $modelCBID
+        );
+
+        if (
+            $associatedImageModelCBID === null
+        ) {
+            return
+            null;
+        }
+
+        return
+        CBModels::fetchModelByCBID(
+            $associatedImageModelCBID
+        );
+    }
+    // fetchAssociatedImageModelByModelCBID()
+
+
+
+    /**
+     * @param CBID $modelCBID
+     *
      * @return CBID|null
      */
     static function
