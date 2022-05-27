@@ -17,7 +17,8 @@ final class CBModelToCBImageAssociation {
      * @return void
      */
     static function CBAjax_replaceImageID(stdClass $args): void {
-        $associationKey = __CLASS__;
+        $associationKey =
+        'CBModelToCBImageAssociation';
 
         CBModelAssociations::replaceAssociatedID(
             $args->modelID,
