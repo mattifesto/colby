@@ -67,7 +67,8 @@ CBViewPage {
     static function
     CBModel_build(
         stdClass $spec
-    ) {
+    ): stdClass
+    {
         $model = (object)[
             'classNameForKind' => CBModel::valueToString(
                 $spec,
@@ -95,6 +96,13 @@ CBViewPage {
                 )
             ),
         ];
+
+        CBViewPage::setAdministrativeTitle(
+            $model,
+            CBViewPage::getAdministrativeTitle(
+                $spec
+            )
+        );
 
         CBViewPage::setFrameClassName(
             $model,
@@ -273,6 +281,44 @@ CBViewPage {
 
 
     /**
+     * @param object $viewPageModel
+     *
+     * @return string
+     */
+    static function
+    CBModel_getAdministrativeTitle(
+        stdClass $viewPageModel
+    ): string
+    {
+        return
+        CBViewPage::getAdministrativeTitle(
+            $viewPageModel
+        );
+    }
+    // CBModel_getAdministrativeTitle()
+
+
+
+    /**
+     * @param object $viewPageModel
+     *
+     * @return string
+     */
+    static function
+    CBModel_getTitle(
+        stdClass $viewPageModel
+    ): string
+    {
+        return
+        CBViewPage::getTitle(
+            $viewPageModel
+        );
+    }
+    // CBModel_getTitle()
+
+
+
+    /**
      * @param object $spec
      *
      * @return object
@@ -294,7 +340,16 @@ CBViewPage {
      *
      * @return string
      */
-    static function CBModel_toSearchText(stdClass $model): string {
+    static function
+    CBModel_toSearchText(
+        stdClass $model
+    ): string
+    {
+        $administrativeTitle =
+        CBViewPage::getAdministrativeTitle(
+            $model
+        );
+
         $title = CBModel::valueToString(
             $model,
             'title'
@@ -305,7 +360,9 @@ CBViewPage {
             'description'
         );
 
-        $strings = [
+        $strings =
+        [
+            $administrativeTitle,
             $title,
             $description,
         ];
@@ -838,6 +895,45 @@ CBViewPage {
     /**
      * @param object $viewPageModel
      *
+     * @return string
+     */
+    static function
+    getAdministrativeTitle(
+        stdClass $viewPageModel
+    ): string
+    {
+        return
+        CBModel::valueToString(
+            $viewPageModel,
+            'CBViewPage_administrativeTitle_property'
+        );
+    }
+    /* getAdministrativeTitle() */
+
+
+
+    /**
+     * @param object $viewPageSpec
+     * @param string $newAdministrativeTitle
+     *
+     * @return void
+     */
+    static function
+    setAdministrativeTitle(
+        stdClass $viewPageSpec,
+        string $newAdministrativeTitle
+    ): void
+    {
+        $viewPageSpec->CBViewPage_administrativeTitle_property =
+        $newAdministrativeTitle;
+    }
+    /* setAdministrativeTitle() */
+
+
+
+    /**
+     * @param object $viewPageModel
+     *
      * @return string|null
      */
     static function
@@ -849,13 +945,13 @@ CBViewPage {
             'frameClassName'
         );
     }
-    /* getFrameClassName() */
+    // getFrameClassName()
 
 
 
     /**
      * @param object $viewPageSpec
-     * @param string $pageSettingsClassName
+     * @param string|null $newFrameClassName
      *
      * @return void
      */
@@ -870,7 +966,7 @@ CBViewPage {
 
         $viewPageSpec->frameClassName = $newFrameClassNameAsName;
     }
-    /* setPageSettingsClassName() */
+    // setFrameClassName()
 
 
 
@@ -1138,19 +1234,41 @@ CBViewPage {
 
 
     /**
-     * @param object $viewPageSpec
+     * @param object $viewPageModel
+     *
+     * @return string
+     */
+    static function
+    getTitle(
+        stdClass $viewPageModel
+    ): string
+    {
+        return
+        CBModel::valueToString(
+            $viewPageModel,
+            'title'
+        );
+    }
+    // getTitle()
+
+
+
+    /**
+     * @param object $viewPageModel
      * @param object $title
      *
      * @return void
      */
     static function
     setTitle(
-        stdClass $viewPageSpec,
+        stdClass $viewPageModel,
         string $title
-    ): void {
-        $viewPageSpec->title = $title;
+    ): void
+    {
+        $viewPageModel->title =
+        $title;
     }
-    /* setTitle() */
+    // setTitle()
 
 
 
