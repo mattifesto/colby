@@ -901,6 +901,22 @@ CBImage
 
 
     /**
+     * @deprecated 2022_05_28
+     *
+     *      I can't find a caller of this function and do not know why it
+     *      exists. It's basically the same as:
+     *
+     *      CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight()
+     *
+     *      but won't create a responsive image.
+     *
+     *      I think it's probably a left over function from when the CBImage
+     *      rendering functions were added which was a tumultuous time for the
+     *      code in this class.
+     *
+     *      If you find a purpose for this, document it here. Otherwise delete
+     *      this function eventually.
+     *
      * @param object $imageModel
      * @param string $imageResizeOperation
      * @param int $imageWidth
