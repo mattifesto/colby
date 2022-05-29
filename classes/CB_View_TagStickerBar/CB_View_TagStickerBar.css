@@ -1,0 +1,23 @@
+.CB_View_TagStickerBar_root_element
+{
+    display:
+    flex;
+
+    flex-wrap:
+    wrap;
+
+    justify-content:
+    center;
+
+    min-height:
+    36px;
+}
+
+
+
+.CB_View_TagStickerBar_root_element
+img
+{
+    margin:
+    5px;
+}
