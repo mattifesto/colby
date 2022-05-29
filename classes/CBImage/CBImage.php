@@ -3,6 +3,28 @@
 final class
 CBImage
 {
+    // -- CBAdmin_CBDocumentationForClass interfaces
+
+
+
+    /**
+     * @return void
+     */
+    static function
+    CBAdmin_CBDocumentationForClass_render(
+    )
+    : void
+    {
+        include_once(
+            __DIR__ . '/CBImage_Documentation.php'
+        );
+
+        CBImage_Documentation::render();
+    }
+    /* CBAdmin_CBDocumentationForClass_render() */
+
+
+
     /* -- CBHTMLOutput interfaces -- */
 
 
