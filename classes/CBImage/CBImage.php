@@ -676,6 +676,117 @@ CBImage
     /**
      * @param object $imageModel
      * @param string $imageResizeOperation
+     * @param int $maximumBoxWidthInCSSPixels
+     * @param int $maximumBoxHeightInCSSPixels
+     * @param string $alternativeText
+     *
+     * @return void
+     */
+    static function
+    renderPictureElementWithImageInsideAspectRatioBox(
+        stdClass $imageModel,
+        string  $imageResizeOperation,
+        int $maximumBoxWidthInCSSPixels,
+        int $maximumBoxHeightInCSSPixels,
+        string $alternativeText = ''
+    ): void
+    {
+        echo
+        CBConvert::stringToCleanLine(<<<EOT
+
+            <picture
+
+                class =
+                "CBImage_renderPictureElementWithImageInsideAspectRatioBox"
+
+            >
+
+        EOT);
+
+        $originalImageExtension =
+        CBImage::getExtension(
+            $imageModel
+        );
+
+        if (
+            $originalImageExtension !== 'webp'
+        ) {
+            $webpImageURL =
+            CBImage::asFlexpath(
+                $imageModel,
+                $imageResizeOperation,
+                cbsiteurl(),
+                'webp'
+            );
+
+            echo
+            CBConvert::stringToCleanLine(<<<EOT
+
+                <source
+                srcset="${webpImageURL}"
+                >
+
+            EOT);
+        }
+
+        $imageURL =
+        CBImage::asFlexpath(
+            $imageModel,
+            $imageResizeOperation,
+            cbsiteurl()
+        );
+
+        $alternativeTextAsHTML =
+        cbhtml(
+            $alternativeText
+        );
+
+        echo
+        CBConvert::stringToCleanLine(<<<EOT
+
+            <img
+                src =
+                "${imageURL}"
+
+                alt =
+                "${alternativeTextAsHTML}"
+
+                style=
+                "
+                    aspect-ratio:
+                    ${maximumBoxWidthInCSSPixels}
+                    /
+                    ${maximumBoxHeightInCSSPixels};
+
+                    display:
+                    block;
+
+                    height:
+                    auto;
+
+                    max-width:
+                    100%;
+
+                    object-fit:
+                    contain;
+
+                    width:
+                    ${maximumBoxWidthInCSSPixels}px;
+                "
+            >
+
+        EOT);
+
+
+        echo
+        "</picture>";
+    }
+
+
+
+    /**
+     * @param object $imageModel
+     * @param string $imageResizeOperation
      * @param int $maximumDisplayWidthInCSSPixels
      * @param int $maximumDisplayHeightInCSSPixels
      *
