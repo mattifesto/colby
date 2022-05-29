@@ -164,7 +164,12 @@ CBViewPageTests {
             'sections' => CBViewTests::testSubviewSpecs(),
         ];
 
-        $expectedModel = (object)[
+        $expectedModel =
+        (object)
+        [
+            'CBViewPage_administrativeTitle_property' =>
+            '',
+
             'className' => 'CBViewPage',
             'classNameForKind' => '',
             'classNameForSettings' => 'CBViewPageTests_PageSettings',
