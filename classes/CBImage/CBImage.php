@@ -789,6 +789,7 @@ CBImage
      * @param string $imageResizeOperation
      * @param int $maximumDisplayWidthInCSSPixels
      * @param int $maximumDisplayHeightInCSSPixels
+     * @param string $alternativeText
      *
      * @return void
      */
@@ -802,7 +803,16 @@ CBImage
     ): void
     {
         echo
-        "<picture>";
+        CBConvert::stringToCleanLine(<<<EOT
+
+            <picture
+
+                class =
+                "CBImage_renderPictureElementWithMaximumDisplayWidthAndHeight"
+
+            >
+
+        EOT);
 
         $originalImageExtension =
         CBImage::getExtension(
@@ -862,6 +872,7 @@ CBImage
         CBConvert::stringToCleanLine(<<<EOT
 
             <img
+
                 src =
                 "${imageURL}"
 
@@ -886,7 +897,7 @@ CBImage
                     100%;
 
                     width:
-                    ${maximumImageStyleWidthInCSSPixels}px
+                    ${maximumImageStyleWidthInCSSPixels}px;
                 "
             >
 
@@ -935,7 +946,16 @@ CBImage
     ): void
     {
         echo
-        "<picture>";
+        CBConvert::stringToCleanLine(<<<EOT
+
+            <picture
+
+                class =
+                "CBImage_renderPictureElementWithSize"
+
+            >
+
+        EOT);
 
         $originalImageExtension =
         CBImage::getExtension(
@@ -979,10 +999,19 @@ CBImage
         CBConvert::stringToCleanLine(<<<EOT
 
             <img
-            src="${imageURL}"
-            width="${imageWidth}"
-            height="${imageHeight}"
-            alt="${alternativeTextAsHTML}"
+
+                src =
+                "${imageURL}"
+
+                width =
+                "${imageWidth}"
+
+                height =
+                "${imageHeight}"
+
+                alt =
+                "${alternativeTextAsHTML}"
+
             >
 
         EOT);
