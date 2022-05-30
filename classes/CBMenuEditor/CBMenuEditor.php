@@ -18,7 +18,7 @@ CBMenuEditor
         [
             Colby::flexpath(
                 __CLASS__,
-                'v675.7.js',
+                'v2022.05.30.1653928266.js',
                 cbsysurl()
             ),
         ];

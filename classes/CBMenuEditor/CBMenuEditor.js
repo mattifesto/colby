@@ -1,7 +1,3 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBMenuEditor */
 /* global
     CBUI,
     CBUISpecArrayEditor,
@@ -9,7 +5,16 @@
 */
 
 
-var CBMenuEditor = {
+(function ()
+{
+    "use strict";
+
+    window.CBMenuEditor =
+    {
+        CBUISpecEditor_createEditorElement,
+    };
+
+
 
     /**
      * @param Object args.spec
@@ -17,9 +22,11 @@ var CBMenuEditor = {
      *
      * @return Element
      */
-    CBUISpecEditor_createEditorElement: function(
+    function
+    CBUISpecEditor_createEditorElement(
         args
-    ) {
+    ) // -> Element
+    {
         let spec = args.spec;
         let specChangedCallback = args.specChangedCallback;
 
@@ -78,7 +85,8 @@ var CBMenuEditor = {
         }
 
         return element;
-    },
+    }
     /* CBUISpecEditor_createEditorElement() */
 
-};
+}
+)();
