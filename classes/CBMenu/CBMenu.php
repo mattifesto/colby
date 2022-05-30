@@ -46,19 +46,26 @@ CBMenu
 
         /* menu items */
 
-        $menuItemSpecs = CBMenu::getMenuItems(
+        $menuItemSpecs =
+        CBMenu::getMenuItems(
             $spec
         );
 
-        $menuItemModels = array_map(
+        $menuItemModels =
+        array_map(
+
             function (
                 $menuItemSpec
-            ) {
-                return CBModel::build(
+            ) // -> object
+            {
+                return
+                CBModel::build(
                     $menuItemSpec
                 );
             },
+
             $menuItemSpecs
+
         );
 
         CBMenu::setMenuItems(
@@ -69,7 +76,8 @@ CBMenu
 
         /* done */
 
-        return $model;
+        return
+        $model;
     }
     /* CBModel_build() */
 
