@@ -35,33 +35,62 @@ CBMenuItem
 
 
     /**
-     * @param model $spec
+     * @param object $menuItemSpec
      *
-     *      {
-     *          name: string?
-     *          submenuID: ID?
-     *          text: string?
-     *          URL: string?
-     *      }
-     *
-     * @return model
+     * @return object
      */
-    static function CBModel_build(stdClass $spec): ?stdClass {
-        $model = (object)[
-            'name' => CBModel::valueToString($spec, 'name'),
-            'submenuID' => CBModel::valueAsID($spec, 'submenuID'),
-            'text' => CBModel::valueToString($spec, 'text'),
-            'URL' => CBModel::valueToString($spec, 'URL'),
+    static function
+    CBModel_build(
+        stdClass $menuItemSpec
+    ): ?stdClass
+    {
+        $menuItemModel =
+        (object)
+        [
+            'name' =>
+            CBModel::valueToString(
+                $menuItemSpec,
+                'name'
+            ),
+
+            'submenuID' =>
+            CBModel::valueAsID(
+                $menuItemSpec,
+                'submenuID'
+            ),
+
+            'text' =>
+            CBModel::valueToString(
+                $menuItemSpec,
+                'text'
+            ),
+
+            'URL' =>
+            CBModel::valueToString(
+                $menuItemSpec,
+                'URL'
+            ),
         ];
+
+
 
         /**
          * These properties are deprecated. When they are confirmed to be
          * unused remove them.
          */
-        $model->textAsHTML = cbhtml($model->text);
-        $model->URLAsHTML = cbhtml($model->URL);
 
-        return $model;
+        $menuItemModel->textAsHTML =
+        cbhtml(
+            $menuItemModel->text
+        );
+
+        $menuItemModel->URLAsHTML =
+        cbhtml(
+            $menuItemModel->URL
+        );
+
+        return
+        $menuItemModel;
     }
     // CBModel_build()
 
