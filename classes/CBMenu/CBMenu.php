@@ -21,23 +21,26 @@ CBMenu
     static function
     CBModel_build(
         stdClass $spec
-    ): ?stdClass {
-        $model = (object)[
-
-            'title' => trim(
+    ): ?stdClass
+    {
+        $model =
+        (object)
+        [
+            'title' =>
+            trim(
                 CBModel::valueToString(
                     $spec,
                     'title'
                 )
             ),
 
-            'titleURI' => trim(
+            'titleURI' =>
+            trim(
                 CBModel::valueToString(
                     $spec,
                     'titleURI'
                 )
             ),
-
         ];
 
 
