@@ -11,25 +11,23 @@
 
     window.CBMenuEditor =
     {
-        CBUISpecEditor_createEditorElement,
+        CBUISpecEditor_createEditorElement2,
     };
 
 
 
     /**
-     * @param Object args.spec
-     * @param function args.specChangedCallback
+     * @param Object spec
+     * @param function specChangedCallback
      *
      * @return Element
      */
     function
-    CBUISpecEditor_createEditorElement(
-        args
+    CBUISpecEditor_createEditorElement2(
+        spec,
+        specChangedCallback
     ) // -> Element
     {
-        let spec = args.spec;
-        let specChangedCallback = args.specChangedCallback;
-
         let elements = CBUI.createElementTree(
             "CBMenuEditor",
             "CBUI_sectionContainer",
@@ -61,15 +59,18 @@
 
         /* menu items */
         {
-            if (!args.spec.items) {
-                args.spec.items = [];
+            if (
+                !spec.items
+            ) {
+                spec.items =
+                [];
             }
 
             let editor = CBUISpecArrayEditor.create(
                 {
                     addableClassNames: ["CBMenuItem"],
-                    specs: args.spec.items,
-                    specsChangedCallback: args.specChangedCallback,
+                    specs: spec.items,
+                    specsChangedCallback: specChangedCallback,
                 }
             );
 
