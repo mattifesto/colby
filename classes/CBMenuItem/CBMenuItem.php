@@ -100,6 +100,36 @@ CBMenuItem
 
 
     /**
+     * @param object $menuItemModel
+     *
+     * @return string
+     */
+    static function
+    CBModel_toSearchText(
+        stdClass $menuItemModel
+    ): string
+    {
+        $searchText =
+        [];
+
+        array_push(
+            $searchText,
+            CBMenuItem::getName(
+                $menuItemModel
+            )
+        );
+
+        return
+        implode(
+            ' ',
+            $searchText
+        );
+    }
+    // CBModel_toSearchText()
+
+
+
+    /**
      * If the menu item is not hidden, this menu item will render a list item
      * element.
      *
