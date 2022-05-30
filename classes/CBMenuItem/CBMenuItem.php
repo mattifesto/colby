@@ -47,12 +47,6 @@ CBMenuItem
         $menuItemModel =
         (object)
         [
-            'text' =>
-            CBModel::valueToString(
-                $menuItemSpec,
-                'text'
-            ),
-
             'URL' =>
             CBModel::valueToString(
                 $menuItemSpec,
@@ -74,6 +68,15 @@ CBMenuItem
         CBMenuItem::setSubmenuCBID(
             $menuItemModel,
             CBMenuItem::getSubmenuCBID(
+                $menuItemSpec
+            )
+        );
+
+
+
+        CBMenuItem::setText(
+            $menuItemModel,
+            CBMenuItem::getText(
                 $menuItemSpec
             )
         );
@@ -125,6 +128,13 @@ CBMenuItem
         array_push(
             $searchText,
             CBMenuItem::getSubmenuCBID(
+                $menuItemModel
+            )
+        );
+
+        array_push(
+            $searchText,
+            CBMenuItem::getText(
                 $menuItemModel
             )
         );
@@ -300,4 +310,43 @@ CBMenuItem
         $newSubmenuCBID;
     }
     /* setSubmenuCBID() */
+
+
+
+    /**
+     * @param object $viewPageModel
+     *
+     * @return string
+     */
+    static function
+    getText(
+        stdClass $menuItemModel
+    ): string
+    {
+        return
+        CBModel::valueToString(
+            $menuItemModel,
+            'text'
+        );
+    }
+    /* getText() */
+
+
+
+    /**
+     * @param object $menuItemModel
+     * @param string $newText
+     *
+     * @return void
+     */
+    static function
+    setText(
+        stdClass $menuItemModel,
+        string $newText
+    ): void
+    {
+        $menuItemModel->text =
+        $newText;
+    }
+    /* setText() */
 }
