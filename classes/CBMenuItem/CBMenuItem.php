@@ -11,6 +11,9 @@ CBMenuItem
     static function CBMenuItem_name(stdClass $menuItemModel): string {
         return CBModel::valueToString($menuItemModel, 'name');
     }
+    // CBMenuItem_name()
+
+
 
     /**
      * @param object $menuItemModel
@@ -27,6 +30,9 @@ CBMenuItem
 
         <?php
     }
+    // CBMenuItem_render()
+
+
 
     /**
      * @param model $spec
@@ -57,6 +63,9 @@ CBMenuItem
 
         return $model;
     }
+    // CBModel_build()
+
+
 
     /**
      * If the menu item is not hidden, this menu item will render a list item
@@ -107,4 +116,5 @@ CBMenuItem
 
         echo '</li>';
     }
+    // render()
 }
