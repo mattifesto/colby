@@ -44,6 +44,14 @@ CBMenu
         ];
 
 
+        CBMenu::setAdministrativeTitle(
+            $model,
+            CBMenu::getAdministrativeTitle(
+                $spec
+            )
+        );
+
+
         /* menu items */
 
         $menuItemSpecs =
@@ -117,6 +125,45 @@ CBMenu
 
 
     /* -- accessors -- */
+
+
+
+    /**
+     * @param object $menuModel
+     *
+     * @return string
+     */
+    static function
+    getAdministrativeTitle(
+        stdClass $menuModel
+    ): string
+    {
+        return
+        CBModel::valueToString(
+            $menuModel,
+            'CBMenu_administrativeTitle_property'
+        );
+    }
+    /* getAdministrativeTitle() */
+
+
+
+    /**
+     * @param object $menuModel
+     * @param string $newAdministrativeTitle
+     *
+     * @return void
+     */
+    static function
+    setAdministrativeTitle(
+        stdClass $menuModel,
+        string $newAdministrativeTitle
+    ): void
+    {
+        $menuModel->CBMenu_administrativeTitle_property =
+        $newAdministrativeTitle;
+    }
+    /* setAdministrativeTitle() */
 
 
 
