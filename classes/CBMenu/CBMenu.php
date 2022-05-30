@@ -91,17 +91,26 @@ CBMenu
     static function
     CBModel_upgrade(
         stdClass $spec
-    ): stdClass {
-        $spec->items = array_values(
+    ): stdClass
+    {
+        $spec->items =
+        array_values(
             array_filter(
                 array_map(
+
                     'CBModel::upgrade',
-                    CBModel::valueToArray($spec, 'items')
+
+                    CBModel::valueToArray(
+                        $spec,
+                        'items'
+                    )
+
                 )
             )
         );
 
-        return $spec;
+        return
+        $spec;
     }
     /* CBModel_upgrade() */
 
