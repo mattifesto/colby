@@ -1,9 +1,9 @@
 <?php
 
 final class
-CBMenu {
-
-    /* -- CBModel interfaces -- */
+CBMenu
+{
+    // -- CBModel interfaces
 
 
 
