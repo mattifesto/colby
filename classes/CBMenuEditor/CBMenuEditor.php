@@ -1,8 +1,9 @@
 <?php
 
-final class CBMenuEditor {
-
-    /* -- CBHTMLOutput interfaces -- */
+final class
+CBMenuEditor
+{
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -11,8 +12,10 @@ final class CBMenuEditor {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
                 'v675.7.js',
@@ -29,8 +32,10 @@ final class CBMenuEditor {
      */
     static function
     CBHTMLOutput_requiredClassNames(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             'CBMenuItemEditor',
             'CBUI',
             'CBUISpecArrayEditor',
