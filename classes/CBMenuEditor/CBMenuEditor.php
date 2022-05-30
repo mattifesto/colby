@@ -36,7 +36,9 @@ CBMenuEditor
     {
         return
         [
+            'CB_UI_StringEditor',
             'CBMenuItemEditor',
+            'CBModel',
             'CBUI',
             'CBUISpecArrayEditor',
             'CBUIStringEditor2',
