@@ -47,12 +47,6 @@ CBMenuItem
         $menuItemModel =
         (object)
         [
-            'submenuID' =>
-            CBModel::valueAsID(
-                $menuItemSpec,
-                'submenuID'
-            ),
-
             'text' =>
             CBModel::valueToString(
                 $menuItemSpec,
@@ -71,6 +65,15 @@ CBMenuItem
         CBMenuItem::setName(
             $menuItemModel,
             CBMenuItem::getName(
+                $menuItemSpec
+            )
+        );
+
+
+
+        CBMenuItem::setSubmenuCBID(
+            $menuItemModel,
+            CBMenuItem::getSubmenuCBID(
                 $menuItemSpec
             )
         );
@@ -115,6 +118,13 @@ CBMenuItem
         array_push(
             $searchText,
             CBMenuItem::getName(
+                $menuItemModel
+            )
+        );
+
+        array_push(
+            $searchText,
+            CBMenuItem::getSubmenuCBID(
                 $menuItemModel
             )
         );
@@ -222,4 +232,72 @@ CBMenuItem
         $newName;
     }
     /* setName() */
+
+
+
+    /**
+     * @param object $viewPageModel
+     *
+     * @return string
+     */
+    static function
+    getSubmenuCBID(
+        stdClass $menuItemModel
+    ): ?string
+    {
+        return
+        CBModel::valueAsCBID(
+            $menuItemModel,
+            'submenuID'
+        );
+    }
+    /* getSubmenuCBID() */
+
+
+
+    /**
+     * @param object $menuItemModel
+     * @param string $newSubmenuCBID
+     *
+     * @return void
+     */
+    static function
+    setSubmenuCBID(
+        stdClass $menuItemModel,
+        ?string $newSubmenuCBID
+    ): void
+    {
+        if (
+            $newSubmenuCBID === null
+        ) {
+            $menuItemModel->submenuID =
+            null;
+
+            return;
+        }
+
+        $valueIsCBID =
+        CBID::valueIsCBID(
+            $newSubmenuCBID
+        );
+
+        if (
+            $valueIsCBID !== true
+        ) {
+            $valueAsJSON =
+            json_encode(
+                $newSubmenuCBID
+            );
+
+            throw new CBExceptionWithValue(
+                "The value ${valueAsJSON} is not a valid CBID.",
+                $newSubmenuCBID,
+                'afd13486a55d70a2486ab3b31fbf7bf2fa4ae10a'
+            );
+        }
+
+        $menuItemModel->submenuID =
+        $newSubmenuCBID;
+    }
+    /* setSubmenuCBID() */
 }
