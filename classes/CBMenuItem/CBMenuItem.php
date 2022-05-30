@@ -1,7 +1,8 @@
 <?php
 
-final class CBMenuItem {
-
+final class
+CBMenuItem
+{
     /**
      * @param object $menuItemModel
      *
