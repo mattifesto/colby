@@ -47,12 +47,6 @@ CBMenuItem
         $menuItemModel =
         (object)
         [
-            'name' =>
-            CBModel::valueToString(
-                $menuItemSpec,
-                'name'
-            ),
-
             'submenuID' =>
             CBModel::valueAsID(
                 $menuItemSpec,
@@ -71,6 +65,15 @@ CBMenuItem
                 'URL'
             ),
         ];
+
+
+
+        CBMenuItem::setName(
+            $menuItemModel,
+            CBMenuItem::getName(
+                $menuItemSpec
+            )
+        );
 
 
 
@@ -146,4 +149,47 @@ CBMenuItem
         echo '</li>';
     }
     // render()
+
+
+
+    // -- accessors
+
+
+
+    /**
+     * @param object $viewPageModel
+     *
+     * @return string
+     */
+    static function
+    getName(
+        stdClass $menuItemModel
+    ): string
+    {
+        return
+        CBModel::valueToString(
+            $menuItemModel,
+            'name'
+        );
+    }
+    /* getName() */
+
+
+
+    /**
+     * @param object $menuItemModel
+     * @param string $newName
+     *
+     * @return void
+     */
+    static function
+    setName(
+        stdClass $menuItemModel,
+        string $newName
+    ): void
+    {
+        $menuItemModel->name =
+        $newName;
+    }
+    /* setName() */
 }
