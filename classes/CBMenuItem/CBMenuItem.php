@@ -45,14 +45,7 @@ CBMenuItem
     ): ?stdClass
     {
         $menuItemModel =
-        (object)
-        [
-            'URL' =>
-            CBModel::valueToString(
-                $menuItemSpec,
-                'URL'
-            ),
-        ];
+        (object)[];
 
 
 
@@ -77,6 +70,15 @@ CBMenuItem
         CBMenuItem::setText(
             $menuItemModel,
             CBMenuItem::getText(
+                $menuItemSpec
+            )
+        );
+
+
+
+        CBMenuItem::setURL(
+            $menuItemModel,
+            CBMenuItem::getURL(
                 $menuItemSpec
             )
         );
@@ -135,6 +137,13 @@ CBMenuItem
         array_push(
             $searchText,
             CBMenuItem::getText(
+                $menuItemModel
+            )
+        );
+
+        array_push(
+            $searchText,
+            CBMenuItem::getURL(
                 $menuItemModel
             )
         );
@@ -349,4 +358,43 @@ CBMenuItem
         $newText;
     }
     /* setText() */
+
+
+
+    /**
+     * @param object $viewPageModel
+     *
+     * @return string
+     */
+    static function
+    getURL(
+        stdClass $menuItemModel
+    ): string
+    {
+        return
+        CBModel::valueToString(
+            $menuItemModel,
+            'URL'
+        );
+    }
+    /* getURL() */
+
+
+
+    /**
+     * @param object $menuItemModel
+     * @param string $newURL
+     *
+     * @return void
+     */
+    static function
+    setURL(
+        stdClass $menuItemModel,
+        string $newURL
+    ): void
+    {
+        $menuItemModel->URL =
+        $newURL;
+    }
+    /* setURL() */
 }
