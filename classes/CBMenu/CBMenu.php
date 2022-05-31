@@ -288,7 +288,7 @@ CBMenu
         stdClass $menuSpec
     ): string {
         return CBModel::valueToString(
-            $smenuSpecpec,
+            $menuSpec,
             'titleURI'
         );
     }
