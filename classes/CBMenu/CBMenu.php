@@ -24,24 +24,8 @@ CBMenu
     ): ?stdClass
     {
         $model =
-        (object)
-        [
-            'title' =>
-            trim(
-                CBModel::valueToString(
-                    $spec,
-                    'title'
-                )
-            ),
+        (object)[];
 
-            'titleURI' =>
-            trim(
-                CBModel::valueToString(
-                    $spec,
-                    'titleURI'
-                )
-            ),
-        ];
 
 
         CBMenu::setAdministrativeTitle(
@@ -50,6 +34,25 @@ CBMenu
                 $spec
             )
         );
+
+
+
+        CBMenu::setTitle(
+            $model,
+            CBMenu::getTitle(
+                $spec
+            )
+        );
+
+
+
+        CBMenu::setTitleURL(
+            $model,
+            CBMenu::getTitleURL(
+                $spec
+            )
+        );
+
 
 
         /* menu items */
