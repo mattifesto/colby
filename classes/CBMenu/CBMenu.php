@@ -114,6 +114,25 @@ CBMenu
 
 
     /**
+     * @param object $viewPageModel
+     *
+     * @return string
+     */
+    static function
+    CBModel_getTitle(
+        stdClass $menuModel
+    ): string
+    {
+        return
+        CBMenu::getTitle(
+            $menuModel
+        );
+    }
+    // CBModel_getTitle()
+
+
+
+    /**
      * @param object $spec
      *
      * @return object
