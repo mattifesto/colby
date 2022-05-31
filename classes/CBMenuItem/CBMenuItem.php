@@ -159,6 +159,38 @@ CBMenuItem
 
 
     /**
+     * @param object $spec
+     *
+     * @return object
+     */
+    static function
+    CBModel_upgrade(
+        stdClass $menuItemSpec
+    ): stdClass
+    {
+        /**
+         * Build process version numbers:
+         *
+         * 2022.05.31.1653957969
+         *
+         *      The models now produce search text.
+         */
+
+        $menuItemSpec->CBMenuItem_buildProcessVersionNumber_property =
+        '2022.05.31.1653957969';
+
+        return
+        $menuItemSpec;
+    }
+    // CBModel_upgrade()
+
+
+
+    // -- functions
+
+
+
+    /**
      * If the menu item is not hidden, this menu item will render a list item
      * element.
      *
