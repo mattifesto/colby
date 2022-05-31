@@ -95,6 +95,25 @@ CBMenu
 
 
     /**
+     * @param object $menuModel
+     *
+     * @return string
+     */
+    static function
+    CBModel_getAdministrativeTitle(
+        stdClass $menuModel
+    ): string
+    {
+        return
+        CBMenu::getAdministrativeTitle(
+            $menuModel
+        );
+    }
+    // CBModel_getAdministrativeTitle()
+
+
+
+    /**
      * @param object $spec
      *
      * @return object
