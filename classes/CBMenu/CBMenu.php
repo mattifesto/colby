@@ -133,6 +133,66 @@ CBMenu
 
 
     /**
+     * @param object $model
+     *
+     * @return string
+     */
+    static function
+    CBModel_toSearchText(
+        stdClass $model
+    ): string
+    {
+        $searchText =
+        [];
+
+        array_push(
+            $searchText,
+            CBMenu::getAdministrativeTitle(
+                $model
+            )
+        );
+
+        array_push(
+            $searchText,
+            CBMenu::getTitle(
+                $model
+            )
+        );
+
+        array_push(
+            $searchText,
+            CBMenu::getTitleURL(
+                $model
+            )
+        );
+
+        $menuItemModels =
+        CBMenu::getMenuItems(
+            $model
+        );
+
+        foreach(
+            $menuItemModels as $menuItemModel
+        ) {
+            array_push(
+                $searchText,
+                CBModel::toSearchText(
+                    $menuItemModel
+                )
+            );
+        }
+
+        return
+        implode(
+            ' ',
+            $searchText
+        );
+    }
+    /* CBModel_toSearchText() */
+
+
+
+    /**
      * @param object $spec
      *
      * @return object
