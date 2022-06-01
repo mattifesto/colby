@@ -153,7 +153,33 @@ CBModelTemplateCatalog
 
 
 
-    /* -- functions -- */
+    // -- functions
+
+
+
+    /**
+     * @return object
+     *
+     *      {
+     *          <class name>: [<template class name>]
+     *          ...
+     *      }
+     */
+    static function
+    fetchAllTemplates(
+    ): stdClass
+    {
+        $modelTemplateCatalogModel =
+        CBModels::fetchModelByCBID(
+            CBModelTemplateCatalog::ID()
+        );
+
+        return
+        CBModelTemplateCatalog::getTemplates(
+            $modelTemplateCatalogModel,
+        );
+    }
+    // fetchAllTemplates()
 
 
 
