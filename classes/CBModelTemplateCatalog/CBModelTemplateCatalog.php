@@ -63,24 +63,28 @@ CBModelTemplateCatalog
      */
     static function
     CBModel_build(
-        stdClass $spec
+        stdClass $modelTemplateCatalogSpec
     ): stdClass
     {
-        return
+        $modelTemplateCatalogModel =
         (object)
         [
             'livePageTemplateClassName' =>
             CBModel::valueToString(
-                $spec,
+                $modelTemplateCatalogSpec,
                 'livePageTemplateClassName'
             ),
-
-            'templates' =>
-            CBModel::valueToObject(
-                $spec,
-                'templates'
-            ),
         ];
+
+        CBModelTemplateCatalog::setTemplates(
+            $modelTemplateCatalogModel,
+            CBModelTemplateCatalog::getTemplates(
+                $modelTemplateCatalogSpec
+            )
+        );
+
+        return
+        $modelTemplateCatalogModel;
     }
     /* CBModel_build() */
 
