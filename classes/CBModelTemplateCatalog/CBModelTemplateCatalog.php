@@ -1,7 +1,8 @@
 <?php
 
-final class CBModelTemplateCatalog {
-
+final class
+CBModelTemplateCatalog
+{
     /**
      * This variable will be set to a substitute ID to be used by
      * CBModelTemplateCatalog while tests are running.
@@ -10,29 +11,48 @@ final class CBModelTemplateCatalog {
 
 
 
+    // -- CBInstall interfaces
+
+
+
     /**
      * @return void
      */
-    static function CBInstall_install(): void {
+    static function
+    CBInstall_install(
+    ): void
+    {
         CBDB::transaction(
-            function () {
+            function (
+            ): void
+            {
                 CBModels::deleteByID(
                     CBModelTemplateCatalog::ID()
                 );
             }
         );
     }
+    // CBInstall_install()
 
 
 
     /**
      * @return [string]
      */
-    static function CBInstall_requiredClassNames(): array {
-        return [
+    static function
+    CBInstall_requiredClassNames(
+    ): array
+    {
+        return
+        [
             'CBModels',
         ];
     }
+    // CBInstall_requiredClassNames()
+
+
+
+    // -- CBModel interfaces
 
 
 
