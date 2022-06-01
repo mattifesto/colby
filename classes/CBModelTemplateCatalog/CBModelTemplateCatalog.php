@@ -258,38 +258,19 @@ CBModelTemplateCatalog
         $targetClassName =
         $templateSpec->className;
 
-        $originalSpec =
-        CBModels::fetchSpecByID(
+        $modelTemplateCatalogUpdater =
+        new CBModelUpdater(
             CBModelTemplateCatalog::ID()
         );
 
-        if (
-            empty($originalSpec)
-        ) {
-            $originalSpec =
-            (object)
-            [
-                'ID' => CBModelTemplateCatalog::ID(),
-            ];
-        }
+        $modelTemplateCatalogSpec =
+        $modelTemplateCatalogUpdater->getSpec();
 
-        $spec =
-        CBModel::clone($originalSpec);
-
-        $spec->className =
-        'CBModelTemplateCatalog';
 
         $templates =
-        CBModel::valueAsObject(
-            $spec,
-            'templates'
+        CBModelTemplateCatalog::getTemplates(
+            $modelTemplateCatalogSpec
         );
-
-        if (
-            empty($templates)
-        ) {
-            $templates = (object)[];
-        }
 
         $templateClassNamesForTarget =
         CBModel::valueToArray(
@@ -311,24 +292,20 @@ CBModelTemplateCatalog
             )
         );
 
-        $spec->templates =
-        $templates;
+        CBModelTemplateCatalog::setTemplates(
+            $modelTemplateCatalogSpec,
+            $templates
+        );
 
-        if (
-            $spec != $originalSpec
-        ) {
-            CBDB::transaction(
-                function (
-                ) use (
-                    $spec
-                ): void
-                {
-                    CBModels::save(
-                        $spec
-                    );
-                }
-            );
-        }
+        CBDB::transaction(
+            function (
+            ) use (
+                $modelTemplateCatalogUpdater
+            ): void
+            {
+                $modelTemplateCatalogUpdater->save2();
+            }
+        );
     }
     /* install() */
 
