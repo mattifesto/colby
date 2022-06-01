@@ -41,16 +41,22 @@ final class CBModelTemplateCatalog {
      *
      * @return object
      */
-    static function CBModel_build(
+    static function
+    CBModel_build(
         stdClass $spec
-    ): stdClass {
-        return (object)[
-            'livePageTemplateClassName' => CBModel::valueToString(
+    ): stdClass
+    {
+        return
+        (object)
+        [
+            'livePageTemplateClassName' =>
+            CBModel::valueToString(
                 $spec,
                 'livePageTemplateClassName'
             ),
 
-            'templates' => CBModel::valueToObject(
+            'templates' =>
+            CBModel::valueToObject(
                 $spec,
                 'templates'
             ),
