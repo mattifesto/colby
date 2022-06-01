@@ -499,7 +499,8 @@ CBModels {
     {
         $foundModels =
         CBModels::fetchModelsByID2(
-            $foundModelCBIDs
+            $foundModelCBIDs,
+            /* maintainPositions: */ true
         );
 
         $administrativeSearchResults =
@@ -1181,6 +1182,10 @@ CBModels {
 
             WHERE
             {$clauses}
+
+            ORDER BY
+            CBModels2_modified_column
+            DESC
 
             LIMIT
             50
