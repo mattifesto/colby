@@ -86,6 +86,59 @@ CBModelTemplateCatalog
 
 
 
+    // -- accessors
+
+
+
+    /**
+     * @param object $modelTemplateCatalogModel
+     *
+     * @return object
+     *
+     *      {
+     *          <class name>: [<template class name>]
+     *          ...
+     *      }
+     */
+    static function
+    getTemplates(
+        stdClass $modelTemplateCatalogModel
+    ): object
+    {
+        return
+        CBModel::valueToObject(
+            $modelTemplateCatalogModel,
+            'templates'
+        );
+    }
+    // getTemplates()
+
+
+
+    /**
+     * @param object $modelTemplateCatalogModel
+     * @param object $newTemplates
+     *
+     *      {
+     *          <class name>: [<template class name>]
+     *          ...
+     *      }
+     *
+     * @return void
+     */
+    static function
+    setTemplates(
+        stdClass $modelTemplateCatalogModel,
+        stdClass $newTemplates
+    ): void
+    {
+        $modelTemplateCatalogModel->templates =
+        $newTemplates;
+    }
+    // setTemplates()
+
+
+
     /* -- functions -- */
 
 
