@@ -29,6 +29,16 @@ CBModelTemplateCatalog
                 CBModels::deleteByID(
                     CBModelTemplateCatalog::ID()
                 );
+
+                $modelTemplateCatalogSpec =
+                CBModel::createSpec(
+                    'CBModelTemplateCatalog',
+                    CBModelTemplateCatalog::ID()
+                );
+
+                CBModels::save(
+                    $modelTemplateCatalogSpec
+                );
             }
         );
     }
