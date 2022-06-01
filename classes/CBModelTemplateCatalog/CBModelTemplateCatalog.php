@@ -235,36 +235,54 @@ CBModelTemplateCatalog
      *
      * @return void
      */
-    static function install(string $templateClassName): void {
-        $templateSpec = call_user_func(
+    static function
+    install(
+        string $templateClassName
+    ): void
+    {
+        $templateSpec =
+        call_user_func(
             "{$templateClassName}::CBModelTemplate_spec"
         );
 
-        $targetClassName = $templateSpec->className;
+        $targetClassName =
+        $templateSpec->className;
 
-        $originalSpec = CBModels::fetchSpecByID(
+        $originalSpec =
+        CBModels::fetchSpecByID(
             CBModelTemplateCatalog::ID()
         );
 
-        if (empty($originalSpec)) {
-            $originalSpec = (object)[
+        if (
+            empty($originalSpec)
+        ) {
+            $originalSpec =
+            (object)
+            [
                 'ID' => CBModelTemplateCatalog::ID(),
             ];
         }
 
-        $spec = CBModel::clone($originalSpec);
-        $spec->className = 'CBModelTemplateCatalog';
+        $spec =
+        CBModel::clone($originalSpec);
 
-        $templates = CBModel::valueAsObject(
+        $spec->className =
+        'CBModelTemplateCatalog';
+
+        $templates =
+        CBModel::valueAsObject(
             $spec,
             'templates'
         );
 
-        if (empty($templates)) {
+        if (
+            empty($templates)
+        ) {
             $templates = (object)[];
         }
 
-        $templateClassNamesForTarget = CBModel::valueToArray(
+        $templateClassNamesForTarget =
+        CBModel::valueToArray(
             $templates,
             $targetClassName
         );
@@ -283,17 +301,27 @@ CBModelTemplateCatalog
             )
         );
 
-        $spec->templates = $templates;
+        $spec->templates =
+        $templates;
 
-        if ($spec != $originalSpec) {
+        if (
+            $spec != $originalSpec
+        ) {
             CBDB::transaction(
-                function () use ($spec) {
-                    CBModels::save($spec);
+                function (
+                ) use (
+                    $spec
+                ): void
+                {
+                    CBModels::save(
+                        $spec
+                    );
                 }
             );
         }
     }
     /* install() */
+
 
 
     /**
