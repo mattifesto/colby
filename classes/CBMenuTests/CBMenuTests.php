@@ -64,6 +64,9 @@ final class CBMenuTests {
             'className' =>
             'CBMenu',
 
+            'CBMenu_administrativeTitle_property' =>
+            '',
+
             'title' =>
             '',
 
@@ -103,7 +106,7 @@ final class CBMenuTests {
         );
 
         $expectedSearchText =
-        '';
+        '   42';
 
         if (
             $actualSearchText !== $expectedSearchText
@@ -129,6 +132,9 @@ final class CBMenuTests {
         [
             'className' =>
             'CBMenu',
+
+            'CBMenu_buildProcessVersionNumber_property' =>
+            '2022.05.31.1653958516',
 
             'items' =>
             [
