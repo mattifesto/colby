@@ -29,13 +29,23 @@ final class CBMenuTests {
      */
     static function
     general(
-    ): stdClass {
-        $spec = (object)[
-            'className' => 'CBMenu',
-            'items' => [
-                (object)[
-                    'className' => 'CBTestView',
-                    'value' => 42,
+    ): stdClass
+    {
+        $spec =
+        (object)
+        [
+            'className' =>
+            'CBMenu',
+
+            'items' =>
+            [
+                (object)
+                [
+                    'className' =>
+                    'CBTestView',
+
+                    'value' =>
+                    42,
                 ],
             ],
         ];
@@ -43,22 +53,41 @@ final class CBMenuTests {
 
         /* build */
 
-        $actualModel = CBModel::build($spec);
+        $actualModel =
+        CBModel::build(
+            $spec
+        );
 
-        $expectedModel = (object)[
-            'className' => 'CBMenu',
-            'title' => '',
-            'titleURI' => '',
-            'items' => [
-                (object)[
-                    'className' => 'CBTestView',
-                    'value' => 42,
+        $expectedModel =
+        (object)
+        [
+            'className' =>
+            'CBMenu',
+
+            'title' =>
+            '',
+
+            'titleURI' =>
+            '',
+
+            'items' =>
+            [
+                (object)
+                [
+                    'className' =>
+                    'CBTestView',
+
+                    'value' =>
+                    42,
                 ],
             ],
         ];
 
-        if ($actualModel != $expectedModel) {
-            return CBTest::resultMismatchFailure(
+        if (
+            $actualModel != $expectedModel
+        ) {
+            return
+            CBTest::resultMismatchFailure(
                 'build',
                 $actualModel,
                 $expectedModel
@@ -68,16 +97,19 @@ final class CBMenuTests {
 
         /* toSearchText */
 
-        $actualSearchText = CBModel::toSearchText(
+        $actualSearchText =
+        CBModel::toSearchText(
             $actualModel
         );
 
-        $expectedSearchText = '';
+        $expectedSearchText =
+        '';
 
         if (
             $actualSearchText !== $expectedSearchText
         ) {
-            return CBTest::resultMismatchFailure(
+            return
+            CBTest::resultMismatchFailure(
                 'toSearchText',
                 $actualSearchText,
                 $expectedSearchText
@@ -87,21 +119,38 @@ final class CBMenuTests {
 
         /* upgrade */
 
-        $actualUpgradedSpec = CBModel::upgrade($spec);
+        $actualUpgradedSpec =
+        CBModel::upgrade(
+            $spec
+        );
 
-        $expectedUpgradedSpec = (object)[
-            'className' => 'CBMenu',
-            'items' => [
-                (object)[
-                    'className' => 'CBTestView',
-                    'value' => 42,
+        $expectedUpgradedSpec =
+        (object)
+        [
+            'className' =>
+            'CBMenu',
+
+            'items' =>
+            [
+                (object)
+                [
+                    'className' =>
+                    'CBTestView',
+
+                    'value' =>
+                    42,
                 ],
             ],
-            'CBModel_versionDate_property' => '2022_01_15',
+
+            'CBModel_versionDate_property' =>
+            '2022_01_15',
         ];
 
-        if ($actualUpgradedSpec != $expectedUpgradedSpec) {
-            return CBTest::resultMismatchFailure(
+        if (
+            $actualUpgradedSpec != $expectedUpgradedSpec
+        ) {
+            return
+            CBTest::resultMismatchFailure(
                 'upgrade',
                 $actualUpgradedSpec,
                 $expectedUpgradedSpec
@@ -111,8 +160,11 @@ final class CBMenuTests {
 
         /* done */
 
-        return (object)[
-            'succeeded' => true,
+        return
+        (object)
+        [
+            'succeeded' =>
+            true,
         ];
     }
     /* CBTest_general() */
