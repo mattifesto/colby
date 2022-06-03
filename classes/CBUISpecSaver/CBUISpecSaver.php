@@ -1,7 +1,8 @@
 <?php
 
-final class CBUISpecSaver {
-
+final class
+CBUISpecSaver
+{
     /* -- CBHTMLOutput interfaces -- */
 
 
@@ -11,8 +12,10 @@ final class CBUISpecSaver {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
                 'v675.2.js',
@@ -27,8 +30,12 @@ final class CBUISpecSaver {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
-        return [
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        return
+        [
             'CBAjax',
             'CBErrorHandler',
             'CBException',
