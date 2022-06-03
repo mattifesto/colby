@@ -459,6 +459,8 @@ CB_CBAdmin_Code
      *      searches.
      *
      * @return [object]
+     *
+     *      Returns an array of CBCodeSearch models.
      */
     static function
     searches(
@@ -2386,21 +2388,6 @@ CB_CBAdmin_Code
                     EOT,
 
                     'noticeStartDate' => '2020/12/28',
-                    'noticeVersion' => 675,
-                ],
-
-
-                (object)[
-                    'regex' => 'CBUISpecSaver',
-                    'severity' => 5,
-                    'title' => 'CBUISpecSaver',
-                    'cbmessage' => <<<EOT
-
-                        Use CBSpecSaver
-
-                    EOT,
-
-                    'noticeStartDate' => '2020/12/25',
                     'noticeVersion' => 675,
                 ],
 
