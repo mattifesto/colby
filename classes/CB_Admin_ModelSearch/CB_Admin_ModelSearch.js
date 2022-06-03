@@ -118,6 +118,10 @@
         let stringEditor =
         CB_UI_StringEditor.create();
 
+        stringEditor.CB_UI_StringEditor_setTitle(
+            "Search for"
+        );
+
         stringEditor.CB_UI_StringEditor_setChangedEventListener(
             function (
             ) // -> undefined
