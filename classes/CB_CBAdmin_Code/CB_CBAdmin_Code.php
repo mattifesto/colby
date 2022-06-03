@@ -298,11 +298,9 @@ CB_CBAdmin_Code
 
 
     /**
-     * You can create a class in each library in which to implement the
-     * CBCodeAdmin_searches() interface to add searches for that library. You
-     * can actually add multiple classes, but the names of all the classes
-     * should include "CodeAdmin" because these clases are automatically removed
-     * from the search.
+     * Implement CBCodeAdmin_searches() on each class if there are items in that
+     * class that are deprecated. The method of implementing once per library is
+     * not the best way.
      *
      * @NOTE 2019_07_23
      *
@@ -1946,20 +1944,29 @@ CB_CBAdmin_Code
 
 
                 (object)[
-                    'CBCodeSearch_CBID' => (
-                        '47575ebc7532925602cc4cd2e0bf1b705e73bc0c'
-                    ),
+                    'CBCodeSearch_CBID' =>
+                    '47575ebc7532925602cc4cd2e0bf1b705e73bc0c',
+
                     'cbmessage' => <<<EOT
 
                         Use CBBackgroundColor1
 
                     EOT,
-                    'regex' => '\bCBBackgroundColor\b',
-                    'severity' => 5,
-                    'title' => 'CBBackgroundColor',
 
-                    'noticeStartDate' => '2021/09/02',
-                    'noticeVersion' => 675,
+                    'regex' =>
+                    '\bCBBackgroundColor\b',
+
+                    'severity' =>
+                    5,
+
+                    'title' =>
+                    'CBBackgroundColor',
+
+                    'noticeStartDate' =>
+                    '2021/09/02',
+
+                    'noticeVersion' =>
+                    675,
                 ],
 
 
