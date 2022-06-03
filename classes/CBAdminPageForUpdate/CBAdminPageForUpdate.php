@@ -295,7 +295,7 @@ final class CBAdminPageForUpdate {
         $intraSiteDatabaseBackupsDirectory = 'tmp/database-backups';
 
         $absoluteDatabaseBackupsDirectory = (
-            cbsitedir() .
+            cb_document_root_directory() .
             "/{$intraSiteDatabaseBackupsDirectory}"
         );
 
@@ -322,7 +322,7 @@ final class CBAdminPageForUpdate {
 
         $filename = "{$domain}_{$date}_{$time}.sql";
         $intraSiteFilename = "{$intraSiteDatabaseBackupsDirectory}/{$filename}";
-        $absoluteFilename = cbsitedir() . "/{$intraSiteFilename}";
+        $absoluteFilename = cb_document_root_directory() . "/{$intraSiteFilename}";
 
         /**
          * Generate the command and execute.
