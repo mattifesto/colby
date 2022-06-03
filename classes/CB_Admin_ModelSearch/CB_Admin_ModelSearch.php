@@ -66,7 +66,7 @@ CB_Admin_ModelSearch
         [
             Colby::flexpath(
                 __CLASS__,
-                'v2022.05.13.1652453538.js',
+                '2022_06_03_1654223196.js',
                 cbsysurl()
             ),
         ];
