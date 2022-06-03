@@ -26,14 +26,33 @@ RewriteRule (.*) https://%{SERVER_NAME}/$1 [R=301,L]
 RewriteRule ^index\.php$ - [L]
 
 
+
+#
+# @deprecated 2022_06_02
+#
+#       This versioning method is deprecated.
 #
 # Cache busting: rewrite versioned CSS and JavaScript URIs to the actual URI.
 #
-#   colby/classes/Colby/Colby.v358.js  ->  colby/classes/Colby/Colby.js
+#   colby/classes/Colby/Colby.v358.js  ->
+#   colby/classes/Colby/Colby.js
 #
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.+)\.(v[0-9.]+)\.(css|js)$ $1.$3
+
+
+
+#
+# Cache busting: rewrite versioned CSS and JavaScript URIs to the actual URI.
+#
+#   colby/classes/Colby/Colby.2022_06_03_1654224575.js  ->
+#   colby/classes/Colby/Colby.js
+#
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+)\.([0-9_]+)\.(css|js)$ $1.$3
+
 
 
 #
