@@ -291,16 +291,25 @@ final class CBAdminPageForUpdate {
     /**
      * @return void
      */
-    static function backupDatabase(): void {
-        $intraSiteDatabaseBackupsDirectory = 'tmp/database-backups';
+    static function
+    backupDatabase(
+    ): void
+    {
+        $intraSiteDatabaseBackupsDirectory =
+        'tmp/database-backups';
 
-        $absoluteDatabaseBackupsDirectory = (
-            cb_document_root_directory() .
-            "/{$intraSiteDatabaseBackupsDirectory}"
-        );
+        $absoluteDatabaseBackupsDirectory =
+        cb_document_root_directory() .
+        "/{$intraSiteDatabaseBackupsDirectory}";
 
-        if (!is_dir($absoluteDatabaseBackupsDirectory)) {
-            mkdir($absoluteDatabaseBackupsDirectory, 0777, true);
+        if (
+            !is_dir($absoluteDatabaseBackupsDirectory)
+        ) {
+            mkdir(
+                $absoluteDatabaseBackupsDirectory,
+                0777,
+                true
+            );
         }
 
         CBAdminPageForUpdate::removeOldBackupFiles(
@@ -311,28 +320,58 @@ final class CBAdminPageForUpdate {
          * Generate a filename for the database backup file.
          */
 
-        $time = time();
-        $date = gmdate("Y_m_d", $time);
+        $time =
+        time();
 
-        $domain = preg_replace(
+        $date =
+        gmdate(
+            "Y_m_d",
+            $time
+        );
+
+        $domain =
+        preg_replace(
             '/\\./',
             '_',
             $_SERVER['SERVER_NAME']
         );
 
-        $filename = "{$domain}_{$date}_{$time}.sql";
-        $intraSiteFilename = "{$intraSiteDatabaseBackupsDirectory}/{$filename}";
-        $absoluteFilename = cb_document_root_directory() . "/{$intraSiteFilename}";
+        $filename =
+        "{$domain}_{$date}_{$time}.sql";
+
+        $intraSiteFilename =
+        "{$intraSiteDatabaseBackupsDirectory}/{$filename}";
+
+        $absoluteFilename =
+        cb_document_root_directory() .
+        "/{$intraSiteFilename}";
 
         /**
          * Generate the command and execute.
          */
 
-        $host = escapeshellarg(CBSitePreferences::mysqlHost());
-        $user = escapeshellarg(CBSitePreferences::mysqlUser());
-        $password = escapeshellarg(CBSitePreferences::mysqlPassword());
-        $database = escapeshellarg(CBSitePreferences::mysqlDatabase());
-        $output = [];
+        $host =
+        escapeshellarg(
+            CBSitePreferences::mysqlHost()
+        );
+
+        $user =
+        escapeshellarg(
+            CBSitePreferences::mysqlUser()
+        );
+
+        $password =
+        escapeshellarg(
+            CBSitePreferences::mysqlPassword()
+        );
+
+        $database =
+        escapeshellarg(
+            CBSitePreferences::mysqlDatabase()
+        );
+
+        $output =
+        [];
 
         /**
          * @NOTE 2015_02_10
@@ -344,14 +383,16 @@ final class CBAdminPageForUpdate {
          *      the MySQL binaries to work around whatever is happening here.
          */
 
-        $command = 'mysqldump';
+        $command =
+        'mysqldump';
 
         $command =
         defined('CBMySQLDirectory') ?
         CBMySQLDirectory . "/{$command}" :
         $command;
 
-        $command = implode(
+        $command =
+        implode(
             ' ',
             [
                 "{$command} -h {$host} -u {$user} --password={$password}",
@@ -378,9 +419,15 @@ final class CBAdminPageForUpdate {
             ]
         );
 
-        exec($command, $output, $result);
+        exec(
+            $command,
+            $output,
+            $result
+        );
 
-        if ($result) {
+        if (
+            $result
+        ) {
             throw new CBException(
                 "An error occurred: {$result}\n\n" .
                 "Output:\n" .
