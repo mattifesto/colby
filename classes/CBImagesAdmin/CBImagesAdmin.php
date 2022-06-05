@@ -107,7 +107,7 @@ class CBImagesAdmin {
      */
     static function CBHTMLOutput_CSSURLs() {
         return [
-            Colby::flexpath(__CLASS__, 'v374.css', cbsysurl()),
+            Colby::flexpath(__CLASS__, '2022_06_05_1654451579.css', cbsysurl()),
         ];
     }
     /* CBHTMLOutput_CSSURLs() */
