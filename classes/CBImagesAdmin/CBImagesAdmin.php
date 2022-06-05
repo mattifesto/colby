@@ -1,7 +1,8 @@
 <?php
 
-class CBImagesAdmin {
-
+final class
+CBImagesAdmin
+{
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
 
@@ -105,9 +106,16 @@ class CBImagesAdmin {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
-        return [
-            Colby::flexpath(__CLASS__, '2022_06_05_1654451579.css', cbsysurl()),
+    static function
+    CBHTMLOutput_CSSURLs(
+    ) {
+        return
+        [
+            Colby::flexpath(
+                __CLASS__,
+                '2022_06_05_1654451579.css',
+                cbsysurl()
+            ),
         ];
     }
     /* CBHTMLOutput_CSSURLs() */
