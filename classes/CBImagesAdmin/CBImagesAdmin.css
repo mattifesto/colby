@@ -1,3 +1,14 @@
+main.CBImagesAdmin
+{
+    display:
+    flex;
+
+    flex-direction:
+    column;
+}
+
+
+
 .CBImagesAdmin_imageList {
     align-items: flex-start;
     display: flex;
