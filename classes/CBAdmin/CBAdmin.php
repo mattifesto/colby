@@ -90,8 +90,8 @@ CBAdmin
     render(
         string $className,
         string $pageStub
-    ): void {
-
+    ): void
+    {
         /**
          * @NOTE 2019_12_13
          *
@@ -112,20 +112,30 @@ CBAdmin
          *      users could still use admin pages where appropriate.
          */
 
-        $currentUserIsAuthorized = false;
+        $currentUserIsAuthorized =
+        false;
 
-        $functionName = "{$className}::CBAdmin_getUserGroupClassName";
+        $functionName =
+        "{$className}::CBAdmin_getUserGroupClassName";
 
-        if (is_callable($functionName)) {
-            $userGroupClassName = call_user_func($functionName);
+        if (
+            is_callable($functionName)
+        ) {
+            $userGroupClassName =
+            call_user_func(
+                $functionName
+            );
 
-            $currentUserIsAuthorized = CBUserGroup::userIsMemberOfUserGroup(
+            $currentUserIsAuthorized =
+            CBUserGroup::userIsMemberOfUserGroup(
                 ColbyUser::getCurrentUserCBID(),
                 $userGroupClassName
             );
         }
 
-        if (!$currentUserIsAuthorized) {
+        if (
+            !$currentUserIsAuthorized
+        ) {
             include (
                 cbsysdir() .
                 '/handlers/handle-authorization-failed.php'
@@ -138,9 +148,8 @@ CBAdmin
 
         try
         {
-            CBHTMLOutput::pageInformation()->classNameForPageSettings = (
-                'CB_StandardPageSettings'
-            );
+            CBHTMLOutput::pageInformation()->classNameForPageSettings =
+            'CB_StandardPageSettings';
 
             CBHTMLOutput::requireClassName(
                 'CBAdmin'
@@ -155,21 +164,29 @@ CBAdmin
             );
 
 
-            if (is_callable($function = "{$className}::CBAdmin_initialize")) {
+            if (
+                is_callable(
+                    $function = "{$className}::CBAdmin_initialize"
+                )
+            ) {
                 call_user_func(
                     $function
                 );
             }
 
-            if (is_callable($function = "{$className}::CBAdmin_menuNamePath")) {
-                $names = call_user_func(
+            if (
+                is_callable(
+                    $function = "{$className}::CBAdmin_menuNamePath"
+                )
+            ) {
+                $names =
+                call_user_func(
                     $function,
                     $pageStub
                 );
 
-                CBHTMLOutput::pageInformation()->selectedMenuItemNames = (
-                    $names
-                );
+                CBHTMLOutput::pageInformation()->selectedMenuItemNames =
+                $names;
             }
 
 
@@ -209,11 +226,23 @@ CBAdmin
 
                 <?php
 
-                $functionName = "{$className}::CBAdmin_render";
+                $functionName =
+                "{$className}::CBAdmin_render";
 
-                if (is_callable($functionName)) {
-                    call_user_func($functionName, $pageStub);
-                } else {
+                if (
+                    is_callable(
+                        $functionName
+                    )
+                ) {
+                    call_user_func(
+                        $functionName,
+                        $pageStub
+                    );
+
+                }
+
+                else
+                {
                     CBHTMLOutput::render404();
                 }
 
@@ -226,17 +255,28 @@ CBAdmin
 
 
             CBView::render(
-                (object)[
-                    'className' => 'CBAdminPageFooterView',
+                (object)
+                [
+                    'className' =>
+                    'CBAdminPageFooterView',
                 ]
             );
 
             CBHTMLOutput::render();
-        } catch (Throwable $throwable) {
+        }
+
+        catch (
+            Throwable $throwable
+        ) {
             CBHTMLOutput::reset();
 
-            CBErrorHandler::report($throwable);
-            CBErrorHandler::renderErrorReportPage($throwable);
+            CBErrorHandler::report(
+                $throwable
+            );
+
+            CBErrorHandler::renderErrorReportPage(
+                $throwable
+            );
         }
     }
     /* render() */
