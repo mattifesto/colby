@@ -127,11 +127,13 @@ CBImagesAdmin
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ) {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
-                'v675.js',
+                '2022_06_06_1654527556.js',
                 cbsysurl()
             ),
         ];
