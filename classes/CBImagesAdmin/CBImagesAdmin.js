@@ -1,7 +1,3 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBImagesAdmin */
 /* global
     CBAjax,
     CBErrorHandler,
@@ -13,29 +9,49 @@
     Colby,
 */
 
-var CBImagesAdmin = {
+
+(function ()
+{
+    "use strict";
+
+
+
+    Colby.afterDOMContentLoaded(
+        function () {
+            init();
+        }
+    );
+
+
 
     /**
      * @return undefined
      */
-    init: function() {
+    function
+    init(
+    ) // -> undefined
+    {
         let elements = document.getElementsByClassName("CBImagesAdmin");
 
         if (elements.length > 0) {
             let element = elements.item(0);
 
             element.appendChild(
-                CBImagesAdmin.createElement()
+                createElement()
             );
         }
-    },
+    }
     /* init() */
+
 
 
     /**
      * @return Element
      */
-    createElement: function () {
+    function
+    createElement(
+    ) // -> Element
+    {
         let element = CBUI.createElement(
             "CBUIRoot CBDarkTheme"
         );
@@ -80,7 +96,7 @@ var CBImagesAdmin = {
         var imagesElement = document.createElement("div");
         imagesElement.className = "CBImagesAdmin_imageList";
 
-        CBImagesAdmin.fetchImages(
+        fetchImages(
             {
                 element: imagesElement
             }
@@ -90,7 +106,7 @@ var CBImagesAdmin = {
         element.appendChild(CBUI.createHalfSpace());
 
         return element;
-    },
+    }
     /* createElement() */
 
 
@@ -99,7 +115,11 @@ var CBImagesAdmin = {
      *
      * @return Element
      */
-    createImageElement: function (image) {
+    function
+    createImageElement(
+        image
+    ) // -> Element
+    {
         var element = document.createElement("div");
         element.className = "CBImagesAdmin_image";
 
@@ -138,7 +158,7 @@ var CBImagesAdmin = {
         element.appendChild(sectionElement);
 
         return element;
-    },
+    }
     /* createImageElement() */
 
 
@@ -149,16 +169,21 @@ var CBImagesAdmin = {
      *          element: Element
      *      }
      *
-     * @return Promise
+     * @return Promise -> undefined
      */
-    fetchImages: function (args) {
+    function
+    fetchImages(
+        args
+    ) // -> Promise -> undefined
+    {
         let promise = CBAjax.call(
             "CBImagesAdmin",
             "fetchImages"
         ).then(
             function (images) {
                 for (var i = 0; i < images.length; i++) {
-                    let imageElement = CBImagesAdmin.createImageElement(
+                    let imageElement =
+                    createImageElement(
                         images[i]
                     );
 
@@ -173,9 +198,8 @@ var CBImagesAdmin = {
         );
 
         return promise;
-    },
+    }
     /* fetchImages() */
-};
-/* CBImagesAdmin */
 
-Colby.afterDOMContentLoaded(CBImagesAdmin.init);
+}
+)();
