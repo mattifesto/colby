@@ -120,11 +120,18 @@
         image
     ) // -> Element
     {
-        var element = document.createElement("div");
-        element.className = "CBImagesAdmin_image";
+        let rootElement =
+        document.createElement(
+            "div"
+        );
+
+        rootElement.className =
+        "CBImagesAdmin_image";
 
         var sectionElement = document.createElement("div");
         sectionElement.className = "section";
+
+
 
         {
             let sectionItemElement = document.createElement("div");
@@ -139,6 +146,8 @@
             sectionItemElement.appendChild(img);
             sectionElement.appendChild(sectionItemElement);
         }
+
+
 
         {
             let sectionItem = CBUISectionItem4.create();
@@ -155,9 +164,13 @@
             sectionElement.appendChild(sectionItem.element);
         }
 
-        element.appendChild(sectionElement);
 
-        return element;
+
+        rootElement.appendChild(
+            sectionElement
+        );
+
+        return rootElement;
     }
     /* createImageElement() */
 
