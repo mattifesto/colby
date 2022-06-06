@@ -94,7 +94,7 @@
         }
 
         var imagesElement = document.createElement("div");
-        imagesElement.className = "CBImagesAdmin_imageList";
+        imagesElement.className = "CBImagesAdmin_imageList_element";
 
         fetchImages(
             {
@@ -116,8 +116,8 @@
      * @return Element
      */
     function
-    createImageElement(
-        image
+    createImageListItemElement(
+        imageModel
     ) // -> Element
     {
         let rootElement =
@@ -126,53 +126,54 @@
         );
 
         rootElement.className =
-        "CBImagesAdmin_image";
+        "CBImagesAdmin_imageListItem_element";
 
-        var sectionElement = document.createElement("div");
-        sectionElement.className = "section";
+        let pictureContainerElement =
+        document.createElement(
+            "div"
+        );
 
-
-
-        {
-            let sectionItemElement = document.createElement("div");
-            sectionItemElement.className = "thumbnail";
-
-            let img = document.createElement("img");
-            img.src = CBImage.toURL(
-                image,
-                "rw320"
-            );
-
-            sectionItemElement.appendChild(img);
-            sectionElement.appendChild(sectionItemElement);
-        }
-
-
-
-        {
-            let sectionItem = CBUISectionItem4.create();
-            sectionItem.callback = function () {
-                window.location = "/admin/?c=CBModelInspector&ID=" + image.ID;
-            };
-
-            let stringsPart = CBUIStringsPart.create();
-            stringsPart.string1 = "Inspect";
-
-            stringsPart.element.classList.add("action");
-
-            sectionItem.appendPart(stringsPart);
-            sectionElement.appendChild(sectionItem.element);
-        }
-
-
+        pictureContainerElement.className =
+        "CBImagesAdmin_pictureContainer_element";
 
         rootElement.appendChild(
-            sectionElement
+            pictureContainerElement
+        );
+
+        let pictureElement =
+        CBImage.createPictureElementWithMaximumDisplayWidthAndHeight(
+            imageModel,
+            "rw320",
+            128,
+            128,
+            ""
+        );
+
+        pictureContainerElement.appendChild(
+            pictureElement
+        );
+
+        let inspectAnchorElement =
+        document.createElement(
+            "a"
+        );
+
+        inspectAnchorElement.className =
+        "CBImagesAdmin_inspect_element";
+
+        inspectAnchorElement.textContent =
+        "Inspect";
+
+        inspectAnchorElement.href =
+        "/admin/?c=CBModelInspector&ID=" + imageModel.ID;
+
+        rootElement.appendChild(
+            inspectAnchorElement
         );
 
         return rootElement;
     }
-    /* createImageElement() */
+    /* createImageListItemElement() */
 
 
     /**
@@ -196,7 +197,7 @@
             function (images) {
                 for (var i = 0; i < images.length; i++) {
                     let imageElement =
-                    createImageElement(
+                    createImageListItemElement(
                         images[i]
                     );
 

@@ -9,55 +9,77 @@ main.CBImagesAdmin
 
 
 
-.CBImagesAdmin_imageList {
-    align-items: flex-start;
-    display: flex;
-    flex: 1 1 auto;
-    flex-wrap: wrap;
-    justify-content: center;
+.CBImagesAdmin_imageList_element
+{
+    align-items:
+    flex-end;
+
+    display:
+    flex;
+
+    flex:
+    1 1 auto;
+
+    flex-wrap:
+    wrap;
+
+    justify-content:
+    center;
 }
 
-/**
- * CBImagesAdmin_image is a constant sized element that has sub-elements whose
- * sizes are also constant. Notes on the calculations of those sizes are
- * included below. Making changes to width would required all sizes be
- * recalculated.
- */
 
-.CBImagesAdmin_image {
-    box-sizing: border-box;
-    padding: 5px;
-    width: 160px;
+
+.CBImagesAdmin_imageListItem_element
+{
+    box-sizing:
+    border-box;
+
+    padding:
+    5px;
+
+    width:
+    160px;
 }
 
-/* based on CBUISection */
-.CBImagesAdmin_image .section {
-    background-color: var(--CBBackgroundColor);
-    border-color: var(--CBUIBorderColor);
-    border-radius: 10px;
-    border-style: solid;
-    border-width: 1px;
-    box-sizing: border-box;
-    max-width: 100%;
-    overflow: hidden;
+
+
+.CBImagesAdmin_pictureContainer_element
+{
+    display:
+    flex;
+
+    justify-content:
+    center;
 }
 
-.CBImagesAdmin_image .section > * + * {
-    border-top: 1px solid var(--CBUIBorderColor);
+
+
+.CBImagesAdmin_pictureContainer_element
+img
+{
+    border-color:
+    var(--CB_UI_borderColor);
+
+    border-style:
+    solid;
+
+    border-width:
+    1px;
 }
 
-/* thumbnail will have a width of 148px */
-.CBImagesAdmin_image .thumbnail {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    padding: 10px 0;
-}
 
-/* 10px padding + 128px img + 10px padding = 148px */
-.CBImagesAdmin_image img {
-    display: block;
-    height: 128px;
-    object-fit: contain;
-    width: 128px;
+
+.CBImagesAdmin_inspect_element
+{
+    display:
+    block;
+
+    padding:
+    20px 0 50px;
+
+    text-align:
+    center;
+
+    text-decoration:
+    none;
 }
