@@ -31,10 +31,16 @@
     init(
     ) // -> undefined
     {
-        let elements = document.getElementsByClassName("CBImagesAdmin");
+        let elements =
+        document.getElementsByClassName(
+            "CBImagesAdmin"
+        );
 
-        if (elements.length > 0) {
-            let element = elements.item(0);
+        if (
+            elements.length > 0
+        ) {
+            let element =
+            elements.item(0);
 
             element.appendChild(
                 createElement()
