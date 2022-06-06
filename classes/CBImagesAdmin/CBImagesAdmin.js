@@ -3,7 +3,6 @@
     CBUIButton,
     CBErrorHandler,
     CBImage,
-    CBUI,
     CBUIPanel,
     Colby,
 */
@@ -73,17 +72,24 @@
             CBImagesAdmin_createStartImageVerificationElement()
         );
 
-        var imagesElement = document.createElement("div");
-        imagesElement.className = "CBImagesAdmin_imageList_element";
+        const imageListElement =
+        document.createElement(
+            "div"
+        );
+
+        imageListElement.className =
+        "CBImagesAdmin_imageList_element";
 
         fetchImages(
             {
-                element: imagesElement
+                element:
+                imageListElement,
             }
         );
 
-        rootElement.appendChild(imagesElement);
-        rootElement.appendChild(CBUI.createHalfSpace());
+        rootElement.appendChild(
+            imageListElement
+        );
 
         return rootElement;
     }

@@ -150,7 +150,6 @@ CBImagesAdmin
             'CBAjax',
             'CBErrorHandler',
             'CBImage',
-            'CBUI',
             'CBUIButton',
             'CBUIPanel',
             'Colby',
