@@ -1,11 +1,10 @@
 /* global
     CBAjax,
+    CBUIButton,
     CBErrorHandler,
     CBImage,
     CBUI,
     CBUIPanel,
-    CBUISectionItem4,
-    CBUIStringsPart,
     Colby,
 */
 
@@ -13,6 +12,10 @@
 (function ()
 {
     "use strict";
+
+
+
+    let CBImagesAdmin_shared_startImageVerificationButtton;
 
 
 
@@ -58,46 +61,17 @@
     createElement(
     ) // -> Element
     {
-        let element = CBUI.createElement(
-            "CBUIRoot CBDarkTheme"
+        let rootElement =
+        document.createElement(
+            "div"
         );
 
-        element.appendChild(
-            CBUI.createHalfSpace()
+        rootElement.className =
+        "CBImagesAdmin_root_element CBDarkTheme";
+
+        rootElement.appendChild(
+            CBImagesAdmin_createStartImageVerificationElement()
         );
-
-        {
-            let sectionElement = CBUI.createSection();
-            let sectionItem = CBUISectionItem4.create();
-
-            sectionItem.callback = function () {
-                CBAjax.call(
-                    "CBImageVerificationTask",
-                    "startForAllImages"
-                ).then(
-                    function () {
-                        CBUIPanel.displayText(
-                            "Verification for all images started."
-                        );
-                    }
-                ).catch(
-                    function (error) {
-                        CBUIPanel.displayError(error);
-                        CBErrorHandler.report(error);
-                    }
-                );
-            };
-
-            let stringsPart = CBUIStringsPart.create();
-            stringsPart.string1 = "Start Verification for All Images";
-
-            stringsPart.element.classList.add("action");
-
-            sectionItem.appendPart(stringsPart);
-            sectionElement.appendChild(sectionItem.element);
-            element.appendChild(sectionElement);
-            element.appendChild(CBUI.createHalfSpace());
-        }
 
         var imagesElement = document.createElement("div");
         imagesElement.className = "CBImagesAdmin_imageList_element";
@@ -108,10 +82,10 @@
             }
         );
 
-        element.appendChild(imagesElement);
-        element.appendChild(CBUI.createHalfSpace());
+        rootElement.appendChild(imagesElement);
+        rootElement.appendChild(CBUI.createHalfSpace());
 
-        return element;
+        return rootElement;
     }
     /* createElement() */
 
@@ -182,6 +156,41 @@
     /* createImageListItemElement() */
 
 
+
+    /**
+     * @return Element
+     */
+    function
+    CBImagesAdmin_createStartImageVerificationElement(
+    ) // -> Element
+    {
+        const button =
+        CBUIButton.create();
+
+        CBImagesAdmin_shared_startImageVerificationButtton =
+        button;
+
+        button.CBUIButton_setTextContent(
+            "Start Verification for All Images"
+        );
+
+        button.CBUIButton_addClickEventListener(
+            function (
+            ) // -> undefined
+            {
+                CBImagesAdmin_startImageVerification();
+            }
+        );
+
+        let buttonElement =
+        button.CBUIButton_getElement();
+
+        return buttonElement;
+    }
+    // CBImagesAdmin_createStartImageVerificationElement()
+
+
+
     /**
      * @param object args
      *
@@ -220,6 +229,61 @@
         return promise;
     }
     /* fetchImages() */
+
+
+
+    /**
+     * @return undefined
+     */
+    async function
+    CBImagesAdmin_startImageVerification(
+    ) // -> undefined
+    {
+        const button =
+        CBImagesAdmin_shared_startImageVerificationButtton;
+
+        if (
+            button.CBUIButton_getIsDisabled()
+        ) {
+            return;
+        }
+
+        try
+        {
+            button.CBUIButton_setIsDisabled(
+                true
+            );
+
+            await CBAjax.call(
+                "CBImageVerificationTask",
+                "startForAllImages"
+            );
+
+            CBUIPanel.displayText(
+                "Verification for all images started."
+            );
+        }
+
+        catch (
+            error
+        ) {
+            CBUIPanel.displayError(
+                error
+            );
+
+            CBErrorHandler.report(
+                error
+            );
+        }
+
+        finally
+        {
+            button.CBUIButton_setIsDisabled(
+                false
+            );
+        }
+    }
+    // CBImagesAdmin_startImageVerification()
 
 }
 )();

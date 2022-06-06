@@ -151,9 +151,8 @@ CBImagesAdmin
             'CBErrorHandler',
             'CBImage',
             'CBUI',
+            'CBUIButton',
             'CBUIPanel',
-            'CBUISectionItem4',
-            'CBUIStringsPart',
             'Colby',
         ];
     }

@@ -9,6 +9,21 @@ main.CBImagesAdmin
 
 
 
+
+.CBImagesAdmin_root_element
+{
+    display:
+    flex;
+
+    flex:
+    1 0 auto;
+
+    flex-direction:
+    column;
+}
+
+
+
 .CBImagesAdmin_imageList_element
 {
     align-items:
@@ -17,14 +32,14 @@ main.CBImagesAdmin
     display:
     flex;
 
-    flex:
-    1 1 auto;
-
     flex-wrap:
     wrap;
 
     justify-content:
     center;
+
+    padding-top:
+    50px;
 }
 
 
