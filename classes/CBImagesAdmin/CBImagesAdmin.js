@@ -80,20 +80,18 @@
         imageListElement.className =
         "CBImagesAdmin_imageList_element";
 
-        fetchImages(
-            {
-                element:
-                imageListElement,
-            }
+        rootElement.appendChild(
+            imageListElement
         );
 
-        rootElement.appendChild(
+        CBImagesAdmin_fetchImageModels(
             imageListElement
         );
 
         return rootElement;
     }
     /* createElement() */
+
 
 
     /**
@@ -198,43 +196,54 @@
 
 
     /**
-     * @param object args
-     *
-     *      {
-     *          element: Element
-     *      }
+     * @param Element imageListElement
      *
      * @return Promise -> undefined
      */
-    function
-    fetchImages(
-        args
-    ) // -> Promise -> undefined
+    async function
+    CBImagesAdmin_fetchImageModels(
+        imageListElement
+    ) // -> Promise -> [object]
     {
-        let promise = CBAjax.call(
-            "CBImagesAdmin",
-            "fetchImages"
-        ).then(
-            function (images) {
-                for (var i = 0; i < images.length; i++) {
-                    let imageElement =
+        try
+        {
+            let imageModels =
+            await
+            CBAjax.call(
+                "CBImagesAdmin",
+                "fetchImages"
+            );
+
+            imageModels.forEach(
+                function (
+                    imageModel
+                ) // -> undefined
+                {
+                    let imageListItemElement =
                     createImageListItemElement(
-                        images[i]
+                        imageModel
                     );
 
-                    args.element.appendChild(imageElement);
+                    imageListElement.append(
+                        imageListItemElement
+                    );
                 }
-            }
-        ).catch(
-            function (error) {
-                CBUIPanel.displayError(error);
-                CBErrorHandler.report(error);
-            }
-        );
+            );
+        }
 
-        return promise;
+        catch (
+            error
+        ) {
+            CBUIPanel.displayError(
+                error
+            );
+
+            CBErrorHandler.report(
+                error
+            );
+        }
     }
-    /* fetchImages() */
+    /* CBImagesAdmin_fetchImageModels() */
 
 
 
