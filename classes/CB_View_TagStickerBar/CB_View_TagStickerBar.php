@@ -94,12 +94,12 @@ CB_View_TagStickerBar
             if (
                 $imageModel !== null
             ) {
-                CBImage::renderPictureElementWithImageInsideAspectRatioBox(
+                CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
                     $imageModel,
                     'rl320',
+                    200,
                     25,
-                    25,
-                    ''
+                    $prettyTagName
                 );
             }
         }
