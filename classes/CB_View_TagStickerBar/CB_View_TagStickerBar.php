@@ -18,7 +18,7 @@ CB_View_TagStickerBar
         [
             Colby::flexpath(
                 __CLASS__,
-                'v2022.05.23.1653328157.css',
+                '2022_06_09_1654785744.css',
                 cbsysurl()
             ),
         ];
