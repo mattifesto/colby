@@ -724,6 +724,7 @@ CBImage
 
                 <source
                 srcset="${webpImageURL}"
+                type="image/webp"
                 >
 
             EOT);
@@ -835,6 +836,7 @@ CBImage
 
                 <source
                 srcset="${webpImageURL}"
+                type="image/webp"
                 >
 
             EOT);
@@ -978,6 +980,7 @@ CBImage
 
                 <source
                 srcset="${webpImageURL}"
+                type="image/webp"
                 >
 
             EOT);
