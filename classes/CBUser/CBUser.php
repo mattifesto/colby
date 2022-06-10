@@ -944,26 +944,60 @@ CBUser
     static function
     CBModel_toSearchText(
         stdClass $userModel
-    ): string {
-        $publicProfileIsEnabled = CBUser::getPublicProfileIsEnabled(
+    ): string
+    {
+        $searchTextStrings =
+        [];
+
+        $fullName =
+        CBUser::getName(
             $userModel
         );
 
-        if (
-            $publicProfileIsEnabled !== true
-        ) {
-            return '';
-        }
+        array_push(
+            $searchTextStrings,
+            $fullName
+        );
 
-        $fullName = CBUser::getName(
+        $facebookName =
+        CBUser::getFacebookName(
             $userModel
         );
 
-        $prettyUsername = CBUser::getPrettyUsername(
+        array_push(
+            $searchTextStrings,
+            $facebookName
+        );
+
+        $prettyUsername =
+        CBUser::getPrettyUsername(
             $userModel
         );
 
-        return "{$fullName} {$prettyUsername}";
+        array_push(
+            $searchTextStrings,
+            "@${prettyUsername}"
+        );
+
+        $emailAddress =
+        CBUser::getEmailAddress(
+            $userModel
+        );
+
+        array_push(
+            $searchTextStrings,
+            $emailAddress
+        );
+
+        $searchText =
+        CBConvert::stringToCleanLine(
+            implode(
+                ' ',
+                $searchTextStrings
+            )
+        );
+
+        return $searchText;
     }
     /* CBModel_toSearchText() */
 
@@ -1085,17 +1119,23 @@ CBUser
 
 
         /**
-         * The model version date is updated when every single model with this
-         * class name needs to be updated. Document the reason for each change
-         * in this comment.
+         * The model version is updated when every single model with this class
+         * name needs to be updated. Document the reason for each change in this
+         * comment.
          *
-         *      2022_03_30 When users would change their username, the old
-         *      username association was not being removed. The bug was fixed
-         *      and re-saving will fix any user models that are affected.
+         * 2022_03_30
+         *
+         *      When users would change their username, the old username
+         *      association was not being removed. The bug was fixed and
+         *      re-saving will fix any user models that are affected.
+         *
+         * 2022_06_10_1654869456
+         *
+         *      The search text has been updated.
          */
 
         $upgradedSpec->CBUser_versionDate_property =
-        '2022_03_30';
+        '2022_06_10_1654869456';
 
 
 
