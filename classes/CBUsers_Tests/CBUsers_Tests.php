@@ -70,7 +70,7 @@ CBUsers_Tests
                 'CBModel_versionDate_property' => '2022_01_15',
 
                 'CBUser_versionDate_property' =>
-                '2022_03_30',
+                '2022_06_10_1654869456',
             ],
             (object)
             [
@@ -81,7 +81,7 @@ CBUsers_Tests
                 'CBModel_versionDate_property' => '2022_01_15',
 
                 'CBUser_versionDate_property' =>
-                '2022_03_30',
+                '2022_06_10_1654869456',
             ],
             (object)
             [
@@ -92,7 +92,7 @@ CBUsers_Tests
                 'CBModel_versionDate_property' => '2022_01_15',
 
                 'CBUser_versionDate_property' =>
-                '2022_03_30',
+                '2022_06_10_1654869456',
             ],
         ];
 
