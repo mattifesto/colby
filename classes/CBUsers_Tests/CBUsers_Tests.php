@@ -35,27 +35,60 @@ CBUsers_Tests
     {
         $originalSpecs =
         [
-            (object)[
-                'className' => 'CBUser',
-                'CBUser_prettyUsername_property' => 'BobBobberts',
+            (object)
+            [
+                'className' =>
+                'CBUser',
+
+                'CBUser_prettyUsername_property' =>
+                'BobBobberts',
             ],
+
+
+
             (object)[
-                'className' => 'CBUser',
-                'facebook' => (object)[
-                    'name' => 'Bob',
-                    'id' => '503',
+                'className' =>
+                'CBUser',
+
+                'facebook' =>
+                (object)
+                [
+                    'name' =>
+                    'Bob',
+
+                    'id' =>
+                    '503',
                 ],
-                'CBUser_prettyUsername_property' => 'BobBobberts',
+
+                'CBUser_prettyUsername_property' =>
+                'BobBobberts',
             ],
-            (object)[
-                'className' => 'CBUser',
-                'facebook' => (object)[
-                    'name' => 'Bob',
-                    'id' => '99',
+
+
+
+            (object)
+            [
+                'className' =>
+                'CBUser',
+
+                'facebook' =>
+                (object)
+                [
+                    'name' =>
+                    'Bob',
+
+                    'id' =>
+                    '99',
                 ],
-                'facebookUserID' => 504,
-                'facebookName' => 'Chet',
-                'CBUser_prettyUsername_property' => 'BobBobberts',
+
+                'facebookUserID' =>
+                504,
+
+                'facebookName' =>
+                'Chet',
+
+                'CBUser_prettyUsername_property' =>
+                'BobBobberts',
             ],
         ];
 
@@ -63,33 +96,60 @@ CBUsers_Tests
         [
             (object)
             [
-                'className' => 'CBUser',
-                'facebookUserID' => null,
-                'facebookName' => '',
-                'CBUser_prettyUsername_property' => 'BobBobberts',
-                'CBModel_versionDate_property' => '2022_01_15',
+                'className' =>
+                'CBUser',
+
+                'facebookUserID' =>
+                null,
+
+                'facebookName' =>
+                '',
+
+                'CBUser_prettyUsername_property' =>
+                'BobBobberts',
+
+                'CBModel_versionDate_property' =>
+                '2022_01_15',
 
                 'CBUser_versionDate_property' =>
                 '2022_06_10_1654869456',
             ],
             (object)
             [
-                'className' => 'CBUser',
-                'facebookUserID' => 503,
-                'facebookName' => 'Bob',
-                'CBUser_prettyUsername_property' => 'BobBobberts',
-                'CBModel_versionDate_property' => '2022_01_15',
+                'className' =>
+                'CBUser',
+
+                'facebookUserID' =>
+                503,
+
+                'facebookName' =>
+                'Bob',
+
+                'CBUser_prettyUsername_property' =>
+                'BobBobberts',
+
+                'CBModel_versionDate_property' =>
+                '2022_01_15',
 
                 'CBUser_versionDate_property' =>
                 '2022_06_10_1654869456',
             ],
             (object)
             [
-                'className' => 'CBUser',
-                'facebookUserID' => 504,
-                'facebookName' => 'Chet',
-                'CBUser_prettyUsername_property' => 'BobBobberts',
-                'CBModel_versionDate_property' => '2022_01_15',
+                'className' =>
+                'CBUser',
+
+                'facebookUserID' =>
+                504,
+
+                'facebookName' =>
+                'Chet',
+
+                'CBUser_prettyUsername_property' =>
+                'BobBobberts',
+
+                'CBModel_versionDate_property' =>
+                '2022_01_15',
 
                 'CBUser_versionDate_property' =>
                 '2022_06_10_1654869456',
@@ -117,9 +177,15 @@ CBUsers_Tests
         }
 
 
-        return (object)[
-            'succeeded' => 'true',
+
+        $result =
+        (object)
+        [
+            'succeeded' =>
+            'true',
         ];
+
+        return $result;
     }
     /* CBTest_upgrade() */
 
