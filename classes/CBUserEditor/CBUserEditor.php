@@ -18,7 +18,7 @@ CBUserEditor
         [
             Colby::flexpath(
                 __CLASS__,
-                '2022_06_10_1654877179.js',
+                '2022_06_11_1654965169.js',
                 cbsysurl()
             ),
         ];
@@ -36,6 +36,7 @@ CBUserEditor
     {
         return
         [
+            'CBMessageView',
             'CBModel',
         ];
     }
