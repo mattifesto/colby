@@ -144,26 +144,6 @@ ColbyRequest {
         }
 
 
-        /**
-         * SCENARIO
-         *
-         * handle site setup
-         *
-         * @deprecated 2022_01_29
-         *
-         *      Websites are no longer set up using this method, they are set up
-         *      fully using the cbt command in terminal. This code should be
-         *      removed during a larger task to remove the old setup code.
-         */
-
-        if (
-            CBSiteVersionNumber === 'setup' ||
-            CBSiteIsConfigured === false
-        ) {
-            CBSetup::renderSetupPage();
-
-            return;
-        }
 
         /**
          * @NOTE 2022_01_29
