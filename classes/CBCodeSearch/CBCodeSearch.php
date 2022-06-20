@@ -23,6 +23,11 @@ CBCodeSearch
      *      CBCodeSearch_warningVersion_property
      *
      *      args
+     *
+     *          additional arguments to ack such as
+     *
+     *          '--ignore-file=is:CBSetup.php'
+     *
      *      cbmessage
      *      regex
      *      severity
