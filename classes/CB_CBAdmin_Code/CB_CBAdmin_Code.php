@@ -162,7 +162,7 @@ CB_CBAdmin_Code
         [
             Colby::flexpath(
                 __CLASS__,
-                'v675.71.js',
+                '2022_06_20_1655696343.js',
                 cbsysurl()
             ),
         ];
