@@ -43,8 +43,6 @@ class ColbyInstaller {
 
 
     /**
-     * @TODO use CBSetup::createSettingsFile()
-     *
      * @return void
      */
     static function createSettingsFile(): void {
