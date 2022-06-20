@@ -481,13 +481,33 @@ CB_CBAdmin_Code
             if (
                 is_callable($function)
             ) {
-                $searches =
-                array_merge(
-                    $searches,
-                    call_user_func(
-                        $function
-                    )
+                $interfaceReturnValue =
+                call_user_func(
+                    $function
                 );
+
+                $interfaceReturnValueIsAnArray =
+                is_array(
+                    $interfaceReturnValue
+                );
+
+                if (
+                    $interfaceReturnValueIsAnArray
+                ) {
+                    $searches =
+                    array_merge(
+                        $searches,
+                        $interfaceReturnValue
+                    );
+                }
+
+                else
+                {
+                    array_push(
+                        $searches,
+                        $interfaceReturnValue
+                    );
+                }
             }
         }
 
