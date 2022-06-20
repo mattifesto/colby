@@ -50,24 +50,57 @@
             index < CB_CBAdmin_Code_searches.length;
             index += 1
         ) {
-            try {
-                let codeSearchModel = CB_CBAdmin_Code_searches[index];
+            try
+            {
+                let codeSearchModel =
+                CB_CBAdmin_Code_searches[
+                    index
+                ];
 
                 if (
-                    CB_CBAdmin_Code_CBCodeSearch_CBID !== "" &&
-                    (
-                        CB_CBAdmin_Code_CBCodeSearch_CBID !==
-                        codeSearchModel.CBCodeSearch_CBID
-                    )
+                    CB_CBAdmin_Code_CBCodeSearch_CBID !== ""
                 ) {
-                    continue;
+                    let codeSearchModelCBID =
+                    CBModel.getCBID(
+                        codeSearchModel
+                    );
+
+                    /**
+                     * @deprecated 2022_06_19
+                     *
+                     *      The CBCodeSearch_CBID property is deprecated and has
+                     *      been replaced by the model CBID.
+                     */
+
+                    if (
+                        codeSearchModelCBID ===
+                        undefined
+                    ) {
+                        codeSearchModelCBID =
+                        CBModel.valueAsCBID(
+                            codeSearchModel,
+                            'CBCodeSearch_CBID'
+                        );
+                    }
+
+                    if (
+                        CB_CBAdmin_Code_CBCodeSearch_CBID !==
+                        codeSearchModelCBID
+                    ) {
+                        continue;
+                    }
                 }
 
-                await doSearch(
+                await
+                doSearch(
                     codeSearchModel,
                     index
                 );
-            } catch (error) {
+            }
+
+            catch (
+                error
+            ) {
                 CBErrorHandler.displayAndReport(error);
 
                 break;
@@ -148,15 +181,16 @@
      *
      * @return Promise -> undefined
      */
-    async function doSearch(
-        search,
+    async function
+    doSearch(
+        codeSearchModel,
         index
     ) {
         let expander = CBUIExpander.create();
-        expander.title = search.title;
+        expander.title = codeSearchModel.title;
 
         let searchCBMessage = CBModel.valueToString(
-            search,
+            codeSearchModel,
             "cbmessage"
         );
 
@@ -183,7 +217,9 @@
             expander.severity = 6;
             searchResults = "";
         } else {
-            expander.severity = search.severity || 3;
+            expander.severity =
+            codeSearchModel.severity ||
+            3;
 
             let updatedSearchResults = [];
 
@@ -227,18 +263,42 @@
             "command"
         );
 
-        let searchCBID = CBModel.valueAsCBID(
-            search,
-            'CBCodeSearch_CBID'
+        let codeSearchModelCBID =
+        CBModel.getCBID(
+            codeSearchModel
         );
+
+        /**
+         * @deprecated 2022_06_19
+         *
+         *      The CBCodeSearch_CBID property is deprecated and has
+         *      been replaced by the model CBID.
+         */
+
+        if (
+            codeSearchModelCBID ===
+            undefined
+        ) {
+            codeSearchModelCBID =
+            CBModel.valueAsCBID(
+                codeSearchModel,
+                'CBCodeSearch_CBID'
+            );
+        }
 
         let searchOnlyForThisCodeCBMessage = "";
 
-        if (searchCBID !== undefined) {
+        if (
+            codeSearchModelCBID !== undefined
+        ) {
+            const URL =
+            "/admin/" +
+            "?c=CB_CBAdmin_Code" +
+            `&CBCodeSearch_CBID=${codeSearchModelCBID}`;
+
             searchOnlyForThisCodeCBMessage = `
 
-                Search only for this code: (link (a
-                /admin/?c=CB_CBAdmin_Code&CBCodeSearch_CBID=${searchCBID}))
+                Search only for this code: (link (a ${URL}))
 
             `;
         }
