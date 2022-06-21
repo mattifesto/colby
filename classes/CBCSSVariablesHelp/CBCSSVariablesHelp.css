@@ -25,12 +25,24 @@
     font-style: italic;
 }
 
-.CBDarkTheme.navy {
-    --CBBackgroundColor: hsl(240, 50%, 20%);
-    --CBTextColor: hsla(40, 100%, 60%, 0.9);
+
+
+.CBDarkTheme.navy
+{
+    --CBBackgroundColor1:
+    hsl(240, 50%, 20%);
+
+    --CBTextColor1:
+    hsla(40, 100%, 60%, 0.9);
 }
 
-.CBLightTheme.yellow {
-    --CBBackgroundColor: hsl(60, 100%, 95%);
-    --CBTextColor: hsla(0, 0%, 0%, 0.8);
+
+
+.CBLightTheme.yellow
+{
+    --CBBackgroundColor1:
+    hsl(60, 100%, 95%);
+
+    --CBTextColor1:
+    hsla(120, 100%, 20%, 0.8);
 }
