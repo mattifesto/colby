@@ -56,13 +56,15 @@
  *      more polished.
  */
 
-* {
+*
+{
     margin: 0; /* 1 */
 }
 
 
 
-html {
+html
+{
     font-size:                  16px;               /* 1 */
     overflow-y:                 scroll;             /* 2 */
     text-rendering:             optimizeLegibility; /* 3 */
@@ -76,6 +78,7 @@ html {
     --CBButtonTextColorDisabled: hsla(0, 0, 100%, 0.3);
     --CBMonospaceFontFamily: 'Menlo', 'Courier New', 'Courier', monospace;
 }
+
 
 
 @media screen
@@ -171,13 +174,15 @@ html {
 
 
 
-.CBBackgroundOffsetColor {
+.CBBackgroundOffsetColor
+{
     background-color: var(--CBBackgroundOffsetColor);
 }
 
 
 
-a {
+a
+{
     color: var(--CBTextColorForLinks);
 }
 
@@ -187,7 +192,8 @@ a {
  * The body element is rendered by CBHTMLOutput. These styles enable the footer
  * to be at the bottom of pages with short content.
  */
-body {
+body
+{
 
     /* the body must be at least as tall as the viewport */
     min-height: 100vh;
@@ -219,25 +225,35 @@ body {
  * made by the style sheet of the footer.
  */
 
-body > * {
+body >
+*
+{
     flex: none;
 }
 
 
 
-a:link, a:active, a:focus, a:hover {
+a:link,
+a:active,
+a:focus,
+a:hover
+{
     outline: none;
 }
 
 
 
-a img {
+a
+img
+{
     border: none;
 }
 
 
 
-code, pre {
+code,
+pre
+{
     font-family: var(--CBMonospaceFontFamily);
 }
 
@@ -254,27 +270,49 @@ code, pre {
  *
  *      Similar pre element styles exist in CBContentStyleSheet.css.
  */
-pre {
+pre
+{
     overflow: auto;
 }
 
-button, input, select, textarea {
+
+
+button,
+input,
+select,
+textarea
+{
     box-sizing: border-box; /* 1 */
 }
 
-input[type=email], input[type=text], input[type=url], textarea {
+
+
+input[type=email],
+input[type=text],
+input[type=url],
+textarea
+{
     border: 1px solid hsl(0, 0%, 80%); /* 1 */
 }
 
-table {
+
+
+table
+{
     border-spacing: 0px; /* 1 */
 }
 
-td, th {
+
+
+td,
+th
+{
     padding: 0;                 /* 1 */
     text-align: left;
     vertical-align: baseline;   /* 2 */
 }
+
+
 
 /*
 z-index guide
