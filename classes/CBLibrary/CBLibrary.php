@@ -1,8 +1,9 @@
 <?php
 
-final class CBLibrary {
-
-    /* -- functions -- */
+final class
+CBLibrary
+{
+    // -- functions
 
 
 
@@ -14,18 +15,22 @@ final class CBLibrary {
     static function
     getClassDirectories(
         string $className
-    ): array {
-        $classDirectories = [];
+    ): array
+    {
+        $classDirectories =
+        [];
 
         foreach (
-            Colby::getAbsoluteLibraryDirectories() as $absoluteLibraryDirectory
+            Colby::getAbsoluteLibraryDirectories() as
+            $absoluteLibraryDirectory
         ) {
-            $classDirectory = (
-                $absoluteLibraryDirectory .
-                "/classes/{$className}"
-            );
+            $classDirectory =
+            $absoluteLibraryDirectory .
+            "/classes/{$className}";
 
-            if (is_dir($classDirectory)) {
+            if (
+                is_dir($classDirectory)
+            ) {
                 array_push(
                     $classDirectories,
                     $classDirectory
@@ -53,38 +58,46 @@ final class CBLibrary {
      */
     static function
     getAllClassDirectoryNames(
-    ): array {
-        $classNames = [];
+    ): array
+    {
+        $classNames =
+        [];
 
         foreach (
-            Colby::getAbsoluteLibraryDirectories() as $absoluteLibraryDirectory
+            Colby::getAbsoluteLibraryDirectories() as
+            $absoluteLibraryDirectory
         ) {
-            $libraryClassesDirectory = (
-                $absoluteLibraryDirectory .
-                '/classes'
-            );
+            $libraryClassesDirectory =
+            $absoluteLibraryDirectory .
+            '/classes';
 
-            $libraryClassDirectories = glob(
+            $libraryClassDirectories =
+            glob(
                 "{$libraryClassesDirectory}/*",
                 GLOB_ONLYDIR
             );
 
-            $libraryClassNames = array_map(
+            $libraryClassNames =
+            array_map(
                 'basename',
                 $libraryClassDirectories
             );
 
-            $classNames = array_merge(
+            $classNames =
+            array_merge(
                 $classNames,
                 $libraryClassNames
             );
         }
 
-        return array_values(
+        $allClassDirectoryNames =
+        array_values(
             array_unique(
                 $classNames
             )
         );
+
+        return $allClassDirectoryNames;
     }
     /* getAllClassDirectoryNames() */
 
