@@ -1,7 +1,8 @@
 <?php
 
-final class CBUIExpander {
-
+final class
+CBUIExpander
+{
     /* -- CBHTMLOutput interfaces -- */
 
 
@@ -11,8 +12,10 @@ final class CBUIExpander {
      */
     static function
     CBHTMLOutput_CSSURLs(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
                 '2022_06_21_1655785586.css',
@@ -29,8 +32,10 @@ final class CBUIExpander {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             Colby::flexpath(
                 __CLASS__,
                 'v503.js',
@@ -47,8 +52,10 @@ final class CBUIExpander {
      */
     static function
     CBHTMLOutput_requiredClassNames(
-    ): array {
-        return [
+    ): array
+    {
+        return
+        [
             'CBContentStyleSheet',
             'CBConvert',
             'CBMessageMarkup'
