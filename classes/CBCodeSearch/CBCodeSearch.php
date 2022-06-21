@@ -26,7 +26,7 @@ CBCodeSearch
      *
      *          additional arguments to ack such as
      *
-     *          '--ignore-file=is:CBSetup.php'
+     *          '--ignore-file=is:CBCodeSearch.php'
      *
      *      cbmessage
      *      regex
