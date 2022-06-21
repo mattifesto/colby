@@ -38,11 +38,13 @@ final class CBMarkaroundDocumentation {
 
         $CSS = <<<EOT
 
-            main.CBUIRoot {
-                background-color: var(--CBBackgroundColor);
+            main.CBUIRoot
+            {
+                background-color:
+                var(--CBBackgroundColor1);
             }
 
-EOT;
+        EOT;
 
         CBHTMLOutput::addCSS($CSS);
 
