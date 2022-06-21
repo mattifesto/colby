@@ -59,9 +59,21 @@ CBCSSVariablesHelp
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
-        return [Colby::flexpath(__CLASS__, 'v374.css', cbsysurl())];
+    static function
+    CBHTMLOutput_CSSURLs(
+    ) {
+        $cssURLS =
+        [
+            Colby::flexpath(
+                __CLASS__,
+                '2022_06_21_1655784726.css',
+                cbsysurl()
+            )
+        ];
+
+        return $cssURLS;
     }
+    // CBHTMLOutput_CSSURLs()
 
 
 
