@@ -88,8 +88,12 @@ final class CBCSSVariablesHelp {
     /**
      * @return string
      */
-    static function markup(): string {
-        return <<<EOT
+    static function
+    markup(
+    ): string
+    {
+        $cbmessage =
+        <<<EOT
 
             --- h1
             Colby CSS Variables
@@ -105,35 +109,36 @@ final class CBCSSVariablesHelp {
 
             --- dl
                 --- dt
-                CBBackgroundColor
+                CBBackgroundColor1
                 ---
 
                 This color represents the standard background color for the
                 theme. The themes are created with the understanding that they
-                may be used with custom background colors that will be considered
-                either light or dark.
+                may be used with custom background colors that will be
+                considered either light or dark.
 
-                For CBLightTheme CBBackgroundColor is white. A white background
+                For CBLightTheme CBBackgroundColor1 is white. A white background
                 is very comfortable and expected for users.
 
-                For CBDarkTheme it is hsl(0, 0%, 10%) because pure black feels too
-                strong for comfortable reading. This value has evolved over the
-                life of CBDarkTheme because while it's pretty easy to say that black is
-                not right color. The correct color is subject to individual situations and emotions
-                of the designer. Shades of dark black look visibly different
-                even in slightly different layouts.
+                For CBDarkTheme it is hsl(0, 0%, 10%) because pure black feels
+                too strong for comfortable reading. This value has evolved over
+                the life of CBDarkTheme because while it's pretty easy to say
+                that black is not right color. The correct color is subject to
+                individual situations and emotions of the designer. Shades of
+                dark black look visibly different even in slightly different
+                layouts.
 
                 --- dt
-                CBTextColor
+                CBTextColor1
                 ---
 
-                CBTextColor is meant to be the color that looks best for the main
-                text color. For CBLightTheme it is black with and opacity of 0.9. For
-                CBDarkTheme is is white with an opacity of 0.9.
+                CBTextColor1 is meant to be the color that looks best for the
+                main text color. For CBLightTheme it is black with and opacity
+                of 0.9. For CBDarkTheme is is white with an opacity of 0.9.
 
-                Pure white or black text is so strong that it can feel awkward. Using opacity
-                to mellow the color allows the color to work with elements that have a custom
-                background color specified.
+                Pure white or black text is so strong that it can feel awkward.
+                Using opacity to mellow the color allows the color to work with
+                elements that have a custom background color specified.
 
                 --- dt
                 CBTextColor2
@@ -144,7 +149,8 @@ final class CBCSSVariablesHelp {
                 descriptions adjecent to titles, for dates or captions.
 
                 The use of CBTextColor2 is left mostly to the designer, because
-                different layouts and views will dictate whether it is appropriate or not.
+                different layouts and views will dictate whether it is
+                appropriate or not.
 
                 --- dt
                 CBTextColor3
@@ -155,19 +161,26 @@ final class CBCSSVariablesHelp {
 
             ---
 
-EOT;
+        EOT;
+
+        return $cbmessage;
     }
+    // markup()
+
+
 
     static function sample() {
-        return <<<EOT
+        $cbmessage =
+        <<<EOT
 
             --- h1
             Welcome!
             ---
 
-            This is a sample to show you what content will look like with various themes.
-            By look at the style sheets associated with this page you can also
-            see how to create your own customized version of the themes.
+            This is a sample to show you what content will look like with
+            various themes. By look at the style sheets associated with this
+            page you can also see how to create your own customized version of
+            the themes.
 
             This is useful for:
 
@@ -178,6 +191,10 @@ EOT;
 
             artistic developers
             ---
-EOT;
+        EOT;
+
+        return $cbmessage;
     }
+    // sample()
+
 }
