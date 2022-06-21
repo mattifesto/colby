@@ -1,7 +1,8 @@
 <?php
 
-final class CBCSSVariablesHelp {
-
+final class
+CBCSSVariablesHelp
+{
     /**
      * @return string
      */
@@ -53,12 +54,16 @@ final class CBCSSVariablesHelp {
         ]);
     }
 
+
+
     /**
      * @return [string]
      */
     static function CBHTMLOutput_CSSURLs() {
         return [Colby::flexpath(__CLASS__, 'v374.css', cbsysurl())];
     }
+
+
 
     /**
      * @return void
@@ -78,12 +83,20 @@ final class CBCSSVariablesHelp {
         });
     }
 
+
+
     /**
      * @return [string]
      */
     static function CBInstall_requiredClassNames(): array {
         return ['CBHelpAdminMenu'];
     }
+
+
+
+    // -- functions
+
+
 
     /**
      * @return string
