@@ -1966,34 +1966,6 @@ CB_CBAdmin_Code
 
 
                 (object)[
-                    'CBCodeSearch_CBID' =>
-                    '47575ebc7532925602cc4cd2e0bf1b705e73bc0c',
-
-                    'cbmessage' => <<<EOT
-
-                        Use CBBackgroundColor1
-
-                    EOT,
-
-                    'regex' =>
-                    '\bCBBackgroundColor\b',
-
-                    'severity' =>
-                    5,
-
-                    'title' =>
-                    'CBBackgroundColor',
-
-                    'noticeStartDate' =>
-                    '2021/09/02',
-
-                    'noticeVersion' =>
-                    675,
-                ],
-
-
-
-                (object)[
                     'CBCodeSearch_CBID' => (
                         '08fc779f0af49400a29f73b67ca33f878a348a51'
                     ),
