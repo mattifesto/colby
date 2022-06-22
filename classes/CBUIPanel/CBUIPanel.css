@@ -71,10 +71,15 @@
     flex-direction: column;
     justify-content: center;
 
-    background-color: var(--CBBackgroundColor);
+    background-color:
+    var(--CBBackgroundColor1);
+
     border-radius: 10px;
     box-sizing: border-box;
-    color: var(--CBTextColor);
+
+    color:
+    var(--CBTextColor1);
+
     flex: 1 0 auto;
 }
 
@@ -102,7 +107,7 @@
     border-box;
 
     color:
-    var(--CBTextColor);
+    var(--CBTextColor1);
 
     flex:
     1 0 auto;
