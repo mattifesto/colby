@@ -25,11 +25,6 @@ CBSetup
             '70870720e297d232c57a68f8871f06514d691708'
         );
 
-        CBCodeSearch::setErrorVersion(
-            $codeSearchSpec,
-            '2022_06_20_1655692698'
-        );
-
         CBCodeSearch::setNoticeVersion(
             $codeSearchSpec,
             '2022_06_03_1654267262'
@@ -38,6 +33,11 @@ CBSetup
         CBCodeSearch::setWarningVersion(
             $codeSearchSpec,
             '2022_06_20_1655692697'
+        );
+
+        CBCodeSearch::setErrorVersion(
+            $codeSearchSpec,
+            '2022_06_20_1655692698'
         );
 
         $codeSearchSpec->args =
