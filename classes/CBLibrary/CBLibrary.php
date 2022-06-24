@@ -8,6 +8,43 @@ CBLibrary
 
 
     /**
+     * @param string $className
+     * @param string $fileVersionNumber
+     * @param string $fileExtension
+     * @param string $libraryPath
+     *
+     *      If provided, the library path should not have a trailing slash.
+     *
+     * @return string
+     */
+    static function
+    buildLibraryClassFilePath(
+        string $className,
+        string $fileVersionNumber,
+        string $fileExtension,
+        string $libraryPath = ''
+    ): string
+    {
+        $intraLibraryPath =
+        "classes/{$className}/" .
+        "{$className}.{$fileVersionNumber}.{$fileExtension}";
+
+        if (
+            $libraryPath === ''
+        ) {
+            return $intraLibraryPath;
+        }
+
+        $interLibraryPath =
+        "{$libraryPath}/{$intraLibraryPath}";
+
+        return $interLibraryPath;
+    }
+    // buildLibraryClassFilePath()
+
+
+
+    /**
      * @return [string]
      *
      *      Returns a list of absolute class directories for a given class name.
