@@ -8,20 +8,33 @@ CBUIPanel
 
 
     /**
-     * @return [string]
+     * @return string
      */
     static function
     CBHTMLOutput_CSSURLs(
-    ): array
+    ): string
     {
-        return
-        [
-            Colby::flexpath(
-                __CLASS__,
-                'v675.62.css',
-                cbsysurl()
-            ),
-        ];
+        $className =
+        __CLASS__;
+
+        $fileVersionNumber =
+        '2022_06_21_1655821960';
+
+        $fileExtension =
+        'css';
+
+        $libraryPath =
+        cbsysurl();
+
+        $cssURL =
+        CBLibrary::buildLibraryClassFilePath(
+            $className,
+            $fileVersionNumber,
+            $fileExtension,
+            $libraryPath
+        );
+
+        return $cssURL;
     }
     /* CBHTMLOutput_CSSURLs() */
 
