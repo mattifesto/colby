@@ -1776,34 +1776,6 @@ CB_CBAdmin_Code
 
 
                 /**
-                 * 2019_07_23
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'function\s+requiredCSSURLs\\(',
-                    'severity' => 4,
-                    'title' => (
-                        'Replace requiredCSSURLs() with ' .
-                        'CBHTMLOutput_CSSURLs()'
-                    ),
-                ],
-
-
-                /**
-                 * 2019_07_23
-                 */
-                (object)[
-                    'filetype' => 'php',
-                    'regex' => 'Colby::URLForJavaScriptForSiteClass\\(',
-                    'severity' => 4,
-                    'title' => (
-                        'Replace Colby::URLForJavaScriptForSiteClass() with ' .
-                        'Colby::flexpath()'
-                    ),
-                ],
-
-
-                /**
                  * 2019_07_26
                  */
                 (object)[
