@@ -66,6 +66,64 @@ CBHTMLOutput {
     private static $styleSheets;
 
 
+
+    // -- CBCodeAdmin interfaces
+
+
+
+    /**
+     * @return object
+     */
+    static function
+    CBCodeAdmin_searches(
+    ): stdClass
+    {
+        $codeSearchSpec =
+        CBModel::createSpec(
+            'CBCodeSearch',
+            '1e830951fa18c4a33e14be379670aa9122f14dc4'
+        );
+
+        CBCodeSearch::setNoticeVersion(
+            $codeSearchSpec,
+            '2019_07_23_1655863866'
+        );
+
+        CBCodeSearch::setWarningVersion(
+            $codeSearchSpec,
+            '2019_07_23_1655863867'
+        );
+
+        CBCodeSearch::setErrorVersion(
+            $codeSearchSpec,
+            '2022_06_22_1655863924'
+        );
+
+        $codeSearchSpec->args =
+        '--ignore-file=is:CBHTMLOutput.php';
+
+        $codeSearchSpec->cbmessage =
+        <<<EOT
+
+            Use CBHTMLOutput_CSSURLs().
+
+        EOT;
+
+        $codeSearchSpec->regex =
+        '\brequiredCSSURLs\b';
+
+        $codeSearchSpec->severity =
+        3;
+
+        $codeSearchSpec->title =
+        'requiredCSSURLs() interface';
+
+        return $codeSearchSpec;
+    }
+    /* CBCodeAdmin_searches() */
+
+
+
     /* -- accessors -- */
 
 
