@@ -531,18 +531,36 @@ CBHTMLOutput {
         foreach (
             $resolvedClassNames as $className
         ) {
-            if (
-                is_callable($function = "{$className}::CBHTMLOutput_CSSURLs") ||
-                is_callable($function = "{$className}::requiredCSSURLs")
-            ) {
-                $URLs = call_user_func($function);
+            $functionName =
+            "{$className}::CBHTMLOutput_CSSURLs";
 
-                array_walk(
-                    $URLs,
-                    function ($URL) {
-                        CBHTMLOutput::addCSSURL($URL);
-                    }
+            if (
+                is_callable($functionName)
+            ) {
+                $interfaceReturnValue =
+                call_user_func(
+                    $functionName
                 );
+
+                if (
+                    is_array($interfaceReturnValue)
+                ) {
+                    foreach (
+                        $interfaceReturnValue as
+                        $CSSURL
+                    ) {
+                        CBHTMLOutput::addCSSURL(
+                            $CSSURL
+                        );
+                    }
+                }
+
+                else
+                {
+                    CBHTMLOutput::addCSSURL(
+                        $interfaceReturnValue
+                    );
+                }
             }
 
 
