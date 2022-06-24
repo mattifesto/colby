@@ -67,6 +67,114 @@ Colby
 
 
 
+    // -- CBCodeAdmin interfaces
+
+
+
+    /**
+     * @return [object]
+     */
+    static function
+    CBCodeAdmin_searches(
+    ): array
+    {
+        $searches =
+        [];
+
+
+
+        /* Colby::flexpath() */
+
+        $codeSearchSpec =
+        CBModel::createSpec(
+            'CBCodeSearch',
+            '0ba70b76ed5c743dc23f69a1650fde99865199d7'
+        );
+
+        CBCodeSearch::setNoticeVersion(
+            $codeSearchSpec,
+            '2022_06_22_1655865358'
+        );
+
+        $codeSearchSpec->cbmessage =
+        <<<EOT
+
+            Use CBLibrary::buildLibraryClassFilePath().
+
+        EOT;
+
+        $codeSearchSpec->regex =
+        '\bColby::flexpath\b';
+
+        $codeSearchSpec->severity =
+        5;
+
+        $codeSearchSpec->title =
+        'Colby::flexpath()';
+
+        array_push(
+            $searches,
+            $codeSearchSpec
+        );
+
+
+
+        /* Colby::URLForJavaScriptForSiteClass() */
+
+        $codeSearchSpec =
+        CBModel::createSpec(
+            'CBCodeSearch',
+            '70e026ab1319da0d164bafb1943bd83521a77537'
+        );
+
+        CBCodeSearch::setNoticeVersion(
+            $codeSearchSpec,
+            '2019_07_23_1655865667'
+        );
+
+        CBCodeSearch::setWarningVersion(
+            $codeSearchSpec,
+            '2019_07_23_1655865668'
+        );
+
+        CBCodeSearch::setErrorVersion(
+            $codeSearchSpec,
+            '2022_06_22_1655865669'
+        );
+
+
+        $codeSearchSpec->args =
+        '--ignore-file=is:Colby.php';
+
+        $codeSearchSpec->cbmessage =
+        <<<EOT
+
+            Use CBLibrary::buildLibraryClassFilePath().
+
+        EOT;
+
+        $codeSearchSpec->regex =
+        '\bColby::URLForJavaScriptForSiteClass\b';
+
+        $codeSearchSpec->severity =
+        3;
+
+        $codeSearchSpec->title =
+        'Colby::URLForJavaScriptForSiteClass()';
+
+        array_push(
+            $searches,
+            $codeSearchSpec
+        );
+
+
+
+        return $searches;
+    }
+    /* CBCodeAdmin_searches() */
+
+
+
     /* -- CBHTMLOutput interfaces -- */
 
 
@@ -421,9 +529,9 @@ Colby
 
 
     /**
-     * @TODO 2020_08_18
+     * @deprecated 2022_06_21
      *
-     *      Move to CBLibrary
+     *      Use CBLibrary::buildLibraryClassFilePath().
      *
      * This function builds a flexpath from a class name. It is mosly used to
      * construct flexpaths for css and js files associated with a class.
@@ -1114,19 +1222,6 @@ Colby
      */
     static function siteIsBeingDebugged() {
         return CBSitePreferences::debug();
-    }
-
-
-
-    /**
-     * @deprecated use URLForJavaScriptForClass
-     *
-     * @param string $className
-     *
-     * @return string
-     */
-    static function URLForJavaScriptForSiteClass($className) {
-        return cbsiteurl() . "/classes/{$className}/{$className}.js";
     }
 
 }
