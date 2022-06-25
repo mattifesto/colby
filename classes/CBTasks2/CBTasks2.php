@@ -587,35 +587,73 @@ final class CBTasks2 {
      *      its abilities. Tasks in Colby are not meant meet such a high level
      *      of requirements at this time.
      */
-    static function runSpecificTask(
+    static function
+    runSpecificTask(
         string $className,
         string $ID
-    ): bool {
-        $classNameAsSQL = CBDB::stringToSQL($className);
-        $IDAsSQL = CBID::toSQL($ID);
-        $timestamp = time();
-        $state_running = 2;
-        $starterID = CBID::generateRandomCBID();
-        $starterIDAsSQL = CBID::toSQL($starterID);
+    ): bool
+    {
+        $classNameAsSQL =
+        CBDB::stringToSQL(
+            $className
+        );
+
+        $IDAsSQL =
+        CBID::toSQL(
+            $ID
+        );
+
+        $timestamp =
+        time();
+
+        $state_running =
+        2;
+
+        $starterID =
+        CBID::generateRandomCBID();
+
+        $starterIDAsSQL =
+        CBID::toSQL(
+            $starterID
+        );
 
         /**
          * If the task is in the CBTasks2 table in a non-running state, place it
          * in a running state with the generated starter ID.
          */
 
-        $SQL = <<<EOT
+        $SQL =
+        <<<EOT
 
-            UPDATE  CBTasks2
-            SET     starterID = {$starterIDAsSQL},
-                    state = {$state_running},
-                    timestamp = {$timestamp}
-            WHERE   className = $classNameAsSQL AND
-                    ID = {$IDAsSQL} AND
-                    state != {$state_running}
+            UPDATE
+            CBTasks2
+
+            SET
+            starterID =
+            {$starterIDAsSQL},
+
+            state =
+            {$state_running},
+
+            timestamp =
+            {$timestamp}
+
+            WHERE
+            className =
+            $classNameAsSQL AND
+
+            ID =
+            {$IDAsSQL} AND
+
+            state !=
+            {$state_running}
 
         EOT;
 
-        Colby::query($SQL, /* retryOnDeadlock */ true);
+        Colby::query(
+            $SQL,
+            true /* retryOnDeadlock */
+        );
 
         /**
          * If the task was not in the CBTasks2 table in a non-running state,
@@ -623,10 +661,16 @@ final class CBTasks2 {
          * ID.
          */
 
-        if (Colby::mysqli()->affected_rows !== 1) {
-            $SQL = <<<EOT
+        if (
+            Colby::mysqli()->affected_rows !==
+            1
+        ) {
+            $SQL =
+            <<<EOT
 
-                INSERT INTO CBTasks2
+                INSERT INTO
+                CBTasks2
+
                 (
                     className,
                     ID,
@@ -634,6 +678,7 @@ final class CBTasks2 {
                     state,
                     timestamp
                 )
+
                 VALUES
                 (
                     {$classNameAsSQL},
@@ -645,10 +690,21 @@ final class CBTasks2 {
 
             EOT;
 
-            try {
-                Colby::query($SQL, /* retryOnDeadlock */ true);
-            } catch (Throwable $throwable) {
-                if (Colby::mysqli()->errno === 1062) {
+            try
+            {
+                Colby::query(
+                    $SQL,
+                    true /* retryOnDeadlock */
+                );
+            }
+
+            catch (
+                Throwable $throwable
+            ) {
+                if (
+                    Colby::mysqli()->errno ===
+                    1062
+                ) {
 
                     /**
                      * This is they MySQL error number for "duplicate entry"
@@ -662,13 +718,21 @@ final class CBTasks2 {
                      */
 
                     return false;
-                } else {
+                }
+
+                else
+                {
                     throw $throwable;
                 }
             }
         }
 
-        return CBTasks2::runTaskForStarter($starterID);
+        $taskWasRun =
+        CBTasks2::runTaskForStarter(
+            $starterID
+        );
+
+        return $taskWasRun;
     }
     /* runSpecificTask() */
 
