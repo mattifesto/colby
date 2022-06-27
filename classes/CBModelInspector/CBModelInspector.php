@@ -122,10 +122,20 @@ final class CBModelInspector {
             $ID
         );
 
-        $mostRecentModel =
-        json_decode(
-            $object->modelVersions[0]->modelAsJSON
-        );
+        if (
+            empty($object->modelVersions)
+        ) {
+            $mostRecentModel =
+            (object)[];
+        }
+
+        else
+        {
+            $mostRecentModel =
+            json_decode(
+                $object->modelVersions[0]->modelAsJSON
+            );
+        }
 
         $object->CBModelInspector_modelTitle =
         CBModel::getTitle(
