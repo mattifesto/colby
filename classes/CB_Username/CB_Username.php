@@ -228,9 +228,26 @@ CB_Username {
                     $usernameCBIDs
                 );
 
+                /**
+                 * @NOTE 2022_06_27
+                 *
+                 *      I noticed a bug today where there were associations left
+                 *      in the associations table with the
+                 *      CBUser_username_association association key. It looks
+                 *      like this was the eventually made the official
+                 *      association key while CBUser_to_CB_Username_association
+                 *      may have been used during development. Regardless, at
+                 *      this point, both should be completely removed.
+                 */
+
                 CBModelAssociations::delete(
                     null,
                     'CBUser_to_CB_Username_association'
+                );
+
+                CBModelAssociations::delete(
+                    null,
+                    'CBUser_username_association'
                 );
             }
         );
@@ -340,7 +357,7 @@ CB_Username {
     ): ?string {
         return CBModelAssociations::fetchSingularSecondCBID(
             $userModelCBID,
-            'CBUser_to_CB_Username_association',
+            'CBUser_username_association',
         );
     }
     /* fetchUsernameCBIDByUserCBID() */
