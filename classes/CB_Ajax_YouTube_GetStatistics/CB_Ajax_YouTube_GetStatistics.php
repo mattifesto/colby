@@ -1,8 +1,8 @@
 <?php
 
 final class
-CB_Ajax_YouTube_GetStatistics {
-
+CB_Ajax_YouTube_GetStatistics
+{
     /* -- CBAjax interfaces -- */
 
 
