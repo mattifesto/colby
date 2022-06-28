@@ -17,33 +17,45 @@ CB_Ajax_YouTube_GetStatistics
     CBAjax_execute(
         stdClass $executorArguments,
         ?string $callingUserModelCBID = null
-    ): ?stdClass {
-        $youtubeChannelID = CBSitePreferences::getYouTubeChannelID(
+    ): ?stdClass
+    {
+        $youtubeChannelID =
+        CBSitePreferences::getYouTubeChannelID(
             CBSitePreferences::model()
         );
 
         if (
-            $youtubeChannelID === ''
+            $youtubeChannelID ===
+            ''
         ) {
             return null;
         }
 
-        $youtubeAPIKey = CBSitePreferences::getYouTubeAPIKey(
+        $youtubeAPIKey =
+        CBSitePreferences::getYouTubeAPIKey(
             CBSitePreferences::model()
         );
 
         if (
-            $youtubeAPIKey === ''
+            $youtubeAPIKey ===
+            ''
         ) {
             return null;
         }
 
-        $returnValue = CB_YouTube::call(
+        $returnValue =
+        CB_YouTube::call(
             'channels',
-            (object)[
-                'id' => $youtubeChannelID,
-                'key' => $youtubeAPIKey,
-                'part' => 'statistics'
+            (object)
+            [
+                'id' =>
+                $youtubeChannelID,
+
+                'key' =>
+                $youtubeAPIKey,
+
+                'part' =>
+                'statistics'
             ]
         );
 
@@ -54,20 +66,26 @@ CB_Ajax_YouTube_GetStatistics
 
 
     /**
-     * @param CBID callingUserModelCBID
+     * @param CBID $callingUserModelCBID
      *
      * @return bool
      */
     static function
     CBAjax_userModelCBIDCanExecute(
         ?string $callingUserModelCBID = null
-    ): bool {
-        $userIsAnAdministrator = (
-            $callingUserModelCBID !== null &&
-            CBUserGroup::userIsMemberOfUserGroup(
-                $callingUserModelCBID,
-                'CBAdministratorsUserGroup'
-            )
+    ): bool
+    {
+        if (
+            $callingUserModelCBID ===
+            null
+        ) {
+            return false;
+        }
+
+        $userIsAnAdministrator =
+        CBUserGroup::userIsMemberOfUserGroup(
+            $callingUserModelCBID,
+            'CBAdministratorsUserGroup'
         );
 
         return $userIsAnAdministrator;
