@@ -43,6 +43,198 @@ CBSitePreferences {
 
     private static $model = null;
 
+
+
+    // -- CBCodeAdmin interfaces
+
+
+
+    /**
+     * @return object
+     */
+    static function
+    CBCodeAdmin_searches(
+    ): array
+    {
+        $searches =
+        [];
+
+
+
+        // CBSitePreferences::getYouTubeAPIKey()
+
+        $codeSearchSpec =
+        CBModel::createSpec(
+            'CBCodeSearch',
+            '3fa3838507d648fa1866253bd55784911d0d352e'
+        );
+
+        CBCodeSearch::setNoticeVersion(
+            $codeSearchSpec,
+            '2022_06_28_1656427937'
+        );
+
+        CBCodeSearch::setWarningVersion(
+            $codeSearchSpec,
+            '2022_06_28_1656427938'
+        );
+
+        $codeSearchSpec->cbmessage =
+        <<<EOT
+
+            Use a CB_YouTubeChannel model.
+
+        EOT;
+
+        $codeSearchSpec->regex =
+        '\bCBSitePreferences::getYouTubeAPIKey\b';
+
+        $codeSearchSpec->severity =
+        4;
+
+        $codeSearchSpec->title =
+        'CBSitePreferences::getYouTubeAPIKey()';
+
+        array_push(
+            $searches,
+            $codeSearchSpec
+        );
+
+
+
+        // CBSitePreferences::getYouTubeChannelID()
+
+        $codeSearchSpec =
+        CBModel::createSpec(
+            'CBCodeSearch',
+            '02662ab106aed59262e0f87fa714d380220201f0'
+        );
+
+        CBCodeSearch::setNoticeVersion(
+            $codeSearchSpec,
+            '2022_06_28_1656427678'
+        );
+
+        CBCodeSearch::setWarningVersion(
+            $codeSearchSpec,
+            '2022_06_28_1656427679'
+        );
+
+        $codeSearchSpec->cbmessage =
+        <<<EOT
+
+            Use a CB_YouTubeChannel model.
+
+        EOT;
+
+        $codeSearchSpec->regex =
+        '\bCBSitePreferences::getYouTubeChannelID\b';
+
+        $codeSearchSpec->severity =
+        4;
+
+        $codeSearchSpec->title =
+        'CBSitePreferences::getYouTubeChannelID()';
+
+        array_push(
+            $searches,
+            $codeSearchSpec
+        );
+
+
+
+        // CBSitePreferences_youtubeAPIKey
+
+        $codeSearchSpec =
+        CBModel::createSpec(
+            'CBCodeSearch',
+            'a43c9470bb1e27f393c6f3c7bd06725aa6770395'
+        );
+
+        CBCodeSearch::setNoticeVersion(
+            $codeSearchSpec,
+            '2022_06_28_1656428227'
+        );
+
+        CBCodeSearch::setWarningVersion(
+            $codeSearchSpec,
+            '2022_06_28_1656428228'
+        );
+
+        $codeSearchSpec->cbmessage =
+        <<<EOT
+
+            Use a CB_YouTubeChannel model.
+
+        EOT;
+
+        $codeSearchSpec->regex =
+        '\bCBSitePreferences_youtubeAPIKey\b';
+
+        $codeSearchSpec->severity =
+        4;
+
+        $codeSearchSpec->title =
+        'CBSitePreferences_youtubeAPIKey';
+
+        array_push(
+            $searches,
+            $codeSearchSpec
+        );
+
+
+
+        // CBSitePreferences_youtubeChannelID
+
+        $codeSearchSpec =
+        CBModel::createSpec(
+            'CBCodeSearch',
+            '5dd1354973659c53aab45f7199c520441396ac97'
+        );
+
+        CBCodeSearch::setNoticeVersion(
+            $codeSearchSpec,
+            '2022_06_28_1656428356'
+        );
+
+        CBCodeSearch::setWarningVersion(
+            $codeSearchSpec,
+            '2022_06_28_1656428357'
+        );
+
+        $codeSearchSpec->cbmessage =
+        <<<EOT
+
+            Use a CB_YouTubeChannel model.
+
+        EOT;
+
+        $codeSearchSpec->regex =
+        '\bCBSitePreferences_youtubeChannelID\b';
+
+        $codeSearchSpec->severity =
+        4;
+
+        $codeSearchSpec->title =
+        'CBSitePreferences_youtubeChannelID';
+
+        array_push(
+            $searches,
+            $codeSearchSpec
+        );
+
+
+
+        return $searches;
+    }
+    // CBCodeAdmin_searches()
+
+
+
+    // -- functions
+
+
+
     /**
      * return [string]
      */
