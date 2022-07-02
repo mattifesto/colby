@@ -358,6 +358,53 @@ CBTest
 
 
     /**
+     * @param mixed $actualResult
+     * @param mixed $expectedResult
+     *
+     * @return string
+     */
+    static function
+    generateTestResultMismatchCBMessage(
+        $actualResult,
+        $expectedResult
+    ): string
+    {
+        $actualResultAsJSONAsMessage =
+        CBMessageMarkup::stringToMarkup(
+            CBConvert::valueToPrettyJSON(
+                $actualResult
+            )
+        );
+
+        $expectedResultAsJSONAsMessage =
+        CBMessageMarkup::stringToMarkup(
+            CBConvert::valueToPrettyJSON(
+                $expectedResult
+            )
+        );
+
+        $cbmessage =
+        <<<EOT
+
+            (actual result (strong))
+
+            --- pre\n{$actualResultAsJSONAsMessage}
+            ---
+
+            (expected result (strong))
+
+            --- pre\n{$expectedResultAsJSONAsMessage}
+            ---
+
+        EOT;
+
+        return $cbmessage;
+    }
+    // generateTestResultMismatchCBMessage()
+
+
+
+    /**
      * @return CBID
      *
      *      You can and should use this CBID to create a temporary model during
