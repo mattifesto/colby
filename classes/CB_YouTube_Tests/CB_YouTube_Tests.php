@@ -44,7 +44,7 @@ CB_YouTube_Tests {
 
         $cbmessage = <<<EOT
 
-        Succeded
+        Succeeded
 
         --- pre\n{$valueAsMessage}
         ---
