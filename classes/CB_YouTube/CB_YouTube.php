@@ -288,4 +288,38 @@ CB_YouTube {
     }
     /* fetchYouTubeCredentials() */
 
+
+
+    /**
+     * @param string $youtubeAPIKey
+     * @param string $youtubeChannelID
+     *
+     * @return object
+     */
+    static function
+    fetchStatistics(
+        string $youtubeAPIKey,
+        string $youtubeChannelID
+    ): stdClass
+    {
+        $statistics =
+        CB_YouTube::call(
+            'channels',
+            (object)
+            [
+                'id' =>
+                $youtubeChannelID,
+
+                'key' =>
+                $youtubeAPIKey,
+
+                'part' =>
+                'statistics',
+            ]
+        );
+
+        return $statistics;
+    }
+    // fetchStatistics()
+
 }
