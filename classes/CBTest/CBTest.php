@@ -916,6 +916,23 @@ CBTest
     {
         try
         {
+            if (
+                CBTest::$isInTestingMode ===
+                true
+            ) {
+                throw
+                new CBException(
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        CBTest::runInTestingMode() has been called recursively
+                        which is not supported.
+
+                    EOT),
+                    '',
+                    'cc918313aa502b3d9c32171090ff9487ae825c56'
+                );
+            }
+
             CBTest::$isInTestingMode =
             true;
 
