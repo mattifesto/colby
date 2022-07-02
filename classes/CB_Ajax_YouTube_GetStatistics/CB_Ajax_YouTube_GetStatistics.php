@@ -17,46 +17,60 @@ CB_Ajax_YouTube_GetStatistics
     CBAjax_execute(
         stdClass $executorArguments,
         ?string $callingUserModelCBID = null
-    ): ?stdClass
+    ): array
     {
-        $youtubeChannelID =
-        CBSitePreferences::getYouTubeChannelID(
-            CBSitePreferences::model()
+        $youtubeChannelModelCBID =
+        CBModel::valueAsCBID(
+            $executorArguments,
+            'CB_Ajax_YouTube_GetStatistics_youtubeChannelModelCBID_parameter'
         );
 
         if (
-            $youtubeChannelID ===
-            ''
+            $youtubeChannelModelCBID ===
+            null
         ) {
-            return null;
+            throw
+            new CBExceptionWithValue(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    The value of the
+                    CB_Ajax_YouTube_GetStatistics_youtubeChannelModelCBID_parameter
+                    is not a valid CBID.
+
+                EOT),
+                $executorArguments,
+                '3186ed4802ae8bfc4f4935570e81fe42e90fd9d1'
+            );
         }
 
-        $youtubeAPIKey =
-        CBSitePreferences::getYouTubeAPIKey(
-            CBSitePreferences::model()
+        $associations =
+        CBModelAssociations::fetchModelAssociationsByFirstCBIDAndAssociationKey(
+            $youtubeChannelModelCBID,
+            'CB_YouTubeStatistics_association',
+            'descending',
+            100
         );
 
-        if (
-            $youtubeAPIKey ===
-            ''
-        ) {
-            return null;
-        }
+        $youtubeStatisticsModelCBIDs =
+        array_map(
+            function (
+                $association
+            ): string
+            {
+                $youtubeStatisticsModelCBID =
+                CB_ModelAssociation::getSecondCBID(
+                    $association
+                );
+
+                return $youtubeStatisticsModelCBID;
+            },
+            $associations
+        );
 
         $returnValue =
-        CB_YouTube::call(
-            'channels',
-            (object)
-            [
-                'id' =>
-                $youtubeChannelID,
-
-                'key' =>
-                $youtubeAPIKey,
-
-                'part' =>
-                'statistics'
-            ]
+        CBModels::fetchModelsByID2(
+            $youtubeStatisticsModelCBIDs,
+            true /* maintain positions */
         );
 
         return $returnValue;
