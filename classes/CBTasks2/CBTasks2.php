@@ -364,6 +364,56 @@ final class CBTasks2 {
 
 
     /**
+     * @return [object]
+     */
+    static function
+    fetchScheduledTasks(
+    ): array
+    {
+        $scheduledState = 0;
+
+        $SQL =
+        <<<EOT
+
+            SELECT
+
+            LOWER(HEX(ID)) AS
+            CBTasks2_fetchScheduledTasks_CBID,
+
+            className AS
+            CBTasks2_fetchScheduledTasks_className,
+
+            priority AS
+            CBTasks2_fetchScheduledTasks_priority,
+
+            timestamp AS
+            CBTasks2_fetchScheduledTasks_timestamp
+
+            FROM
+            CBTasks2
+
+            WHERE
+            state =
+            {$scheduledState}
+
+            ORDER BY
+            timestamp ASC,
+            priority ASC
+
+        EOT;
+
+        $sceduledTasks =
+        CBDB::SQLToObjects(
+            $SQL
+        );
+
+        return $sceduledTasks;
+    }
+    // fetchScheduledTasks()
+
+
+
+    /**
      * @param object $args
      *
      *      {
