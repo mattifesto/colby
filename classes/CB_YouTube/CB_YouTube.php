@@ -3,6 +3,55 @@
 final class
 CB_YouTube {
 
+    // -- CBCodeAdmin interfaces
+
+
+
+    /**
+     * @return object
+     */
+    static function
+    CBCodeAdmin_searches(
+    ): stdClass
+    {
+        $codeSearchSpec =
+        CBModel::createSpec(
+            'CBCodeSearch',
+            '8f3b4f6847045f6202d16f92dfd047840b75ea52'
+        );
+
+        CBCodeSearch::setNoticeVersion(
+            $codeSearchSpec,
+            '2022_07_02_1656783035'
+        );
+
+        CBCodeSearch::setWarningVersion(
+            $codeSearchSpec,
+            '2022_07_02_1656783036'
+        );
+
+        $codeSearchSpec->cbmessage =
+        <<<EOT
+
+            YouTube channel data is now stored in CB_YouTubeChannel models.
+
+        EOT;
+
+        $codeSearchSpec->regex =
+        '\bCB_YouTube::fetchCredentials\b';
+
+        $codeSearchSpec->severity =
+        4;
+
+        $codeSearchSpec->title =
+        'CB_YouTube::fetchCredentials()';
+
+        return $codeSearchSpec;
+    }
+    // CBCodeAdmin_searches()
+
+
+
     /* -- functions -- */
 
 
@@ -189,6 +238,12 @@ CB_YouTube {
 
 
     /**
+     * @deprecated 2022_06_13
+     *
+     *      This function fetches the api key and channel id from the site
+     *      preferences model. These are now stored in a CB_YouTubeChannel
+     *      model.
+     *
      * @return object|null
      */
     static function
