@@ -57,9 +57,35 @@ CBTest
             ) {
                 CBLog::bufferStart();
 
-                $result = call_user_func(
+                $result =
+                call_user_func(
                     $functionName
                 );
+
+                /**
+                 * @NOTE 2022_06_18
+                 *
+                 *      A null return value is now interpreted as a successful
+                 *      result. This change was made because most tests were
+                 *      returning the exact same value which was wasted code.
+                 *
+                 *      It is now also preferred for test to throw exceptions
+                 *      when a test fails instead of returning an object
+                 *      reporting failure.
+                 *
+                 *      If a test doesn't have anything notable to return it can
+                 *      just have a void return type.
+                 */
+                if (
+                    $result === null
+                ) {
+                    $result =
+                    (object)
+                    [
+                        'succeeded' =>
+                        true,
+                    ];
+                }
 
                 $testLogEntries = CBLog::bufferContents();
 
