@@ -21,7 +21,8 @@ final class CBTasks2Admin {
     static function CBAdmin_menuNamePath(): array {
         return [
             'general',
-            'tasks'
+            'CB_Menu_Tasks_generalMenuItem_tasks',
+            'CBTasks2Admin_tasksMenuItem_status',
         ];
     }
 
@@ -86,42 +87,99 @@ final class CBTasks2Admin {
 
 
 
-    /* -- CBInstall interfaces -- -- -- -- -- */
+    // -- CBInstall interfaces
 
 
 
     /**
      * @return void
      */
-    static function CBInstall_install(): void {
-        $spec = CBModels::fetchSpecByID(
-            CBGeneralAdminMenu::getModelID()
+    static function
+    CBInstall_install(
+    ): void
+    {
+        // tasks menu, tasks status menu item
+
+        $tasksStatusMenuItemSpec =
+        CBModel::createSpec(
+            'CBMenuItem'
         );
 
-        $spec->items[] = (object)[
-            'className' => 'CBMenuItem',
-            'name' => 'tasks',
-            'text' => 'Tasks',
-            'URL' => '/admin/?c=CBTasks2Admin',
-        ];
+        CBMenuItem::setName(
+            $tasksStatusMenuItemSpec,
+            'CBTasks2Admin_tasksMenuItem_status'
+        );
+
+        CBMenuItem::setText(
+            $tasksStatusMenuItemSpec,
+            'Status'
+        );
+
+        CBMenuItem::setURL(
+            $tasksStatusMenuItemSpec,
+            CBAdmin::getAdminPageURL(
+                'CBTasks2Admin'
+            )
+        );
+
+
+
+        // tasks menu
+
+        $tasksMenuModelUpdater =
+        new CBModelUpdater(
+            CB_Menu_Tasks::getModelCBID()
+        );
+
+        $tasksMenuSpec =
+        $tasksMenuModelUpdater->getSpec();
+
+        $tasksMenuItems =
+        CBMenu::getMenuItems(
+            $tasksMenuSpec
+        );
+
+        array_push(
+            $tasksMenuItems,
+            $tasksStatusMenuItemSpec
+        );
+
+        CBMenu::setMenuItems(
+            $tasksMenuSpec,
+            $tasksMenuItems
+        );
+
+
+
+        // save
 
         CBDB::transaction(
-            function () use ($spec) {
-                CBModels::save($spec);
+            function () use (
+                $tasksMenuModelUpdater
+            ): void
+            {
+                $tasksMenuModelUpdater->save2();
             }
         );
     }
-    /* CBInstall_install() */
+    // CBInstall_install()
 
 
 
     /**
      * @return [string]
      */
-    static function CBInstall_requiredClassNames(): array {
-        return [
-            'CBGeneralAdminMenu',
+    static function
+    CBInstall_requiredClassNames(
+    ): array
+    {
+        $requiredClassNames =
+        [
+            'CB_Menu_Tasks'
         ];
+
+        return $requiredClassNames;
     }
+    // CBInstall_requiredClassNames()
 
 }
