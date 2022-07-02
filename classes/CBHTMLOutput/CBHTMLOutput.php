@@ -120,7 +120,7 @@ CBHTMLOutput {
 
         return $codeSearchSpec;
     }
-    /* CBCodeAdmin_searches() */
+    // CBCodeAdmin_searches()
 
 
 
