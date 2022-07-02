@@ -189,6 +189,14 @@ CB_YouTube {
 
 
     /**
+     * This function fetches a list of recent uploads for a YouTube channel.
+     *
+     * @TODO 2022_06_13
+     *
+     *      This function should have a channel ID and API key parameters. This
+     *      change can occur as soon as it's needed, but it's being triaged at
+     *      this time.
+     *
      * @return [object]|null
      */
     static function
