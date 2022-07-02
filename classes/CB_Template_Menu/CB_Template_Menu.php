@@ -17,8 +17,6 @@ CB_Template_Menu
         CBModelTemplateCatalog::install(
             'CB_Template_Menu'
         );
-
-        error_log(__CLASS__);
     }
 
 
