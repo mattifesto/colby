@@ -185,6 +185,51 @@ CBTest
 
 
 
+    // -- CBCodeAdmin interfaces
+
+
+
+    /**
+     * @return object
+     */
+    static function
+    CBCodeAdmin_searches(
+    ): stdClass
+    {
+        $codeSearchSpec =
+        CBModel::createSpec(
+            'CBCodeSearch',
+            '6bd02f4e742e76dbdbeef02ea84f53fa6aa26076'
+        );
+
+        CBCodeSearch::setNoticeVersion(
+            $codeSearchSpec,
+            '2022_07_02_1656723320'
+        );
+
+        $codeSearchSpec->cbmessage =
+        <<<EOT
+
+            Throw and exception and use
+            CBTest::generateTestResultMismatchCBMessage().
+
+        EOT;
+
+        $codeSearchSpec->regex =
+        '\bCBTest::resultMismatchFailure\b';
+
+        $codeSearchSpec->severity =
+        5;
+
+        $codeSearchSpec->title =
+        'CBTest::resultMismatchFailure()';
+
+        return $codeSearchSpec;
+    }
+    // CBCodeAdmin_searches()
+
+
+
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
 
@@ -683,6 +728,14 @@ CBTest
 
 
     /**
+     * @deprecated 2022_06_18
+     *
+     *      Instead of using this function you should throw an exception when a
+     *      test fails. Use the function
+     *      CBTest::generateTestResultMismatchCBMessage() to create the
+     *      cbmessage for the exception. CB_Tests_YouTubeStatistics was the
+     *      first class to use this method and can be used as a reference.
+     *
      * @param string $testTitle
      *
      *      The test function name and class name will be added by the test
