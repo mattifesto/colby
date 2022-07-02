@@ -32,12 +32,18 @@ CB_CBAdmin_Social {
     }
     /* CBAdmin_menuNamePath() */
 
+
+
     /**
      * @return void
      */
     static function
     CBAdmin_render(
-    ): void {
+    ): void
+    {
+        CBHTMLOutput::pageInformation()->title =
+        'Social';
+
         ?>
 
         <div class="CB_CBAdmin_Social_element"></div>
@@ -57,11 +63,14 @@ CB_CBAdmin_Social {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
-            Colby::flexpath(
+    ): array
+    {
+        return
+        [
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.56.js',
+                '2022_07_02_1656798521',
+                'js',
                 cbsysurl()
             ),
         ];
@@ -71,16 +80,78 @@ CB_CBAdmin_Social {
 
 
     /**
+     * @return [[<key>, <value>]]
+     */
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array
+    {
+        $youtubeChannelModels =
+        CBModels::fetchModelsByClassName(
+            'CB_YouTubeChannel'
+        );
+
+        $youtubeChannels =
+        array_map(
+            function (
+                $youtubeChannelModel
+            ): stdClass
+            {
+                $title =
+                CBModel::getTitle(
+                    $youtubeChannelModel
+                );
+
+                $cbid =
+                CBModel::getCBID(
+                    $youtubeChannelModel
+                );
+
+                $returnValue =
+                (object)
+                [
+                    'CB_CBAdmin_Social_YouTubeChannel_title_property' =>
+                    $title,
+
+                    'CB_CBAdmin_Social_YouTubeChannel_cbid_property' =>
+                    $cbid,
+                ];
+
+                return $returnValue;
+            },
+            $youtubeChannelModels
+        );
+
+        $youtubeChannels =
+        array_values(
+            $youtubeChannels
+        );
+
+        return
+        [
+            [
+                'CB_CBAdmin_Social_youtubeChannels_jsvariable',
+                $youtubeChannels,
+            ],
+        ];
+    }
+    // CBHTMLOutput_JavaScriptVariables()
+
+
+
+    /**
      * @return [string]
      */
     static function
     CBHTMLOutput_requiredClassNames(
-    ): array {
-        return [
-            'CB_UI_KeyValue',
+    ): array
+    {
+        return
+        [
             'CBAjax',
             'CBErrorHandler',
             'CBModel',
+            'Colby',
         ];
     }
     /* CBHTMLOutput_requiredClassNames() */

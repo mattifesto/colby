@@ -1,8 +1,10 @@
 /* global
-    CB_UI_KeyValue,
     CBAjax,
     CBErrorHandler,
     CBModel,
+    Colby,
+
+    CB_CBAdmin_Social_youtubeChannels_jsvariable,
 */
 
 
@@ -45,56 +47,165 @@
             "div"
         );
 
-        element.className = "CBStatusAdminPage_YouTubeStatus_element";
+        element.className =
+        "CBStatusAdminPage_YouTubeStatus_element";
 
         (async function () {
             try {
-                let statistics = await CBAjax.call2(
-                    'CB_Ajax_YouTube_GetStatistics'
-                );
+                let youtubeChannelCount =
+                CB_CBAdmin_Social_youtubeChannels_jsvariable.length;
 
-                if (statistics === null) {
-                    return;
+                for (
+                    let youtubeChannelIndex = 0;
+                    youtubeChannelIndex < youtubeChannelCount;
+                    youtubeChannelIndex += 1
+                ) {
+                    let youtubeChannel =
+                    CB_CBAdmin_Social_youtubeChannels_jsvariable[
+                        youtubeChannelIndex
+                    ];
+
+                    let youtubeChannelModelCBID =
+                    CBModel.valueAsCBID(
+                        youtubeChannel,
+                        'CB_CBAdmin_Social_YouTubeChannel_cbid_property'
+                    );
+
+
+
+                    let youtubeChannelModelTitle =
+                    CBModel.valueToString(
+                        youtubeChannel,
+                        'CB_CBAdmin_Social_YouTubeChannel_title_property'
+                    );
+
+                    let titleElement =
+                    document.createElement(
+                        "h1"
+                    );
+
+                    element.append(
+                        titleElement
+                    );
+
+                    titleElement.textContent =
+                    youtubeChannelModelTitle;
+
+
+
+                    let arrayOfYouTubeStatisticsModels =
+                    await
+                    CBAjax.call2(
+                        'CB_Ajax_YouTube_GetStatistics',
+                        {
+                            'CB_Ajax_YouTube_GetStatistics_youtubeChannelModelCBID_parameter':
+                            youtubeChannelModelCBID,
+                        }
+                    );
+
+                    let arrayOfYouTubeStatisticsModelsLength =
+                    arrayOfYouTubeStatisticsModels.length;
+
+                    for (
+                        let youtubeStatisticsModelIndex =
+                        0;
+
+                        youtubeStatisticsModelIndex <
+                        arrayOfYouTubeStatisticsModelsLength;
+
+                        youtubeStatisticsModelIndex++
+                    ) {
+                        let youtubeStatisticsModel =
+                        arrayOfYouTubeStatisticsModels[
+                            youtubeStatisticsModelIndex
+                        ];
+
+
+
+                        let statisticsContainerElement =
+                        document.createElement(
+                            "div"
+                        );
+
+                        element.append(
+                            statisticsContainerElement
+                        );
+
+                        statisticsContainerElement.style.padding =
+                        "10px";
+
+
+
+                        let viewCount =
+                        CBModel.valueAsInt(
+                            youtubeStatisticsModel,
+                            "CB_YouTubeStatistics_statistics_property." +
+                            "items.[0].statistics.viewCount"
+                        );
+
+                        let subscriberCount =
+                        CBModel.valueAsInt(
+                            youtubeStatisticsModel,
+                            "CB_YouTubeStatistics_statistics_property." +
+                            "items.[0].statistics.subscriberCount"
+                        );
+
+                        let videoCount =
+                        CBModel.valueAsInt(
+                            youtubeStatisticsModel,
+                            "CB_YouTubeStatistics_statistics_property." +
+                            "items.[0].statistics.videoCount"
+                        );
+
+                        let textElement =
+                        document.createElement(
+                            "div"
+                        );
+
+                        statisticsContainerElement.append(
+                            textElement
+                        );
+
+                        textElement.textContent =
+                        `
+                            Subscribers: ${subscriberCount}
+                            Views: ${viewCount}
+                            Videos: ${videoCount}
+                        `;
+
+                        let unixTimestamp =
+                        CBModel.valueAsInt(
+                            youtubeStatisticsModel,
+                            "CB_YouTubeStatistics_cbtimestamp_property." +
+                            "CB_Timestamp_unixTimestamp_property"
+                        );
+
+                        let timeElement =
+                        Colby.unixTimestampToElement(
+                            unixTimestamp,
+                            undefined,
+                            "Colby_time_element_style_compact"
+                        );
+
+                        timeElement.style.color =
+                        "var(--CBTextColor3)";
+
+                        timeElement.style.fontSize =
+                        "80%";
+
+                        statisticsContainerElement.append(
+                            timeElement
+                        );
+                    }
+                    // for statistics
+
                 }
+                // for channel
 
-                let viewCount = CBModel.valueAsInt(
-                    statistics,
-                    "items.[0].statistics.viewCount"
-                );
+            }
+            // try
 
-                let subscriberCount = CBModel.valueAsInt(
-                    statistics,
-                    "items.[0].statistics.subscriberCount"
-                );
-
-                let viewsKeyValue = CB_UI_KeyValue.create();
-
-                viewsKeyValue.CB_UI_KeyValue_setKey(
-                    "YouTube Views"
-                );
-
-                viewsKeyValue.CB_UI_KeyValue_setValue(
-                    viewCount
-                );
-
-                element.append(
-                    viewsKeyValue.CB_UI_KeyValue_getElement()
-                );
-
-                let subscribersKeyValue = CB_UI_KeyValue.create();
-
-                subscribersKeyValue.CB_UI_KeyValue_setKey(
-                    "YouTube Subscribers"
-                );
-
-                subscribersKeyValue.CB_UI_KeyValue_setValue(
-                    subscriberCount
-                );
-
-                element.append(
-                    subscribersKeyValue.CB_UI_KeyValue_getElement()
-                );
-            } catch (
+            catch (
                 error
             ) {
                 CBErrorHandler.report(
