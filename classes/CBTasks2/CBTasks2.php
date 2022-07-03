@@ -378,13 +378,13 @@ final class CBTasks2 {
             SELECT
 
             LOWER(HEX(ID)) AS
-            CBTasks2_fetchScheduledTasks_CBID,
+            CBTasks2_fetchScheduledTasks_targetModelCBID,
 
             className AS
-            CBTasks2_fetchScheduledTasks_className,
+            CBTasks2_fetchScheduledTasks_taskClassName,
 
             priority AS
-            CBTasks2_fetchScheduledTasks_priority,
+            CBTasks2_fetchScheduledTasks_taskPriority,
 
             timestamp AS
             CBTasks2_fetchScheduledTasks_timestamp
