@@ -12,8 +12,15 @@ CB_YouTube {
      */
     static function
     CBCodeAdmin_searches(
-    ): stdClass
+    ): array
     {
+        $searches =
+        [];
+
+
+
+        // CB_YouTube::fetchCredentials()
+
         $codeSearchSpec =
         CBModel::createSpec(
             'CBCodeSearch',
@@ -46,7 +53,55 @@ CB_YouTube {
         $codeSearchSpec->title =
         'CB_YouTube::fetchCredentials()';
 
-        return $codeSearchSpec;
+        array_push(
+            $searches,
+            $codeSearchSpec
+        );
+
+
+
+        // CB_YouTube::fetchRecentUploads()
+
+        $codeSearchSpec =
+        CBModel::createSpec(
+            'CBCodeSearch',
+            'ff3f685a3061475f7067c2fdc8d310b334d21bf3'
+        );
+
+        CBCodeSearch::setNoticeVersion(
+            $codeSearchSpec,
+            '2022_07_03_1656860013'
+        );
+
+        CBCodeSearch::setWarningVersion(
+            $codeSearchSpec,
+            '2022_07_03_1656860014'
+        );
+
+        $codeSearchSpec->cbmessage =
+        <<<EOT
+
+            Use CB_YouTube::fetchRecentUploads2()
+
+        EOT;
+
+        $codeSearchSpec->regex =
+        '\bCB_YouTube::fetchRecentUploads\b';
+
+        $codeSearchSpec->severity =
+        4;
+
+        $codeSearchSpec->title =
+        'CB_YouTube::fetchRecentUploads()';
+
+        array_push(
+            $searches,
+            $codeSearchSpec
+        );
+
+
+
+        return $searches;
     }
     // CBCodeAdmin_searches()
 
