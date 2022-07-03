@@ -191,18 +191,18 @@ CB_YouTube {
     /**
      * This function fetches a list of recent uploads for a YouTube channel.
      *
-     * @TODO 2022_06_13
+     * @deprecated 2022_07_03
      *
-     *      This function should have a channel ID and API key parameters. This
-     *      change can occur as soon as it's needed, but it's being triaged at
-     *      this time.
+     *      Use CB_YouTube::fetchRecentUploads2()
      *
      * @return [object]|null
      */
     static function
     fetchRecentUploads(
-    ): ?array {
-        $youtubeCredentials = CB_YouTube::fetchCredentials();
+    ): ?array
+    {
+        $youtubeCredentials =
+        CB_YouTube::fetchCredentials();
 
         if (
             $youtubeCredentials === null
@@ -210,38 +210,82 @@ CB_YouTube {
             return null;
         }
 
-        $response = CB_YouTube::call(
+        $returnValue =
+        CB_YouTube::fetchRecentUploads2(
+            $youtubeCredentials->youtubeAPIKey,
+            $youtubeCredentials->youtubeChannelID
+        );
+
+        return $returnValue;
+    }
+    /* fetchRecentUploads() */
+
+
+
+    /**
+     * This function fetches a list of recent uploads for a YouTube channel.
+     *
+     * @param string $googleAPIKey
+     * @param string $youtubeChannelID
+     *
+     * @return [object]|null
+     */
+    static function
+    fetchRecentUploads2(
+        string $googleAPIKey,
+        string $youtubeChannelID
+    ): ?array
+    {
+        $response =
+        CB_YouTube::call(
             'channels',
-            (object)[
-                'id' => $youtubeCredentials->youtubeChannelID,
-                'key' => $youtubeCredentials->youtubeAPIKey,
-                'part' => 'contentDetails',
+            (object)
+            [
+                'id' =>
+                $youtubeChannelID,
+
+                'key' =>
+                $googleAPIKey,
+
+                'part' =>
+                'contentDetails',
             ]
         );
 
-        $uploadsPlaylistID = CBModel::valueToString(
+        $uploadsPlaylistID =
+        CBModel::valueToString(
             $response,
             'items.[0].contentDetails.relatedPlaylists.uploads'
         );
 
-        $response = CB_YouTube::call(
+        $response =
+        CB_YouTube::call(
             'playlistItems',
-            (object)[
-                'key' => $youtubeCredentials->youtubeAPIKey,
-                'maxResults' => 5,
-                'part' => 'snippet',
-                'playlistId' => $uploadsPlaylistID,
+            (object)
+            [
+                'key' =>
+                $googleAPIKey,
+
+                'maxResults' =>
+                5,
+
+                'part' =>
+                'snippet',
+
+                'playlistId' =>
+                $uploadsPlaylistID,
             ]
         );
 
-        $items = CBModel::valueAsArray(
+        $items =
+        CBModel::valueAsArray(
             $response,
             'items'
         );
 
         return $items;
     }
-    /* fetchRecentUploads() */
+    /* fetchRecentUploads2() */
 
 
 
