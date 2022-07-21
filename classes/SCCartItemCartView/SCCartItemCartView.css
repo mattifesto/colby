@@ -3,12 +3,34 @@
     display: none;
 }
 
+
+
 .SCCartItemCartView_itemIsNotAvalailable
 .SCCartItemCartView_increaseQuantityButton {
     display: none;
 }
 
+
+
 .SCCartItemCartView_itemIsNotAvalailable
 .SCCartItemCartView_decreaseQuantityButton {
     display: none;
+}
+
+
+
+.SCCartItemCartView_imageSectionItem
+.CBArtworkElement
+{
+    background-color:
+    var(--CBBackgroundOffsetColor);
+
+    border-color:
+    var(--CB_UI_borderColor);
+
+    border-style:
+    solid;
+
+    border-width:
+    1px;
 }

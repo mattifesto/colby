@@ -432,8 +432,6 @@ var SCCartItemCartView = {
                 }
             );
 
-            artworkElement.classList.add("CBBackgroundOffsetColor");
-
             sectionItemElement.appendChild(artworkElement);
         } else {
             sectionItemElement.style.display = "none";

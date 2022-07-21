@@ -11,7 +11,12 @@ final class SCCartItemCartView {
      */
     static function CBHTMLOutput_CSSURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v140.css', scliburl()),
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2022_07_21_1658420444',
+                'css',
+                cbsysurl()
+            ),
         ];
     }
 
@@ -22,7 +27,12 @@ final class SCCartItemCartView {
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
         return [
-            Colby::flexpath(__CLASS__, 'v654.js', scliburl()),
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2022_07_21_1658420445',
+                'js',
+                cbsysurl()
+            ),
         ];
     }
 
