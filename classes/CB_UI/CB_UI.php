@@ -28,9 +28,10 @@ CB_UI
     {
         return
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v2022.05.26.1653599619.css',
+                '2022_07_21_1658420826',
+                'css',
                 cbsysurl()
             ),
         ];
