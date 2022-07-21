@@ -89,13 +89,15 @@ html
         hsl(0, 0%, 12%);
 
         --CB_UI_borderColor:
-        hsl(0, 0%, 20%);
+        hsla(0, 0%, 100%, 0.1);
 
         --CBBackgroundColor1: hsl(0, 0%, 10%);
         --CBBackgroundColor2: hsl(0, 0%, 15%);
         --CBBackgroundColor3: hsl(0, 0%, 20%);
 
-        --CBBackgroundOffsetColor: hsl(0, 0%, 15%);
+        --CBBackgroundOffsetColor:
+        hsla(0, 0%, 100%, 0.05);
+
         --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.05);
 
         --CBTextColor1: hsla(0, 0%, 100%, 0.9);
@@ -135,13 +137,15 @@ html
     hsl(0, 0%, 100%);
 
     --CB_UI_borderColor:
-    hsl(0, 0%, 94%);
+    hsla(0, 0%, 0%, 0.1);
 
     --CBBackgroundColor1: hsl(0, 0%, 100%);
     --CBBackgroundColor2: hsl(0, 0%, 95%);
     --CBBackgroundColor3: hsl(0, 0%, 90%);
 
-    --CBBackgroundOffsetColor: hsl(0, 0%, 97%);
+    --CBBackgroundOffsetColor:
+    hsla(0, 0%, 0%, 0.05);
+
     --CBBackgroundColorForPanel: hsla(0, 0%, 100%, 0.8);
 
     --CBTextColor1: hsla(0, 0%, 0%, 0.9);

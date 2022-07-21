@@ -124,9 +124,10 @@ CBEqualizePageSettingsPart
     ): void
     {
         $CSSURL =
-        Colby::flexpath(
+        CBLibrary::buildLibraryClassFilePath(
             __CLASS__,
-            '2022_06_21_1655784419.css',
+            '2022_07_21_1658421073',
+            'css',
             cbsysurl()
         );
 
