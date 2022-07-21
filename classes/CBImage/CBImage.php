@@ -490,6 +490,60 @@ CBImage
 
 
     /**
+     * @param float $maximumDisplayWidthInCSSPixels
+     * @param float $maximumDisplayHeightInCSSPixels
+     * @param float $aspectRatioWidth
+     * @param float $aspectRatioHeight
+     *
+     * @return float
+     */
+    static function
+    calculateFloatingPointMaximumImageStyleWidthInCSSPixels(
+        float $maximumDisplayWidthInCSSPixels,
+        float $maximumDisplayHeightInCSSPixels,
+        float $aspectRatioWidth,
+        float $aspectRatioHeight
+    ): float
+    {
+        /**
+         * If the image were displayed at its maximum height, what would the
+         * width be.
+         */
+
+        $widthInCSSPixelsAtMaximumHeight =
+        $maximumDisplayHeightInCSSPixels *
+        (
+            $aspectRatioWidth /
+            $aspectRatioHeight
+        );
+
+        $maximumImageStyleWidthInCSSPixels =
+        min(
+            $widthInCSSPixelsAtMaximumHeight,
+            $maximumDisplayWidthInCSSPixels
+        );
+
+        return $maximumImageStyleWidthInCSSPixels;
+    }
+    // calculateFloatingPointMaximumImageStyleWidthInCSSPixels()
+
+
+
+    /**
+     * @NOTE 2022_07_11
+     *
+     *      This function may be deprecated in the future because it returns an
+     *      integer. Modern browsers can handle fractional pixels and in certain
+     *      cases a fractional return value avoids visual issues related to the
+     *      image not taking up the full height that is should.
+     *
+     *      Use calculateFloatingPointMaximumImageStyleWidthInCSSPixels() first
+     *      and if that doesn't work for some reason, document the reason here
+     *      which will be a reason not to deprecate this function.
+     *
+     *      If no reasons for this function are found, it will eventually be
+     *      deprecated.
+     *
      * @param int $maximumDisplayWidthInCSSPixels
      * @param int $maximumDisplayHeightInCSSPixels
      * @param int aspectRatioWidth
@@ -863,7 +917,7 @@ CBImage
         );
 
         $maximumImageStyleWidthInCSSPixels =
-        CBImage::calculateMaximumImageStyleWidthInCSSPixels(
+        CBImage::calculateFloatingPointMaximumImageStyleWidthInCSSPixels(
             $maximumDisplayWidthInCSSPixels,
             $maximumDisplayHeightInCSSPixels,
             $intrinsicImageWidth,
