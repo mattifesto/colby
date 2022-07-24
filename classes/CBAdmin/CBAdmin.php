@@ -48,9 +48,10 @@ CBAdmin
     {
         return
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v2022.05.03.1651603788.css',
+                '2022_07_24_1658632862',
+                'css',
                 cbsysurl()
             ),
         ];
