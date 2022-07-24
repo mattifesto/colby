@@ -404,25 +404,51 @@ CBSitePreferences {
         ];
 
 
-        /* image for icon */
 
-        $imageForIconSpec = CBModel::valueAsModel(
-            $spec,
-            'imageForIcon',
-            ['CBImage']
+        // icon image
+
+        $iconImageSpec =
+        CBSitePreferences::getIconImage(
+            $spec
         );
 
-        if ($imageForIconSpec) {
-            $model->imageForIcon = CBModel::build($imageForIconSpec);
+        if (
+            $iconImageSpec !== null
+        ) {
+            $iconImageModel =
+            CBModel::build(
+                $iconImageSpec
+            );
+
+            CBSitePreferences::setIconImage(
+                $model,
+                $iconImageModel
+            );
         }
 
 
-        CBSitePreferences::setHeaderImage(
-            $model,
-            CBSitePreferences::getHeaderImage(
-                $spec
-            )
+
+        // header image
+
+        $headerImageSpec =
+        CBSitePreferences::getHeaderImage(
+            $spec
         );
+
+        if (
+            $headerImageSpec !== null
+        ) {
+            $headerImageModel =
+            CBModel::build(
+                $headerImageSpec
+            );
+
+            CBSitePreferences::setHeaderImage(
+                $model,
+                $headerImageModel
+            );
+        }
+
 
 
         /* administrator emails */
@@ -831,6 +857,47 @@ CBSitePreferences {
         );
     }
     /* setHeaderImage() */
+
+
+
+    /**
+     * @param object $sitePreferencesModel
+     *
+     * @return object|null
+     */
+    static function
+    getIconImage(
+        stdClass $sitePreferencesModel
+    ): ?stdClass
+    {
+        $iconImageModel =
+        CBModel::valueAsModel(
+            $sitePreferencesModel,
+            'imageForIcon',
+            'CBImage'
+        );
+
+        return $iconImageModel;
+    }
+    // getIconImage()
+
+
+
+    /**
+     * @param object $sitePreferencesModel
+     * @param object $iconImageModel
+     *
+     * @return void
+     */
+    static function
+    setIconImage(
+        stdClass $sitePreferencesModel,
+        ?stdClass $iconImageModel
+    ): void {
+        $sitePreferencesModel->imageForIcon =
+        $iconImageModel;
+    }
+    // setIconImage()
 
 
 
