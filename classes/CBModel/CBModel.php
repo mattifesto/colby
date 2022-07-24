@@ -139,13 +139,17 @@ CBModel {
     static function
     getClassName(
         stdClass $model
-    ): string {
-        return CBModel::valueToString(
+    ): string
+    {
+        $className =
+        CBModel::valueAsName(
             $model,
             'className'
-        );
+        ) ?? '';
+
+        return $className;
     }
-    /* getClassName() */
+    // getClassName()
 
 
 
