@@ -213,45 +213,42 @@ CB_Username {
 
 
 
+    /**
+     * CB_Username models have been deprecated because the username is now
+     * stored inside the CBUser model. This function removes all CB_Username
+     * models and related assocations from the system.
+     *
+     * @return void
+     */
     static function
     CBInstall_configure(
-    ): void {
-        $usernameCBIDs = CBModels::fetchCBIDsByClassName(
+    ): void
+    {
+        $usernameCBIDs =
+        CBModels::fetchCBIDsByClassName(
             'CB_Username'
         );
 
         CBDB::transaction(
             function () use (
                 $usernameCBIDs
-            ) {
+            ): void
+            {
                 CBModels::deleteByID(
                     $usernameCBIDs
                 );
-
-                /**
-                 * @NOTE 2022_06_27
-                 *
-                 *      I noticed a bug today where there were associations left
-                 *      in the associations table with the
-                 *      CBUser_username_association association key. It looks
-                 *      like this was the eventually made the official
-                 *      association key while CBUser_to_CB_Username_association
-                 *      may have been used during development. Regardless, at
-                 *      this point, both should be completely removed.
-                 */
 
                 CBModelAssociations::delete(
                     null,
                     'CBUser_to_CB_Username_association'
                 );
-
-                CBModelAssociations::delete(
-                    null,
-                    'CBUser_username_association'
-                );
             }
         );
     }
+    // CBInstall_configure()
+
+
+
     /* -- CBModel interfaces -- */
 
 
@@ -336,7 +333,7 @@ CB_Username {
         $usernameModelCBID
     ): ?string {
         return CBModelAssociations::fetchSingularFirstCBID(
-            'CBUser_username_association',
+            'CBUser_to_CB_Username_association',
             $usernameModelCBID
         );
     }
@@ -357,7 +354,7 @@ CB_Username {
     ): ?string {
         return CBModelAssociations::fetchSingularSecondCBID(
             $userModelCBID,
-            'CBUser_username_association',
+            'CBUser_to_CB_Username_association',
         );
     }
     /* fetchUsernameCBIDByUserCBID() */
