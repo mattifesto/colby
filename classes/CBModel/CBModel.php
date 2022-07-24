@@ -159,12 +159,16 @@ CBModel {
     setClassName(
         stdClass $spec,
         string $className
-    ): void {
-        $classNameAsName = CBConvert::valueAsName(
+    ): void
+    {
+        $classNameAsName =
+        CBConvert::valueAsName(
             $className
         );
 
-        if ($classNameAsName === null) {
+        if (
+            $classNameAsName === null
+        ) {
             throw new CBExceptionWithValue(
                 'The class name must be a valid Colby name value.',
                 $className,
@@ -172,7 +176,8 @@ CBModel {
             );
         }
 
-        $spec->className = $className;
+        $spec->className =
+        $className;
     }
     /* setClassName() */
 
