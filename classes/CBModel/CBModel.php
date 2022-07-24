@@ -1252,7 +1252,8 @@ CBModel {
     static function
     upgrade(
         $originalSpec
-    ): stdClass {
+    ): stdClass
+    {
         if (
             CBConvert::valueAsModel(
                 $originalSpec
@@ -1298,19 +1299,18 @@ CBModel {
          *      its CBID instead of the root model CBID.
          */
 
-        {
-            if (
-                !empty(
-                    $originalCBID
-                )
-            ) {
-                CBID::push(
-                    $originalCBID
-                );
-            }
+        if (
+            $originalCBID !== null
+        ) {
+            CBID::push(
+                $originalCBID
+            );
         }
 
-        try {
+
+
+        try
+        {
             $upgradedSpec = CBModel::clone(
                 $originalSpec
             );
@@ -1371,30 +1371,32 @@ CBModel {
              *      The CBModel_versionDate_property value is only updated on
              *      root specs when every single model needs to be re-processed.
              *
-             * 2022_01_15 CBModel::toSearchText() no longer adds the model
-             * class name to the search text.
+             * 2022_01_15
+             *
+             *      CBModel::toSearchText() no longer adds the model class name
+             *      to the search text.
              **/
 
              if (
                  CBModel::$rootSpecCurrentlyBeingUpgraded === $originalSpec
              ) {
-                 $upgradedSpec->CBModel_versionDate_property = '2022_01_15';
+                 $upgradedSpec->CBModel_versionDate_property =
+                 '2022_01_15';
              }
-        } finally {
-            {
-                /**
-                 * @deprecated 2022_01_09
-                 *
-                 *      See comment above.
-                 */
+        }
 
-                if (
-                    !empty(
-                        $originalCBID
-                    )
-                ) {
-                    CBID::pop();
-                }
+        finally
+        {
+            /**
+             * @deprecated 2022_01_09
+             *
+             *      See comment above.
+             */
+
+            if (
+                $originalCBID !== null
+            ) {
+                CBID::pop();
             }
 
             if (
