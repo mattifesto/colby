@@ -911,36 +911,24 @@ CBModel {
 
 
             // CBID
-            
-            /**
-             * A model will always have the same CBID as its spec. A malformed
-             * CBID on the spec will cause an exception to be thrown.
-             */
-            $ID =
-            CBModel::valueAsID(
-                $spec,
-                'ID'
+
+            $CBID =
+            CBModel::getCBID(
+                $spec
             );
 
             if (
-                isset($spec->ID) &&
-                $ID === null
+                $CBID !== null
             ) {
-                throw new CBExceptionWithValue(
-                    (
-                        'This spec can\'t be built because it has an invalid ' .
-                        '"ID" property value.'
-                    ),
-                    $spec,
-                    '11759b8ba7d8ae54039371942c9b09e29cda59d6'
+                CBModel::setCBID(
+                    $model,
+                    $CBID
                 );
             }
 
-            if (
-                $ID !== null
-            ) {
-                $model->ID = $ID;
-            }
+
+
+            // title
 
             /**
              * @deprecated 2018_12_21
