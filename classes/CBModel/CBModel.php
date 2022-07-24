@@ -790,11 +790,15 @@ CBModel {
     static function
     build(
         stdClass $spec
-    ): stdClass {
+    ): stdClass
+    {
         static $staticRootSpec = null;
 
-        try {
-            if ($staticRootSpec === null) {
+        try
+        {
+            if (
+                $staticRootSpec === null
+            ) {
                 $staticRootSpec = $spec;
             }
 
@@ -803,7 +807,9 @@ CBModel {
                 'className'
             );
 
-            if ($className === null) {
+            if (
+                $className === null
+            ) {
                 throw new CBExceptionWithValue(
                     (
                         'This spec can\'t be built because it has an invalid ' .
@@ -814,7 +820,9 @@ CBModel {
                 );
             }
 
-            if (!class_exists($className)) {
+            if (
+                !class_exists($className)
+            ) {
                 throw new CBExceptionWithValue(
                     (
                         'This spec can\'t be built because a class ' .
@@ -825,18 +833,23 @@ CBModel {
                 );
             }
 
-            $buildInterfaceFunctionName = "{$className}::CBModel_build";
+            $buildInterfaceFunctionName =
+            "{$className}::CBModel_build";
 
             if (
                 is_callable(
                     $buildInterfaceFunctionName
                 )
             ) {
-                $model = call_user_func(
+                $model =
+                call_user_func(
                     $buildInterfaceFunctionName,
                     $spec
                 );
-            } else {
+            }
+
+            else
+            {
                 throw new CBExceptionWithValue(
                     CBConvert::stringToCleanLine(<<<EOT
 
@@ -872,16 +885,24 @@ CBModel {
              * should always be transferred by the build process, this function
              * is allowed to transfer the property for all models.
              */
-            $model->className = $className;
+            $model->className =
+            $className;
 
 
             /**
              * A model will always have the same CBID as its spec. A malformed
              * CBID on the spec will cause an exception to be thrown.
              */
-            $ID = CBModel::valueAsID($spec, 'ID');
+            $ID =
+            CBModel::valueAsID(
+                $spec,
+                'ID'
+            );
 
-            if (isset($spec->ID) && $ID === null) {
+            if (
+                isset($spec->ID) &&
+                $ID === null
+            ) {
                 throw new CBExceptionWithValue(
                     (
                         'This spec can\'t be built because it has an invalid ' .
@@ -892,7 +913,9 @@ CBModel {
                 );
             }
 
-            if ($ID !== null) {
+            if (
+                $ID !== null
+            ) {
                 $model->ID = $ID;
             }
 
@@ -904,13 +927,25 @@ CBModel {
              *      string property for this particular model. In the future the
              *      class will be responsible for building all model properties.
              */
-            if (!isset($model->title) && isset($spec->title)) {
-                $model->title = trim(
-                    CBModel::valueToString($spec, 'title')
+            if (
+                !isset($model->title) &&
+                isset($spec->title)
+            ) {
+                $model->title =
+                trim(
+                    CBModel::valueToString(
+                        $spec,
+                        'title'
+                        )
                 );
             }
-        } catch (Throwable $throwable) {
-            if ($staticRootSpec !== $spec) {
+        }
+
+        catch (Throwable $throwable)
+        {
+            if (
+                $staticRootSpec !== $spec
+            ) {
                 throw new CBExceptionWithValue(
                     'An exception was thrown while building this root spec.',
                     $staticRootSpec,
@@ -918,14 +953,23 @@ CBModel {
                     0,
                     $throwable
                 );
-            } else {
+            }
+
+            else
+            {
                 throw $throwable;
             }
-        } finally {
-            if ($staticRootSpec === $spec) {
+        }
+
+        finally
+        {
+            if (
+                $staticRootSpec === $spec
+            ) {
                 $staticRootSpec = null;
             }
         }
+
 
 
         /* done */
