@@ -111,8 +111,8 @@ CBUsers_Tests
                 'CBModel_versionDate_property' =>
                 '2022_01_15',
 
-                'CBUser_versionDate_property' =>
-                '2022_06_10_1654869456',
+                'CBModel_processVersionNumber_property' =>
+                '2022_07_24_1658674583',
             ],
             (object)
             [
@@ -131,8 +131,8 @@ CBUsers_Tests
                 'CBModel_versionDate_property' =>
                 '2022_01_15',
 
-                'CBUser_versionDate_property' =>
-                '2022_06_10_1654869456',
+                'CBModel_processVersionNumber_property' =>
+                '2022_07_24_1658674583',
             ],
             (object)
             [
@@ -151,8 +151,8 @@ CBUsers_Tests
                 'CBModel_versionDate_property' =>
                 '2022_01_15',
 
-                'CBUser_versionDate_property' =>
-                '2022_06_10_1654869456',
+                'CBModel_processVersionNumber_property' =>
+                '2022_07_24_1658674583',
             ],
         ];
 
