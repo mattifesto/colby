@@ -16,14 +16,15 @@ CB_CBView_MainHeader
     {
         return
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.61.4.css',
+                '2022_07_24_1658632627',
+                'css',
                 cbsysurl()
             ),
         ];
     }
-    /* CBHTMLOutput_CSSURLs() */
+    // CBHTMLOutput_CSSURLs()
 
 
 
@@ -124,9 +125,17 @@ CB_CBView_MainHeader
             $context
         );
 
+        $websiteIconImageModel =
+        CBSitePreferences::getIconImage(
+            CBSitePreferences::model()
+        );
+
         CB_CBView_MainHeader::renderItem(
             '🏠',
-            '/'
+            '/',
+            '', // CSS Class
+            null, // context
+            $websiteIconImageModel
         );
 
         CB_CBView_MainHeader::renderItem(
@@ -260,7 +269,8 @@ CB_CBView_MainHeader
         string $emoji,
         ?string $url,
         string $CSSClass = '',
-        ?string $context = null
+        ?string $context = null,
+        ?object $imageModel = null
     ): void {
         $emojiAsHTML =
         cbhtml(
@@ -271,6 +281,15 @@ CB_CBView_MainHeader
         [
             'CB_CBView_MainHeader_item'
         ];
+
+        if (
+            $imageModel === null
+        ) {
+            array_push(
+                $CSSClasses,
+                'CB_CBView_MainHeader_item_dropShadow'
+            );
+        }
 
         $CSSClass =
         CBConvert::valueAsName(
@@ -330,7 +349,30 @@ CB_CBView_MainHeader
         <<<EOT
 
             <{$tag} class="{$CSSClasses}" {$hrefAttribute}>
-                <div class="CB_CBView_MainHeader_icon">$emojiAsHTML</div>
+                <div class="CB_CBView_MainHeader_icon">
+
+        EOT;
+
+        if (
+            $imageModel !== null
+        ) {
+            CBImage::renderPictureElementWithImageInsideAspectRatioBox(
+                $imageModel,
+                'rw320',
+                32,
+                32
+            );
+        }
+
+        else
+        {
+            echo $emojiAsHTML;
+        }
+
+        echo
+        <<<EOT
+
+                </div>
             </{$tag}>
 
         EOT;

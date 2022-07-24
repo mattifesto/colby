@@ -42,26 +42,34 @@ a.CB_CBView_MainHeader_item:hover
 
 .CB_CBView_MainHeader_item
 {
+    display:
+    flex;
+
+    align-items:
+    center;
+
+    justify-content:
+    center;
+
     height:
     44px;
 
     width:
     44px;
 
+    text-decoration:
+    none;
+}
+
+
+
+.CB_CBView_MainHeader_item_dropShadow
+{
     filter:
     grayscale(100%)
     drop-shadow(
         0 0 1px hsla(0, 0%, 100%, 1)
     );
-
-    border-radius:
-    50%;
-
-    text-align:
-    center;
-
-    text-decoration:
-    none;
 }
 
 
