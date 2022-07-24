@@ -811,19 +811,25 @@ CBModel {
                 $staticRootSpec = $spec;
             }
 
-            $className = CBModel::valueAsName(
-                $spec,
-                'className'
+
+
+            // class name
+
+            $className =
+            CBModel::getClassName(
+                $spec
             );
 
             if (
-                $className === null
+                $className === ''
             ) {
                 throw new CBExceptionWithValue(
-                    (
-                        'This spec can\'t be built because it has an invalid ' .
-                        '"className" property value.'
-                    ),
+                    CBConvert::stringToCleanLine(<<< EOT
+
+                        This spec can't be built because it has an invalid class
+                        name.
+
+                    EOT),
                     $spec,
                     'd24a83a81c914e1a5b66eeede05a577c0c44bd57'
                 );
@@ -833,10 +839,12 @@ CBModel {
                 !class_exists($className)
             ) {
                 throw new CBExceptionWithValue(
-                    (
-                        'This spec can\'t be built because a class ' .
-                        "with the name \"{$className}\" doesn't exist."
-                    ),
+                    CBConvert::stringToCleanLine(<<< EOT
+
+                        This spec can't be built because a class with the name
+                        "${className}" doesn't exist.
+
+                    EOT),
                     $spec,
                     '0f170c152f54ebb97ecd2fb0a27055a096276d37'
                 );
@@ -894,10 +902,16 @@ CBModel {
              * should always be transferred by the build process, this function
              * is allowed to transfer the property for all models.
              */
-            $model->className =
-            $className;
+
+            CBModel::setClassName(
+                $model,
+                $className
+            );
 
 
+
+            // CBID
+            
             /**
              * A model will always have the same CBID as its spec. A malformed
              * CBID on the spec will cause an exception to be thrown.
