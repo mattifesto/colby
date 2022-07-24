@@ -987,6 +987,24 @@ CBModel {
 
 
 
+            // process version number
+
+            $processVersionNumber =
+            CBModel::getProcessVersionNumber(
+                $spec
+            );
+
+            if (
+                $processVersionNumber !== ''
+            ) {
+                CBModel::setProcessVersionNumber(
+                    $model,
+                    $processVersionNumber
+                );
+            }
+
+
+
             // title
 
             /**
