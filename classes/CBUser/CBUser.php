@@ -1119,6 +1119,19 @@ CBUser
 
 
         /**
+         * @deprecated 2022_07_24
+         *
+         *      The CBUser_versionDate_property has been replace with the
+         *      standard model process version number property.
+         */
+
+        unset(
+            $upgradedSpec->CBUser_versionDate_property
+        );
+
+
+
+        /**
          * The model version is updated when every single model with this class
          * name needs to be updated. Document the reason for each change in this
          * comment.
@@ -1132,17 +1145,24 @@ CBUser
          * 2022_06_10_1654869456
          *
          *      The search text has been updated.
+         *
+         * 2022_07_24_1658674583
+         *
+         *      Because of a bug, the username associations were being deleted
+         *      when a website was upgraded. Setting a new process version
+         *      number will restore the assocations.
          */
 
-        $upgradedSpec->CBUser_versionDate_property =
-        '2022_06_10_1654869456';
+        CBModel::setProcessVersionNumber(
+            $upgradedSpec,
+            '2022_07_24_1658674583'
+        );
 
 
 
-        /* done */
+        // done
 
-        return
-        $upgradedSpec;
+        return $upgradedSpec;
     }
     /* CBModel_upgrade() */
 
