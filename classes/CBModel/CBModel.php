@@ -188,6 +188,65 @@ CBModel {
 
 
     /**
+     * @NOTE 2022_07_24
+     *
+     *      This property was added today because it will be potentially set by
+     *      all models in the CBModel_upgrade() interface implementation when
+     *      the build or save process changes to make sure all models of that
+     *      class get updated.
+     *
+     *      Until now, clases were using their own custom properties but the
+     *      pattern is so common is should be made official and be documented.
+     *
+     *      Purpose:
+     *
+     *      When a spec is built and saved many side effects may occur.
+     *      Individual properties will be set on the model, associations may be
+     *      added or deleted, tasks may be scheduled.
+     *
+     *      When any of these processes change, all models will need to be
+     *      rebuilt and saved again. Setting this property to a new version
+     *      number in the CBModel_upgrade() interface implementation will force
+     *      all models of the class to be rebuilt and saved.
+     *
+     * @return string
+     */
+    static function
+    getProcessVersionNumber(
+        stdClass $model
+    ): string
+    {
+        $processVersionNumber =
+        CBModel::valueToString(
+            $model,
+            'CBModel_processVersionNumber_property'
+        );
+
+        return $processVersionNumber;
+    }
+    // getProcessVersionNumber()
+
+
+
+    /**
+     * @see getProcessVersionNumber() for more information
+     *
+     * @return string
+     */
+    static function
+    setProcessVersionNumber(
+        stdClass $model,
+        string $processVersionNumber
+    ): void
+    {
+        $model->CBModel_processVersionNumber_property =
+        $processVersionNumber;
+    }
+    // setProcessVersionNumber()
+
+
+
+    /**
      * @param object $model
      *
      * @return int
