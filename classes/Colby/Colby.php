@@ -186,16 +186,19 @@ Colby
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        return
+        $cssURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v357.css',
+                '2022_07_25_1658770161',
+                'css',
                 cbsysurl()
             ),
         ];
+
+        return $cssURLs;
     }
-    /* CBHTMLOutput_CSSURLs() */
+    // CBHTMLOutput_CSSURLs()
 
 
 
@@ -206,15 +209,19 @@ Colby
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        return [
-            Colby::flexpath(
+        $javaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.61.4.js',
+                '2022_07_25_1658770162',
+                'js',
                 cbsysurl()
             ),
         ];
+
+        return $javaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
