@@ -147,6 +147,53 @@ SCCountry
 
 
 
+    // accessors
+
+
+
+    /**
+     * @param object $countryModel
+     *
+     * @return string
+     */
+    static function
+    getTitle(
+        stdClass $countryModel
+    ): string
+    {
+        $title =
+        trim(
+            CBModel::valueToString(
+                $countryModel,
+                'title'
+            )
+        );
+
+        return $title;
+    }
+    // getTitle()
+
+
+
+    /**
+     * @param object $countryModel
+     * @param string $newTitle
+     *
+     * @return void
+     */
+    static function
+    setTitle(
+        stdClass $countryModel,
+        string $newTitle
+    ): void
+    {
+        $countryModel->title =
+        $newTitle;
+    }
+    // setTitle()
+
+
+
     // functions
 
 
