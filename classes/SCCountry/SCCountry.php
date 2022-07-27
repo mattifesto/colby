@@ -130,6 +130,33 @@ SCCountry
 
 
 
+    /**
+     * @param object $upgradableCountryModel
+     *
+     * @return object
+     */
+    static function
+    CBModel_upgrade(
+        stdClass $upgradableCountryModel
+    ): stdClass
+    {
+        /**
+         * 2022_07_26_1658867412
+         *
+         *      CBModel_toSearchText() was implemented.
+         */
+
+        CBModel::setProcessVersionNumber(
+            $upgradableCountryModel,
+            '2022_07_26_1658867412'
+        );
+
+        return $upgradableCountryModel;
+    }
+    // CBModel_upgrade()
+
+
+
     // CBModels interfaces
 
 
