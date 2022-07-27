@@ -109,6 +109,27 @@ SCCountry
 
 
 
+    /**
+     * @param object $countryModel
+     *
+     * @return string
+     */
+    static function
+    CBModel_toSearchText(
+        stdClass $countryModel
+    ): string
+    {
+        $title =
+        SCCountry::getTitle(
+            $countryModel
+        );
+
+        return $title;
+    }
+    // CBModel_toSearchText()
+
+
+
     // CBModels interfaces
 
 
