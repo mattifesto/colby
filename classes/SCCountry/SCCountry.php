@@ -8,13 +8,13 @@ SCCountry
 
 
     /**
-     * @param object $spec
+     * @param object $countrySpec
      *
      * @return ?object
      */
     static function
     CBModel_build(
-        stdClass $spec
+        stdClass $countrySpec
     ): stdClass
     {
         $countryModel =
@@ -22,30 +22,29 @@ SCCountry
         [
             'isActive' =>
             CBModel::valueToBool(
-                $spec,
+                $countrySpec,
                 'isActive'
             ),
 
             'isDefault' =>
             CBModel::valueToBool(
-                $spec,
+                $countrySpec,
                 'isDefault'
             ),
 
             'moniker' =>
             CBModel::valueAsMoniker(
-                $spec,
+                $countrySpec,
                 'moniker'
             ),
-
-            'title' =>
-            trim(
-                CBModel::valueToString(
-                    $spec,
-                    'title'
-                )
-            ),
         ];
+
+        SCCountry::setTitle(
+            $countryModel,
+            SCCountry::getTitle(
+                $countrySpec
+            )
+        );
 
         return $countryModel;
     }
