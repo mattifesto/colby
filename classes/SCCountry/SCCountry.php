@@ -53,6 +53,27 @@ SCCountry
 
 
     /**
+     * @param object $countryModel
+     *
+     * @return string
+     */
+    static function
+    CBModel_getTitle(
+        stdClass $countryModel
+    ): string
+    {
+         $title =
+         SCCountry::getTitle(
+             $countryModel
+         );
+
+         return $title;
+    }
+    // CBModel_getTitle()
+
+
+
+    /**
      * @param object $spec
      *
      * @return CBID|null
