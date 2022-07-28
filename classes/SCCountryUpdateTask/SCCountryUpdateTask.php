@@ -1,31 +1,60 @@
 <?php
 
-final class SCCountryUpdateTask {
+final class
+SCCountryUpdateTask
+{
+    // CBTasks2 interfaces
+
+
 
     /**
-     * @param ID $ID
+     * @param CBID $CBID
      *
-     * @return ?object
+     * @return object|null
      */
-    static function CBTasks2_run(string $ID): ?stdClass {
-        $associationKey = 'SCCountry_isActive';
-        $tags = ['true'];
-        $countryModel = CBModelCache::fetchModelByID($ID);
-        $isActive = CBModel::valueToBool($countryModel, 'isActive');
+    static function
+    CBTasks2_run(
+        string $CBID
+    ): ?stdClass
+    {
+        $associationKey =
+        'SCCountry_isActive';
+
+        $tags =
+        [
+            'true',
+        ];
+
+        $countryModel =
+        CBModelCache::fetchModelByID(
+            $CBID
+        );
+
+        $isActive =
+        CBModel::valueToBool(
+            $countryModel,
+            'isActive'
+        );
 
         /* delete previous tags */
+
         CBTag::delete(
-            $ID,
+            $CBID,
             $associationKey,
             $tags
         );
 
         /* add current tags */
-        if (!empty($countryModel)) {
-            CBTag::create($tags);
+        if (
+            !empty($countryModel) &&
+            $isActive
+        ) {
+            CBTag::create(
+                $tags
+            );
 
             CBTag::add(
-                $ID,
+                $CBID,
                 $associationKey,
                 $tags
             );
@@ -33,4 +62,6 @@ final class SCCountryUpdateTask {
 
         return null;
     }
+    // CBTasks2_run()
+
 }
