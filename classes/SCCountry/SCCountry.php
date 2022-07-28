@@ -141,14 +141,15 @@ SCCountry
     ): stdClass
     {
         /**
-         * 2022_07_26_1658867412
+         * 2022_07_28_1658973516
          *
          *      CBModel_toSearchText() was implemented.
+         *      A bug was fixed in SCCountryUpdateTask.
          */
 
         CBModel::setProcessVersionNumber(
             $upgradableCountryModel,
-            '2022_07_26_1658867412'
+            '2022_07_28_1658973516'
         );
 
         return $upgradableCountryModel;
