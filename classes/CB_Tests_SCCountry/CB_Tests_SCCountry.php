@@ -121,7 +121,7 @@ CB_Tests_SCCountry
             'afa3b515624d75a7c0f4aac888e5761d805e4ac9',
 
             'CBModel_processVersionNumber_property' =>
-            '2022_07_26_1658867412',
+            '2022_07_28_1658973516',
 
             'version' =>
             1,
