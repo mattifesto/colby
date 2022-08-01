@@ -475,15 +475,26 @@ CB_CBAdmin_Code
         foreach (
             $allClassNames as $className
         ) {
-            $function =
-            "{$className}::CBCodeAdmin_searches";
+            $functionName =
+            "{$className}::CB_CBAdmin_Code_getDeprecatedCodeSearches";
 
             if (
-                is_callable($function)
+                !is_callable($functionName)
+            ) {
+                /**
+                 * @deprecated 2022_08_01_1659316060
+                 */
+
+                $functionName =
+                "{$className}::CBCodeAdmin_searches";
+            }
+
+            if (
+                is_callable($functionName)
             ) {
                 $interfaceReturnValue =
                 call_user_func(
-                    $function
+                    $functionName
                 );
 
                 $interfaceReturnValueIsAnArray =
