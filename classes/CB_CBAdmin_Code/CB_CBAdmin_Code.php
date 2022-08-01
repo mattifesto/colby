@@ -3,6 +3,69 @@
 final class
 CB_CBAdmin_Code
 {
+    // -- CB_CBAdmin_Code interfaces
+
+
+
+    /**
+     * @return [object]
+     */
+    static function
+    CB_CBAdmin_Code_getDeprecatedCodeSearches(
+    ): array
+    {
+        $deprecatedCodeSearches =
+        [];
+
+
+
+        // CB_CBView_MainHeader_menuButton
+
+        $codeSearchSpec =
+        CBModel::createSpec(
+            'CBCodeSearch',
+            '39c702515f1ffe881f4f6d85b67df7d5860e573f'
+        );
+
+        CBCodeSearch::setNoticeVersion(
+            $codeSearchSpec,
+            '2022_08_01_1659316060'
+        );
+
+        $codeSearchSpec->cbmessage =
+        <<<EOT
+
+            Replace CBCodeAdmin_searches() interface implementations with
+            CB_CBAdmin_Code_getDeprecatedCodeSearches() interface
+            implementations. There are no functional changes so just renaming
+            the interface implementation will work.
+
+        EOT;
+
+        $codeSearchSpec->regex =
+        '\bCBCodeAdmin_searches\b';
+
+        $codeSearchSpec->severity =
+        5;
+
+        $codeSearchSpec->title =
+        'CBCodeAdmin_searches() interface';
+
+        array_push(
+            $deprecatedCodeSearches,
+            $codeSearchSpec
+        );
+
+
+
+        // done
+
+        return $deprecatedCodeSearches;
+    }
+    // CB_CBAdmin_Code_getDeprecatedCodeSearches()
+
+
+
     /* -- CBAdmin interfaces -- */
 
 
