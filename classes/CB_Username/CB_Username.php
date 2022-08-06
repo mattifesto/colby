@@ -374,7 +374,7 @@ CB_Username {
         string $prettyUsername
     ): bool {
         return !!preg_match(
-            '/^[a-zA-Z0-9_]{5,30}$/',
+            '/^[a-zA-Z0-9_]{4,30}$/',
             $prettyUsername
         );
     }
