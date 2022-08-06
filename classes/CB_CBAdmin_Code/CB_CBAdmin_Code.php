@@ -415,9 +415,8 @@ CB_CBAdmin_Code
                 '--ignore-file=match:CB_CBAdmin_Code',
 
                 '--sort-files',
-                CBModel::valueToString(
+                CBCodeSearch::getAckArguments(
                     $searchModel,
-                    'args'
                 ),
             ]
         );
@@ -442,6 +441,8 @@ CB_CBAdmin_Code
                 break;
 
             case 'args':
+
+                // the file type is specified in the ack arguments
 
                 break;
 
