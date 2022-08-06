@@ -22,7 +22,7 @@ CBCodeSearch
      *      CBCodeSearch_noticeVersion_property
      *      CBCodeSearch_warningVersion_property
      *
-     *      args
+     *      CBCodeSearch_ackArguments_property
      *
      *          additional arguments to ack such as
      *
@@ -35,6 +35,7 @@ CBCodeSearch
      *
      *      deprecated:
      *
+     *      args -> CBCodeSearch_ackArguments_property
      *      CBCodeSearch_CBID -> model CBID
      *      errorStartDate -> CBCodeSearch_errorVersion_property
      *      noticeStartDate -> CBCodeSearch_noticeVersion_property
@@ -44,6 +45,62 @@ CBCodeSearch
 
 
      // -- accessors
+
+
+
+     /**
+      * @param object $codeSearchModel
+      * @param string $newErrorVersion
+      *
+      * @return void
+      */
+     static function
+     getAckArguments(
+         stdClass $codeSearchModel,
+     ): string
+     {
+         $ackArguments =
+         CBModel::valueToString(
+             $codeSearchModel,
+             'CBCodeSearch_ackArguments_property'
+         );
+
+         if (
+             $ackArguments === ''
+         ) {
+             $ackArguments =
+             CBModel::valueToString(
+                 $codeSearchModel,
+                 'args'
+             );
+         }
+
+         return $ackArguments;
+     }
+     // getAckArguments()
+
+
+
+     /**
+      * @param object $codeSearchModel
+      * @param string $newErrorVersion
+      *
+      * @return void
+      */
+     static function
+     setAckArguments(
+         stdClass $codeSearchModel,
+         string $newAckArguments
+     ): void
+     {
+         $codeSearchModel->CBCodeSearch_ackArguments_property =
+         $newAckArguments;
+
+         unset(
+             $codeSearchModel->args
+         );
+     }
+     // setAckArguments()
 
 
 
