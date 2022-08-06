@@ -75,7 +75,7 @@ Colby
      * @return [object]
      */
     static function
-    CBCodeAdmin_searches(
+    CB_CBAdmin_Code_getDeprecatedCodeSearches(
     ): array
     {
         $searches =
@@ -142,9 +142,10 @@ Colby
             '2022_06_22_1655865669'
         );
 
-
-        $codeSearchSpec->args =
-        '--ignore-file=is:Colby.php';
+        CBCodeSearch::setAckArguments(
+            $codeSearchSpec,
+            '--ignore-file=is:Colby.php'
+        );
 
         $codeSearchSpec->cbmessage =
         <<<EOT
