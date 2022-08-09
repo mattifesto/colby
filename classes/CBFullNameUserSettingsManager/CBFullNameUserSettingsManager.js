@@ -1,10 +1,9 @@
 /* global
+    CB_UI_StringEditor,
     CBAjax,
     CBException,
     CBModel,
-    CBUI,
     CBUIPanel,
-    CBUIStringEditor,
 */
 
 
@@ -54,22 +53,25 @@
             );
         }
 
-        let elements = CBUI.createElementTree(
-            "CBFullNameUserSettingsManager",
-            "CBUI_sectionContainer",
-            "CBUI_section"
+        let rootElement =
+        document.createElement(
+            "div"
         );
 
-        let element = elements[0];
-        let sectionElement = elements[2];
+        rootElement.className =
+        "CBFullNameUserSettingsManager";
 
-        fullNameEditor = CBUIStringEditor.create();
 
-        sectionElement.appendChild(
-            fullNameEditor.element
+        fullNameEditor = 
+        CB_UI_StringEditor.create();
+
+        rootElement.append(
+            fullNameEditor.CB_UI_StringEditor_getElement()
         );
 
-        fullNameEditor.title = "Full Name";
+        fullNameEditor.CB_UI_StringEditor_setTitle(
+            "Full Name"
+        );
 
         CBAjax.call(
             "CBFullNameUserSettingsManager",
@@ -87,7 +89,7 @@
             }
         );
 
-        return element;
+        return rootElement;
     }
     /* CBUserSettingsManager_createElement() */
 
@@ -102,37 +104,47 @@
         result
     ) {
         if (result.accessWasDenied) {
-            fullNameEditor.value = "access was denied";
+            fullNameEditor.CB_UI_StringEditor_setValue(
+                "access was denied"
+            );
 
             // @TODO replace editor with non-editor
 
             return;
         }
 
-        fullNameEditor.value = result.targetUserFullName;
+        fullNameEditor.CB_UI_StringEditor_setValue(
+            result.targetUserFullName
+        );
 
-        fullNameEditor.changed = function () {
-            hasChanged = true;
+        fullNameEditor.CB_UI_StringEditor_setChangedEventListener(
+            function (
+            ) // -> undefined
+            {
+                hasChanged = true;
 
-            if (isSaving) {
-                return;
+                if (isSaving) {
+                    return;
+                }
+
+                fullNameEditor.CB_UI_StringEditor_setTitle(
+                    "Full Name (changed...)"
+                );
+
+                if (timeoutID !== undefined) {
+                    window.clearTimeout(timeoutID);
+                }
+
+                timeoutID = window.setTimeout(
+                    function () {
+                        timeoutID = undefined;
+
+                        updateFullName();
+                    },
+                    1000
+                );
             }
-
-            fullNameEditor.title = "Full Name (changed...)";
-
-            if (timeoutID !== undefined) {
-                window.clearTimeout(timeoutID);
-            }
-
-            timeoutID = window.setTimeout(
-                function () {
-                    timeoutID = undefined;
-
-                    updateFullName();
-                },
-                1000
-            );
-        };
+        );
     }
     /* initialize() */
 
@@ -145,14 +157,18 @@
         hasChanged = false;
         isSaving = true;
 
-        fullNameEditor.title = "Full Name (saving...)";
+        fullNameEditor.CB_UI_StringEditor_setTitle(
+            "Full Name (saving...)"
+        );
 
         CBAjax.call(
             "CBFullNameUserSettingsManager",
             "updateFullName",
             {
                 targetUserCBID,
-                targetUserFullName: fullNameEditor.value,
+
+                targetUserFullName:
+                fullNameEditor.CB_UI_StringEditor_getValue(),
             }
         ).then(
             function () {
@@ -161,7 +177,9 @@
                 if (hasChanged) {
                     updateFullName();
                 } else {
-                    fullNameEditor.title = "Full Name";
+                    fullNameEditor.CB_UI_StringEditor_setTitle(
+                        "Full Name"
+                    );
                 }
             }
         ).catch(
