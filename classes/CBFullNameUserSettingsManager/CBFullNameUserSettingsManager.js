@@ -143,13 +143,13 @@
 
                 timeoutID =
                 window.setTimeout(
-                    function (
-                    ) // -> undefined
+                    async function (
+                    ) // -> Promise -> undefined
                     {
                         timeoutID =
                         undefined;
 
-                        updateFullName();
+                        await updateFullName();
                     },
                     1000
                 );
@@ -163,59 +163,60 @@
     /**
      * @return undefined
      */
-    function
+    async function
     updateFullName(
-    ) // -> undefined
+    ) // -> Promise -> undefined
     {
-        hasChanged =
-        false;
+        try
+        {
+            hasChanged =
+            false;
 
-        isSaving =
-        true;
+            isSaving =
+            true;
 
-        fullNameEditor.CB_UI_StringEditor_setTitle(
-            "Full Name (saving...)"
-        );
+            fullNameEditor.CB_UI_StringEditor_setTitle(
+                "Full Name (saving...)"
+            );
 
-        CBAjax.call(
-            "CBFullNameUserSettingsManager",
-            "updateFullName",
-            {
-                targetUserCBID,
-
-                targetUserFullName:
-                fullNameEditor.CB_UI_StringEditor_getValue(),
-            }
-        ).then(
-            function (
-            ) // -> undefined
-            {
-                isSaving =
-                false;
-
-                if (
-                    hasChanged
-                ) {
-                    updateFullName();
-                }
-
-                else
+            await CBAjax.call(
+                "CBFullNameUserSettingsManager",
+                "updateFullName",
                 {
-                    fullNameEditor.CB_UI_StringEditor_setTitle(
-                        "Full Name"
-                    );
+                    targetUserCBID,
+
+                    targetUserFullName:
+                    fullNameEditor.CB_UI_StringEditor_getValue(),
                 }
+            );
+
+            if (
+                hasChanged
+            ) {
+                updateFullName();
             }
-        ).catch(
-            function (
-                error
-            ) // -> undefined
+
+            else
             {
-                CBUIPanel.displayAndReportError(
-                    error
+                fullNameEditor.CB_UI_StringEditor_setTitle(
+                    "Full Name"
                 );
             }
-        );
+        }
+
+        catch (
+            error
+        ) {
+            CBUIPanel.displayAndReportError(
+                error
+            );
+        }
+
+        finally
+        {
+            isSaving =
+            false;
+        }
     }
     /* updateFullName() */
 
