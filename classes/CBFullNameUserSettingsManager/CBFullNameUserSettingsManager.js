@@ -62,7 +62,7 @@
         "CBFullNameUserSettingsManager";
 
 
-        fullNameEditor = 
+        fullNameEditor =
         CB_UI_StringEditor.create();
 
         rootElement.append(
@@ -123,7 +123,9 @@
             {
                 hasChanged = true;
 
-                if (isSaving) {
+                if (
+                    isSaving
+                ) {
                     return;
                 }
 
@@ -131,13 +133,21 @@
                     "Full Name (changed...)"
                 );
 
-                if (timeoutID !== undefined) {
-                    window.clearTimeout(timeoutID);
+                if (
+                    timeoutID !== undefined
+                ) {
+                    window.clearTimeout(
+                        timeoutID
+                    );
                 }
 
-                timeoutID = window.setTimeout(
-                    function () {
-                        timeoutID = undefined;
+                timeoutID =
+                window.setTimeout(
+                    function (
+                    ) // -> undefined
+                    {
+                        timeoutID =
+                        undefined;
 
                         updateFullName();
                     },
