@@ -1,7 +1,8 @@
 <?php
 
-final class CBFullNameUserSettingsManager {
-
+final class
+CBFullNameUserSettingsManager
+{
     /* -- CBAjax interfaces -- -- -- -- -- */
 
 
@@ -147,11 +148,23 @@ final class CBFullNameUserSettingsManager {
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [
-            Colby::flexpath(__CLASS__, 'v655.js', cbsysurl()),
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
+        $javaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2022_08_09_1660008192',
+                'js',
+                cbsysurl()
+            ),
         ];
+
+        return $javaScriptURLs;
     }
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
