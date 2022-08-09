@@ -1,6 +1,3 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
 /* global
     CBAjax,
     CBException,
@@ -11,8 +8,10 @@
 */
 
 
-
 (function () {
+    "use strict";
+
+
 
     /* public API */
 
