@@ -171,15 +171,20 @@ CBFullNameUserSettingsManager
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
-        return [
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        $requiredClassNames =
+        [
+            'CB_UI_StringEditor',
             'CBAjax',
             'CBException',
             'CBModel',
-            'CBUI',
             'CBUIPanel',
-            'CBUIStringEditor',
         ];
+
+        return $requiredClassNames;
     }
     /* CBHTMLOutput_requiredClassNames() */
 
