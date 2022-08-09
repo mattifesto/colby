@@ -163,9 +163,15 @@
     /**
      * @return undefined
      */
-    function updateFullName() {
-        hasChanged = false;
-        isSaving = true;
+    function
+    updateFullName(
+    ) // -> undefined
+    {
+        hasChanged =
+        false;
+
+        isSaving =
+        true;
 
         fullNameEditor.CB_UI_StringEditor_setTitle(
             "Full Name (saving...)"
@@ -181,20 +187,33 @@
                 fullNameEditor.CB_UI_StringEditor_getValue(),
             }
         ).then(
-            function () {
-                isSaving = false;
+            function (
+            ) // -> undefined
+            {
+                isSaving =
+                false;
 
-                if (hasChanged) {
+                if (
+                    hasChanged
+                ) {
                     updateFullName();
-                } else {
+                }
+
+                else
+                {
                     fullNameEditor.CB_UI_StringEditor_setTitle(
                         "Full Name"
                     );
                 }
             }
         ).catch(
-            function (error) {
-                CBUIPanel.displayAndReportError(error);
+            function (
+                error
+            ) // -> undefined
+            {
+                CBUIPanel.displayAndReportError(
+                    error
+                );
             }
         );
     }
