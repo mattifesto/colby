@@ -528,9 +528,39 @@
         /**
          * @return undefined
          */
-        function runTest_onFulfilled(value) {
+        function
+        runTest_onFulfilled(
+            value
+        ) // -> undefined
+        {
             let message;
             let status;
+
+
+
+            /**
+             * @NOTE 2022_08_09
+             *
+             *      An undefined return value is now interpreted as a successful
+             *      result. This change was made because most tests were
+             *      returning the exact same value which was wasted code.
+             *
+             *      It is now also preferred for test to throw exceptions
+             *      when a test fails instead of returning an object
+             *      reporting failure.
+             */
+
+            if (
+                typeof value === "undefined"
+            ) {
+                value =
+                {
+                    succeeded:
+                    true,
+                };
+            }
+
+
 
             if (typeof value === "object") {
                 if (value.succeeded) {
