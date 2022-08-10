@@ -36,7 +36,7 @@ final class CBTestAdmin {
 
 
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -57,16 +57,21 @@ final class CBTestAdmin {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ) {
-        return [
-            Colby::flexpath(
+    ): array
+    {
+        $javaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.14.js',
+                '2022_08_10_1660090897',
+                'js',
                 cbsysurl()
             ),
         ];
+
+        return $javaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
