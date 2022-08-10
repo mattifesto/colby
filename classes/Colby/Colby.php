@@ -233,13 +233,16 @@ Colby
     CBHTMLOutput_requiredClassNames(
     ): array
     {
-        return [
+        $requiredClassNames =
+        [
             'CBAjax',
             'CBErrorHandler',
             'CBException',
             'CBID',
             'CBJavaScript',
         ];
+
+        return $requiredClassNames;
     }
     /* CBHTMLOutput_requiredClassNames() */
 
