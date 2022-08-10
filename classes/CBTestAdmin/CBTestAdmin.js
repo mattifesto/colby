@@ -78,38 +78,74 @@
             }
 
 
+
             {
                 let functionName =
-                `CBTest_${test.name}`;
+                test.name;
 
-                let callable = CBModel.valueAsFunction(
+                let callable =
+                CBModel.valueAsFunction(
                     window[test.testClassName],
                     functionName
                 );
 
-                if (callable) {
+                if (
+                    callable !== undefined
+                ) {
                     return callable;
                 }
-            }
 
 
-            /**
-             * @deprecated 2019_05_24
-             */
 
-            {
-                let functionName =
+                /**
+                 * @deprecated 2022_08_09
+                 *
+                 *      Placing CBTest_ before a test function name makes it
+                 *      appear that the function implements a specific CBTest
+                 *      interface which it does not.
+                 */
+
+                functionName =
                 `CBTest_${test.name}`;
 
-                let callable = CBModel.valueAsFunction(
-                    window[test.testClassName + "Tests"],
+                callable = CBModel.valueAsFunction(
+                    window[test.testClassName],
                     functionName
                 );
 
-                if (callable) {
+                if (
+                    callable !== undefined
+                ) {
                     return callable;
                 }
+
+
+
+                /**
+                 * @deprecated 2019_05_24
+                 *
+                 *      Test classes were once required to be the tested class
+                 *      name with the word "Tests" appended to the end. This is
+                 *      no longer required.
+                 */
+
+                 functionName =
+                 `CBTest_${test.name}`;
+
+                 callable =
+                 CBModel.valueAsFunction(
+                     window[test.testClassName + "Tests"],
+                     functionName
+                 );
+
+                 if (
+                     callable !== undefined
+                 ) {
+                     return callable;
+                 }
             }
+
+
 
             throw CBException.withError(
                 Error(
