@@ -3,7 +3,7 @@
 final class
 CBAjax
 {
-    /* -- CBHTMLOutput interfaces -- */
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -14,15 +14,19 @@ CBAjax
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        return [
-            Colby::flexpath(
+        $javaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.54.js',
+                '2022_08_10_1660096116',
+                'js',
                 cbsysurl()
             ),
         ];
+
+        return $javaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
@@ -33,10 +37,16 @@ CBAjax
     CBHTMLOutput_requiredClassNames(
     ): array
     {
-        return [
+        $requiredClassNames =
+        [
             'CB_AjaxRequest',
+            'CBConvert',
+            'CBException',
+            'CBMessageMarkup',
             'CBModel',
         ];
+
+        return $requiredClassNames;
     }
     /* CBHTMLOutput_requiredClassNames() */
 
