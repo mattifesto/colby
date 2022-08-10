@@ -77,21 +77,34 @@
             "Full Name"
         );
 
-        CBAjax.call(
-            "CBFullNameUserSettingsManager",
-            "fetchFullName",
+        (async function ()
+        {
+            try
             {
-                targetUserCBID,
+                let result =
+                await CBAjax.call(
+                    "CBFullNameUserSettingsManager",
+                    "fetchFullName",
+                    {
+                        targetUserCBID,
+                    }
+                );
+
+                initialize(
+                    result
+                );
             }
-        ).then(
-            function (result) {
-                initialize(result);
+
+            catch (
+                error
+            ) {
+                CBUIPanel.displayAndReportError(
+                    error
+                );
             }
-        ).catch(
-            function (error) {
-                CBUIPanel.displayAndReportError(error);
-            }
-        );
+        }
+        )();
+
 
         return rootElement;
     }
