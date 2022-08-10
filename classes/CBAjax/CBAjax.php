@@ -230,7 +230,7 @@ CBAjax
             throw new CBExceptionWithValue(
                 CBConvert::stringToCleanLine(<<<EOT
 
-                    The Ajax interface {$interfacename}() has not been
+                    The Ajax interface {$interfaceName}() has not been
                     implemented on the {$executorFunctionClassName} class to
                     implement the requested Ajax function call.
 
