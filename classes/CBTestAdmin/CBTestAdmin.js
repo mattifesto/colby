@@ -1,6 +1,3 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 8 */
 /* global
     CBConvert,
     CBException,
@@ -21,10 +18,15 @@
     CBTestAdmin_tests,
 */
 
-(function() {
 
-    window.CBTestAdmin = {
+(function()
+{
+    "use strict";
 
+
+
+    window.CBTestAdmin =
+    {
         errorCount: 0,
         testImageID: "3dd8e721048bbe8ea5f0c043fab73277a0b0044c",
 
@@ -624,7 +626,8 @@
     }
     /* runTest() */
 
-})();
+}
+)();
 
 
 Colby.afterDOMContentLoaded(
