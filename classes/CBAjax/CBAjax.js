@@ -1,5 +1,8 @@
 /* global
     CB_AjaxRequest,
+    CBConvert,
+    CBException,
+    CBMessageMarkup,
     CBModel,
 */
 
@@ -261,14 +264,60 @@
                         ajaxResponse
                     );
                 } else {
-                    let error = new Error(
-                        ajaxResponse.message
+                    let errorTextMessage =
+                    CBConvert.stringToCleanLine(`
+
+                        An Ajax request was not successful:
+                        ${ajaxResponse.message}
+
+                    `);
+
+                    let errorTextMessageAsCBMessage =
+                    CBMessageMarkup.stringToMessage(
+                        errorTextMessage
                     );
 
-                    error.ajaxResponse = ajaxResponse;
+                    let errorStackTraceAsCBMessage =
+                    CBMessageMarkup.stringToMessage(
+                        CBModel.valueToString(
+                            ajaxResponse,
+                            "stackTrace"
+                        )
+                    );
+
+
+
+                    let originalError =
+                    new Error(
+                        errorTextMessage
+                    );
+
+                    let cbmessage =
+                    `
+                        ${errorTextMessageAsCBMessage}
+
+                        --- pre\n${errorStackTraceAsCBMessage}
+                        ---
+                    `;
+
+                    let sourceCBID =
+                    CBModel.valueAsCBID(
+                        ajaxResponse,
+                        "sourceCBID"
+                    );
+
+                    let finalError =
+                    CBException.withError(
+                        originalError,
+                        cbmessage,
+                        sourceCBID
+                    );
+
+                    finalError.ajaxResponse =
+                    ajaxResponse;
 
                     reject(
-                        error
+                        finalError
                     );
                 }
             }
