@@ -37,15 +37,19 @@
      *
      * @return Element
      */
-    function CBUserSettingsManager_createElement(
+    function
+    CBUserSettingsManager_createElement(
         args
-    ) {
+    ) // -> Element
+    {
         targetUserCBID = CBModel.valueAsCBID(
             args,
             "targetUserCBID"
         );
 
-        if (targetUserCBID === null) {
+        if (
+            targetUserCBID === null
+        ) {
             throw CBException.withValueRelatedError(
                 Error("The \"targetUserCBID\" argument is not valid."),
                 args,
