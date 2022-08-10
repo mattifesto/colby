@@ -593,10 +593,16 @@
         /**
          * @return undefined
          */
-        function runTest_onRejected(error) {
-            let descriptionAsMessage = CBMessageMarkup.stringToMessage(
-                CBConvert.errorToDescription(error)
+        function
+        runTest_onRejected(
+            error
+        ) // -> undefined
+        {
+            let cbmessage =
+            CBException.errorToExtendedMessage(
+                error
             );
+
             let stackTraceAsMessage = CBMessageMarkup.stringToMessage(
                 CBConvert.errorToStackTrace(error)
             );
@@ -606,7 +612,7 @@
             expander.title = `${title} failed`;
             expander.message = `
 
-                ${descriptionAsMessage}
+                ${cbmessage}
 
                 --- pre\n${stackTraceAsMessage}
                 ---
