@@ -878,6 +878,15 @@ CBUser
             $passwordHash,
         ];
 
+
+
+        CBUser::setBio(
+            $userModel,
+            CBUser::getBio(
+                $spec
+            )
+        );
+
         CBUser::setFacebookAccessToken(
             $userModel,
             CBUser::getFacebookAccessToken(
@@ -1447,6 +1456,49 @@ CBUser
 
 
     /* -- accessors -- */
+
+
+
+    /**
+     * @param object $userModel
+     *
+     * @return string
+     */
+    static function
+    getBio(
+        stdClass $userModel
+    ): string
+    {
+        $bio =
+        CBModel::valueToString(
+            $userModel,
+            'CBUser_bio_property'
+        );
+
+        return $bio;
+    }
+    // getBio()
+
+
+
+    /**
+     * @param object $userModel
+     * @param string $newBio
+     *
+     *      A bio has moment markup.
+     *
+     * @return void
+     */
+    static function
+    setBio(
+        stdClass $userModel,
+        string $newBio
+    ): void
+    {
+        $userModel->CBUser_bio_property =
+        $newBio;
+    }
+    // setBio()
 
 
 
