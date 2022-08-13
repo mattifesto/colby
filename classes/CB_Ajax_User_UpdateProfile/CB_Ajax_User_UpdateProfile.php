@@ -14,6 +14,9 @@ CB_Ajax_User_UpdateProfile
      *          CB_Ajax_User_UpdateProfile_targetUserModelCBID_argument:
      *          <CBID>,
      *
+     *          CB_Ajax_User_UpdateProfile_targetUserBio_argument:
+     *          <string>,
+     *
      *          CB_Ajax_User_UpdateProfile_targetUserFullName_argument:
      *          <string>,
      *      }
@@ -41,6 +44,21 @@ CB_Ajax_User_UpdateProfile
 
         $targetUserSpec =
         $targetUserModelUpdater->getSpec();
+
+
+
+        // bio
+
+        $updatedTargetUserBio =
+        CBModel::valueToString(
+            $executorArguments,
+            'CB_Ajax_User_UpdateProfile_targetUserBio_argument'
+        );
+
+        CBUser::setBio(
+            $targetUserSpec,
+            $updatedTargetUserBio
+        );
 
 
 
