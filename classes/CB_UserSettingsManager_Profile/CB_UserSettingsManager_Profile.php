@@ -1,7 +1,7 @@
 <?php
 
 final class
-CBFullNameUserSettingsManager
+CB_UserSettingsManager_Profile
 {
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 

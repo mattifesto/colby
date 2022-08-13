@@ -14,7 +14,7 @@
 
     /* public API */
 
-    window.CBFullNameUserSettingsManager = {
+    window.CB_UserSettingsManager_Profile = {
         CBUserSettingsManager_createElement,
     };
 
@@ -63,7 +63,7 @@
         );
 
         rootElement.className =
-        "CBFullNameUserSettingsManager";
+        "CB_UserSettingsManager_Profile";
 
 
         fullNameEditor =
