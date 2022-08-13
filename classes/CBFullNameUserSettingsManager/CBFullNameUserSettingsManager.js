@@ -196,14 +196,13 @@
                 "Full Name (saving...)"
             );
 
-            await CBAjax.call(
-                "CBFullNameUserSettingsManager",
-                "updateFullName",
+            await CBAjax.call2(
+                "CB_Ajax_User_UpdateProfile",
                 {
-                    targetUserCBID:
+                    CB_Ajax_User_UpdateProfile_targetUserModelCBID_argument:
                     targetUserModelCBID,
 
-                    targetUserFullName:
+                    CB_Ajax_User_UpdateProfile_targetUserFullName_argument:
                     fullNameEditor.CB_UI_StringEditor_getValue(),
                 }
             );
