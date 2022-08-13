@@ -23,7 +23,7 @@
     let fullNameEditor;
     let hasChanged = false;
     let isSaving = false;
-    let targetUserCBID;
+    let targetUserModelCBID;
     let timeoutID;
 
 
@@ -42,13 +42,13 @@
         args
     ) // -> Element
     {
-        targetUserCBID = CBModel.valueAsCBID(
+        targetUserModelCBID = CBModel.valueAsCBID(
             args,
             "targetUserCBID"
         );
 
         if (
-            targetUserCBID === null
+            targetUserModelCBID === null
         ) {
             throw CBException.withValueRelatedError(
                 Error("The \"targetUserCBID\" argument is not valid."),
@@ -82,11 +82,11 @@
             try
             {
                 let result =
-                await CBAjax.call(
-                    "CBFullNameUserSettingsManager",
-                    "fetchFullName",
+                await CBAjax.call2(
+                    "CB_Ajax_User_FetchProfile",
                     {
-                        targetUserCBID,
+                        CB_Ajax_User_FetchProfile_targetUserModelCBID_argument:
+                        targetUserModelCBID,
                     }
                 );
 
@@ -131,7 +131,7 @@
         }
 
         fullNameEditor.CB_UI_StringEditor_setValue(
-            result.targetUserFullName
+            result.CB_Ajax_User_FetchProfile_fullName
         );
 
         fullNameEditor.CB_UI_StringEditor_setChangedEventListener(
@@ -200,7 +200,8 @@
                 "CBFullNameUserSettingsManager",
                 "updateFullName",
                 {
-                    targetUserCBID,
+                    targetUserCBID:
+                    targetUserModelCBID,
 
                     targetUserFullName:
                     fullNameEditor.CB_UI_StringEditor_getValue(),
