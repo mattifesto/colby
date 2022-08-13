@@ -771,8 +771,8 @@ CBUser
     static function
     CBModel_build(
         stdClass $spec
-    ): stdClass {
-
+    ): stdClass
+    {
         /* email */
 
         $email = CBModel::valueAsEmail(
@@ -913,9 +913,11 @@ CBUser
             )
         );
 
+
+
         return $userModel;
     }
-    /* CBModel_build() */
+    // CBModel_build()
 
 
 
