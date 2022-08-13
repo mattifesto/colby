@@ -20,6 +20,7 @@
 
 
 
+    let bioEditor;
     let fullNameEditor;
     let hasChanged = false;
     let isSaving = false;
@@ -66,6 +67,9 @@
         "CB_UserSettingsManager_Profile";
 
 
+
+        // full name
+
         fullNameEditor =
         CB_UI_StringEditor.create();
 
@@ -77,11 +81,28 @@
             "Full Name"
         );
 
+
+
+        // bio
+
+        bioEditor =
+        CB_UI_StringEditor.create();
+
+        rootElement.append(
+            bioEditor.CB_UI_StringEditor_getElement()
+        );
+
+        bioEditor.CB_UI_StringEditor_setTitle(
+            "Bio"
+        );
+
+
+
         (async function ()
         {
             try
             {
-                let result =
+                let userProfile =
                 await CBAjax.call2(
                     "CB_Ajax_User_FetchProfile",
                     {
@@ -91,7 +112,7 @@
                 );
 
                 initialize(
-                    result
+                    userProfile
                 );
             }
 
@@ -117,60 +138,29 @@
      *
      * @return undefined
      */
-    function initialize(
-        result
-    ) {
-        if (result.accessWasDenied) {
-            fullNameEditor.CB_UI_StringEditor_setValue(
-                "access was denied"
-            );
-
-            // @TODO replace editor with non-editor
-
-            return;
-        }
-
+    function
+    initialize(
+        userProfile
+    ) // -> undefined
+    {
         fullNameEditor.CB_UI_StringEditor_setValue(
-            result.CB_Ajax_User_FetchProfile_fullName
+            userProfile.CB_Ajax_User_FetchProfile_fullName
         );
 
         fullNameEditor.CB_UI_StringEditor_setChangedEventListener(
             function (
             ) // -> undefined
             {
-                hasChanged = true;
-
-                if (
-                    isSaving
-                ) {
-                    return;
-                }
-
                 fullNameEditor.CB_UI_StringEditor_setTitle(
                     "Full Name (changed...)"
                 );
 
-                if (
-                    timeoutID !== undefined
-                ) {
-                    window.clearTimeout(
-                        timeoutID
-                    );
-                }
-
-                timeoutID =
-                window.setTimeout(
-                    async function (
-                    ) // -> Promise -> undefined
-                    {
-                        timeoutID =
-                        undefined;
-
-                        await updateFullName();
-                    },
-                    1000
-                );
+                scheduleProfileSave();
             }
+        );
+
+        initializeBio(
+            userProfile
         );
     }
     /* initialize() */
@@ -178,10 +168,40 @@
 
 
     /**
+     * @param object userProfile
+     *
+     * @return undefined
+     */
+    function
+    initializeBio(
+        userProfile
+    ) // -> undefined
+    {
+        bioEditor.CB_UI_StringEditor_setValue(
+            userProfile.CB_Ajax_User_FetchProfile_bio
+        );
+
+        bioEditor.CB_UI_StringEditor_setChangedEventListener(
+            function (
+            ) // -> undefined
+            {
+                bioEditor.CB_UI_StringEditor_setTitle(
+                    "Bio (changed...)"
+                );
+
+                scheduleProfileSave();
+            }
+        );
+    }
+    // initializeBio()
+
+
+
+    /**
      * @return undefined
      */
     async function
-    updateFullName(
+    executeProfileSave(
     ) // -> Promise -> undefined
     {
         try
@@ -196,11 +216,18 @@
                 "Full Name (saving...)"
             );
 
+            bioEditor.CB_UI_StringEditor_setTitle(
+                "Bio (saving...)"
+            );
+
             await CBAjax.call2(
                 "CB_Ajax_User_UpdateProfile",
                 {
                     CB_Ajax_User_UpdateProfile_targetUserModelCBID_argument:
                     targetUserModelCBID,
+
+                    CB_Ajax_User_UpdateProfile_targetUserBio_argument:
+                    bioEditor.CB_UI_StringEditor_getValue(),
 
                     CB_Ajax_User_UpdateProfile_targetUserFullName_argument:
                     fullNameEditor.CB_UI_StringEditor_getValue(),
@@ -210,13 +237,17 @@
             if (
                 hasChanged
             ) {
-                updateFullName();
+                await executeProfileSave();
             }
 
             else
             {
                 fullNameEditor.CB_UI_StringEditor_setTitle(
                     "Full Name"
+                );
+
+                bioEditor.CB_UI_StringEditor_setTitle(
+                    "Bio"
                 );
             }
         }
@@ -235,6 +266,46 @@
             false;
         }
     }
-    /* updateFullName() */
+    /* executeProfileSave() */
+
+
+
+    /**
+     * @return undefined
+     */
+    function
+    scheduleProfileSave(
+    ) // -> undefined
+    {
+        hasChanged = true;
+
+        if (
+            isSaving
+        ) {
+            return;
+        }
+
+        if (
+            timeoutID !== undefined
+        ) {
+            window.clearTimeout(
+                timeoutID
+            );
+        }
+
+        timeoutID =
+        window.setTimeout(
+            async function (
+            ) // -> Promise -> undefined
+            {
+                timeoutID =
+                undefined;
+
+                executeProfileSave();
+            },
+            1000
+        );
+    }
+    // scheduleProfileSave()
 
 })();
