@@ -24,6 +24,9 @@ CB_Ajax_User_FetchProfile
      * @return object
      *
      *      {
+     *          CB_Ajax_User_FetchProfile_bio:
+     *          <string>,
+     *
      *          CB_Ajax_User_FetchProfile_fullName:
      *          <string>,
      *      }
@@ -50,9 +53,17 @@ CB_Ajax_User_FetchProfile
             $targetUserModel
         );
 
+        $targetUserBio =
+        CBUser::getBio(
+            $targetUserModel
+        );
+
         $profile =
         (object)
         [
+            'CB_Ajax_User_FetchProfile_bio' =>
+            $targetUserBio,
+
             'CB_Ajax_User_FetchProfile_fullName' =>
             $targetUserFullName,
         ];
