@@ -960,6 +960,16 @@ CBUser
         $searchTextStrings =
         [];
 
+        $bio =
+        CBUser::getBio(
+            $userModel
+        );
+
+        array_push(
+            $searchTextStrings,
+            $bio
+        );
+
         $fullName =
         CBUser::getName(
             $userModel
