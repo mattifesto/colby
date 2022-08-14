@@ -70,42 +70,26 @@ return (function () {
         $userModel
     );
 
-    $cbmessage = <<<EOT
 
-        --- h1
-        {$userFullName}
-        ---
-
-    EOT;
-
-    if (
-        $userModelCBID === $currentUserModelCBID
-    ) {
-        $cbmessage .= <<<EOT
-
-            (edit profile (a /colby/user/))
-
-        EOT;
-    }
-
-    $pageSpec = CBViewPage::standardPageTemplate();
+    $pageSpec =
+    CBViewPage::standardPageTemplate();
 
     $views =
     [];
 
-    $messageViewSpec =
+    $userProfileViewSpec =
     CBModel::createSpec(
-        'CBMessageView'
+        'CB_View_UserProfile'
     );
 
-    CBMessageView::setCBMessage(
-        $messageViewSpec,
-        $cbmessage
+    CB_View_UserProfile::setUserModelCBID(
+        $userProfileViewSpec,
+        $userModelCBID
     );
 
     array_push(
         $views,
-        $messageViewSpec
+        $userProfileViewSpec
     );
 
     $viewSpec = CBModel::createSpec(
