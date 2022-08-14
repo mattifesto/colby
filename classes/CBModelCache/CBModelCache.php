@@ -1,9 +1,13 @@
 <?php
 
-final class CBModelCache {
+final class
+CBModelCache
+{
+    private static $cache =
+    [];
 
-    private static $cache = [];
-    private static $neededModelIDs = [];
+    private static $neededModelIDs =
+    [];
 
 
 
