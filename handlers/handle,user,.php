@@ -90,12 +90,23 @@ return (function () {
 
     $pageSpec = CBViewPage::standardPageTemplate();
 
-    $views = [
-        (object)[
-            'className' => 'CBMessageView',
-            'markup' => $cbmessage,
-        ],
-    ];
+    $views =
+    [];
+
+    $messageViewSpec =
+    CBModel::createSpec(
+        'CBMessageView'
+    );
+
+    CBMessageView::setCBMessage(
+        $messageViewSpec,
+        $cbmessage
+    );
+
+    array_push(
+        $views,
+        $messageViewSpec
+    );
 
     $viewSpec = CBModel::createSpec(
         'CB_CBView_UserMomentList'
