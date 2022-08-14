@@ -11,6 +11,68 @@ CBModelCache
 
 
 
+    // -- CBCodeAdmin interfaces
+
+
+
+    /**
+     * @return [object]
+     */
+    static function
+    CB_CBAdmin_Code_getDeprecatedCodeSearches(
+    ): array
+    {
+        $searches =
+        [];
+
+
+
+        // CBModelCache::fetchModelByID()
+
+        $codeSearchSpec =
+        CBModel::createSpec(
+            'CBCodeSearch',
+            '8fbcc9332b71e3c7527d1a18ea9966aca0dd9ebd'
+        );
+
+        CBCodeSearch::setNoticeVersion(
+            $codeSearchSpec,
+            '2022_08_14_1660511945'
+        );
+
+        $codeSearchSpec->cbmessage =
+        <<<EOT
+
+            Use CBModelCache::fetchModelByCBID().
+
+        EOT;
+
+        $codeSearchSpec->regex =
+        '\bCBModelCache::fetchModelByID\b';
+
+        $codeSearchSpec->severity =
+        5;
+
+        $codeSearchSpec->title =
+        'CBModelCache::fetchModelByID()';
+
+        array_push(
+            $searches,
+            $codeSearchSpec
+        );
+
+
+
+        return $searches;
+    }
+    /* CBCodeAdmin_searches() */
+
+
+
+    // functions
+
+
+
     /**
      * This is the only function in this class that will query the database
      * directly.
