@@ -53,15 +53,48 @@ CBModelCache
      *
      * If the model doesn't exist in the database then null will be returned.
      *
-     * @param ID $ID
+     * @param CBID $modelCBID
      *
-     * @return ?model
+     * @return object|null
      */
-    static function fetchModelByID($ID): ?stdClass {
-        CBModelCache::cacheModelsByID([$ID]);
+    static function
+    fetchModelByCBID(
+        string $modelCBID
+    ): ?stdClass
+    {
+        CBModelCache::cacheModelsByID(
+            [$modelCBID]
+        );
 
-        return CBModelCache::modelByID($ID);
+        $model =
+        CBModelCache::modelByID(
+            $modelCBID
+        );
+
+        return $model;
     }
+    // fetchModelByCBID()
+
+
+
+    /**
+     * @deprecated 2022_08_14
+     *
+     *      Use CBModelCache::fetchModelByCBID()
+     */
+    static function
+    fetchModelByID(
+        string $modelCBID
+    ): ?stdClass
+    {
+        $model =
+        CBModelCache::fetchModelByCBID(
+            $modelCBID
+        );
+
+        return $model;
+    }
+    // fetchModelByID
 
 
 
