@@ -244,7 +244,7 @@ Colby
 
         return $requiredClassNames;
     }
-    /* CBHTMLOutput_requiredClassNames() */
+    // CBHTMLOutput_requiredClassNames()
 
 
 
