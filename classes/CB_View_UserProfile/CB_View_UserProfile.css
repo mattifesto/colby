@@ -1,0 +1,47 @@
+.CB_View_UserProfile_rootElement
+{
+    box-sizing:
+    border-box;
+
+    display:
+    flex;
+
+    max-width:
+    100%;
+
+    overflow-wrap:
+    break-word;
+
+    padding:
+    20px;
+}
+
+
+
+.CB_View_UserProfile_contentElement
+{
+    max-width:
+    100%;
+}
+
+
+
+.CB_View_UserProfile_fullNameElement
+{
+    font-size:
+    150%;
+
+    font-weight:
+    bold;
+
+    padding-bottom:
+    20px;
+}
+
+
+
+.CB_View_UserProfile_bioElement
+{
+    padding-bottom:
+    20px;
+}
