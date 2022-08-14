@@ -30,6 +30,24 @@ CB_View_UserProfile
 
 
 
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        $requiredClassNames =
+        [
+            'CB_UI',
+        ];
+
+        return $requiredClassNames;
+    }
+    // CBHTMLOutput_requiredClassNames()
+
+
+
     // CBModel interfaces
 
 
