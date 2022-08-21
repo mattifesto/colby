@@ -1,0 +1,49 @@
+.CB_Link_ArrayEditor_root_element
+{
+    box-sizing:
+    border-box;
+
+    display:
+    flex;
+
+    justify-content:
+    center;
+
+    max-width:
+    100%;
+
+    overflow-wrap:
+    break-word;
+
+    padding:
+    10px 20px;
+}
+
+
+
+.CB_Link_ArrayEditor_content_element
+{
+    border-color:
+    var(--CB_UI_borderColor);
+
+    border-radius:
+    5px;
+
+    border-style:
+    solid;
+
+    border-width:
+    2px;
+
+    box-sizing:
+    border-box;
+
+    max-width:
+    100%;
+
+    padding:
+    3px 10px;
+
+    width:
+    var(--CB_UI_readableWidth);
+}
