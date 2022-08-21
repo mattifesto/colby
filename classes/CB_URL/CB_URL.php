@@ -20,6 +20,47 @@ CB_URL
 
 
     /**
+     * @NOTE 2022_08_21_1661043752
+     *
+     *      This function is being written in haste, but should become the
+     *      function to validate URLs written in moments or in other casual
+     *      URL entry scenarios.
+     *
+     *      Eventually this function should validate the top level domain and
+     *      convert:
+     *
+     *          apple.com -> https://apple.com
+     *
+     * @param string $casualURL
+     *
+     * @return string
+     *
+     *      Returns "" if the casual URL is not valid.
+     */
+    static function
+    convertCasualURLToActualURL(
+        $casualURL
+    ): string
+    {
+        $hasHTTP =
+        preg_match(
+            '/^(http:\/\/|https:\/\/)/',
+            $casualURL
+        );
+
+        if (
+            $hasHTTP
+        ) {
+            return $casualURL;
+        }
+
+        return '';
+    }
+    // convertCasualURLToActualURL()
+
+
+
+    /**
      * A URL word is made up of characters that match this character regex. We
      * distinguish words from stubs because other concepts may also use the URL
      * word regex, such as tags. But often those concepts don't want to include
