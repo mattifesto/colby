@@ -19,6 +19,9 @@ CB_Ajax_User_UpdateProfile
      *
      *          CB_Ajax_User_UpdateProfile_targetUserFullName_argument:
      *          <string>,
+     *
+     *          CB_Ajax_User_UpdateProfile_targetUserProfileLinkArray_argument:
+     *          <array>,
      *      }
      *
      * @param CBID|null $callingUserModelCBID
@@ -73,6 +76,22 @@ CB_Ajax_User_UpdateProfile
         CBUser::setName(
             $targetUserSpec,
             $updatedTargetUserFullName
+        );
+
+
+
+        // profile link array
+
+        $updatedTargetUserProfileLinkArray =
+        CBModel::valueAsModel(
+            $executorArguments,
+            'CB_Ajax_User_UpdateProfile_targetUserProfileLinkArray_argument',
+            'CB_Link_Array'
+        );
+
+        CBUser::setProfileLinkArray(
+            $targetUserSpec,
+            $updatedTargetUserProfileLinkArray
         );
 
 
