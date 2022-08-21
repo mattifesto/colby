@@ -922,6 +922,13 @@ CBUser
             )
         );
 
+        CBUser::setProfileLinkArray(
+            $userModel,
+            CBUser::getProfileLinkArray(
+                $spec
+            )
+        );
+
 
 
         return $userModel;
@@ -1769,6 +1776,74 @@ CBUser
         $userModel->CBUser_prettyUsername_property = $prettyUsername;
     }
     /* setPrettyUsername() */
+
+
+
+    /**
+     * @param object $userModel
+     *
+     * @return <CB_Link_Array model>
+     */
+    static function
+    getProfileLinkArray(
+        stdClass $userModel
+    ): stdClass
+    {
+        $profileLinkArray =
+        CBModel::valueAsModel(
+            $userModel,
+            'CBUser_profileLinkArray_property',
+            'CB_Link_Array'
+        );
+
+        if (
+            $profileLinkArray ===
+            null
+        ) {
+            $profileLinkArray =
+            CBModel::createSpec(
+                'CB_Link_Array'
+            );
+        }
+
+        return $profileLinkArray;
+    }
+    // getProfileLinkArray()
+
+
+
+    /**
+     * @param object $userModel
+     * @param <CB_Link_Array model> $newLinkArray
+     *
+     * @return void
+     */
+    static function
+    setProfileLinkArray(
+        stdClass $userModel,
+        stdClass $newLinkArrayModel
+    ): void
+    {
+        $newLinkArrayModelClassName =
+        CBModel::getClassName(
+            $newLinkArrayModel
+        );
+
+        if (
+            $newLinkArrayModelClassName !==
+            'CB_Link_Array'
+        ) {
+            throw new CBExceptionWithValue(
+                'The new link array model is not valid.',
+                $newLinkArrayModel,
+                '251c02ab78ac5b33df8d23753706b3ae624c7d37'
+            );
+        }
+
+        $userModel->CBUser_profileLinkArray_property =
+        $newLinkArrayModel;
+    }
+    // setProfileLinks()
 
 
 
