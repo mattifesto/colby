@@ -156,6 +156,89 @@ CB_View_UserProfile
 
 
 
+        // links
+
+        $userProfileLinkArray =
+        CBUser::getProfileLinkArray(
+            $userModel
+        );
+
+        $linkModels =
+        CB_Link_Array::getLinks(
+            $userProfileLinkArray
+        );
+
+        $visibleLinkAnchors =
+        array_reduce(
+            $linkModels,
+            function (
+                $visibleLinkAnchors,
+                $linkModel
+            ): array
+            {
+                $text =
+                CB_Link::getText(
+                    $linkModel
+                );
+
+                if (
+                    $text ===
+                    ''
+                ) {
+                    return $visibleLinkAnchors;
+                }
+
+                $casualURL =
+                CB_Link::getURL(
+                    $linkModel
+                );
+
+                $actualURL =
+                CB_URL::convertCasualURLToActualURL(
+                    $casualURL
+                );
+
+                if (
+                    $actualURL ===
+                    ''
+                ) {
+                    return $visibleLinkAnchors;
+                }
+
+                array_push(
+                    $visibleLinkAnchors,
+                    '<a href="' .
+                    cbhtml(
+                        $actualURL
+                    ) .
+                    '">' .
+                    cbhtml(
+                        $text
+                    ) .
+                    '</a>'
+                );
+
+                return $visibleLinkAnchors;
+            },
+            []
+        );
+
+        if (
+            count($visibleLinkAnchors) > 0
+        ) {
+            echo
+            '<div class="CB_View_UserProfile_links">';
+
+            echo
+            implode(
+                " | ",
+                $visibleLinkAnchors
+            );
+
+            echo
+            '</div>';
+        }
+
         // edit profile
 
         $currentUseModelCBID =
