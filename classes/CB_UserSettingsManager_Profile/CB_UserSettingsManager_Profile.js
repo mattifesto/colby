@@ -1,4 +1,5 @@
 /* global
+    CB_Link_ArrayEditor,
     CB_UI_StringEditor,
     CBAjax,
     CBException,
@@ -22,6 +23,8 @@
 
     let bioEditor;
     let fullNameEditor;
+    let profileLinkArrayEditor;
+
     let hasChanged = false;
     let isSaving = false;
     let targetUserModelCBID;
@@ -98,6 +101,21 @@
 
 
 
+        // profile link array
+
+        profileLinkArrayEditor =
+        CB_Link_ArrayEditor.create();
+
+        rootElement.append(
+            profileLinkArrayEditor.CB_Link_ArrayEditor_getElement()
+        );
+
+        profileLinkArrayEditor.CB_Link_ArrayEditor_setTitle(
+            "Profile Links"
+        );
+
+
+
         (async function ()
         {
             try
@@ -162,6 +180,10 @@
         initializeBio(
             userProfile
         );
+
+        initializeProfileLinkArray(
+            userProfile
+        );
     }
     /* initialize() */
 
@@ -198,6 +220,36 @@
 
 
     /**
+     * @param object userProfile
+     *
+     * @return undefined
+     */
+    function
+    initializeProfileLinkArray(
+        userProfile
+    ) // -> undefined
+    {
+        profileLinkArrayEditor.CB_Link_ArrayEditor_setValue(
+            userProfile.CB_Ajax_User_FetchProfile_profileLinkArray
+        );
+
+        profileLinkArrayEditor.CB_Link_ArrayEditor_setChangedEventListener(
+            function (
+            ) // -> undefined
+            {
+                profileLinkArrayEditor.CB_Link_ArrayEditor_setTitle(
+                    "Profile Links (changed...)"
+                );
+
+                scheduleProfileSave();
+            }
+        );
+    }
+    // initializeProfileLinkArray()
+
+
+
+    /**
      * @return undefined
      */
     async function
@@ -220,6 +272,10 @@
                 "Bio (saving...)"
             );
 
+            profileLinkArrayEditor.CB_Link_ArrayEditor_setTitle(
+                "Profile Links (saving...)"
+            );
+
             await CBAjax.call2(
                 "CB_Ajax_User_UpdateProfile",
                 {
@@ -231,6 +287,9 @@
 
                     CB_Ajax_User_UpdateProfile_targetUserFullName_argument:
                     fullNameEditor.CB_UI_StringEditor_getValue(),
+
+                    CB_Ajax_User_UpdateProfile_targetUserProfileLinkArray_argument:
+                    profileLinkArrayEditor.CB_Link_ArrayEditor_getValue(),
                 }
             );
 
@@ -248,6 +307,10 @@
 
                 bioEditor.CB_UI_StringEditor_setTitle(
                     "Bio"
+                );
+
+                profileLinkArrayEditor.CB_Link_ArrayEditor_setTitle(
+                    "Profile Links"
                 );
             }
         }
