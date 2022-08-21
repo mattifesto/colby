@@ -176,7 +176,7 @@ Colby
 
 
 
-    /* -- CBHTMLOutput interfaces -- */
+    // -- CBHTMLOutput interfaces
 
 
 
