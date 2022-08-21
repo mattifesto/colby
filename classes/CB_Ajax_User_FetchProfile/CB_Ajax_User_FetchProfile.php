@@ -58,6 +58,13 @@ CB_Ajax_User_FetchProfile
             $targetUserModel
         );
 
+        $targetUserProfileLinkArray =
+        CBUser::getProfileLinkArray(
+            $targetUserModel
+        );
+
+
+
         $profile =
         (object)
         [
@@ -66,7 +73,12 @@ CB_Ajax_User_FetchProfile
 
             'CB_Ajax_User_FetchProfile_fullName' =>
             $targetUserFullName,
+
+            'CB_Ajax_User_FetchProfile_profileLinkArray' =>
+            $targetUserProfileLinkArray,
         ];
+
+
 
         return $profile;
     }
