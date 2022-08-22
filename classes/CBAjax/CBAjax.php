@@ -206,11 +206,11 @@ CBAjax
             'className' =>
             'CBAjaxResponse',
 
-            'message'
-            => '',
+            'message' =>
+            '',
 
-            'wasSuccessful'
-            => false,
+            'wasSuccessful' =>
+            false,
         ];
 
         $executorFunctionClassName =
@@ -274,7 +274,8 @@ CBAjax
             );
         }
 
-        else {
+        else
+        {
             throw new CBExceptionWithValue(
                 (
                     'The CBAjax_function_getUserGroupClassName() ' .
@@ -317,7 +318,8 @@ CBAjax
                 return;
             }
 
-            else {
+            else
+            {
                 $isDeveloper =
                 CBUserGroup::currentUserIsMemberOfUserGroup(
                     'CBDevelopersUserGroup'
@@ -364,6 +366,8 @@ CBAjax
 
         $response->wasSuccessful =
         true;
+
+
 
         done:
 
