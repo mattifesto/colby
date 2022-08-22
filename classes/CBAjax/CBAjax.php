@@ -218,6 +218,33 @@ CBAjax
             $ajaxRequestModel
         );
 
+
+
+        if (
+            $executorFunctionClassName ===
+            'CB_Tests_Ajax'
+        ) {
+            /**
+             * @TODO 2022_08_22_1661137374
+             *
+             *      This code exists because we have at least one test that
+             *      tests Ajax exceptions. There is currently no way to run an
+             *      Ajax test and say "this is a test" except for the fact that
+             *      those tests are run using the CB_Tests_Ajax class.
+             *
+             *      In the future, it may be a good idea to find a way to make
+             *      the Ajax code more testable so that any test can disable
+             *      slack notifications.
+             *
+             *      Also, we never re-enable slack notifications which is
+             *      functionally fine, but not techically great.
+             */
+
+            CBSlack::disable();
+        }
+
+
+
         $executorFunctionName =
         CB_AjaxRequest::getExecutorFunctionName(
             $ajaxRequestModel
