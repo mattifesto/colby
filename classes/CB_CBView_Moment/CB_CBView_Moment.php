@@ -14,16 +14,19 @@ CB_CBView_Moment
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        return
+        $cssURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.68.css',
+                '2022_08_25_1661436915',
+                'css',
                 cbsysurl()
             ),
         ];
+
+        return $cssURLs;
     }
-    /* CBHTMLOutput_CSSURLs() */
+    // CBHTMLOutput_CSSURLs()
 
 
 
@@ -34,16 +37,19 @@ CB_CBView_Moment
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        return
+        $javaScriptURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.72.js',
+                '2022_08_25_1661436916',
+                'js',
                 cbsysurl()
             ),
         ];
+
+        return $javaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
@@ -54,7 +60,7 @@ CB_CBView_Moment
     CBHTMLOutput_requiredClassNames(
     ): array
     {
-        return
+        $requiredClassNames =
         [
             'CB_Moment',
             'CBAjax',
@@ -70,8 +76,10 @@ CB_CBView_Moment
             'CB_UI',
             'CBAdministratorsUserGroup',
         ];
+
+        return $requiredClassNames;
     }
-    /* CBHTMLOutput_requiredClassNames() */
+    // CBHTMLOutput_requiredClassNames()
 
 
 
@@ -229,7 +237,7 @@ CB_CBView_Moment
                 href="/moment/${momentModelCBID}/"
                 title="go to moment page"
             >
-                📄
+                moment &gt;
             </a>
 
             EOT;
@@ -264,7 +272,7 @@ CB_CBView_Moment
             href="${hrefAsHTML}"
             title="share using email"
         >
-            ✉️
+            share
         </a>
         EOT;
 
