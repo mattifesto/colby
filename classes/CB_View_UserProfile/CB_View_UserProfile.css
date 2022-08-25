@@ -39,15 +39,13 @@
 
     font-weight:
     bold;
-
-    padding-bottom:
-    20px;
 }
 
 
-
-.CB_View_UserProfile_bioElement
+.CB_View_UserProfile_bioElement,
+.CB_View_UserProfile_editProfileElement,
+.CB_View_UserProfile_linksElement
 {
-    padding-bottom:
+    padding-top:
     20px;
 }
