@@ -30,16 +30,21 @@ CB_CBView_MomentCreator {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
-            Colby::flexpath(
+    ): array
+    {
+        $javaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.54.js',
+                '2022_08_25_1661447491',
+                'js',
                 cbsysurl()
             ),
         ];
+
+        return $javaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
