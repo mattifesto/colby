@@ -174,32 +174,8 @@ img
 
 
 .CB_CBView_Moment_footer_element >
-a
+a + a
 {
-    border:
-    2px solid var(--CB_UI_borderColor);
-
-    border-radius:
-    1000px;
-
-    display:
-    flex;
-
-    justify-content:
-    center;
-
-    align-items:
-    center;
-
-    font-size:
-    150%;
-
-    height:
-    44px;
-
-    margin:
-    0 20px;
-
-    width:
-    44px;
+    margin-left:
+    20px;
 }
