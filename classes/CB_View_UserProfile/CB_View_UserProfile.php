@@ -18,7 +18,7 @@ CB_View_UserProfile
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_08_14_1660498217',
+                '2022_08_25_1661435645',
                 'css',
                 cbsysurl()
             ),
@@ -227,7 +227,7 @@ CB_View_UserProfile
             count($visibleLinkAnchors) > 0
         ) {
             echo
-            '<div class="CB_View_UserProfile_links">';
+            '<div class="CB_View_UserProfile_linksElement">';
 
             echo
             implode(
