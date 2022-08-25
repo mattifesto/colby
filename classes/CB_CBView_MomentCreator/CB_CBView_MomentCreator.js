@@ -58,11 +58,13 @@
 
         let newMomentCallback;
 
-        let element = document.createElement(
+        let momentCreatorRootElement =
+        document.createElement(
             "div"
         );
 
-        element.className = "CB_CBView_MomentCreator";
+        momentCreatorRootElement.className =
+        "CB_CBView_MomentCreator";
 
         let stringEditor = CB_UI_StringEditor.create();
 
@@ -76,9 +78,10 @@
             "CB_UI_StringEditor_tall"
         );
 
-        element.append(
+        momentCreatorRootElement.append(
             stringEditorElement
         );
+
 
 
         /* image */
@@ -88,89 +91,110 @@
         let imageFileInputElement;
         let imageModel;
 
-        {
-            let imageContainerElement = document.createElement(
-                "div"
-            );
+        let imageContainerElement = document.createElement(
+            "div"
+        );
 
-            imageContainerElement.className = (
-                "CB_CBView_MomentCreator_imageContainer_element"
-            );
+        imageContainerElement.className = (
+            "CB_CBView_MomentCreator_imageContainer_element"
+        );
 
-            imageElement = document.createElement(
-                "img"
-            );
+        imageElement = document.createElement(
+            "img"
+        );
 
-            imageElement.className = "CB_CBView_MomentCreator_image_element";
+        imageElement.className = "CB_CBView_MomentCreator_image_element";
 
-            imageContainerElement.append(
-                imageElement
-            );
+        imageContainerElement.append(
+            imageElement
+        );
 
-            imageFileInputElement = document.createElement("input");
-            imageFileInputElement.type = "file";
-            imageFileInputElement.style.display = "none";
-            imageFileInputElement.accept="image/jpeg, image/png, image/gif";
+        imageFileInputElement = document.createElement("input");
+        imageFileInputElement.type = "file";
+        imageFileInputElement.style.display = "none";
+        imageFileInputElement.accept="image/jpeg, image/png, image/gif";
 
-            element.append(
-                imageFileInputElement
-            );
+        momentCreatorRootElement.append(
+            imageFileInputElement
+        );
 
-            imageFileInputElement.addEventListener(
-                "change",
-                async function () {
-                    try {
-                        imageModel = await CBAjax.call(
+        imageFileInputElement.addEventListener(
+            "change",
+            async function(
+            ) // -> undefined
+            {
+                try
+                {
+                    let imageURL =
+                    "";
+
+                    if (
+                        imageFileInputElement.files.length >
+                        0
+                    ) {
+                        let imageFile =
+                        imageFileInputElement.files[0];
+
+                        imageModel =
+                        await CBAjax.call(
                             "CBImages",
                             "upload",
                             {},
-                            imageFileInputElement.files[0]
+                            imageFile
                         );
 
-                        let imageURL = CBImage.toURL(
+                        imageURL =
+                        CBImage.toURL(
                             imageModel,
                             "rw960"
                         );
+                    }
 
-                        if (
-                            imageURL === ""
-                        ) {
-                            element.remove(
-                                imageContainerElement
-                            );
+                    imageElement.src =
+                    imageURL;
 
-                            imageElement.src = imageURL;
-                        } else {
-                            imageElement.src = imageURL;
-
-                            element.append(
-                                imageContainerElement
-                            );
-                        }
-                    } catch (
-                        error
+                    if (
+                        imageURL ===
+                        ""
                     ) {
-                        CBUIPanel.displayAndReportError(
-                            error
+                        momentCreatorRootElement.removeChild(
+                            imageContainerElement
+                        );
+                    }
+
+                    else
+                    {
+                        momentCreatorRootElement.append(
+                            imageContainerElement
                         );
                     }
                 }
-            );
 
-            addImageButton = CBUIButton.create();
-
-            addImageButton.CBUIButton_setTextContent(
-                "Add Image"
-            );
-
-            addImageButton.CBUIButton_addClickEventListener(
-                function () {
-                    imageFileInputElement.click();
+                catch (
+                    error
+                ) {
+                    CBUIPanel.displayAndReportError(
+                        error
+                    );
                 }
-            );
-        }
-        /* image */
+            }
+        );
 
+        addImageButton = CBUIButton.create();
+
+        addImageButton.CBUIButton_setTextContent(
+            "Add Image"
+        );
+
+        addImageButton.CBUIButton_addClickEventListener(
+            function () {
+                imageFileInputElement.click();
+            }
+        );
+
+
+
+        // share button
 
         let shareButton = CBUIButton.create();
 
@@ -213,7 +237,7 @@
                 buttonBarElement
             );
 
-            element.append(
+            momentCreatorRootElement.append(
                 buttonBarContainerElement
             );
         }
@@ -254,8 +278,24 @@
                     return;
                 }
 
-                imageFileInputElement.value = "";
-                imageElement.style.display = "none";
+                imageFileInputElement.value =
+                "";
+
+                imageModel =
+                undefined;
+
+                let imageContainerElementIsVisible =
+                momentCreatorRootElement.contains(
+                    imageContainerElement
+                );
+
+                if (
+                    imageContainerElementIsVisible
+                ) {
+                    momentCreatorRootElement.removeChild(
+                        imageContainerElement
+                    );
+                }
 
                 stringEditor.CB_UI_StringEditor_setValue(
                     ""
@@ -296,7 +336,7 @@
         function
         CB_CBView_MomentCreator_getElement(
         ) {
-            return element;
+            return momentCreatorRootElement;
         }
         /* CB_CBView_MomentCreator_getElement() */
 
