@@ -332,7 +332,7 @@
         );
 
         momentPageLinkElement.textContent =
-        "page";
+        "moment >";
 
         momentPageLinkElement.title =
         "go to moment page";
