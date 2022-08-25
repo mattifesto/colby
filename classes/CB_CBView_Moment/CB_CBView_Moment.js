@@ -332,7 +332,7 @@
         );
 
         momentPageLinkElement.textContent =
-        "📄";
+        "page";
 
         momentPageLinkElement.title =
         "go to moment page";
@@ -354,7 +354,7 @@
         );
 
         sendEmailElement.textContent =
-        "✉️";
+        "share";
 
         sendEmailElement.title =
         "share using email";
