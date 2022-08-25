@@ -75,26 +75,8 @@ CB_Moment {
             return $response;
         }
 
-        $text = trim(
-            CBModel::valueToString(
-                $args,
-                'CB_Moment_create_text_parameter'
-            )
-        );
 
-        if (
-            $text === ''
-        ) {
-            $response->CB_Moment_create_userErrorMessage = (
-                CBConvert::stringToCleanLine(<<<EOT
-
-                    You have provided no text for your moment.
-
-                EOT)
-            );
-
-            return $response;
-        }
+        // moment
 
         $momentModelCBID = CBID::generateRandomCBID();
 
@@ -118,62 +100,48 @@ CB_Moment {
         );
 
 
-        /* image */
 
-        $imageModel = CBModel::valueAsModel(
-            $args,
-            'CB_Moment_create_imageModel_parameter',
-            'CBImage'
+        // arguments
+
+        $textArgument =
+        CB_Ajax_Moment_Create::getTextArgument(
+            $args
         );
 
-        $imageModelCBID = null;
-
-        if (
-            $imageModel !== null
-        ) {
-            $imageModelCBID = CBModel::getCBID(
-                $imageModel
-            );
-        }
-
-        $verifiedImageSpec = null;
-
-        if (
-            $imageModelCBID !== null
-        ) {
-            $verifiedImageSpec = CBModels::fetchSpecByCBID(
-                $imageModelCBID
-            );
-        }
-
-        if (
-            $imageModel !== null &&
-            $verifiedImageSpec === null
-        ) {
-            throw new CBExceptionWithValue(
-                'CB_Moment_create_imageModel_parameter is not valid',
-                $imageModel,
-                'f0a3a15573f7e32fb22a3d46c661d9552669dc31'
-            );
-        }
-
-        $verifiedImageSpec = CBConvert::valueAsModel(
-            $verifiedImageSpec,
-            'CBImage'
+        $verifiedImageSpecArgument =
+        CB_Ajax_Moment_Create::getVerifiedImageSpecArgument(
+            $args
         );
+
+        if (
+            $verifiedImageSpecArgument ===
+            null &&
+            $textArgument ===
+            ''
+        ) {
+            $response->CB_Moment_create_userErrorMessage =
+            CBConvert::stringToCleanLine(<<<EOT
+
+                You have provided no text for your moment.
+
+            EOT);
+
+            return $response;
+        }
 
         CB_Moment::setImage(
             $momentSpec,
-            $verifiedImageSpec
+            $verifiedImageSpecArgument
         );
-
-        /* image */
-
 
         CB_Moment::setText(
             $momentSpec,
-            $text
+            $textArgument
         );
+
+
+
+        // save
 
         CBDB::transaction(
             function (
@@ -186,11 +154,10 @@ CB_Moment {
             }
         );
 
-        $response->CB_Moment_create_momentModel = (
-            CBModels::fetchModelByCBID(
-                CBModel::getCBID(
-                    $momentSpec
-                )
+        $response->CB_Moment_create_momentModel =
+        CBModels::fetchModelByCBID(
+            CBModel::getCBID(
+                $momentSpec
             )
         );
 
