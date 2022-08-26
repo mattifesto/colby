@@ -12,16 +12,21 @@ CB_CBView_MomentCreator
      */
     static function
     CBHTMLOutput_CSSURLs(
-    ): array {
-        return [
-            Colby::flexpath(
+    ): array
+    {
+        $cssURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.54.css',
+                '2022_08_26_1661538432',
+                'css',
                 cbsysurl()
             ),
         ];
+
+        return $cssURLs;
     }
-    /* CBHTMLOutput_CSSURLs() */
+    // CBHTMLOutput_CSSURLs()
 
 
 
