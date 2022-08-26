@@ -275,7 +275,7 @@ CB_Moment
 
 
 
-    /* -- CBHTMLOutput interfaces -- */
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -284,16 +284,21 @@ CB_Moment
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
-            Colby::flexpath(
+    ): array
+    {
+        $javaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.53.js',
+                '2022_08_26_1661547529',
+                'js',
                 cbsysurl()
             ),
         ];
+
+        return $javaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
