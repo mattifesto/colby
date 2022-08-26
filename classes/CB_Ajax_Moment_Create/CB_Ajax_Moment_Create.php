@@ -22,6 +22,32 @@ CB_Ajax_Moment_Create
      *      An empty string will be returned if no valid text has been provided.
      */
     static function
+    getImageAlternativeTextArgument(
+        stdClass $executorArguments
+    ): string
+    {
+        $imageAlternativeTextArgument =
+        trim(
+            CBModel::valueToString(
+                $executorArguments,
+                'CB_Moment_create_imageAlternativeText_parameter'
+            )
+        );
+
+        return $imageAlternativeTextArgument;
+    }
+    // getImageAlternativeTextArgument()
+
+
+
+    /**
+     * @param object $executorArguments
+     *
+     * @return string
+     *
+     *      An empty string will be returned if no valid text has been provided.
+     */
+    static function
     getTextArgument(
         stdClass $executorArguments
     ): string
