@@ -392,6 +392,13 @@ CB_Moment {
             )
         );
 
+        CB_Moment::setImageAlternativeText(
+            $momentModel,
+            CB_Moment::getImageAlternativeText(
+                $momentSpec
+            )
+        );
+
         CB_Moment::setText(
             $momentModel,
             CB_Moment::getText(
@@ -973,6 +980,48 @@ CB_Moment {
         $momentModel->CB_Moment_imageModel_property = $verifiedImageModel;
     }
     /* setImage() */
+
+
+
+    /**
+     * @param object $momentModel
+     *
+     * @return string
+     */
+    static function
+    getImageAlternativeText(
+        stdClass $momentModel
+    ): string
+    {
+        $imageAlternativeText =
+        trim(
+            CBModel::valueToString(
+                $momentModel,
+                'CB_Moment_imageAlternativeText_property'
+            )
+        );
+
+        return $imageAlternativeText;
+    }
+    /* getImageAlternativeText() */
+
+
+
+    /**
+     * @param object $momentModel
+     * @param srting $newImageAlternativeText
+     *
+     * @return void
+     */
+    static function
+    setImageAlternativeText(
+        stdClass $momentModel,
+        string $newImageAlternativeText
+    ): void {
+        $momentModel->CB_Moment_imageAlternativeText_property =
+        $newImageAlternativeText;
+    }
+    /* setImageAlternativeText() */
 
 
 
