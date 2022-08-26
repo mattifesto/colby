@@ -3,7 +3,9 @@
 */
 
 
-(function () {
+(function ()
+{
+    "use strict";
 
     window.CB_Moment = {
         getAuthorUserModelCBID,
@@ -124,4 +126,5 @@
     }
     /* getText() */
 
-})();
+}
+)();
