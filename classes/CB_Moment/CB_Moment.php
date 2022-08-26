@@ -1045,16 +1045,17 @@ CB_Moment {
 
     /**
      * @param object $momentModel
-     * @param CBID|null $authorUserModelCBID
+     * @param string $newText
      *
      * @return void
      */
     static function
     setText(
         stdClass $momentModel,
-        string $text
+        string $newText
     ): void {
-        $momentModel->CB_Moment_text = $text;
+        $momentModel->CB_Moment_text =
+        $newText;
     }
     /* setText() */
 
