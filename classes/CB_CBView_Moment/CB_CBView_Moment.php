@@ -513,7 +513,17 @@ CB_CBView_Moment
         }
 
         $alternativeText =
-        "Image";
+        CB_Moment::getImageAlternativeText(
+            $momentModel
+        );
+
+        if (
+            $alternativeText ===
+            ''
+        ) {
+            $alternativeText =
+            'Image';
+        }
 
         CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
             $imageModel,
