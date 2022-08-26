@@ -79,32 +79,31 @@
         momentCreatorRootElement.className =
         "CB_CBView_MomentCreator";
 
-        let stringEditor =
+
+
+        // moment text editor
+
+        let momentTextEditor =
         CB_UI_StringEditor.create();
 
-        stringEditor.CB_UI_StringEditor_setPlaceholderText(
+        momentTextEditor.CB_UI_StringEditor_setPlaceholderText(
             "Share a Moment"
         );
 
-        let stringEditorElement =
-        stringEditor.CB_UI_StringEditor_getElement();
+        let momentTextEditorElement =
+        momentTextEditor.CB_UI_StringEditor_getElement();
 
-        stringEditorElement.classList.add(
+        momentTextEditorElement.classList.add(
             "CB_UI_StringEditor_tall"
         );
 
         momentCreatorRootElement.append(
-            stringEditorElement
+            momentTextEditorElement
         );
 
 
 
-        /* image */
-
-        let addImageButton;
-        let imageElement;
-        let imageFileInputElement;
-        let imageModel;
+        // image container element
 
         let imageContainerElement =
         document.createElement(
@@ -114,7 +113,7 @@
         imageContainerElement.className =
         "CB_CBView_MomentCreator_imageContainer_element";
 
-        imageElement =
+        let imageElement =
         document.createElement(
             "img"
         );
@@ -125,6 +124,13 @@
         imageContainerElement.append(
             imageElement
         );
+
+
+
+        /* image */
+
+        let imageFileInputElement;
+        let imageModel;
 
         imageFileInputElement =
         document.createElement(
@@ -206,7 +212,11 @@
             }
         );
 
-        addImageButton =
+
+
+        // add image button
+
+        let addImageButton =
         CBUIButton.create();
 
         addImageButton.CBUIButton_setTextContent(
@@ -298,7 +308,7 @@
                     imageModel,
 
                     CB_Moment_create_text_parameter:
-                    stringEditor.CB_UI_StringEditor_getValue(),
+                    momentTextEditor.CB_UI_StringEditor_getValue(),
                 };
 
                 let response =
@@ -338,7 +348,7 @@
                     );
                 }
 
-                stringEditor.CB_UI_StringEditor_setValue(
+                momentTextEditor.CB_UI_StringEditor_setValue(
                     ""
                 );
 
