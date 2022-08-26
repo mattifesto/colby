@@ -62,6 +62,18 @@
     CB_CBView_MomentCreator_create(
     ) // -> object
     {
+        /**
+         * The currentImageModel and currentPictureElement will be changed each
+         * time the user changes the image associated with the moment. They will
+         * both be set to undefined if there is no image associated with the
+         * moment.
+         */
+
+        let currentPictureElement;
+        let currentImageModel;
+
+
+
         if (
             CB_Moment_showMomentEditor_jsvariable !==
             true
@@ -113,16 +125,20 @@
         imageContainerElement.className =
         "CB_CBView_MomentCreator_imageContainer_element";
 
-        let imageElement =
-        document.createElement(
-            "img"
+
+
+        let momentImageAlternativeTextEditor =
+        CB_UI_StringEditor.create();
+
+        momentImageAlternativeTextEditor.CB_UI_StringEditor_setPlaceholderText(
+            "Alternative Text"
         );
 
-        imageElement.className =
-        "CB_CBView_MomentCreator_image_element";
+        let momentImageAlternativeTextEditorElement =
+        momentImageAlternativeTextEditor.CB_UI_StringEditor_getElement();
 
         imageContainerElement.append(
-            imageElement
+            momentImageAlternativeTextEditorElement
         );
 
 
@@ -130,7 +146,6 @@
         /* image */
 
         let imageFileInputElement;
-        let imageModel;
 
         imageFileInputElement =
         document.createElement(
@@ -157,49 +172,82 @@
             {
                 try
                 {
-                    let imageURL =
+                    if (
+                        imageFileInputElement.files.length <
+                        1
+                    ) {
+                        return;
+                    }
+
+                    let imageFile =
+                    imageFileInputElement.files[0];
+
+                    let newImageModel =
+                    await CBAjax.call(
+                        "CBImages",
+                        "upload",
+                        {},
+                        imageFile
+                    );
+
+                    imageFileInputElement.value =
                     "";
 
                     if (
-                        imageFileInputElement.files.length >
-                        0
+                        newImageModel ===
+                        undefined
                     ) {
-                        let imageFile =
-                        imageFileInputElement.files[0];
-
-                        imageModel =
-                        await CBAjax.call(
-                            "CBImages",
-                            "upload",
-                            {},
-                            imageFile
-                        );
-
-                        imageURL =
-                        CBImage.toURL(
-                            imageModel,
-                            "rw960"
-                        );
+                        /**
+                         * It would be odd for newImageModel to be undefined
+                         * here but if it is just return making no image
+                         * changes.
+                         */
+                        return;
                     }
-
-                    imageElement.src =
-                    imageURL;
 
                     if (
-                        imageURL ===
-                        ""
+                        currentPictureElement !==
+                        undefined
                     ) {
-                        momentCreatorRootElement.removeChild(
-                            imageContainerElement
+                        imageContainerElement.removeChild(
+                            currentPictureElement
                         );
                     }
 
-                    else
-                    {
+                    let imageContainerElementIsVisible =
+                    momentCreatorRootElement.contains(
+                        imageContainerElement
+                    );
+
+
+                    if (
+                        imageContainerElementIsVisible !==
+                        true
+                    ) {
                         momentCreatorRootElement.append(
                             imageContainerElement
                         );
                     }
+
+                    currentPictureElement =
+                    CBImage.createPictureElementWithMaximumDisplayWidthAndHeight(
+                        newImageModel,
+                        "rw960",
+                        500,
+                        500
+                    );
+
+                    imageContainerElement.prepend(
+                        currentPictureElement
+                    );
+
+
+                    momentImageAlternativeTextEditor.CB_UI_StringEditor_setValue(
+                        ""
+                    );
+
+                    currentImageModel =
+                    newImageModel;
                 }
 
                 catch (
@@ -305,7 +353,10 @@
                 let executorArguments =
                 {
                     CB_Moment_create_imageModel_parameter:
-                    imageModel,
+                    currentImageModel,
+
+                    CB_Moment_create_imageAlternativeText_parameter:
+                    momentImageAlternativeTextEditor.CB_UI_StringEditor_getValue(),
 
                     CB_Moment_create_text_parameter:
                     momentTextEditor.CB_UI_StringEditor_getValue(),
@@ -329,10 +380,19 @@
                     return;
                 }
 
-                imageFileInputElement.value =
-                "";
+                if (
+                    currentPictureElement !==
+                    undefined
+                ) {
+                    imageContainerElement.removeChild(
+                        currentPictureElement
+                    );
+                }
 
-                imageModel =
+                currentImageModel =
+                undefined;
+
+                currentPictureElement =
                 undefined;
 
                 let imageContainerElementIsVisible =
@@ -347,6 +407,10 @@
                         imageContainerElement
                     );
                 }
+
+                momentImageAlternativeTextEditor.CB_UI_StringEditor_setValue(
+                    ""
+                );
 
                 momentTextEditor.CB_UI_StringEditor_setValue(
                     ""
