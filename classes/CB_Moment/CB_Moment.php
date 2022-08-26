@@ -12,6 +12,7 @@ CB_Moment
      *
      *      {
      *          CB_Moment_create_text_parameter: string
+     *          CB_Moment_create_imageAlternativeText_parameter: string
      *          CB_Moment_create_imageModel_parameter: object
      *      }
      *
@@ -113,6 +114,21 @@ CB_Moment
             $args
         );
 
+        $imageAlternativeTextArgument =
+        '';
+
+        if (
+            $verifiedImageSpecArgument !==
+            null
+        ) {
+            $imageAlternativeTextArgument =
+            CB_Ajax_Moment_Create::getImageAlternativeTextArgument(
+                $args
+            );
+        }
+
+
+
         if (
             $verifiedImageSpecArgument ===
             null &&
@@ -128,6 +144,11 @@ CB_Moment
 
             return $response;
         }
+
+        CB_Moment::setImageAlternativeText(
+            $momentSpec,
+            $imageAlternativeTextArgument
+        );
 
         CB_Moment::setImage(
             $momentSpec,
