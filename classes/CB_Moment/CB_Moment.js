@@ -7,13 +7,21 @@
 {
     "use strict";
 
-    window.CB_Moment = {
+    let CB_Moment =
+    {
         getAuthorUserModelCBID,
         getCBTimestamp,
         getCreatedTimestamp,
         getImage,
+
+        getImageAlternativeText:
+        CB_Moment_getImageAlternativeText,
+
         getText,
     };
+
+    window.CB_Moment =
+    CB_Moment;
 
 
 
@@ -107,6 +115,28 @@
         );
     }
     /* getImage() */
+
+
+
+    /**
+     * @param object momentModel
+     *
+     * @return string
+     */
+    function
+    CB_Moment_getImageAlternativeText(
+        momentModel
+    ) // -> string
+    {
+        let imageAlternativeText =
+        CBModel.valueToString(
+            momentModel,
+            'CB_Moment_imageAlternativeText_property'
+        );
+
+        return imageAlternativeText;
+    }
+    // CB_Moment_getImageAlternativeText()
 
 
 
