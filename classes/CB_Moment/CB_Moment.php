@@ -1,9 +1,9 @@
 <?php
 
 final class
-CB_Moment {
-
-    /* -- CBAjax interfaces -- */
+CB_Moment
+{
+    // -- CBAjax interfaces
 
 
 
