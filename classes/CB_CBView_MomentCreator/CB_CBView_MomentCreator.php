@@ -1,9 +1,9 @@
 <?php
 
 final class
-CB_CBView_MomentCreator {
-
-    /* -- CBHTMLOutput interfaces -- */
+CB_CBView_MomentCreator
+{
+    // -- CBHTMLOutput interfaces
 
 
 
