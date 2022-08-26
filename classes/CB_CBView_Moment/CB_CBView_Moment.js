@@ -20,11 +20,14 @@
 {
     "use strict";
 
-    window.CB_CBView_Moment =
+    let CB_CBView_Moment =
     {
         createStandardMoment:
         CB_CBView_Moment_createStandardMoment,
     };
+
+    window.CB_CBView_Moment =
+    CB_CBView_Moment;
 
 
 
@@ -423,7 +426,17 @@
         "block";
 
         let alternativeText =
-        "Image";
+        CB_Moment.getImageAlternativeText(
+            momentModel
+        );
+
+        if (
+            alternativeText ===
+            ""
+        ) {
+            alternativeText =
+            "Image";
+        }
 
         let maximumDisplayWidthInCSSPixels =
         1280;
