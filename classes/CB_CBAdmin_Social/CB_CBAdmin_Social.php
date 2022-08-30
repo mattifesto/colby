@@ -1,9 +1,9 @@
 <?php
 
 final class
-CB_CBAdmin_Social {
-
-    /* -- CBAdmin interfaces -- -- -- -- -- */
+CB_CBAdmin_Social
+{
+    // -- CBAdmin interfaces
 
 
 
