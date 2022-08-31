@@ -406,8 +406,8 @@ CB_YouTubeStatistics
 
 
     /**
-     * This function gets statistics for a YouTube channel and returns an
-     * unsaved CB_YouTubeStatistics spec.
+     * This function gets the current statistics from YouTube for a YouTube
+     * channel and returns an unsaved CB_YouTubeStatistics spec.
      */
     static function
     fetch(
@@ -464,5 +464,56 @@ CB_YouTubeStatistics
         return $youtubeStatisticsSpec;
     }
     // fetch()
+
+
+
+    /**
+     * This function fetches the most recently saved CB_YouTubeStatistics models
+     * for a channel.
+     *
+     * @param CBID $youtubeChannelModelCBID
+     * @param int $maximumResultCount
+     *
+     * @return [<CB_YouTubeStatistics model>]
+     */
+    static function
+    fetchRecentStatistics(
+        string $youtubeChannelModelCBID,
+        int $maximumResultCount = 10
+    ): array
+    {
+        $associations =
+        CBModelAssociations::fetchModelAssociationsByFirstCBIDAndAssociationKey(
+            $youtubeChannelModelCBID,
+            'CB_YouTubeStatistics_association',
+            'descending',
+            $maximumResultCount
+        );
+
+        $youtubeStatisticsModelCBIDs =
+        array_map(
+            function (
+                $association
+            ): string
+            {
+                $youtubeStatisticsModelCBID =
+                CB_ModelAssociation::getSecondCBID(
+                    $association
+                );
+
+                return $youtubeStatisticsModelCBID;
+            },
+            $associations
+        );
+
+        $returnValue =
+        CBModels::fetchModelsByID2(
+            $youtubeStatisticsModelCBIDs,
+            true /* maintain positions */
+        );
+
+        return $returnValue;
+    }
+    // fetchRecentStatistics()
 
 }
