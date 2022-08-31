@@ -29,51 +29,30 @@ CB_Ajax_YouTube_GetStatistics
             $youtubeChannelModelCBID ===
             null
         ) {
+            $message =
+            CBConvert::stringToCleanLine(<<<EOT
+
+                The value of the
+                CB_Ajax_YouTube_GetStatistics_youtubeChannelModelCBID_parameter
+                is not a valid CBID.
+
+            EOT);
+
             throw
             new CBExceptionWithValue(
-                CBConvert::stringToCleanLine(<<<EOT
-
-                    The value of the
-                    CB_Ajax_YouTube_GetStatistics_youtubeChannelModelCBID_parameter
-                    is not a valid CBID.
-
-                EOT),
+                $message,
                 $executorArguments,
                 '3186ed4802ae8bfc4f4935570e81fe42e90fd9d1'
             );
         }
 
-        $associations =
-        CBModelAssociations::fetchModelAssociationsByFirstCBIDAndAssociationKey(
+        $youtubeStatisticsModels =
+        CB_YouTubeStatistics::fetchRecentStatistics(
             $youtubeChannelModelCBID,
-            'CB_YouTubeStatistics_association',
-            'descending',
-            100
+            7
         );
 
-        $youtubeStatisticsModelCBIDs =
-        array_map(
-            function (
-                $association
-            ): string
-            {
-                $youtubeStatisticsModelCBID =
-                CB_ModelAssociation::getSecondCBID(
-                    $association
-                );
-
-                return $youtubeStatisticsModelCBID;
-            },
-            $associations
-        );
-
-        $returnValue =
-        CBModels::fetchModelsByID2(
-            $youtubeStatisticsModelCBIDs,
-            true /* maintain positions */
-        );
-
-        return $returnValue;
+        return $youtubeStatisticsModels;
     }
     /* CBAjax_execute() */
 
