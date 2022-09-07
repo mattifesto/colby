@@ -26,18 +26,10 @@ if (
 
 } else {
 
-    /**
-     * @deprecated 2022_01_25
-     *
-     *      I'm pretty sure the /api/ URL below is no longer used and can be
-     *      removed.
-     */
-
     echo <<<EOT
 
     User-agent: *
     Disallow: /admin/
-    Disallow: /api/
 
     EOT;
 
