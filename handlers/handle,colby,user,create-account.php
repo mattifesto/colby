@@ -1,5 +1,10 @@
 <?php
 
+CBHTMLOutput::setCanonicalURL(
+    cbsiteurl() .
+    '/colby/user/create-account/'
+);
+
 try {
     $stateAsJSON = cb_query_string_value('state');
     $state = json_decode($stateAsJSON);
