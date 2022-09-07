@@ -5,49 +5,68 @@ CBHTMLOutput::setCanonicalURL(
     '/signin/'
 );
 
-try {
-    $stateAsJSON = cb_query_string_value(
+try
+{
+    $stateAsJSON =
+    cb_query_string_value(
         'state'
     );
 
-    $state = json_decode(
+    $state =
+    json_decode(
         $stateAsJSON
     );
-} catch (
-    Throwable $throwable
-) {
-    $state = (object)[];
 }
 
-$destinationURL = trim(
+catch (
+    Throwable $throwable
+) {
+    $state =
+    (object)[];
+}
+
+
+
+$destinationURL =
+trim(
     CBModel::valueToString(
         $state,
         'destinationURL'
     )
 );
 
+if (
+    $destinationURL ===
+    ''
+) {
+    /**
+     * If the destination URL is empty, make the home page the destination.
+     */
 
-
-/**
- * If the destination URL is empty, make the home page the destination.
- */
-if ($destinationURL === '') {
-    $destinationURL = '/';
+    $destinationURL =
+    '/';
 }
 
 
 
-if (ColbyUser::getCurrentUserCBID() !== null) {
-
+if (
+    ColbyUser::getCurrentUserCBID() !==
+    null
+) {
     /**
      * If the user is signed in and came directly to this page show the sign out
      * view.
      */
 
-    $viewSpecs = [
-        (object)[
-            'className' => 'CBMessageView',
-            'markup' => <<<EOT
+    $viewSpecs =
+    [
+        (object)
+        [
+            'className' =>
+            'CBMessageView',
+
+            'markup' =>
+            <<<EOT
 
                 --- center
                 You are already signed in.
@@ -55,18 +74,24 @@ if (ColbyUser::getCurrentUserCBID() !== null) {
 
             EOT,
         ],
-        (object)[
-            'className' => 'CBSignOutView',
+        (object)
+        [
+            'className' =>
+            'CBSignOutView',
         ],
     ];
 
-} else {
+}
+
+else
+{
 
     /**
      * If the user is not logged in display sign in views.
      */
 
-    $userSignInViewSpec = CBModel::createSpec(
+    $userSignInViewSpec =
+    CBModel::createSpec(
         'CB_CBView_UserSignIn'
     );
 
@@ -75,22 +100,32 @@ if (ColbyUser::getCurrentUserCBID() !== null) {
         $destinationURL
     );
 
-    $viewSpecs = [
+    $viewSpecs =
+    [
         $userSignInViewSpec,
-        (object)[
-            'className' => 'SignInView',
-            'destinationURL' => $destinationURL,
+        (object)
+        [
+            'className' =>
+            'SignInView',
+
+            'destinationURL' =>
+            $destinationURL,
         ],
-        (object)[
-            'className' => 'CBFacebookSignInView',
-            'destinationURL' => $destinationURL,
+        (object)
+        [
+            'className' =>
+            'CBFacebookSignInView',
+
+            'destinationURL' =>
+            $destinationURL,
         ],
     ];
 }
 
 
 
-$pageSpec = CBViewPage::standardPageTemplate();
+$pageSpec =
+CBViewPage::standardPageTemplate();
 
 CBViewPage::setTitle(
     $pageSpec,
@@ -111,26 +146,32 @@ CBPage::render(
 
 
 final class
-SignInView {
-
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+SignInView
+{
+    // -- CBHTMLOutput interfaces
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
-        return [
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        $requiredClassNames =
+        [
             'CBUI',
             'CBUIStringEditor',
         ];
+
+        return $requiredClassNames;
     }
     /* CBHTMLOutput_requiredClassNames() */
 
 
 
-    /* -- CBModel interfaces -- -- -- -- -- */
+    // -- CBModel interfaces
 
 
 
@@ -139,21 +180,27 @@ SignInView {
      *
      * @return object
      */
-    static function CBModel_build(
-        stdClass $spec
-    ): stdClass {
-        return (object)[
-            'destinationURL' => CBModel::valueToString(
-                $spec,
+    static function
+    CBModel_build(
+        stdClass $viewSpec
+    ): stdClass
+    {
+        $viewModel =
+        (object)[
+            'destinationURL' =>
+            CBModel::valueToString(
+                $viewSpec,
                 'destinationURL'
             ),
         ];
+
+        return $viewModel;
     }
     /* CBModel_build() */
 
 
 
-    /* -- CBView interfaces -- -- -- -- -- */
+    // -- CBView interfaces
 
 
 
@@ -162,15 +209,19 @@ SignInView {
      *
      * @return void
      */
-    static function CBView_render(
+    static function
+    CBView_render(
         stdClass $viewModel
-    ): void {
-        $destinationURL = CBModel::valueToString(
+    ): void
+    {
+        $destinationURL =
+        CBModel::valueToString(
             $viewModel,
             'destinationURL'
         );
 
-        $createAccountURL = CBUser::getCreateAccountPageURL(
+        $createAccountURL =
+        CBUser::getCreateAccountPageURL(
             $destinationURL
         );
 
