@@ -1,5 +1,10 @@
 <?php
 
+CBHTMLOutput::setCanonicalURL(
+    cbsiteurl() .
+    '/signin/'
+);
+
 try {
     $stateAsJSON = cb_query_string_value(
         'state'
