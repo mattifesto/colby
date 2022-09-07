@@ -52,6 +52,9 @@ CBHTMLOutput {
     const JSInHeadElement   = 2; // 1 << 1
     const JSDefer           = 4; // 1 << 2
 
+    private static $canonicalURL =
+    null;
+
     private static $CSSURLs;
     private static $exportedLists;
     private static $exportedVariables;
@@ -125,6 +128,38 @@ CBHTMLOutput {
 
 
     /* -- accessors -- */
+
+
+
+    /**
+     * @param string $newCanonicalURL
+     *
+     * @return void
+     */
+    static function
+    setCanonicalURL(
+        string $newCanonicalURL
+    ): void
+    {
+        $newCanonicalURL =
+        trim(
+            $newCanonicalURL
+        );
+
+        if (
+            $newCanonicalURL === ''
+        ) {
+            CBHTMLOutput::$canonicalURL =
+            null;
+        }
+
+        else
+        {
+            CBHTMLOutput::$canonicalURL =
+            $newCanonicalURL;
+        }
+    }
+    //setCanonicalURL()
 
 
 
@@ -749,6 +784,23 @@ CBHTMLOutput {
                     <?php
                 }
 
+                if (
+                    CBHTMLOutput::$canonicalURL !==
+                    null
+                ) {
+                    $canonicalURLAsHTML =
+                    cbhtml(
+                        CBHTMLOutput::$canonicalURL
+                    );
+
+                    echo <<<EOT
+                    <link
+                        rel="canonical"
+                        href="${canonicalURLAsHTML}"
+                    >
+                    EOT;
+                }
+
                 CBPageSettings::renderHeadElementHTML(
                     $requiredPageSettingsClassNames
                 );
@@ -1029,11 +1081,17 @@ CBHTMLOutput {
      */
     static function
     reset(
-    ): void {
-        if (CBHTMLOutput::$isActive) {
+    ): void
+    {
+        if (
+            CBHTMLOutput::$isActive
+        ) {
             restore_exception_handler();
             ob_end_clean();
         }
+
+        CBHTMLOutput::$canonicalURL =
+        null;
 
         CBHTMLOutput::$CSSURLs = array();
         CBHTMLOutput::$exportedLists = array();
@@ -1058,7 +1116,9 @@ CBHTMLOutput {
          *      required class names.
          */
 
-        CBHTMLOutput::requireClassName('Colby');
+        CBHTMLOutput::requireClassName(
+            'Colby'
+        );
     }
     /* reset() */
 
