@@ -5,28 +5,50 @@ CBHTMLOutput::setCanonicalURL(
     '/colby/user/create-account/'
 );
 
-try {
-    $stateAsJSON = cb_query_string_value('state');
-    $state = json_decode($stateAsJSON);
-} catch (Throwable $throwable) {
-    $state = (object)[];
+try
+{
+    $stateAsJSON =
+    cb_query_string_value(
+        'state'
+    );
+
+    $state =
+    json_decode(
+        $stateAsJSON
+    );
 }
 
-$destinationURL = CBModel::valueToString(
+catch (
+    Throwable $throwable
+) {
+    $state =
+    (object)[];
+}
+
+$destinationURL =
+CBModel::valueToString(
     $state,
     'destinationURL'
 );
 
-$currentUserCBID = ColbyUser::getCurrentUserCBID();
+$currentUserCBID =
+ColbyUser::getCurrentUserCBID();
 
-$sections = [];
+$sections =
+[];
 
-if ($currentUserCBID !== null) {
+if (
+    $currentUserCBID !== null
+) {
     array_push(
         $sections,
-        (object)[
-            'className' => 'CBMessageView',
-            'markup' => <<<EOT
+        (object)
+        [
+            'className' =>
+            'CBMessageView',
+
+            'markup' =>
+            <<<EOT
 
                 You are currently signed in. If you create a new account you
                 will be sign out of the current account and signed in as the new
@@ -39,16 +61,25 @@ if ($currentUserCBID !== null) {
 
 array_push(
     $sections,
-    (object)[
-        'className' => 'CBUser_CreateAccountView',
-        'destinationURL' => $destinationURL,
+    (object)
+    [
+        'className' =>
+        'CBUser_CreateAccountView',
+
+        'destinationURL' =>
+        $destinationURL,
     ]
 );
 
-$pageSpec = CBModelTemplateCatalog::fetchLivePageTemplate(
-    (object)[
-        'title' => 'Create Account',
-        'sections' => $sections,
+$pageSpec =
+CBModelTemplateCatalog::fetchLivePageTemplate(
+    (object)
+    [
+        'title' =>
+        'Create Account',
+
+        'sections' =>
+        $sections,
     ]
 );
 
