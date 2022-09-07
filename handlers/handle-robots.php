@@ -1,36 +1,52 @@
 <?php
 
-header("Content-Type: text/plain");
+(function ()
+{
+    header(
+        "Content-Type: text/plain"
+    );
 
-?>
-Sitemap: <?= cbsiteurl() . '/sitemap.xml' ?>
+    $sitemapURL =
+    cbsiteurl() .
+    '/sitemap.xml';
 
-<?php
+    echo <<<EOT
+    Sitemap: ${sitemapURL}
 
-/**
- * Robots are not allowed if they are disabled in site preferences or if the
- * request domain is not the primary domain.
- */
+    EOT;
 
-if (
+    /**
+     * Robots are not allowed if they are disabled in site preferences or if the
+     * request domain is not the primary domain.
+     */
+
+    $theRequestDomainIsNotThePrimaryDomain =
+    CBRequest::requestDomain() !==
+    CBConfiguration::primaryDomain();
+
+    $robotsAreNotAllowed =
     CBSitePreferences::disallowRobots() ||
-    CBRequest::requestDomain() !== CBConfiguration::primaryDomain()
-) {
+    $theRequestDomainIsNotThePrimaryDomain;
 
-    echo <<<EOT
+    if (
+        $robotsAreNotAllowed
+    ) {
+        echo <<<EOT
 
-    User-agent: *
-    Disallow: /
+        User-agent: *
+        Disallow: /
 
-    EOT;
+        EOT;
+    }
 
-} else {
+    else
+    {
+        echo <<<EOT
 
-    echo <<<EOT
+        User-agent: *
+        Disallow: /admin/
 
-    User-agent: *
-    Disallow: /admin/
-
-    EOT;
-
+        EOT;
+    }
 }
+)();
