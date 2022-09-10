@@ -1,79 +1,86 @@
-.CBLinkView1 {
-    display: flex;
-    justify-content: center;
-    max-width: 100%;
+.CBLinkView1_root_element
+{
+    box-sizing:
+    border-box;
+
+    display:
+    flex;
+
+    justify-content:
+    center;
+
+    max-width:
+    100%;
+
+    overflow-wrap:
+    break-word;
+
+    padding:
+    20px;
 }
 
-.CBLinkView1 a {
-    box-sizing: border-box;
-    color: inherit;
-    display: block;
-    padding: 20px;
-    text-decoration: none;
+
+
+.CBLinkView1_content_element
+{
+    /**
+     * 2022_09_10
+     *
+     * The "color" property is set to "inherit" because this element is an
+     * anchor element and we don't want it to have the anchor color unless the
+     * user is hovering.
+     */
+    color:
+    inherit;
+
+    max-width:
+    100%;
+
+    text-decoration:
+    none;
+
+    width:
+    320px;
 }
 
-.CBLinkView1 a:hover {
-    color: var(--CBTextColorForLinks);
+
+
+.CBLinkView1_content_element:hover
+{
+    color:
+    var(--CBTextColorForLinks);
 }
 
-.CBLinkView1 a:hover .arrow {
-    opacity: 1;
+
+
+.CBLinkView1_root_element.small
+.CBLinkView1_content_element
+{
+    width:
+    240px;
 }
 
-.CBLinkView1 .text {
-    padding-top: 5px;
-    display: flex;
-    justify-content: space-between;
+
+
+.CBLinkView1_root_element.large
+.CBLinkView1_content_element
+{
+    width:
+    480px;
 }
 
-.CBLinkView1 .title {
-    font-weight: bold;
+
+
+.CBLinkView1_title_element
+{
+    margin:
+    3px 0;
 }
 
-.CBLinkView1 .description {
 
-}
 
-.CBLinkView1 .arrow {
-    align-items: center;
-    display: flex;
-    flex: none;
-    font-size: 2em;
-    font-weight: bold;
-    justify-content: center;
-    opacity: 0.2;
-    padding: 0 0.1em 0 0.5em;
-}
-
-.CBLinkView1 .arrow::before {
-    content: ">";
-}
-
-/**
- * Large instances compress to 368px to fit two in a row on the largest iPhone,
- * then pause, then eventually compress to 100vw.
- */
-
-.CBLinkView1.large a {
-    max-width: 520px; /* 20 + 480 + 20 */
-    width: 50vw;
-}
-
-@media (max-width: 736px) {
-    .CBLinkView1.large a {
-        max-width: 368px;
-        width: 100vw;
-    }
-}
-
-.CBLinkView1.medium a {
-    max-width: 360px; /* 20 + 320 + 20 */
-    min-width: 320px;
-    width: 50vw;
-}
-
-.CBLinkView1.small a {
-    max-width: 280px; /* 20 + 240 + 20 */
-    min-width: 240px;
-    width: 33.33vw;
+.CBLinkView1_description_element
+{
+    font-size:
+    80%;
 }
