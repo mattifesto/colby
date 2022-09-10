@@ -1,26 +1,46 @@
 <?php
 
-final class CBLinkView1 {
+final class
+CBLinkView1
+{
+    // -- CBHTMLOutput interfaces
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs(): array {
-        return [
-            Colby::flexpath(__CLASS__, 'css', cbsysurl()),
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
+        $cssURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2022_09_10_1662826792',
+                'css',
+                cbsysurl()
+            ),
         ];
+
+        return $cssURLs;
     }
-    /* CBHTMLOutput_CSSURLs() */
+    // CBHTMLOutput_CSSURLs()
 
 
-    /* -- CBInstall interfaces -- -- -- -- -- */
+
+    // -- CBInstall interfaces
+
+
 
     /**
      * @return void
      */
-    static function CBInstall_install(): void {
+    static function
+    CBInstall_install(
+    ): void
+    {
         CBViewCatalog::installView(
             __CLASS__
         );
@@ -28,10 +48,14 @@ final class CBLinkView1 {
     /* CBInstall_install() */
 
 
+
     /**
      * @return [string]
      */
-    static function CBInstall_requiredClassNames(): array {
+    static function
+    CBInstall_requiredClassNames(
+    ): array
+    {
         return [
             'CBViewCatalog',
         ];
@@ -39,28 +63,69 @@ final class CBLinkView1 {
     /* CBInstall_requiredClassNames() */
 
 
-    /* -- CBModel interfaces -- -- -- -- -- */
+
+    // -- CBModel interfaces
+
+
 
     /**
      * @param model $spec
      *
      * @return ?model
      */
-    static function CBModel_build(stdClass $spec): ?stdClass {
-        $model = (object)[
-            'description' => CBModel::valueToString($spec, 'description'),
-            'size' => trim(CBModel::valueToString($spec, 'size')),
-            'URL' => trim(CBModel::valueToString($spec, 'URL')),
+    static function
+    CBModel_build(
+        stdClass $spec
+    ): stdClass
+    {
+        $model =
+        (object)
+        [
+            'description' =>
+            CBModel::valueToString(
+                $spec,
+                'description'
+            ),
+
+            'size' =>
+            trim(
+                CBModel::valueToString(
+                    $spec,
+                    'size'
+                )
+            ),
+
+            'URL' =>
+            trim(
+                CBModel::valueToString(
+                    $spec,
+                    'URL'
+                )
+            ),
         ];
 
         /* image */
 
-        if ($imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage'])) {
-            $model->image = CBModel::build($imageSpec);
+        if (
+            $imageSpec =
+            CBModel::valueAsModel(
+                $spec,
+                'image',
+                [
+                    'CBImage'
+                ]
+            )
+        ) {
+            $model->image =
+            CBModel::build(
+                $imageSpec
+            );
         }
 
         return $model;
     }
+    // CBModel_build()
+
 
 
     /**
@@ -68,13 +133,28 @@ final class CBLinkView1 {
      *
      * @return model
      */
-    static function CBModel_upgrade(stdClass $spec): stdClass {
-        if ($imageSpec = CBModel::valueAsObject($spec, 'image')) {
-            $spec->image = CBImage::fixAndUpgrade($imageSpec);
+    static function
+    CBModel_upgrade(
+        stdClass $spec
+    ): stdClass
+    {
+        if (
+            $imageSpec =
+            CBModel::valueAsObject(
+                $spec,
+                'image'
+            )
+        ) {
+            $spec->image =
+            CBImage::fixAndUpgrade(
+                $imageSpec
+            );
         }
 
         return $spec;
     }
+    // CBModel_upgrade()
+
 
 
     /**
@@ -82,49 +162,94 @@ final class CBLinkView1 {
      *
      * @return null
      */
-    static function CBView_render(stdClass $model) {
-        if (empty($model->image)) {
+    static function
+    CBView_render(
+        stdClass $model
+    ): void
+    {
+        if (
+            empty($model->image)
+        ) {
             echo '<!-- CBLinkView1: no image specified -->';
+
             return;
         }
 
-        $description = CBModel::value($model, 'description', '');
-        $image = $model->image;
-        $title = CBModel::valueToString($model, 'title');
-        $size = CBModel::value($model, 'size');
-        $URL = CBModel::value($model, 'URL', '');
+        $description =
+        CBModel::value(
+            $model,
+            'description',
+            ''
+        );
 
-        switch ($size) {
+        $image =
+        $model->image;
 
+        $title =
+        CBModel::valueToString(
+            $model,
+            'title'
+        );
+
+        $size =
+        CBModel::value(
+            $model,
+            'size'
+        );
+
+        $URL =
+        CBModel::value(
+            $model,
+            'URL',
+            ''
+        );
+
+        switch (
+            $size
+        ) {
             case 'small':
 
-                $imageURL = CBDataStore::flexpath(
+                $imageURL =
+                CBDataStore::flexpath(
                     $image->ID,
                     "rw480.{$image->extension}",
                     cbsiteurl()
                 );
-                $imageWidth = 240;
+
+                $imageWidth =
+                240;
+
                 break;
 
             case 'large':
 
-                $imageURL = CBDataStore::flexpath(
+                $imageURL =
+                CBDataStore::flexpath(
                     $image->ID,
                     "rw960.{$image->extension}",
                     cbsiteurl()
                 );
-                $imageWidth = 480;
+
+                $imageWidth =
+                480;
+
                 break;
 
             default:
 
-                $imageURL = CBDataStore::flexpath(
+                $imageURL =
+                CBDataStore::flexpath(
                     $image->ID,
                     "rw640.{$image->extension}",
                     cbsiteurl()
                 );
-                $imageWidth = 320;
-                $size = 'medium';
+
+                $imageWidth =
+                320;
+
+                $size =
+                'medium';
+
                 break;
         }
 
@@ -166,4 +291,6 @@ final class CBLinkView1 {
 
         <?php
     }
+    // CBView_render()
+
 }
