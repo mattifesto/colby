@@ -182,7 +182,7 @@ CBLinkView1
             ''
         );
 
-        $image =
+        $imageModel =
         $model->image;
 
         $title =
@@ -209,48 +209,37 @@ CBLinkView1
         ) {
             case 'small':
 
-                $imageURL =
-                CBDataStore::flexpath(
-                    $image->ID,
-                    "rw480.{$image->extension}",
-                    cbsiteurl()
-                );
+            $maximumDisplayWidthInCSSPixels =
+            240;
 
-                $imageWidth =
-                240;
+            $imageResizeOperation =
+            'rw480';
 
-                break;
+            break;
+
+
 
             case 'large':
 
-                $imageURL =
-                CBDataStore::flexpath(
-                    $image->ID,
-                    "rw960.{$image->extension}",
-                    cbsiteurl()
-                );
+            $maximumDisplayWidthInCSSPixels =
+            480;
 
-                $imageWidth =
-                480;
+            $imageResizeOperation =
+            'rw960';
 
-                break;
+            break;
+
+
 
             default:
 
-                $imageURL =
-                CBDataStore::flexpath(
-                    $image->ID,
-                    "rw640.{$image->extension}",
-                    cbsiteurl()
-                );
+            $maximumDisplayWidthInCSSPixels =
+            320;
 
-                $imageWidth =
-                320;
+            $imageResizeOperation =
+            'rw640';
 
-                $size =
-                'medium';
-
-                break;
+            break;
         }
 
         ?>
@@ -261,14 +250,19 @@ CBLinkView1
 
                     <?php
 
-                    CBArtworkElement::render(
-                        [
-                            'alternativeText' => $title,
-                            'height' => $image->height,
-                            'maxWidth' => $imageWidth,
-                            'width' => $image->width,
-                            'URL' => $imageURL,
-                        ]
+                    $maximumDisplayHeightInCSSPixels =
+                    $maximumDisplayWidthInCSSPixels *
+                    3;
+
+                    $alternativeText =
+                    $title;
+
+                    CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
+                        $imageModel,
+                        $imageResizeOperation,
+                        $maximumDisplayWidthInCSSPixels,
+                        $maximumDisplayHeightInCSSPixels,
+                        $alternativeText
                     );
 
                     ?>
