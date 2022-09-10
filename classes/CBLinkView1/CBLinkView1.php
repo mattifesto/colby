@@ -106,20 +106,24 @@ CBLinkView1
 
         /* image */
 
+        $imageSpec =
+        CBModel::valueAsModel(
+            $spec,
+            'image',
+            'CBImage'
+        );
+
         if (
-            $imageSpec =
-            CBModel::valueAsModel(
-                $spec,
-                'image',
-                [
-                    'CBImage'
-                ]
-            )
+            $imageSpec !==
+            null
         ) {
-            $model->image =
+            $imageModel =
             CBModel::build(
                 $imageSpec
             );
+
+            $model->image =
+            $imageModel;
         }
 
         return $model;
@@ -164,42 +168,56 @@ CBLinkView1
      */
     static function
     CBView_render(
-        stdClass $model
+        stdClass $viewModel
     ): void
     {
-        if (
-            empty($model->image)
-        ) {
-            echo '<!-- CBLinkView1: no image specified -->';
-
-            return;
-        }
+        $title =
+        trim(
+            CBModel::valueToString(
+                $viewModel,
+                'title'
+            )
+        );
 
         $description =
-        CBModel::value(
-            $model,
-            'description',
-            ''
+        trim(
+            CBModel::valueToString(
+                $viewModel,
+                'description'
+            )
         );
 
         $imageModel =
-        $model->image;
-
-        $title =
-        CBModel::valueToString(
-            $model,
-            'title'
+        CBModel::valueAsModel(
+            $viewModel,
+            'image',
+            'CBImage'
         );
+
+
+
+        $thereIsNothingToRender =
+        $title === '' &&
+        $description === '' &&
+        $imageModel === null;
+
+        if (
+            $thereIsNothingToRender
+        ) {
+            return;
+        }
+
+
 
         $size =
         CBModel::value(
-            $model,
+            $viewModel,
             'size'
         );
 
         $URL =
         CBModel::value(
-            $model,
+            $viewModel,
             'URL',
             ''
         );
@@ -233,6 +251,9 @@ CBLinkView1
 
             default:
 
+            $size =
+            'medium';
+
             $maximumDisplayWidthInCSSPixels =
             320;
 
@@ -244,41 +265,44 @@ CBLinkView1
 
         ?>
 
-        <figure class="CBLinkView1 <?= $size ?>">
+        <figure class="CBLinkView1_root_element <?= $size ?>">
 
-                <a href="<?= cbhtml($URL) ?>">
+                <a
+                    class="CBLinkView1_content_element"
+                    href="<?= cbhtml($URL) ?>">
 
                     <?php
 
-                    $maximumDisplayHeightInCSSPixels =
-                    $maximumDisplayWidthInCSSPixels *
-                    3;
+                    if (
+                        $imageModel !==
+                        null
+                    ) {
+                        $maximumDisplayHeightInCSSPixels =
+                        $maximumDisplayWidthInCSSPixels *
+                        3;
 
-                    $alternativeText =
-                    $title;
+                        $alternativeText =
+                        $title;
 
-                    CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
-                        $imageModel,
-                        $imageResizeOperation,
-                        $maximumDisplayWidthInCSSPixels,
-                        $maximumDisplayHeightInCSSPixels,
-                        $alternativeText
-                    );
+                        CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
+                            $imageModel,
+                            $imageResizeOperation,
+                            $maximumDisplayWidthInCSSPixels,
+                            $maximumDisplayHeightInCSSPixels,
+                            $alternativeText
+                        );
+                    }
 
                     ?>
 
-                    <div class="text">
-                        <figcaption>
-                            <div class="title"><?=
-                                cbhtml($title)
-                            ?></div>
-                            <div class="description"><?=
-                                cbhtml($description)
-                            ?></div>
-                        </figcaption>
-                        <div class="arrow">
-                        </div>
-                    </div>
+                    <figcaption>
+                        <div class="CBLinkView1_title_element"><?=
+                            cbhtml($title)
+                        ?></div>
+                        <div class="CBLinkView1_description_element"><?=
+                            cbhtml($description)
+                        ?></div>
+                    </figcaption>
                 </a>
 
         </figure>
