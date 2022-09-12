@@ -65,17 +65,19 @@ CB_CBAdmin_Social
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        return
+        $javaScriptURLs =
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_07_02_1656798521',
+                '2022_09_12_1662999979',
                 'js',
                 cbsysurl()
             ),
         ];
+
+        return $javaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
