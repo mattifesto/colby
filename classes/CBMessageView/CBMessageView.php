@@ -3,7 +3,7 @@
 final class
 CBMessageView
 {
-    /* -- CBHTMLOutput interfaces -- */
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -14,16 +14,19 @@ CBMessageView
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        return
+        $cssURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.61.6.css',
+                '2022_09_12_1663016425',
+                'css',
                 cbsysurl()
             ),
         ];
+
+        return $cssURLs;
     }
-    /* CBHTMLOutput_CSSURLs() */
+    // CBHTMLOutput_CSSURLs()
 
 
 
@@ -34,16 +37,19 @@ CBMessageView
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        return
+        $javaScriptURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.60.js',
+                '2022_09_12_1663016451',
+                'js',
                 cbsysurl()
             ),
         ];
+
+        return $javaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
@@ -54,18 +60,20 @@ CBMessageView
     CBHTMLOutput_requiredClassNames(
     ): array
     {
-        return
+        $requiredClassNames =
         [
             'CBMessageMarkup',
 
             'CBContentStyleSheet',
         ];
+
+        return $requiredClassNames;
     }
-    /* CBHTMLOutput_requiredClassNames() */
+    // CBHTMLOutput_requiredClassNames()
 
 
 
-    /* -- CBInstall interfaces -- */
+    // -- CBInstall interfaces
 
 
 
@@ -99,7 +107,7 @@ CBMessageView
 
 
 
-    /* -- CBModel interfaces -- */
+    // -- CBModel interfaces
 
 
 
