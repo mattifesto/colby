@@ -8,7 +8,8 @@
 */
 
 
-(function () {
+(function ()
+{
     "use strict";
 
     document.addEventListener(
@@ -218,4 +219,5 @@
     }
     /* createYouTubeStatusElement() */
 
-})();
+}
+)();
