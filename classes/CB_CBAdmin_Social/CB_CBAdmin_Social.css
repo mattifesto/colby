@@ -1,0 +1,28 @@
+.CB_CBAdmin_Social_channel_element
+{
+    box-sizing:
+    border-box;
+
+    display:
+    flex;
+
+    justify-content:
+    center;
+
+    overflow-wrap:
+    break-word;
+
+    max-width:
+    100%;
+    
+    padding:
+    20px;
+}
+
+
+
+.CB_CBAdmin_Social_channelContent_element
+{
+    max-width:
+    100%;
+}
