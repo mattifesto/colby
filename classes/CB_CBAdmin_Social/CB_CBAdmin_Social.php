@@ -302,6 +302,15 @@ CB_CBAdmin_Social
             );
         }
 
+        /**
+         * Put the most recent values at the end of the array.
+         */
+
+        $values =
+        array_reverse(
+            $values
+        );
+
         $viewSpec =
         CBModel::createSpec(
             'CB_View_SVGBarChart1'
