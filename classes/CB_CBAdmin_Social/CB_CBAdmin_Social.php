@@ -46,7 +46,15 @@ CB_CBAdmin_Social
 
         ?>
 
-        <div class="CB_CBAdmin_Social_element"></div>
+        <div class="CB_CBAdmin_Social_element">
+
+            <?php
+
+            CB_CBAdmin_Social::renderYouTubeChannelGraphs();
+
+            ?>
+
+        </div>
 
         <?php
     }
@@ -54,7 +62,30 @@ CB_CBAdmin_Social
 
 
 
-    /* -- CBHTMLOutput interfaces -- */
+    // -- CBHTMLOutput interfaces
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
+        $cssURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2022_09_13_1663107077',
+                'css',
+                cbsysurl()
+            ),
+        ];
+
+        return $cssURLs;
+    }
+    // CBHTMLOutput_CSSURLs()
 
 
 
@@ -225,5 +256,107 @@ CB_CBAdmin_Social
         ];
     }
     /* CBInstall_requiredClassNames() */
+
+
+
+    // -- functions
+
+
+
+    /**
+     * @param object $youtubeChannelModel
+     *
+     * @return void
+     */
+    private static function
+    renderGraphForYouTubeChannel(
+        stdClass $youtubeChannelModel
+    ): void
+    {
+        $youtubeChannelModelCBID =
+        CBModel::getCBID(
+            $youtubeChannelModel
+        );
+
+        $youtubeStatisticsModels =
+        CB_YouTubeStatistics::fetchRecentStatistics(
+            $youtubeChannelModelCBID,
+            28
+        );
+
+        $values =
+        [];
+
+        foreach (
+            $youtubeStatisticsModels as
+            $youtubeStatisticsModel
+        ) {
+            $subscriberCount =
+            CB_YouTubeStatistics::getStatistics_SubscriberCount(
+                $youtubeStatisticsModel
+            );
+
+            array_push(
+                $values,
+                $subscriberCount
+            );
+        }
+
+        $viewSpec =
+        CBModel::createSpec(
+            'CB_View_SVGBarChart1'
+        );
+
+        CB_View_SVGBarChart1::setValues(
+            $viewSpec,
+            $values
+        );
+
+        CBView::renderSpec(
+            $viewSpec
+        );
+    }
+    // renderGraphForYouTubeChannel()
+
+
+
+    /**
+     * @return void
+     */
+    private static function
+    renderYouTubeChannelGraphs(
+    ): void
+    {
+        $youtubeChannelModels =
+        CBModels::fetchModelsByClassName(
+            'CB_YouTubeChannel'
+        );
+
+        foreach (
+            $youtubeChannelModels as
+            $youtubeChannelModel
+        ) {
+            $title =
+            CB_YouTubeChannel::getTitle(
+                $youtubeChannelModel
+            );
+
+            echo
+            '<div class="CB_CBAdmin_Social_channel_element">',
+            '<div class="CB_CBAdmin_Social_channelContent_element">',
+            '<h3>',
+            cbhtml($title),
+            '</h3>';
+
+            CB_CBAdmin_Social::renderGraphForYouTubeChannel(
+                $youtubeChannelModel
+            );
+
+            echo
+            '</div>',
+            '</div>';
+        }
+    }
+    // renderYouTubeChannelGraphs()
 
 }
