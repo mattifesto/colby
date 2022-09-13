@@ -1,0 +1,25 @@
+.CB_View_SVGBarChart1_root_element
+{
+    box-sizing:
+    border-box;
+
+    display:
+    flex;
+
+    justify-content:
+    center;
+
+    max-width:
+    100%;
+
+    overflow-wrap:
+    break-word;
+}
+
+
+
+.CB_View_SVGBarChart1_svg_element
+{
+    max-width:
+    100%;
+}
