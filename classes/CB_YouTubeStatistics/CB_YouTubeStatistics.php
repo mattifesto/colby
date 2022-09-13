@@ -363,7 +363,7 @@ CB_YouTubeStatistics
      */
     static function
     getStatistics(
-        stdClass $youtubeStatisticsModel,
+        stdClass $youtubeStatisticsModel
     ): ?stdClass
     {
         $statistics =
@@ -375,6 +375,34 @@ CB_YouTubeStatistics
         return $statistics;
     }
     // getStatistics()
+
+
+
+    /**
+     * @param object $youtubeStatisticsModel
+     *
+     * @return int
+     */
+    static function
+    getStatistics_SubscriberCount(
+        stdClass $youtubeStatisticsModel
+    ): int
+    {
+        $statistics =
+        CB_YouTubeStatistics::getStatistics(
+            $youtubeStatisticsModel
+        );
+
+        $subscriberCount =
+        CBModel::valueAsInt(
+            $statistics,
+            'items.[0].statistics.subscriberCount'
+        ) ??
+        0;
+
+        return $subscriberCount;
+    }
+    // getStatistics_SubscriberCount()
 
 
 
