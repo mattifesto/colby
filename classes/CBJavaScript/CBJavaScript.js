@@ -1,8 +1,11 @@
-(function () {
+(function ()
+{
     "use strict";
 
-    window.CBJavaScript = {
-        afterDOMContentLoaded: CBJavaScript_afterDOMContentLoaded,
+    window.CBJavaScript =
+    {
+        afterDOMContentLoaded:
+        CBJavaScript_afterDOMContentLoaded,
     };
 
 
@@ -15,18 +18,24 @@
     function
     CBJavaScript_afterDOMContentLoaded(
         callback
-    ) {
+    ) // -> undefined
+    {
         if (
-            document.readyState === "loading"
+            document.readyState ===
+            "loading"
         ) {
             document.addEventListener(
                 "DOMContentLoaded",
                 callback
             );
-        } else {
+        }
+
+        else
+        {
             callback();
         }
     }
     /* afterDOMContentLoaded() */
 
-})();
+}
+)();
