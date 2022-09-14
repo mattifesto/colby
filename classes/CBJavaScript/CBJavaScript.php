@@ -11,9 +11,9 @@
  *      Colby class.
  */
 class
-CBJavaScript {
-
-    /* -- CBAjax interfaces -- -- -- -- -- */
+CBJavaScript
+{
+    // -- CBAjax interfaces
 
 
 
@@ -238,7 +238,7 @@ CBJavaScript {
 
 
 
-    /* -- CBHTMLOutput interfaces -- */
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -247,16 +247,21 @@ CBJavaScript {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
-            Colby::flexpath(
+    ): array
+    {
+        $javaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.54.js',
+                '2022_09_14_1663198902',
+                'js',
                 cbsysurl()
             ),
         ];
+
+        return $javaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
