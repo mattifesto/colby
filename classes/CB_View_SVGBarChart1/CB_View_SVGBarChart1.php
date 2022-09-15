@@ -30,6 +30,47 @@ CB_View_SVGBarChart1
 
 
 
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
+        $javaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2022_09_12_1663016451',
+                'js',
+                cbsysurl()
+            ),
+        ];
+
+        return $javaScriptURLs;
+    }
+    // CBHTMLOutput_JavaScriptURLs()
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        $requiredClassNames =
+        [
+            'CBJavaScript',
+        ];
+
+        return $requiredClassNames;
+    }
+    // CBHTMLOutput_requiredClassNames()
+
+
+
     // -- CBModel interfaces
 
 
@@ -139,11 +180,12 @@ CB_View_SVGBarChart1
         echo <<<EOT
 
             <div class="CB_View_SVGBarChart1_root_element">
-                <svg
-                    class="CB_View_SVGBarChart1_svg_element"
-                    style="width: 280px;"
-                    viewBox="0 0 280 ${graphHeightAsPixels}"
-                >
+                <div class="CB_View_SVGBarChart1_content_element">
+                    <svg
+                        class="CB_View_SVGBarChart1_svg_element"
+                        style="width: 280px;"
+                        viewBox="0 0 280 ${graphHeightAsPixels}"
+                    >
 
         EOT;
 
@@ -233,6 +275,8 @@ CB_View_SVGBarChart1
             echo <<<EOT
 
                 <rect
+                    class="CB_View_SVGBarChart1_bar_element"
+                    data-value="${currentValue}"
                     fill="${barColor}"
                     height="${columnHeightAsPixels}"
                     width="${columnWidthAsPixels}"
@@ -251,7 +295,13 @@ CB_View_SVGBarChart1
 
         echo <<<EOT
 
-                </svg>
+                    </svg>
+                    <div
+                        class="CB_View_SVGBarChart1_currentValue_element"
+                    >
+                        &nbsp;
+                    </div>
+                </div>
             </div>
 
         EOT;
