@@ -18,6 +18,13 @@
 
 
 
+.CB_View_SVGBarChart1_content_element
+{
+    max-width: 100%;
+}
+
+
+
 .CB_View_SVGBarChart1_svg_element
 {
     max-width:
