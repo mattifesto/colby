@@ -496,6 +496,43 @@ CB_YouTubeStatistics
 
 
     /**
+     * @param CBID $youtubeChannelModelCBID
+     *
+     * @return <CB_YouTubeStatistics model>|null
+     */
+    static function
+    fetchMostRecentYouTubeStatisticsModel(
+        string $youtubeChannelModelCBID
+    ): ?stdClass
+    {
+        $getAtMostOneResult =
+        1;
+
+        $arrayOfYouTubeStatisticsModels =
+        CB_YouTubeStatistics::fetchRecentStatistics(
+            $youtubeChannelModelCBID,
+            $getAtMostOneResult
+        );
+
+        if (
+            count($arrayOfYouTubeStatisticsModels) ===
+            0
+        ) {
+            return null;
+        }
+
+        $youtubeStatisticsModel =
+        $arrayOfYouTubeStatisticsModels[
+            0
+        ];
+
+        return $youtubeStatisticsModel;
+    }
+    // fetchMostRecentYouTubeStatisticsModel()
+
+
+
+    /**
      * This function fetches the most recently saved CB_YouTubeStatistics models
      * for a channel.
      *
