@@ -789,13 +789,11 @@ final class CBTasks2 {
 
 
     /**
-     * Runs a task started by the provided starter. There are situations in
-     * which a task can be pulled away from a starter and in those cases the
-     * task will not be run by that starter and this function will return
-     * false.
+     * @NOTE 2022_09_23_1663971461
      *
-     * The situations are rare race conditions and potentially a very closely
-     * timed calls to runNextTask() and runSpecificTask().
+     *      This is the only function that will actually run a task. Since this
+     *      function is private, the public functions that will run tasks are
+     *      runSpecificTask() and runNextTask().
      *
      * @NOTE Exception Handling
      *
@@ -808,11 +806,21 @@ final class CBTasks2 {
      *      exception occurs it will report the first exception and throw the
      *      second.
      *
-     *      The prinicple is that this function will not hide exceptions. If an
+     *      The principle is that this function will not hide exceptions. If an
      *      exception occurs this function will make sure the system has
      *      recovered from it and then throw that exception.
      *
-     * @param ID $starterID
+     * @param CBID $starterID
+     *
+     *      A task must be assigned a unique starter CBID before this function
+     *      is called.
+     *
+     *      There are situations in which a task can be pulled away from a
+     *      starter and in those cases the task will not be run by that starter
+     *      and this function will return false.
+     *
+     *      The situations are rare race conditions and potentially a very
+     *      closely timed calls to runNextTask() and runSpecificTask().
      *
      * @return bool
      *
