@@ -402,12 +402,12 @@ final class CBTasks2 {
 
         EOT;
 
-        $sceduledTasks =
+        $scheduledTasks =
         CBDB::SQLToObjects(
             $SQL
         );
 
-        return $sceduledTasks;
+        return $scheduledTasks;
     }
     // fetchScheduledTasks()
 
