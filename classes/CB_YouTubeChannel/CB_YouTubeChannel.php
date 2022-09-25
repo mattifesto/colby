@@ -78,28 +78,19 @@ CB_YouTubeChannel
         array $youtubeChannelModels
     ): void
     {
-        $youtubeChannelModelCBIDs =
-        array_map(
-            function (
-                stdClass $youtubeChannelModel
-            ): string
-            {
-                $CBID =
-                CBModel::getCBID(
-                    $youtubeChannelModel
-                );
+        foreach (
+            $youtubeChannelModels as
+            $youtubeChannelModel
+        ) {
+            $youtubeChannelModelCBID =
+            CBModel::getCBID(
+                $youtubeChannelModel
+            );
 
-                return $CBID;
-            },
-            $youtubeChannelModels
-        );
-
-        CBTasks2::restart(
-            'CB_Task_CollectYouTubeChannelStatistics',
-            $youtubeChannelModelCBIDs,
-            null, // default priority
-            15 // run task in 15 seconds
-        );
+            CB_Task_CollectYouTubeChannelStatistics::restartNextTaskForYouTubeChannel(
+                $youtubeChannelModelCBID
+            );
+        }
     }
     /* CBModels_willSave() */
 
