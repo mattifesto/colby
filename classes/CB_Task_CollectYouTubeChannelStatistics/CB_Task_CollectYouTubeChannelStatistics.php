@@ -35,21 +35,12 @@ CB_Task_CollectYouTubeChannelStatistics
             'CB_YouTubeChannel'
         );
 
-        $timestampForNextMidnightUTC =
-        strtotime(
-            '24:00'
-        );
-
         foreach(
             $youtubeChannelModelCBIDs as
             $youtubeChannelModelCBID
         ) {
-            CBTasks2::updateTask(
-                'CB_Task_CollectYouTubeChannelStatistics',
-                $youtubeChannelModelCBID,
-                null, /* proccess ID */
-                null, /* priority */
-                $timestampForNextMidnightUTC /* scheduled timestamp */
+            CB_Task_CollectYouTubeChannelStatistics::restartNextTaskForYouTubeChannel(
+                $youtubeChannelModelCBID
             );
         }
     }
@@ -111,14 +102,26 @@ CB_Task_CollectYouTubeChannelStatistics
             $youtubeStatisticsSpec
         );
 
-        $timestampForNextMidnightUTC =
-        strtotime("24:00");
+        $previouslyRunCBTimestamp =
+        CB_YouTubeStatistics::getCBTimestamp(
+            $youtubeStatisticsSpec
+        );
+
+        $previouslyRunUnixTimestamp =
+        CB_Timestamp::getUnixTimestamp(
+            $previouslyRunCBTimestamp
+        );
+
+        $nextRunUnixTimestamp =
+        CB_Task_CollectYouTubeChannelStatistics::calculateTheScheduledUnixTimestampOfTheNextTaskRun(
+            $previouslyRunUnixTimestamp
+        );
 
         $returnValue =
         (object)
         [
             'scheduled' =>
-            $timestampForNextMidnightUTC,
+            $nextRunUnixTimestamp,
         ];
 
         return $returnValue;
@@ -128,6 +131,92 @@ CB_Task_CollectYouTubeChannelStatistics
 
 
     // -- functions
+
+
+
+    /**
+     * This function returns the next time the task should be run according to
+     * the settings of the current website.
+     *
+     * @param object|null $unixTimestampOfMostRecentTaskRun
+     * @param int|null $providedUnixTimestampForNow
+     *
+     *      This parameter exists to make this function testable. In production
+     *      it will usually not be provided and the return value of time() will
+     *      be used.
+     *
+     * @return int
+     */
+    static function
+    calculateTheScheduledUnixTimestampOfTheNextTaskRun(
+        ?int $unixTimestampOfTheMostRecentTaskRun,
+        ?int $providedUnixTimestampForNow = null
+    ): int
+    {
+        if (
+            $providedUnixTimestampForNow ===
+            null
+        ) {
+            $unixTimestampForNow =
+            time();
+        }
+
+        else
+        {
+            if (
+                $providedUnixTimestampForNow <
+                $unixTimestampOfTheMostRecentTaskRun
+            ) {
+                throw new CBException(
+                    CBConvert::stringToCleanLine(<<<EOT
+
+                        The providedUnixTimestampForNow argument must be greater
+                        than the unixTimestampOfTheMostRecentTaskRun argument.
+
+                    EOT),
+                    '',
+                    '72a0aece1a286b237d1a16920f72efd375920a27'
+                );
+            }
+
+            $unixTimestampForNow =
+            $providedUnixTimestampForNow;
+        }
+
+        if (
+            $unixTimestampOfTheMostRecentTaskRun ===
+            null
+        ) {
+            return $unixTimestampForNow;
+        }
+
+        $secondsInOneHour =
+        60 * 60;
+
+        $unixTimestampAtTheBeginningOfTheCurrentHour =
+        (
+            intdiv(
+                $unixTimestampForNow,
+                $secondsInOneHour
+            ) *
+            $secondsInOneHour
+        ) +
+        1;
+
+        if (
+            $unixTimestampAtTheBeginningOfTheCurrentHour >
+            $unixTimestampOfTheMostRecentTaskRun
+        ) {
+            return $unixTimestampAtTheBeginningOfTheCurrentHour;
+        }
+
+        $scheduledUnixTimestampOfTheNextTaskRun =
+        $unixTimestampAtTheBeginningOfTheCurrentHour +
+        $secondsInOneHour;
+
+        return $scheduledUnixTimestampOfTheNextTaskRun;
+    }
+    // calculateTheScheduledUnixTimestampOfTheNextTaskRun();
 
 
 
@@ -177,5 +266,47 @@ CB_Task_CollectYouTubeChannelStatistics
         [];
     }
     /* resetSession() */
+
+
+
+    /**
+     * This function should be the only place where this task is scheduled. It
+     * schedules the task for a YouTube channel at the next appropriate time
+     * after having looked at when the task was last run for the channel.
+     */
+    static function
+    restartNextTaskForYouTubeChannel(
+        string $youtubeChannelModelCBID
+    ): void
+    {
+        $youtubeStatisticsModel =
+        CB_YouTubeStatistics::fetchMostRecentYouTubeStatisticsModel(
+            $youtubeChannelModelCBID
+        );
+
+        $previouslyRunCBTimestamp =
+        CB_YouTubeStatistics::getCBTimestamp(
+            $youtubeStatisticsModel
+        );
+
+        $previouslyRunUnixTimestamp =
+        CB_Timestamp::getUnixTimestamp(
+            $previouslyRunCBTimestamp
+        );
+
+        $nextRunUnixTimestamp =
+        CB_Task_CollectYouTubeChannelStatistics::calculateTheScheduledUnixTimestampOfTheNextTaskRun(
+            $previouslyRunUnixTimestamp
+        );
+
+        CBTasks2::updateTask(
+            'CB_Task_CollectYouTubeChannelStatistics',
+            $youtubeChannelModelCBID,
+            null, /* proccess ID */
+            null, /* priority */
+            $nextRunUnixTimestamp
+        );
+    }
+    // restartNextTaskForYouTubeChannel()
 
 }
