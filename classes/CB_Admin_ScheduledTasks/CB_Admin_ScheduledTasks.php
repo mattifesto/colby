@@ -67,7 +67,7 @@ CB_Admin_ScheduledTasks
         [
             CBLibrary::buildLibraryClassFilePath(
                 'CB_Admin_ScheduledTasks',
-                '2022_06_30_1656605068',
+                '2022_09_24_1664039243',
                 'js',
                 cbsysurl()
             ),
@@ -89,7 +89,9 @@ CB_Admin_ScheduledTasks
         $requiredClassNames =
         [
             'CBAjax',
+            'CBConvert',
             'CBModel',
+            'CBUIPanel',
             'Colby',
         ];
 
