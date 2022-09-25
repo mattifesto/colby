@@ -1,6 +1,8 @@
 /* global
     CBAjax,
+    CBConvert,
     CBModel,
+    CBUIPanel,
     Colby,
 */
 
@@ -8,6 +10,10 @@
 (function ()
 {
     let CB_Admin_ScheduledTasks_shared_containerElement;
+    let CB_Admin_ScheduledTasks_shared_taskClassNameSelectorElement;
+    let CB_Admin_ScheduledTasks_shared_sheduledTaskObjects;
+
+
 
     {
         let mainElement =
@@ -120,6 +126,41 @@
         rootElement.className =
         "CB_Admin_ScheduledTasks_element_root";
 
+
+
+        /**
+         * @NOTE 2022_09_24_1664040448
+         *
+         *      The select element should eventually be replaced with a Colby
+         *      selector.
+         */
+
+        let selectorElement =
+        document.createElement(
+            "select"
+        );
+
+        selectorElement.addEventListener(
+            "change",
+            function (
+            ) // -> undefined
+            {
+                CB_Admin_ScheduledTasks_render();
+            }
+        );
+
+        rootElement.append(
+            selectorElement
+        );
+
+        CB_Admin_ScheduledTasks_shared_taskClassNameSelectorElement =
+        selectorElement;
+
+
+
+
+        /* container */
+
         CB_Admin_ScheduledTasks_shared_containerElement =
         document.createElement(
             "div"
@@ -128,6 +169,8 @@
         rootElement.append(
             CB_Admin_ScheduledTasks_shared_containerElement
         );
+
+
 
         return rootElement;
     }
@@ -179,29 +222,155 @@
 
 
     /**
+     * @param [object] arrayOfScheduledTaskObjects
+     *
+     * @return undefined
+     */
+    function
+    CB_Admin_ScheduledTasks_populateTaskClassNameSelector(
+    ) // -> undefined
+    {
+        let arrayOfTaskClassNames =
+        CB_Admin_ScheduledTasks_shared_sheduledTaskObjects.reduce(
+            function (
+                arrayOfTaskClassNames,
+                currentTaskObject
+            ) // --> [object]
+            {
+                let currentTaskClassName =
+                CBModel.valueToString(
+                    currentTaskObject,
+                    "CBTasks2_fetchScheduledTasks_taskClassName"
+                );
+
+                let arrayOfTaskClassNamesContainsCurrentTaskClassName =
+                arrayOfTaskClassNames.includes(
+                    currentTaskClassName
+                );
+
+
+                if (
+                    arrayOfTaskClassNamesContainsCurrentTaskClassName !==
+                    true
+                ) {
+                    arrayOfTaskClassNames.push(
+                        currentTaskClassName
+                    );
+                }
+
+                return arrayOfTaskClassNames;
+            },
+            [] // initial value
+        );
+
+        arrayOfTaskClassNames.unshift(
+            ""
+        );
+
+
+
+        let selectorElement =
+        CB_Admin_ScheduledTasks_shared_taskClassNameSelectorElement;
+
+        selectorElement.textContent =
+        "";
+
+
+
+        arrayOfTaskClassNames.forEach(
+            function (
+                currentTaskClassName
+            ) // -> undefined
+            {
+                let optionElement =
+                document.createElement(
+                    "option"
+                );
+
+                if (
+                    currentTaskClassName ===
+                    ""
+                ) {
+                    optionElement.textContent =
+                    "All";
+
+                    optionElement.value =
+                    "";
+                }
+
+                else
+                {
+                    optionElement.textContent =
+                    currentTaskClassName;
+                }
+
+                selectorElement.append(
+                    optionElement
+                );
+            }
+        );
+    }
+    // CB_Admin_ScheduledTasks_populateTaskClassNameSelector()
+
+
+
+    /**
      * @return undefined
      */
     async function
     CB_Admin_ScheduledTasks_refresh(
     ) // -> undefined
     {
-        let result =
-        await
-        CBAjax.call2(
-            "CB_Ajax_FetchScheduledTasks"
-        );
+        try
+        {
+            let result =
+            await
+            CBAjax.call2(
+                "CB_Ajax_FetchScheduledTasks"
+            );
 
+            CB_Admin_ScheduledTasks_shared_sheduledTaskObjects =
+            CBModel.valueToArray(
+                result,
+                "CB_Ajax_FetchScheduledTasks_scheduledTasks"
+            );
+
+            CB_Admin_ScheduledTasks_populateTaskClassNameSelector();
+
+            CB_Admin_ScheduledTasks_render();
+        }
+        // try
+
+        catch (
+            error
+        ) {
+            CBUIPanel.displayAndReportError(
+                error
+            );
+
+            throw error;
+        }
+        // catch
+
+    }
+    // CB_Admin_ScheduledTasks_refresh()
+
+
+
+    function
+    CB_Admin_ScheduledTasks_render(
+    ) // --> undefined
+    {
         CB_Admin_ScheduledTasks_shared_containerElement.textContent =
         "";
 
-        let scheduledTaskObjects =
-        CBModel.valueToArray(
-            result,
-            "CB_Ajax_FetchScheduledTasks_scheduledTasks"
-        );
-
         let scheduledTasksCount =
-        scheduledTaskObjects.length;
+        CB_Admin_ScheduledTasks_shared_sheduledTaskObjects.length;
+
+        let selectedTaskClassName =
+        CBConvert.valueToString(
+            CB_Admin_ScheduledTasks_shared_taskClassNameSelectorElement.value
+        );
 
         for (
             let scheduledTaskIndex = 0;
@@ -209,9 +378,24 @@
             scheduledTaskIndex++
         ) {
             let scheduledTaskObject =
-            scheduledTaskObjects[
+            CB_Admin_ScheduledTasks_shared_sheduledTaskObjects[
                 scheduledTaskIndex
             ];
+
+            let taskClassName =
+            CBModel.valueToString(
+                scheduledTaskObject,
+                "CBTasks2_fetchScheduledTasks_taskClassName"
+            );
+
+            if (
+                selectedTaskClassName !==
+                "" &&
+                taskClassName !==
+                selectedTaskClassName
+            ) {
+                continue;
+            }
 
             let element =
             document.createElement(
@@ -245,7 +429,7 @@
         }
         // for - scheduled task
     }
-    // CB_Admin_ScheduledTasks_refresh()
+    // CB_Admin_ScheduledTasks_render()
 
 }
 )();
