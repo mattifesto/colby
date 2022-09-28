@@ -88,6 +88,13 @@ CB_View_SVGBarChart1
         $viewModel =
         (object)[];
 
+        CB_View_SVGBarChart1::setTitles(
+            $viewModel,
+            CB_View_SVGBarChart1::getTitles(
+                $viewSpec
+            )
+        );
+
         CB_View_SVGBarChart1::setValues(
             $viewModel,
             CB_View_SVGBarChart1::getValues(
@@ -102,6 +109,47 @@ CB_View_SVGBarChart1
 
 
     // -- accessors
+
+
+
+    /**
+     * @param object $viewModel
+     *
+     * @return [string]
+     */
+    static function
+    getTitles(
+        stdClass $viewModel
+    ): array
+    {
+        $titles =
+        CBModel::valueToArray(
+            $viewModel,
+            'CB_View_SVGBarChart1_titles_property'
+        );
+
+        return $titles;
+    }
+    // getTitles()
+
+
+
+    /**
+     * @param object $viewModel
+     * @param [string] $newTalues
+     *
+     * @return void
+     */
+    static function
+    setTitles(
+        stdClass $viewModel,
+        array $newTitles
+    ): void
+    {
+        $viewModel->CB_View_SVGBarChart1_titles_property =
+        $newTitles;
+    }
+    // setTitles()
 
 
 
@@ -161,6 +209,11 @@ CB_View_SVGBarChart1
             $viewModel
         );
 
+        $titles =
+        CB_View_SVGBarChart1::getTitles(
+            $viewModel
+        );
+        
         $valuesCount =
         count($values);
 
@@ -218,10 +271,28 @@ CB_View_SVGBarChart1
         $previousValue =
         $values[0];
 
-        foreach (
-            $values as
-            $currentValue
+        for (
+            $index = 0;
+            $index < count($values);
+            $index += 1
         ) {
+            $currentValue =
+            $values[$index];
+
+            if (
+                isset(
+                    $titles[$index]
+                )
+            ) {
+                $loopTitle =
+                $titles[$index];
+            }
+            else
+            {
+                $loopTitle =
+                $currentValue;
+            }
+
             if (
                 $previousValue < $currentValue
             ) {
@@ -276,7 +347,7 @@ CB_View_SVGBarChart1
 
                 <rect
                     class="CB_View_SVGBarChart1_bar_element"
-                    data-value="${currentValue}"
+                    data-value="${loopTitle}"
                     fill="${barColor}"
                     height="${columnHeightAsPixels}"
                     width="${columnWidthAsPixels}"
