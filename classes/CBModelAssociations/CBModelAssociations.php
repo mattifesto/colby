@@ -588,6 +588,13 @@ CBModelAssociations {
      * @param CBID $firstCBID
      * @param string $associationKey
      * @param string $sortingOrder
+     *
+     *      "ascending": associations with earlier sorting values will be at the
+     *      beginning of the returned array
+     *
+     *      "descending": associations with later sorting values will be at the
+     *      beginning of the returned array
+     *
      * @param int $maximumResultCount
      * @param int|null $sortingValueMinimum
      * @param int|null $sortingValueMaximum
