@@ -213,7 +213,7 @@ CB_View_SVGBarChart1
         CB_View_SVGBarChart1::getTitles(
             $viewModel
         );
-        
+
         $valuesCount =
         count($values);
 
@@ -249,10 +249,24 @@ CB_View_SVGBarChart1
         array_reduce(
             $values,
             function (
-                float $previousMaxValue,
-                float $currentValue
+                ?float $previousMaxValue,
+                ?float $currentValue
             ): float
             {
+                if (
+                    $currentValue ===
+                    null
+                ) {
+                    return $previousMaxValue;
+                }
+
+                if (
+                    $previousMaxValue ===
+                    null
+                ) {
+                    return null;
+                }
+                
                 if (
                     $currentValue >
                     $previousMaxValue
