@@ -278,11 +278,20 @@ CB_CBAdmin_Social
             $youtubeChannelModel
         );
 
+        $dateInformation =
+        getdate();
+
         $youtubeStatisticsModels =
-        CB_YouTubeStatistics::fetchRecentStatistics(
+        CB_YouTubeStatistics::fetchDailyStatistics(
             $youtubeChannelModelCBID,
+            $dateInformation['mon'],
+            $dateInformation['mday'],
+            $dateInformation['year'],
             28
         );
+
+        $titles =
+        [];
 
         $values =
         [];
@@ -291,16 +300,58 @@ CB_CBAdmin_Social
             $youtubeStatisticsModels as
             $youtubeStatisticsModel
         ) {
-            $subscriberCount =
-            CB_YouTubeStatistics::getStatistics_SubscriberCount(
-                $youtubeStatisticsModel
-            );
+            if (
+                $youtubeStatisticsModel !==
+                null
+            ) {
+                $subscriberCount =
+                CB_YouTubeStatistics::getStatistics_SubscriberCount(
+                    $youtubeStatisticsModel
+                );
 
-            array_push(
-                $values,
-                $subscriberCount
-            );
+                array_push(
+                    $values,
+                    $subscriberCount
+                );
+
+                $cbtimestamp =
+                CB_YouTubeStatistics::getCBTimestamp(
+                    $youtubeStatisticsModel
+                );
+
+                $timestamp =
+                CB_Timestamp::getUnixTimestamp(
+                    $cbtimestamp
+                );
+
+                $dateString =
+                gmdate(
+                    'Y/m/d',
+                    $timestamp
+                );
+
+                array_push(
+                    $titles,
+                    "$dateString $subscriberCount"
+                );
+            }
+            // if
+
+            else
+            {
+                array_push(
+                    $values,
+                    null
+                );
+
+                array_push(
+                    $titles,
+                    "No Data"
+                );
+            }
+            // else
         }
+        // foreach
 
         /**
          * Put the most recent values at the end of the array.
@@ -311,9 +362,19 @@ CB_CBAdmin_Social
             $values
         );
 
+        $titles =
+        array_reverse(
+            $titles
+        );
+
         $viewSpec =
         CBModel::createSpec(
             'CB_View_SVGBarChart1'
+        );
+
+        CB_View_SVGBarChart1::setTitles(
+            $viewSpec,
+            $titles
         );
 
         CB_View_SVGBarChart1::setValues(
