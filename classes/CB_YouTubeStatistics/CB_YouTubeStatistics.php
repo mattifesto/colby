@@ -496,6 +496,84 @@ CB_YouTubeStatistics
 
 
     /**
+     * @param CBID $youtubeChannelModelCBIDArgument
+     * @param int $beginningUnixTimestampArgument
+     * @param int $endingUnixTimestampArgument
+     *
+     * @return [object]
+     *
+     *      {
+     *          CB_YouTubeStatistics_beginningOfDayUnixTimestamp:
+     *          int,
+     *
+     *          CB_YouTubeStatistics_youtubeStatisticsModel:
+     *          <CB_YouTubeStatistics model>
+     *      }
+     */
+    static function
+    fetchDailyStatistics(
+        string $youtubeChannelModelCBIDArgument,
+        int $endingMonthArgument,
+        int $endingDayArgument,
+        int $endingYearArgument,
+        int $countOfDaysArgument,
+    ): array
+    {
+        $arrayOfDailyYouTubeStatisticsModels =
+        [];
+
+        for (
+            $dayIndex = 0;
+            $dayIndex < $countOfDaysArgument;
+            $dayIndex += 1
+        ) {
+            $loopDayMaximumUnixTimestamp =
+            gmmktime(
+                24, // hour
+
+                0, // minute
+
+                -1, // second
+
+                $endingMonthArgument,
+
+                $endingDayArgument -
+                $dayIndex,
+
+                $endingYearArgument
+            );
+
+            $arrayOfFetchedYouTubeStatisticsModels =
+            CB_YouTubeStatistics::fetchRecentStatistics(
+                $youtubeChannelModelCBIDArgument,
+                1, // maximumResultCount
+                $loopDayMaximumUnixTimestamp
+            );
+
+            $youtubeStatisticsModel =
+            null;
+
+            if (
+                count($arrayOfFetchedYouTubeStatisticsModels) ===
+                1
+            ) {
+                $youtubeStatisticsModel =
+                $arrayOfFetchedYouTubeStatisticsModels[0];
+            }
+
+            array_push(
+                $arrayOfDailyYouTubeStatisticsModels,
+                $youtubeStatisticsModel
+            );
+        }
+
+        return $arrayOfDailyYouTubeStatisticsModels;
+    }
+    // fetchDailyStatistics()
+
+
+
+    /**
      * @param CBID $youtubeChannelModelCBID
      *
      * @return <CB_YouTubeStatistics model>|null
@@ -544,7 +622,8 @@ CB_YouTubeStatistics
     static function
     fetchRecentStatistics(
         string $youtubeChannelModelCBID,
-        int $maximumResultCount = 10
+        int $maximumResultCount = 10,
+        ?int $maximumUnixTimestampArgument = null
     ): array
     {
         $associations =
@@ -552,7 +631,9 @@ CB_YouTubeStatistics
             $youtubeChannelModelCBID,
             'CB_YouTubeStatistics_association',
             'descending',
-            $maximumResultCount
+            $maximumResultCount,
+            null, // sortingValueMinimum
+            $maximumUnixTimestampArgument
         );
 
         $youtubeStatisticsModelCBIDs =
