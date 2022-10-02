@@ -242,97 +242,63 @@ CB_View_SVGBarChart1
 
         EOT;
 
-        $initialMaxValue =
-        1;
 
-        $maxValue =
-        array_reduce(
-            $values,
-            function (
-                ?float $previousMaxValue,
-                ?float $currentValue
-            ): float
-            {
-                if (
-                    $currentValue ===
-                    null
-                ) {
-                    return $previousMaxValue;
-                }
-
-                if (
-                    $previousMaxValue ===
-                    null
-                ) {
-                    return null;
-                }
-                
-                if (
-                    $currentValue >
-                    $previousMaxValue
-                ) {
-                    return $currentValue;
-                }
-
-                return $previousMaxValue;
-            },
-            $initialMaxValue
+        $unitValues =
+        CB_View_SVGBarChart1::calculateUnitValues(
+            $values
         );
+
 
         $columnIndex =
         0;
 
-        $previousValue =
-        $values[0];
+        $previousUnitValue =
+        null;
 
         for (
-            $index = 0;
-            $index < count($values);
-            $index += 1
+            $loopIndex
+            = 0;
+
+            $loopIndex
+            < count($values);
+
+            $loopIndex
+            += 1
         ) {
-            $currentValue =
-            $values[$index];
+            $loopUnitValue
+            = $unitValues[
+                $loopIndex
+            ];
 
             if (
                 isset(
-                    $titles[$index]
+                    $titles[
+                        $loopIndex
+                    ]
                 )
             ) {
                 $loopTitle =
-                $titles[$index];
-            }
-            else
-            {
-                $loopTitle =
-                $currentValue;
-            }
-
-            if (
-                $previousValue < $currentValue
-            ) {
-                $barColor =
-                'green';
-            }
-
-            else if (
-                $previousValue > $currentValue
-            ) {
-                $barColor =
-                'red';
+                $titles[
+                    $loopIndex
+                ];
             }
 
             else
             {
-                $barColor =
-                'gray';
+                $loopTitle
+                = '';
             }
 
-            $columnHeightAsPixels =
-            $graphHeightAsPixels *
-            (
-                $currentValue /
-                $maxValue
+            $barColor =
+            CB_View_SVGBarChart1::calculateBarColor(
+                $loopIndex,
+                $loopUnitValue,
+                $previousUnitValue
             );
+
+            $columnHeightAsPixels
+            = $graphHeightAsPixels
+            * $loopUnitValue;
 
             $columnContainerWidthAsPixels =
             10;
@@ -360,8 +326,16 @@ CB_View_SVGBarChart1
             echo <<<EOT
 
                 <rect
+                    class="CB_View_SVGBarChart1_barBackground_element"
+                    fill="#333"
+                    height="${graphHeightAsPixels}"
+                    width="${columnWidthAsPixels}"
+                    x="${columnXAsPixels}"
+                    y="0"
+                />
+
+                <rect
                     class="CB_View_SVGBarChart1_bar_element"
-                    data-value="${loopTitle}"
                     fill="${barColor}"
                     height="${columnHeightAsPixels}"
                     width="${columnWidthAsPixels}"
@@ -369,10 +343,20 @@ CB_View_SVGBarChart1
                     y="${columnYAsPixels}"
                 />
 
+                <rect
+                    class="CB_View_SVGBarChart1_transparentFullBar_element"
+                    data-value="${loopTitle}"
+                    fill="transparent"
+                    height="${graphHeightAsPixels}"
+                    width="${columnWidthAsPixels}"
+                    x="${columnXAsPixels}"
+                    y="0"
+                />
+
             EOT;
 
-            $previousValue =
-            $currentValue;
+            $previousUnitValue =
+            $loopUnitValue;
 
             $columnIndex +=
             1;
@@ -392,5 +376,305 @@ CB_View_SVGBarChart1
         EOT;
     }
     // CBView_render()
+
+
+
+    // -- functions
+
+
+
+    private static function
+    calculateBarColor(
+        int $barIndex,
+        ?float $currentValue,
+        ?float $previousValue
+    ): string
+    {
+        if (
+            $barIndex
+            === 0
+        ) {
+            $barColor
+            = 'gray';
+        }
+
+        else if (
+            $previousValue
+            < $currentValue
+        ) {
+            $barColor =
+            'green';
+        }
+
+        else if (
+            $previousValue
+            > $currentValue
+        ) {
+            $barColor =
+            'red';
+        }
+
+        else
+        {
+            $barColor =
+            'gray';
+        }
+
+        return $barColor;
+    }
+    // calculateBarColor()
+
+
+
+    private static function
+    calculateMaxValue(
+        array $valuesArgument
+    ): float
+    {
+        $initialMaxValue =
+        1.0;
+
+        $maxValue =
+        array_reduce(
+            $valuesArgument,
+            function (
+                ?float $previousMaxValue,
+                ?float $currentValue
+            ): ?float
+            {
+                if (
+                    $currentValue ===
+                    null
+                ) {
+                    return $previousMaxValue;
+                }
+
+                if (
+                    $previousMaxValue ===
+                    null
+                ) {
+                    return $currentValue;
+                }
+
+                if (
+                    $currentValue >
+                    $previousMaxValue
+                ) {
+                    return $currentValue;
+                }
+
+                return $previousMaxValue;
+            },
+            $initialMaxValue
+        );
+
+        return $maxValue;
+    }
+    // calculateMaxValue
+
+
+
+    private static function
+    calculateMinValue(
+        array $valuesArgument
+    ): float
+    {
+        $initialMinValue
+        = null;
+
+        $minValue =
+        array_reduce(
+            $valuesArgument,
+            function (
+                ?float $previousMinValue,
+                ?float $currentValue
+            ): ?float
+            {
+                if (
+                    $currentValue ===
+                    null
+                ) {
+                    return $previousMinValue;
+                }
+
+                if (
+                    $previousMinValue ===
+                    null
+                ) {
+                    return $currentValue;
+                }
+
+                if (
+                    $currentValue <
+                    $previousMinValue
+                ) {
+                    return $currentValue;
+                }
+
+                return $previousMinValue;
+            },
+            $initialMinValue
+        );
+
+        return $minValue;
+    }
+    // calculateMinValue()
+
+
+
+    /**
+     * This function calculates unit values (0 - 1) from an array of floats. The
+     * returned unit values are meant to be used to render graphs showing the
+     * differences in the values.
+     *
+     * If the differenct between the maximum values and the minimum values is
+     * less than 75 percent of the available area the values will be reduced to
+     * make that range equal to 75 percent of the area so that the changes
+     * between values can be seen better.
+     */
+    private static function
+    calculateUnitValues(
+        array $arrayOfValuesArgument
+    ): array
+    {
+        $maxValue =
+        CB_View_SVGBarChart1::calculateMaxValue(
+            $arrayOfValuesArgument
+        );
+
+        $minValue =
+        CB_View_SVGBarChart1::calculateMinValue(
+            $arrayOfValuesArgument
+        );
+
+        if (
+            $minValue
+            === null
+        ) {
+            $minValue
+            = $maxValue;
+        }
+
+        $changeRange =
+        $maxValue
+        - $minValue;
+
+        $changeRangeToFullRangeRatio =
+        $changeRange
+        / $maxValue;
+
+        if (
+            $minValue
+            === $maxValue
+        ) {
+            $reducedValues =
+            $arrayOfValuesArgument;
+        }
+
+        else if (
+            $changeRangeToFullRangeRatio
+            > .75
+        ) {
+            $reducedValues =
+            $arrayOfValuesArgument;
+        }
+
+        else
+        {
+            $valueReduction =
+            $maxValue
+            - (
+                $changeRange /
+                0.75
+            );
+
+            $maxValue -=
+            $valueReduction;
+
+            $minValue -=
+            $valueReduction;
+
+            $reducedValues =
+            [];
+
+            for (
+                $arrayOfValuesArgumentIndex =
+                0;
+
+                $arrayOfValuesArgumentIndex
+                < count($arrayOfValuesArgument);
+
+                $arrayOfValuesArgumentIndex
+                += 1
+            ) {
+                $originalValue =
+                $arrayOfValuesArgument[
+                    $arrayOfValuesArgumentIndex
+                ];
+
+                if (
+                    $originalValue
+                    === null
+                ) {
+                    $reducedValue
+                    = null;
+                }
+
+                else
+                {
+                    $reducedValue =
+                    $originalValue -
+                    $valueReduction;
+                }
+
+                array_push(
+                    $reducedValues,
+                    $reducedValue
+                );
+            }
+        }
+
+        $unitValues =
+        [];
+
+        for (
+            $arrayOfValuesArgumentIndex =
+            0;
+
+            $arrayOfValuesArgumentIndex
+            < count($arrayOfValuesArgument);
+
+            $arrayOfValuesArgumentIndex
+            += 1
+        ) {
+            $reducedValue =
+            $reducedValues[
+                $arrayOfValuesArgumentIndex
+            ];
+
+            if (
+                $reducedValue
+                === null
+            ) {
+                $unitValue
+                = null;
+            }
+
+            else
+            {
+                $unitValue
+                = $reducedValue
+                / $maxValue;
+            }
+
+            array_push(
+                $unitValues,
+                $unitValue
+            );
+        }
+
+        return $unitValues;
+    }
+    // calculateUnitValues()
 
 }
