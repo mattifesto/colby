@@ -284,15 +284,34 @@ CB_Task_CollectYouTubeChannelStatistics
             $youtubeChannelModelCBID
         );
 
-        $previouslyRunCBTimestamp =
-        CB_YouTubeStatistics::getCBTimestamp(
-            $youtubeStatisticsModel
-        );
 
-        $previouslyRunUnixTimestamp =
-        CB_Timestamp::getUnixTimestamp(
-            $previouslyRunCBTimestamp
-        );
+
+        if (
+            $youtubeStatisticsModel ===
+            null
+        ) {
+            $previouslyRunUnixTimestamp =
+            null;
+        }
+        // if
+
+
+
+        else
+        {
+            $previouslyRunCBTimestamp =
+            CB_YouTubeStatistics::getCBTimestamp(
+                $youtubeStatisticsModel
+            );
+
+            $previouslyRunUnixTimestamp =
+            CB_Timestamp::getUnixTimestamp(
+                $previouslyRunCBTimestamp
+            );
+
+        }
+        //else
+
 
         $nextRunUnixTimestamp =
         CB_Task_CollectYouTubeChannelStatistics::calculateTheScheduledUnixTimestampOfTheNextTaskRun(
