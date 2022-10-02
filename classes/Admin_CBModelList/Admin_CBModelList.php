@@ -1,7 +1,13 @@
 <?php
 
-final class Admin_CBModelList {
-
+/**
+ * @deprecated 2022_10_02_1664717360
+ *
+ *      This functionaity should be replaced by the CB_Admin_ModelSearch class.
+ */
+final class
+Admin_CBModelList
+{
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
 
@@ -110,6 +116,13 @@ final class Admin_CBModelList {
 
 
     /**
+     * @NOTE 2022_10_02_1664717109
+     *
+     *      This function fetches information for every single model with a
+     *      given class name. This is bad. CB_Admin_ModelSearch should be
+     *      modified to replace this functionality and this clsas should be
+     *      removed.
+     *
      * @return [object]
      */
     private static function
