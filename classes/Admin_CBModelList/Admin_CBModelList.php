@@ -112,43 +112,96 @@ final class Admin_CBModelList {
     /**
      * @return [object]
      */
-    private static function fetchModelList() {
-        $modelClassNameAsSQL = CBDB::stringToSQL(
+    private static function
+    fetchModelList(
+    ): array
+    {
+        $modelClassNameAsSQL =
+        CBDB::stringToSQL(
             cb_query_string_value(
                 'modelClassName'
             )
         );
 
-        $SQL = <<<EOT
+        $SQL =
+        <<<EOT
 
-            SELECT      LOWER(HEX(CBModelsTable.ID)) AS ID,
-                        CBModelsTable.title AS title,
-                        CBModelVersionsTable_images.modelAsJSON AS image
+            SELECT
 
-            FROM        CBModels as CBModelsTable
+            LOWER(HEX(CBModelsTable.ID))
+            AS ID,
 
-            LEFT JOIN   CBModelAssociations AS CBModelAssociationsTable
-                ON      CBModelsTable.ID = CBModelAssociationsTable.ID AND
-                        CBModelAssociationsTable.className = "CBModelToCBImageAssociation"
+            CBModelsTable.title
+            AS title,
 
-            LEFT JOIN   CBModels as CBModelsTable_images
-                ON      CBModelAssociationsTable.associatedID = CBModelsTable_images.ID
+            CBModelVersionsTable_images.modelAsJSON
+            AS image
 
-            LEFT JOIN   CBModelVersions as CBModelVersionsTable_images
-                ON      CBModelsTable_images.ID = CBModelVersionsTable_images.ID AND
-                        CBModelsTable_images.version = CBModelVersionsTable_images.version
 
-            WHERE       CBModelsTable.className = {$modelClassNameAsSQL}
 
-            ORDER BY    CBModelsTable.created DESC
+            FROM
+
+            CBModels
+            AS CBModelsTable
+
+
+
+            LEFT JOIN
+            CBModelAssociations
+            AS CBModelAssociationsTable
+            ON
+            CBModelsTable.ID = CBModelAssociationsTable.ID AND
+            CBModelAssociationsTable.className = "CBModelToCBImageAssociation"
+
+
+
+            LEFT JOIN
+            CBModels
+            AS CBModelsTable_images
+            ON
+            CBModelAssociationsTable.associatedID = CBModelsTable_images.ID
+
+
+
+            LEFT JOIN
+            CBModelVersions
+            AS CBModelVersionsTable_images
+            ON
+            CBModelsTable_images.ID = CBModelVersionsTable_images.ID AND
+            CBModelsTable_images.version = CBModelVersionsTable_images.version
+
+
+
+            WHERE
+
+            CBModelsTable.className =
+            {$modelClassNameAsSQL}
+
+
+
+            ORDER BY
+
+            CBModelsTable.created DESC
 
         EOT;
 
-        $modelList = CBDB::SQLToObjects($SQL);
+        $modelList =
+        CBDB::SQLToObjects(
+            $SQL
+        );
 
-        foreach($modelList as $modelListItem) {
-            if ($modelListItem->image !== null) {
-                $modelListItem->image = json_decode($modelListItem->image);
+        foreach(
+            $modelList
+            as $modelListItem
+        ) {
+            if (
+                $modelListItem->image
+                !== null
+            ) {
+                $modelListItem->image =
+                json_decode(
+                    $modelListItem->image
+                );
             }
         }
 
