@@ -34,7 +34,7 @@
                     let barElements =
                     Array.from(
                         rootElement.getElementsByClassName(
-                            "CB_View_SVGBarChart1_bar_element"
+                            "CB_View_SVGBarChart1_transparentFullBar_element"
                         )
                     );
 
