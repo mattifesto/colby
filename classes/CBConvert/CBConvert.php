@@ -3,7 +3,7 @@
 final class
 CBConvert
 {
-    /* -- CBHTMLOutput interfaces -- */
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -14,15 +14,19 @@ CBConvert
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        return [
-            Colby::flexpath(
+        $javaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.60.js',
+                '2022_10_05_1664987509',
+                'js',
                 cbsysurl()
             ),
         ];
+
+        return $javaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
@@ -33,14 +37,17 @@ CBConvert
     CBHTMLOutput_JavaScriptVariables(
     ): array
     {
-        return [
+        $arrayOfJavaScriptVariables =
+        [
             [
                 'CBConvert_stringToStubReplacements',
                 CBConvert::stringToStubReplacements(),
             ]
         ];
+
+        return $arrayOfJavaScriptVariables;
     }
-    /* CBHTMLOutput_JavaScriptVariables() */
+    // CBHTMLOutput_JavaScriptVariables()
 
 
 
