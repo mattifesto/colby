@@ -351,6 +351,11 @@ CB_CBView_Moment
 
 
 
+    /**
+     * @param object $momentModel
+     *
+     * @return void
+     */
     private static function
     renderHeader(
         stdClass $momentModel
