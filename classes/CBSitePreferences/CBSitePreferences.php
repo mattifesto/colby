@@ -39,6 +39,14 @@ CBSitePreferences {
         'rw3840',       /* 1920pt x ? */
         'rw4480',       /* 2240pt x ? */
         'rw5120',       /* 2560pt x ? */
+
+        /**
+         * @NOTE 2022_10_05_1664989774
+         *
+         *      This operation was added to support the CB_View_Moment2 class.
+         *      We probaby need a way to register resize operations.
+         */
+        'rh800rw2560',
     ];
 
     private static $model = null;
