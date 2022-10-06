@@ -225,16 +225,20 @@ ColbyConvert
             $timestampAttribute =
             "data-timestamp=\"{$timestampForJavaScript}\"";
 
-            return CBConvert::stringToCleanLine(<<<EOT
+            $timeElementHTML =
+            CBConvert::stringToCleanLine(<<<EOT
 
                 <time
                     ${classAttribute}
                     ${datetimeAttribute}
                     ${timestampAttribute}
                 >
+                    &nbsp
                 </time>
 
             EOT);
+
+            return $timeElementHTML;
         }
 
         else
