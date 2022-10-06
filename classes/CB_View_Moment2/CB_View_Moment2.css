@@ -1,0 +1,138 @@
+.CB_View_Moment2_root_element
+{
+    display:
+    flex;
+
+    justify-content:
+    center;
+
+    box-sizing:
+    border-box;
+
+    max-width:
+    100%;
+
+    overflow-wrap:
+    break-word;
+
+    padding:
+    100px 5%;
+}
+
+
+
+.CB_View_Moment2_root_element
+a
+{
+    text-decoration:
+    none;
+}
+
+
+
+.CB_View_Moment2_root_element
+a:hover
+{
+    border-color:
+    var(--CBTextColorForLinks);
+
+    color:
+    var(--CBTextColorForLinks);
+}
+
+
+
+.CB_View_Moment2_content_element
+{
+    box-sizing:
+    border-box;
+
+    max-width:
+    100%;
+
+    overflow:
+    hidden;
+}
+
+
+
+.CB_View_Moment2_root_element
+img
+{
+    border:
+    1px
+    solid
+    var(--CB_UI_borderColor);
+
+    border-radius:
+    3px;
+
+    box-sizing:
+    border-box;
+}
+
+
+
+.CB_View_Moment2_text_element
+{
+    max-width:
+    100%;
+
+    padding:
+    10px 0;
+
+    white-space:
+    pre-wrap;
+
+    width:
+    480px;
+}
+
+
+
+.CB_View_Moment2_nameAndDate_element
+{
+    color:
+    var(--CBTextColor3);
+
+    font-size:
+    80%;
+
+    padding-top:
+    10px;
+}
+
+
+
+.CB_View_Moment2_links_element
+{
+    color:
+    var(--CBTextColor3);
+
+    font-size:
+    80%;
+
+    padding-top:
+    10px;
+}
+
+
+
+.CB_View_Moment2_links_element
+a
+{
+    color:
+    var(--CBTextColor3);
+
+    text-decoration:
+    none;
+}
+
+
+
+.CB_View_Moment2_links_element
+a:hover
+{
+    color:
+    var(--CBTextColorForLinks);
+}
