@@ -125,14 +125,14 @@ CB_CBView_MostRecentUserMoment
             return;
         }
 
-        $moments =
+        $arrayOfMomentModels =
         CB_Moment::fetchMomentsForUserModelCBID(
             $userModelCBID,
             1
         );
 
         if (
-            count($moments) === 0
+            count($arrayOfMomentModels) === 0
         ) {
             return;
         }
@@ -140,12 +140,20 @@ CB_CBView_MostRecentUserMoment
         echo
         '<div class="CB_CBView_MostRecentUserMoment">';
 
-        $shouldIncludeLinksToMomentPage =
-        true;
+        $moment2ViewSpec =
+        CBModel::createSpec(
+            'CB_View_Moment2'
+        );
 
-        CB_CBView_Moment::renderFullSizeMoment(
-            $moments[0],
-            $shouldIncludeLinksToMomentPage
+        CB_View_Moment2::setMomentModelCBID(
+            $moment2ViewSpec,
+            CBModel::getCBID(
+                $arrayOfMomentModels[0]
+            )
+        );
+
+        CBView::renderSpec(
+            $moment2ViewSpec
         );
 
         echo
