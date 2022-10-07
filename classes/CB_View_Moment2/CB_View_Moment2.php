@@ -106,6 +106,53 @@ CB_View_Moment2
 
 
 
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
+        $javaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2022_10_07_1665104675',
+                'js',
+                cbsysurl()
+            ),
+        ];
+
+        return $javaScriptURLs;
+    }
+    // CBHTMLOutput_JavaScriptURLs()
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        $requiredClassNames =
+        [
+            'CB_Moment',
+            'CB_UI',
+            'CBErrorHandler',
+            'CBImage',
+            'CBModel',
+            'CBUser',
+            'Colby',
+        ];
+
+        return $requiredClassNames;
+    }
+    // CBHTMLOutput_requiredClassNames()
+
+
+
     // -- CBModel interfaces
 
 
