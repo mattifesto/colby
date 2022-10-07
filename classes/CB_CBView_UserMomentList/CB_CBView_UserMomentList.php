@@ -3,7 +3,7 @@
 final class
 CB_CBView_UserMomentList
 {
-    /* -- CBHTMLOutput interfaces -- */
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -14,16 +14,19 @@ CB_CBView_UserMomentList
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        return
+        $javaScriptURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.62.js',
+                '2022_10_07_1665152374',
+                'js',
                 cbsysurl()
             ),
         ];
+
+        return $javaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
@@ -32,20 +35,24 @@ CB_CBView_UserMomentList
      */
     static function
     CBHTMLOutput_requiredClassNames(
-    ): array {
-        return [
+    ): array
+    {
+        $requiredClassNames =
+        [
             'CB_Timestamp',
-            'CB_CBView_Moment',
             'CB_CBView_MomentCreator',
             'CB_Moment',
+            'CB_View_Moment2',
             'CBAjax',
             'CBConvert',
             'CBErrorHandler',
             'CBUser',
             'Colby',
         ];
+
+        return $requiredClassNames;
     }
-    /* CBHTMLOutput_requiredClassNames() */
+    // CBHTMLOutput_requiredClassNames()
 
 
 

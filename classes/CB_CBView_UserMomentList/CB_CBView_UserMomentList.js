@@ -1,8 +1,8 @@
 /* global
     CB_Timestamp,
-    CB_CBView_Moment,
     CB_CBView_MomentCreator,
     CB_Moment,
+    CB_View_Moment2,
     CBAjax,
     CBConvert,
     CBErrorHandler,
@@ -11,7 +11,11 @@
     CBUser_currentUserModelCBID_jsvariable,
 */
 
-(function () {
+(function ()
+{
+    "use strict";
+
+
 
     Colby.afterDOMContentLoaded(
         function () {
@@ -277,14 +281,16 @@
          */
         function
         renderNewMoment(
-            newMomentModel
+            newMomentModelArgument
         ) {
-            let momentView = CB_CBView_Moment.createStandardMoment(
-                newMomentModel
+            let moment2View = CB_View_Moment2.create();
+
+            moment2View.CB_View_Moment2_setMomentModel(
+                newMomentModelArgument
             );
 
             momentContainerElement.prepend(
-                momentView.CB_CBView_Moment_getElement()
+                moment2View.CB_View_Moment2_getElement()
             );
         }
         /* renderNewMoment() */
@@ -298,20 +304,25 @@
          */
         function
         renderOlderMoment(
-            momentModel,
+            momentModelArgument
         ) {
-            let momentView = CB_CBView_Moment.createStandardMoment(
-                momentModel
+            let moment2View = CB_View_Moment2.create();
+
+            moment2View.CB_View_Moment2_setMomentModel(
+                momentModelArgument
             );
 
             momentContainerElement.append(
-                momentView.CB_CBView_Moment_getElement()
+                moment2View.CB_View_Moment2_getElement()
             );
         }
         /* renderOlderMoment() */
+
+
 
         return;
     }
     /* initializeElement() */
 
-})();
+}
+)();
