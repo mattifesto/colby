@@ -14,7 +14,7 @@ CBMessageView
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        $cssURLs =
+        $arrayOfCSSURLs =
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
@@ -24,7 +24,7 @@ CBMessageView
             ),
         ];
 
-        return $cssURLs;
+        return $arrayOfCSSURLs;
     }
     // CBHTMLOutput_CSSURLs()
 
@@ -37,7 +37,7 @@ CBMessageView
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        $javaScriptURLs =
+        $arrayOfJavaScriptURLs =
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
@@ -47,7 +47,7 @@ CBMessageView
             ),
         ];
 
-        return $javaScriptURLs;
+        return $arrayOfJavaScriptURLs;
     }
     // CBHTMLOutput_JavaScriptURLs()
 
@@ -60,14 +60,14 @@ CBMessageView
     CBHTMLOutput_requiredClassNames(
     ): array
     {
-        $requiredClassNames =
+        $arrayOfRequiredClassNames =
         [
             'CBMessageMarkup',
 
             'CBContentStyleSheet',
         ];
 
-        return $requiredClassNames;
+        return $arrayOfRequiredClassNames;
     }
     // CBHTMLOutput_requiredClassNames()
 
