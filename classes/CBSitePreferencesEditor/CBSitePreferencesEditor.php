@@ -1,9 +1,9 @@
 <?php
 
 final class
-CBSitePreferencesEditor {
-
-    /* -- CBHTMLOutput interfaces -- */
+CBSitePreferencesEditor
+{
+    // -- CBHTMLOutput interfaces
 
 
 
