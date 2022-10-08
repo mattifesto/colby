@@ -28,7 +28,6 @@ CBCodeSearch
      *
      *          '--ignore-file=is:CBCodeSearch.php'
      *
-     *      cbmessage
      *      regex
      *      severity
      *      title
@@ -37,6 +36,7 @@ CBCodeSearch
      *
      *      args -> CBCodeSearch_ackArguments_property
      *      CBCodeSearch_CBID -> model CBID
+     *      cbmessage -> CBCodeSearch_cbmessage_property
      *      errorStartDate -> CBCodeSearch_errorVersion_property
      *      noticeStartDate -> CBCodeSearch_noticeVersion_property
      *      noticeVersion -> CBCodeSearch_noticeVersion_property
@@ -100,6 +100,69 @@ CBCodeSearch
          );
      }
      // setAckArguments()
+
+
+
+     /**
+      * @param object $codeSearchModelArgument
+      *
+      * @return void
+      */
+     static function
+     getCBMessage(
+         stdClass $codeSearchModelArgument
+     ): string
+     {
+         if (
+             isset(
+                 $codeSearchModelArgument->CBCodeSearch_cbmessage_property
+             )
+         ) {
+             $cbmessage =
+             CBModel::valueToString(
+                 $codeSearchModelArgument,
+                 "CBCodeSearch_cbmessage_property"
+             );
+         }
+         // if
+
+         else
+         {
+             // @deprecated 2022_10_08_1665245776
+
+             $cbmessage =
+             CBModel::valueToString(
+                 $codeSearchModelArgument,
+                 'cbmessage'
+             );
+         }
+
+         return $cbmessage;
+     }
+     // getCBMessage()
+
+
+
+     /**
+      * @param object $codeSearchModelArgument
+      * @param string $cbmessageArgument
+      *
+      * @return void
+      */
+     static function
+     setCBMessage(
+         stdClass $codeSearchModelArgument,
+         string $cbmessageArgument
+     ): void
+     {
+         $codeSearchModelArgument->CBCodeSearch_cbmessage_property =
+         $cbmessageArgument;
+
+         unset(
+             $codeSearchModelArgument->cbmessage
+         );
+     }
+     // setCBMessage()
 
 
 
