@@ -89,7 +89,7 @@ CB_StandardPageFrame
 
 
 
-    /* -- CBHTMLOutput interfaces -- */
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -100,16 +100,19 @@ CB_StandardPageFrame
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        return
+        $arrayOfCSSURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.61.4.css',
+                '2022_10_08_1665256555',
+                'css',
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfCSSURLs;
     }
-    /* CBHTMLOutput_CSSURLs() */
+    // CBHTMLOutput_CSSURLs()
 
 
 
@@ -316,50 +319,7 @@ CB_StandardPageFrame
 
 
 
-    /* -- functions -- */
-
-
-
-    /**
-     * @return void
-     */
-    private static function
-    renderHeaderImage(
-    ): void
-    {
-        $headerImageModel =
-        CBSitePreferences::getHeaderImage(
-            CBSitePreferences::model()
-        );
-
-        if (
-            $headerImageModel === null
-        ) {
-            return;
-        }
-
-        ?>
-
-        <div class="CB_StandardPageFrame_headerImage_element">
-            <a href="/">
-
-            <?php
-
-            CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
-                $headerImageModel,
-                "rw1600",
-                720,
-                720
-            );
-
-            ?>
-
-            </a>
-        </div>
-
-        <?php
-    }
-    /* renderHeaderImage() */
+    // -- functions
 
 
 
@@ -464,8 +424,6 @@ CB_StandardPageFrame
         CBView::renderSpec(
             $mainHeaderViewSpec
         );
-
-        CB_StandardPageFrame::renderHeaderImage();
 
         $renderContent();
 
