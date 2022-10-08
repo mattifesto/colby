@@ -44,6 +44,52 @@ CBCodeSearch
      */
 
 
+
+     // -- CBHTMLOutput interfaces
+
+
+
+     /**
+      * @return [string]
+      */
+     static function
+     CBHTMLOutput_JavaScriptURLs(
+     ): array
+     {
+         $javaScriptURLs =
+         [
+             CBLibrary::buildLibraryClassFilePath(
+                 __CLASS__,
+                 '2022_10_08_1665246592',
+                 'js',
+                 cbsysurl()
+             ),
+         ];
+
+         return $javaScriptURLs;
+     }
+     // CBHTMLOutput_JavaScriptURLs()
+
+
+
+     /**
+      * @return [string]
+      */
+     static function
+     CBHTMLOutput_requiredClassNames(
+     ): array
+     {
+         $requiredClassNames =
+         [
+             'CBModel',
+         ];
+
+         return $requiredClassNames;
+     }
+     // CBHTMLOutput_requiredClassNames()
+
+
+
      // -- accessors
 
 
