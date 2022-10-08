@@ -15,8 +15,11 @@
 */
 
 
-(function () {
+(function ()
+{
     "use strict";
+
+
 
     window.CBSitePreferencesEditor = {
         CBUISpecEditor_createEditorElement,
@@ -632,4 +635,5 @@
     }
     /* createHeaderImageEditorElement() */
 
-})();
+}
+)();
