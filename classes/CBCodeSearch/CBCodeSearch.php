@@ -49,19 +49,18 @@ CBCodeSearch
 
 
      /**
-      * @param object $codeSearchModel
-      * @param string $newErrorVersion
+      * @param object $codeSearchModelArgument
       *
       * @return void
       */
      static function
      getAckArguments(
-         stdClass $codeSearchModel,
+         stdClass $codeSearchModelArgument
      ): string
      {
          $ackArguments =
          CBModel::valueToString(
-             $codeSearchModel,
+             $codeSearchModelArgument,
              'CBCodeSearch_ackArguments_property'
          );
 
@@ -70,7 +69,7 @@ CBCodeSearch
          ) {
              $ackArguments =
              CBModel::valueToString(
-                 $codeSearchModel,
+                 $codeSearchModelArgument,
                  'args'
              );
          }
