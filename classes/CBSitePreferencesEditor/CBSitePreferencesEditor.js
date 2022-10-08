@@ -82,39 +82,12 @@
 
         /* -- website icon section -- -- -- -- -- */
 
-        let imageChooser;
-
-        {
-            let sectionTitleElement = CBUI.createElement("CBUI_title1");
-
-            element.appendChild(sectionTitleElement);
-
-            sectionTitleElement.textContent = "Website Icon";
-
-            let elements = CBUI.createElementTree(
-                "CBUI_sectionContainer",
-                "CBUI_section"
-            );
-
-            element.appendChild(
-                elements[0]
-            );
-
-            let sectionElement = elements[1];
-
-            imageChooser = CBUIImageChooser.create();
-            imageChooser.chosen = createEditor_handleImageChosen;
-            imageChooser.removed = createEditor_handleImageRemoved;
-
-            imageChooser.src = CBImage.toURL(
-                spec.imageForIcon,
-                "rw960"
-            );
-
-            sectionElement.appendChild(
-                imageChooser.element
-            );
-        }
+        element.append(
+            createWebsiteIconImageEditorElement(
+                spec,
+                specChangedCallback
+            )
+        );
 
 
 
@@ -411,51 +384,12 @@
         }
 
         return element;
-
-
-        /* -- closures -- -- -- -- -- */
-
-        /**
-         * @return undefined
-         */
-        function createEditor_handleImageChosen() {
-            CBAjax.call(
-                "CBImages",
-                "upload",
-                {},
-                imageChooser.file
-            ).then(
-                function (imageModel) {
-                    imageChooser.src = CBImage.toURL(imageModel, "rw960");
-                    args.spec.imageForIcon = imageModel;
-
-                    args.specChangedCallback();
-
-                }
-            ).catch(
-                function (error) {
-                    CBUIPanel.displayAndReportError(error);
-                }
-            );
-        }
-        /* createEditor_handleImageChosen() */
-
-
-        /**
-         * @return undefined
-         */
-        function createEditor_handleImageRemoved() {
-            args.spec.imageForIcon = undefined;
-            args.specChangedCallback();
-        }
-        /* createEditor_handleImageRemoved() */
-
     }
     /* CBUISpecEditor_createEditorElement() */
 
 
 
-    /* -- functions -- */
+    // -- functions
 
 
 
@@ -634,6 +568,140 @@
         return rootElement;
     }
     /* createHeaderImageEditorElement() */
+
+
+
+    /**
+     * @param object sitePreferencesSpecArgument
+     * @param function specChangedCallbackArgument
+     *
+     * @return Element
+     */
+    function
+    createWebsiteIconImageEditorElement(
+        sitePreferencesSpecArgument,
+        specChangedCallbackArgument
+    ) {
+        let headerImageEditorElement =
+        document.createElement(
+            "div"
+        );
+
+        headerImageEditorElement.className =
+        "CBSitePreferencesEditor_headerImageEditor_element";
+
+        let imageChooser;
+
+        let sectionTitleElement =
+        CBUI.createElement(
+            "CBUI_title1"
+        );
+
+        headerImageEditorElement.append(
+            sectionTitleElement
+        );
+
+        sectionTitleElement.textContent =
+        "Website Icon";
+
+        let elements =
+        CBUI.createElementTree(
+            "CBUI_sectionContainer",
+            "CBUI_section"
+        );
+
+        headerImageEditorElement.append(
+            elements[0]
+        );
+
+        let sectionElement =
+        elements[1];
+
+        imageChooser =
+        CBUIImageChooser.create();
+
+        imageChooser.chosen =
+        handleImageChosen;
+
+        imageChooser.removed =
+        handleImageRemoved;
+
+        imageChooser.src =
+        CBImage.toURL(
+            sitePreferencesSpecArgument.imageForIcon,
+            "rw960"
+        );
+
+        sectionElement.appendChild(
+            imageChooser.element
+        );
+
+
+
+        /**
+         * @return undefined
+         */
+        async function
+        handleImageChosen(
+        ) // -> Promise -> undefined
+        {
+            try
+            {
+                let imageModel =
+                await CBAjax.call(
+                    "CBImages",
+                    "upload",
+                    {},
+                    imageChooser.file
+                );
+
+                imageChooser.src =
+                CBImage.toURL(
+                    imageModel,
+                    "rw960"
+                );
+
+                sitePreferencesSpecArgument.imageForIcon =
+                imageModel;
+
+                specChangedCallbackArgument();
+            }
+            // try
+
+            catch(
+                error
+            ) {
+                CBUIPanel.displayAndReportError(
+                    error
+                );
+            }
+            // catch
+        }
+        /* createEditor_handleImageChosen() */
+
+
+
+        /**
+         * @return undefined
+         */
+        function
+        handleImageRemoved(
+        ) // -> undefined
+        {
+            sitePreferencesSpecArgument.imageForIcon =
+            undefined;
+
+            specChangedCallbackArgument();
+        }
+        /* createEditor_handleImageRemoved() */
+
+
+
+        return headerImageEditorElement;
+    }
+    // createWebsiteIconImageEditorElement()
+
+
 
 }
 )();
