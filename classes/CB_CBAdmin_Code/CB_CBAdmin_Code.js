@@ -1,7 +1,5 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 8 */
 /* global
+    CBCodeSearch,
     CBErrorHandler,
     CBMessageMarkup,
     CBModel,
@@ -15,7 +13,11 @@
 */
 
 
-(function () {
+(function ()
+{
+    "use strict";
+
+
 
     let rootElement;
 
@@ -189,9 +191,9 @@
         let expander = CBUIExpander.create();
         expander.title = codeSearchModel.title;
 
-        let searchCBMessage = CBModel.valueToString(
-            codeSearchModel,
-            "cbmessage"
+        let searchCBMessage =
+        CBCodeSearch.getCBMessage(
+            codeSearchModel
         );
 
         expander.message = searchCBMessage;
@@ -323,4 +325,5 @@
     }
     /* doSearch() */
 
-})();
+}
+)();
