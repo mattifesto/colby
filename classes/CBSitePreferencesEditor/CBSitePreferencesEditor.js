@@ -91,17 +91,6 @@
 
 
 
-        /* -- website header image -- */
-
-        element.append(
-            createHeaderImageEditorElement(
-                spec,
-                specChangedCallback
-            )
-        );
-
-
-
         /* -- developer settings section -- -- -- -- -- */
 
         {
@@ -454,120 +443,6 @@
 
     }
     /* createGoogleAnalyticsIDEditorElement() */
-
-
-
-    /**
-     * @param object sitePreferencesSpec
-     * @param function specChangedCallback
-     *
-     * @return Element
-     */
-    function
-    createHeaderImageEditorElement(
-        sitePreferencesSpec,
-        specChangedCallback
-    ) {
-        let rootElement;
-
-        {
-            let elements = CBUI.createElementTree(
-                "CBSitePreferencesEditor_headerImageEditor",
-                "CBUI_title1"
-            );
-
-            rootElement = elements[0];
-
-            let sectionTitleElement = elements[1];
-
-            sectionTitleElement.textContent = "Header Image";
-
-        }
-
-
-        let imageChooser;
-
-        {
-            let elements = CBUI.createElementTree(
-                "CBUI_sectionContainer",
-                "CBUI_section"
-            );
-
-            rootElement.appendChild(
-                elements[0]
-            );
-
-            imageChooser = CBUIImageChooser.create();
-            imageChooser.chosen = handleImageChosen;
-            imageChooser.removed = handleImageRemoved;
-
-            imageChooser.src = CBImage.toURL(
-                sitePreferencesSpec.CBSitePreferences_headerImage_property,
-                "rw960"
-            );
-
-            let sectionElement = elements[1];
-
-            sectionElement.appendChild(
-                imageChooser.element
-            );
-        }
-
-
-        /**
-         * @return undefined
-         */
-        async function
-        handleImageChosen(
-        ) {
-            try {
-                let imageModel = await CBAjax.call(
-                    "CBImages",
-                    "upload",
-                    {},
-                    imageChooser.file
-                );
-
-                imageChooser.src = CBImage.toURL(
-                    imageModel,
-                    "rw960"
-                );
-
-                sitePreferencesSpec.CBSitePreferences_headerImage_property = (
-                    imageModel
-                );
-
-                specChangedCallback();
-            } catch (
-                error
-            ) {
-                CBUIPanel.displayAndReportError(
-                    error
-                );
-            }
-        }
-        /* handleImageChosen() */
-
-
-
-        /**
-         * @return undefined
-         */
-        function
-        handleImageRemoved() {
-            sitePreferencesSpec.CBSitePreferences_headerImage_property = (
-                undefined
-            );
-
-            specChangedCallback();
-        }
-        /* createEditor_handleImageRemoved() */
-
-
-
-        return rootElement;
-    }
-    /* createHeaderImageEditorElement() */
 
 
 
