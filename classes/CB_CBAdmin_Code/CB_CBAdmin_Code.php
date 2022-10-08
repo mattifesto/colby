@@ -221,14 +221,17 @@ CB_CBAdmin_Code
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        return
+        $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_06_20_1655696343.js',
+                '2022_10_08_1665246742',
+                'js',
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfJavaScriptURLs;
     }
     // CBHTMLOutput_JavaScriptURLs()
 
@@ -266,8 +269,9 @@ CB_CBAdmin_Code
     CBHTMLOutput_requiredClassNames(
     ): array
     {
-        return
+        $arrayOfRequiredClassNames =
         [
+            'CBCodeSearch',
             'CBErrorHandler',
             'CBMessageMarkup',
             'CBModel',
@@ -276,6 +280,8 @@ CB_CBAdmin_Code
             'CBUIExpander',
             'Colby',
         ];
+
+        return $arrayOfRequiredClassNames;
     }
     // CBHTMLOutput_requiredClassNames()
 
