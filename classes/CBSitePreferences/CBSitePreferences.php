@@ -241,6 +241,20 @@ CBSitePreferences {
             '503e1a636261e6fe0cb893459efc9d7368730e77'
         );
 
+        CBCodeSearch::setAckArguments(
+            $codeSearchSpec,
+            '--ignore-file=is:CBSitePreferences.php'
+        );
+
+        CBCodeSearch::setCBMessage(
+            $codeSearchSpec,
+            <<<EOT
+
+                The header image property is no longer supported.
+
+            EOT
+        );
+
         CBCodeSearch::setNoticeVersion(
             $codeSearchSpec,
             '2022_10_08_1665245227'
@@ -254,15 +268,6 @@ CBSitePreferences {
         CBCodeSearch::setErrorVersion(
             $codeSearchSpec,
             '2022_10_08_1665245229'
-        );
-
-        CBCodeSearch::setCBMessage(
-            $codeSearchSpec,
-            <<<EOT
-
-                The header image property is no longer supported.
-
-            EOT
         );
 
         $codeSearchSpec->regex =
@@ -280,6 +285,69 @@ CBSitePreferences {
         );
 
 
+
+        // CBSitePreferences::getHeaderImage()
+        // CBSitePreferences::setHeaderImage()
+
+        $codeSearchSpec =
+        CBModel::createSpec(
+            'CBCodeSearch',
+            'e5e67453934a52a9d7886cc7dc9556b3fabd1cdc'
+        );
+
+        CBCodeSearch::setAckArguments(
+            $codeSearchSpec,
+            '--ignore-file=is:CBSitePreferences.php'
+        );
+
+        CBCodeSearch::setCBMessage(
+            $codeSearchSpec,
+            <<<EOT
+
+                CBSitePreferences::getHeaderImage() and
+                CBSitePreferences::setHeaderImage() are no longer available.
+
+            EOT
+        );
+
+        CBCodeSearch::setNoticeVersion(
+            $codeSearchSpec,
+            '2022_10_08_1665249339'
+        );
+
+        CBCodeSearch::setWarningVersion(
+            $codeSearchSpec,
+            '2022_10_08_1665249340'
+        );
+
+        CBCodeSearch::setErrorVersion(
+            $codeSearchSpec,
+            '2022_10_08_1665249341'
+        );
+
+        $codeSearchSpec->regex =
+        '\bCBSitePreferences::getHeaderImage\b|' .
+        '\bCBSitePreferences::setHeaderImage\b';
+
+        $codeSearchSpec->severity =
+        3;
+
+        $codeSearchSpec->title =
+        CBConvert::stringToCleanLine(<<<EOT
+
+            CBSitePreferences::getHeaderImage(),
+            CBSitePreferences::setHeaderImage()
+
+        EOT);
+
+        array_push(
+            $arrayOfCBCodeSearchSpecs,
+            $codeSearchSpec
+        );
+
+
+
+        // done
 
         return $arrayOfCBCodeSearchSpecs;
     }
@@ -479,29 +547,6 @@ CBSitePreferences {
             CBSitePreferences::setIconImage(
                 $model,
                 $iconImageModel
-            );
-        }
-
-
-
-        // header image
-
-        $headerImageSpec =
-        CBSitePreferences::getHeaderImage(
-            $spec
-        );
-
-        if (
-            $headerImageSpec !== null
-        ) {
-            $headerImageModel =
-            CBModel::build(
-                $headerImageSpec
-            );
-
-            CBSitePreferences::setHeaderImage(
-                $model,
-                $headerImageModel
             );
         }
 
@@ -875,44 +920,6 @@ CBSitePreferences {
         $sitePreferencesModel->frontPageID = $frontPageModelCBID;
     }
     /* setFrontPageModelCBID() */
-
-
-
-    /**
-     * @param object $sitePreferencesModel
-     *
-     * @return object|null
-     */
-    static function
-    getHeaderImage(
-        stdClass $sitePreferencesModel
-    ): ?stdClass {
-        return CBModel::valueAsModel(
-            $sitePreferencesModel,
-            'CBSitePreferences_headerImage_property',
-            'CBImage'
-        );
-    }
-    /* getHeaderImage() */
-
-
-
-    /**
-     * @param object $sitePreferencesModel
-     * @param object $headerImageModel
-     *
-     * @return void
-     */
-    static function
-    setHeaderImage(
-        stdClass $sitePreferencesModel,
-        ?stdClass $headerImageModel
-    ): void {
-        $sitePreferencesModel->CBSitePreferences_headerImage_property = (
-            $headerImageModel
-        );
-    }
-    /* setHeaderImage() */
 
 
 
