@@ -64,7 +64,7 @@ CBSitePreferences {
     CBCodeAdmin_searches(
     ): array
     {
-        $searches =
+        $arrayOfCBCodeSearchSpecs =
         [];
 
 
@@ -104,7 +104,7 @@ CBSitePreferences {
         'CBSitePreferences::getYouTubeAPIKey()';
 
         array_push(
-            $searches,
+            $arrayOfCBCodeSearchSpecs,
             $codeSearchSpec
         );
 
@@ -145,7 +145,7 @@ CBSitePreferences {
         'CBSitePreferences::getYouTubeChannelID()';
 
         array_push(
-            $searches,
+            $arrayOfCBCodeSearchSpecs,
             $codeSearchSpec
         );
 
@@ -186,7 +186,7 @@ CBSitePreferences {
         'CBSitePreferences_youtubeAPIKey';
 
         array_push(
-            $searches,
+            $arrayOfCBCodeSearchSpecs,
             $codeSearchSpec
         );
 
@@ -227,13 +227,61 @@ CBSitePreferences {
         'CBSitePreferences_youtubeChannelID';
 
         array_push(
-            $searches,
+            $arrayOfCBCodeSearchSpecs,
             $codeSearchSpec
         );
 
 
 
-        return $searches;
+        // CBSitePreferences_headerImage_property
+
+        $codeSearchSpec =
+        CBModel::createSpec(
+            'CBCodeSearch',
+            '503e1a636261e6fe0cb893459efc9d7368730e77'
+        );
+
+        CBCodeSearch::setNoticeVersion(
+            $codeSearchSpec,
+            '2022_10_08_1665245227'
+        );
+
+        CBCodeSearch::setWarningVersion(
+            $codeSearchSpec,
+            '2022_10_08_1665245228'
+        );
+
+        CBCodeSearch::setErrorVersion(
+            $codeSearchSpec,
+            '2022_10_08_1665245229'
+        );
+
+        CBCodeSearch::setCBMessage(
+            $codeSearchSpec,
+            <<<EOT
+
+                The header image property is no longer supported.
+
+            EOT
+        );
+
+        $codeSearchSpec->regex =
+        '\bCBSitePreferences_headerImage_property\b';
+
+        $codeSearchSpec->severity =
+        3;
+
+        $codeSearchSpec->title =
+        'CBSitePreferences_headerImage_property';
+
+        array_push(
+            $arrayOfCBCodeSearchSpecs,
+            $codeSearchSpec
+        );
+
+
+
+        return $arrayOfCBCodeSearchSpecs;
     }
     // CBCodeAdmin_searches()
 
