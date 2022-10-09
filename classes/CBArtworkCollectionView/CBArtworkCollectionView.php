@@ -211,6 +211,11 @@ CBArtworkCollectionView
                 >
                 </div>
 
+                <div
+                    class="CBArtworkCollectionView_thumbnailsContainer_element"
+                >
+                </div>
+                
             </div>
 
         </div>
