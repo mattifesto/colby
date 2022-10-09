@@ -1,18 +1,27 @@
 .CBArtworkCollectionView_root_element
 {
-    display: flex;
-    justify-content: center;
+    display:
+    flex;
 
-    box-sizing: border-box;
-    max-width: 100%;
-    overflow-wrap: break-word;
+    justify-content:
+    center;
+
+    box-sizing:
+    border-box;
+
+    max-width:
+    100%;
+
+    overflow-wrap:
+    break-word;
 }
 
 
 
 .CBArtworkCollectionView_content_element
 {
-    max-width: 100%;
+    max-width:
+    100%;
 }
 
 
@@ -61,31 +70,46 @@
 
 .CBArtworkCollectionView_mainPicture_element
 {
-    display: block;
-    aspect-ratio: 1/1;
+    display:
+    block;
 
-    width: 640px;
-    max-width: 100%;
+    aspect-ratio:
+    1/1;
 
-    padding: 20px;
+    width:
+    640px;
+
+    max-width:
+    100%;
+
+    padding:
+    20px;
 }
 
 
 
-.CBArtworkCollectionView_mainPicture_element img
+.CBArtworkCollectionView_mainPicture_element
+img
 {
-    width: 100%;
-    height: 100%;
+    width:
+    100%;
 
-    object-fit: contain;
+    height:
+    100%;
+
+    object-fit:
+    contain;
 }
 
 
 
 .CBArtworkCollectionView_thumbnailsContainer_element
 {
-    display: flex;
-    flex-wrap: wrap;
+    display:
+    flex;
+
+    flex-wrap:
+    wrap;
 }
 
 
@@ -93,5 +117,6 @@
 .CBArtworkCollectionView_thumbnailsContainer_element
 picture
 {
-    padding: 5px;
+    padding:
+    5px;
 }
