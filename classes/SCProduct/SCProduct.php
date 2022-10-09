@@ -246,6 +246,53 @@ SCProduct
 
 
     /**
+     * @deprecated 2022_10_09_1665335161
+     *
+     *      This function was created in a deprecated state. It exists for
+     *      products that can provide thumbnail image URLs but that don't have a
+     *      product image model. Use cases for this have existed in the past and
+     *      are being removed but new uses of this should not be created.
+     *
+     *      Products should be associated with CBImage models.
+     *
+     * @param object $productModelArgument
+     *
+     * @return string
+     *
+     *      Returns an empty string if the product does not have a thumbnail
+     *      image URl associated with it.
+     */
+    static function
+    getThumbnailImageURL(
+        stdClass $productModelArgument
+    ): string
+    {
+        $callable =
+        CBModel::getClassFunction(
+            $productModelArgument,
+            'SCProduct_getThumbnailImageURL'
+        );
+
+        if (
+            $callable ===
+            null
+        ) {
+            return '';
+        }
+
+        $thumbnailImageURL =
+        call_user_func(
+            $callable,
+            $productModelArgument
+        );
+
+        return $thumbnailImageURL;
+    }
+    // getThumbnailImageURL()
+
+
+
+    /**
      * This function can also be used for product models that have a class name
      * other than SCProduct.
      *
@@ -288,7 +335,15 @@ SCProduct
 
 
     /**
-     * @param $productCBID
+     * @deprecated 2022_10_09_1665335804
+     *
+     *      This function finds the best possible thumbnail URL for a product.
+     *      It's deprecated because in the future we will only use CBImage
+     *      models for product images and this function removes the CBImage
+     *      model from use. This is bad because it prevents user of generated
+     *      images like webp.
+     *
+     * @param CBID $productCBID
      *
      * @param string
      *
@@ -301,9 +356,6 @@ SCProduct
         string $productModelCBIDArgument
     ): string
     {
-        $productThumbnailImageURL =
-        '';
-        
         $mainProductImageModel =
         SCProduct::productModelCBIDToMainImageModel(
             $productModelCBIDArgument
@@ -313,44 +365,34 @@ SCProduct
             $mainProductImageModel !==
             null
         ) {
-            $productThumbnailImageURL =
+            $thumbnailImageURL =
             CBImage::asFlexpath(
                 $mainProductImageModel,
                 'rl640',
                 cbsiteurl()
             );
+
+            return $thumbnailImageURL;
         }
 
-        else
-        {
-            $productModel =
-            CBModelCache::fetchModelByID(
-                $productModelCBIDArgument
-            );
+        $productModel =
+        CBModelCache::fetchModelByID(
+            $productModelCBIDArgument
+        );
 
-            if (
-                $productModel !== null
-            ) {
-                $callable =
-                CBModel::getClassFunction(
-                    $productModel,
-                    'SCProduct_getThumbnailImageURL'
-                );
-
-                if (
-                    $callable !==
-                    null
-                ) {
-                    $productThumbnailImageURL =
-                    call_user_func(
-                        $callable,
-                        $productModel
-                    );
-                }
-            }
+        if (
+            $productModel ===
+            null
+        ) {
+            return '';
         }
 
-        return $productThumbnailImageURL;
+        $thumbnailImageURL =
+        SCProduct::getThumbnailImageURL(
+            $productModel
+        );
+
+        return $thumbnailImageURL;
     }
     /* productCBIDToThumbnailImageURL() */
 
