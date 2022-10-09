@@ -1,8 +1,8 @@
 <?php
 
 final class
-SCProduct {
-
+SCProduct
+{
     /* -- CBArtworkCollection interfaces -- */
 
 
@@ -253,13 +253,24 @@ SCProduct {
      *
      * @return string
      */
-    static function productCBIDToArtworkCollectionCBID(
+    static function
+    productCBIDToArtworkCollectionCBID(
         string $productCBID
-    ): string {
-        if (!CBID::valueIsCBID($productCBID)) {
-            $message = "This value is not a CBID";
-            $value = $productCBID;
-            $sourceCBID = "bd48cb576b59cffc049067eee24522596ca46587";
+    ): string
+    {
+        if (
+            !CBID::valueIsCBID(
+                $productCBID
+            )
+        ) {
+            $message =
+            "This value is not a CBID";
+
+            $value =
+            $productCBID;
+
+            $sourceCBID =
+            "bd48cb576b59cffc049067eee24522596ca46587";
 
             throw new CBExceptionWithValue(
                 $message,
@@ -285,41 +296,53 @@ SCProduct {
      *      May return an empty string if there is no image for the product or
      *      if the product doesn't exist.
      */
-    static function productCBIDToThumbnailImageURL(
-        string $productCBID
-    ): string {
-        $productArtworkCollectionCBID = (
-            SCProduct::productCBIDToArtworkCollectionCBID(
-                $productCBID
-            )
+    static function
+    productCBIDToThumbnailImageURL(
+        string $productModelCBIDArgument
+    ): string
+    {
+        $productThumbnailImageURL =
+        '';
+        
+        $mainProductImageModel =
+        SCProduct::productModelCBIDToMainImageModel(
+            $productModelCBIDArgument
         );
 
-        $productArtworkCollectionModel = CBModelCache::fetchModelByID(
-            $productArtworkCollectionCBID
-        );
+        if (
+            $mainProductImageModel !==
+            null
+        ) {
+            $productThumbnailImageURL =
+            CBImage::asFlexpath(
+                $mainProductImageModel,
+                'rl640',
+                cbsiteurl()
+            );
+        }
 
-        $productMainArtworkModel = CBArtworkCollection::getMainArtwork(
-            $productArtworkCollectionModel
-        );
-
-        $productThumbnailImageURL = CBArtwork::getThumbnailImageURL(
-            $productMainArtworkModel
-        );
-
-
-        if ($productThumbnailImageURL === '') {
-            $productModel = CBModelCache::fetchModelByID(
-                $productCBID
+        else
+        {
+            $productModel =
+            CBModelCache::fetchModelByID(
+                $productModelCBIDArgument
             );
 
-            if ($productModel !== null) {
-                $callable = CBModel::getClassFunction(
+            if (
+                $productModel !== null
+            ) {
+                $callable =
+                CBModel::getClassFunction(
                     $productModel,
                     'SCProduct_getThumbnailImageURL'
                 );
 
-                if ($callable !== null) {
-                    $productThumbnailImageURL = call_user_func(
+                if (
+                    $callable !==
+                    null
+                ) {
+                    $productThumbnailImageURL =
+                    call_user_func(
                         $callable,
                         $productModel
                     );
@@ -410,6 +433,56 @@ SCProduct {
         return "/{$productPageURI}/";
     }
     /* productCodeToProductPageURL() */
+
+
+
+    /**
+     * @param CBID $productModelCBIDArgument
+     *
+     * @return <CBImage model>|null
+     */
+    static function
+    productModelCBIDToMainImageModel(
+        $productModelCBIDArgument
+    ): ?stdClass
+    {
+        $productArtworkCollectionCBID =
+        SCProduct::productCBIDToArtworkCollectionCBID(
+            $productModelCBIDArgument
+        );
+
+        $productArtworkCollectionModel =
+        CBModelCache::fetchModelByCBID(
+            $productArtworkCollectionCBID
+        );
+
+        if (
+            $productArtworkCollectionModel ===
+            null
+        ) {
+            return null;
+        }
+
+        $productMainArtworkModel =
+        CBArtworkCollection::getMainArtwork(
+            $productArtworkCollectionModel
+        );
+
+        if (
+            $productMainArtworkModel ===
+            null
+        ) {
+            return null;
+        }
+
+        $mainImageModel =
+        CBArtwork::getImageModel(
+            $productMainArtworkModel
+        );
+
+        return $mainImageModel;
+    }
+    // productModelCBIDToMainImageModel();
 
 
 
