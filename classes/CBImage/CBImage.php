@@ -728,7 +728,7 @@ CBImage
 
 
     /**
-     * @param object $imageModel
+     * @param object|string $imageModelOrURLArgument
      * @param string $imageResizeOperation
      * @param int $maximumBoxWidthInCSSPixels
      * @param int $maximumBoxHeightInCSSPixels
@@ -738,8 +738,8 @@ CBImage
      */
     static function
     renderPictureElementWithImageInsideAspectRatioBox(
-        stdClass $imageModel,
-        string  $imageResizeOperation,
+        /* object|string| */ $imageModelOrURLArgument,
+        string $imageResizeOperation,
         int $maximumBoxWidthInCSSPixels,
         int $maximumBoxHeightInCSSPixels,
         string $alternativeText = ''
@@ -757,39 +757,63 @@ CBImage
 
         EOT);
 
-        $originalImageExtension =
-        CBImage::getExtension(
-            $imageModel
+        $imageModel =
+        CBConvert::valueAsObject(
+            $imageModelOrURLArgument
         );
 
+
+
         if (
-            $originalImageExtension !== 'webp'
+            $imageModel !==
+            null
         ) {
-            $webpImageURL =
+            $originalImageExtension =
+            CBImage::getExtension(
+                $imageModel
+            );
+
+            if (
+                $originalImageExtension !== 'webp'
+            ) {
+                $webpImageURL =
+                CBImage::asFlexpath(
+                    $imageModel,
+                    $imageResizeOperation,
+                    cbsiteurl(),
+                    'webp'
+                );
+
+                echo
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    <source
+                    srcset="${webpImageURL}"
+                    type="image/webp"
+                    >
+
+                EOT);
+            }
+
+            $imageURL =
             CBImage::asFlexpath(
                 $imageModel,
                 $imageResizeOperation,
-                cbsiteurl(),
-                'webp'
+                cbsiteurl()
             );
-
-            echo
-            CBConvert::stringToCleanLine(<<<EOT
-
-                <source
-                srcset="${webpImageURL}"
-                type="image/webp"
-                >
-
-            EOT);
         }
+        // if
 
-        $imageURL =
-        CBImage::asFlexpath(
-            $imageModel,
-            $imageResizeOperation,
-            cbsiteurl()
-        );
+        else
+        {
+            $imageURL =
+            CBConvert::valueToString(
+                $imageModelOrURLArgument
+            );
+        }
+        // else
+
+
 
         $alternativeTextAsHTML =
         cbhtml(
@@ -836,6 +860,7 @@ CBImage
         echo
         "</picture>";
     }
+    // renderPictureElementWithImageInsideAspectRatioBox()
 
 
 
