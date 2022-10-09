@@ -214,8 +214,44 @@ CBArtworkCollectionView
                 <div
                     class="CBArtworkCollectionView_thumbnailsContainer_element"
                 >
+
+                    <?php
+
+                    foreach (
+                        $artworks
+                        as $loopArtworkModel
+                    ) {
+                        $imageModelOrURL =
+                        CBArtwork::getImageModel(
+                            $loopArtworkModel
+                        );
+
+                        if (
+                            $imageModelOrURL ===
+                            null
+                        ) {
+                            $imageModelOrURL =
+                            CBArtwork::getThumbnailImageURL(
+                                $loopArtworkModel
+                            );
+                        }
+
+                        $alternativeText =
+                        "Thumbnail";
+                        
+                        CBImage::renderPictureElementWithImageInsideAspectRatioBox(
+                            $imageModelOrURL,
+                            'rw320',
+                            75,
+                            75,
+                            $alternativeText
+                        );
+                    }
+
+                    ?>
+
                 </div>
-                
+
             </div>
 
         </div>
