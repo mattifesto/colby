@@ -51,7 +51,7 @@ CBArtworkCollectionView
 
 
 
-    /* -- CBHTMLOutput interfaces -- */
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -70,7 +70,7 @@ CBArtworkCollectionView
             ),
         ];
     }
-    /* CBHTMLOutput_CSSURLs() */
+    // CBHTMLOutput_CSSURLs()
 
 
 
@@ -89,7 +89,7 @@ CBArtworkCollectionView
             ),
         ];
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
@@ -100,12 +100,15 @@ CBArtworkCollectionView
     CBHTMLOutput_requiredClassNames(
     ): array
     {
-        return [
+        $arrayOfRequiredClassNames =
+        [
             'CBArtwork',
             'CBImage',
         ];
+
+        return $arrayOfRequiredClassNames;
     }
-    /* CBHTMLOutput_requiredClassNames() */
+    // CBHTMLOutput_requiredClassNames()
 
 
 
