@@ -57,21 +57,19 @@
 
 
     /**
-     * @return Element
+     * @param Element thumbnailsContainerElementArgument
+     * @param [object] artworks
+     * @param function thumbnailClickedCallback
+     *
+     * @return undefined
      */
     function
-    createThumbnailsElement(
+    CBArtworkCollectionView_initThumbnails(
+        thumbnailsContainerElementArgument,
         artworks,
         thumbnailClickedCallback
-    ) /* -> Element */
+    ) // -> undefined
     {
-        let thumbnailsContainerElement = document.createElement(
-            "div"
-        );
-
-        thumbnailsContainerElement.className =
-        "CBArtworkCollectionView_thumbnailsContainer_element";
-
         for (
             let artworkIndex = 0;
             artworkIndex < artworks.length;
@@ -117,14 +115,13 @@
                 }
             );
 
-            thumbnailsContainerElement.appendChild(
+            thumbnailsContainerElementArgument.appendChild(
                 thumbnailPictureElement
             );
         }
-
-        return thumbnailsContainerElement;
+        // for
     }
-    /* createThumbnailsElement() */
+    // CBArtworkCollectionView_initThumbnails()
 
 
 
@@ -142,17 +139,19 @@
             element.dataset.artworks
         );
 
-        let contentElement = element.getElementsByClassName(
-            "CBArtworkCollectionView_content_element"
-        )[0];
-
         let mainPictureContainerElement =
         element.getElementsByClassName(
             "CBArtworkCollectionView_mainPictureContainer_element"
         )[0];
 
         {
-            let thumbnailsContainerElement = createThumbnailsElement(
+            let thumbnailsContainerElement =
+            element.getElementsByClassName(
+                "CBArtworkCollectionView_thumbnailsContainer_element"
+            )[0];
+
+            CBArtworkCollectionView_initThumbnails(
+                thumbnailsContainerElement,
                 artworks,
                 function (
                     index
@@ -161,10 +160,6 @@
                         index
                     );
                 }
-            );
-
-            contentElement.appendChild(
-                thumbnailsContainerElement
             );
         }
 
