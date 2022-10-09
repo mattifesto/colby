@@ -146,17 +146,10 @@
             "CBArtworkCollectionView_content_element"
         )[0];
 
-        let mainPictureContainerElement = document.createElement(
-            "div"
-        );
-
-        mainPictureContainerElement.className = (
+        let mainPictureContainerElement =
+        element.getElementsByClassName(
             "CBArtworkCollectionView_mainPictureContainer_element"
-        );
-
-        contentElement.appendChild(
-            mainPictureContainerElement
-        );
+        )[0];
 
         {
             let thumbnailsContainerElement = createThumbnailsElement(
