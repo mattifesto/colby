@@ -762,8 +762,6 @@ CBImage
             $imageModelOrURLArgument
         );
 
-
-
         if (
             $imageModel !==
             null
