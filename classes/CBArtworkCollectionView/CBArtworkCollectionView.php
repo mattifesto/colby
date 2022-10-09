@@ -177,14 +177,39 @@ CBArtworkCollectionView
 
         /* HTML */
 
+        /**
+         * @NOTE 2022_10_09_1665277753
+         *
+         *      The CBArtworkCollectionView_mainPictureContainer_element was
+         *      created and rendered by JavaScript before changes made today.
+         *      Rendering this element in HTML along with giving it an aspect
+         *      ratio and other properties in CSS allows this view to be mostly
+         *      laid out properly immediately. That is, rendering this element
+         *      from PHP prevents a "cumulative layout shift" that Google will
+         *      notice.
+         *
+         *      In theory, we could do the same for the thumbnail images but
+         *      haven't yet because they don't cause as much of a shift.
+         */
+
         ?>
 
         <div
             class="CBArtworkCollectionView_root_element <?= $CSSClassNames ?>"
             data-artworks="<?= $artworksAsData ?>"
         >
-            <div class="CBArtworkCollectionView_content_element">
+
+            <div
+                class="CBArtworkCollectionView_content_element"
+            >
+
+                <div
+                    class="CBArtworkCollectionView_mainPictureContainer_element"
+                >
+                </div>
+
             </div>
+
         </div>
 
         <?php
