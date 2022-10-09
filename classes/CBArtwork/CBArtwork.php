@@ -1,5 +1,34 @@
 <?php
 
+/**
+ * @NOTE 2022_10_09_1665326440
+ *
+ *      This class is problematic. The original intention of the class was never
+ *      documented. Furthermore, I'm pretty sure this class was already
+ *      partially deprecated without adding documentation.
+ *
+ *      Possible Purpose 1:
+ *
+ *          This class could represent either a local image or an image
+ *          represented by a few remote image URLs representing image versions
+ *          of various sizes.
+ *
+ *          Issue: We are past the point where image URLs can reasonably
+ *          represent images and we don't have any known use cases for this that
+ *          aren't moving to CBImage models. If a use case is found, document
+ *          it; othewise deprecate this class.
+ *
+ *      Possible Purpose 2:
+ *
+ *          While writing this documentation, there existed a one sentence
+ *          documentation file for this class that suggested it should represent
+ *          the combination of an image, its alternative text, and its caption.
+ *
+ *          Issue: This class has been around a while and it has never held
+ *          alternative text or a caption. If this is the purpose, I would think
+ *          there would be more references to it. I removed that documentaton
+ *          file.
+ */
 final class
 CBArtwork
 {
