@@ -62,13 +62,17 @@ CBArtworkCollectionView
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        return [
-            Colby::flexpath(
+        $arrayOfCSSURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.60.css',
+                '2022_10_09_1665278245',
+                'css',
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfCSSURLs;
     }
     // CBHTMLOutput_CSSURLs()
 
@@ -81,13 +85,17 @@ CBArtworkCollectionView
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        return [
-            Colby::flexpath(
+        $arrayOfJavaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.60.js',
+                '2022_10_09_1665278268',
+                'js',
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfJavaScriptURLs;
     }
     // CBHTMLOutput_JavaScriptURLs()
 
