@@ -90,18 +90,8 @@
 
 
 
-.CBArtworkCollectionView_thumbnailPicture_element
+.CBArtworkCollectionView_thumbnailsContainer_element
+picture
 {
     padding: 5px;
-}
-
-
-
-.CBArtworkCollectionView_thumbnailPicture_element img
-{
-    aspect-ratio: 1/1;
-    object-fit: contain;
-
-    max-width: 100%;
-    width: 75px;
 }
