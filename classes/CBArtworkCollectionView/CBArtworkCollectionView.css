@@ -27,11 +27,37 @@
  * width and height of 100%.
  */
 
+
+
+/**
+ * @NOTE 2022_10_09_1665276574
+ *
+ *      This class has an aspect ratio because the images are added via
+ *      JavaScript after load. The aspect ratio prevents a cumulative layout
+ *      shift issue that Google will notice.
+ */
 .CBArtworkCollectionView_mainPictureContainer_element
 {
-    display: flex;
-    justify-content: center;
+    aspect-ratio:
+    1/1;
+
+    display:
+    flex;
+
+    justify-content:
+    center;
+
+    /**
+     * The maximum image height and width is 640px plux 20px of padding = 680px
+     */
+    width:
+    680px;
+
+    max-width:
+    100%;
 }
+
+
 
 .CBArtworkCollectionView_mainPicture_element
 {
