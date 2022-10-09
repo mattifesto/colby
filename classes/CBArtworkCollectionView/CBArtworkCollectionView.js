@@ -78,33 +78,10 @@
             const currentArtworkIndex = artworkIndex;
             const currentThumbnailClickedCallback = thumbnailClickedCallback;
 
-
-
-            let thumbnailPictureElement;
-            let artworkModel = artworks[artworkIndex];
-
-            let imageModel = CBArtwork.getImage(
-                artworkModel
-            );
-
-            if (
-                imageModel !== undefined
-            ) {
-                thumbnailPictureElement = CBImage.createPictureElement(
-                    imageModel,
-                    'rw1280'
-                );
-            } else {
-                thumbnailPictureElement = CBImage.createPictureElement(
-                    CBArtwork.getThumbnailImageURL(
-                        artworkModel
-                    )
-                );
-            }
-
-            thumbnailPictureElement.className = (
-                "CBArtworkCollectionView_thumbnailPicture_element"
-            );
+            let thumbnailPictureElement =
+            thumbnailsContainerElementArgument.children[
+                artworkIndex
+            ];
 
             thumbnailPictureElement.addEventListener(
                 "click",
@@ -113,10 +90,6 @@
                         currentArtworkIndex
                     );
                 }
-            );
-
-            thumbnailsContainerElementArgument.appendChild(
-                thumbnailPictureElement
             );
         }
         // for
