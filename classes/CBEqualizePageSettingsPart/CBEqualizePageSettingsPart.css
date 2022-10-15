@@ -1,20 +1,14 @@
 /**
  * @TODO 2022_03_08
  *
- *      This comment is and should remain exactly duplicated in CB_UI.css.
+ *      This comment is referenced by CB_UI.css.
  *
  *      CBEqualizePageSettingsPart and CB_UI currently are working together and
  *      competing with each other over the concept of the most basic look and
- *      feel of a website. This includes fonts, background and text colors, and
- *      choice of an "accent" color which is also the link color.
+ *      feel of a website.
  *
- *      This is a work in progress because CB_UI thought it was restarting this
- *      process, but just kind of added more ideas to the mix. As a result we
- *      still have two themes call CBLightTheme and CBDarkTheme although we also
- *      have the concept of using the system preferred light or dark mode.
- *
- *      The concept of at least a light and dark theme will continue and
- *      possibly allowing other themes as well. Alter this comment as needed.
+ *      This is a work in progress because most CSS variables, theming, and
+ *      colors are moving into CB_UI.
  *
  *      Known requirements:
  *
@@ -28,12 +22,23 @@
  *
  *
  *
+ * @NOTE 2022_10_15_1665842238
  *
- * This file is used to give all platforms and browsers an equal starting point
- * for CSS. If there is anything very basic that's different among platforms or
- * browsers then rules should be added to this file to equalize and make the
- * experience the same for all browsers and platforms. Rules that commonly
- * change between themes or sites should not be placed in this file.
+ *      This file is used to give all platforms and browsers an equal starting
+ *      point for CSS. If there is anything very basic that's different among
+ *      platforms or browsers then rules should be added to this file to
+ *      equalize and make the experience the same for all browsers and
+ *      platforms. Rules that commonly change between themes or sites should not
+ *      be placed in this file.
+ *
+ *      User interface and themes are part of CB_UI and are moving there.
+ *      CBDarkTheme and CBLightTheme have been deprecated in favor of
+ *      CB_UI_theme_dark an CB_UI_theme_light.
+ *
+ *      Most, if not all of the variables in this file should be deprecated
+ *      and replaced with CB_UI variables.
+ *
+ *
  *
  * --CBBackgroundOffsetColor
  *
@@ -55,6 +60,8 @@
  *      cropped image. In both cases use of this color can make the site look
  *      more polished.
  */
+
+
 
 *
 {
@@ -83,7 +90,15 @@ html
 
 @media screen
 {
-    .CBDarkTheme
+    /**
+     * @NOTE 2022_10_15_1665842549
+     *
+     *      The dark theme is only applied to the screen to make printing
+     *      cleaner.
+     */
+
+    .CB_UI_theme_dark,
+    .CBDarkTheme /* deprecated use CB_UI_theme_dark */
     {
         --CB_UI_paperColor:
         hsl(0, 0%, 12%);
@@ -131,7 +146,8 @@ html
 
 
 
-.CBLightTheme
+.CB_UI_theme_light,
+.CBLightTheme /* deprecated use CB_UI_theme_light */
 {
     --CB_UI_paperColor:
     hsl(0, 0%, 100%);
