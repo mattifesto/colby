@@ -126,7 +126,7 @@ CBEqualizePageSettingsPart
         $CSSURL =
         CBLibrary::buildLibraryClassFilePath(
             __CLASS__,
-            '2022_07_21_1658421073',
+            '2022_10_15_1665851309',
             'css',
             cbsysurl()
         );
