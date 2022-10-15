@@ -15,7 +15,7 @@
 final class
 CB_UI
 {
-    /* -- CBHTMLOutput interfaces -- */
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -26,17 +26,19 @@ CB_UI
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        return
+        $arrayOfCSSURLs =
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_07_21_1658420826',
+                '2022_10_15_1665851674',
                 'css',
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfCSSURLs;
     }
-    /* CBHTMLOutput_CSSURLs() */
+    // CBHTMLOutput_CSSURLs()
 
 
 
