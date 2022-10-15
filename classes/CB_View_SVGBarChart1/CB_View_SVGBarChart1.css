@@ -30,3 +30,34 @@
     max-width:
     100%;
 }
+
+
+
+.CB_View_SVGBarChart1_barBackground_element
+{
+    fill:
+    var(--CB_UI_color_solidText20);
+}
+
+
+
+.CB_View_SVGBarChart1_color_gray
+{
+    fill:
+    var(--CB_UI_color_solidText60);
+}
+
+
+.CB_View_SVGBarChart1_color_red
+{
+    fill:
+    var(--CB_UI_color_solidRed);
+}
+
+
+
+.CB_View_SVGBarChart1_color_green
+{
+    fill:
+    var(--CB_UI_color_solidGreen);
+}
