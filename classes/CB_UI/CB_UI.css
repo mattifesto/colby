@@ -1,12 +1,30 @@
 /**
  * @TODO 2022_03_08
  *
- *      This file works together with CBEqualizePageSettingsPart. See that file
- *      for more informaton.
+ *      This file currently works together with CBEqualizePageSettingsPart. See
+ *      that file for more informaton.
  */
 
 
 html
+{
+    /**
+     * @NOTE 2022_10_15_1665843389
+     *
+     *      This rule set is for CB_UI variables that are NOT altered by themes.
+     *      If something is alterable by themes all themes have to set it
+     *      because themes can be changed on different elements and inherted
+     *      values would cause a potential break in the theme.
+     */
+
+    --CB_UI_readableWidth:
+    500px;
+}
+
+
+
+.CB_UI_theme_light,
+.CBLightTheme
 {
     --CB_UI_paperColor:
     hsl(0, 0%, 100%);
@@ -20,9 +38,37 @@ html
     --CB_UI_disabledSpotColor:
     hsl(210, 0%, 50%);
 
-    --CB_UI_readableWidth:
-    500px;
 
+
+    /**
+     * colors
+     *
+     *      The solid text colors below are colors that are the same color as
+     *      text, but unlike text they are completely solid with no
+     *      transparency. They can be used to draw charts and graphics and even
+     *      text on charts, but shouldn't be used for actual text content.
+    **/
+
+    --CB_UI_color_solidRed:
+    hsl(0, 50%, 50%);
+
+    --CB_UI_color_solidGreen:
+    hsl(120, 50%, 50%);
+
+    --CB_UI_color_solidText90:
+    hsl(0, 0%, 10%);
+
+    --CB_UI_color_solidText60:
+    hsl(0, 0%, 40%);
+
+    --CB_UI_color_solidText30:
+    hsl(0, 0%, 70%);
+
+    --CB_UI_color_solidText20:
+    hsl(0, 0%, 80%);
+
+    --CB_UI_color_solidText10:
+    hsl(0, 0%, 90%);
 
 
     /* under development */
@@ -35,13 +81,60 @@ html
 
 @media screen
 {
-    html.CB_UI_browserPrefersDarkMode
+    /**
+     * @NOTE 2022_10_15_1665842549
+     *
+     *      The dark theme is only applied to the screen to make printing
+     *      cleaner.
+     */
+
+    .CB_UI_theme_dark,
+    .CBDarkTheme
     {
         --CB_UI_paperColor:
         hsl(0, 0%, 12%);
 
         --CB_UI_borderColor:
         hsla(0, 0%, 100%, 0.1);
+
+        --CB_UI_spotColor:
+        hsl(210, 80%, 50%);
+
+        --CB_UI_disabledSpotColor:
+        hsl(210, 0%, 50%);
+
+
+
+        /**
+         * colors
+         *
+         *      The solid text colors below are colors that are the same color
+         *      as text, but unlike text they are completely solid with no
+         *      transparency. They can be used to draw charts and graphics and
+         *      even text on charts, but shouldn't be used for actual text
+         *      content.
+        **/
+
+        --CB_UI_color_solidRed:
+        hsl(0, 50%, 50%);
+
+        --CB_UI_color_solidGreen:
+        hsl(120, 50%, 50%);
+
+        --CB_UI_color_solidText90:
+        hsl(0, 0%, 90%);
+
+        --CB_UI_color_solidText60:
+        hsl(0, 0%, 60%);
+
+        --CB_UI_color_solidText30:
+        hsl(0, 0%, 30%);
+
+        --CB_UI_color_solidText20:
+        hsl(0, 0%, 20%);
+
+        --CB_UI_color_solidText10:
+        hsl(0, 0%, 10%);
 
 
 
