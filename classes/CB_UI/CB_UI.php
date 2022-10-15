@@ -49,16 +49,19 @@ CB_UI
     CBHTMLOutput_JavaScriptURLs_Immediate(
     ): array
     {
-        return
+        $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.55.js',
+                '2022_10_15_1665851883',
+                'js',
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfJavaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs_Immediate()
 
 
 
