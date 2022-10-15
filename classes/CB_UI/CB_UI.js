@@ -89,12 +89,32 @@
     setDarkAppearance(
     ) {
         document.documentElement.classList.add(
+            "CB_UI_theme_dark",
+
+            /**
+             * @deprecated 2022_10_15_1665842023
+             *
+             *      Use CB_UI_theme_dark
+             */
             "CB_UI_browserPrefersDarkMode",
-            "CBDarkTheme" /* 2021_09_06 deprecated */
+
+            /**
+             * @deprecated 2021_09_06
+             *
+             *      Use CB_UI_theme_dark
+             */
+            "CBDarkTheme"
         );
 
         document.documentElement.classList.remove(
-            "CBLightTheme" /* 2021_09_06 deprecated */
+            "CB_UI_theme_light",
+
+            /**
+             * @deprecated 2021_09_06
+             *
+             *      Use CB_UI_theme_light
+             */
+            "CBLightTheme"
         );
     }
     /* setDarkAppearance() */
@@ -108,12 +128,32 @@
     setLightAppearance(
     ) {
         document.documentElement.classList.remove(
+            "CB_UI_theme_dark",
+
+            /**
+             * @deprecated 2022_10_15_1665842023
+             *
+             *      Use CB_UI_theme_dark
+             */
             "CB_UI_browserPrefersDarkMode",
-            "CBDarkTheme" /* 2021_09_06 deprecated */
+
+            /**
+             * @deprecated 2021_09_06
+             *
+             *      Use CB_UI_theme_dark
+             */
+            "CBDarkTheme"
         );
 
         document.documentElement.classList.add(
-            "CBLightTheme" /* 2021_09_06 deprecated */
+            "CB_UI_theme_light",
+
+            /**
+             * @deprecated 2021_09_06
+             *
+             *      Use CB_UI_theme_light
+             */
+            "CBLightTheme"
         );
     }
     /* setLightAppearance() */
