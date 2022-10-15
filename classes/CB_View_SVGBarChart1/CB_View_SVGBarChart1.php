@@ -62,6 +62,7 @@ CB_View_SVGBarChart1
     {
         $requiredClassNames =
         [
+            'CB_UI',
             'CBJavaScript',
         ];
 
@@ -327,7 +328,6 @@ CB_View_SVGBarChart1
 
                 <rect
                     class="CB_View_SVGBarChart1_barBackground_element"
-                    fill="#333"
                     height="${graphHeightAsPixels}"
                     width="${columnWidthAsPixels}"
                     x="${columnXAsPixels}"
@@ -335,8 +335,7 @@ CB_View_SVGBarChart1
                 />
 
                 <rect
-                    class="CB_View_SVGBarChart1_bar_element"
-                    fill="${barColor}"
+                    class="CB_View_SVGBarChart1_bar_element ${barColor}"
                     height="${columnHeightAsPixels}"
                     width="${columnWidthAsPixels}"
                     x="${columnXAsPixels}"
@@ -395,7 +394,7 @@ CB_View_SVGBarChart1
             === 0
         ) {
             $barColor
-            = 'gray';
+            = 'CB_View_SVGBarChart1_color_gray';
         }
 
         else if (
@@ -403,7 +402,7 @@ CB_View_SVGBarChart1
             < $currentValue
         ) {
             $barColor =
-            'green';
+            'CB_View_SVGBarChart1_color_green';
         }
 
         else if (
@@ -411,13 +410,13 @@ CB_View_SVGBarChart1
             > $currentValue
         ) {
             $barColor =
-            'red';
+            'CB_View_SVGBarChart1_color_red';
         }
 
         else
         {
             $barColor =
-            'gray';
+            'CB_View_SVGBarChart1_color_gray';
         }
 
         return $barColor;
