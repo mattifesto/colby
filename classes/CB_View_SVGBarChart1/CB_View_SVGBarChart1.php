@@ -14,17 +14,17 @@ CB_View_SVGBarChart1
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        $cssURLs =
+        $arrayOfCSSURLs =
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_09_15_1663204595',
+                '2022_10_15_1665852028',
                 'css',
                 cbsysurl()
             ),
         ];
 
-        return $cssURLs;
+        return $arrayOfCSSURLs;
     }
     // CBHTMLOutput_CSSURLs()
 
