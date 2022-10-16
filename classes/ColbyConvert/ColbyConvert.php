@@ -233,7 +233,7 @@ ColbyConvert
                     ${datetimeAttribute}
                     ${timestampAttribute}
                 >
-                    &nbsp
+                    &nbsp;
                 </time>
 
             EOT);
