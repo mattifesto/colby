@@ -495,6 +495,24 @@ CB_View_Moment2
             'Image';
         }
 
+        $momentPageURLAsHTML =
+        cbhtml(
+            cbsiteurl() .
+            CBModel::toURLPath(
+                $momentModelArgument
+            )
+        );
+
+        echo
+        CBConvert::stringToCleanLine(<<<EOT
+
+            <a
+                href="${momentPageURLAsHTML}"
+                style="display: block;"
+            >
+
+        EOT);
+
         CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
             $imageModel,
             'rh800rw2560',
@@ -502,6 +520,8 @@ CB_View_Moment2
             400,
             $alternativeText
         );
+
+        echo '</a>';
     }
     // renderImage()
 
