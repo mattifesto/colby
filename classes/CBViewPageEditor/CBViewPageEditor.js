@@ -248,50 +248,8 @@
 
 
 
-        /**
-         * @param object args
-         *
-         *      {
-         *          spec: object
-         *      }
-         *
-         * @return undefined
-         */
-        handleTitleChanged(
-            args
-        ) {
-            /**
-             * Only change the page title if this is a CBModelEditor admin page.
-             */
-
-            let elements = document.getElementsByClassName(
-                "CBModelEditor"
-            );
-
-            if (elements.length === 0) {
-                return;
-            }
-
-            /**
-             * Change the page title.
-             */
-
-            let title = CBModel.valueToString(
-                args,
-                "spec.title"
-            ).trim();
-
-            let documentTitle = "Page Editor";
-
-            if (title.length > 0) {
-                documentTitle = documentTitle + ": " + title;
-            }
-
-            document.title = documentTitle;
-        },
-        /* handleTitleChanged() */
-
-
+        handleTitleChanged:
+        CBViewPageEditor_handleTitleChanged,
 
         makeFrontPage:
         CBViewPageEditor_makeFrontPage,
@@ -355,6 +313,63 @@
         );
     }
     // CBViewPageEditor_createAdministrativeTitleEditorElement()
+
+
+
+    /**
+     * @param object args
+     *
+     *      {
+     *          spec: object
+     *      }
+     *
+     * @return undefined
+     */
+    function
+    CBViewPageEditor_handleTitleChanged(
+        args
+    ) {
+        /**
+         * Only change the page title if this is a CBModelEditor admin page.
+         */
+
+        let elements =
+        document.getElementsByClassName(
+            "CBModelEditor"
+        );
+
+        if (
+            elements.length === 0
+        ) {
+            return;
+        }
+
+        /**
+         * Change the page title.
+         */
+
+        let title =
+        CBModel.valueToString(
+            args,
+            "spec.title"
+        ).trim();
+
+        let documentTitle =
+        "Page Editor";
+
+        if (
+            title.length > 0
+        ) {
+            documentTitle =
+            documentTitle +
+            ": " +
+            title;
+        }
+
+        document.title =
+        documentTitle;
+    }
+    // CBViewPageEditor_handleTitleChanged()
 
 
 
