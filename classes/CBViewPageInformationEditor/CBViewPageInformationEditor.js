@@ -512,35 +512,60 @@ var CBViewPageInformationEditor = {
 
             /* published by */
             {
-                if (!spec.publishedByUserCBID) {
+                if (
+                    !spec.publishedByUserCBID
+                ) {
                     spec.publishedByUserCBID =
                     CBViewPageInformationEditor_currentUserCBID;
                 }
 
-                var users = CBViewPageInformationEditor_administrators.map(
-                    function (user) {
-                        return {
-                            title: user.name,
-                            value: user.userCBID,
+                var users =
+                CBViewPageInformationEditor_administrators.map(
+                    function (
+                        user
+                    ) {
+                        let returnValue =
+                        {
+                            title:
+                            user.name,
+
+                            value:
+                            user.userCBID,
                         };
+
+                        return returnValue;
                     }
                 );
 
                 let item = CBUI.createSectionItem();
 
-                item.appendChild(
-                    CBUISelector.create(
-                        {
-                            labelText: "Published By",
-                            propertyName: "publishedByUserCBID",
-                            spec: spec,
-                            specChangedCallback: specChangedCallback,
-                            options: users,
-                        }
-                    ).element
+                let selector =
+                CBUISelector.create(
+                    {
+                        labelText:
+                        "Published By",
+
+                        propertyName:
+                        "publishedByUserCBID",
+
+                        spec:
+                        spec,
+
+                        specChangedCallback:
+                        specChangedCallback,
+
+                        options:
+                        users,
+                    }
                 );
 
-                sectionElement.appendChild(item);
+                item.appendChild(
+                    selector.element
+                );
+
+                sectionElement.appendChild(
+                    item
+                );
             }
             /* published by */
 
