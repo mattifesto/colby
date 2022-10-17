@@ -293,47 +293,8 @@
 
 
 
-        /**
-         * @param object args
-         *
-         *      {
-         *          ID: ID
-         *      }
-         *
-         * @return undefined
-         */
-        makeFrontPage(
-            args
-        ) {
-            if (
-                window.confirm(
-                    "Are you sure you want to use this page as the front page?"
-                )
-            ) {
-                CBAjax.call(
-                    "CBSitePreferences",
-                    "setFrontPageID",
-                    {
-                        ID: args.ID
-                    }
-                ).then(
-                    function (response) {
-                        CBUIPanel.displayText(response.message);
-                    }
-                ).catch(
-                    function (error) {
-                        CBUIPanel.displayError(error);
-
-                        CBErrorHandler.report(
-                            error
-                        );
-                    }
-                );
-            }
-        },
-        /* makeFrontPage() */
-
-
+        makeFrontPage:
+        CBViewPageEditor_makeFrontPage,
 
         setThumbnailImage:
         CBViewPageEditor_setThumbnailImage,
@@ -394,6 +355,64 @@
         );
     }
     // CBViewPageEditor_createAdministrativeTitleEditorElement()
+
+
+
+    /**
+     * @param object args
+     *
+     *      {
+     *          ID: <CBID>
+     *      }
+     *
+     * @return Promise -> undefined
+     */
+    async function
+    CBViewPageEditor_makeFrontPage(
+        args
+    ) // -> Promise -> undefined
+    {
+        try
+        {
+            let userConfirmed =
+            window.confirm(
+                "Are you sure you want to use this page as the front page?"
+            );
+
+            if (
+                userConfirmed !== true
+            ) {
+                return;
+            }
+
+            let response =
+            await CBAjax.call(
+                "CBSitePreferences",
+                "setFrontPageID",
+                {
+                    ID:
+                    args.ID,
+                }
+            );
+
+            CBUIPanel.displayText(
+                response.message
+            );
+        }
+
+        catch (
+            error
+        ) {
+            CBUIPanel.displayError(
+                error
+            );
+
+            CBErrorHandler.report(
+                error
+            );
+        }
+    }
+    // CBViewPageEditor_makeFrontPage()
 
 
 
