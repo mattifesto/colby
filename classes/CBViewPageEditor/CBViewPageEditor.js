@@ -15,10 +15,14 @@
     CBViewPageEditor_currentFrontPageID,
 */
 
-(function () {
+(function ()
+{
     "use strict";
 
-    let CBViewPageEditor = {
+
+
+    let CBViewPageEditor =
+    {
 
         /**
          * This variable will be set to the spec as soon as the editor is created.
@@ -569,4 +573,5 @@
     }
     /* useViewsAsRightSidebarContent() */
 
-})();
+}
+)();
