@@ -375,24 +375,8 @@
 
 
 
-        /**
-         * @param model image
-         *
-         * @return undefined
-         */
-        suggestThumbnailImage(
-            image
-        ) {
-            var spec = CBViewPageEditor.spec;
-
-            if (spec && !spec.image && !spec.thumbnailURL) {
-                CBViewPageEditor.setThumbnailImage(image);
-            }
-        },
-        /* suggestThumbnailImage() */
-
-
-
+        suggestThumbnailImage:
+        CBViewPageEditor_suggestThumbnailImage,
     };
     /* CBViewPageEditor */
 
@@ -447,6 +431,32 @@
         );
     }
     // CBViewPageEditor_createAdministrativeTitleEditorElement()
+
+
+
+    /**
+     * @param object image
+     *
+     * @return undefined
+     */
+    function
+    CBViewPageEditor_suggestThumbnailImage(
+        image
+    ) {
+        let spec =
+        CBViewPageEditor.spec;
+
+        if (
+            spec &&
+            !spec.image &&
+            !spec.thumbnailURL
+        ) {
+            CBViewPageEditor.setThumbnailImage(
+                image
+            );
+        }
+    }
+    /* suggestThumbnailImage() */
 
 
 
