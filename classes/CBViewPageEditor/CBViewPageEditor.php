@@ -3,7 +3,7 @@
 final class
 CBViewPageEditor
 {
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -14,14 +14,17 @@ CBViewPageEditor
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        return
+        $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v2022.05.22.1653192151.js',
+                '2022_10_17_1666013780',
+                'js',
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfJavaScriptURLs;
     }
     // CBHTMLOutput_JavaScriptURLs()
 
