@@ -129,12 +129,32 @@ CBViewPageInformationEditor
 
         $userModels = CBModels::fetchModelsByID2($userCBIDs);
 
-        $returnValues = array_map(
-            function ($userModel) {
-                return (object)[
-                    'name' => $userModel->facebookName,
-                    'userCBID' => $userModel->ID,
+        $returnValues =
+        array_map(
+            function (
+                $userModel
+            ) {
+                $userFullName =
+                CBUser::getName(
+                    $userModel
+                );
+
+                $userModelCBID =
+                CBModel::getCBID(
+                    $userModel
+                );
+
+                $returnValue =
+                (object)
+                [
+                    'name' =>
+                    $userFullName,
+
+                    'userCBID' =>
+                    $userModelCBID,
                 ];
+
+                return $returnValue;
             },
             $userModels
         );
