@@ -335,45 +335,8 @@
 
 
 
-        /**
-         * @param model? image
-         *
-         * @return undefined
-         */
-        setThumbnailImage(
-            image
-        ) {
-            var spec = CBViewPageEditor.spec;
-
-            if (spec === undefined) {
-                return;
-            }
-
-            if (image === undefined) {
-                spec.image = undefined;
-                spec.thumbnailURL = undefined;
-            } else {
-                spec.image = image;
-                spec.thumbnailURL = CBImage.toURL(
-                    image,
-                    "rw640"
-                );
-            }
-
-            if (CBViewPageEditor.thumbnailChangedCallback) {
-                CBViewPageEditor.thumbnailChangedCallback(
-                    {
-                        spec: spec,
-                        image: image
-                    }
-                );
-            }
-
-            CBViewPageEditor.specChangedCallback.call();
-        },
-        /* setThumbnailImage() */
-
-
+        setThumbnailImage:
+        CBViewPageEditor_setThumbnailImage,
 
         suggestThumbnailImage:
         CBViewPageEditor_suggestThumbnailImage,
@@ -435,6 +398,66 @@
 
 
     /**
+     * @param model? image
+     *
+     * @return undefined
+     */
+    function
+    CBViewPageEditor_setThumbnailImage(
+        image
+    ) {
+        let spec =
+        CBViewPageEditor.spec;
+
+        if (
+            spec === undefined
+        ) {
+            return;
+        }
+
+        if (
+            image === undefined
+        ) {
+            spec.image =
+            undefined;
+
+            spec.thumbnailURL =
+            undefined;
+        }
+
+        else
+        {
+            spec.image =
+            image;
+
+            spec.thumbnailURL =
+            CBImage.toURL(
+                image,
+                "rw640"
+            );
+        }
+
+        if (
+            CBViewPageEditor.thumbnailChangedCallback
+        ) {
+            CBViewPageEditor.thumbnailChangedCallback(
+                {
+                    spec:
+                    spec,
+
+                    image:
+                    image,
+                }
+            );
+        }
+
+        CBViewPageEditor.specChangedCallback.call();
+    }
+    // CBViewPageEditor_setThumbnailImage()
+
+
+
+    /**
      * @param object image
      *
      * @return undefined
@@ -456,7 +479,7 @@
             );
         }
     }
-    /* suggestThumbnailImage() */
+    // CBViewPageEditor_suggestThumbnailImage()
 
 
 
