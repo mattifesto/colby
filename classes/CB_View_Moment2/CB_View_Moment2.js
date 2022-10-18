@@ -99,6 +99,28 @@
             contentElementArgument
         ) // -> undefined
         {
+            // anchor element
+
+            let mainMomentPageURLPath =
+            CB_Moment.generateMainMomentPageURLPath(
+                shared_momentModel
+            );
+
+            let anchorElement =
+            document.createElement(
+                "a"
+            );
+
+            anchorElement.href =
+            mainMomentPageURLPath;
+
+            anchorElement.style.display =
+            "block";
+
+
+
+            // picture element
+
             let imageModel =
             CB_Moment.getImage(
                 shared_momentModel
@@ -133,8 +155,16 @@
                 alternativeText
             );
 
-            contentElementArgument.append(
+
+
+            // add to content element
+
+            anchorElement.append(
                 pictureElement
+            );
+
+            contentElementArgument.append(
+                anchorElement
             );
         }
         // CB_View_Moment2_createImageElement()
