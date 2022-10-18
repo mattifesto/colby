@@ -117,7 +117,7 @@ CB_View_Moment2
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_10_07_1665104675',
+                '2022_10_18_1666102028',
                 'js',
                 cbsysurl()
             ),
