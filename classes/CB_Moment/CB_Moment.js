@@ -7,8 +7,12 @@
 {
     "use strict";
 
+
+
     let CB_Moment =
     {
+        // accessors
+
         getAuthorUserModelCBID,
         getCBTimestamp,
         getCreatedTimestamp,
@@ -18,6 +22,11 @@
         CB_Moment_getImageAlternativeText,
 
         getText,
+
+         // functions
+
+         generateMainMomentPageURLPath:
+         CB_Moment_generateMainMomentPageURLPath
     };
 
     window.CB_Moment =
@@ -155,6 +164,43 @@
         );
     }
     /* getText() */
+
+
+
+    // -- functions
+
+
+
+    /**
+     * @param object momentModel
+     *
+     * @return string
+     *
+     *      If no URL can be generated an empty string will be returned.
+     */
+    function
+    CB_Moment_generateMainMomentPageURLPath(
+        momentModel
+    ) // -> string
+    {
+        let momentModelCBID =
+        CBModel.getCBID(
+            momentModel
+        );
+
+        if (
+            momentModelCBID ===
+            undefined
+        ) {
+            return '';
+        }
+
+        let mainMomentPageURLPath =
+        `/moment/${momentModelCBID}/`;
+
+        return mainMomentPageURLPath;
+    }
+    // generateMainMomentPageURL()
 
 }
 )();
