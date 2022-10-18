@@ -290,7 +290,7 @@ CB_Moment
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_08_26_1661547529',
+                '2022_10_18_1666101769',
                 'js',
                 cbsysurl()
             ),
