@@ -27,25 +27,6 @@ CB_CBView_MostRecentUserMoment
 
 
 
-    /**
-     * @return [string]
-     */
-    static function
-    CBHTMLOutput_requiredClassNames(
-    ): array
-    {
-        return
-        [
-            'CB_CBView_Moment',
-            'CBAjax',
-            'CBConvert',
-            'CBErrorHandler',
-        ];
-    }
-    /* CBHTMLOutput_requiredClassNames() */
-
-
-
     /* -- CBInstall interfaces -- -- -- -- -- */
 
 
