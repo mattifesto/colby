@@ -326,16 +326,16 @@ CB_CBView_Moment
 
         EOT);
 
-        CB_CBView_Moment::renderHeader(
-            $momentModel
-        );
-
         CB_CBView_Moment::renderLargeImage(
             $momentModel,
             $shouldIncludeLinksToMomentPage
         );
 
         CB_CBView_Moment::renderText(
+            $momentModel
+        );
+
+        CB_CBView_Moment::renderHeader(
             $momentModel
         );
 
