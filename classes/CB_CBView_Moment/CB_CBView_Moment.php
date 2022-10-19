@@ -330,13 +330,13 @@ CB_CBView_Moment
             $momentModel
         );
 
-        CB_CBView_Moment::renderText(
-            $momentModel
-        );
-
         CB_CBView_Moment::renderLargeImage(
             $momentModel,
             $shouldIncludeLinksToMomentPage
+        );
+
+        CB_CBView_Moment::renderText(
+            $momentModel
         );
 
         CB_CBView_Moment::renderFooter(
