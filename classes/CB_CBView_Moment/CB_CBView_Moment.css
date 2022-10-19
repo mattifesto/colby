@@ -105,20 +105,17 @@ a:hover
 
 .CB_CBView_Moment_text_element
 {
+    max-width:
+    100%;
+    
     padding:
     10px 0 0;
 
     white-space:
     pre-wrap;
-}
 
-
-
-.CB_CBView_Moment_momentPage
-.CB_CBView_Moment_text_element
-{
-    font-size:
-    150%;
+    width:
+    480px;
 }
 
 
