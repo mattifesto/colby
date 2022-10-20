@@ -1,11 +1,5 @@
 .CB_CBView_Moment_root_element
 {
-    display:
-    flex;
-
-    justify-content:
-    center;
-
     box-sizing:
     border-box;
 
@@ -14,9 +8,6 @@
 
     overflow-wrap:
     break-word;
-
-    padding:
-    40px 20px;
 }
 
 
@@ -42,18 +33,73 @@ a:hover
 
 
 
-.CB_CBView_Moment_content_element
+.CB_CBView_Moment_leftContainer_element,
+.CB_CBView_Moment_rightContainer_element
 {
     box-sizing:
     border-box;
 
-    max-width:
-    100%;
-
-    overflow:
-    hidden;
+    padding:
+    20px;
 }
 
+
+
+@media (max-width: 640px)
+{
+    .CB_CBView_Moment_leftContainer_element
+    {
+        max-width:
+        100%;
+
+        width:
+        100%;
+    }
+
+
+
+    .CB_CBView_Moment_rightContainer_element
+    {
+        max-width:
+        100%;
+
+        width:
+        100%;
+    }
+}
+
+
+
+@media (min-width: 641px)
+{
+    .CB_CBView_Moment_root_element
+    {
+        display:
+        flex;
+
+        justify-content:
+        center;
+    }
+
+
+
+    .CB_CBView_Moment_leftContainer_element
+    {
+        max-width:
+        calc(100% - 320px);
+    }
+
+
+
+    .CB_CBView_Moment_rightContainer_element
+    {
+        max-width:
+        320px;
+
+        width:
+        320px;
+    }
+}
 
 
 .CB_CBView_Moment_userLink_element
@@ -68,23 +114,6 @@ a:hover
 {
     color:
     inherit;
-}
-
-
-
-.CB_CBView_Moment_content_element
-{
-    width:
-    var(--CB_UI_readableWidth);
-}
-
-
-
-.CB_CBView_Moment_momentPage
-.CB_CBView_Moment_content_element
-{
-    width:
-    40em;
 }
 
 
