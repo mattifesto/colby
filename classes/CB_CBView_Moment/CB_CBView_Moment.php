@@ -18,7 +18,7 @@ CB_CBView_Moment
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_08_25_1661436915',
+                '2022_10_19_1666187502',
                 'css',
                 cbsysurl()
             ),
