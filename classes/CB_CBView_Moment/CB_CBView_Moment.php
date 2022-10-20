@@ -320,8 +320,9 @@ CB_CBView_Moment
                 data-momentmodelasjson0959d46fd2=
                 "${momentModelAsJSONAsHTML}"
             >
+
                 <div
-                    class="CB_CBView_Moment_content_element"
+                    class="CB_CBView_Moment_leftContainer_element"
                 >
 
         EOT);
@@ -330,6 +331,17 @@ CB_CBView_Moment
             $momentModel,
             $shouldIncludeLinksToMomentPage
         );
+
+        echo
+        CBConvert::stringToCleanLine(<<<EOT
+
+            </div>
+
+            <div
+                class="CB_CBView_Moment_rightContainer_element"
+            >
+
+        EOT);
 
         CB_CBView_Moment::renderText(
             $momentModel
@@ -532,9 +544,9 @@ CB_CBView_Moment
 
         CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
             $imageModel,
-            'rw1600',
-            800,
-            2400,
+            'rl2560',
+            1920,
+            960,
             $alternativeText
         );
 
