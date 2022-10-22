@@ -436,29 +436,32 @@ CB_CBView_Moment
 
                 <div class="CB_CBView_Moment_information_element">
 
-                    <a
-                        class="CB_CBView_Moment_userLink_element"
-                        href="${userPageURLAsHTML}"
-                    >
-                        <span class="CB_CBView_Moment_fullName_element">
-                            ${userFullNameAsHTML}
-                        </span>
+                    <div>
 
-                        <span class="CB_CBView_Moment_prettyUsername_element">
-                            @${userPrettyUsernameAsHTML}
-                        </span>
-                    </a>
+                        <a
+                            class="CB_CBView_Moment_userLink_element"
+                            href="${userPageURLAsHTML}"
+                        >
 
-                    <span>
-                    •
-                    </span>
+                            <span class="CB_CBView_Moment_fullName_element">
+                                ${userFullNameAsHTML}
+                            </span>
 
-                    <a
+                            <span class="CB_CBView_Moment_prettyUsername_element">
+                                @${userPrettyUsernameAsHTML}
+                            </span>
+
+                        </a>
+
+                    </div>
+
+                    <div
                         class="CB_CBView_Moment_timeContainer_element"
-                        href="${momentURLAsHTML}"
                     >
+
                         ${timestampElementAsHTML}
-                    </a>
+
+                    </div>
 
                 </div>
 
