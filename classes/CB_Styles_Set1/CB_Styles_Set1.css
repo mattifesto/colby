@@ -1,0 +1,26 @@
+ul.CB_Styles_Set1_ul_horizonal1 >
+li
+{
+    display:
+    inline;
+}
+
+
+
+ul.CB_Styles_Set1_ul_horizonal1 >
+li >
+p
+{
+    display:
+    inline;
+}
+
+
+
+ul.CB_Styles_Set1_ul_horizonal1 >
+li +
+li::before
+{
+    content:
+    " • ";
+}
