@@ -123,11 +123,17 @@ a:hover
     display:
     flex;
 
+    font-size:
+    80%;
+
     justify-content:
     space-between;
 
     color:
     var(--CBTextColor3);
+
+    padding:
+    10px 0 0;
 }
 
 
@@ -190,11 +196,23 @@ img
 
 .CB_CBView_Moment_footer_element
 {
+    font-size:
+    80%;
+
     display:
     flex;
 
-    padding-top:
-    20px;
+    padding:
+    10px 0 0;
+}
+
+
+
+.CB_CBView_Moment_footer_element >
+a
+{
+    color:
+    var(--CBTextColor3);
 }
 
 
