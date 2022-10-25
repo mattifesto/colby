@@ -147,8 +147,9 @@ CB_CBView_MainHeader
         );
 
         CB_CBView_MainHeader::renderItem(
-            '🔍',
-            '/search/'
+            'search',
+            '/search/',
+            'CB_MaterialSymbols_characters'
         );
 
         CB_CBView_MainHeader::renderItem(
