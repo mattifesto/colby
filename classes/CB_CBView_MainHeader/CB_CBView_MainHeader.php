@@ -153,8 +153,9 @@ CB_CBView_MainHeader
         );
 
         CB_CBView_MainHeader::renderItem(
-            $userEmoji,
+            'person',
             $userURL,
+            'CB_MaterialSymbols_characters'
         );
 
         echo
