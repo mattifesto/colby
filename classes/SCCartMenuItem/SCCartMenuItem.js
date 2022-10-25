@@ -9,6 +9,7 @@
     "use strict";
 
 
+
     /**
      * @param Element element
      *
@@ -19,6 +20,8 @@
         element
     ) // -> undefined
     {
+        // anchor
+
         let anchorElement =
         document.createElement(
             "a"
@@ -28,8 +31,51 @@
             anchorElement
         );
 
+
+
+        // cart symbol
+
+        let cartSymbolElement =
+        document.createElement(
+            "span"
+        );
+
+        cartSymbolElement.className =
+        "CB_MaterialSymbols_characters";
+
+        cartSymbolElement.textContent =
+        "shopping_bag";
+
+        anchorElement.append(
+            cartSymbolElement
+        );
+
+
+
+        // quantity
+
+        let quantityElement =
+        document.createElement(
+            "span"
+        );
+
+        quantityElement.style.fontSize =
+        "80%";
+
+        quantityElement.style.position =
+        "relative";
+
+        quantityElement.style.bottom =
+        "3px";
+
+        anchorElement.append(
+            quantityElement
+        );
+
         anchorElement.href =
         "/view-cart/";
+
+
 
         SCShoppingCart.mainCartItemSpecs.addEventListener(
             "somethingChanged",
@@ -62,16 +108,14 @@
                 quantityOfItemsInCart >
                 0
             ) {
-                anchorElement.textContent =
-                "Cart (" +
-                quantityOfItemsInCart +
-                ")";
+                quantityElement.textContent =
+                ` (${quantityOfItemsInCart})`;
             }
 
             else
             {
-                anchorElement.textContent =
-                "Cart";
+                quantityElement.textContent =
+                "";
             }
         }
         /* activateElement_updateQuantity() */
