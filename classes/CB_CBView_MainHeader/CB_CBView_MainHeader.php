@@ -195,8 +195,9 @@ CB_CBView_MainHeader
             $livePublishableKey !== null
         ) {
             CB_CBView_MainHeader::renderItem(
-                '🛍',
-                '/view-cart/'
+                'shopping_bag',
+                '/view-cart/',
+                'CB_MaterialSymbols_characters'
             );
         }
 
