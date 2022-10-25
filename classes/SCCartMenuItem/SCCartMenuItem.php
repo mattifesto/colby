@@ -25,7 +25,13 @@ SCCartMenuItem
 
 
 
-    static function CBHTMLOutput_requiredClassNames(): array {
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
         $arrayOfRequiredClassNames =
         [
             'Colby',
@@ -35,10 +41,13 @@ SCCartMenuItem
 
         return $arrayOfRequiredClassNames;
     }
-    /* CBHTMLOutput_requiredClassNames() */
+    // CBHTMLOutput_requiredClassNames()
+
 
 
     /* -- CBMenuItem interfaces -- -- -- -- -- */
+
+
 
     /**
      * @param object $model
