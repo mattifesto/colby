@@ -261,6 +261,9 @@ CB_CBView_MainHeader
      * @param string $emoji
      * @param string|null $url
      * @param string $CSSClass
+     * @param string|null $context
+     * @param object|null $imageModel
+     * @param [string] $additionalCSSClassesArgument
      *
      * @return void
      */
@@ -270,17 +273,22 @@ CB_CBView_MainHeader
         ?string $url,
         string $CSSClass = '',
         ?string $context = null,
-        ?object $imageModel = null
-    ): void {
+        ?object $imageModel = null,
+        array $additionalCSSClassesArgument = []
+    ): void
+    {
         $emojiAsHTML =
         cbhtml(
             $emoji
         );
 
         $CSSClasses =
-        [
+        $additionalCSSClassesArgument;
+
+        array_unshift(
+            $CSSClasses,
             'CB_CBView_MainHeader_item'
-        ];
+        );
 
         if (
             $imageModel === null
