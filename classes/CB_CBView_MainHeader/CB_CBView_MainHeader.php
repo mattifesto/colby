@@ -175,8 +175,9 @@ CB_CBView_MainHeader
             $isAdministator
         ) {
             CB_CBView_MainHeader::renderItem(
-                '🔨',
-                '/admin/'
+                'settings',
+                '/admin/',
+                'CB_MaterialSymbols_characters'
             );
         }
 
