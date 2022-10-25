@@ -123,10 +123,14 @@ CB_CBView_MainHeader
         );
 
         CB_CBView_MainHeader::renderItem(
-            '☰',
+            'menu',
             null,
             'CB_CBView_MainHeader_menuButton',
-            $context
+            $context,
+            null,
+            [
+                'CB_MaterialSymbols_characters',
+            ]
         );
 
         $websiteIconImageModel =
