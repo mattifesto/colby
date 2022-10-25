@@ -11,9 +11,12 @@ SCCartMenuItem
      * @return [string]
      */
     static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [
+        $arrayOfJavaScriptURLs =
+        [
             Colby::flexpath(__CLASS__, 'v98.js', scliburl()),
         ];
+
+        return $arrayOfJavaScriptURLs;
     }
     /* CBHTMLOutput_JavaScriptURLs() */
 
