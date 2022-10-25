@@ -42,6 +42,9 @@ a.CB_CBView_MainHeader_item:hover
 
 .CB_CBView_MainHeader_item
 {
+    color:
+    inherit;
+
     display:
     flex;
 
@@ -63,13 +66,10 @@ a.CB_CBView_MainHeader_item:hover
 
 
 
-.CB_CBView_MainHeader_item_dropShadow
+.CB_CBView_MainHeader_item:hover
 {
-    filter:
-    grayscale(100%)
-    drop-shadow(
-        0 0 1px hsla(0, 0%, 100%, 1)
-    );
+    color:
+    var(--CBTextColorForLinks);
 }
 
 
