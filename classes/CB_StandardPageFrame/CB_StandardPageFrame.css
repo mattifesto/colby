@@ -16,11 +16,9 @@
 .CB_StandardPageFrame_rightSidebar_element {
     display: none;
     flex-shrink: 0;
-    height: 100vh;
+    min-height: 100vh;
     top: 0;
     width: 240px;
-    overflow-y: scroll;
-    position: sticky;
 }
 
 
