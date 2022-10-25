@@ -13,15 +13,18 @@ CB_CBView_MostRecentUserMomentEditor {
     static function
     CBHTMLOutput_JavaScriptURLs(
     ): array {
-        return [
+        $arrayOfJavaScriptURLs =
+        [
             Colby::flexpath(
                 __CLASS__,
                 'v675.51.js',
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfJavaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
