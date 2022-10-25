@@ -147,11 +147,17 @@
                 isCurrentlyLookingUpUsername =
                 false;
 
-                if (usernameHasChanged) {
-                    usernameHasChanged = false;
+                if (
+                    usernameHasChanged
+                ) {
+                    usernameHasChanged =
+                    false;
 
                     handleUsernameChanged();
-                } else {
+                }
+
+                else
+                {
                     specChangedCallback();
                 }
             } catch (
