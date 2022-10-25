@@ -35,12 +35,16 @@ CB_CBView_MainHeader
     CBHTMLOutput_requiredClassNames(
     ): array
     {
-        return
+        $arrayOfRequiredClassNames =
         [
+            'CB_MaterialSymbols',
             'CB_UI',
         ];
+
+        return $arrayOfRequiredClassNames;
+
     }
-    /* CBHTMLOutput_requiredClassNames() */
+    // CBHTMLOutput_requiredClassNames()
 
 
 
