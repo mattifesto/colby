@@ -4,6 +4,7 @@
     SCShoppingCart,
 */
 
+
 (function()
 {
     "use strict";
