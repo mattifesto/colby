@@ -144,7 +144,8 @@
                     userModelCBID
                 );
 
-                isCurrentlyLookingUpUsername = false;
+                isCurrentlyLookingUpUsername =
+                false;
 
                 if (usernameHasChanged) {
                     usernameHasChanged = false;
