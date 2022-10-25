@@ -16,7 +16,12 @@ SCCartMenuItem
     {
         $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(__CLASS__, 'v98.js', scliburl()),
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2022_10_25_1666720412',
+                'js',
+                cbsysurl()
+            ),
         ];
 
         return $arrayOfJavaScriptURLs;
