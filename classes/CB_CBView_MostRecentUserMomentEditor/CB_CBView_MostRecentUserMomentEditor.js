@@ -160,7 +160,9 @@
                 {
                     specChangedCallback();
                 }
-            } catch (
+            }
+
+            catch (
                 error
             ) {
                 CBErrorHandler.report(
