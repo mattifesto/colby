@@ -1,8 +1,11 @@
 <?php
 
-final class SCCartMenuItem {
+final class
+SCCartMenuItem
+{
+    // -- CBHTMLOutput interfaces
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
 
     /**
      * @return [string]
