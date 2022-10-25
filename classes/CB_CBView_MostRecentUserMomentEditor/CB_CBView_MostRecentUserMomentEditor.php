@@ -1,9 +1,9 @@
 <?php
 
 final class
-CB_CBView_MostRecentUserMomentEditor {
-
-    /* -- CBHTMLOutput interfaces -- */
+CB_CBView_MostRecentUserMomentEditor
+{
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -12,7 +12,8 @@ CB_CBView_MostRecentUserMomentEditor {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
+    ): array
+    {
         $arrayOfJavaScriptURLs =
         [
             Colby::flexpath(
