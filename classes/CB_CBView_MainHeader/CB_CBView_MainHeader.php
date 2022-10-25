@@ -139,9 +139,9 @@ CB_CBView_MainHeader
         );
 
         CB_CBView_MainHeader::renderItem(
-            '🏠',
+            'home',
             '/',
-            '', // CSS Class
+            'CB_MaterialSymbols_characters', // CSS Class
             null, // context
             $websiteIconImageModel
         );
