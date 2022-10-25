@@ -108,8 +108,10 @@
          */
         async function
         handleUsernameChanged(
-        ) {
-            try {
+        ) // -> Promise -> undefined
+        {
+            try
+            {
                 if (
                     isCurrentlyLookingUpUsername
                 ) {
