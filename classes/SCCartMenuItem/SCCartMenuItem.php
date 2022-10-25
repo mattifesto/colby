@@ -26,11 +26,14 @@ SCCartMenuItem
 
 
     static function CBHTMLOutput_requiredClassNames(): array {
-        return [
+        $arrayOfRequiredClassNames =
+        [
             'Colby',
             'SCCartItem',
             'SCShoppingCart',
         ];
+
+        return $arrayOfRequiredClassNames;
     }
     /* CBHTMLOutput_requiredClassNames() */
 
