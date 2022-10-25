@@ -10,7 +10,10 @@ SCCartMenuItem
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
         $arrayOfJavaScriptURLs =
         [
             Colby::flexpath(__CLASS__, 'v98.js', scliburl()),
@@ -18,7 +21,8 @@ SCCartMenuItem
 
         return $arrayOfJavaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
+
 
 
     static function CBHTMLOutput_requiredClassNames(): array {
