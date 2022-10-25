@@ -19,55 +19,86 @@
         element
     ) // -> undefined
     {
-        let anchorElement = document.createElement("a");
+        let anchorElement =
+        document.createElement(
+            "a"
+        );
 
-        element.appendChild(anchorElement);
+        element.appendChild(
+            anchorElement
+        );
 
-        anchorElement.href = "/view-cart/";
+        anchorElement.href =
+        "/view-cart/";
 
         SCShoppingCart.mainCartItemSpecs.addEventListener(
             "somethingChanged",
-            function activateElement_mainCartItemSpecsChanged() {
+            function
+            activateElement_mainCartItemSpecsChanged(
+            ) // -> undefined
+            {
                 activateElement_updateQuantity();
             }
         );
 
         activateElement_updateQuantity();
 
-        return;
 
-        /* -- closures -- -- -- -- -- */
+
 
         /**
          * @return undefined
          */
-        function activateElement_updateQuantity() {
-            let quantityOfItemsInCart = SCCartItem.itemsToQuantity(
+        function
+        activateElement_updateQuantity(
+        ) // -> undefined
+        {
+            let quantityOfItemsInCart =
+            SCCartItem.itemsToQuantity(
                 SCShoppingCart.mainCartItemSpecs.getCartItems()
             );
 
-            if (quantityOfItemsInCart > 0) {
-                anchorElement.textContent = (
-                    "Cart (" +
-                    quantityOfItemsInCart +
-                    ")"
-                );
-            } else {
-                anchorElement.textContent = "Cart";
+            if (
+                quantityOfItemsInCart >
+                0
+            ) {
+                anchorElement.textContent =
+                "Cart (" +
+                quantityOfItemsInCart +
+                ")";
+            }
+
+            else
+            {
+                anchorElement.textContent =
+                "Cart";
             }
         }
         /* activateElement_updateQuantity() */
+
     }
     /* SCCartMenuItem_activateElement() */
 
 
     Colby.afterDOMContentLoaded(
-        function SCCartMenuItem_afterDOMContentLoaded() {
-            let elements = document.getElementsByClassName("SCCartMenuItem");
+        function
+        SCCartMenuItem_afterDOMContentLoaded(
+        ) // -> undefined
+        {
+            let elements =
+            document.getElementsByClassName(
+                "SCCartMenuItem"
+            );
 
-            for (let index = 0; index < elements.length; index += 1) {
+            for (
+                let index = 0;
+                index < elements.length;
+                index += 1
+            ) {
                 SCCartMenuItem_activateElement(
-                    elements.item(index)
+                    elements.item(
+                        index
+                    )
                 );
             }
         }
