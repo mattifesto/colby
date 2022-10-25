@@ -34,6 +34,7 @@ SCCartMenuItem
     {
         $arrayOfRequiredClassNames =
         [
+            'CB_MaterialSymbols',
             'Colby',
             'SCCartItem',
             'SCShoppingCart',
