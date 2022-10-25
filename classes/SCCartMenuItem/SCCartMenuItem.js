@@ -1,5 +1,5 @@
 /* global
-    Colby,
+    CBJavaScript,
     SCCartItem,
     SCShoppingCart,
 */
@@ -124,7 +124,7 @@
     /* SCCartMenuItem_activateElement() */
 
 
-    Colby.afterDOMContentLoaded(
+    CBJavaScript.afterDOMContentLoaded(
         function
         SCCartMenuItem_afterDOMContentLoaded(
         ) // -> undefined
