@@ -115,7 +115,8 @@
                 if (
                     isCurrentlyLookingUpUsername
                 ) {
-                    usernameHasChanged = true;
+                    usernameHasChanged =
+                    true;
 
                     return;
                 }
