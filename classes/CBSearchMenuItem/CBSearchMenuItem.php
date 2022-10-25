@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @NOTE 2022_10_25_1666719300
+ *
+ *      This class can be used in a menu to create an interactive search menu
+ *      item. It's better to just link to the search page.
+ */
 final class
 CBSearchMenuItem
 {
