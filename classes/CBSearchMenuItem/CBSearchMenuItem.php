@@ -1,8 +1,9 @@
 <?php
 
-final class CBSearchMenuItem {
-
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+final class
+CBSearchMenuItem
+{
+    // -- CBHTMLOutput interfaces
 
 
 
