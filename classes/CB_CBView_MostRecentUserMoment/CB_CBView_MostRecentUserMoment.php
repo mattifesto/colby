@@ -27,6 +27,29 @@ CB_CBView_MostRecentUserMoment
 
 
 
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
+        $arrayOfJavaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2022_10_26_1666743017',
+                'js',
+                cbsysurl()
+            ),
+        ];
+
+        return $arrayOfJavaScriptURLs;
+    }
+    // CBHTMLOutput_JavaScriptURLs()
+
+
+
     /* -- CBInstall interfaces -- -- -- -- -- */
 
 
