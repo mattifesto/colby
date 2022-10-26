@@ -3,7 +3,7 @@
 final class
 CB_CBView_MostRecentUserMoment
 {
-    /* -- CBHTMLOutput interfaces -- */
+    // -- CBHTMLOutput interfaces
 
 
 
