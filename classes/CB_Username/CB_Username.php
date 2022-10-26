@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * @deprecated 2022_10_25_1666740439
+ *
+ *      This class is deprecated because the username is stored in the CBUser
+ *      model now.
+ *
+ *      Some username related functions are still used but should eventually be
+ *      moved to CBUser.
+ */
 final class
 CB_Username
 {
@@ -8,6 +17,12 @@ CB_Username
 
 
     /**
+     * @deprecated 2022_10_25_1666740328
+     *
+     *      This function no longer works but I don't have time to officially
+     *      deprecate it right now. User
+     *      CB_Ajax_User_PrettyUsernameToUserModelCBID instead.
+     *
      * @param object $args
      *
      *      {
