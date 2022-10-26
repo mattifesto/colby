@@ -1,8 +1,8 @@
 <?php
 
 final class
-CB_Username {
-
+CB_Username
+{
     /* -- CBAjax interfaces -- */
 
 
