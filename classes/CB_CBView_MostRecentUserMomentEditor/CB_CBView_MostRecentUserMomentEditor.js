@@ -125,13 +125,20 @@
                     "Username (looking up...)"
                 );
 
-                let userModelCBID = await CBAjax.call(
-                    "CB_Username",
-                    "CB_Username_ajax_fetchUserModelCBIDByPrettyUsername",
+                let prettyUsername =
+                usernameEditor.CBUIStringEditor2_getValue();
+
+                let result =
+                await CBAjax.call2(
+                    "CB_Ajax_User_PrettyUsernameToUserModelCBID",
                     {
-                        prettyUsername: usernameEditor.CBUIStringEditor2_getValue(),
+                        CB_Ajax_User_PrettyUsernameToUserModelCBID_prettyUsername_argument:
+                        prettyUsername,
                     }
                 );
+
+                let userModelCBID =
+                result.CB_Ajax_User_PrettyUsernameToUserModelCBID_userModelCBID;
 
                 usernameEditor.CBUIStringEditor2_setTitle(
                     userModelCBID === null ?
