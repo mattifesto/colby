@@ -16,9 +16,10 @@ CB_CBView_MostRecentUserMomentEditor
     {
         $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.51.js',
+                '2022_10_25_1666741318',
+                'js',
                 cbsysurl()
             ),
         ];
