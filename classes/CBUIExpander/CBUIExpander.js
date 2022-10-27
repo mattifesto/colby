@@ -184,9 +184,8 @@
             contentContainerElement
         );
 
-        let api =
+        let expanderController =
         {
-
             /**
              * @return Element|null
              */
@@ -252,18 +251,18 @@
             set message(value) {
                 value = CBConvert.valueToString(value);
 
-                if (api.title === "") {
+                if (expanderController.title === "") {
                     let firstLineOfMessage = CBMessageMarkup.messageToText(value);
                     firstLineOfMessage = firstLineOfMessage.split("\n\n", 1)[0];
 
-                    api.title = firstLineOfMessage;
+                    expanderController.title = firstLineOfMessage;
                 }
 
                 let contentElement = document.createElement("div");
                 contentElement.className = "CBUIExpander_message CBContentStyleSheet";
                 contentElement.innerHTML = CBMessageMarkup.messageToHTML(value);
 
-                api.contentElement = contentElement;
+                expanderController.contentElement = contentElement;
 
                 message = value;
             },
@@ -339,11 +338,9 @@
             },
         };
 
-        api.message = args.message;
-        api.severity = args.severity;
-        api.timestamp = args.timestamp;
-
-        return api;
+        expanderController.message = args.message;
+        expanderController.severity = args.severity;
+        expanderController.timestamp = args.timestamp;
 
         /**
          * CBUIExpander.create() closure
@@ -372,8 +369,8 @@
                 function (
                 ) // -> undefined
                 {
-                    api.expanded =
-                    !api.expanded;
+                    expanderController.expanded =
+                    !expanderController.expanded;
                 }
             );
 
@@ -418,6 +415,9 @@
                 titleElement: titleElement,
             };
         }
+        // createHeader()
+
+        return expanderController;
     }
     // CBUIExpander_create()
 
