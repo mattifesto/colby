@@ -43,9 +43,19 @@
     transform: rotate(90deg);
 }
 
-.CBUIExpander.severity7 .CBUIExpander_toggle {
-    background-color: hsl(210, 100%, 70%);
+
+
+.CBUIExpander.severity7
+.CBUIExpander_container
+{
+    border-top-width:
+    5px;
+
+    border-top-color:
+    hsl(210, 100%, 70%);
 }
+
+
 
 .CBUIExpander.severity6 .CBUIExpander_toggle {
     /* use inherited background color */
