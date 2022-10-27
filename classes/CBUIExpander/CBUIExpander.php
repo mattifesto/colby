@@ -58,13 +58,15 @@ CBUIExpander
     CBHTMLOutput_requiredClassNames(
     ): array
     {
-        return
+        $arrayOfRequiredClassNames =
         [
             'CBContentStyleSheet',
             'CBConvert',
             'CBMessageMarkup'
         ];
+
+        return $arrayOfRequiredClassNames;
     }
-    /* CBHTMLOutput_requiredClassNames() */
+    // CBHTMLOutput_requiredClassNames()
 
 }
