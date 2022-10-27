@@ -82,9 +82,17 @@
 
 
 
-.CBUIExpander.severity1 .CBUIExpander_toggle {
-    background-color: hsl(0, 50%, 30%);
+.CBUIExpander.severity1
+.CBUIExpander_container
+{
+    border-color:
+    var(--CB_UI_color_solidRed);
+
+    border-width:
+    3px;
 }
+
+
 
 .CBUIExpander.severity0 .CBUIExpander_toggle {
     background-color: hsl(0, 0%, 0%); /* black */
