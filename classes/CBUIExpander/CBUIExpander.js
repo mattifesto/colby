@@ -147,12 +147,12 @@
         let severity;
         let timestamp;
 
-        let element =
+        let rootElement =
         document.createElement(
             "div"
         );
 
-        element.className =
+        rootElement.className =
         "CBUIExpander";
 
         let containerElement =
@@ -163,7 +163,7 @@
         containerElement.className =
         "CBUIExpander_container";
 
-        element.appendChild(
+        rootElement.appendChild(
             containerElement
         );
 
@@ -212,14 +212,14 @@
              * @return Element
              */
             get element() {
-                return element;
+                return rootElement;
             },
 
             /**
              * @return bool
              */
             get expanded() {
-                return element.classList.contains("expanded");
+                return rootElement.classList.contains("expanded");
             },
 
             /**
@@ -227,9 +227,9 @@
              */
             set expanded(value) {
                 if (value) {
-                    element.classList.add("expanded");
+                    rootElement.classList.add("expanded");
                 } else {
-                    element.classList.remove("expanded");
+                    rootElement.classList.remove("expanded");
                 }
             },
 
@@ -281,13 +281,13 @@
             set severity(value) {
                 let newSeverity = Number.parseInt(value);
 
-                element.classList.remove("severity" + severity);
+                rootElement.classList.remove("severity" + severity);
 
                 if (Number.isNaN(newSeverity)) {
                     severity = undefined;
                 } else {
                     severity = newSeverity;
-                    element.classList.add("severity" + severity);
+                    rootElement.classList.add("severity" + severity);
                 }
             },
 
@@ -379,7 +379,7 @@
             toggleElement.className = "CBUIExpander_toggle";
 
             toggleElement.addEventListener("click", function () {
-                element.classList.toggle("expanded");
+                rootElement.classList.toggle("expanded");
             });
 
             headerElement.appendChild(toggleElement);
