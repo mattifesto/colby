@@ -66,6 +66,9 @@
 .CBUIExpander.severity5
 .CBUIExpander_container
 {
+    border-top-width:
+    5px;
+
     border-top-color:
     hsl(50, 100%, 50%); /* yellow */
 }
@@ -75,6 +78,9 @@
 .CBUIExpander.severity4
 .CBUIExpander_container
 {
+    border-top-width:
+    5px;
+
     border-top-color:
     hsl(30, 100%, 50%); /* orange */
 }
@@ -84,6 +90,9 @@
 .CBUIExpander.severity3
 .CBUIExpander_container
 {
+    border-top-width:
+    5px;
+
     border-top-color:
     var(--CB_UI_color_solidRed);
 }
@@ -93,11 +102,12 @@
 .CBUIExpander.severity2
 .CBUIExpander_container
 {
-    border-color:
-    var(--CB_UI_color_solidRed);
+    border-top-width:
+    10px;
 
-    border-width:
-    2px;
+
+    border-top-color:
+    var(--CB_UI_color_solidRed);
 }
 
 
@@ -105,11 +115,11 @@
 .CBUIExpander.severity1
 .CBUIExpander_container
 {
-    border-color:
-    var(--CB_UI_color_solidRed);
+    border-top-width:
+    15px;
 
-    border-width:
-    3px;
+    border-top-color:
+    var(--CB_UI_color_solidRed);
 }
 
 
@@ -117,11 +127,11 @@
 .CBUIExpander.severity0
 .CBUIExpander_container
 {
-    border-color:
-    var(--CB_UI_color_solidRed);
+    border-top-width:
+    20px;
 
-    border-width:
-    4px;
+    border-top-color:
+    var(--CB_UI_color_solidRed);
 }
 
 
