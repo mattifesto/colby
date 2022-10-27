@@ -362,12 +362,10 @@
             parentElementArgument
         ) // -> object
         {
-            let headerElement = document.createElement("div");
-            headerElement.className = "CBUIExpander_header";
-
-            parentElementArgument.appendChild(headerElement);
-
-
+            let headerElement =
+            CBUIExpander_createHeaderElement(
+                parentElementArgument
+            );
 
             CBUIExpander_createSeverityIndicatorElement(
                 headerElement
@@ -416,6 +414,34 @@
         }
     }
     // CBUIExpander_create()
+
+
+
+    /**
+     * @param Element parentElementArgument
+     *
+     * @return Element
+     */
+    function
+    CBUIExpander_createHeaderElement(
+        parentElementArgument
+    ) // -> Element
+    {
+        let headerElement =
+        document.createElement(
+            "div"
+        );
+
+        headerElement.className =
+        "CBUIExpander_header";
+
+        parentElementArgument.append(
+            headerElement
+        );
+
+        return headerElement;
+    }
+    // CBUIExpander_createHeaderElement()
 
 
 
