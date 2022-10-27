@@ -36,7 +36,7 @@ CBUIExpander
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        return
+        $arrayOfJavaScriptURLs =
         [
             Colby::flexpath(
                 __CLASS__,
@@ -44,8 +44,10 @@ CBUIExpander
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfJavaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
