@@ -1,9 +1,19 @@
-.CBUIExpander {
-    box-sizing: border-box;
-    max-width: 100%;
+.CBUIExpander
+{
+    box-sizing:
+    border-box;
+
+    max-width:
+    100%;
+
+    overflow-wrap:
+    break-word;
+
     padding:
     20px 10px;
 }
+
+
 
 .CBUIExpander_container {
     border: 1px solid var(--CBUIBorderColor);
