@@ -348,6 +348,8 @@
         /**
          * CBUIExpander.create() closure
          *
+         * @param Element parentElementArgument
+         *
          * @return object
          *
          *      {
@@ -355,11 +357,15 @@
          *          titleElement: Element
          *      }
          */
-        function createHeader(parentElement) {
+        function
+        createHeader(
+            parentElementArgument
+        ) // -> object
+        {
             let headerElement = document.createElement("div");
             headerElement.className = "CBUIExpander_header";
 
-            parentElement.appendChild(headerElement);
+            parentElementArgument.appendChild(headerElement);
 
 
 
