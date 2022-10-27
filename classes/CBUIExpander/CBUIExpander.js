@@ -184,12 +184,14 @@
             contentContainerElement
         );
 
-        let api = {
+        let api =
+        {
 
             /**
              * @return Element|null
              */
-            get contentElement() {
+            get contentElement()
+            {
                 return contentContainerElement.firstElementChild;
             },
 
