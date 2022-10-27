@@ -55,8 +55,13 @@
     background-color: hsl(50, 100%, 50%); /* yellow */
 }
 
-.CBUIExpander.severity4 .CBUIExpander_toggle {
-    background-color: hsl(30, 100%, 50%); /* orange */
+
+
+.CBUIExpander.severity4
+.CBUIExpander_container
+{
+    border-top-color:
+    hsl(30, 100%, 50%); /* orange */
 }
 
 
