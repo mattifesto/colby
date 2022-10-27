@@ -94,9 +94,17 @@
 
 
 
-.CBUIExpander.severity0 .CBUIExpander_toggle {
-    background-color: hsl(0, 0%, 0%); /* black */
+.CBUIExpander.severity0
+.CBUIExpander_container
+{
+    border-color:
+    var(--CB_UI_color_solidRed);
+
+    border-width:
+    4px;
 }
+
+
 
 .CBUIExpander_headerTextContainer {
     display: flex;
