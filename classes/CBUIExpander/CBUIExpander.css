@@ -45,7 +45,7 @@
 
 
 .CBUIExpander.expanded
-.CBUIExpander_toggle::before 
+.CBUIExpander_toggle::before
 {
     content: "expand_less";
 }
