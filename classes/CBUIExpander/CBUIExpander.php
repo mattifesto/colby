@@ -16,9 +16,10 @@ CBUIExpander
     {
         $arrayOfCSSURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_06_21_1655785586.css',
+                '2022_10_27_1666890499',
+                'css',
                 cbsysurl()
             ),
         ];
@@ -38,9 +39,10 @@ CBUIExpander
     {
         $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v503.js',
+                '2022_10_27_1666889444',
+                'js',
                 cbsysurl()
             ),
         ];
