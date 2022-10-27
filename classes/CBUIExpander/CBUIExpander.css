@@ -69,7 +69,7 @@
 .CBUIExpander.severity3
 .CBUIExpander_container
 {
-    border-color:
+    border-top-color:
     var(--CB_UI_color_solidRed);
 }
 
