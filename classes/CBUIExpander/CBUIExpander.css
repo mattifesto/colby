@@ -196,13 +196,16 @@
     flex-direction:
     column;
 
+    flex-grow:
+    1;
+
     justify-content:
     center;
 
     /* required for ellipsis of CBUIExpander_title */
     min-width:
     0;
-    
+
     padding:
     3px 0;
 }
