@@ -137,16 +137,31 @@
         args
     ) // -> object
     {
-        args = args || {};
-        let message = "";
+        args =
+        args ||
+        {};
+
+        let message =
+        "";
+
         let severity;
         let timestamp;
 
-        let element = document.createElement("div");
-        element.className = "CBUIExpander";
+        let element =
+        document.createElement(
+            "div"
+        );
 
-        let containerElement = document.createElement("div");
-        containerElement.className = "CBUIExpander_container";
+        element.className =
+        "CBUIExpander";
+
+        let containerElement =
+        document.createElement(
+            "div"
+        );
+
+        containerElement.className =
+        "CBUIExpander_container";
 
         element.appendChild(containerElement);
 
