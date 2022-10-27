@@ -188,15 +188,26 @@
 
 
 
-.CBUIExpander_headerTextContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 3px 0;
+.CBUIExpander_headerTextContainer
+{
+    display:
+    flex;
+
+    flex-direction:
+    column;
+
+    justify-content:
+    center;
 
     /* required for ellipsis of CBUIExpander_title */
-    min-width: 0;
+    min-width:
+    0;
+    
+    padding:
+    3px 0;
 }
+
+
 
 .CBUIExpander_title,
 .CBUIExpander_timeContainer {
