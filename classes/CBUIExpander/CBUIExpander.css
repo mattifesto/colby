@@ -51,8 +51,13 @@
     /* use inherited background color */
 }
 
-.CBUIExpander.severity5 .CBUIExpander_toggle {
-    background-color: hsl(50, 100%, 50%); /* yellow */
+
+
+.CBUIExpander.severity5
+.CBUIExpander_container
+{
+    border-top-color:
+    hsl(50, 100%, 50%); /* yellow */
 }
 
 
