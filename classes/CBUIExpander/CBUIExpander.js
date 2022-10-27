@@ -382,10 +382,17 @@
 
             /* toggle */
 
-            let toggleElement = document.createElement("div");
-            toggleElement.className = "CBUIExpander_toggle";
+            let toggleElement =
+            document.createElement(
+                "div"
+            );
 
-            headerElement.appendChild(toggleElement);
+            toggleElement.className =
+            "CBUIExpander_toggle";
+
+            headerElement.append(
+                toggleElement
+            );
 
 
 
