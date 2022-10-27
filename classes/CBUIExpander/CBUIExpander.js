@@ -361,6 +361,14 @@
 
             parentElement.appendChild(headerElement);
 
+
+
+            CBUIExpander_createSeverityIndicatorElement(
+                headerElement
+            );
+
+
+
             /* toggle */
 
             let toggleElement = document.createElement("div");
@@ -371,6 +379,8 @@
             });
 
             headerElement.appendChild(toggleElement);
+
+
 
             /* header container */
 
@@ -400,6 +410,48 @@
         }
     }
     // CBUIExpander_create()
+
+
+
+    /**
+     * @param Element parentElementArgument
+     *
+     * @return undefined
+     */
+    function
+    CBUIExpander_createSeverityIndicatorElement(
+        parentElementArgument
+    ) // -> undefined
+    {
+        let rootElement =
+        document.createElement(
+            "div"
+        );
+
+        rootElement.className =
+        "CBUIExpander_severityIndicator_root_element";
+
+
+
+        let textElement =
+        document.createElement(
+            "div"
+        );
+
+        textElement.className =
+        "CBUIExpander_severityIndicator_text_element";
+
+        rootElement.append(
+            textElement
+        );
+
+
+
+        parentElementArgument.append(
+            rootElement
+        );
+    }
+    // CBUIExpander_createSeverityIndicatorElement()
 
 }
 )();
