@@ -37,11 +37,11 @@
     CBUIExpander_build(
     ) // -> undefined
     {
-        var message;
-        var elements = document.getElementsByClassName("CBUIExpander_builder");
+        let message;
+        let elements = document.getElementsByClassName("CBUIExpander_builder");
 
-        for (var i = 0; i < elements.length; i++) {
-            var element = elements[i];
+        for (let i = 0; i < elements.length; i++) {
+            let element = elements[i];
             message = undefined;
 
             if (!element.classList.contains("built")) {
@@ -54,7 +54,7 @@
                     message = "Cannot parse message";
                 }
 
-                var expander = CBUIExpander.create({
+                let expander = CBUIExpander.create({
                     message: message,
                 });
 
@@ -107,7 +107,7 @@
         let severity;
         let timestamp;
 
-        var element = document.createElement("div");
+        let element = document.createElement("div");
         element.className = "CBUIExpander";
 
         let containerElement = document.createElement("div");
@@ -117,7 +117,7 @@
 
         let header = createHeader(containerElement);
 
-        var contentContainerElement = document.createElement("div");
+        let contentContainerElement = document.createElement("div");
         contentContainerElement.className = "CBUIExpander_contentContainer";
 
         containerElement.appendChild(contentContainerElement);
