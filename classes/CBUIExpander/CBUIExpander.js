@@ -163,9 +163,14 @@
         containerElement.className =
         "CBUIExpander_container";
 
-        element.appendChild(containerElement);
+        element.appendChild(
+            containerElement
+        );
 
-        let header = createHeader(containerElement);
+        let header =
+        createHeader(
+            containerElement
+        );
 
         let contentContainerElement = document.createElement("div");
         contentContainerElement.className = "CBUIExpander_contentContainer";
