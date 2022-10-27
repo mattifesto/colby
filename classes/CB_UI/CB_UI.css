@@ -50,10 +50,21 @@ html
     **/
 
     --CB_UI_color_solidRed:
-    hsl(0, 50%, 50%);
+    hsl(0, 80%, 50%);
+
+    --CB_UI_color_solidOrange:
+    hsl(30, 90%, 50%);
+
+    --CB_UI_color_solidYellow:
+    hsl(60, 95%, 50%);
 
     --CB_UI_color_solidGreen:
     hsl(120, 50%, 50%);
+
+    --CB_UI_color_solidBlue:
+    hsl(240, 50%, 50%);
+
+
 
     --CB_UI_color_solidText90:
     hsl(0, 0%, 10%);
@@ -116,10 +127,22 @@ html
         **/
 
         --CB_UI_color_solidRed:
-        hsl(0, 50%, 50%);
+        hsl(0, 70%, 50%);
+
+        --CB_UI_color_solidOrange:
+        hsl(30, 70%, 50%);
+
+        --CB_UI_color_solidYellow:
+        hsl(60, 70%, 50%);
 
         --CB_UI_color_solidGreen:
-        hsl(120, 50%, 50%);
+        hsl(120, 50%, 40%);
+
+        --CB_UI_color_solidBlue:
+        hsl(240, 50%, 40%);
+
+
+
 
         --CB_UI_color_solidText90:
         hsl(0, 0%, 90%);
