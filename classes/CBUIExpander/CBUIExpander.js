@@ -1,19 +1,42 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBUIExpander */
 /* global
     CBConvert,
     CBMessageMarkup,
     Colby,
 */
 
-var CBUIExpander = {
+(function ()
+{
+    "use strict";
+
+
+
+    let CBUIExpander =
+    {
+        build:
+        CBUIExpander_build,
+
+        create:
+        CBUIExpander_create,
+    };
+
+    window.CBUIExpander =
+    CBUIExpander;
+
+
+
+    Colby.afterDOMContentLoaded(
+        CBUIExpander.build
+    );
+
+
 
     /**
      * @return undefined
      */
-    build: function () {
+    function
+    CBUIExpander_build(
+    ) // -> undefined
+    {
         var message;
         var elements = document.getElementsByClassName("CBUIExpander_builder");
 
@@ -40,7 +63,8 @@ var CBUIExpander = {
                 element.classList.add("built");
             }
         }
-    },
+    }
+    // CBUIExpander_build()
 
 
     /**
@@ -73,7 +97,11 @@ var CBUIExpander = {
      *          timestamp: int (get, set)
      *      }
      */
-    create: function (args) {
+    function
+    CBUIExpander_create(
+        args
+    ) // -> object
+    {
         args = args || {};
         let message = "";
         let severity;
@@ -306,7 +334,8 @@ var CBUIExpander = {
                 titleElement: titleElement,
             };
         }
-    },
-};
+    }
+    // CBUIExpander_create()
 
-Colby.afterDOMContentLoaded(CBUIExpander.build);
+}
+)();
