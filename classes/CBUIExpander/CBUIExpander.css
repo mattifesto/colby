@@ -35,11 +35,18 @@
     -webkit-user-select: none;
 }
 
-.CBUIExpander_toggle::before {
+
+
+.CBUIExpander_toggle::before
+{
     content: "expand_more";
 }
 
-.CBUIExpander.expanded .CBUIExpander_toggle::before {
+
+
+.CBUIExpander.expanded
+.CBUIExpander_toggle::before 
+{
     content: "expand_less";
 }
 
