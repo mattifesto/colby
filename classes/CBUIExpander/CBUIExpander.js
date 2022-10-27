@@ -172,10 +172,17 @@
             containerElement
         );
 
-        let contentContainerElement = document.createElement("div");
-        contentContainerElement.className = "CBUIExpander_contentContainer";
+        let contentContainerElement =
+        document.createElement(
+            "div"
+        );
 
-        containerElement.appendChild(contentContainerElement);
+        contentContainerElement.className =
+        "CBUIExpander_contentContainer";
+
+        containerElement.appendChild(
+            contentContainerElement
+        );
 
         let api = {
 
