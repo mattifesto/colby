@@ -388,7 +388,7 @@
             );
 
             toggleElement.className =
-            "CBUIExpander_toggle";
+            "CBUIExpander_toggle CB_MaterialSymbols_characters";
 
             headerElement.append(
                 toggleElement
