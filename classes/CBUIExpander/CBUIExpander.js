@@ -380,22 +380,6 @@
 
 
 
-            /* toggle */
-
-            let toggleElement =
-            document.createElement(
-                "div"
-            );
-
-            toggleElement.className =
-            "CBUIExpander_toggle CB_MaterialSymbols_characters";
-
-            headerElement.append(
-                toggleElement
-            );
-
-
-
             /* header container */
 
             let headerTextContainerElement = document.createElement("div");
@@ -416,6 +400,24 @@
             timeContainerElement.className = "CBUIExpander_timeContainer";
 
             headerTextContainerElement.appendChild(timeContainerElement);
+
+
+
+            /* toggle */
+
+            let toggleElement =
+            document.createElement(
+                "div"
+            );
+
+            toggleElement.className =
+            "CBUIExpander_toggle CB_MaterialSymbols_characters";
+
+            headerElement.append(
+                toggleElement
+            );
+
+
 
             return {
                 timeContainerElement: timeContainerElement,
