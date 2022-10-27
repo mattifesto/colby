@@ -367,6 +367,16 @@
                 parentElementArgument
             );
 
+            headerElement.addEventListener(
+                "click",
+                function (
+                ) // -> undefined
+                {
+                    api.expanded =
+                    !api.expanded;
+                }
+            );
+
             CBUIExpander_createSeverityIndicatorElement(
                 headerElement
             );
@@ -377,10 +387,6 @@
 
             let toggleElement = document.createElement("div");
             toggleElement.className = "CBUIExpander_toggle";
-
-            toggleElement.addEventListener("click", function () {
-                rootElement.classList.toggle("expanded");
-            });
 
             headerElement.appendChild(toggleElement);
 
