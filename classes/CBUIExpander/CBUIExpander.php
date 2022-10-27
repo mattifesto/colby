@@ -60,6 +60,8 @@ CBUIExpander
     {
         $arrayOfRequiredClassNames =
         [
+            'CB_MaterialSymbols',
+            'CB_UI',
             'CBContentStyleSheet',
             'CBConvert',
             'CBMessageMarkup'
