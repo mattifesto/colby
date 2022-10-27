@@ -38,29 +38,64 @@
     ) // -> undefined
     {
         let message;
-        let elements = document.getElementsByClassName("CBUIExpander_builder");
 
-        for (let i = 0; i < elements.length; i++) {
-            let element = elements[i];
-            message = undefined;
+        let elements =
+        document.getElementsByClassName(
+            "CBUIExpander_builder"
+        );
 
-            if (!element.classList.contains("built")) {
+        for (
+            let i = 0;
+            i < elements.length;
+            i++
+        ) {
+            let element =
+            elements[i];
 
-                try {
-                    message = JSON.parse(element.dataset.message);
-                } catch (error) {}
+            message =
+            undefined;
 
-                if (typeof message !== "string") {
-                    message = "Cannot parse message";
+            if (
+                !element.classList.contains(
+                    "built"
+                )
+            ) {
+                try
+                {
+                    message =
+                    JSON.parse(
+                        element.dataset.message
+                    );
+                }
+                catch (
+                    error
+                ) {
+                    // do nothing
                 }
 
-                let expander = CBUIExpander.create({
-                    message: message,
-                });
+                if (
+                    typeof message !==
+                    "string"
+                ) {
+                    message =
+                    "Cannot parse message";
+                }
 
-                element.appendChild(expander.element);
+                let expander =
+                CBUIExpander.create(
+                    {
+                        message:
+                        message,
+                    }
+                );
 
-                element.classList.add("built");
+                element.appendChild(
+                    expander.element
+                );
+
+                element.classList.add(
+                    "built"
+                );
             }
         }
     }
