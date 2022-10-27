@@ -36,11 +36,11 @@
 }
 
 .CBUIExpander_toggle::before {
-    content: "▶";
+    content: "expand_more";
 }
 
 .CBUIExpander.expanded .CBUIExpander_toggle::before {
-    transform: rotate(90deg);
+    content: "expand_less";
 }
 
 
