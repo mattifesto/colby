@@ -30,7 +30,7 @@ CB_UI
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_10_15_1665851674',
+                '2022_10_28_1666930717',
                 'css',
                 cbsysurl()
             ),
