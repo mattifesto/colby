@@ -177,7 +177,7 @@ final class CBAdminPageForUpdate {
 
 
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -186,16 +186,20 @@ final class CBAdminPageForUpdate {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
+    ): array
+    {
+        $arrayOfJavaScriptURLs =
+        [
             Colby::flexpath(
                 __CLASS__,
                 'v675.21.js',
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfJavaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
