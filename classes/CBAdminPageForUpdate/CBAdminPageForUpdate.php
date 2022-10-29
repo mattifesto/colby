@@ -206,15 +206,21 @@ final class CBAdminPageForUpdate {
     /**
      * @return [[<name>, <value>]]
      */
-    static function CBHTMLOutput_JavaScriptVariables(): array {
-        return [
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array
+    {
+        $arrayOfJavaScriptVariables =
+        [
             [
                 'CBAdminPageForUpdate_isDevelopmentWebsite',
                 CBSitePreferences::getIsDevelopmentWebsite(),
             ],
         ];
+
+        return $arrayOfJavaScriptVariables;
     }
-    /* CBHTMLOutput_JavaScriptVariables() */
+    // CBHTMLOutput_JavaScriptVariables()
 
 
 
