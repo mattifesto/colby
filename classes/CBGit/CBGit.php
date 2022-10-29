@@ -147,24 +147,34 @@ final class CBGit {
      */
     static function
     submodules(
-    ): array {
-        $pwd = getcwd();
+    ): array
+    {
+        $pwd =
+        getcwd();
 
         chdir(
             cbsitedir()
         );
 
-        try {
+        try
+        {
             exec(
-                (
-                    'git submodule foreach ' .
-                    '--recursive --quiet ' .
-                    "'echo \$displaypath'"
-                ),
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    git submodule foreach 
+                    --recursive --quiet
+                    'echo \$displaypath'
+
+                EOT),
                 $relativeSubmodulePaths
             );
-        } finally {
-            chdir($pwd);
+        }
+
+        finally
+        {
+            chdir(
+                $pwd
+            );
         }
 
         return $relativeSubmodulePaths;
