@@ -12,8 +12,11 @@
 */
 
 
-(function() {
+(function()
+{
     "use strict";
+
+
 
     let taskIsRunning = false;
     let outputElement;
@@ -469,4 +472,5 @@
     }
     /* promiseToUpdateSite() */
 
-})();
+}
+)();
