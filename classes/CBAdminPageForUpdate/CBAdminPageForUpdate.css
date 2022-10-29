@@ -1,0 +1,29 @@
+.CBAdminPageForUpdate_submodules_root_element
+{
+    box-sizing:
+    border-box;
+
+    max-width:
+    100%;
+
+    overflow-wrap:
+    break-word;
+
+    padding:
+    20px;
+
+    text-align:
+    center;
+}
+
+
+
+.CBAdminPageForUpdate_submodules_root_element
+a
+{
+    margin-left:
+    20px;
+
+    margin-right:
+    20px;
+}
