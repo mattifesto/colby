@@ -236,6 +236,10 @@ final class CBAdminPageForUpdate {
         $arrayOfJavaScriptVariables =
         [
             [
+                'CBAdminPageForUpdate_arrayOfSubmodulePaths_jsvariable',
+                CBGit::submodules(),
+            ],
+            [
                 'CBAdminPageForUpdate_isDevelopmentWebsite',
                 CBSitePreferences::getIsDevelopmentWebsite(),
             ],
