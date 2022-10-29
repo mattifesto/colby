@@ -8,6 +8,7 @@
     CBUIPanel,
     Colby,
 
+    CBAdminPageForUpdate_arrayOfSubmodulePaths_jsvariable,
     CBAdminPageForUpdate_isDevelopmentWebsite,
 */
 
@@ -60,6 +61,11 @@
             createIndividualActionsSectionElement()
         );
 
+        navigationPaneElement.append(
+            CBAdminPageForUpdate_createSubmodulesElement()
+        );
+
+
 
         /* output element */
 
@@ -73,6 +79,59 @@
         return;
     }
     /* afterDOMContentLoaded() */
+
+
+
+    /**
+     * @return Element
+     */
+    function
+    CBAdminPageForUpdate_createSubmodulesElement(
+    ) // --> Element
+    {
+        let rootElement =
+        document.createElement(
+            "div"
+        );
+
+        rootElement.className =
+        "CBAdminPageForUpdate_submodules_root_element";
+
+
+
+        CBAdminPageForUpdate_arrayOfSubmodulePaths_jsvariable.forEach(
+
+            /**
+             * @param string submodulePath
+             *
+             * @return undefined
+             */
+            function(
+                submodulePath
+            ) // -> undefined
+            {
+                let anchorElement =
+                document.createElement(
+                    "a"
+                );
+
+
+                anchorElement.textContent =
+                submodulePath;
+
+                rootElement.append(
+                    anchorElement
+                );
+            }
+
+        );
+        // forEach
+
+
+
+        return rootElement;
+    }
+    // CBAdminPageForUpdate_createSubmodulesElement()
 
 
 
