@@ -213,9 +213,10 @@ final class CBAdminPageForUpdate {
     {
         $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.21.js',
+                '2022_10_29_1667058389',
+                'js',
                 cbsysurl()
             ),
         ];
