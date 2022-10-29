@@ -185,6 +185,29 @@ final class CBAdminPageForUpdate {
      * @return [string]
      */
     static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
+        $arrayOfCSSURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2022_10_29_1667059611',
+                'css',
+                cbsysurl()
+            ),
+        ];
+
+        return $arrayOfCSSURLs;
+    }
+    // CBHTMLOutput_CSSURLs()
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
