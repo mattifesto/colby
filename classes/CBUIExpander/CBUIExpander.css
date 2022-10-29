@@ -59,9 +59,17 @@
 
 
 
+/**
+ * @NOTE 2022_10_29_1667052181
+ *
+ *      Safari won't apply ligature replacements to the text of the content
+ *      property so we must use the code point instead.
+ */
+
 .CBUIExpander_toggle::before
 {
-    content: "expand_more";
+    /* expand_more */
+    content: "\e5cf";
 }
 
 
@@ -69,7 +77,8 @@
 .CBUIExpander.expanded
 .CBUIExpander_toggle::before
 {
-    content: "expand_less";
+    /* expand_less */
+    content: "\e5ce";
 }
 
 
