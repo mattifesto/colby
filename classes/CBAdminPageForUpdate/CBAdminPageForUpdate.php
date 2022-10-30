@@ -1,8 +1,11 @@
 <?php
 
-final class CBAdminPageForUpdate {
-
-    private static $installationIsRequired = false;
+final class
+CBAdminPageForUpdate
+{
+    private static
+    $installationIsRequired =
+    false;
 
 
 
