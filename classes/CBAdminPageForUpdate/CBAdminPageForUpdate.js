@@ -20,7 +20,7 @@
 
 
     let taskIsRunning = false;
-    let outputElement;
+    let shared_outputElement;
 
     Colby.afterDOMContentLoaded(
         afterDOMContentLoaded
@@ -69,11 +69,11 @@
 
         /* output element */
 
-        outputElement = document.createElement("div");
-        outputElement.className = "output";
+        shared_outputElement = document.createElement("div");
+        shared_outputElement.className = "output";
 
         navigationPaneElement.appendChild(
-            outputElement
+            shared_outputElement
         );
 
         return;
@@ -389,7 +389,7 @@
             return;
         }
 
-        outputElement.textContent = "";
+        shared_outputElement.textContent = "";
         taskIsRunning = true;
 
         Promise.resolve().then(
@@ -418,7 +418,7 @@
         expander.title = "database backup in progress";
         expander.timestamp = Date.now() / 1000;
 
-        outputElement.appendChild(expander.element);
+        shared_outputElement.appendChild(expander.element);
 
         let promise = CBAjax.call(
             "CBAdminPageForUpdate",
@@ -444,7 +444,7 @@
         expander.title = "pull website in progress";
         expander.timestamp = Date.now() / 1000;
 
-        outputElement.appendChild(expander.element);
+        shared_outputElement.appendChild(expander.element);
 
         let promise = CBAjax.call(
             "CBAdminPageForUpdate",
@@ -483,7 +483,7 @@
         expander.title = "pull colby in progress";
         expander.timestamp = Date.now() / 1000;
 
-        outputElement.appendChild(
+        shared_outputElement.appendChild(
             expander.element
         );
 
@@ -523,7 +523,7 @@
         expander.title = "website update in progress";
         expander.timestamp = Date.now() / 1000;
 
-        outputElement.appendChild(expander.element);
+        shared_outputElement.appendChild(expander.element);
 
         let promise = CBAjax.call(
             "CBAdminPageForUpdate",
