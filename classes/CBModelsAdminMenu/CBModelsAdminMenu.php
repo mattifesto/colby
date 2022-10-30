@@ -1,7 +1,8 @@
 <?php
 
-final class CBModelsAdminMenu {
-
+final class
+CBModelsAdminMenu
+{
     /* -- CBInstall interfaces -- -- -- -- -- */
 
 
