@@ -83,6 +83,33 @@
 
 
     /**
+     * @param string submodulePath
+     *
+     * @return undefined
+     */
+    function
+    CBAdminPageForUpdate_createSubmoduleAnchorElement(
+        parentElementArgument,
+        submodulePathArgument
+    ) // -> Element
+    {
+        let anchorElement =
+        document.createElement(
+            "a"
+        );
+
+        anchorElement.textContent =
+        submodulePathArgument;
+
+        parentElementArgument.append(
+            anchorElement
+        );
+    }
+    // CBAdminPageForUpdate_createSubmoduleAnchorElement()
+
+
+
+    /**
      * @return Element
      */
     function
@@ -100,32 +127,13 @@
 
 
         CBAdminPageForUpdate_arrayOfSubmodulePaths_jsvariable.forEach(
-
-            /**
-             * @param string submodulePath
-             *
-             * @return undefined
-             */
-            function(
-                submodulePath
-            ) // -> undefined
-            {
-                let anchorElement =
-                document.createElement(
-                    "a"
-                );
-
-
-                anchorElement.textContent =
-                submodulePath;
-
-                rootElement.append(
-                    anchorElement
+            function (submodulePath) {
+                CBAdminPageForUpdate_createSubmoduleAnchorElement(
+                    rootElement,
+                    submodulePath
                 );
             }
-
         );
-        // forEach
 
 
 
