@@ -21,6 +21,9 @@
 .CBAdminPageForUpdate_submodules_root_element
 a
 {
+    cursor:
+    default;
+
     margin-left:
     20px;
 
