@@ -62,11 +62,13 @@ CBUIExpander
     {
         $arrayOfRequiredClassNames =
         [
+            'CBConvert',
+            'CBMessageMarkup',
+            'Colby',
+
             'CB_MaterialSymbols',
             'CB_UI',
             'CBContentStyleSheet',
-            'CBConvert',
-            'CBMessageMarkup'
         ];
 
         return $arrayOfRequiredClassNames;
