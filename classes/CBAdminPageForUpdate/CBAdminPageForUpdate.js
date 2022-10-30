@@ -104,6 +104,32 @@
         parentElementArgument.append(
             anchorElement
         );
+
+        anchorElement.addEventListener(
+            "click",
+            function () { closure_handleClick(); }
+        );
+
+
+
+        /**
+         * @return undefined
+         */
+        function
+        closure_handleClick(
+        ) // -> undefined
+        {
+            CBAdminPageForUpdate_runTask(
+                submodulePathArgument,
+                function () {
+                    CBAdminPageForUpdate_performSubmoduleTask(
+                        submodulePathArgument
+                    );
+                }
+            );
+        }
+        // closure_handleClick()
+
     }
     // CBAdminPageForUpdate_createSubmoduleAnchorElement()
 
@@ -375,6 +401,40 @@
         return sectionContainerElement;
     }
     /* createPullColbySectionElement() */
+
+
+
+    /**
+     * @param string submodulePathArgument
+     *
+     * @return undefined
+     */
+    async function
+    CBAdminPageForUpdate_performSubmoduleTask(
+        submodulePathArgument
+    ) // -> Promise -> undefined
+    {
+        shared_outputElement.textContent =
+        "";
+
+        let expander =
+        CBUIExpander.create();
+
+        shared_outputElement.append(
+            expander.element
+        );
+
+
+        expander.expanded =
+        true;
+
+        expander.message =
+        "foo";
+
+        expander.title =
+        submodulePathArgument;
+    }
+    // CBAdminPageForUpdate_performSubmoduleTask()
 
 
 
