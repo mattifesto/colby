@@ -10,49 +10,95 @@ CBModelsAdminMenu
     /**
      * @return void
      */
-    static function CBInstall_install(): void {
-        $adminMenuSpec = CBModels::fetchSpecByID(
+    static function
+    CBInstall_install(
+    ): void
+    {
+        $adminMenuSpec =
+        CBModels::fetchSpecByID(
             CBAdminMenu::ID()
         );
 
-        $adminMenuSpec->items[] = (object)[
-            'className' => 'CBMenuItem',
-            'name' => 'models',
-            'submenuID' => CBModelsAdminMenu::ID(),
-            'text' => 'Models',
-            'URL' => CBAdmin::getAdminPageURL(
+        $adminMenuSpec->items[] =
+        (object)
+        [
+            'className' =>
+            'CBMenuItem',
+
+            'name' =>
+            'models',
+
+            'submenuID' =>
+            CBModelsAdminMenu::ID(),
+
+            'text' =>
+            'Models',
+
+            'URL' =>
+            CBAdmin::getAdminPageURL(
                 'Admin_CBModelClassList'
             ),
         ];
 
-        $modelsMenuSpec = (object)[
-            'className' => 'CBMenu',
-            'ID' => CBModelsAdminMenu::ID(),
-            'title' => 'Models',
-            'titleURI' => CBAdmin::getAdminPageURL(
+        $modelsMenuSpec =
+        (object)
+        [
+            'className' =>
+            'CBMenu',
+
+            'ID' =>
+            CBModelsAdminMenu::ID(),
+
+            'title' =>
+            'Models',
+
+            'titleURI' =>
+            CBAdmin::getAdminPageURL(
                 'Admin_CBModelClassList'
             ),
-            'items' => [
-                (object)[
-                    'className' => 'CBMenuItem',
-                    'name' => 'inspector',
-                    'text' => 'Inspector',
-                    'URL' => '/admin/?c=CBModelInspector',
+
+            'items' =>
+            [
+                (object)
+                [
+                    'className' =>
+                    'CBMenuItem',
+
+                    'name' =>
+                    'inspector',
+
+                    'text' =>
+                    'Inspector',
+
+                    'URL' =>
+                    '/admin/?c=CBModelInspector',
                 ],
             ],
         ];
 
         CBDB::transaction(
-            function () use ($adminMenuSpec, $modelsMenuSpec) {
-                CBModels::save($adminMenuSpec);
+
+            function (
+            ) use (
+                $adminMenuSpec,
+                $modelsMenuSpec
+            ) {
+                CBModels::save(
+                    $adminMenuSpec
+                );
 
                 CBModels::deleteByID(
                     CBModelsAdminMenu::ID()
                 );
 
-                CBModels::save($modelsMenuSpec);
+                CBModels::save(
+                    $modelsMenuSpec
+                );
             }
+
         );
+        // CBDB::transaction()
+
     }
     /* CBInstall_install() */
 
