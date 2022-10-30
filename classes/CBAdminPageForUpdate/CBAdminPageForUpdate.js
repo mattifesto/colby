@@ -371,40 +371,54 @@
 
 
     /**
-     * TODO maybe make task not a closure
-     *
      * This function fully handles an attempt to run a task.
      *
      * @param string title
      * @param function callback
      *
-     * @return undefined
+     * @return Promise -> undefined
      */
-    function task(title, callback) {
-        if (taskIsRunning) {
-            CBUIPanel.displayText2(
-                "A task is already running."
+    async function
+    task(
+        title,
+        callback
+    ) {
+        try
+        {
+            if (
+                taskIsRunning
+            ) {
+                CBUIPanel.displayText2(
+                    "A task is already running."
+                );
+
+                return;
+            }
+
+            taskIsRunning =
+            true;
+
+            shared_outputElement.textContent =
+            "";
+
+            await
+            CBMaintenance.transaction(
+                title,
+                callback
             );
 
-            return;
+            taskIsRunning = false;
         }
 
-        shared_outputElement.textContent = "";
-        taskIsRunning = true;
+        catch (
+            error
+        ) {
+            CBUIPanel.displayAndReportError(
+                error
+            );
 
-        Promise.resolve().then(
-            function () {
-                return CBMaintenance.transaction(title, callback);
-            }
-        ).finally(
-            function () {
-                taskIsRunning = false;
-            }
-        ).catch(
-            function (error) {
-                CBUIPanel.displayAndReportError(error);
-            }
-        );
+            taskIsRunning = false;
+        }
     }
     /* task() */
 
