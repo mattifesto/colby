@@ -163,7 +163,7 @@
         buttonElement.addEventListener(
             "click",
             function () {
-                task(
+                CBAdminPageForUpdate_runTask(
                     "Backup, Pull Website, and Update",
                     function () {
                         return Promise.resolve().then(
@@ -222,7 +222,7 @@
             actionElement.addEventListener(
                 "click",
                 function () {
-                    task(
+                    CBAdminPageForUpdate_runTask(
                         "Backup Database",
                         function () {
                             return promiseToBackupDatabase();
@@ -249,7 +249,7 @@
             actionElement.addEventListener(
                 "click",
                 function () {
-                    task(
+                    CBAdminPageForUpdate_runTask(
                         "Pull Colby",
                         function () {
                             return CBAdminPageForUpdate_pull(
@@ -273,7 +273,7 @@
             actionElement.addEventListener(
                 "click",
                 function () {
-                    task(
+                    CBAdminPageForUpdate_runTask(
                         "Pull Website",
                         function () {
                             return CBAdminPageForUpdate_pull(
@@ -302,7 +302,7 @@
             actionElement.addEventListener(
                 "click",
                 function () {
-                    task(
+                    CBAdminPageForUpdate_runTask(
                         "Update Site",
                         function () {
                             return promiseToUpdateSite();
@@ -349,7 +349,7 @@
         actionElement.addEventListener(
             "click",
             function () {
-                task(
+                CBAdminPageForUpdate_runTask(
                     "Backup and Update Colby",
                     function () {
                         return Promise.resolve().then(
@@ -387,7 +387,7 @@
      * @return Promise -> undefined
      */
     async function
-    task(
+    CBAdminPageForUpdate_runTask(
         title,
         callback
     ) {
@@ -428,7 +428,7 @@
             taskIsRunning = false;
         }
     }
-    /* task() */
+    /* CBAdminPageForUpdate_runTask() */
 
 
 
