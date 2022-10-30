@@ -16,7 +16,7 @@
 
 
 .CBUIExpander_container {
-    border: 1px solid var(--CBUIBorderColor);
+    border: 1px solid var(--CB_UI_borderColor);
     border-radius: 3px;
     overflow: hidden;
 }
@@ -41,7 +41,7 @@
 
 
 .CBUIExpander.expanded .CBUIExpander_header {
-    border-bottom: 1px solid var(--CBUIBorderColor);
+    border-bottom: 1px solid var(--CB_UI_borderColor);
 }
 
 .CBUIExpander_toggle {
