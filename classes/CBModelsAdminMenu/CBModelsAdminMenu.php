@@ -36,7 +36,7 @@ CBModelsAdminMenu
 
             'URL' =>
             CBAdmin::getAdminPageURL(
-                'Admin_CBModelClassList'
+                'CB_Admin_ModelSearch'
             ),
         ];
 
@@ -54,7 +54,7 @@ CBModelsAdminMenu
 
             'titleURI' =>
             CBAdmin::getAdminPageURL(
-                'Admin_CBModelClassList'
+                'CB_Admin_ModelSearch'
             ),
 
             'items' =>
