@@ -25,7 +25,11 @@
 
 .CBUIExpander_header
 {
-    display: flex;
+    background-color:
+    var(--CB_UI_borderColor);
+
+    display:
+    flex;
 
     -webkit-user-select:
     none;
