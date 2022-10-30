@@ -172,7 +172,9 @@
                             }
                         ).then (
                             function () {
-                                return promiseToPullWebsite();
+                                return CBAdminPageForUpdate_pull(
+                                    "website"
+                                );
                             }
                         ).then(
                             function () {
@@ -250,7 +252,9 @@
                     task(
                         "Pull Colby",
                         function () {
-                            return promiseToPullColby();
+                            return CBAdminPageForUpdate_pull(
+                                "colby"
+                            );
                         }
                     );
                 }
@@ -272,7 +276,9 @@
                     task(
                         "Pull Website",
                         function () {
-                            return promiseToPullWebsite();
+                            return CBAdminPageForUpdate_pull(
+                                "website"
+                            );
                         }
                     );
                 }
@@ -352,7 +358,9 @@
                             }
                         ).then(
                             function () {
-                                return promiseToPullColby();
+                                return CBAdminPageForUpdate_pull(
+                                    "colby"
+                                );
                             }
                         ).then(
                             function () {
@@ -451,81 +459,116 @@
 
 
     /**
-     * @return Promise
+     * @param string targetArgument
+     *
+     * @return Promise -> undefined
      */
-    function promiseToPullWebsite() {
-        let expander = CBUIExpander.create();
-        expander.title = "pull website in progress";
-        expander.timestamp = Date.now() / 1000;
+    async function
+    CBAdminPageForUpdate_pull(
+        targetArgument
+    ) // -> Promise -> undefined
+    {
+        try
+        {
+            let ajaxFunctionName;
 
-        shared_outputElement.appendChild(expander.element);
+            switch (
+                targetArgument
+            ) {
+                case "colby":
 
-        let promise = CBAjax.call(
-            "CBAdminPageForUpdate",
-            "pull"
-        ).then(
-            function (response) {
-                let message = [
-                    "--- pre green",
-                    CBMessageMarkup.stringToMessage(response.output),
-                    "---",
-                ].join("\n");
+                ajaxFunctionName =
+                "pullColby";
 
-                expander.message = message;
-                expander.timestamp = Date.now() / 1000;
+                break;
 
-                if (response.succeeded) {
-                    expander.title = "pull website completed";
-                } else {
-                    expander.title = "pull website failed";
-                    expander.severity = 3;
-                }
+
+
+                case "website":
+
+                ajaxFunctionName =
+                "pull";
+
+                break;
+
+
+                default:
+
+                throw Error(
+                    "Unrecognized targetArgument"
+                );
             }
-        );
 
-        return promise;
-    }
-    /* promiseToPullWebsite() */
+            let expander =
+            CBUIExpander.create();
 
+            expander.title =
+            `pull ${targetArgument} in progress`;
 
+            expander.timestamp =
+            Date.now() /
+            1000;
 
-    /**
-     * @return Promise
-     */
-    function promiseToPullColby() {
-        let expander = CBUIExpander.create();
-        expander.title = "pull colby in progress";
-        expander.timestamp = Date.now() / 1000;
+            shared_outputElement.append(
+                expander.element
+            );
 
-        shared_outputElement.appendChild(
-            expander.element
-        );
+            let response =
+            await
+            CBAjax.call(
+                "CBAdminPageForUpdate",
+                ajaxFunctionName
+            );
 
-        let promise = CBAjax.call(
-            "CBAdminPageForUpdate",
-            "pullColby"
-        ).then(
-            function (response) {
-                let message = [
-                    "--- pre green",
-                    CBMessageMarkup.stringToMessage(response.output),
-                    "---",
-                ].join("\n");
+            let cbmessage =
+            [
+                "--- pre green",
 
-                expander.message = message;
-                expander.timestamp = Date.now() / 1000;
+                CBMessageMarkup.stringToMessage(
+                    response.output
+                ),
 
-                if (response.succeeded) {
-                    expander.title = "pull colby completed";
-                } else {
-                    expander.title = "pull colby failed";
-                    expander.severity = 3;
-                }
+                "---",
+            ].join(
+                "\n"
+            );
+
+            expander.message =
+            cbmessage;
+
+            expander.timestamp =
+            Date.now() /
+            1000;
+
+            if (
+                response.succeeded
+            ) {
+                expander.title =
+                `pull ${targetArgument} completed`;
             }
-        );
 
-        return promise;
+            else
+            {
+                expander.title =
+                `pull ${targetArgument} failed`;
+
+                expander.severity =
+                3;
+            }
+
+            expander.expanded =
+            true;
+        }
+
+        catch (
+            error
+        ) {
+            CBUIPanel.displayAndReportError(
+                error
+            );
+        }
     }
+    // CBAdminPageForUpdate_pull()
 
 
 
