@@ -382,9 +382,9 @@
      */
     function task(title, callback) {
         if (taskIsRunning) {
-            let error = new Error("A task is already running.");
-
-            CBUIPanel.displayAndReportError(error);
+            CBUIPanel.displayText2(
+                "A task is already running."
+            );
 
             return;
         }
