@@ -40,10 +40,6 @@
 
 
 
-.CBUIExpander.expanded .CBUIExpander_header {
-    border-bottom: 1px solid var(--CB_UI_borderColor);
-}
-
 .CBUIExpander_toggle {
     display: flex;
     align-items: center;
