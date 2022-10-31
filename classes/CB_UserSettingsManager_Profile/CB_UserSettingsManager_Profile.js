@@ -8,7 +8,8 @@
 */
 
 
-(function () {
+(function ()
+{
     "use strict";
 
 
@@ -371,4 +372,5 @@
     }
     // scheduleProfileSave()
 
-})();
+}
+)();
