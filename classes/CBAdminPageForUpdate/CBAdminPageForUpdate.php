@@ -195,7 +195,7 @@ CBAdminPageForUpdate
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_10_29_1667059611',
+                '2022_10_30_1667167671',
                 'css',
                 cbsysurl()
             ),
@@ -218,7 +218,7 @@ CBAdminPageForUpdate
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_10_29_1667058389',
+                '2022_10_30_1667148515',
                 'js',
                 cbsysurl()
             ),
