@@ -18,7 +18,7 @@ CB_CBView_MainHeader
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_10_25_1666662316',
+                '2022_11_01_1667328621',
                 'css',
                 cbsysurl()
             ),
