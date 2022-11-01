@@ -20,8 +20,11 @@ CB_Ajax_User_UpdateProfile
      *          CB_Ajax_User_UpdateProfile_targetUserFullName_argument:
      *          <string>,
      *
+     *          CB_Ajax_User_UpdateProfile_targetUserProfileImageModel_argument:
+     *          <CBImage model>|null,
+     *
      *          CB_Ajax_User_UpdateProfile_targetUserProfileLinkArray_argument:
-     *          <array>,
+     *          <CB_Link_Array model>,
      *      }
      *
      * @param CBID|null $callingUserModelCBID
@@ -76,6 +79,22 @@ CB_Ajax_User_UpdateProfile
         CBUser::setName(
             $targetUserSpec,
             $updatedTargetUserFullName
+        );
+
+
+
+        // profile image model
+
+        $updatedTargetUserProfileImageModel =
+        CBModel::valueAsModel(
+            $executorArguments,
+            'CB_Ajax_User_UpdateProfile_targetUserProfileImageModel_argument',
+            'CBImage'
+        );
+
+        CBUser::setProfileImageModel(
+            $targetUserSpec,
+            $updatedTargetUserProfileImageModel
         );
 
 
