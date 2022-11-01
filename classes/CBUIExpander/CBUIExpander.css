@@ -40,19 +40,37 @@
 
 
 
-.CBUIExpander_toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.CBUIExpander_toggle
+{
+    display:
+    flex;
 
-    box-sizing: border-box;
-    flex: none;
-    min-height: 50px;
-    user-select: none;
-    width: 50px;
+    align-items:
+    center;
 
-    -webkit-user-select: none;
-    user-select: none;
+    justify-content:
+    center;
+
+    box-sizing:
+    border-box;
+
+    flex:
+    none;
+
+    min-height:
+    50px;
+
+    user-select:
+    none;
+
+    width:
+    50px;
+
+    -webkit-user-select:
+    none;
+
+    user-select:
+    none;
 }
 
 
