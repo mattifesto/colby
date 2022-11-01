@@ -922,6 +922,40 @@ CBUser
             )
         );
 
+
+
+        // profile image model
+
+        $profileImageSpec =
+        CBUser::getProfileImageModel(
+            $spec
+        );
+
+        if (
+            $profileImageSpec ===
+            null
+        ) {
+            $profileImageModel =
+            null;
+        }
+
+        else
+        {
+            $profileImageModel =
+            CBModel::build(
+                $profileImageSpec
+            );
+        }
+
+        CBUser::setProfileImageModel(
+            $userModel,
+            $profileImageModel
+        );
+
+
+
+        // profile link array
+
         CBUser::setProfileLinkArray(
             $userModel,
             CBUser::getProfileLinkArray(
@@ -1780,6 +1814,68 @@ CBUser
 
 
     /**
+     * @param object $userModelArgument
+     *
+     * @return <CBImage model>
+     */
+    static function
+    getProfileImageModel(
+        stdClass $userModelArgument
+    ): ?stdClass
+    {
+        $profileImageModel =
+        CBModel::valueAsModel(
+            $userModelArgument,
+            'CBUser_profileImageModel_property'
+        );
+
+        return $profileImageModel;
+    }
+    // getProfileImageModel()
+
+
+
+    /**
+     * @param object $userModelArgument
+     * @param <CBImage model>|null $newProfileImageModelArgument
+     *
+     * @return void
+     */
+    static function
+    setProfileImageModel(
+        stdClass $userModelArgument,
+        ?stdClass $newProfileImageModelArgument
+    ): void
+    {
+        if (
+            $newProfileImageModelArgument !==
+            null
+        ) {
+            $newProfileImageModelClasName =
+            CBModel::getClassName(
+                $newProfileImageModelArgument
+            );
+
+            if (
+                $newProfileImageModelClasName !==
+                'CBImage'
+            ) {
+                throw new CBExceptionWithValue(
+                    'The new profile image model is not valid.',
+                    $newProfileImageModelArgument,
+                    'a779a40f8605850ea2c6fc5b9d1337b80210122e'
+                );
+            }
+        }
+
+        $userModelArgument->CBUser_profileImageModel_property =
+        $newProfileImageModelArgument;
+    }
+    // setProfileImageModel()
+
+
+
+    /**
      * @param object $userModel
      *
      * @return <CB_Link_Array model>
@@ -1843,7 +1939,7 @@ CBUser
         $userModel->CBUser_profileLinkArray_property =
         $newLinkArrayModel;
     }
-    // setProfileLinks()
+    // setProfileLinkArray()
 
 
 
