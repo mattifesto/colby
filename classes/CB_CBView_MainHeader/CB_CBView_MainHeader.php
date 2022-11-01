@@ -96,15 +96,12 @@ CB_CBView_MainHeader
         if (
             $currentPrettyUsername === null
         ) {
-            $userEmoji =
-            '👤';
-
             $userURL =
             CBUser::getSignInPageURL();
-        } else {
-            $userEmoji =
-            '👨';
+        }
 
+        else
+        {
             $userURL =
             "/user/{$currentPrettyUsername}/";
         }
