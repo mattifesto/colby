@@ -93,6 +93,9 @@ CB_CBView_MainHeader
         $currentPrettyUsername =
         CB_Username::fetchCurrentUserPrettyUsername();
 
+        $currentUserProfileImageModel =
+        null;
+
         if (
             $currentPrettyUsername === null
         ) {
@@ -104,6 +107,19 @@ CB_CBView_MainHeader
         {
             $userURL =
             "/user/{$currentPrettyUsername}/";
+
+            $currentUserCBID =
+            ColbyUser::getCurrentUserCBID();
+
+            $currentUserModel =
+            CBModelCache::fetchModelByCBID(
+                $currentUserCBID
+            );
+
+            $currentUserProfileImageModel =
+            CBUser::getProfileImageModel(
+                $currentUserModel
+            );
         }
 
         echo
@@ -152,7 +168,12 @@ CB_CBView_MainHeader
         CB_CBView_MainHeader::renderItem(
             'person',
             $userURL,
-            'CB_MaterialSymbols_characters'
+            'CB_CBView_MainHeader_personItem_element',
+            null, // context
+            $currentUserProfileImageModel,
+            [
+                'CB_MaterialSymbols_characters',
+            ]
         );
 
         echo
