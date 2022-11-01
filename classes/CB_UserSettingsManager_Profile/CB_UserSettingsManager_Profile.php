@@ -18,7 +18,7 @@ CB_UserSettingsManager_Profile
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_08_09_1660008192',
+                '2022_10_31_1667224761',
                 'js',
                 cbsysurl()
             ),
