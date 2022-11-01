@@ -9,14 +9,20 @@
  * This class is agnostic as to what happens after an image is selected or
  * removed.
  */
-(function () {
+(function ()
+{
     "use strict";
 
-    window.CB_UI_ImageChooser =
+
+
+    let CB_UI_ImageChooser =
     {
         create:
         CB_UI_ImageChooser_create,
     };
+
+    window.CB_UI_ImageChooser =
+    CB_UI_ImageChooser;
 
 
 
@@ -28,6 +34,7 @@
     ) // -> object
     {
         let imageWasChosenCallback;
+        let imageWasRemovedCallback;
         let currentImageModel;
 
         let rootElement =
@@ -150,6 +157,9 @@
         );
 
 
+
+        // remove button
+
         let removeButton =
         CBUIButton.create();
 
@@ -157,25 +167,17 @@
             "Remove"
         );
 
-        buttonContainerElement.append(
-            removeButton.CBUIButton_getElement()
-        );
-
         removeButton.CBUIButton_addClickEventListener(
-            function ()
-            {
-                /*
-                api.caption = "";
-                api.src = "";
-
+            function () {
                 if (
-                    typeof removedCallback === "function"
+                    imageWasRemovedCallback !==
+                    undefined
                 ) {
-                    removedCallback();
+                    imageWasRemovedCallback();
                 }
-                */
             }
         );
+
 
 
         /**
@@ -281,6 +283,40 @@
 
 
         /**
+         * @param function newImageWasChosenCallack
+         *
+         * @return undefined
+         */
+        function
+        CB_UI_ImageChooser_setImageWasRemovedCallback(
+            newImageWasRemovedCallack
+        ) // -> undefined
+        {
+            if (
+                typeof newImageWasRemovedCallack ===
+                "function"
+            ) {
+                imageWasRemovedCallback =
+                newImageWasRemovedCallack;
+
+                buttonContainerElement.append(
+                    removeButton.CBUIButton_getElement()
+                );
+            }
+
+            else
+            {
+                imageWasRemovedCallback =
+                undefined;
+
+                removeButton.CBUIButton_getElement().remove();
+            }
+        }
+        // CB_UI_ImageChooser_setImageWasChosenCallback()
+
+
+
+        /**
          * @param string newTitle
          *
          * @return undefined
@@ -296,7 +332,8 @@
 
 
 
-        return {
+        let imageChooserController =
+        {
             CB_UI_ImageChooser_getElement,
 
             CB_UI_ImageChooser_setImage,
@@ -305,8 +342,12 @@
 
             CB_UI_ImageChooser_setImageWasChosenCallback,
 
+            CB_UI_ImageChooser_setImageWasRemovedCallback,
+
             CB_UI_ImageChooser_setTitle,
         };
+
+        return imageChooserController;
     }
     // CBUIImageChooser_create()
 
@@ -334,4 +375,5 @@
     }
     // CB_UI_ImageChooser_createImageFileInputElement()
 
-})();
+}
+)();
