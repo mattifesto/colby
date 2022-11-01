@@ -14,11 +14,13 @@
 
 
 
-    /* public API */
-
-    window.CB_UserSettingsManager_Profile = {
+    let CB_UserSettingsManager_Profile =
+    {
         CBUserSettingsManager_createElement,
     };
+
+    window.CB_UserSettingsManager_Profile =
+    CB_UserSettingsManager_Profile;
 
 
 
