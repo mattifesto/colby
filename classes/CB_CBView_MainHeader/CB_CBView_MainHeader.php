@@ -160,12 +160,6 @@ CB_CBView_MainHeader
         );
 
         CB_CBView_MainHeader::renderItem(
-            'search',
-            '/search/',
-            'CB_MaterialSymbols_characters'
-        );
-
-        CB_CBView_MainHeader::renderItem(
             'person',
             $userURL,
             'CB_CBView_MainHeader_personItem_element',
@@ -174,6 +168,12 @@ CB_CBView_MainHeader
             [
                 'CB_MaterialSymbols_characters',
             ]
+        );
+
+        CB_CBView_MainHeader::renderItem(
+            'search',
+            '/search/',
+            'CB_MaterialSymbols_characters'
         );
 
         echo
