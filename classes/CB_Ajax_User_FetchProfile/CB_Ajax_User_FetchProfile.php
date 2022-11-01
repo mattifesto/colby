@@ -29,6 +29,12 @@ CB_Ajax_User_FetchProfile
      *
      *          CB_Ajax_User_FetchProfile_fullName:
      *          <string>,
+     *
+     *          CB_Ajax_User_FetchProfile_profileImageModel:
+     *          <CBImage model>|null,
+     *
+     *          CB_Ajax_User_FetchProfile_profileLinkArray:
+     *          <CB_Link_Array model>,
      *      }
      */
     static function
@@ -58,6 +64,11 @@ CB_Ajax_User_FetchProfile
             $targetUserModel
         );
 
+        $targetUserProfileImageModel =
+        CBUser::getProfileImageModel(
+            $targetUserModel
+        );
+
         $targetUserProfileLinkArray =
         CBUser::getProfileLinkArray(
             $targetUserModel
@@ -73,6 +84,9 @@ CB_Ajax_User_FetchProfile
 
             'CB_Ajax_User_FetchProfile_fullName' =>
             $targetUserFullName,
+
+            'CB_Ajax_User_FetchProfile_profileImageModel' =>
+            $targetUserProfileImageModel,
 
             'CB_Ajax_User_FetchProfile_profileLinkArray' =>
             $targetUserProfileLinkArray,
