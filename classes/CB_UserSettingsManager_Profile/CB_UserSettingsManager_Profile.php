@@ -40,6 +40,7 @@ CB_UserSettingsManager_Profile
         $requiredClassNames =
         [
             'CB_Link_ArrayEditor',
+            'CB_UI_ImageChooser',
             'CB_UI_StringEditor',
             'CBAjax',
             'CBException',
