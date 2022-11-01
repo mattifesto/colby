@@ -18,7 +18,7 @@ CBUIExpander
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_10_30_1667151664',
+                '2022_11_01_1667345846',
                 'css',
                 cbsysurl()
             ),
