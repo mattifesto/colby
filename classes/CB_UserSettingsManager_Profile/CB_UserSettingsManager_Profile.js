@@ -186,6 +186,10 @@
             CB_UserSettingsManager_Profile_imageWasChosenCallback
         );
 
+        imageChooser.CB_UI_ImageChooser_setImageWasRemovedCallback(
+            CB_UserSettingsManager_Profile_imageWasRemovedCallback
+        );
+
         imageChooser.CB_UI_ImageChooser_setTitle(
             'Profile Image'
         );
@@ -237,6 +241,44 @@
         }
     }
     // CB_UserSettingsManager_Profile_imageWasChosenCallback()
+
+
+
+    /**
+     * @return Promise -> undefined
+     */
+    async function
+    CB_UserSettingsManager_Profile_imageWasRemovedCallback(
+    ) // Promise -> undefined
+    {
+        try
+        {
+            shared_profileImageChooser.CB_UI_ImageChooser_setTitle(
+                'removing...'
+            );
+
+            shared_profileImageModel =
+            undefined;
+
+            /**
+             * @NOTE 2022_11_01_1667322021
+             *
+             *      The image chooser title and image will be reset when the
+             *      profile is successfuly saved.
+             */
+
+            scheduleProfileSave();
+        }
+
+        catch (
+            error
+        ) {
+            CBUIPanel.displayAndReportError(
+                error
+            );
+        }
+    }
+    // CB_UserSettingsManager_Profile_imageWasRemovedCallback()
 
 
 
