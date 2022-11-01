@@ -34,7 +34,7 @@ CB_UI_ImageChooser
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        return
+        $arrayOfJavaScriptURLs =
         [
             Colby::flexpath(
                 __CLASS__,
@@ -42,8 +42,10 @@ CB_UI_ImageChooser
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfJavaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
