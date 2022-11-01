@@ -46,7 +46,6 @@
     justify-content: center;
 
     box-sizing: border-box;
-    color: hsla(0, 100%, 100%, 0.9);
     flex: none;
     min-height: 50px;
     user-select: none;
