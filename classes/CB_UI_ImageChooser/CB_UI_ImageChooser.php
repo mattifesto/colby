@@ -56,6 +56,7 @@ CB_UI_ImageChooser
     {
         $arrayOfRequiredClassNames =
         [
+            'CBConvert',
             'CBImage',
             'CBUIButton',
         ];
