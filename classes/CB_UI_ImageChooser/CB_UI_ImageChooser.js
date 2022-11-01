@@ -1,4 +1,5 @@
 /* global
+    CBConvert,
     CBImage,
     CBUIButton,
 */
@@ -191,7 +192,7 @@
 
 
         /**
-         * @param object|undefined newImageModel
+         * @param object|undefined newImageModelArgument
          *
          *      Pass undefined to remove the image.
          *
@@ -199,13 +200,18 @@
          */
         function
         CB_UI_ImageChooser_setImage(
-            newImageModel
+            newImageModelArgument
         ) // -> undefined
         {
-            currentImageModel = newImageModel;
+            currentImageModel =
+            CBConvert.valueAsModel(
+                newImageModelArgument,
+                "CBImage"
+            );
 
             if (
-                typeof currentImageModel === "object"
+                currentImageModel !==
+                undefined
             ) {
                 imageContainerElement.textContent =
                 "";
@@ -222,7 +228,10 @@
                 removeButton.CBUIButton_setIsDisabled(
                     false
                 );
-            } else {
+            }
+
+            else
+            {
                 imageContainerElement.textContent =
                 "";
 
