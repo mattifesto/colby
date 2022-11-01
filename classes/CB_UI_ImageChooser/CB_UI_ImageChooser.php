@@ -54,11 +54,14 @@ CB_UI_ImageChooser
     CBHTMLOutput_requiredClassNames(
     ): array
     {
-        return [
+        $arrayOfRequiredClassNames =
+        [
             'CBImage',
             'CBUIButton',
         ];
+
+        return $arrayOfRequiredClassNames;
     }
-    /* CBHTMLOutput_requiredClassNames() */
+    // CBHTMLOutput_requiredClassNames()
 
 }
