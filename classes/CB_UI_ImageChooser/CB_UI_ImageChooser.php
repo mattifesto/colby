@@ -36,9 +36,10 @@ CB_UI_ImageChooser
     {
         $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.61.3.js',
+                '2022_11_01_1667326891',
+                'js',
                 cbsysurl()
             ),
         ];
