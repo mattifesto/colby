@@ -1,6 +1,7 @@
 /* global
     CB_Link_ArrayEditor,
     CB_UI_StringEditor,
+    CB_UI_ImageChooser,
     CBAjax,
     CBException,
     CBModel,
@@ -23,6 +24,9 @@
     CB_UserSettingsManager_Profile;
 
 
+
+    let shared_profileImageChooser;
+    let shared_profileImageModel;
 
     let bioEditor;
     let fullNameEditor;
@@ -71,6 +75,13 @@
 
         rootElement.className =
         "CB_UserSettingsManager_Profile";
+
+
+
+        shared_profileImageChooser =
+        CB_UserSettingsManager_Profile_createImageChooser(
+            rootElement
+        );
 
 
 
@@ -155,6 +166,81 @@
 
 
     /**
+     * @param Element parentElementArgument
+     *
+     * @return <CB_UI_ImageChooser controller>
+     */
+    function
+    CB_UserSettingsManager_Profile_createImageChooser(
+        parentElementArgument
+    ) // -> object
+    {
+        let imageChooser =
+        CB_UI_ImageChooser.create();
+
+        parentElementArgument.append(
+            imageChooser.CB_UI_ImageChooser_getElement()
+        );
+
+        imageChooser.CB_UI_ImageChooser_setImageWasChosenCallback(
+            CB_UserSettingsManager_Profile_imageWasChosenCallback
+        );
+
+        imageChooser.CB_UI_ImageChooser_setTitle(
+            'Profile Image'
+        );
+
+        return imageChooser;
+    }
+    // CB_UserSettingsManager_Profile_createImageChooser()
+
+
+
+    /**
+     * @return Promise -> undefined
+     */
+    async function
+    CB_UserSettingsManager_Profile_imageWasChosenCallback(
+    ) // Promise -> undefined
+    {
+        try
+        {
+            shared_profileImageChooser.CB_UI_ImageChooser_setTitle(
+                'uploading...'
+            );
+
+            shared_profileImageModel =
+            await
+            CBAjax.call(
+                "CBImages",
+                "upload",
+                {},
+                shared_profileImageChooser.CB_UI_ImageChooser_getImageFile()
+            );
+
+            /**
+             * @NOTE 2022_11_01_1667322021
+             *
+             *      The image chooser title and image will be reset when the
+             *      profile is successfuly saved.
+             */
+
+            scheduleProfileSave();
+        }
+
+        catch (
+            error
+        ) {
+            CBUIPanel.displayAndReportError(
+                error
+            );
+        }
+    }
+    // CB_UserSettingsManager_Profile_imageWasChosenCallback()
+
+
+
+    /**
      * @param object result
      *
      * @return undefined
@@ -181,6 +267,10 @@
         );
 
         initializeBio(
+            userProfile
+        );
+
+        CB_UserSettingsManager_Profile_initializeProfileImageModel(
             userProfile
         );
 
@@ -219,6 +309,27 @@
         );
     }
     // initializeBio()
+
+
+
+    /**
+     * @param object userProfileArgument
+     *
+     * @return undefined
+     */
+    function
+    CB_UserSettingsManager_Profile_initializeProfileImageModel(
+        userProfileArgument
+    ) // -> undefined
+    {
+        shared_profileImageModel =
+        userProfileArgument.CB_Ajax_User_FetchProfile_profileImageModel;
+
+        shared_profileImageChooser.CB_UI_ImageChooser_setImage(
+            shared_profileImageModel
+        );
+    }
+    // CB_Ajax_User_FetchProfile_profileImageModel()
 
 
 
@@ -291,6 +402,9 @@
                     CB_Ajax_User_UpdateProfile_targetUserFullName_argument:
                     fullNameEditor.CB_UI_StringEditor_getValue(),
 
+                    CB_Ajax_User_UpdateProfile_targetUserProfileImageModel_argument:
+                    shared_profileImageModel,
+
                     CB_Ajax_User_UpdateProfile_targetUserProfileLinkArray_argument:
                     profileLinkArrayEditor.CB_Link_ArrayEditor_getValue(),
                 }
@@ -314,6 +428,14 @@
 
                 profileLinkArrayEditor.CB_Link_ArrayEditor_setTitle(
                     "Profile Links"
+                );
+
+                shared_profileImageChooser.CB_UI_ImageChooser_setTitle(
+                    'Profile Image'
+                );
+
+                shared_profileImageChooser.CB_UI_ImageChooser_setImage(
+                    shared_profileImageModel
                 );
             }
         }
