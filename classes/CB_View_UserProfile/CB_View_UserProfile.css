@@ -69,6 +69,35 @@ img
 
 
 
+.CB_View_UserProfile_editProfileSection_root_element
+{
+    padding-bottom:
+    20px;
+
+    text-align:
+    right;
+}
+
+
+
+.CB_View_UserProfile_editProfileSection_root_element
+a
+{
+    background-color:
+    var(--CBButtonBackgroundColor);
+
+    border-radius:
+    1000px;
+
+    color:
+    var(--CBButtonTextColor);
+
+    padding:
+    6px 15px 7px;
+}
+
+
+
 .CB_View_UserProfile_fullNameElement
 {
     font-size:
@@ -89,7 +118,6 @@ img
 
 
 .CB_View_UserProfile_bioElement,
-.CB_View_UserProfile_editProfileElement,
 .CB_View_UserProfile_linksElement
 {
     padding-top:
