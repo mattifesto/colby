@@ -32,6 +32,43 @@
 
 
 
+.CB_View_UserProfile_imageContainer_element
+{
+    padding-bottom:
+    20px;
+}
+
+
+
+.CB_View_UserProfile_imageContainer_element
+img
+{
+    border:
+    1px solid var(--CB_UI_borderColor);
+
+    border-radius:
+    1000px;
+}
+
+
+
+.CB_View_UserProfile_emptyProfileImage_element
+{
+    background-color:
+    var(--CB_UI_borderColor);
+
+    border-radius:
+    1000px;
+
+    height:
+    161px;
+
+    width:
+    161px;
+}
+
+
+
 .CB_View_UserProfile_fullNameElement
 {
     font-size:
