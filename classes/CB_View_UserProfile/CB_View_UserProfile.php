@@ -128,6 +128,10 @@ CB_View_UserProfile
             $userModel
         );
 
+        CB_View_UserProfile::renderEditProfileSection(
+            $userModel
+        );
+
         CB_View_UserProfile::renderName(
             $userModel
         );
@@ -233,23 +237,6 @@ CB_View_UserProfile
             '</div>';
         }
 
-        // edit profile
-
-        $currentUseModelCBID =
-        ColbyUser::getCurrentUserCBID();
-
-        if (
-            $userModelCBID ===
-            $currentUseModelCBID
-        ) {
-            echo
-            '<div class="CB_View_UserProfile_editProfileElement">',
-            '<a href="/colby/user/">',
-            'edit profile',
-            '</a>',
-            '</div>';
-        }
-
 
 
         // close
@@ -262,6 +249,46 @@ CB_View_UserProfile
 
 
     // functions
+
+
+
+    /**
+     * @param object $userModelArgument
+     *
+     * @return void
+     */
+    private static function
+    renderEditProfileSection(
+        stdClass $userModelArgument
+    ): void
+    {
+        $userModelCBID =
+        CBModel::getCBID(
+            $userModelArgument
+        );
+
+        $currentUseModelCBID =
+        ColbyUser::getCurrentUserCBID();
+
+        if (
+            $userModelCBID !==
+            $currentUseModelCBID
+        ) {
+            return;
+        }
+
+        echo
+        CBConvert::stringToCleanLine(<<<EOT
+
+            <div class="CB_View_UserProfile_editProfileSection_root_element">
+                <a href="/colby/user/">
+                    edit profile
+                </a>
+            </div>
+
+        EOT);
+    }
+    // renderEditProfileSection()
 
 
 
