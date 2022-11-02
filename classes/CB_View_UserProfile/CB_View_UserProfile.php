@@ -124,6 +124,12 @@ CB_View_UserProfile
 
 
 
+        CB_View_UserProfile::renderProfileImage(
+            $userModel
+        );
+
+
+
         // full name
 
         $userFullName =
@@ -264,6 +270,63 @@ CB_View_UserProfile
         '</div></div>';
     }
     // CBView_render()
+
+
+
+    // functions
+
+
+
+    /**
+     * @param object $userModelArgument
+     *
+     * @return void
+     */
+    private static function
+    renderProfileImage(
+        stdClass $userModelArgument
+    ): void
+    {
+        $profileImageModel =
+        CBUser::getProfileImageModel(
+            $userModelArgument
+        );
+
+        echo CBConvert::stringToCleanLine(<<<EOT
+
+            <div class="CB_View_UserProfile_imageContainer_element">
+
+        EOT);
+
+        if (
+            $profileImageModel ===
+            null
+        ) {
+            echo CBConvert::stringToCleanLine(<<<EOT
+
+                <div class="CB_View_UserProfile_emptyProfileImage_element">
+                </div>
+
+            EOT);
+        }
+
+        else
+        {
+            CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
+                $profileImageModel,
+                'rs320clc320',
+                 160,
+                 160
+             );
+        }
+
+        echo CBConvert::stringToCleanLine(<<<EOT
+
+            </div>
+
+        EOT);
+    }
+    // renderProfileImage()
 
 
 
