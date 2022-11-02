@@ -14,17 +14,17 @@ CB_View_UserProfile
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        $cssURLs =
+        $arrayOfCSSURLs =
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_08_25_1661435645',
+                '2022_11_02_1667408424',
                 'css',
                 cbsysurl()
             ),
         ];
 
-        return $cssURLs;
+        return $arrayOfCSSURLs;
     }
     // CBHTMLOutput_CSSURLs()
 
