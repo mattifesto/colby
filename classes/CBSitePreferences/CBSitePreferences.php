@@ -16,7 +16,8 @@ CBSitePreferences {
     const ID = '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
 
     private const
-    defaultResizeOperations = [
+    defaultResizeOperations =
+    [
         'rl320',        /* long edge of 160pt */
         'rl640',        /* long edge of 320pt */
         'rl960',        /* long edge of 480pt */
@@ -26,6 +27,7 @@ CBSitePreferences {
         'rl2560',       /* long edge of 1280pt */
 
         'rs200clc200',  /*  100pt x 100pt */
+        'rs320clc320',  /*  160pt x 160pt */
 
         'rw320',        /*  160pt x ? */
         'rw480',        /*  240pt x ? */
