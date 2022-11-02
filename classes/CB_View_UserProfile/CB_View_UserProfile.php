@@ -128,21 +128,9 @@ CB_View_UserProfile
             $userModel
         );
 
-
-
-        // full name
-
-        $userFullName =
-        CBUser::getName(
+        CB_View_UserProfile::renderName(
             $userModel
         );
-
-        echo
-        '<div class="CB_View_UserProfile_fullNameElement">',
-        cbhtml(
-            $userFullName
-        ),
-        '</div>';
 
 
 
@@ -274,6 +262,62 @@ CB_View_UserProfile
 
 
     // functions
+
+
+
+    /**
+     * @param object $userModelArgument
+     *
+     * @return void
+     */
+    private static function
+    renderName(
+        stdClass $userModelArgument
+    ): void
+    {
+        echo CBConvert::stringToCleanLine(<<<EOT
+
+            <div class="CB_View_UserProfile_nameContainer_element">
+                <div class="CB_View_UserProfile_fullNameElement">
+
+        EOT);
+
+        $userFullName =
+        CBUser::getName(
+            $userModelArgument
+        );
+
+        echo
+        cbhtml(
+            $userFullName
+        );
+
+        echo CBConvert::stringToCleanLine(<<<EOT
+
+            </div>
+            <div class="CB_View_UserProfile_username_element">
+
+        EOT);
+
+        $prettyUsername =
+        CBUser::getPrettyUsername(
+            $userModelArgument
+        );
+
+        echo
+        '@',
+        cbhtml(
+            $prettyUsername
+        );
+
+        echo CBConvert::stringToCleanLine(<<<EOT
+
+                </div>
+            </div>
+
+        EOT);
+    }
+    // renderName()
 
 
 
