@@ -1103,11 +1103,17 @@
         /**
          * @return undefined
          */
-        function Colby_createTasksController_init() {
-            if (!isStopped) {
+        function
+        Colby_createTasksController_init(
+        ) // -> undefined
+        {
+            if (
+                !isStopped
+            ) {
                 start();
             }
         }
+        // Colby_createTasksController_init()
 
 
 
