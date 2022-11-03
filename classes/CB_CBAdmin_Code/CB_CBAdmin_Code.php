@@ -435,6 +435,11 @@ CB_CBAdmin_Code
         switch (
             $filetype
         ) {
+            case 'css':
+
+                $searchCommand .= ' --css';
+                break;
+
             case 'js':
 
                 $searchCommand .= ' --js';
