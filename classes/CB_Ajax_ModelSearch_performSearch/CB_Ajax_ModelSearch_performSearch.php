@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @BUG 2022_11_03_1667512785
+ *
+ *      This class does not have a valid class name. The P in perform should be
+ *      capitalized.
+ */
 final class
 CB_Ajax_ModelSearch_performSearch
 {
