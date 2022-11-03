@@ -1200,7 +1200,7 @@
                             }
 
                         })();
-                        
+
                         Colby.CBTasks2_countOfTasksRequested += 1;
                     }
                     /* go() */
@@ -1214,14 +1214,31 @@
                      *
                      * @return undefined
                      */
-                    function goAgainOrResolve(value) {
-                        Colby.CBTasks2_countOfTasksRun += value.tasksRunCount;
+                    function
+                    goAgainOrResolve(
+                        value
+                    ) // -> undefined
+                    {
+                        Colby.CBTasks2_countOfTasksRun +=
+                        value.tasksRunCount;
 
-                        if (isStopped || value.tasksRunCount === 0) {
-                            promise = undefined;
+                        if (
+                            isStopped ||
+                            value.tasksRunCount ===
+                            0
+                        ) {
+                            promise =
+                            undefined;
+
                             resolve();
-                        } else {
-                            setTimeout(go, Colby.CBTasks2_delay);
+                        }
+
+                        else
+                        {
+                            setTimeout(
+                                go,
+                                Colby.CBTasks2_delay
+                            );
                         }
                     }
                     /* goAgainOrResolve() */
@@ -1230,6 +1247,9 @@
 
             return promise;
         }
+        // start()
+
+        
 
         /**
          * @return undefined
