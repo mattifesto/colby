@@ -1153,7 +1153,10 @@
                     /**
                      * @return undefined
                      */
-                    function go() {
+                    function
+                    go(
+                    ) // -> undefined
+                    {
 
                         /**
                          * Errors occuring during this process are likely to be
