@@ -428,9 +428,8 @@ CB_CBAdmin_Code
         );
 
         $filetype =
-        CBModel::valueToString(
-            $searchModel,
-            'filetype'
+        CBCodeSearch::getFileType(
+            $searchModel
         );
 
         switch (
