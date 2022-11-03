@@ -384,8 +384,7 @@ CBModel {
         CB_AdministrativeSearchResult_associatedImageModel =
         $primaryImageModel;
 
-        return
-        $administrativeSearchResult;
+        return $administrativeSearchResult;
     }
     // convertModelToAdministrativeSearchResult()
 
