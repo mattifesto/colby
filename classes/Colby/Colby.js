@@ -1166,8 +1166,10 @@
                          * with the end user.
                          */
 
-                        let args = {
-                            processID: Colby.CBTasks2_processID,
+                        let args =
+                        {
+                            processID:
+                            Colby.CBTasks2_processID,
                         };
 
                         CBAjax.call(
