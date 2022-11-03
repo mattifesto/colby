@@ -972,6 +972,27 @@ CBUser
 
 
     /**
+     * @param object $userModelArgument
+     *
+     * @return <CBImage model>|null
+     */
+    static function
+    CBModel_getPrimaryImageModel(
+        stdClass $userModelArgument
+    ): ?stdClass
+    {
+        $primaryImageModel =
+        CBUser::getProfileImageModel(
+            $userModelArgument
+        );
+
+        return $primaryImageModel;
+    }
+    // CBModel_getPrimaryImageModel()
+
+
+
+    /**
      * @param object $momentModel
      *
      * @return string
