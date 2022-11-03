@@ -210,7 +210,7 @@ Colby
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        $javaScriptURLs =
+        $arrayOfJavaScriptURLs =
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
@@ -220,7 +220,7 @@ Colby
             ),
         ];
 
-        return $javaScriptURLs;
+        return $arrayOfJavaScriptURLs;
     }
     // CBHTMLOutput_JavaScriptURLs()
 
