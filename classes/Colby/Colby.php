@@ -170,6 +170,59 @@ Colby
 
 
 
+        /* Colby.browserIsSupported() */
+
+        $codeSearchSpec =
+        CBModel::createSpec(
+            'CBCodeSearch',
+            '0fcc10cb10df4e72d7ce58d6a52f883fbc6912a8'
+        );
+
+        CBCodeSearch::setNoticeVersion(
+            $codeSearchSpec,
+            '2022_11_03_1667483391'
+        );
+
+        CBCodeSearch::setWarningVersion(
+            $codeSearchSpec,
+            '2022_11_03_1667483392'
+        );
+
+        CBCodeSearch::setErrorVersion(
+            $codeSearchSpec,
+            '2022_11_03_1667483393'
+        );
+
+        CBCodeSearch::setCBMessage(
+            $codeSearchSpec,
+            <<<EOT
+
+                Use CBErrorHandler.getCurrentBrowserIsSupported().
+
+            EOT
+        );
+
+        CBCodeSearch::setFileType(
+            $codeSearchSpec,
+            'js'
+        );
+
+        $codeSearchSpec->regex =
+        '\bColby\.browserIsSupported\b';
+
+        $codeSearchSpec->severity =
+        3;
+
+        $codeSearchSpec->title =
+        'Colby.browserIsSupported()';
+
+        array_push(
+            $searches,
+            $codeSearchSpec
+        );
+
+
+
         return $searches;
     }
     /* CBCodeAdmin_searches() */
