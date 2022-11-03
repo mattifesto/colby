@@ -1086,9 +1086,14 @@
 
         shared_tasksController =
         {
-            init: Colby_createTasksController_init,
-            start: start,
-            stop: stop,
+            init:
+            Colby_createTasksController_init,
+
+            start:
+            start,
+
+            stop:
+            stop,
         };
 
         return shared_tasksController;
