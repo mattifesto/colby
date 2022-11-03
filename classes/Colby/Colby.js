@@ -1125,17 +1125,24 @@
          *
          * The model import process is one of these situations.
          *
-         * @return Promise
+         * @return Promise -> undefined
          */
-        function start() {
+        function
+        start(
+        ) // -> Promise -> undefined
+        {
             isStopped = false;
 
             if (promise) {
                 return promise;
             }
 
-            promise = new Promise(
-                function (resolve) {
+            promise =
+            new Promise(
+                function (
+                    resolve
+                )
+                {
                     return go();
 
 
