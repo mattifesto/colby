@@ -356,12 +356,33 @@ CBModel {
             $model
         );
 
+        $primaryImageModel =
+        CBModel::getPrimaryImageModel(
+            $model
+        );
+
+        if (
+            $primaryImageModel ===
+            null
+        ) {
+            /**
+             * @deprecated 2022_11_03_1667513631
+             *
+             *      Model classes should implement the
+             *      CBModel_getPrimaryImageModel() interface. Eventually the
+             *      code below will be removed.
+             */
+
+             $primaryImageModel =
+             CBModelToCBImageAssociation::fetchAssociatedImageModelByModelCBID(
+                 $administrativeSearchResult->
+                 CB_AdministrativeSearchResult_CBID
+             );
+        }
+
         $administrativeSearchResult->
         CB_AdministrativeSearchResult_associatedImageModel =
-        CBModelToCBImageAssociation::fetchAssociatedImageModelByModelCBID(
-            $administrativeSearchResult->
-            CB_AdministrativeSearchResult_CBID
-        );
+        $primaryImageModel;
 
         return
         $administrativeSearchResult;
