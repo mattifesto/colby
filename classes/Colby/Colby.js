@@ -1249,14 +1249,20 @@
         }
         // start()
 
-        
+
 
         /**
          * @return undefined
          */
-        function stop() {
-            isStopped = true;
+        function
+        stop(
+        ) // -> undefined
+        {
+            isStopped =
+            true;
         }
+        // stop()
+
     }
     // Colby_createTasksController()
 
