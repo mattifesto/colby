@@ -1086,21 +1086,25 @@
 
         shared_tasksController =
         {
-            init: init,
+            init: Colby_createTasksController_init,
             start: start,
             stop: stop,
         };
 
         return shared_tasksController;
 
+
+
         /**
          * @return undefined
          */
-        function init() {
+        function Colby_createTasksController_init() {
             if (!isStopped) {
                 start();
             }
         }
+
+
 
         /**
          * Under normal circumstances the promise returned by this function is
