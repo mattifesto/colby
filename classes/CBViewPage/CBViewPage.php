@@ -300,6 +300,27 @@ CBViewPage {
 
 
     /**
+     * @param <CBViewPage model> $viewPageModelArgument
+     *
+     * @return <CBImage model>|null
+     */
+    static function
+    CBModel_getPrimaryImageModel(
+        stdClass $viewPageModelArgument
+    ): ?stdClass
+    {
+        $primaryImageModel =
+        CBViewPage::getPrimaryImageModel(
+            $viewPageModelArgument
+        );
+
+        return $primaryImageModel;
+    }
+    // CBModel_getPrimaryImageModel()
+
+
+
+    /**
      * @param object $viewPageModel
      *
      * @return string
