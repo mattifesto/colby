@@ -1172,22 +1172,35 @@
                             Colby.CBTasks2_processID,
                         };
 
-                        CBAjax.call(
-                            "CBTasks2",
-                            "runNextTask",
-                            args
-                        ).then(
-                            goAgainOrResolve
-                        ).catch(
-                            function (error) {
+                        (async function ()
+                        {
+                            try
+                            {
+                                let response =
+                                await
+                                CBAjax.call(
+                                    "CBTasks2",
+                                    "runNextTask",
+                                    args
+                                );
+
+                                goAgainOrResolve(
+                                    response
+                                );
+                            }
+
+                            catch (
+                                error
+                            ) {
                                 promise = undefined;
 
                                 CBErrorHandler.report(
                                     error
                                 );
                             }
-                        );
 
+                        })();
+                        
                         Colby.CBTasks2_countOfTasksRequested += 1;
                     }
                     /* go() */
