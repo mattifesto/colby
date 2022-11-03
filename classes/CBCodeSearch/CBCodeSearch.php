@@ -38,6 +38,7 @@ CBCodeSearch
      *      CBCodeSearch_CBID -> model CBID
      *      cbmessage -> CBCodeSearch_cbmessage_property
      *      errorStartDate -> CBCodeSearch_errorVersion_property
+     *      filetype -> CBCodeSearch_fileType_property
      *      noticeStartDate -> CBCodeSearch_noticeVersion_property
      *      noticeVersion -> CBCodeSearch_noticeVersion_property
      *      warningStartDate -> CBCodeSearch_warningVersion_property
@@ -230,6 +231,69 @@ CBCodeSearch
      }
      // setErrorVersion()
 
+
+
+    /**
+     * @param object $codeSearchModelArgument
+     *
+     * @return string
+     */
+    static function
+    getFileType(
+        stdClass $codeSearchModelArgument,
+    ): string
+    {
+        if (
+            isset(
+                $codeSearchModelArgument->CBCodeSearch_fileType_property
+            )
+        ) {
+            $fileTypePropertyValue =
+            CBModel::valueToString(
+                $codeSearchModelArgument,
+                'CBCodeSearch_fileType_property'
+            );
+        }
+
+        else
+        {
+            /**
+             * @deprecated 2022_11_03_1667490968
+             */
+
+            $fileTypePropertyValue =
+            CBModel::valueToString(
+                $codeSearchModelArgument,
+                'filetype'
+            );
+        }
+
+        return $fileTypePropertyValue;
+    }
+    // getFileType()
+
+
+
+    /**
+     * @param object $codeSearchModelArgument
+     * @param string $newFileTypePropertyValueArgument
+     *
+     * @return void
+     */
+    static function
+    setFileType(
+        stdClass $codeSearchModelArgument,
+        string $newFileTypePropertyValueArgument
+    ): void
+    {
+        $codeSearchModelArgument->CBCodeSearch_fileType_property =
+        $newFileTypePropertyValueArgument;
+
+        unset(
+            $codeSearchModelArgument->filetype
+        );
+    }
+    // setFileType()
 
 
      /**
