@@ -466,6 +466,27 @@ CB_Moment
 
 
     /**
+     * @param <CB_Moment model> $momentModelArgument
+     *
+     * @return <CBImage model>|null
+     */
+    static function
+    CBModel_getPrimaryImageModel(
+        stdClass $momentModelArgument
+    ): ?stdClass
+    {
+        $primaryImageModel =
+        CB_Moment::getImage(
+            $momentModelArgument
+        );
+
+        return $primaryImageModel;
+    }
+    // CBModel_getPrimaryImageModel()
+
+
+
+    /**
      * @param object $momentModel
      *
      * @return string
