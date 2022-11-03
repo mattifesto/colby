@@ -657,6 +657,49 @@ CBModel {
 
 
     /**
+     * This function returns the primary image model associated with a target
+     * model. The image model may be stored inside the target model or it may
+     * have to be queried and fetched and processed.
+     *
+     * Model classes that conceptually have primary images should implement the
+     * CBModel_getPrimaryImageModel() interface.
+     *
+     * @param object $targetModelArgument
+     *
+     * @return <CBImage model>|null
+     */
+    static function
+    getPrimaryImageModel(
+        stdClass $targetModelArgument
+    ): ?stdClass
+    {
+        $primaryImageModel =
+        null;
+
+        $callable =
+        CBModel::getClassFunction(
+            $targetModelArgument,
+            'CBModel_getPrimaryImageModel'
+        );
+
+        if (
+            $callable !==
+            null
+        ) {
+            $primaryImageModel =
+            call_user_func(
+                $callable,
+                $targetModelArgument
+            );
+        }
+
+        return $primaryImageModel;
+    }
+    // getPrimaryImageModel()
+
+
+
+    /**
      * @return object|null
      *
      *      When a model upgrade is in progress, a clone of the root model that
