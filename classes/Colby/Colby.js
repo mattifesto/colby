@@ -1168,20 +1168,6 @@
 
 
 
-    Object.defineProperty(
-        Colby,
-        "browserIsSupported",
-        {
-            configurable: true,
-            enumerable: false,
-            get: function () {
-                return CBErrorHandler.getCurrentBrowserIsSupported();
-            },
-        }
-    );
-
-
-
     Colby.CBTasks2_countOfTasksRequested = 0;
     Colby.CBTasks2_countOfTasksRun = 0;
     Colby.CBTasks2_delay = 5000;
