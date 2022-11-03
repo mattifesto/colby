@@ -58,9 +58,12 @@
 
     let Colby =
     {
+        tasks:
+        Colby_createTasksController(),
+
         updateTimesTimeoutID:
         null,
-        
+
         updateTimesCount:
         0,
 
@@ -581,155 +584,6 @@
 
 
         /**
-         * @return object
-         *
-         *      {
-         *          init()-> undefined
-         *
-         *              Called after DOMContentLoaded. If another JavaScript file
-         *              has called stop() before DOMContentLoaded, this function
-         *              will not start processing tasks.
-         *
-         *          start() -> Promise -> undefined
-         *
-         *              If tasks aren't currently running, calling this function
-         *              will start running tasks again until there aren't any. The
-         *              promise returned will resolve when there are no more tasks
-         *              to run.
-         *
-         *          stop() -> undefined
-         *
-         *              Will stop running tasks. This is useful when the session is
-         *              running other operations on the server or is preparing to
-         *              only run tasks for a specific process.
-         *      }
-         */
-        get tasks() {
-            let isStopped = false;
-            let promise;
-
-            if (Colby.CBTasks2_API) {
-                return Colby.CBTasks2_API;
-            }
-
-            Colby.CBTasks2_API = {
-                init: init,
-                start: start,
-                stop: stop,
-            };
-
-            return Colby.CBTasks2_API;
-
-            /**
-             * @return undefined
-             */
-            function init() {
-                if (!isStopped) {
-                    start();
-                }
-            }
-
-            /**
-             * Under normal circumstances the promise returned by this function is
-             * not used. But there are some situations where the caller of this
-             * function wants all tasks to run until they are complete, potentially
-             * for a specific process ID, and the to have the promise resolve.
-             *
-             * The model import process is one of these situations.
-             *
-             * @return Promise
-             */
-            function start() {
-                isStopped = false;
-
-                if (promise) {
-                    return promise;
-                }
-
-                promise = new Promise(
-                    function (resolve) {
-                        return go();
-
-
-                        /* -- closures -- -- -- -- -- */
-
-
-
-                        /**
-                         * @return undefined
-                         */
-                        function go() {
-
-                            /**
-                             * Errors occuring during this process are likely to be
-                             * server side errors and will be reported on the
-                             * server. If the promise is rejected further requests
-                             * will be stopped. This process does not communicate
-                             * with the end user.
-                             */
-
-                            let args = {
-                                processID: Colby.CBTasks2_processID,
-                            };
-
-                            CBAjax.call(
-                                "CBTasks2",
-                                "runNextTask",
-                                args
-                            ).then(
-                                goAgainOrResolve
-                            ).catch(
-                                function (error) {
-                                    promise = undefined;
-
-                                    CBErrorHandler.report(
-                                        error
-                                    );
-                                }
-                            );
-
-                            Colby.CBTasks2_countOfTasksRequested += 1;
-                        }
-                        /* go() */
-
-
-
-                        /**
-                         * This function will determine if there is any reason to
-                         * continue to attempt to run tasks. If there is, it will go
-                         * again; if not, it will resolve the promise.
-                         *
-                         * @return undefined
-                         */
-                        function goAgainOrResolve(value) {
-                            Colby.CBTasks2_countOfTasksRun += value.tasksRunCount;
-
-                            if (isStopped || value.tasksRunCount === 0) {
-                                promise = undefined;
-                                resolve();
-                            } else {
-                                setTimeout(go, Colby.CBTasks2_delay);
-                            }
-                        }
-                        /* goAgainOrResolve() */
-                    }
-                );
-
-                return promise;
-            }
-
-            /**
-             * @return undefined
-             */
-            function stop() {
-                isStopped = true;
-            }
-        },
-        /* get tasks */
-
-
-
-        /**
          * @deprecated 2022_02_24
          *
          *      Use CBConvert.stringToHTML()
@@ -1179,6 +1033,172 @@
             Colby.tasks.init();
         }
     );
+
+
+
+    // -- functions
+
+
+
+    /**
+     * @return object
+     *
+     *      {
+     *          init()-> undefined
+     *
+     *              Called after DOMContentLoaded. If another JavaScript file
+     *              has called stop() before DOMContentLoaded, this function
+     *              will not start processing tasks.
+     *
+     *          start() -> Promise -> undefined
+     *
+     *              If tasks aren't currently running, calling this function
+     *              will start running tasks again until there aren't any. The
+     *              promise returned will resolve when there are no more tasks
+     *              to run.
+     *
+     *          stop() -> undefined
+     *
+     *              Will stop running tasks. This is useful when the session is
+     *              running other operations on the server or is preparing to
+     *              only run tasks for a specific process.
+     *      }
+     */
+    function
+    Colby_createTasksController(
+    ) // -> object
+    {
+        let isStopped =
+        false;
+
+        let promise;
+
+        let shared_tasksController;
+
+
+
+        if (
+            shared_tasksController !==
+            undefined
+        ) {
+            return shared_tasksController;
+        }
+
+        shared_tasksController =
+        {
+            init: init,
+            start: start,
+            stop: stop,
+        };
+
+        return shared_tasksController;
+
+        /**
+         * @return undefined
+         */
+        function init() {
+            if (!isStopped) {
+                start();
+            }
+        }
+
+        /**
+         * Under normal circumstances the promise returned by this function is
+         * not used. But there are some situations where the caller of this
+         * function wants all tasks to run until they are complete, potentially
+         * for a specific process ID, and the to have the promise resolve.
+         *
+         * The model import process is one of these situations.
+         *
+         * @return Promise
+         */
+        function start() {
+            isStopped = false;
+
+            if (promise) {
+                return promise;
+            }
+
+            promise = new Promise(
+                function (resolve) {
+                    return go();
+
+
+                    /* -- closures -- -- -- -- -- */
+
+
+
+                    /**
+                     * @return undefined
+                     */
+                    function go() {
+
+                        /**
+                         * Errors occuring during this process are likely to be
+                         * server side errors and will be reported on the
+                         * server. If the promise is rejected further requests
+                         * will be stopped. This process does not communicate
+                         * with the end user.
+                         */
+
+                        let args = {
+                            processID: Colby.CBTasks2_processID,
+                        };
+
+                        CBAjax.call(
+                            "CBTasks2",
+                            "runNextTask",
+                            args
+                        ).then(
+                            goAgainOrResolve
+                        ).catch(
+                            function (error) {
+                                promise = undefined;
+
+                                CBErrorHandler.report(
+                                    error
+                                );
+                            }
+                        );
+
+                        Colby.CBTasks2_countOfTasksRequested += 1;
+                    }
+                    /* go() */
+
+
+
+                    /**
+                     * This function will determine if there is any reason to
+                     * continue to attempt to run tasks. If there is, it will go
+                     * again; if not, it will resolve the promise.
+                     *
+                     * @return undefined
+                     */
+                    function goAgainOrResolve(value) {
+                        Colby.CBTasks2_countOfTasksRun += value.tasksRunCount;
+
+                        if (isStopped || value.tasksRunCount === 0) {
+                            promise = undefined;
+                            resolve();
+                        } else {
+                            setTimeout(go, Colby.CBTasks2_delay);
+                        }
+                    }
+                    /* goAgainOrResolve() */
+                }
+            );
+
+            return promise;
+        }
+
+        /**
+         * @return undefined
+         */
+        function stop() {
+            isStopped = true;
+        }
+    }
+    // Colby_createTasksController()
 
 }
 )();
