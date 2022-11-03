@@ -58,10 +58,14 @@
 
     let Colby =
     {
-        updateTimesTimeoutID: null,
-        updateTimesCount: 0,
+        updateTimesTimeoutID:
+        null,
+        
+        updateTimesCount:
+        0,
 
-        monthNames: [
+        monthNames:
+        [
             'January',
             'February',
             'March',
