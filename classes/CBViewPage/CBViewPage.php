@@ -218,10 +218,19 @@ CBViewPage {
 
         /* image */
 
-        $imageSpec = CBModel::valueAsModel($spec, 'image', ['CBImage']);
+        $imageSpec =
+        CBViewPage::getPrimaryImageModel(
+            $spec
+        );
 
-        if ($imageSpec) {
-            $model->image = CBModel::build($imageSpec);
+        if (
+            $imageSpec !==
+            null
+        ) {
+            $model->image =
+            CBModel::build(
+                $imageSpec
+            );
         }
 
         if (empty($model->image)) {
