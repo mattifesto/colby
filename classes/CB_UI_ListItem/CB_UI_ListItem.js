@@ -38,45 +38,50 @@
             imageContainerElement
         );
 
+        let informationContainerElement =
+        CB_UI_ListItem_createInformationContainerElement(
+            contentElement
+        );
+
         let administrativeTitleElement =
         CB_UI_ListItem_createAdministrativeTitleElement();
 
-        contentElement.append(
+        informationContainerElement.append(
             administrativeTitleElement
         );
 
         let titleElement =
         CB_UI_ListItem_createTitleElement();
 
-        contentElement.append(
+        informationContainerElement.append(
             titleElement
         );
 
         let classNameElement =
         CB_UI_ListItem_createClassNameElement();
 
-        contentElement.append(
+        informationContainerElement.append(
             classNameElement
         );
 
         let CBIDElement =
         CB_UI_ListItem_createCBIDElement();
 
-        contentElement.append(
+        informationContainerElement.append(
             CBIDElement
         );
 
         let editElement =
         CB_UI_ListItem_createEditElement();
 
-        contentElement.append(
+        informationContainerElement.append(
             editElement
         );
 
         let inspectElement =
         CB_UI_ListItem_createInspectElement();
 
-        contentElement.append(
+        informationContainerElement.append(
             inspectElement
         );
 
@@ -327,6 +332,35 @@
             imageContainerElement
         );
     }
+    // CB_UI_ListItem_createImageContainerElement()
+
+
+
+    /**
+     * @param Element parentElement
+     *
+     * @return Element
+     */
+    function
+    CB_UI_ListItem_createInformationContainerElement(
+        parentElement
+    ) // -> Element
+    {
+        let informationContainerElement =
+        document.createElement(
+            "div"
+        );
+
+        informationContainerElement.className =
+        "CB_UI_ListItem_informationContainer_element";
+
+        parentElement.append(
+            informationContainerElement
+        );
+
+        return informationContainerElement;
+    }
+    // CB_UI_ListItem_createInformationContainerElement()
 
 
 
