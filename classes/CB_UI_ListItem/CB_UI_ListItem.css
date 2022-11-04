@@ -1,13 +1,22 @@
 .CB_UI_ListItem_root_element
 {
+    box-sizing:
+    border-box;
+
     display:
     flex;
 
     justify-content:
     center;
 
+    max-width:
+    100%;
+
+    overflow-wrap:
+    break-word;
+
     padding:
-    10px;
+    20px 10px;
 }
 
 
@@ -16,6 +25,9 @@
 {
     box-sizing:
     border-box;
+
+    max-width:
+    100%;
 
     width:
     var(--CB_UI_readableWidth);
