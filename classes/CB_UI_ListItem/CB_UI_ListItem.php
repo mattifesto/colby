@@ -3,6 +3,10 @@
 final class
 CB_UI_ListItem
 {
+    // -- CBHTMLOutput interfaces
+
+
+
     /**
      * @return [string]
      */
@@ -10,7 +14,7 @@ CB_UI_ListItem
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        return
+        $arrayOfCSSURLs =
         [
             Colby::flexpath(
                 __CLASS__,
@@ -18,8 +22,10 @@ CB_UI_ListItem
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfCSSURLs;
     }
-    // CBHTMLOutput_JavaScriptURLs()
+    // CBHTMLOutput_CSSURLs()
 
 
 
