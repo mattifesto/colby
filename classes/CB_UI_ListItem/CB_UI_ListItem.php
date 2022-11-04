@@ -16,9 +16,10 @@ CB_UI_ListItem
     {
         $arrayOfCSSURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v2022.05.19.1652988415.css',
+                '2022_11_04_1667576323',
+                'css',
                 cbsysurl()
             ),
         ];
@@ -38,9 +39,10 @@ CB_UI_ListItem
     {
         $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v2022.05.19.1652988415.js',
+                '2022_11_04_1667578900',
+                'js',
                 cbsysurl()
             ),
         ];
