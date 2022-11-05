@@ -1,7 +1,8 @@
 <?php
 
-final class SCOrder {
-
+final class
+SCOrder
+{
     /* -- CBAjax interfaces ---------- */
 
 
