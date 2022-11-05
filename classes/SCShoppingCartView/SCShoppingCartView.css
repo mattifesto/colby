@@ -6,3 +6,26 @@
 .SCShoppingCartView_emptyCart {
     padding-top: 100px;
 }
+
+
+
+.SCShoppingCartView_proceedToCheckout_root_element
+{
+    box-sizing:
+    border-box;
+
+    display:
+    flex;
+
+    justify-content:
+    center;
+
+    max-width:
+    100%;
+
+    overflow-wrap:
+    break-word;
+
+    padding:
+    20px;
+}
