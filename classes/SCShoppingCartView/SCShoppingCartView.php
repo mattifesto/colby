@@ -16,7 +16,12 @@ SCShoppingCartView
     {
         $arrayOfCSSURLs =
         [
-            Colby::flexpath(__CLASS__, 'v147.css', scliburl()),
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2022_11_05_1667670267',
+                'css',
+                cbsysurl()
+            ),
         ];
 
         return $arrayOfCSSURLs;
@@ -34,7 +39,12 @@ SCShoppingCartView
     {
         $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(__CLASS__, 'v663.js', scliburl()),
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2022_11_05_1667670268',
+                'js',
+                cbsysurl()
+            ),
         ];
 
         return $arrayOfJavaScriptURLs;
