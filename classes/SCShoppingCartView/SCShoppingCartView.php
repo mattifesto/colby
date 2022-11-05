@@ -1,8 +1,9 @@
 <?php
 
-final class SCShoppingCartView {
-
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+final class
+SCShoppingCartView
+{
+    // -- CBHTMLOutput interfaces
 
 
 
