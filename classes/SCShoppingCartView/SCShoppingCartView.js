@@ -177,18 +177,43 @@
     /**
      * @return Element
      */
-    function createProceedToCheckoutSectionItemElement() {
-        let element = CBUI.createElement(
-            "CBUI_action",
+    function
+    createProceedToCheckoutButtonElement(
+    ) // -> Element
+    {
+        let rootElement =
+        document.createElement(
+            "div"
+        );
+
+        rootElement.className =
+        "SCShoppingCartView_proceedToCheckout_root_element";
+
+
+
+        let anchorElement =
+        document.createElement(
             "a"
         );
 
-        element.href = "/checkout/100/";
-        element.textContent = "Proceed to Checkout >";
+        rootElement.append(
+            anchorElement
+        );
 
-        return element;
+        anchorElement.className =
+        "SCShoppingCartView_proceedToCheckout_anchor_element CBUI_button1";
+
+        anchorElement.href =
+        "/checkout/100/";
+
+        anchorElement.textContent =
+        "Proceed to Checkout >";
+
+
+
+        return rootElement;
     }
-    /* createProceedToCheckoutSectionItemElement() */
+    // createProceedToCheckoutButtonElement()
 
 
 
@@ -297,8 +322,8 @@
                 subtotalValueElement1
             );
 
-            sectionElement.appendChild(
-                createProceedToCheckoutSectionItemElement()
+            viewElement.append(
+                createProceedToCheckoutButtonElement()
             );
         }
 
@@ -344,8 +369,8 @@
                 subtotalValueElement2
             );
 
-            sectionElement.appendChild(
-                createProceedToCheckoutSectionItemElement()
+            viewElement.append(
+                createProceedToCheckoutButtonElement()
             );
 
 
