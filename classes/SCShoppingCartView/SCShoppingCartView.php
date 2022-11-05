@@ -10,29 +10,46 @@ SCShoppingCartView
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs(): array {
-        return [
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
+        $arrayOfCSSURLs =
+        [
             Colby::flexpath(__CLASS__, 'v147.css', scliburl()),
         ];
+
+        return $arrayOfCSSURLs;
     }
+    // CBHTMLOutput_CSSURLs()
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
+        $arrayOfJavaScriptURLs =
+        [
             Colby::flexpath(__CLASS__, 'v663.js', scliburl()),
         ];
+
+        return $arrayOfJavaScriptURLs;
     }
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
         $preferencesModel = CBModelCache::fetchModelByID(
             SCPreferences::ID()
         );
@@ -47,7 +64,8 @@ SCShoppingCartView
             'cartItemCartViewClassNames'
         );
 
-        return array_merge(
+        $arrayOfRequiredClassNames =
+        array_merge(
             [
                 'CBAjax',
                 'CBConvert',
@@ -63,8 +81,10 @@ SCShoppingCartView
             $cartItemClassNames,
             $cartItemCartViewClassNames
         );
+
+        return $arrayOfRequiredClassNames;
     }
-    /* CBHTMLOutput_requiredClassNames() */
+    // CBHTMLOutput_requiredClassNames()
 
 
 
