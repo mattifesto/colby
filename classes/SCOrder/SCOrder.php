@@ -3,7 +3,7 @@
 final class
 SCOrder
 {
-    /* -- CBAjax interfaces ---------- */
+    // -- CBAjax interfaces
 
 
 
@@ -17,37 +17,69 @@ SCOrder
      *
      * @return object
      */
-    static function CBAjax_addNote(stdClass $args): stdClass {
-        $orderID = CBModel::valueAsID($args, "orderID");
+    static function
+    CBAjax_addNote(
+        stdClass $args
+    ): stdClass
+    {
+        $orderID =
+        CBModel::valueAsID(
+            $args,
+            'orderID'
+        );
 
-        if ($orderID === null) {
+        if (
+            $orderID ===
+            null
+        ) {
             throw new Exception(
                 'No order ID was provided.'
             );
         }
 
-        $text = CBModel::valueToString($args, 'text');
+        $text =
+        CBModel::valueToString(
+            $args,
+            'text'
+        );
 
-        if (trim($text) === '') {
+        if (
+            trim($text) ===
+            ''
+        ) {
             throw new Exception(
                 'The text in the note is empty.'
             );
         }
 
-        $noteSpec = (object)[
-            'className' => 'CBNote',
-            'text' => $text,
-            'timestamp' => time(),
-            'userID' => ColbyUser::getCurrentUserCBID(),
+        $noteSpec =
+        (object)
+        [
+            'className' =>
+            'CBNote',
+
+            'text' =>
+            $text,
+
+            'timestamp' =>
+            time(),
+
+            'userID' =>
+            ColbyUser::getCurrentUserCBID(),
         ];
 
-        $updater = CBModelUpdater::fetch(
+        $updater =
+        CBModelUpdater::fetch(
             (object)[
-                'ID' => $orderID,
+                'ID' =>
+                $orderID,
             ]
         );
 
-        if ($updater->working->className !== "SCOrder") {
+        if (
+            $updater->working->className !==
+            'SCOrder'
+        ) {
             throw new CBExceptionWithValue(
                 'The target model is not an order.',
                 $updater->working,
@@ -55,7 +87,8 @@ SCOrder
             );
         }
 
-        $notes = CBModel::valueToArray(
+        $notes =
+        CBModel::valueToArray(
             $updater->working,
             'notes'
         );
@@ -65,22 +98,34 @@ SCOrder
             $noteSpec
         );
 
-        $updater->working->notes = $notes;
+        $updater->working->notes =
+        $notes;
 
-        CBModelUpdater::save($updater);
+        CBModelUpdater::save(
+            $updater
+        );
 
-        return CBModel::build($noteSpec);
+        $noteModel =
+        CBModel::build(
+            $noteSpec
+        );
+
+        return $noteModel;
     }
-    /* CBAjax_addNote() */
+    // CBAjax_addNote()
 
 
 
     /**
      * @return string
      */
-    static function CBAjax_addNote_getUserGroupClassName(): string {
+    static function
+    CBAjax_addNote_getUserGroupClassName(
+    ): string
+    {
         return 'CBAdministratorsUserGroup';
     }
+    // CBAjax_addNote_getUserGroupClassName()
 
 
 
