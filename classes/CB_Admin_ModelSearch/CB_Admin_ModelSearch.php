@@ -64,9 +64,10 @@ CB_Admin_ModelSearch
     {
         $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_06_03_1654223196.js',
+                '2022_11_06_1667761008',
+                'js',
                 cbsysurl()
             ),
         ];
