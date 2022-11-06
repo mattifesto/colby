@@ -439,6 +439,27 @@ CB_Moment
 
 
     /**
+     * @param <CB_Moment model> $momentModelArgument
+     *
+     * @return string
+     */
+    static function
+    CBModel_getAbsoluteURLPath(
+        stdClass $momentModelArgument
+    ): string
+    {
+        $absoluteURLPath =
+        CBModel::toURLPath(
+            $momentModelArgument
+        );
+
+        return $absoluteURLPath;
+    }
+    // CBModel_getAbsoluteURLPath()
+
+
+
+    /**
      * @param object $momentModel
      *
      * @return [<CB_Timestamp>]
