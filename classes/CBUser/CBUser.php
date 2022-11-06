@@ -972,6 +972,27 @@ CBUser
 
 
     /**
+     * @param <CBUser model> $userModelArgument
+     *
+     * @return string
+     */
+    static function
+    CBModel_getAbsoluteURLPath(
+        stdClass $userModelArgument
+    ): string
+    {
+        $absoluteURLPath =
+        CBModel::toURLPath(
+            $userModelArgument
+        );
+
+        return $absoluteURLPath;
+    }
+    // CBModel_getAbsoluteURLPath()
+
+
+
+    /**
      * @param object $userModelArgument
      *
      * @return <CBImage model>|null
