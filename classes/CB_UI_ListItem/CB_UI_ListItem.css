@@ -131,7 +131,8 @@ a
 
 
 
-.CB_UI_ListItem_inspect_element
+.CB_UI_ListItem_inspect_element,
+.CB_UI_ListItem_pageAnchor_element
 {
     margin-left:
     20px;
