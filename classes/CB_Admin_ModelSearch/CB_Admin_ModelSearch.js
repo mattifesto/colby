@@ -217,6 +217,12 @@
                     CB_UI_ListItem.create();
 
                     listItem.
+                    CB_UI_ListItem_setAbsolutePageURL(
+                        searchResult.
+                        CB_AdministrativeSearchResult_absoluteURLPath
+                    );
+
+                    listItem.
                     CB_UI_ListItem_setAdministrativeTitle(
                         searchResult.
                         CB_AdministrativeSearchResult_administrativeTitle
