@@ -40,13 +40,15 @@
  * be a common situation.
  */
 final class
-CBModel {
+CBModel
+{
+    private static
+    $rootSpecCurrentlyBeingUpgraded =
+    null;
 
-    private static $rootSpecCurrentlyBeingUpgraded = null;
 
 
-
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+    // -- CBHTMLOutput interfaces
 
 
 
