@@ -83,12 +83,15 @@ SCProduct
             'contentCBMessage'
         );
 
-        $productCode = CBModel::valueAsName(
-            $spec,
-            'productCode'
+        $productCode =
+        SCProduct::getProductCode(
+            $spec
         );
 
-        if ($productCode === null) {
+        if (
+            $productCode ===
+            ''
+        ) {
             throw CBException::createModelIssueException(
                 'This spec has an invalid "productCode" property value.',
                 $spec,
