@@ -241,7 +241,38 @@ SCProduct
 
 
 
-    /* -- functions -- -- -- -- -- */
+    // -- accessors
+
+
+
+    /**
+     * @param <SCProduct model> $productModelArgument
+     *
+     * @return string
+     */
+    static function
+    getTitle(
+        stdClass $productModelArgument
+    ): string
+    {
+        $productTitle =
+        CBModel::valueToString(
+            $productModelArgument,
+            'title'
+        );
+
+        $productTitle =
+        trim(
+            $productTitle
+        );
+
+        return $productTitle;
+    }
+    // getTitle()
+
+
+
+    // -- functions
 
 
 
