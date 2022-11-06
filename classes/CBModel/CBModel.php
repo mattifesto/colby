@@ -1324,6 +1324,15 @@ CBModel
 
 
     /**
+     * @NOTE 2022_11_06_1667746348
+     *
+     *      If a model generates a page it should implement CBModel_toURLPath()
+     *      to return the page's URL. This will be treated as an absolute URL
+     *      path.
+     *
+     *      This function will add starting and ending slashes if the model
+     *      provided value does not have them.
+     *
      * @param mixed $model
      *
      * @return string
@@ -1331,37 +1340,41 @@ CBModel
     static function
     toURLPath(
         $model
-    ) {
-        $className = CBModel::getClassName(
+    ) // -> string
+    {
+        $absoluteURLPath =
+        '';
+
+        $potentialURLPath =
+        '';
+
+
+
+        $callable =
+        CBModel::getClassFunction(
             $model,
+            'CBModel_toURLPath'
         );
 
         if (
-            empty($className)
+            $callable !==
+            null
         ) {
-            return '';
-        }
-
-        $functionName = "{$className}::CBModel_toURLPath";
-
-        if (
-            is_callable(
-                $functionName
-            )
-        ) {
-            $potentialURLPath = call_user_func(
-                $functionName,
+            $potentialURLPath =
+            call_user_func(
+                $callable,
                 CBModel::clone(
                     $model
                 )
             );
+        }
 
-            if (
-                $potentialURLPath === ''
-            ) {
-                return '';
-            }
 
+
+        if (
+            $potentialURLPath !==
+            ''
+        ) {
             $isValid =
             CB_URL::potentialURLPathIsValid(
                 $potentialURLPath
@@ -1383,10 +1396,13 @@ CBModel
                 );
             }
 
-            return $potentialURLPath;
+            $absoluteURLPath =
+            CB_URL::convertURLPathToAbsoluteURLPath(
+                $potentialURLPath
+            );
         }
 
-        return '';
+        return $absoluteURLPath;
     }
     /* toURLPath() */
 
