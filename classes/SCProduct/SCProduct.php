@@ -159,6 +159,40 @@ SCProduct
      * @return string
      */
     static function
+    CBModel_getAbsoluteURLPath(
+        stdClass $productModelArgument
+    ): string
+    {
+        $absoluteURLPath =
+        '';
+
+        $productCode =
+        SCProduct::getProductCode(
+            $productModelArgument
+        );
+
+        if (
+            $productCode !==
+            ''
+        ) {
+            $absoluteURLPath =
+            SCProduct::productCodeToProductPageURL(
+                $productCode
+            );
+        }
+
+        return $absoluteURLPath;
+    }
+    // CBModel_getAbsoluteURLPath()
+
+
+
+    /**
+     * @param <SCProduct model> $productModelArgument
+     *
+     * @return string
+     */
+    static function
     CBModel_getTitle(
         stdClass $productModelArgument
     ): string
