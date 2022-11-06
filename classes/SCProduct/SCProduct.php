@@ -144,11 +144,9 @@ SCProduct
 
             'productCode' => $productCode,
 
-            'title' => trim(
-                CBModel::valueToString(
-                    $spec,
-                    'title'
-                )
+            'title' => 
+            SCProduct::getTitle(
+                $spec
             ),
         ];
     }
