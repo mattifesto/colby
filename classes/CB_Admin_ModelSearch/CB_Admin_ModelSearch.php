@@ -62,7 +62,7 @@ CB_Admin_ModelSearch
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        return
+        $arrayOfJavaScriptURLs =
         [
             Colby::flexpath(
                 __CLASS__,
@@ -70,6 +70,8 @@ CB_Admin_ModelSearch
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfJavaScriptURLs;
     }
     // CBHTMLOutput_JavaScriptURLs()
 
