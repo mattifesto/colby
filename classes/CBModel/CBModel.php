@@ -358,6 +358,20 @@ CBModel
             $model
         );
 
+
+
+        $absoluteURLPath =
+        CBModel::getAbsoluteURLPath(
+            $model
+        );
+
+        $administrativeSearchResult->
+        CB_AdministrativeSearchResult_absoluteURLPath =
+        $absoluteURLPath;
+
+
+
+
         $primaryImageModel =
         CBModel::getPrimaryImageModel(
             $model
