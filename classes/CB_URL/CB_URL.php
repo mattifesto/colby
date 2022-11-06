@@ -320,6 +320,57 @@ CB_URL
 
 
     /**
+     * @param string $potentialAbsoluteURLPathArgument
+     *
+     * @return bool
+     *
+     *      Returns true if the potential absolute URL path is a valid URL path
+     *      and it begins and ends with a slash; otherwise false.
+     */
+    static function
+    potentialAbsoluteURLPathIsValid(
+        string $potentialAbsoluteURLPathArgument
+    ): bool
+    {
+        $potentialAbsoluteURLPathIsValid =
+        false;
+
+        $potentialURLPathIsValid =
+        CB_URL::potentialURLPathIsValid(
+            $potentialAbsoluteURLPathArgument
+        );
+
+        if (
+            $potentialURLPathIsValid !==
+            true
+        ) {
+            goto done;
+        }
+
+        $absoluteURLPath =
+        CB_URL::convertURLPathToAbsoluteURLPath(
+            $potentialAbsoluteURLPathArgument
+        );
+
+        if (
+            $absoluteURLPath !==
+            $potentialAbsoluteURLPathArgument
+        ) {
+            goto done;
+        }
+
+        $potentialAbsoluteURLPathIsValid =
+        true;
+
+        done:
+
+        return $potentialAbsoluteURLPathIsValid;
+    }
+    // potentialAbsoluteURLPathIsValid()
+
+
+
+    /**
      * This function allows but does not require the first or the last slash
      * on the URL path.
      *
