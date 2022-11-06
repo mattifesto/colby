@@ -249,6 +249,39 @@ SCProduct
      * @param <SCProduct model> $productModelArgument
      *
      * @return string
+     *
+     *      Returns an empty string if the product does not have a valid product
+     *      code.
+     */
+    static function
+    getProductCode(
+        stdClass $productModelArgument
+    ): string
+    {
+        $productCode =
+        CBModel::valueAsName(
+            $productModelArgument,
+            'productCode'
+        );
+
+        if (
+            $productCode ===
+            null
+        ) {
+            $productCode =
+            '';
+        }
+
+        return $productCode;
+    }
+    // getProductCode()
+
+
+
+    /**
+     * @param <SCProduct model> $productModelArgument
+     *
+     * @return string
      */
     static function
     getTitle(
