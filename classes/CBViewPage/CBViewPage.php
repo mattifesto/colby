@@ -311,6 +311,40 @@ CBViewPage {
     /**
      * @param <CBViewPage model> $viewPageModelArgument
      *
+     * @return string
+     */
+    static function
+    CBModel_getAbsoluteURLPath(
+        stdClass $viewPageModelArgument
+    ): string
+    {
+        $absoluteURLPath =
+        '';
+
+        $viewPageURI =
+        CBViewPage::getURI(
+            $viewPageModelArgument
+        );
+
+        if (
+            $viewPageURI !==
+            ''
+        ) {
+            $absoluteURLPath =
+            CB_URL::convertURLPathToAbsoluteURLPath(
+                $viewPageURI
+            );
+        }
+
+        return $absoluteURLPath;
+    }
+    //CBModel_getAbsoluteURLPath()
+
+
+
+    /**
+     * @param <CBViewPage model> $viewPageModelArgument
+     *
      * @return <CBImage model>|null
      */
     static function
