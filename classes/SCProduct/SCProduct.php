@@ -154,6 +154,27 @@ SCProduct
 
 
     /**
+     * @param <SCProduct model> $productModelArgument
+     *
+     * @return string
+     */
+    static function
+    CBModel_getTitle(
+        stdClass $productModelArgument
+    ): string
+    {
+        $productTitle =
+        SCProduct::getTitle(
+            $productModelArgument
+        );
+
+        return $productTitle;
+    }
+    // CBModel_getTitle()
+
+
+
+    /**
      * @param object $spec
      *
      * @return string
