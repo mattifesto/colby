@@ -590,6 +590,92 @@ CBModel
 
 
     /**
+     * If a model creates or generates a page it should implement
+     * CBModel_getAbsoluteURLPath() so that administrative pages can share that
+     * information with administrators of the site.
+     *
+     * It must return a valid URL path with slashes at the beginning and the end
+     * of the URL.
+     *
+     * @return string
+     *
+     *      If the model does not create or generate a page an empty string will
+     *      be returned.
+     */
+    static function
+    getAbsoluteURLPath(
+        stdClass $modelArgument
+    ): string
+    {
+        $absoluteURLPath =
+        '';
+
+        $callable =
+        CBModel::getClassFunction(
+            $modelArgument,
+            'CBModel_getAbsoluteURLPath'
+        );
+
+        if (
+            $callable ===
+            null
+        ) {
+            goto done;
+        }
+
+        $potentialAbsoluteURLPath =
+        call_user_func(
+            $callable,
+            $modelArgument
+        );
+
+        if (
+            $potentialAbsoluteURLPath ===
+            ''
+        ) {
+            goto done;
+        }
+
+        $potentialAbsoluteURLPathIsValid =
+        CB_URL::potentialAbsoluteURLPathIsValid(
+            $potentialAbsoluteURLPath
+        );
+
+        if (
+            $potentialAbsoluteURLPathIsValid !==
+            true
+        ) {
+            $modelClassName =
+            CBModel::getClassName(
+                $modelArgument
+            );
+
+            throw new CBExceptionWithValue(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    This class for this model (${modelClassName}) returned the
+                    value "${potentialAbsoluteURLPath}" from the
+                    CBModel_getAbsoluteURLPath() interface which is not a valid
+                    absolute URL path.
+
+                EOT),
+                $modelArgument,
+                ''
+            );
+        }
+
+        $absoluteURLPath =
+        $potentialAbsoluteURLPath;
+
+        done:
+
+        return $absoluteURLPath;
+    }
+    // getAbsoluteURLPath()
+
+
+
+    /**
      * @param object $model
      *
      * @return string
