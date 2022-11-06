@@ -20,6 +20,69 @@ CB_URL
 
 
     /**
+     * @NOTE 2022_11_06_1667755606
+     *
+     *      This function is being written in haste because of the need to
+     *      ensure that some URL paths without beginning and ending slashes
+     *      become absolute URL paths with beginning and ending slashes.
+     *
+     *      This may be the beginning of the term "absolute URL path" in the
+     *      context of Colby meaning a URL path that definitely has beginning
+     *      and ending slashes.
+     *
+     * @param string $originalURLPathArgument
+     *
+     *      This argument is not validated in any way. It shouldn't be, but it
+     *      could be an empty string. (The return value would be "/" in this
+     *      case.)
+     *
+     * @return string
+     */
+    static function
+    convertURLPathToAbsoluteURLPath(
+        string $originalURLPathArgument
+    ) // -> string
+    {
+        $absoluteURLPath =
+        $originalURLPathArgument;
+
+        $firstCharacter =
+        mb_substr(
+            $absoluteURLPath,
+            0,
+            1
+        );
+
+        if (
+            $firstCharacter !==
+            '/'
+        ) {
+            $absoluteURLPath =
+            "/${absoluteURLPath}";
+        }
+
+        $lastCharacter =
+        mb_substr(
+            $absoluteURLPath,
+            -1,
+            1
+        );
+
+        if (
+            $lastCharacter !==
+            '/'
+        ) {
+            $absoluteURLPath =
+            "${absoluteURLPath}/";
+        }
+
+        return $absoluteURLPath;
+    }
+    // convertURLPathToAbsoluteURLPath();
+
+
+
+    /**
      * @NOTE 2022_08_21_1661043752
      *
      *      This function is being written in haste, but should become the
