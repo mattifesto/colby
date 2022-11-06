@@ -20,6 +20,7 @@
     ) // -> object
     {
         let modelCBID;
+        let shared_pageAnchorElement;
 
         let rootElement =
         CB_UI_ListItem_createRootElement();
@@ -85,7 +86,45 @@
             inspectElement
         );
 
+        shared_pageAnchorElement =
+        CB_UI_ListItem_createPageAnchorElement(
+            informationContainerElement
+        );
+
+
+
         // -- accessors
+
+
+
+        /**
+         * @param string newAbsolutePageURLArgument
+         *
+         * @return undefined
+         */
+        function
+        CB_UI_ListItem_setAbsolutePageURL(
+            newAbsolutePageURLArgument
+        ) // -> undefined
+        {
+            shared_pageAnchorElement.href =
+            newAbsolutePageURLArgument;
+
+            if (
+                newAbsolutePageURLArgument ===
+                ""
+            ) {
+                shared_pageAnchorElement.style.display =
+                "none";
+            }
+
+            else
+            {
+                shared_pageAnchorElement.style.display =
+                "inline";
+            }
+        }
+        // CB_UI_ListItem_setAbsolutePageURL()
 
 
 
@@ -182,7 +221,9 @@
 
 
 
-        return {
+        let listItemController =
+        {
+            CB_UI_ListItem_setAbsolutePageURL,
             CB_UI_ListItem_setAdministrativeTitle,
             CB_UI_ListItem_setImageModel,
             CB_UI_ListItem_setModelCBID,
@@ -190,6 +231,8 @@
             CB_UI_ListItem_getRootElement,
             CB_UI_ListItem_setTitle,
         };
+
+        return listItemController;
     }
     // CB_UI_ListItem_create()
 
@@ -387,6 +430,40 @@
         );
     }
     // CB_UI_ListItem_createInspectElement()
+
+
+
+    /**
+     * @param Element parentElementArgument
+     *
+     * @return Element
+     */
+    function
+    CB_UI_ListItem_createPageAnchorElement(
+        parentElementArgument
+    ) // -> Element
+    {
+        let pageAnchorElement =
+        document.createElement(
+            "a"
+        );
+
+        parentElementArgument.append(
+            pageAnchorElement
+        );
+
+        pageAnchorElement.style.display =
+        "none";
+
+        pageAnchorElement.textContent =
+        "page";
+
+        pageAnchorElement.className =
+        "CB_UI_ListItem_pageAnchor_element";
+
+        return pageAnchorElement;
+    }
+    // CB_UI_ListItem_createPageAnchorElement()
 
 
 
