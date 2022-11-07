@@ -18,7 +18,7 @@ CB_UI_ListItem
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_11_06_1667760826',
+                '2022_11_07_1667839650',
                 'css',
                 cbsysurl()
             ),
@@ -41,7 +41,7 @@ CB_UI_ListItem
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_11_06_1667760827',
+                '2022_11_07_1667839651',
                 'js',
                 cbsysurl()
             ),
