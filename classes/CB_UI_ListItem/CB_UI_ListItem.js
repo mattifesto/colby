@@ -44,18 +44,16 @@
             contentElement
         );
 
-        let administrativeTitleElement =
-        CB_UI_ListItem_createAdministrativeTitleElement();
-
-        informationContainerElement.append(
-            administrativeTitleElement
-        );
-
         let titleElement =
         CB_UI_ListItem_createTitleElement();
 
         informationContainerElement.append(
             titleElement
+        );
+
+        let administrativeTitleElement =
+        CB_UI_ListItem_createAdministrativeTitleElement(
+            informationContainerElement
         );
 
         let classNameElement =
@@ -239,10 +237,13 @@
 
 
     /**
+     * @param parentElement
+     *
      * @return Element
      */
     function
     CB_UI_ListItem_createAdministrativeTitleElement(
+        parentElement
     ) // -> Element
     {
         let administrativeTitleElement =
@@ -250,12 +251,14 @@
             "div"
         );
 
+        parentElement.append(
+            administrativeTitleElement
+        );
+
         administrativeTitleElement.className =
         "CB_UI_ListItem_administrativeTitle_element";
 
-        return (
-            administrativeTitleElement
-        );
+        return administrativeTitleElement;
     }
     // CB_UI_ListItem_createAdministrativeTitleElement()
 
