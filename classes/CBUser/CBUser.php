@@ -993,6 +993,30 @@ CBUser
 
 
     /**
+     * @param <CBUser model> $userModelArgument
+     *
+     * @return string
+     */
+    static function
+    CBModel_getAdministrativeTitle(
+        stdClass $userModelArgument
+    ): string
+    {
+        $prettyUsername =
+        CBUser::getPrettyUsername(
+            $userModelArgument
+        );
+
+        $administrativeTitle =
+        "@${prettyUsername}";
+
+        return $administrativeTitle;
+    }
+    // CBModel_getAdministrativeTitle()
+
+
+
+    /**
      * @param object $userModelArgument
      *
      * @return <CBImage model>|null
