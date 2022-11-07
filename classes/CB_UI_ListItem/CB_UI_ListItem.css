@@ -82,6 +82,12 @@ img
 {
     color:
     var(--CBTextColor2);
+
+    font-size:
+    80%;
+
+    padding-top:
+    5px;
 }
 
 
