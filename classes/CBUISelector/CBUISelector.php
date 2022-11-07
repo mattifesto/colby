@@ -16,7 +16,12 @@ CBUISelector
     {
         $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(__CLASS__, 'v590.js', cbsysurl()),
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2022_11_07_1667840421',
+                'js',
+                cbsysurl()
+            ),
         ];
 
         return $arrayOfJavaScriptURLs;
