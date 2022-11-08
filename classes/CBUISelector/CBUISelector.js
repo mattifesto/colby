@@ -6,6 +6,11 @@
 */
 
 
+/**
+ * @deprecated 2022_11_08_1667944718
+ *
+ *      Use CB_UI_Selector
+ */
 (function ()
 {
     "use strict";
