@@ -66,7 +66,7 @@ CB_Admin_ModelSearch
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_11_06_1667761008',
+                '2022_11_08_1667915630',
                 'js',
                 cbsysurl()
             ),
