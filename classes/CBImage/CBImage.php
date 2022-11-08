@@ -193,6 +193,22 @@ CBImage
 
 
     /**
+     * @param <CBImage model> $imageModelArgument
+     *
+     * @return <CBImage model>
+     */
+    static function
+    CBModel_getPrimaryImageModel(
+        stdClass $imageModelArgument
+    ): stdClass
+    {
+        return $imageModelArgument;
+    }
+    // CBModel_getPrimaryImageModel()
+
+
+
+    /**
      * @param object $spec
      *
      * @return object
