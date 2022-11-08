@@ -2,10 +2,9 @@
     CB_UI_ListItem,
     CB_UI_StringEditor,
     CBAjax,
-    CBUI,
     CBUINavigationView,
     CBUIPanel,
-    CBUISelector,
+    CB_UI_Selector,
 
     CB_Admin_ModelSearch_modelClassNameOptions,
 */
@@ -49,51 +48,31 @@
     CB_Admin_ModelSearch_createClassNameSelectorElement(
     ) // -> Element
     {
-        let rootElement;
-        let sectionElement;
+        let selectorController =
+        CB_UI_Selector.create();
 
-        {
-            let elements =
-            CBUI.createElementTree(
-                "CBUI_sectionContainer",
-                "CBUI_section"
-            );
+        selectorController.CB_UI_Selector_setTitle(
+            "Class Name"
+        );
 
-            rootElement =
-            elements[0];
+        selectorController.CB_UI_Selector_setArrayOfOptions(
+            CB_Admin_ModelSearch_modelClassNameOptions
+        );
 
-            sectionElement =
-            elements[1];
-        }
-
-        let selector =
-        CBUISelector.create(
+        selectorController.CB_UI_Selector_setChangedEventListenter(
+            function ()
             {
-                labelText:
-                "Class Name",
+                global_search_modelClassName =
+                selectorController.CB_UI_Selector_getValue();
 
-                options:
-                CB_Admin_ModelSearch_modelClassNameOptions,
-
-                valueChangedCallback:
-                function ()
-                {
-                    global_search_modelClassName =
-                    selector.value;
-
-                    CB_Admin_ModelSearch_performSearch();
-                }
+                CB_Admin_ModelSearch_performSearch();
             }
         );
 
-        /* classNameForKind */
-        sectionElement.append(
-            selector.element
-        );
+        let selectorElement =
+        selectorController.CB_UI_Selector_getElement();
 
-        return (
-            rootElement
-        );
+        return selectorElement;
     }
     // CB_Admin_ModelSearch_createClassNameSelectorElement()
 
