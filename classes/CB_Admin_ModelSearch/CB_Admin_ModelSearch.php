@@ -143,10 +143,9 @@ CB_Admin_ModelSearch
             'CB_UI_ListItem',
             'CB_UI_StringEditor',
             'CBAjax',
-            'CBUI',
             'CBUINavigationView',
             'CBUIPanel',
-            'CBUISelector',
+            'CB_UI_Selector',
         ];
     }
     // CBHTMLOutput_requiredClassNames()
