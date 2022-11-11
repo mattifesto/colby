@@ -1,7 +1,8 @@
 <?php
 
-final class Documentation_CBContentStyleSheet {
-
+final class
+Documentation_CBContentStyleSheet
+{
     /* -- CBAdmin interfaces -- */
 
 
@@ -9,7 +10,10 @@ final class Documentation_CBContentStyleSheet {
     /**
      * @return string
      */
-    static function CBAdmin_getUserGroupClassName(): string {
+    static function
+    CBAdmin_getUserGroupClassName(
+    ): string
+    {
         return 'CBAdministratorsUserGroup';
     }
 
@@ -18,7 +22,10 @@ final class Documentation_CBContentStyleSheet {
     /**
      * @return [string]
      */
-    static function CBAdmin_menuNamePath(): array {
+    static function
+    CBAdmin_menuNamePath(
+    ): array
+    {
         return [
             'help',
         ];
@@ -29,11 +36,12 @@ final class Documentation_CBContentStyleSheet {
     /**
      * @return void
      */
-    static function CBAdmin_render(
-    ): void {
-        CBHTMLOutput::pageInformation()->title = (
-            'CBContentStyleSheet Documentation'
-        );
+    static function
+    CBAdmin_render(
+    ): void
+    {
+        CBHTMLOutput::pageInformation()->title =
+        'CBContentStyleSheet Documentation';
 
         $CSS = <<<EOT
 
@@ -45,18 +53,26 @@ final class Documentation_CBContentStyleSheet {
 
         EOT;
 
-        CBHTMLOutput::addCSS($CSS);
+        CBHTMLOutput::addCSS(
+            $CSS
+        );
 
         CBView::renderSpec(
-            (object)[
-                'className' => 'CBPageTitleAndDescriptionView',
+            (object)
+            [
+                'className' =>
+                'CBPageTitleAndDescriptionView',
             ]
         );
 
         CBView::renderSpec(
-            (object)[
-                'className' => 'CBMessageView',
-                'markup' => file_get_contents(
+            (object)
+            [
+                'className' =>
+                'CBMessageView',
+
+                'markup' =>
+                file_get_contents(
                     __DIR__ .
                     '/Documentation_CBContentStyleSheet.cbmessage'
                 ),
@@ -74,26 +90,43 @@ final class Documentation_CBContentStyleSheet {
     /**
      * @return void
      */
-    static function CBInstall_install(): void {
-        $updater = CBModelUpdater::fetch(
-            (object)[
-                'ID' => CBHelpAdminMenu::ID(),
+    static function
+    CBInstall_install(
+    ): void
+    {
+        $updater =
+        CBModelUpdater::fetch(
+            (object)
+            [
+                'ID' =>
+                CBHelpAdminMenu::ID(),
             ]
         );
 
-        $menuSpec = $updater->working;
+        $menuSpec =
+        $updater->working;
 
         CBMenu::addOrReplaceItem(
             $menuSpec,
-            (object)[
-                'className' => 'CBMenuItem',
-                'name' => 'CBContentStyleSheet',
-                'text' => 'CBContentStyleSheet',
-                'URL' => '/admin/?c=Documentation_CBContentStyleSheet',
+            (object)
+            [
+                'className' =>
+                'CBMenuItem',
+
+                'name' =>
+                'CBContentStyleSheet',
+
+                'text' =>
+                'CBContentStyleSheet',
+
+                'URL' =>
+                '/admin/?c=Documentation_CBContentStyleSheet',
             ]
         );
 
-        CBModelUpdater::save($updater);
+        CBModelUpdater::save(
+            $updater
+        );
     }
     /* CBInstall_install() */
 
@@ -102,7 +135,10 @@ final class Documentation_CBContentStyleSheet {
     /**
      * @return [string]
      */
-    static function CBInstall_requiredClassNames(): array {
+    static function
+    CBInstall_requiredClassNames(
+    ): array
+    {
         return [
             'CBHelpAdminMenu'
         ];
