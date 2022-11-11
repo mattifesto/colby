@@ -104,7 +104,7 @@ CB_StandardPageFrame
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_10_25_1666664637',
+                '2022_11_11_1668204002',
                 'css',
                 cbsysurl()
             ),
