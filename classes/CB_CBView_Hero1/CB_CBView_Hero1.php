@@ -3,7 +3,7 @@
 final class
 CB_CBView_Hero1
 {
-    /* -- CBHTMLOutput interfaces -- */
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -14,15 +14,18 @@ CB_CBView_Hero1
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        return [
+        $arrayOfCSSURLs =
+        [
             Colby::flexpath(
                 __CLASS__,
                 'v675.70.css',
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfCSSURLs;
     }
-    /* CBHTMLOutput_CSSURLs() */
+    // CBHTMLOutput_CSSURLs()
 
 
 
