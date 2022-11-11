@@ -21,10 +21,10 @@
     var(--CB_UI_accentPaperColorGray);
 
     border:
-    1px solid var(--CB_UI_accentPaperColorGray);
+    1px solid var(--CB_UI_borderColor);
 
     border-radius:
-    10px;
+    3px;
 
     box-sizing:
     border-box;
