@@ -37,8 +37,10 @@ final class Documentation_CBContentStyleSheet {
 
         $CSS = <<<EOT
 
-            main.CBUIRoot {
-                background-color: var(--CBBackgroundColor);
+            main.CBUIRoot
+            {
+                background-color:
+                var(--CBBackgroundColor1);
             }
 
         EOT;
