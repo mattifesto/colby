@@ -14,7 +14,7 @@ CB_CBView_MainHeader
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        return
+        $arrayOfCSSURLs =
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
@@ -23,6 +23,8 @@ CB_CBView_MainHeader
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfCSSURLs;
     }
     // CBHTMLOutput_CSSURLs()
 
