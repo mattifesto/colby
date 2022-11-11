@@ -23,18 +23,6 @@
 
 
 
-.CB_StandardPageFrame_leftSidebar_class {
-    border-right: 1px solid var(--CB_UI_borderColor);
-}
-
-
-
-.CB_StandardPageFrame_rightSidebar_element {
-    border-left: 1px solid var(--CB_UI_borderColor);
-}
-
-
-
 .CB_StandardPageFrame_rightSidebarEnabled
   .CB_StandardPageFrame_rightSidebar_element {
     display: block;
