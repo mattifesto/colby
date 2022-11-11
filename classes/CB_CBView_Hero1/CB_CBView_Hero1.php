@@ -16,9 +16,10 @@ CB_CBView_Hero1
     {
         $arrayOfCSSURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.70.css',
+                '2022_11_11_1668203659',
+                'css',
                 cbsysurl()
             ),
         ];
