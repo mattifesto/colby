@@ -154,20 +154,27 @@ html
 
 
 
+        /**
+         * @NOTE 2022_11_12_1668273809
+         *
+         *      Since the paper color lightness is 12% solidText10 is 10% of
+         *      the way from 12% to 100% which is 20.8%.
+         */
+
         --CB_UI_color_solidText90:
-        hsl(0, 0%, 90%);
+        hsl(0, 0%, 91.2%);
 
         --CB_UI_color_solidText60:
-        hsl(0, 0%, 60%);
+        hsl(0, 0%, 64.8%);
 
         --CB_UI_color_solidText30:
-        hsl(0, 0%, 30%);
+        hsl(0, 0%, 38.4%);
 
         --CB_UI_color_solidText20:
-        hsl(0, 0%, 20%);
+        hsl(0, 0%, 29.6%);
 
         --CB_UI_color_solidText10:
-        hsl(0, 0%, 10%);
+        hsl(0, 0%, 20.8%);
     }
 }
 
