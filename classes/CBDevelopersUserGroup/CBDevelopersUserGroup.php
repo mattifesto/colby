@@ -3,6 +3,56 @@
 final class
 CBDevelopersUserGroup
 {
+    // -- CBHTMLOutput interfaces
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
+        $arrayOfJavaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2022_11_13_1668351816',
+                'js',
+                cbsysurl()
+            ),
+        ];
+
+        return $arrayOfJavaScriptURLs;
+    }
+    // CBHTMLOutput_JavaScriptURLs()
+
+
+
+    /**
+     * @return [[<name>, <value>]]
+     */
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array
+    {
+        $arrayOfJavaScriptVariables =
+        [
+            [
+                'CBDevelopersUserGroup_currentUserIsAMember_jsvariable',
+                CBUserGroup::currentUserIsMemberOfUserGroup(
+                    'CBDevelopersUserGroup'
+                ),
+            ],
+        ];
+
+        return $arrayOfJavaScriptVariables;
+    }
+    // CBHTMLOutput_JavaScriptVariables()
+
+
+
     // -- CBInstall interfaces
 
 
