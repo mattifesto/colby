@@ -179,15 +179,17 @@ CB_CBAdmin_Social
     CBHTMLOutput_requiredClassNames(
     ): array
     {
-        return
+        $arrayOfRequiredClassNames =
         [
             'CBAjax',
             'CBErrorHandler',
             'CBModel',
             'Colby',
         ];
+
+        return $arrayOfRequiredClassNames;
     }
-    /* CBHTMLOutput_requiredClassNames() */
+    // CBHTMLOutput_requiredClassNames()
 
 
 
