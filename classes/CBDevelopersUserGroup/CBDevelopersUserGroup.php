@@ -1,8 +1,9 @@
 <?php
 
-final class CBDevelopersUserGroup {
-
-    /* -- CBInstall interfaces -- -- -- -- -- */
+final class
+CBDevelopersUserGroup
+{
+    // -- CBInstall interfaces
 
 
 
@@ -11,20 +12,28 @@ final class CBDevelopersUserGroup {
      */
     static function
     CBInstall_install(
-    ): void {
-        $groupCBID = CBUserGroup::userGroupClassNameToCBID(
+    ): void
+    {
+        $groupCBID =
+        CBUserGroup::userGroupClassNameToCBID(
             __CLASS__
         );
 
         CBModelUpdater::update(
-            (object)[
-                'ID' => $groupCBID,
-                'className' => 'CBUserGroup',
-                'userGroupClassName' => __CLASS__,
+            (object)
+            [
+                'ID' =>
+                $groupCBID,
+
+                'className' =>
+                'CBUserGroup',
+
+                'userGroupClassName' =>
+                __CLASS__,
             ]
         );
     }
-    /* CBInstall_install() */
+    // CBInstall_install()
 
 
 
@@ -33,16 +42,20 @@ final class CBDevelopersUserGroup {
      */
     static function
     CBInstall_requiredClassNames(
-    ): array {
-        return [
-            'CBUsers'
+    ): array
+    {
+        $arrayOfRequiredClassNames =
+        [
+            'CBUsers',
         ];
+
+        return $arrayOfRequiredClassNames;
     }
-    /* CBInstall_requiredClassNames() */
+    // CBHTMLOutput_requiredClassNames()
 
 
 
-    /* -- CBUserGroup interfaces -- -- -- -- -- */
+    // -- CBUserGroup interfaces
 
 
 
