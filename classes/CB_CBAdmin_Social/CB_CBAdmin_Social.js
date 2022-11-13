@@ -1,5 +1,6 @@
 /* global
     CBAjax,
+    CBDevelopersUserGroup,
     CBErrorHandler,
     CBModel,
     Colby,
@@ -31,9 +32,14 @@
             "CB_CBAdmin_Social_element"
         )[0];
 
-        element.append(
-            createYouTubeStatusElement()
-        );
+        if (
+            CBDevelopersUserGroup.currentUserIsMember() ===
+            true
+        ) {
+            element.append(
+                createYouTubeStatusElement()
+            );
+        }
     }
     /* afterDOMContentLoaded() */
 
@@ -86,7 +92,7 @@
 
                     let titleElement =
                     document.createElement(
-                        "h1"
+                        "div"
                     );
 
                     element.append(
@@ -109,7 +115,10 @@
                     );
 
                     let arrayOfYouTubeStatisticsModelsLength =
-                    arrayOfYouTubeStatisticsModels.length;
+                    Math.min(
+                        arrayOfYouTubeStatisticsModels.length,
+                        1
+                    );
 
                     for (
                         let youtubeStatisticsModelIndex =
