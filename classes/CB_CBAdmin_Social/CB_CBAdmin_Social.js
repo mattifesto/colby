@@ -26,7 +26,8 @@
     function
     afterDOMContentLoaded(
     ) {
-        let element = document.getElementsByClassName(
+        let element =
+        document.getElementsByClassName(
             "CB_CBAdmin_Social_element"
         )[0];
 
@@ -39,11 +40,14 @@
 
 
     /**
+     * This function renders information for developers.
+     *
      * @return Element
      */
     function
     createYouTubeStatusElement(
-    ) {
+    ) // -> undefined
+    {
         let element = document.createElement(
             "div"
         );
