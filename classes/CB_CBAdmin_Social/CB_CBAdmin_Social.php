@@ -182,6 +182,7 @@ CB_CBAdmin_Social
         $arrayOfRequiredClassNames =
         [
             'CBAjax',
+            'CBDevelopersUserGroup',
             'CBErrorHandler',
             'CBModel',
             'Colby',
