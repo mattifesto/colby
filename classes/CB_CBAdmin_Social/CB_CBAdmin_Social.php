@@ -100,7 +100,7 @@ CB_CBAdmin_Social
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_09_12_1662999979',
+                '2022_11_13_1668352332',
                 'js',
                 cbsysurl()
             ),
