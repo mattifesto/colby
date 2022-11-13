@@ -43,20 +43,6 @@ Documentation_CBTest
         CBHTMLOutput::pageInformation()->title =
         'CBTest Documentation';
 
-        $CSS = <<<EOT
-
-            main.CBUIRoot
-            {
-                background-color:
-                var(--CBBackgroundColor);
-            }
-
-            EOT;
-
-        CBHTMLOutput::addCSS(
-            $CSS
-        );
-
         CBView::renderSpec(
             (object)
             [
