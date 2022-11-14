@@ -401,7 +401,7 @@ CB_CBView_MainHeader
         ) {
             CBImage::renderPictureElementWithImageInsideAspectRatioBox(
                 $imageModel,
-                'rw320',
+                'rs200clc200',
                 32,
                 32
             );
