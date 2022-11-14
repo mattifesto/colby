@@ -156,9 +156,12 @@ CB_CBView_MainHeader
         CB_CBView_MainHeader::renderItem(
             'home',
             '/',
-            'CB_MaterialSymbols_characters', // CSS Class
+            'CB_CBView_MainHeader_websiteItem_element',
             null, // context
-            $websiteIconImageModel
+            $websiteIconImageModel,
+            [
+                'CB_MaterialSymbols_characters',
+            ]
         );
 
         CB_CBView_MainHeader::renderItem(
