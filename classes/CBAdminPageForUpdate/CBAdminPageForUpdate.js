@@ -1,5 +1,6 @@
 /* globals
     CBAjax,
+    CBDevelopersUserGroup,
     CBMaintenance,
     CBMessageMarkup,
     CBUI,
@@ -65,7 +66,7 @@
         );
 
         if (
-            CBAdminPageForUpdate_isDevelopmentWebsite
+            CBDevelopersUserGroup.currentUserIsMember()
         ) {
             navigationPaneElement.appendChild(
                 createDeveloperUpdateButtonElement()
