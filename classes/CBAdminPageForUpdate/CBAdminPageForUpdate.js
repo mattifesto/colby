@@ -68,7 +68,7 @@
             CBAdminPageForUpdate_isDevelopmentWebsite
         ) {
             navigationPaneElement.appendChild(
-                createPullColbySectionElement()
+                createDeveloperUpdateButtonElement()
             );
         }
 
@@ -412,7 +412,7 @@
      * @return Element
      */
     function
-    createPullColbySectionElement(
+    createDeveloperUpdateButtonElement(
     ) // -> Element
     {
         let sectionContainerElement =
@@ -471,7 +471,7 @@
 
         return sectionContainerElement;
     }
-    /* createPullColbySectionElement() */
+    /* createDeveloperUpdateButtonElement() */
 
 
 
