@@ -209,7 +209,8 @@
      */
     function
     createFullUpdateSectionElement(
-    ) {
+    ) // -> Element 
+    {
         let elements =
         CBUI.createElementTree(
             "CBUI_container1",
