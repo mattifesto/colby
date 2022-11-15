@@ -1,4 +1,6 @@
 /* global
+    CB_UI,
+    CBDevelopersUserGroup,
     CBJavaScript,
 */
 
@@ -9,8 +11,7 @@
 
 
     CBJavaScript.afterDOMContentLoaded(
-        function (
-        ) // -> undefined
+        function ()
         {
             let rootElements =
             Array.from(
@@ -19,52 +20,106 @@
                 )
             );
 
-
-
             rootElements.forEach(
-                function (
-                    rootElement
-                ) // -> undefined
+                function (rootElement)
                 {
-                    let currentValueElement =
-                    rootElement.getElementsByClassName(
-                        "CB_View_SVGBarChart1_currentValue_element"
-                    )[0];
-
-                    let barElements =
-                    Array.from(
-                        rootElement.getElementsByClassName(
-                            "CB_View_SVGBarChart1_transparentFullBar_element"
-                        )
+                    CB_View_SVGBarChart1_initializeRootElement(
+                        rootElement
                     );
-
-
-
-                    barElements.forEach(
-                        function (
-                            barElement
-                        ) // -> undefined
-                        {
-                            barElement.addEventListener(
-                                "mouseover",
-                                function (
-                                ) // -> undefined
-                                {
-                                    currentValueElement.textContent =
-                                    barElement.dataset.value;
-                                }
-                            );
-                        }
-                    );
-                    // barElements.forEach()
-
                 }
             );
-            // rootElements.forEach()
-
         }
     );
     // CBJavaScript.afterDOMContentLoaded()
+
+
+
+    /**
+     * @param Element parentElement
+     *
+     * @return undefined
+     */
+    function
+    CB_View_SVGBarChart1_createDeveloperElement(
+        parentElement
+    ) // -> undefined
+    {
+        let developerElement =
+        document.createElement(
+            "div"
+        );
+
+        parentElement.append(
+            developerElement
+        );
+
+        developerElement.textContent =
+        "(developer)";
+    }
+    // CB_View_SVGBarChart1_createDeveloperElement()
+
+
+
+    /**
+     * @param Element rootElement
+     *
+     * @return undefined
+     */
+    function
+    CB_View_SVGBarChart1_initializeRootElement(
+        rootElement
+    ) // -> undefined
+    {
+        let contentElement =
+        rootElement.getElementsByClassName(
+            "CB_View_SVGBarChart1_content_element"
+        )[0];
+
+        let currentValueElement =
+        document.createElement(
+            "div"
+        );
+
+        contentElement.append(
+            currentValueElement
+        );
+
+        currentValueElement.className =
+        "CB_View_SVGBarChart1_currentValue_element";
+
+        currentValueElement.textContent =
+        CB_UI.getNonBreakingSpaceCharacter();
+
+        if (
+            CBDevelopersUserGroup.currentUserIsMember()
+        ) {
+            CB_View_SVGBarChart1_createDeveloperElement(
+                contentElement
+            );
+        }
+
+        let barElements =
+        Array.from(
+            rootElement.getElementsByClassName(
+                "CB_View_SVGBarChart1_transparentFullBar_element"
+            )
+        );
+
+        barElements.forEach(
+            function (barElement)
+            {
+                barElement.addEventListener(
+                    "mouseover",
+                    function ()
+                    {
+                        currentValueElement.textContent =
+                        barElement.dataset.value;
+                    }
+                );
+            }
+        );
+    }
+    // CB_View_SVGBarChart1_initializeRootElement()
 
 }
 )();
