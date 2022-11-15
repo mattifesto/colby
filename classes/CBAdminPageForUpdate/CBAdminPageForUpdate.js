@@ -72,12 +72,9 @@
             );
         }
 
-        else
-        {
-            navigationPaneElement.appendChild(
-                createFullUpdateSectionElement()
-            );
-        }
+        navigationPaneElement.appendChild(
+            createFullUpdateButtonElement()
+        );
 
         navigationPaneElement.appendChild(
             createIndividualActionsSectionElement()
@@ -208,8 +205,8 @@
      * @return Element
      */
     function
-    createFullUpdateSectionElement(
-    ) // -> Element 
+    createFullUpdateButtonElement(
+    ) // -> Element
     {
         let elements =
         CBUI.createElementTree(
@@ -253,7 +250,7 @@
 
         return elements[0];
     }
-    /* createFullUpdateSectionElement() */
+    /* createFullUpdateButtonElement() */
 
 
 
