@@ -19,11 +19,16 @@
 
 
 
-    let taskIsRunning = false;
+    let taskIsRunning =
+    false;
+
     let shared_outputElement;
 
     Colby.afterDOMContentLoaded(
-        afterDOMContentLoaded
+        function ()
+        {
+            afterDOMContentLoaded();
+        }
     );
 
 
@@ -31,27 +36,44 @@
     /**
      * @return undefined
      */
-    function afterDOMContentLoaded() {
-        let mainElement = document.getElementsByTagName("main")[0];
+    function
+    afterDOMContentLoaded(
+    ) // -> undefined
+    {
+        let mainElement =
+        document.getElementsByTagName(
+            "main"
+        )[0];
 
         mainElement.appendChild(
             CBUINavigationView.create().element
         );
 
-        let navigationPaneElement = document.createElement("div");
+        let navigationPaneElement =
+        document.createElement(
+            "div"
+        );
 
         CBUINavigationView.navigate(
             {
-                element: navigationPaneElement,
-                title: "Developer Tools",
+                element:
+                navigationPaneElement,
+
+                title:
+                "Developer Tools",
             }
         );
 
-        if (CBAdminPageForUpdate_isDevelopmentWebsite) {
+        if (
+            CBAdminPageForUpdate_isDevelopmentWebsite
+        ) {
             navigationPaneElement.appendChild(
                 createPullColbySectionElement()
             );
-        } else {
+        }
+
+        else
+        {
             navigationPaneElement.appendChild(
                 createFullUpdateSectionElement()
             );
@@ -69,8 +91,13 @@
 
         /* output element */
 
-        shared_outputElement = document.createElement("div");
-        shared_outputElement.className = "output";
+        shared_outputElement =
+        document.createElement(
+            "div"
+        );
+
+        shared_outputElement.className =
+        "output";
 
         navigationPaneElement.appendChild(
             shared_outputElement
@@ -107,7 +134,10 @@
 
         anchorElement.addEventListener(
             "click",
-            function () { closure_handleClick(); }
+            function ()
+            {
+                closure_handleClick();
+            }
         );
 
 
@@ -121,7 +151,8 @@
         {
             CBAdminPageForUpdate_runTask(
                 submodulePathArgument,
-                function () {
+                function ()
+                {
                     CBAdminPageForUpdate_performSubmoduleTask(
                         submodulePathArgument
                     );
@@ -153,7 +184,8 @@
 
 
         CBAdminPageForUpdate_arrayOfSubmodulePaths_jsvariable.forEach(
-            function (submodulePath) {
+            function (submodulePath)
+            {
                 CBAdminPageForUpdate_createSubmoduleAnchorElement(
                     rootElement,
                     submodulePath
@@ -178,20 +210,26 @@
     function
     createFullUpdateSectionElement(
     ) {
-        let elements = CBUI.createElementTree(
+        let elements =
+        CBUI.createElementTree(
             "CBUI_container1",
             "CBUI_button1"
         );
 
-        let buttonElement = elements[1];
-        buttonElement.textContent = "Backup, Pull Website, and Update";
+        let buttonElement =
+        elements[1];
+
+        buttonElement.textContent =
+        "Backup, Pull Website, and Update";
 
         buttonElement.addEventListener(
             "click",
-            function () {
+            function ()
+            {
                 CBAdminPageForUpdate_runTask(
                     "Backup, Pull Website, and Update",
-                    function () {
+                    function ()
+                    {
                         return Promise.resolve().then(
                             function () {
                                 return promiseToBackupDatabase();
@@ -225,17 +263,20 @@
     function
     createIndividualActionsSectionElement(
     ) {
-        let elements = CBUI.createElementTree(
+        let elements =
+        CBUI.createElementTree(
             "CBUI_sectionContainer",
             "CBUI_section"
         );
 
-        let sectionElement = elements[1];
+        let sectionElement =
+        elements[1];
 
 
         /* backup only */
         {
-            let actionElement = CBUI.createElement(
+            let actionElement =
+            CBUI.createElement(
                 "CBUI_action"
             );
 
@@ -243,14 +284,17 @@
                 actionElement
             );
 
-            actionElement.textContent = "Backup Database";
+            actionElement.textContent =
+            "Backup Database";
 
             actionElement.addEventListener(
                 "click",
-                function () {
+                function ()
+                {
                     CBAdminPageForUpdate_runTask(
                         "Backup Database",
-                        function () {
+                        function ()
+                        {
                             return promiseToBackupDatabase();
                         }
                     );
@@ -261,8 +305,11 @@
 
 
         /* pull colby or pull website */
-        if (CBAdminPageForUpdate_isDevelopmentWebsite) {
-            let actionElement = CBUI.createElement(
+        if (
+            CBAdminPageForUpdate_isDevelopmentWebsite
+        ) {
+            let actionElement =
+            CBUI.createElement(
                 "CBUI_action"
             );
 
@@ -270,14 +317,17 @@
                 actionElement
             );
 
-            actionElement.textContent = "Pull Colby";
+            actionElement.textContent =
+            "Pull Colby";
 
             actionElement.addEventListener(
                 "click",
-                function () {
+                function ()
+                {
                     CBAdminPageForUpdate_runTask(
                         "Pull Colby",
-                        function () {
+                        function ()
+                        {
                             return CBAdminPageForUpdate_pull(
                                 "colby"
                             );
@@ -285,8 +335,12 @@
                     );
                 }
             );
-        } else {
-            let actionElement = CBUI.createElement(
+        }
+
+        else
+        {
+            let actionElement =
+            CBUI.createElement(
                 "CBUI_action"
             );
 
@@ -294,14 +348,17 @@
                 actionElement
             );
 
-            actionElement.textContent = "Pull Website";
+            actionElement.textContent =
+            "Pull Website";
 
             actionElement.addEventListener(
                 "click",
-                function () {
+                function ()
+                {
                     CBAdminPageForUpdate_runTask(
                         "Pull Website",
-                        function () {
+                        function ()
+                        {
                             return CBAdminPageForUpdate_pull(
                                 "website"
                             );
@@ -315,7 +372,8 @@
 
         /* update only */
         {
-            let actionElement = CBUI.createElement(
+            let actionElement =
+            CBUI.createElement(
                 "CBUI_action"
             );
 
@@ -323,14 +381,17 @@
                 actionElement
             );
 
-            actionElement.textContent = "Update Site";
+            actionElement.textContent =
+            "Update Site";
 
             actionElement.addEventListener(
                 "click",
-                function () {
+                function ()
+                {
                     CBAdminPageForUpdate_runTask(
                         "Update Site",
-                        function () {
+                        function ()
+                        {
                             return promiseToUpdateSite();
                         }
                     );
@@ -349,12 +410,17 @@
     /**
      * @return Element
      */
-    function createPullColbySectionElement() {
-        let sectionContainerElement = CBUI.createElement(
+    function
+    createPullColbySectionElement(
+    ) // -> Element
+    {
+        let sectionContainerElement =
+        CBUI.createElement(
             "CBUI_sectionContainer"
         );
 
-        let sectionElement = CBUI.createElement(
+        let sectionElement =
+        CBUI.createElement(
             "CBUI_section"
         );
 
@@ -362,7 +428,8 @@
             sectionElement
         );
 
-        let actionElement = CBUI.createElement(
+        let actionElement =
+        CBUI.createElement(
             "CBUI_action"
         );
 
@@ -370,14 +437,17 @@
             actionElement
         );
 
-        actionElement.textContent = "Backup, Pull Colby, and Update";
+        actionElement.textContent =
+        "Backup, Pull Colby, and Update";
 
         actionElement.addEventListener(
             "click",
-            function () {
+            function ()
+            {
                 CBAdminPageForUpdate_runTask(
                     "Backup and Update Colby",
-                    function () {
+                    function ()
+                    {
                         return Promise.resolve().then(
                             function () {
                                 return promiseToBackupDatabase();
@@ -424,7 +494,6 @@
             expander.element
         );
 
-
         expander.expanded =
         true;
 
@@ -450,7 +519,8 @@
     CBAdminPageForUpdate_runTask(
         title,
         callback
-    ) {
+    ) // -> Promise -> undefined
+    {
         try
         {
             if (
@@ -475,7 +545,8 @@
                 callback
             );
 
-            taskIsRunning = false;
+            taskIsRunning =
+            false;
         }
 
         catch (
@@ -485,7 +556,8 @@
                 error
             );
 
-            taskIsRunning = false;
+            taskIsRunning =
+            false;
         }
     }
     /* CBAdminPageForUpdate_runTask() */
@@ -495,20 +567,35 @@
     /**
      * @return Promise
      */
-    function promiseToBackupDatabase() {
-        let expander = CBUIExpander.create();
-        expander.title = "database backup in progress";
-        expander.timestamp = Date.now() / 1000;
+    function
+    promiseToBackupDatabase(
+    ) // -> Promise -> undefined
+    {
+        let expander =
+        CBUIExpander.create();
 
-        shared_outputElement.appendChild(expander.element);
+        expander.title =
+        "database backup in progress";
 
-        let promise = CBAjax.call(
+        expander.timestamp =
+        Date.now() / 1000;
+
+        shared_outputElement.appendChild(
+            expander.element
+        );
+
+        let promise =
+        CBAjax.call(
             "CBAdminPageForUpdate",
             "backupDatabase"
         ).then(
-            function () {
-                expander.title = "database backup completed";
-                expander.timestamp = Date.now() / 1000;
+            function ()
+            {
+                expander.title =
+                "database backup completed";
+
+                expander.timestamp =
+                Date.now() / 1000;
             }
         );
 
@@ -635,20 +722,35 @@
     /**
      * @return Promise
      */
-    function promiseToUpdateSite() {
-        let expander = CBUIExpander.create();
-        expander.title = "website update in progress";
-        expander.timestamp = Date.now() / 1000;
+    function
+    promiseToUpdateSite(
+    ) // -> Promise -> undefined
+    {
+        let expander =
+        CBUIExpander.create();
 
-        shared_outputElement.appendChild(expander.element);
+        expander.title =
+        "website update in progress";
 
-        let promise = CBAjax.call(
+        expander.timestamp =
+        Date.now() / 1000;
+
+        shared_outputElement.appendChild(
+            expander.element
+        );
+
+        let promise =
+        CBAjax.call(
             "CBAdminPageForUpdate",
             "update"
         ).then(
-            function () {
-                expander.title = "website update completed";
-                expander.timestamp = Date.now() / 1000;
+            function ()
+            {
+                expander.title =
+                "website update completed";
+
+                expander.timestamp =
+                Date.now() / 1000;
             }
         );
 
