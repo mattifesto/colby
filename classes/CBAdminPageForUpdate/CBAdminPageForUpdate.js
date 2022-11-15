@@ -4,6 +4,7 @@
     CBMaintenance,
     CBMessageMarkup,
     CBUI,
+    CBUIButton,
     CBUIExpander,
     CBUINavigationView,
     CBUIPanel,
@@ -209,47 +210,56 @@
     createFullUpdateButtonElement(
     ) // -> Element
     {
-        let elements =
-        CBUI.createElementTree(
-            "CBUI_container1",
-            "CBUI_button1"
+        let buttonController =
+        CBUIButton.create();
+
+        buttonController.CBUIButton_setTextContent(
+            "Backup, Pull Website, and Update"
         );
 
-        let buttonElement =
-        elements[1];
 
-        buttonElement.textContent =
-        "Backup, Pull Website, and Update";
-
-        buttonElement.addEventListener(
-            "click",
+        buttonController.CBUIButton_addClickEventListener(
             function ()
             {
-                CBAdminPageForUpdate_runTask(
-                    "Backup, Pull Website, and Update",
-                    function ()
-                    {
-                        return Promise.resolve().then(
-                            function () {
-                                return promiseToBackupDatabase();
-                            }
-                        ).then (
-                            function () {
-                                return CBAdminPageForUpdate_pull(
-                                    "website"
-                                );
-                            }
-                        ).then(
-                            function () {
-                                return promiseToUpdateSite();
-                            }
-                        );
-                    }
-                );
+                closure_handleFullUpdateButtonClick();
             }
         );
 
-        return elements[0];
+
+
+        /**
+         * @return undefined
+         */
+        function
+        closure_handleFullUpdateButtonClick(
+        ) // -> undefined
+        {
+            CBAdminPageForUpdate_runTask(
+                "Backup, Pull Website, and Update",
+                async function ()
+                {
+                    await promiseToBackupDatabase();
+
+                    await CBAdminPageForUpdate_pull(
+                        "website"
+                    );
+
+                    await CBAdminPageForUpdate_wait(
+                        5
+                    );
+
+                    await promiseToUpdateSite();
+                }
+            );
+        }
+        // closure_handleFullUpdateButtonClick()
+
+
+
+        let buttonElement =
+        buttonController.CBUIButton_getElement();
+
+        return buttonElement;
     }
     /* createFullUpdateButtonElement() */
 
