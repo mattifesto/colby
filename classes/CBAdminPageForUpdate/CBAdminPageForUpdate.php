@@ -258,8 +258,12 @@ CBAdminPageForUpdate
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames(): array {
-        return [
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        $arrayOfRequiredClassNames =
+        [
             'CBAjax',
             'CBMaintenance',
             'CBMessageMarkup',
@@ -269,8 +273,10 @@ CBAdminPageForUpdate
             'CBUIPanel',
             'Colby',
         ];
+
+        return $arrayOfRequiredClassNames;
     }
-    /* CBHTMLOutput_requiredClassNames() */
+    // CBHTMLOutput_requiredClassNames()
 
 
 
