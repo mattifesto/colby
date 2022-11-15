@@ -67,6 +67,7 @@
         );
 
         if (
+            CBAdminPageForUpdate_isDevelopmentWebsite &&
             CBDevelopersUserGroup.currentUserIsMember()
         ) {
             navigationPaneElement.appendChild(
