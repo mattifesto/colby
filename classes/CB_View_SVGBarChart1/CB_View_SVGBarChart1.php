@@ -64,6 +64,7 @@ CB_View_SVGBarChart1
         [
             'CB_UI',
             'CBJavaScript',
+            'CBDevelopersUserGroup',
         ];
 
         return $arrayOfRequiredClassNames;
