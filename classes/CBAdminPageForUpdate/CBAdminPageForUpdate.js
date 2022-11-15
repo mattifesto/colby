@@ -757,5 +757,74 @@
     }
     /* promiseToUpdateSite() */
 
+
+
+    /**
+     * @param int numberOfSecondsToWaitArgument
+     *
+     * @return Promise -> undefined
+     */
+    async function
+    CBAdminPageForUpdate_wait(
+        numberOfSecondsToWaitArgument
+    ) // -> Promise -> undefined
+    {
+        let numberOfSecondsRemaining =
+        numberOfSecondsToWaitArgument;
+
+        let expander =
+        CBUIExpander.create();
+
+        shared_outputElement.append(
+            expander.element
+        );
+
+        expander.title =
+        `waiting ${numberOfSecondsRemaining} seconds`;
+
+        expander.timestamp =
+        Date.now() / 1000;
+
+        while (
+            numberOfSecondsRemaining > 0
+        ) {
+            await closure_waitOneSecond();
+
+            numberOfSecondsRemaining -= 1;
+
+            expander.title =
+            `waiting ${numberOfSecondsRemaining} seconds`;
+        }
+
+
+
+
+        /**
+         * @return Promise -> undefined
+         */
+        async function
+        closure_waitOneSecond(
+        ) // -> Promise -> undefined
+        {
+            return new Promise(
+                function (
+                    resolve
+                ) // -> undefined
+                {
+                    setTimeout(
+                        function ()
+                        {
+                            resolve();
+                        },
+                        1000
+                    );
+                }
+            );
+        }
+        // closure_waitOneSecond()
+
+    }
+    // CBAdminPageForUpdate_wait()
+
 }
 )();
