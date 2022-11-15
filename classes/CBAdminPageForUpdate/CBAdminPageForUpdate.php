@@ -265,9 +265,11 @@ CBAdminPageForUpdate
         $arrayOfRequiredClassNames =
         [
             'CBAjax',
+            'CBDevelopersUserGroup',
             'CBMaintenance',
             'CBMessageMarkup',
             'CBUI',
+            'CBUIButton',
             'CBUIExpander',
             'CBUINavigationView',
             'CBUIPanel',
