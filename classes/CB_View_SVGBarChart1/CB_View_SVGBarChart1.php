@@ -37,7 +37,7 @@ CB_View_SVGBarChart1
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        $javaScriptURLs =
+        $arrayOfJavaScriptURLs =
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
@@ -47,7 +47,7 @@ CB_View_SVGBarChart1
             ),
         ];
 
-        return $javaScriptURLs;
+        return $arrayOfJavaScriptURLs;
     }
     // CBHTMLOutput_JavaScriptURLs()
 
@@ -60,13 +60,13 @@ CB_View_SVGBarChart1
     CBHTMLOutput_requiredClassNames(
     ): array
     {
-        $requiredClassNames =
+        $arrayOfRequiredClassNames =
         [
             'CB_UI',
             'CBJavaScript',
         ];
 
-        return $requiredClassNames;
+        return $arrayOfRequiredClassNames;
     }
     // CBHTMLOutput_requiredClassNames()
 
