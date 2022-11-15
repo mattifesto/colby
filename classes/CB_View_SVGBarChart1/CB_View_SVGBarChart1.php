@@ -364,11 +364,6 @@ CB_View_SVGBarChart1
         echo <<<EOT
 
                     </svg>
-                    <div
-                        class="CB_View_SVGBarChart1_currentValue_element"
-                    >
-                        &nbsp;
-                    </div>
                 </div>
             </div>
 
