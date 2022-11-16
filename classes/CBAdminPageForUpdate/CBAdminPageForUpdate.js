@@ -677,7 +677,7 @@
 
             let cbmessage =
             [
-                "--- pre green",
+                "--- pre CBContentStyleSheet_console",
 
                 CBMessageMarkup.stringToMessage(
                     response.output
