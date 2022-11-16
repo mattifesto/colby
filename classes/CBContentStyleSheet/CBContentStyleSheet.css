@@ -181,6 +181,15 @@
     padding: 10px 15px;
 }
 
+
+
+.CBContentStyleSheet_console
+{
+    line-height: 1.4;
+}
+
+
+
 .CBContentStyleSheet.center,
 .CBContentStyleSheet .center {
     text-align: center;
