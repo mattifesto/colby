@@ -30,15 +30,26 @@ html
     hsl(0, 0%, 100%);
 
     /**
-     * @NOTE 2022_11_11_1668204828
+     * 2022_11_11_1668204828
      *
      *      This variable was officially accepted today as the color of a piece
      *      of "paper" on top of CB_UI_paperColor. There are only two levels
      *      available at this time.
+     *
+     * 2022_11_16_1668620864
+     *
+     *      I changed the lightness value to 98% from 99% after viewing the
+     *      CBUIExpander control in light mode. 99% is so close to white that it
+     *      was at the disturbing level even with the border. The value can just
+     *      be slightly different, but it has to be different enough to be an
+     *      obviously different color to the viewer. A difference that is too
+     *      slight makes the viewer think something is going wrong with their
+     *      eyes. Continue to adjust the value of this variable and add comments
+     *      until we get it right.
      */
 
     --CB_UI_accentPaperColorGray:
-    hsl(0, 0%, 99%);
+    hsl(0, 0%, 98%);
 
 
 
