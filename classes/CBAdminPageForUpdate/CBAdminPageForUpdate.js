@@ -314,9 +314,12 @@
         /* backup only */
 
 
-        /* pull colby or pull website */
+
+        // pull colby
+
         if (
-            CBAdminPageForUpdate_isDevelopmentWebsite
+            CBAdminPageForUpdate_isDevelopmentWebsite &&
+            CBDevelopersUserGroup.currentUserIsMember()
         ) {
             let actionElement =
             CBUI.createElement(
@@ -328,7 +331,7 @@
             );
 
             actionElement.textContent =
-            "Pull Colby";
+            "Prepare For Development";
 
             actionElement.addEventListener(
                 "click",
@@ -347,37 +350,38 @@
             );
         }
 
-        else
-        {
-            let actionElement =
-            CBUI.createElement(
-                "CBUI_action"
-            );
 
-            sectionElement.appendChild(
-                actionElement
-            );
 
-            actionElement.textContent =
-            "Pull Website";
+        // pull website
 
-            actionElement.addEventListener(
-                "click",
-                function ()
-                {
-                    CBAdminPageForUpdate_runTask(
-                        "Pull Website",
-                        function ()
-                        {
-                            return CBAdminPageForUpdate_pull(
-                                "website"
-                            );
-                        }
-                    );
-                }
-            );
-        }
-        /* pull colby or pull website */
+        let actionElement =
+        CBUI.createElement(
+            "CBUI_action"
+        );
+
+        sectionElement.appendChild(
+            actionElement
+        );
+
+        actionElement.textContent =
+        "Pull Website";
+
+        actionElement.addEventListener(
+            "click",
+            function ()
+            {
+                CBAdminPageForUpdate_runTask(
+                    "Pull Website",
+                    function ()
+                    {
+                        return CBAdminPageForUpdate_pull(
+                            "website"
+                        );
+                    }
+                );
+            }
+        );
+
 
 
         /* update only */
@@ -448,7 +452,7 @@
         );
 
         actionElement.textContent =
-        "Backup, Pull Colby, and Update";
+        "Backup, Prepare For Development, and Update";
 
         actionElement.addEventListener(
             "click",
