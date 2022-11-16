@@ -10,7 +10,7 @@
     break-word;
 
     padding:
-    20px 10px;
+    20px 5vw;
 }
 
 
@@ -273,6 +273,9 @@
 }
 
 .CBUIExpander_contentContainer {
+    background-color:
+    var(--CB_UI_accentPaperColorGray);
+
     display: none;
     overflow-y: scroll;
 }
