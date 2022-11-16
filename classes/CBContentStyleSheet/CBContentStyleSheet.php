@@ -16,9 +16,10 @@ CBContentStyleSheet
     {
         $arrayOfCSSURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v648.css',
+                '2022_11_16_1668620653',
+                'css',
                 cbsysurl()
             ),
         ];
