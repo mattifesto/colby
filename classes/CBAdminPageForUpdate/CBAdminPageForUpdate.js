@@ -428,61 +428,55 @@
     createDeveloperUpdateButtonElement(
     ) // -> Element
     {
-        let sectionContainerElement =
-        CBUI.createElement(
-            "CBUI_sectionContainer"
+        let buttonController =
+        CBUIButton.create();
+
+        buttonController.CBUIButton_setTextContent(
+            "Backup, Prepare For Development, and Update"
         );
 
-        let sectionElement =
-        CBUI.createElement(
-            "CBUI_section"
-        );
-
-        sectionContainerElement.appendChild(
-            sectionElement
-        );
-
-        let actionElement =
-        CBUI.createElement(
-            "CBUI_action"
-        );
-
-        sectionElement.appendChild(
-            actionElement
-        );
-
-        actionElement.textContent =
-        "Backup, Prepare For Development, and Update";
-
-        actionElement.addEventListener(
-            "click",
+        buttonController.CBUIButton_addClickEventListener(
             function ()
             {
-                CBAdminPageForUpdate_runTask(
-                    "Backup and Update Colby",
-                    function ()
-                    {
-                        return Promise.resolve().then(
-                            function () {
-                                return promiseToBackupDatabase();
-                            }
-                        ).then(
-                            function () {
-                                return CBAdminPageForUpdate_pull(
-                                    "colby"
-                                );
-                            }
-                        ).then(
-                            function () {
-                                return promiseToUpdateSite();
-                            }
-                        );
-                    }
-                );
+                closure_handleDeveloperUpdateButtonClick();
             }
         );
 
-        return sectionContainerElement;
+
+
+        /**
+         * @return undefined
+         */
+        function
+        closure_handleDeveloperUpdateButtonClick(
+        ) // -> undefined
+        {
+            CBAdminPageForUpdate_runTask(
+                "Backup, Prepare For Development, and Update",
+                async function ()
+                {
+                    await promiseToBackupDatabase();
+
+                    await CBAdminPageForUpdate_pull(
+                        "colby"
+                    );
+
+                    await CBAdminPageForUpdate_wait(
+                        5
+                    );
+
+                    await promiseToUpdateSite();
+                }
+            );
+        }
+        // closure_handleDeveloperUpdateButtonClick()
+
+
+
+        let buttonElement =
+        buttonController.CBUIButton_getElement();
+
+        return buttonElement;
     }
     /* createDeveloperUpdateButtonElement() */
 
