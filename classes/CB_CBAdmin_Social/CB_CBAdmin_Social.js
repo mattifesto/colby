@@ -13,19 +13,22 @@
 {
     "use strict";
 
+
+    
     document.addEventListener(
         "DOMContentLoaded",
         function () {
-            afterDOMContentLoaded();
+            CB_CBAdmin_Social_afterDOMContentLoaded();
         }
     );
 
 
+    
     /**
      * @return undefined
      */
     function
-    afterDOMContentLoaded(
+    CB_CBAdmin_Social_afterDOMContentLoaded(
     ) {
         let element =
         document.getElementsByClassName(
