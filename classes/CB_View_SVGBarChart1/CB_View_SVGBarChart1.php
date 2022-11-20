@@ -362,9 +362,29 @@ CB_View_SVGBarChart1
             1;
         }
 
+        echo '</svg>';
+
+        if (
+            CBUserGroup::currentUserIsMemberOfUserGroup(
+                'CBDevelopersUserGroup'
+            )
+        ) {
+            $hi = "a";
+
+            echo <<<EOT
+
+                <svg
+                    class="CB_View_SVGBarChart1_svg2_element"
+                    style="width: 280px;"
+                    viewBox="0 0 280 ${graphHeightAsPixels}"
+                >
+                </svg>
+
+            EOT;
+        }
+
         echo <<<EOT
 
-                    </svg>
                 </div>
             </div>
 
