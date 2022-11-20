@@ -14,7 +14,7 @@
 
     max-width:
     100%;
-    
+
     padding:
     20px;
 }
@@ -25,4 +25,16 @@
 {
     max-width:
     100%;
+}
+
+
+
+.CB_CBAdmin_Social_channel_element
+svg
+{
+    display:
+    block;
+
+    margin:
+    5px 0;
 }
