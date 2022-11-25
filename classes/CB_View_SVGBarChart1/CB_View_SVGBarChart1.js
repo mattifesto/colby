@@ -145,12 +145,12 @@
     /**
      * @param Element svg2ElementArgument
      */
-    function 
+    function
     CB_View_SVGBarChart1_renderSVG2Element(
         svg2ElementArgument
-    ) // -> undefined 
+    ) // -> undefined
     {
-        let rectElement = 
+        let rectElement =
         document.createElementNS(
             svgNamespace,
             "rect"
