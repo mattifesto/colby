@@ -10,7 +10,7 @@
 
 
 
-    const svgNamespace = 
+    const svgNamespace =
     "http://www.w3.org/2000/svg";
 
 
@@ -75,13 +75,13 @@
         rootElement
     ) // -> undefined
     {
-        let svg2Element = 
+        let svg2Element =
         rootElement.getElementsByClassName(
             "CB_View_SVGBarChart1_svg2_element"
         ).item(0);
 
         if (
-            svg2Element !== 
+            svg2Element !==
             null
         ) {
             CB_View_SVGBarChart1_renderSVG2Element(
