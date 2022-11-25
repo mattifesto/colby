@@ -150,6 +150,57 @@
         svg2ElementArgument
     ) // -> undefined
     {
+        const graphHeightAsPixels =
+        100;
+
+        for(
+            let barIndex = 0;
+            barIndex < 28;
+            barIndex += 1
+        ) {
+            let x =
+            (
+                10 *
+                barIndex
+            ) +
+            1;
+
+            let y =
+            0;
+
+            let width =
+            8;
+
+            let height =
+            graphHeightAsPixels;
+
+            CB_View_SVGBarChart1_renderRect(
+                svg2ElementArgument,
+                "CB_View_SVGBarChart1_barBackground_element",
+                x,
+                y,
+                width,
+                height
+            );
+        }
+    }
+    // CB_View_SVGBarChart1_renderSVG2Element()
+
+
+
+    /**
+     * @param Element svg2ElementArgument
+     */
+    function
+    CB_View_SVGBarChart1_renderRect(
+        svg2ElementArgument,
+        classNameArgument,
+        xArgument,
+        yArgument,
+        widthArgument,
+        heightArgument
+    ) // -> undefined
+    {
         let rectElement =
         document.createElementNS(
             svgNamespace,
@@ -158,34 +209,34 @@
 
         rectElement.setAttribute(
             "x",
-            "0"
+            `${xArgument}`
         );
 
         rectElement.setAttribute(
             "y",
-            "0"
+            `${yArgument}`
         );
 
         rectElement.setAttribute(
             "width",
-            "7"
+            `${widthArgument}`
         );
 
         rectElement.setAttribute(
             "height",
-            "100"
+            `${heightArgument}`
         );
 
         rectElement.setAttribute(
             "class",
-            "CB_View_SVGBarChart1_barBackground_element"
+            classNameArgument
         );
 
         svg2ElementArgument.appendChild(
             rectElement
         );
     }
-    // CB_View_SVGBarChart1_renderSVG2Element()
+    // CB_View_SVGBarChart1_renderRect()
 
 }
 )();
