@@ -85,6 +85,18 @@ img,
 .CB_CBView_MainHeader_personItem_element
 img
 {
+    border-color:
+    var(--CB_UI_borderColor);
+
     border-radius:
     1000px;
+
+    border-style:
+    solid;
+
+    border-width:
+    1px;
+
+    box-sizing:
+    border-box;
 }
