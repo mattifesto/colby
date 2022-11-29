@@ -10,6 +10,9 @@
 
 
 
+    const shared_graphHeightAsPixels =
+    100;
+
     const svgNamespace =
     "http://www.w3.org/2000/svg";
 
@@ -80,12 +83,39 @@
             "CB_View_SVGBarChart1_svg2_element"
         ).item(0);
 
+        let arrayOfBarHeights =
+        (function ()
+        {
+            let numbers =
+            [];
+
+            let currentNumber =
+            25;
+
+            for (
+                let barIndex = 0;
+                barIndex < 28;
+                barIndex += 1
+            ) {
+                numbers.push(
+                    currentNumber
+                );
+
+                currentNumber +=
+                1;
+            }
+
+            return numbers;
+        }
+        )();
+
         if (
             svg2Element !==
             null
         ) {
             CB_View_SVGBarChart1_renderSVG2Element(
-                svg2Element
+                svg2Element,
+                arrayOfBarHeights
             );
         }
 
@@ -144,43 +174,41 @@
 
     /**
      * @param Element svg2ElementArgument
+     * @param [int] arrayOfBarHeightsArgument
+     *
+     * @return undefined
      */
     function
     CB_View_SVGBarChart1_renderSVG2Element(
-        svg2ElementArgument
+        svg2ElementArgument,
+        arrayOfBarHeightsArgument
     ) // -> undefined
     {
-        const graphHeightAsPixels =
-        100;
-
         for(
             let barIndex = 0;
             barIndex < 28;
             barIndex += 1
         ) {
-            let x =
-            (
-                10 *
-                barIndex
-            ) +
-            1;
+            let barHeight =
+            shared_graphHeightAsPixels;
 
-            let y =
-            0;
-
-            let width =
-            8;
-
-            let height =
-            graphHeightAsPixels;
-
-            CB_View_SVGBarChart1_renderRect(
+            CB_View_SVGBarChart1_renderBar(
                 svg2ElementArgument,
                 "CB_View_SVGBarChart1_barBackground_element",
-                x,
-                y,
-                width,
-                height
+                barIndex,
+                barHeight
+            );
+
+            barHeight =
+            arrayOfBarHeightsArgument[
+                barIndex
+            ];
+
+            CB_View_SVGBarChart1_renderBar(
+                svg2ElementArgument,
+                "CB_View_SVGBarChart1_color_gray",
+                barIndex,
+                barHeight
             );
         }
     }
@@ -192,15 +220,30 @@
      * @param Element svg2ElementArgument
      */
     function
-    CB_View_SVGBarChart1_renderRect(
+    CB_View_SVGBarChart1_renderBar(
         svg2ElementArgument,
         classNameArgument,
-        xArgument,
-        yArgument,
-        widthArgument,
-        heightArgument
+        barIndexArgument,
+        barHeightArgument,
     ) // -> undefined
     {
+        let x =
+        (
+            10 *
+            barIndexArgument
+        ) +
+        1;
+
+        let width =
+        8;
+
+        let y =
+        shared_graphHeightAsPixels -
+        barHeightArgument;
+
+        let height =
+        barHeightArgument;
+
         let rectElement =
         document.createElementNS(
             svgNamespace,
@@ -209,22 +252,22 @@
 
         rectElement.setAttribute(
             "x",
-            `${xArgument}`
+            `${x}`
         );
 
         rectElement.setAttribute(
             "y",
-            `${yArgument}`
+            `${y}`
         );
 
         rectElement.setAttribute(
             "width",
-            `${widthArgument}`
+            `${width}`
         );
 
         rectElement.setAttribute(
             "height",
-            `${heightArgument}`
+            `${height}`
         );
 
         rectElement.setAttribute(
