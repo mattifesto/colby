@@ -3,7 +3,7 @@
 final class
 CBUI
 {
-    /* -- CBHTMLOutput interfaces -- */
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -14,15 +14,18 @@ CBUI
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        return [
+        $arrayOfCSSURLs =
+        [
             Colby::flexpath(
                 __CLASS__,
                 'v675.61.css',
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfCSSURLs;
     }
-    /* CBHTMLOutput_CSSURLs() */
+    // CBHTMLOutput_CSSURLs()
 
 
 
