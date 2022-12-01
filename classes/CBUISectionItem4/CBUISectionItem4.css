@@ -1,6 +1,8 @@
 .CBUISectionItem4
 {
-    background-color: var(--CB_UI_paperColor);
+    background-color:
+    var(--CB_UI_accentPaperColorGray);
+
     cursor: default;
     display: flex;
     min-height: 44px;
