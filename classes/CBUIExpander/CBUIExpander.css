@@ -15,9 +15,13 @@
 
 
 
-.CBUIExpander_container {
+.CBUIExpander_container
+{
+    background-color:
+    var(--CB_UI_accentPaperColorGray);
+
     border: 1px solid var(--CB_UI_borderColor);
-    border-radius: 3px;
+    border-radius: 5px;
     overflow: hidden;
 }
 
@@ -25,9 +29,6 @@
 
 .CBUIExpander_header
 {
-    background-color:
-    var(--CB_UI_borderColor);
-
     display:
     flex;
 
@@ -272,9 +273,10 @@
     font-size: 70%;
 }
 
-.CBUIExpander_contentContainer {
-    background-color:
-    var(--CB_UI_accentPaperColorGray);
+.CBUIExpander_contentContainer
+{
+    border-top:
+    1px solid var(--CB_UI_borderColor);
 
     display: none;
     overflow-y: scroll;
@@ -299,7 +301,7 @@
     center;
 
     background-color:
-    var(--CB_UI_paperColor);
+    var(--CB_UI_accentPaperColorGray);
 
     border-radius:
     10px;
