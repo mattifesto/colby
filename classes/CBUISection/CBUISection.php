@@ -21,9 +21,10 @@ CBUISection
     {
         $arrayOfCSSURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.61.css',
+                '2022_12_01_1669867113',
+                'css',
                 cbsysurl()
             ),
         ];
@@ -43,7 +44,12 @@ CBUISection
     {
         $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(__CLASS__, 'v440.js', cbsysurl()),
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2022_12_01_1669867393',
+                'js',
+                cbsysurl()
+            ),
         ];
 
         return $arrayOfJavaScriptURLs;
