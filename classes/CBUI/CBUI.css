@@ -985,10 +985,13 @@ a.CBUI_sectionItem {
     margin-top: 0.5em;
 }
 
+
+
 .CBUISectionItem {
-    background-color: var(--CB_UI_paperColor);
     min-height: 44px;
 }
+
+
 
 .CBUISectionItem a {
     color: var(--CBTextColorForLinks);
