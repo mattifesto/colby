@@ -3,7 +3,7 @@
 final class
 CBUISelectableItemContainer
 {
-    /* -- CBHTMLOutput interfaces -- */
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -14,7 +14,7 @@ CBUISelectableItemContainer
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        return
+        $arrayOfCSSURLs =
         [
             Colby::flexpath(
                 __CLASS__,
@@ -22,8 +22,10 @@ CBUISelectableItemContainer
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfCSSURLs;
     }
-    /* CBHTMLOutput_CSSURLs() */
+    // CBHTMLOutput_CSSURLs()
 
 
 
