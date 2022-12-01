@@ -20,10 +20,8 @@
      *      parts may only have 5px or in rare cases 0px of visible white space.
      */
 
-    user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     -webkit-user-select: none;
+    user-select: none;
 }
 
 
@@ -34,8 +32,7 @@
 .CBUISectionItem4 .selectable
 {
     cursor: auto;
-    user-select: auto;
-    -moz-user-select: auto;
-    -ms-user-select: auto;
+
     -webkit-user-select: auto;
+    user-select: auto;
 }
