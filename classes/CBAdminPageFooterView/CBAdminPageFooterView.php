@@ -20,9 +20,10 @@ CBAdminPageFooterView
     {
         $arrayOfCSSURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.61.css',
+                '2022_12_01_1669909255',
+                'css',
                 cbsysurl()
             ),
         ];
