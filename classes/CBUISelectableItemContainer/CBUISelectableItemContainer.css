@@ -36,6 +36,9 @@
 .CBUISelectableItemContainer
 .container
 {
+    background-color:
+    var(--CB_UI_accentPaperColorGray);
+
     max-width:
     100%;
 
@@ -53,9 +56,6 @@
     justify-content:
     space-between;
 
-    background-color:
-    var(--CB_UI_paperColor);
-
     border-color:
     var(--CB_UI_borderColor);
 
@@ -66,7 +66,7 @@
     solid;
 
     border-width:
-    2px;
+    1px;
 
     min-height:
     44px;
@@ -118,9 +118,6 @@
 .container >
 .items
 {
-    background-color:
-    var(--CB_UI_paperColor);
-
     border-color:
     var(--CB_UI_borderColor);
 
@@ -128,7 +125,7 @@
     solid;
 
     border-width:
-    0 2px;
+    0 1px;
 
     min-height:
     44px;
@@ -143,7 +140,7 @@
 *
 {
     border-top:
-    2px solid var(--CB_UI_borderColor);
+    1px solid var(--CB_UI_borderColor);
 }
 
 
@@ -159,9 +156,6 @@
     space-around;
 
 
-    background-color:
-    var(--CB_UI_paperColor);
-
     border-color:
     var(--CB_UI_borderColor);
 
@@ -172,7 +166,7 @@
     solid;
 
     border-width:
-    2px;
+    1px;
 
     min-height:
     44px;
