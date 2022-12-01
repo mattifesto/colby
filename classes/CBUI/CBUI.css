@@ -440,7 +440,8 @@ a.CBUI_action {
 
 
 .CBUI_section {
-    background-color: var(--CB_UI_paperColor);
+    background-color:
+    var(--CB_UI_accentPaperColorGray);
 
     border-color: var(--CB_UI_borderColor);
 
