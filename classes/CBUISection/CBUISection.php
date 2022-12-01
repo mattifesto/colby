@@ -37,11 +37,18 @@ CBUISection
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs(): array {
-        return [
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
+        $arrayOfJavaScriptURLs =
+        [
             Colby::flexpath(__CLASS__, 'v440.js', cbsysurl()),
         ];
+
+        return $arrayOfJavaScriptURLs;
     }
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
