@@ -16,9 +16,10 @@ CBUISelectableItemContainer
     {
         $arrayOfCSSURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.61.5.css',
+                '2022_12_01_1669866635',
+                'css',
                 cbsysurl()
             ),
         ];
