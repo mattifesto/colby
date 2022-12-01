@@ -7,7 +7,7 @@
 final class
 CBAdminPageFooterView
 {
-    /* -- CBHTMLOutput interfaces -- */
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -18,7 +18,7 @@ CBAdminPageFooterView
     CBHTMLOutput_CSSURLs(
     ): array
     {
-        return
+        $arrayOfCSSURLs =
         [
             Colby::flexpath(
                 __CLASS__,
@@ -26,6 +26,8 @@ CBAdminPageFooterView
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfCSSURLs;
     }
     // CBHTMLOutput_CSSURLs()
 
