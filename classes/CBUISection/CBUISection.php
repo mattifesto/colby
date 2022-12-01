@@ -59,10 +59,13 @@ CBUISection
     CBHTMLOutput_requiredClassNames(
     ): array
     {
-        return [
+        $arrayOfRequiredClassNames =
+        [
             'CB_UI',
         ];
+
+        return $arrayOfRequiredClassNames;
     }
-    /* CBHTMLOutput_requiredClassNames() */
+    // CBHTMLOutput_requiredClassNames()
 
 }
