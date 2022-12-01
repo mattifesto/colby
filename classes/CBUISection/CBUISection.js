@@ -1,9 +1,19 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBUISection */
+(function ()
+{
+    "use strict";
 
-var CBUISection = {
+
+
+    let CBUISection =
+    {
+        create:
+        CBUISection_create,
+    };
+
+    window.CBUISection =
+    CBUISection;
+
+
 
     /**
      * @return object
@@ -14,7 +24,10 @@ var CBUISection = {
      *          element: Element (readonly)
      *      }
      */
-    create: function () {
+    function
+    CBUISection_create(
+    ) // -> object
+    {
         var element = document.createElement("div");
         element.className = "CBUISection";
 
@@ -34,5 +47,8 @@ var CBUISection = {
         function appendItem(sectionItem) {
             element.appendChild(sectionItem.element);
         }
-    },
-};
+    }
+    // CBUISection_create()
+
+}
+)();
