@@ -50,6 +50,9 @@
 
 .CBUISelectableItemContainer_header_element
 {
+    background-color:
+    var(--CB_UI_accentPaperColorGray);
+
     display:
     flex;
 
@@ -149,6 +152,9 @@
 .container >
 .footer
 {
+    background-color:
+    var(--CB_UI_accentPaperColorGray);
+
     display:
     flex;
 
