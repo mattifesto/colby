@@ -1,5 +1,8 @@
 .CBAdminPageFooterView
 {
+    background-color:
+    var(--CB_UI_accentPaperColorGray);
+
     border-top:
     1px solid var(--CB_UI_borderColor);
 
@@ -13,7 +16,7 @@
     400;
 
     padding:
-    5px 10px;
+    10px 10px 20px;
 }
 
 
