@@ -14,8 +14,6 @@
     text-align: center;
 
     -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
 }
 
@@ -91,9 +89,8 @@ a.CBUI_action {
 
     cursor: default;
 
-    user-select: none;
-    -moz-user-select: none;
     -webkit-user-select: none;
+    user-select: none;
 }
 
 .CBUI_section > .CBUI_button1 {
@@ -776,10 +773,8 @@ a.CBUI_sectionItem {
 .CBUI_userSelectNone {
     cursor: default;
 
-    user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     -webkit-user-select: none;
+    user-select: none;
 }
 
 /**
@@ -1044,8 +1039,6 @@ a.CBUI_sectionItem {
     display: flex;
 
     -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none
 }
 
