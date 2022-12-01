@@ -16,9 +16,10 @@ CBUISectionItem4
     {
         $arrayOfCSSURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.61.css',
+                '2022_12_01_1669859736',
+                'css',
                 cbsysurl()
             ),
         ];
