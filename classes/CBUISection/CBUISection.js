@@ -28,14 +28,22 @@
     CBUISection_create(
     ) // -> object
     {
-        var element = document.createElement("div");
-        element.className = "CBUISection";
+        let sectionElement =
+        document.createElement(
+            "div"
+        );
 
-        return {
-            appendItem: appendItem,
+        sectionElement.className =
+        "CBUISection";
 
-            get element() {
-                return element;
+        let controller =
+        {
+            appendItem:
+            CBUISection_appendItem,
+
+            get element()
+            {
+                return sectionElement;
             },
         };
 
@@ -44,9 +52,17 @@
          *
          * @return undefined
          */
-        function appendItem(sectionItem) {
-            element.appendChild(sectionItem.element);
+        function
+        CBUISection_appendItem(
+            sectionItem
+        ) // -> undefined
+        {
+            sectionElement.append(
+                sectionItem.element
+            );
         }
+
+        return controller;
     }
     // CBUISection_create()
 
