@@ -364,7 +364,7 @@
 
 
 
-        /* -- closures -- -- -- -- -- */
+        // -- closures
 
 
 
@@ -373,22 +373,38 @@
          *
          *      The number of items copied to the clipboard.
          */
-        function copySelectedItems() {
-            let i = 0;
-            let length = selectableItemContainer.length;
-            let selectedSpecs = [];
+        function
+        copySelectedItems(
+        ) // -> int
+        {
+            let i =
+            0;
 
-            while (i < length) {
-                let selectableItem = selectableItemContainer.item(i);
+            let length =
+            selectableItemContainer.length;
 
-                if (selectableItem.selected) {
-                    selectedSpecs.push(specs[i]);
+            let selectedSpecs =
+            [];
+
+            while (
+                i < length
+            ) {
+                let selectableItem =
+                selectableItemContainer.item(i);
+
+                if (
+                    selectableItem.selected
+                ) {
+                    selectedSpecs.push(
+                        specs[i]
+                    );
                 }
 
                 i++;
             }
 
-            CBUISpecClipboard.specs = selectedSpecs;
+            CBUISpecClipboard.specs =
+            selectedSpecs;
 
             return selectedSpecs.length;
         }
