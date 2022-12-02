@@ -3,13 +3,20 @@
     CBUIStringsPart,
 */
 
-(function () {
+(function ()
+{
     "use strict";
 
-    window.CBUISelectableItemContainer =
+
+
+    let CBUISelectableItemContainer =
     {
-        create: CBUISelectableItemContainer_create,
+        create:
+        CBUISelectableItemContainer_create,
     };
+
+    window.CBUISelectableItemContainer =
+    CBUISelectableItemContainer;
 
 
 
@@ -522,4 +529,5 @@
     }
     // CBUISelectableItemContainer_create()
 
-})();
+}
+)();
