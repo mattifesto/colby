@@ -1,9 +1,9 @@
 <?php
 
 final class
-CBUICommandPart {
-
-    /* -- CBHTMLOutput interfaces -- */
+CBUICommandPart
+{
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -12,16 +12,20 @@ CBUICommandPart {
      */
     static function
     CBHTMLOutput_CSSURLs(
-    ): array {
-        return [
+    ): array
+    {
+        $arrayOfCSSURLs =
+        [
             Colby::flexpath(
                 __CLASS__,
                 'v675.41.css',
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfCSSURLs;
     }
-    /* CBHTMLOutput_CSSURLs() */
+    // CBHTMLOutput_CSSURLs()
 
 
 
