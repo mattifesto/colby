@@ -1,6 +1,3 @@
-"use strict";
-/* jshint strict: global */
-/* exported CBUISpecArrayEditor */
 /* global
     CB_UI,
     CBErrorHandler,
@@ -20,8 +17,21 @@
 */
 
 
+(function ()
+{
+    "use strict";
 
-var CBUISpecArrayEditor = {
+
+
+    let CBUISpecArrayEditor =
+    {
+        create:
+        CBUISpecArrayEditor_create,
+    };
+
+    window.CBUISpecArrayEditor =
+    CBUISpecArrayEditor;
+
 
 
     /**
@@ -46,9 +56,11 @@ var CBUISpecArrayEditor = {
      *              editor element.
      *      }
      */
-    create: function (
+    function
+    CBUISpecArrayEditor_create(
         args
-    ) {
+    ) // -> object
+    {
         if (!Array.isArray(args.addableClassNames)) {
             throw CBException.withError(
                 Error(
@@ -558,8 +570,8 @@ var CBUISpecArrayEditor = {
         }
         /* specToSelectableItem() */
 
-    },
-    /* create() */
+    }
+    // CBUISpecArrayEditor_create()
 
-};
-/* CBUISpecArrayEditor */
+}
+)();
