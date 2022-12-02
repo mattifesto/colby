@@ -60,6 +60,10 @@
 
         let selectionChangedCallback;
 
+
+
+        // root element
+
         let element =
         document.createElement(
             "div"
@@ -68,13 +72,21 @@
         element.className =
         "CBUISelectableItemContainer";
 
+
+
+        // container element
+
         let containerElement =
         document.createElement(
             "div"
         );
 
         containerElement.className =
-        "container";
+        "CBUISelectableItemContainer_container";
+
+
+
+        // header element
 
         let headerElement =
         document.createElement(
