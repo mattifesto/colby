@@ -37,7 +37,7 @@ CBUISelectableItemContainer
     CBHTMLOutput_JavaScriptURLs(
     ): array
     {
-        return
+        $arrayOfJavaScriptURLs =
         [
             Colby::flexpath(
                 __CLASS__,
@@ -45,6 +45,8 @@ CBUISelectableItemContainer
                 cbsysurl()
             )
         ];
+
+        return $arrayOfJavaScriptURLs;
     }
     // CBHTMLOutput_JavaScriptURLs()
 
