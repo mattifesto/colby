@@ -1,9 +1,9 @@
 <?php
 
 final class
-CBUISpecArrayEditor {
-
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+CBUISpecArrayEditor
+{
+    // -- CBHTMLOutput interfaces
 
 
 
@@ -23,16 +23,20 @@ CBUISpecArrayEditor {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ) {
-        return [
+    ): array
+    {
+        $arrayOfJavaScriptURLs =
+        [
             Colby::flexpath(
                 __CLASS__,
                 'v675.51.js',
                 cbsysurl()
             )
         ];
+
+        return $arrayOfJavaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
