@@ -33,14 +33,22 @@
 
 
 
-.CBUISelectableItemContainer
-.container
+.CBUISelectableItemContainer_container
 {
     background-color:
     var(--CB_UI_accentPaperColorGray);
 
+    border:
+    1px solid var(--CB_UI_borderColor);
+
+    border-radius:
+    5px;
+
     max-width:
     100%;
+
+    overflow:
+    hidden;
 
     width:
     960px;
@@ -59,17 +67,8 @@
     justify-content:
     space-between;
 
-    border-color:
-    var(--CB_UI_borderColor);
-
-    border-radius:
-    5px 5px 0 0;
-
-    border-style:
-    solid;
-
-    border-width:
-    1px;
+    border-bottom:
+    1px solid var(--CB_UI_borderColor);
 
     min-height:
     44px;
@@ -117,8 +116,7 @@
 
 
 
-.CBUISelectableItemContainer >
-.container >
+.CBUISelectableItemContainer_container >
 .items
 {
     border-color:
@@ -136,8 +134,7 @@
 
 
 
-.CBUISelectableItemContainer >
-.container >
+.CBUISelectableItemContainer_container >
 .items >
 * +
 *
@@ -148,8 +145,7 @@
 
 
 
-.CBUISelectableItemContainer >
-.container >
+.CBUISelectableItemContainer_container >
 .footer
 {
     background-color:
@@ -162,17 +158,8 @@
     space-around;
 
 
-    border-color:
-    var(--CB_UI_borderColor);
-
-    border-radius:
-    0 0 5px 5px;
-
-    border-style:
-    solid;
-
-    border-width:
-    1px;
+    border-top:
+    1px solid var(--CB_UI_borderColor);
 
     min-height:
     44px;
