@@ -1,16 +1,40 @@
-.CBUICommandPart {
-    align-items: center;
-    box-sizing: border-box;
-    color: var(--CBTextColorForLinks);
-    display: flex;
-    flex: none;
-    font-size: 80%;
-    justify-content: center;
-    min-height: 44px;
-    min-width: 44px;
-    padding: 0 10px;
+.CBUICommandPart
+{
+    align-items:
+    center;
+
+    box-sizing:
+    border-box;
+
+    color:
+    var(--CBTextColorForLinks);
+
+    display:
+    flex;
+
+    flex:
+    none;
+
+    font-size:
+    80%;
+
+    justify-content:
+    center;
+
+    min-height:
+    44px;
+
+    min-width:
+    44px;
+
+    padding:
+    0 10px;
 }
 
-.CBUICommandPart.disabled {
-    color: var(--CB_UI_borderColor);
+
+
+.CBUICommandPart.disabled
+{
+    color:
+    var(--CB_UI_borderColor);
 }
