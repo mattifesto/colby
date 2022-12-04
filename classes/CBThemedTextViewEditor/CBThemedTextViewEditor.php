@@ -1,22 +1,31 @@
 <?php
 
-final class CBThemedTextViewEditor {
+final class
+CBThemedTextViewEditor
+{
+    // -- CBHTMLOutput interfaces
+
+
 
     /**
      * @return [string]
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
+    ): array
+    {
+        $arrayOfJavaScriptURLs =
+        [
             Colby::flexpath(
                 __CLASS__,
                 'v675.7.js',
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfJavaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
@@ -25,8 +34,10 @@ final class CBThemedTextViewEditor {
      */
     static function
     CBHTMLOutput_requiredClassNames(
-    ): array {
-        return [
+    ): array
+    {
+        $arrayOfRequiredClassNames =
+        [
             'CBAjax',
             'CBUI',
             'CBUIBooleanEditor',
@@ -36,7 +47,9 @@ final class CBThemedTextViewEditor {
             'CBUISpecEditor',
             'CBUIStringEditor2',
         ];
+
+        return $arrayOfRequiredClassNames;
     }
-    /* CBHTMLOutput_requiredClassNames() */
+    // CBHTMLOutput_requiredClassNames()
 
 }
