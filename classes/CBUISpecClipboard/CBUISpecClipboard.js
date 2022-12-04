@@ -1,47 +1,131 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBUISpecClipboard */
+/* global
+    CBConvert
+*/
 
-var CBUISpecClipboard = {
+
+(function ()
+{
+    "use strict";
+
+
+
+    let CBUISpecClipboard =
+    {
+        /**
+         * @return [object]
+         */
+        get specs()
+        {
+            return CBUISpecClipboard_getSpecs();
+        },
+
+        /**
+         * @param [object] value
+         */
+        set specs(
+            specsArgument
+        ) {
+            CBUISpecClipboard_setSpecs(
+                specsArgument
+            );
+        },
+    };
+
+    window.CBUISpecClipboard =
+    CBUISpecClipboard;
+
+
 
     /**
      * @return [object]
      */
-    get specs() {
-        var clipboardAsJSON = localStorage.getItem("CBUISpecClipboard");
+    function
+    CBUISpecClipboard_getSpecs(
+    ) // -> [object]
+    {
+        let clipboardAsJSON =
+        localStorage.getItem(
+            "CBUISpecClipboard"
+        );
 
-        if (clipboardAsJSON === null) {
+        if (
+            clipboardAsJSON === null
+        ) {
             return [];
         }
 
-        return JSON.parse(clipboardAsJSON);
-    },
+        let specs =
+        JSON.parse(
+            clipboardAsJSON
+        );
+
+        return specs;
+    }
+    // CBUISpecClipboard_getSpecs()
+
+
 
     /**
-     * @param [object] value
+     * @param [object] arrayOfSpecsArgument
+     *
+     * @return undefined
      */
-    set specs(value) {
-        if (!Array.isArray(value)) {
-            value = [];
+    function
+    CBUISpecClipboard_setSpecs(
+        arrayOfSpecsArgument
+    ) // -> undefined
+    {
+        let arrayOfSpecs =
+        [];
+
+        let arrayOfSpecsArgumentIsAnArray =
+        Array.isArray(
+            arrayOfSpecsArgument
+        );
+
+        if (
+            arrayOfSpecsArgumentIsAnArray
+        ) {
+            arrayOfSpecs =
+            arrayOfSpecsArgument;
         }
 
-        for (let i = 0; i < value.length; i++) {
-            let spec = value[i];
+        for (
+            let specIndex = 0;
+            specIndex < arrayOfSpecs.length;
+            specIndex++
+        ) {
+            let currentSpec =
+            arrayOfSpecs[
+                specIndex
+            ];
 
-            if (typeof spec !== "object") {
-                value = [];
-                break;
-            }
+            let currentSpecAsModel =
+            CBConvert.valueAsModel(
+                currentSpec
+            );
 
-            let className = spec.className;
+            if (
+                currentSpecAsModel === undefined
+            ) {
+                arrayOfSpecs =
+                [];
 
-            if (typeof className !== "string" || className.trim() === "") {
-                value = [];
                 break;
             }
         }
 
-        localStorage.setItem("CBUISpecClipboard", JSON.stringify(value));
-    },
-};
+        let arrayOfSpecsAsJSON =
+        JSON.stringify(
+            arrayOfSpecs
+        );
+
+        localStorage.setItem(
+            "CBUISpecClipboard",
+            arrayOfSpecsAsJSON
+        );
+    }
+    // CBUISpecClipboard_setSpecs()
+
+}
+)();
