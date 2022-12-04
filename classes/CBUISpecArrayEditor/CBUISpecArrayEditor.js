@@ -142,7 +142,11 @@
                     className: className,
                 };
 
-                let selectableItem = specToSelectableItem(spec);
+                let selectableItem =
+                specToSelectableItem(
+                    spec,
+                    specsChangedCallback
+                );
 
                 selectableItemContainer.splice(
                     pasteIndex,
@@ -212,39 +216,33 @@
 
         selectableItemContainer.commands.push(copyCommand);
 
-        let pasteCommand = CBUICommandPart.create();
-        pasteCommand.title = "Paste";
-        pasteCommand.callback = function () {
-            let length = selectableItemContainer.length;
-            let pasteIndex = length;
 
-            for (let i = 0; i < length; i++) {
-                let selectableItem = selectableItemContainer.item(i);
 
-                if (selectableItem.selected) {
-                    pasteIndex = i;
-                    break;
-                }
-            }
+        // paste
 
-            let clipboardSpecs = CBUISpecClipboard.specs;
+        let pasteCommand =
+        CBUICommandPart.create();
 
-            for (let i = 0; i < clipboardSpecs.length; i++) {
-                let spec = clipboardSpecs[i];
-                let selectableItem = specToSelectableItem(spec);
+        pasteCommand.title =
+        "Paste";
 
-                selectableItemContainer.splice(pasteIndex, 0, selectableItem);
-                specs.splice(pasteIndex, 0, spec);
-
-                pasteIndex++;
-            }
-
-            if (clipboardSpecs.length > 0) {
-                specsChangedCallback();
-            }
+        pasteCommand.callback =
+        function ()
+        {
+            CBUISpecArrayEditor_handlePaste(
+                selectableItemContainer,
+                specs,
+                specsChangedCallback
+            );
         };
 
-        selectableItemContainer.commands.push(pasteCommand);
+        selectableItemContainer.commands.push(
+            pasteCommand
+        );
+
+
+
+        // up
 
         let upCommand = CBUICommandPart.create();
         upCommand.title = "▲";
@@ -329,7 +327,11 @@
         element.appendChild(selectableItemContainer.element);
 
         for (let i = 0; i < specs.length; i++) {
-            let selectableItem = specToSelectableItem(specs[i]);
+            let selectableItem =
+            specToSelectableItem(
+                specs[i],
+                specsChangedCallback
+            );
 
             selectableItemContainer.push(selectableItem);
         }
@@ -403,8 +405,9 @@
                 i++;
             }
 
-            CBUISpecClipboard.specs =
-            selectedSpecs;
+            CBUISpecClipboard.setSpecs(
+                selectedSpecs
+            );
 
             return selectedSpecs.length;
         }
@@ -494,100 +497,182 @@
 
 
 
-        /**
-         * @param object spec
-         *
-         * @return CBUISelectableItem
-         */
-        function specToSelectableItem(spec) {
-            let selectableItem = CBUISelectableItem.create();
-
-            selectableItem.callback = function () {
-                let editor = CBUISpecEditor.create(
-                    {
-                        spec: spec,
-                        specChangedCallback: specChangedCallback,
-                    }
-                );
-
-                CBUINavigationView.navigate(
-                    {
-                        element: editor.element,
-                        title: spec.className,
-                    }
-                );
-            };
-
-            let thumbnailPart = CBUIThumbnailPart.create();
-            selectableItem.push(thumbnailPart);
-
-            let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
-            selectableItem.push(titleAndDescriptionPart);
-
-            selectableItem.partsElement.appendChild(
-                CBUI.createElement(
-                    "CBUI_navigationArrow"
-                )
-            );
-
-            updateThumbnail();
-            updateTitleAndDescription();
-
-            return selectableItem;
-
-
-
-            /* -- closures -- -- -- -- -- */
-
-
-
-            function specChangedCallback() {
-                updateTitleAndDescription();
-                updateThumbnail();
-                specsChangedCallback();
-            }
-
-
-
-            /**
-             * @return Promise -> undefined
-             */
-            async function
-            updateTitleAndDescription(
-            ) {
-                try {
-                    titleAndDescriptionPart.title = spec.className;
-                    titleAndDescriptionPart.description = "...";
-
-                    let description = await CBUISpec.specToDescription(
-                        spec
-                    );
-
-                    titleAndDescriptionPart.description = (
-                        description ||
-                        CB_UI.getNonBreakingSpaceCharacter()
-                    );
-                } catch (
-                    error
-                ) {
-                    CBErrorHandler.report(
-                        error
-                    );
-                }
-            }
-            /* updateTitleAndDescription() */
-
-
-
-            function updateThumbnail() {
-                thumbnailPart.src = CBUISpec.specToThumbnailURL(spec);
-            }
-
-        }
-        /* specToSelectableItem() */
 
     }
     // CBUISpecArrayEditor_create()
+
+
+
+    /**
+     * @return Promise -> undefined
+     */
+    async function
+    CBUISpecArrayEditor_handlePaste(
+        selectableItemContainer,
+        specs,
+        specsChangedCallback
+    ) // -> Promise -> undefined
+    {
+        let length =
+        selectableItemContainer.length;
+
+        let pasteIndex =
+        length;
+
+        for (
+            let i = 0;
+            i < length;
+            i++
+        ) {
+            let selectableItem =
+            selectableItemContainer.item(i);
+
+            if (
+                selectableItem.selected
+            ) {
+                pasteIndex = i;
+                break;
+            }
+        }
+
+        let clipboardSpecs =
+        await CBUISpecClipboard.getSpecs();
+
+        for (
+            let i = 0;
+            i < clipboardSpecs.length;
+            i++
+        ) {
+            let spec =
+            clipboardSpecs[i];
+
+            let selectableItem =
+            specToSelectableItem(
+                spec,
+                specsChangedCallback
+            );
+
+            selectableItemContainer.splice(
+                pasteIndex,
+                0,
+                selectableItem
+            );
+
+            specs.splice(
+                pasteIndex,
+                0,
+                spec
+            );
+
+            pasteIndex++;
+        }
+
+        if (
+            clipboardSpecs.length > 0
+        ) {
+            specsChangedCallback();
+        }
+    }
+    // CBUISpecArrayEditor_handlePaste()
+
+
+
+    /**
+     * @param object spec
+     *
+     * @return CBUISelectableItem
+     */
+    function
+    specToSelectableItem(
+        spec,
+        specsChangedCallback
+    )
+    {
+        let selectableItem = CBUISelectableItem.create();
+
+        selectableItem.callback = function () {
+            let editor = CBUISpecEditor.create(
+                {
+                    spec: spec,
+                    specChangedCallback: specChangedCallback,
+                }
+            );
+
+            CBUINavigationView.navigate(
+                {
+                    element: editor.element,
+                    title: spec.className,
+                }
+            );
+        };
+
+        let thumbnailPart = CBUIThumbnailPart.create();
+        selectableItem.push(thumbnailPart);
+
+        let titleAndDescriptionPart = CBUITitleAndDescriptionPart.create();
+        selectableItem.push(titleAndDescriptionPart);
+
+        selectableItem.partsElement.appendChild(
+            CBUI.createElement(
+                "CBUI_navigationArrow"
+            )
+        );
+
+        updateThumbnail();
+        updateTitleAndDescription();
+
+        return selectableItem;
+
+
+
+        /* -- closures -- -- -- -- -- */
+
+
+
+        function specChangedCallback() {
+            updateTitleAndDescription();
+            updateThumbnail();
+            specsChangedCallback();
+        }
+
+
+
+        /**
+         * @return Promise -> undefined
+         */
+        async function
+        updateTitleAndDescription(
+        ) {
+            try {
+                titleAndDescriptionPart.title = spec.className;
+                titleAndDescriptionPart.description = "...";
+
+                let description = await CBUISpec.specToDescription(
+                    spec
+                );
+
+                titleAndDescriptionPart.description = (
+                    description ||
+                    CB_UI.getNonBreakingSpaceCharacter()
+                );
+            } catch (
+                error
+            ) {
+                CBErrorHandler.report(
+                    error
+                );
+            }
+        }
+        /* updateTitleAndDescription() */
+
+
+
+        function updateThumbnail() {
+            thumbnailPart.src = CBUISpec.specToThumbnailURL(spec);
+        }
+
+    }
+    /* specToSelectableItem() */
 
 }
 )();
