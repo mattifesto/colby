@@ -11,24 +11,11 @@
 
     let CBUISpecClipboard =
     {
-        /**
-         * @return [object]
-         */
-        get specs()
-        {
-            return CBUISpecClipboard_getSpecs();
-        },
+        getSpecs :
+        CBUISpecClipboard_getSpecs,
 
-        /**
-         * @param [object] value
-         */
-        set specs(
-            specsArgument
-        ) {
-            CBUISpecClipboard_setSpecs(
-                specsArgument
-            );
-        },
+        setSpecs :
+        CBUISpecClipboard_setSpecs,
     };
 
     window.CBUISpecClipboard =
@@ -39,25 +26,44 @@
     /**
      * @return [object]
      */
-    function
+    async function
     CBUISpecClipboard_getSpecs(
     ) // -> [object]
     {
-        let clipboardAsJSON =
-        localStorage.getItem(
-            "CBUISpecClipboard"
-        );
+        let clipboardText =
+        await navigator.clipboard.readText();
 
-        if (
-            clipboardAsJSON === null
-        ) {
-            return [];
+        let specs;
+
+        try
+        {
+            let potentialClipboardModel =
+            JSON.parse(
+                clipboardText
+            );
+
+            let clipboardModel =
+            CBConvert.valueAsModel(
+                potentialClipboardModel,
+                "CBUISpecClipboard"
+            );
+
+            if (
+                clipboardModel !== undefined
+            ) {
+                specs =
+                CBConvert.valueToArray(
+                    clipboardModel.CBUISpecClipboard_arrayOfSpecs
+                );
+            }
         }
 
-        let specs =
-        JSON.parse(
-            clipboardAsJSON
-        );
+        catch (
+            error
+        ) {
+            specs =
+            [];
+        }
 
         return specs;
     }
@@ -70,7 +76,7 @@
      *
      * @return undefined
      */
-    function
+    async function
     CBUISpecClipboard_setSpecs(
         arrayOfSpecsArgument
     ) // -> undefined
@@ -115,14 +121,22 @@
             }
         }
 
-        let arrayOfSpecsAsJSON =
+        let clipboardModel =
+        {
+            "className" :
+            "CBUISpecClipboard",
+
+            "CBUISpecClipboard_arrayOfSpecs" :
+            arrayOfSpecs,
+        };
+
+        let clipboardModelAsJSON =
         JSON.stringify(
-            arrayOfSpecs
+            clipboardModel
         );
 
-        localStorage.setItem(
-            "CBUISpecClipboard",
-            arrayOfSpecsAsJSON
+        await navigator.clipboard.writeText(
+            clipboardModelAsJSON
         );
     }
     // CBUISpecClipboard_setSpecs()
