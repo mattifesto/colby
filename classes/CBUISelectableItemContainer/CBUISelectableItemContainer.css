@@ -33,25 +33,26 @@
 
 
 
+/**
+ * @NOTE 2022_12_03_1670084859
+ *
+ * Do not add "overflow:hidden" to this element because it has header and footer
+ * children with "position:sticky" which will not work if "overflow:hidden" is
+ * set here.
+ *
+ * This also means the header and footer children will specify more information
+ * about their borders than they usually would.
+ *
+ * Do not add "background-color" to this element because the header and footer
+ * children need to specify the background color.
+ */
 .CBUISelectableItemContainer_container
 {
-    background-color:
-    var(--CB_UI_accentPaperColorGray);
-
-    border:
-    1px solid var(--CB_UI_borderColor);
-
-    border-radius:
-    5px;
-
     max-width:
     100%;
 
-    overflow:
-    hidden;
-
     width:
-    960px;
+    720px;
 }
 
 
@@ -61,17 +62,26 @@
     background-color:
     var(--CB_UI_accentPaperColorGray);
 
+    border:
+    1px solid var(--CB_UI_borderColor);
+
+    border-top-left-radius:
+    5px;
+
+    border-top-right-radius:
+    5px;
+
     display:
     flex;
 
     justify-content:
     space-between;
 
-    border-bottom:
-    1px solid var(--CB_UI_borderColor);
-
     min-height:
     44px;
+
+    overflow:
+    hidden;
 
     padding:
     0 5px;
@@ -119,6 +129,9 @@
 .CBUISelectableItemContainer_container >
 .items
 {
+    background-color:
+    var(--CB_UI_accentPaperColorGray);
+
     border-color:
     var(--CB_UI_borderColor);
 
@@ -154,15 +167,29 @@
     display:
     flex;
 
+    flex-wrap:
+    wrap;
+
     justify-content:
     space-around;
 
-
-    border-top:
+    border:
     1px solid var(--CB_UI_borderColor);
+
+    border-bottom-left-radius:
+    5px;
+
+    border-bottom-right-radius:
+    5px;
+
+    max-width:
+    100%;
 
     min-height:
     44px;
+
+    overflow:
+    hidden;
 
     position:
     sticky;
