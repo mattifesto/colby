@@ -103,4 +103,22 @@ CBUISpecClipboard
     }
     // CBHTMLOutput_JavaScriptURLs()
 
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        $arrayOfRequiredClassNames =
+        [
+            'CBConvert',
+        ];
+
+        return $arrayOfRequiredClassNames;
+    }
+    // CBHTMLOutput_requiredClassNames()
+
 }
