@@ -1,6 +1,5 @@
 "use strict";
 /* jshint strict: global */
-/* jshint esversion: 6 */
 /* exported CBTextView2Editor */
 /* global
     CBAjax,
@@ -147,8 +146,6 @@ var CBTextView2Editor = {
             );
         }
 
-        return element;
-
 
 
         /* -- closures -- -- -- -- -- */
@@ -158,54 +155,73 @@ var CBTextView2Editor = {
         /**
          * @return undefined
          */
-        function createEditor_convert() {
-            CBUIPanel.confirmText(
-                `
+        async function
+        createEditor_convert() {
+            try
+            {
+                let wasConfirmed =
+                CBUIPanel.confirmText(`
+
                     Are you sure you want to convert this CBTextView2 into a
                     CBMessageView?
-                `
-            ).then(
-                function (wasConfirmed) {
-                    if (!wasConfirmed) {
-                        return;
-                    }
 
-                    CBUISpecClipboard.specs = [args.spec];
+                `);
 
-                    return CBAjax.call(
-                        "CBTextView2",
-                        "convertToCBMessageView",
+                if (
+                    !wasConfirmed
+                ) {
+                    return;
+                }
+
+                CBUISpecClipboard.setSpecs(
+                    [
                         args.spec
-                    ).then(
-                        function (messageViewSpec) {
-                            Object.assign(args.spec, messageViewSpec);
+                    ]
+                );
 
-                            args.specChangedCallback();
+                let messageViewSpec =
+                await CBAjax.call(
+                    "CBTextView2",
+                    "convertToCBMessageView",
+                    args.spec
+                );
 
-                            let editor = CBUISpecEditor.create(
-                                {
-                                    spec: args.spec,
-                                    specChangedCallback: args.specChangedCallback,
-                                }
-                            );
+                Object.assign(
+                    args.spec,
+                    messageViewSpec
+                );
 
-                            CBUINavigationView.replace(
-                                {
-                                    element: editor.element,
-                                    title: args.spec.className,
-                                }
-                            );
-                        }
-                    );
-                }
-            ).catch(
-                function (error) {
-                    CBUIPanel.displayAndReportError(error);
-                }
-            );
+                args.specChangedCallback();
+
+                let editor =
+                CBUISpecEditor.create(
+                    {
+                        spec: args.spec,
+                        specChangedCallback: args.specChangedCallback,
+                    }
+                );
+
+                CBUINavigationView.replace(
+                    {
+                        element: editor.element,
+                        title: args.spec.className,
+                    }
+                );
+            }
+
+            catch (
+                error
+            ) {
+                CBUIPanel.displayAndReportError(
+                    error
+                );
+            }
         }
         /* createEditor_convert() */
 
+
+
+        return element;
     },
     /* CBUISpecEditor_createEditorElement() */
 
