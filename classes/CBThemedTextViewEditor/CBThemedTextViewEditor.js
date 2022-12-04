@@ -1,6 +1,5 @@
 "use strict";
 /* jshint strict: global */
-/* jshint esversion: 6 */
 /* exported CBThemedTextViewEditor */
 /* globals
     CBAjax,
@@ -14,6 +13,7 @@
 */
 
 
+
 var CBThemedTextViewEditor = {
 
     /**
@@ -21,51 +21,76 @@ var CBThemedTextViewEditor = {
      *
      * @return undefined
      */
-    convertToCBMessageView: function (spec, specChangedCallback) {
-        CBUIPanel.confirmText(
-            `
-                Are you sure you want to convert this CBThemedTextView into a
-                CBMessageView?
-            `
-        ).then(
-            function (wasConfirmed) {
-                if (!wasConfirmed) {
-                    return;
+    convertToCBMessageView:
+    async function (
+        spec,
+        specChangedCallback
+    ) {
+        try
+        {
+            let wasConfirmed =
+            await CBUIPanel.confirmText(
+                `
+                    Are you sure you want to convert this CBThemedTextView into a
+                    CBMessageView?
+                `
+            );
+
+            if (
+                !wasConfirmed
+            ) {
+                return;
+            }
+
+            CBUISpecClipboard.setSpecs(
+                [
+                    spec,
+                ]
+            );
+
+            let convertedSpec =
+            await CBAjax.call(
+                "CBThemedTextView",
+                "convertToCBMessageView",
+                spec
+            );
+
+            Object.assign(
+                spec,
+                convertedSpec
+            );
+
+            specChangedCallback();
+
+            let editor =
+            CBUISpecEditor.create(
+                {
+                    spec:
+                    spec,
+
+                    specChangedCallback:
+                    specChangedCallback,
                 }
+            );
 
-                CBUISpecClipboard.specs = [spec];
+            CBUINavigationView.replace(
+                {
+                    element:
+                    editor.element,
 
-                return CBAjax.call(
-                    "CBThemedTextView",
-                    "convertToCBMessageView",
-                    spec
-                ).then(
-                    function (convertedSpec) {
-                        Object.assign(spec, convertedSpec);
+                    title:
+                    spec.className,
+                }
+            );
+        }
 
-                        specChangedCallback();
-
-                        let editor = CBUISpecEditor.create(
-                            {
-                                spec: spec,
-                                specChangedCallback: specChangedCallback,
-                            }
-                        );
-
-                        CBUINavigationView.replace(
-                            {
-                                element: editor.element,
-                                title: spec.className,
-                            }
-                        );
-                    }
-                );
-            }
-        ).catch(
-            function (error) {
-                CBUIPanel.displayAndReportError(error);
-            }
-        );
+        catch (
+            error
+        ) {
+            CBUIPanel.displayAndReportError(
+                error
+            );
+        }
     },
     /* convertToCBMessageView() */
 
