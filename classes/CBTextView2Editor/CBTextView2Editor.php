@@ -16,9 +16,10 @@ CBTextView2Editor
     {
         $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.7.js',
+                '2022_12_04_1670178526',
+                'js',
                 cbsysurl()
             ),
         ];
