@@ -18,7 +18,7 @@ CBUISelectableItemContainer
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_12_01_1669866635',
+                '2022_12_02_1670001398',
                 'css',
                 cbsysurl()
             ),
@@ -39,11 +39,12 @@ CBUISelectableItemContainer
     {
         $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.61.5.js',
+                '2022_12_02_1669953966',
+                'js',
                 cbsysurl()
-            )
+            ),
         ];
 
         return $arrayOfJavaScriptURLs;
