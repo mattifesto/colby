@@ -27,11 +27,12 @@ CBUISpecArrayEditor
     {
         $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.51.js',
+                '2022_12_02_1669954497',
+                'js',
                 cbsysurl()
-            )
+            ),
         ];
 
         return $arrayOfJavaScriptURLs;
