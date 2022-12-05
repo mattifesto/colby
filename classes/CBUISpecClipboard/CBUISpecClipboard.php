@@ -92,9 +92,10 @@ CBUISpecClipboard
     {
         $arrayOfJavaScriptURLs =
         [
-            Colby::flexpath(
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v361.js',
+                '2022_12_04_1670164822',
+                'js',
                 cbsysurl()
             ),
         ];
