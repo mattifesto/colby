@@ -41,7 +41,7 @@ CB_View_SVGBarChart1
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_11_29_1669745863',
+                '2022_12_13_1670953615',
                 'js',
                 cbsysurl()
             ),
