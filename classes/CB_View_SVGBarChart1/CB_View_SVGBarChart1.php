@@ -232,9 +232,19 @@ CB_View_SVGBarChart1
         $graphHeightAsPixels =
         100;
 
+        $valuesAsJSONAsHTML =
+        cbhtml(
+            json_encode(
+                $values
+            )
+        );
+
         echo <<<EOT
 
-            <div class="CB_View_SVGBarChart1_root_element">
+            <div
+                class="CB_View_SVGBarChart1_root_element"
+                data-values="${valuesAsJSONAsHTML}"
+            >
                 <div class="CB_View_SVGBarChart1_content_element">
                     <svg
                         class="CB_View_SVGBarChart1_svg_element"
