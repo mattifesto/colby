@@ -83,39 +83,18 @@
             "CB_View_SVGBarChart1_svg2_element"
         ).item(0);
 
-        let arrayOfBarHeights =
-        (function ()
-        {
-            let numbers =
-            [];
-
-            let currentNumber =
-            25;
-
-            for (
-                let barIndex = 0;
-                barIndex < 28;
-                barIndex += 1
-            ) {
-                numbers.push(
-                    currentNumber
-                );
-
-                currentNumber +=
-                1;
-            }
-
-            return numbers;
-        }
-        )();
-
         if (
             svg2Element !==
             null
         ) {
+            let values =
+            JSON.parse(
+                rootElement.dataset.values
+            );
+
             CB_View_SVGBarChart1_renderSVG2Element(
                 svg2Element,
-                arrayOfBarHeights
+                values
             );
         }
 
@@ -181,28 +160,63 @@
     function
     CB_View_SVGBarChart1_renderSVG2Element(
         svg2ElementArgument,
-        arrayOfBarHeightsArgument
+        arrayOfValuesArgument
     ) // -> undefined
     {
+        let minimumValue =
+        Math.min(...arrayOfValuesArgument);
+
+        let maximumValue =
+        Math.max(...arrayOfValuesArgument);
+
+        let minimumBarHeight =
+        minimumValue <= 0 ?
+        0 :
+        (
+            shared_graphHeightAsPixels *
+            0.2
+        );
+
+        let maximumBarHeight =
+        shared_graphHeightAsPixels;
+
+        let barHeightRange =
+        maximumBarHeight -
+        minimumBarHeight;
+
         for(
             let barIndex = 0;
             barIndex < 28;
             barIndex += 1
         ) {
+            let currentValue =
+            arrayOfValuesArgument[
+                barIndex
+            ];
+
+            let currentUnitValue =
+            (
+                currentValue -
+                minimumValue
+            ) /
+            (
+                maximumValue -
+                minimumValue
+            );
+
             let barHeight =
-            shared_graphHeightAsPixels;
+            (
+                currentUnitValue *
+                barHeightRange
+            ) +
+            minimumBarHeight;
 
             CB_View_SVGBarChart1_renderBar(
                 svg2ElementArgument,
                 "CB_View_SVGBarChart1_barBackground_element",
                 barIndex,
-                barHeight
+                maximumBarHeight
             );
-
-            barHeight =
-            arrayOfBarHeightsArgument[
-                barIndex
-            ];
 
             CB_View_SVGBarChart1_renderBar(
                 svg2ElementArgument,
