@@ -10,6 +10,47 @@ CB_SearchResult
     /**
      * @param object $searchResultModel
      *
+     * @return object|null
+     */
+    static function
+    getPrimaryImageModel(
+        stdClass $searchResultModelArgument
+    ): ?stdClass
+    {
+        $primaryImageModel =
+        CBModel::valueAsModel(
+            $searchResultModelArgument,
+            'CB_SearchResult_primaryImageModel_property'
+        );
+
+        return $primaryImageModel;
+    }
+    /* getPrimaryImageModel() */
+
+
+
+    /**
+     * @param object $searchResultModel
+     * @param string $newTitle
+     *
+     * @return void
+     */
+    static function
+    setPrimaryImageModel(
+        stdClass $searchResultModelArgument,
+        ?stdClass $newPrimaryImageModelArgument
+    ): void
+    {
+        $searchResultModelArgument->CB_SearchResult_primaryImageModel_property =
+        $newPrimaryImageModelArgument;
+    }
+    /* setPrimaryImageModel() */
+
+
+
+    /**
+     * @param object $searchResultModel
+     *
      * @return string
      */
     static function
