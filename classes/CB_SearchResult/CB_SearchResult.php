@@ -1,8 +1,8 @@
 <?php
 
 final class
-CB_SearchResult {
-
+CB_SearchResult
+{
     /* -- accessors -- */
 
 
