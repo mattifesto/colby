@@ -7,12 +7,42 @@
     width: 800px;
 }
 
-.CBView_CBSearchResults_thumbnail {
-    background-color: var(--CBBackgroundOffsetColor);
-    box-sizing: border-box;
-    max-width: 100%;
-    padding: 10px;
+
+
+.CBView_CBSearchResults_thumbnail
+{
+    flex:
+    none;
+
+    max-width:
+    100%;
+
+    width:
+    150px;
 }
+
+
+
+.CBView_CBSearchResults_thumbnail
+img
+{
+    background-color:
+    var(--CB_UI_accentPaperColorGray);
+
+    border:
+    1px solid var(--CB_UI_borderColor);
+
+    border-radius:
+    5px;
+
+    box-sizing:
+    border-box;
+
+    padding:
+    5px;
+}
+
+
 
 .CBView_CBSearchResults_text {
     padding-left: 20px;
