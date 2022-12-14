@@ -29,6 +29,24 @@ CBView_CBSearchResults
 
 
 
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        $arrayOfRequiredClassNames =
+        [
+            'CB_UI',
+        ];
+
+        return $arrayOfRequiredClassNames;
+    }
+    // CBHTMLOutput_requiredClassNames()
+
+
+
     /* -- CBModel interfaces -- */
 
 
