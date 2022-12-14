@@ -1,10 +1,18 @@
-.CBView_CBSearchResults_result {
-    padding: 20px;
+.CBView_CBSearchResults_result
+{
+    padding:
+    20px;
 }
 
-.CBView_CBSearchResults_resultContent {
-    display: flex;
-    width: 800px;
+
+
+.CBView_CBSearchResults_resultContent
+{
+    display:
+    flex;
+
+    width:
+    800px;
 }
 
 
@@ -44,10 +52,17 @@ img
 
 
 
-.CBView_CBSearchResults_text {
-    padding-left: 20px;
+.CBView_CBSearchResults_text
+{
+    padding-left:
+    20px;
 }
 
-.CBView_CBSearchResults_text h3 {
-    font-weight: normal;
+
+
+.CBView_CBSearchResults_text
+h3
+{
+    font-weight:
+    normal;
 }
