@@ -245,6 +245,12 @@ CBView_CBSearchResults
             $searchResult
         );
 
+        $imageModel =
+        null;
+
+        $imageURL =
+        '';
+
         if (
             $className === 'CB_SearchResult'
         ) {
@@ -256,8 +262,12 @@ CBView_CBSearchResults
                 $searchResult
             );
 
+            $imageModel =
+            CB_SearchResult::getPrimaryImageModel(
+                $searchResult
+            );
+
             $description = '';
-            $imageURL = '';
         } else {
             $pageKeyValueData = $searchResult;
 
@@ -308,19 +318,22 @@ CBView_CBSearchResults
                     <?php
 
                     if (
-                        empty(
+                        $imageModel !==
+                        null
+                    ) {
+                        CBImage::renderPictureElementWithImageInsideAspectRatioBox(
+                            $imageModel,
+                            'rl640',
+                            150,
+                            150
+                        );
+                    }
+
+                    else if (
+                        !empty(
                             $imageURL
                         )
                     ) {
-                        CBArtworkElement::render(
-                            [
-                                'aspectRatioWidth' => 1,
-                                'aspectRatioHeight' => 1,
-                                'maxWidth' => '150',
-                                'URL' => $imageURL,
-                            ]
-                        );
-                    } else {
                         CBArtworkElement::render(
                             [
                                 'aspectRatioWidth' => 1,
