@@ -1309,6 +1309,13 @@ CBModels {
                 )
             );
 
+            CB_SearchResult::setPrimaryImageModel(
+                $searchResult,
+                CBModel::getPrimaryImageModel(
+                    $foundModel
+                )
+            );
+
             array_push(
                 $searchResults,
                 $searchResult
