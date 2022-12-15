@@ -306,40 +306,63 @@ CB_CBView_Moment
             )
         );
 
-        echo
-        CBConvert::stringToCleanLine(<<<EOT
-
-            <div
-                class=
-                "
-                    CB_CBView_Moment_root_element
-                    CB_CBView_Moment_momentPage
-                    CB_CBView_Moment_uninitialized
-                "
-
-                data-momentmodelasjson0959d46fd2=
-                "${momentModelAsJSONAsHTML}"
-            >
-
-                <div
-                    class="CB_CBView_Moment_leftContainer_element"
-                >
-
-        EOT);
-
-        CB_CBView_Moment::renderLargeImage(
-            $momentModel,
-            $shouldIncludeLinksToMomentPage
+        $imageModel =
+        CB_Moment::getImage(
+            $momentModel
         );
 
+        if (
+            $imageModel !==
+            null
+        ) {
+            echo
+            CBConvert::stringToCleanLine(<<<EOT
+
+                <div
+                    class=
+                    "
+                        CB_CBView_Moment_root_element
+                        CB_CBView_Moment_momentPage
+                        CB_CBView_Moment_uninitialized
+                    "
+
+                    data-momentmodelasjson0959d46fd2=
+                    "${momentModelAsJSONAsHTML}"
+                >
+
+                    <div
+                        class="CB_CBView_Moment_leftContainer_element"
+                    >
+
+            EOT);
+
+            CB_CBView_Moment::renderLargeImage(
+                $momentModel,
+                $shouldIncludeLinksToMomentPage
+            );
+
+            echo
+            CBConvert::stringToCleanLine(<<<EOT
+
+                </div>
+
+            EOT);
+        }
+
+        $containerElementClassName =
+        $imageModel === null ?
+        'CB_CBView_Moment_rightContainer_noImage_element' :
+        'CB_CBView_Moment_rightContainer_element';
+
         echo
         CBConvert::stringToCleanLine(<<<EOT
 
-            </div>
-
             <div
-                class="CB_CBView_Moment_rightContainer_element"
+                class="${containerElementClassName}"
             >
+                <div
+                    class="CB_CBView_Moment_rightContent_element"
+                >
 
         EOT);
 
@@ -357,7 +380,7 @@ CB_CBView_Moment
         );
 
         echo
-        '</div></div>';
+        '</div></div></div>';
     }
     // renderFullSizeMoment()
 
