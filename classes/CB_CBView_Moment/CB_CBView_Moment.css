@@ -34,13 +34,25 @@ a:hover
 
 
 .CB_CBView_Moment_leftContainer_element,
-.CB_CBView_Moment_rightContainer_element
+.CB_CBView_Moment_rightContainer_element,
+.CB_CBView_Moment_rightContainer_noImage_element
 {
     box-sizing:
     border-box;
 
     padding:
     20px;
+}
+
+
+
+.CB_CBView_Moment_rightContainer_noImage_element
+{
+    display:
+    flex;
+
+    justify-content:
+    center;
 }
 
 
