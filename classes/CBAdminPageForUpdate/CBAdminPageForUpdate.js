@@ -502,6 +502,8 @@
             expander.element
         );
 
+        expander.element.scrollIntoView();
+
         expander.expanded =
         true;
 
@@ -592,6 +594,8 @@
             expander.element
         );
 
+        expander.element.scrollIntoView();
+
         let promise =
         CBAjax.call(
             "CBAdminPageForUpdate",
@@ -667,6 +671,8 @@
             shared_outputElement.append(
                 expander.element
             );
+
+            expander.element.scrollIntoView();
 
             let response =
             await
@@ -747,6 +753,8 @@
             expander.element
         );
 
+        expander.element.scrollIntoView();
+
         let promise =
         CBAjax.call(
             "CBAdminPageForUpdate",
@@ -787,6 +795,8 @@
         shared_outputElement.append(
             expander.element
         );
+
+        expander.element.scrollIntoView();
 
         expander.title =
         `waiting ${numberOfSecondsRemaining} seconds`;
