@@ -306,6 +306,23 @@ CB_CBView_Moment
             )
         );
 
+        echo
+        CBConvert::stringToCleanLine(<<<EOT
+
+            <div
+                class=
+                "
+                    CB_CBView_Moment_root_element
+                    CB_CBView_Moment_momentPage
+                    CB_CBView_Moment_uninitialized
+                "
+
+                data-momentmodelasjson0959d46fd2=
+                "${momentModelAsJSONAsHTML}"
+            >
+
+        EOT);
+
         $imageModel =
         CB_Moment::getImage(
             $momentModel
@@ -319,20 +336,8 @@ CB_CBView_Moment
             CBConvert::stringToCleanLine(<<<EOT
 
                 <div
-                    class=
-                    "
-                        CB_CBView_Moment_root_element
-                        CB_CBView_Moment_momentPage
-                        CB_CBView_Moment_uninitialized
-                    "
-
-                    data-momentmodelasjson0959d46fd2=
-                    "${momentModelAsJSONAsHTML}"
+                    class="CB_CBView_Moment_leftContainer_element"
                 >
-
-                    <div
-                        class="CB_CBView_Moment_leftContainer_element"
-                    >
 
             EOT);
 
@@ -341,12 +346,9 @@ CB_CBView_Moment
                 $shouldIncludeLinksToMomentPage
             );
 
+            // left container
             echo
-            CBConvert::stringToCleanLine(<<<EOT
-
-                </div>
-
-            EOT);
+            '</div>';
         }
 
         $containerElementClassName =
@@ -379,8 +381,13 @@ CB_CBView_Moment
             $shouldIncludeLinksToMomentPage
         );
 
+        // right content, right container
         echo
-        '</div></div></div>';
+        '</div></div>';
+
+        // root element
+        echo
+        '</div>';
     }
     // renderFullSizeMoment()
 
