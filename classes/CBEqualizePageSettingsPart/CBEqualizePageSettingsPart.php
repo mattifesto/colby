@@ -19,10 +19,17 @@ CBEqualizePageSettingsPart
 
 
 
+        // CBBackgroundColor
+
         $codeSearchSpec =
         CBModel::createSpec(
             'CBCodeSearch',
             '47575ebc7532925602cc4cd2e0bf1b705e73bc0c'
+        );
+
+        CBCodeSearch::setAckArguments(
+            $codeSearchSpec,
+            '--ignore-file=match:CBEqualizePageSettingsPart\.'
         );
 
         CBCodeSearch::setNoticeVersion(
@@ -33,6 +40,11 @@ CBEqualizePageSettingsPart
         CBCodeSearch::setWarningVersion(
             $codeSearchSpec,
             '2022_06_21_1655783579'
+        );
+
+        CBCodeSearch::setErrorVersion(
+            $codeSearchSpec,
+            '2023_01_12_1673533018'
         );
 
         $codeSearchSpec->cbmessage =
@@ -46,7 +58,7 @@ CBEqualizePageSettingsPart
         '\bCBBackgroundColor\b';
 
         $codeSearchSpec->severity =
-        4;
+        3;
 
         $codeSearchSpec->title =
         'CBBackgroundColor';
@@ -57,6 +69,8 @@ CBEqualizePageSettingsPart
         );
 
 
+
+        // CBTextColor
 
         $codeSearchSpec =
         CBModel::createSpec(
