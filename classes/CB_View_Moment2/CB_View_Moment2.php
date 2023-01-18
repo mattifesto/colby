@@ -420,7 +420,8 @@ CB_View_Moment2
      */
     private static function
     generateLinkHTMLForUser(
-        stdClass $momentModelArgument
+        stdClass $momentModelArgument,
+        string $textContent = ''
     ): string
     {
         $authorUserModelCBID =
@@ -445,12 +446,25 @@ CB_View_Moment2
         $userPrettyUsernameAsHTML .
         '/';
 
+        if (
+            $textContent ===
+            ''
+        ) {
+            $textContent =
+            "@${userPrettyUsernameAsHTML}";
+        }
+
+        $textContentAsHTML =
+        cbhtml(
+            $textContent
+        );
+
         $linkHTML =
         <<<EOT
             <a
                 href="${userPageURLAsHTML}"
             >
-                @${userPrettyUsernameAsHTML}
+                ${textContentAsHTML}
             </a>
 
         EOT;
@@ -597,11 +611,15 @@ CB_View_Moment2
             $authorUserModelCBID
         );
 
-        $userFullNameAsHTML =
-        cbhtml(
-            CBUser::getName(
-                $authorUserModel
-            )
+        $userFullName =
+        CBUser::getName(
+            $authorUserModel
+        );
+
+        $userFullNameLinkHTML =
+        CB_View_Moment2::generateLinkHTMLForUser(
+            $momentModelArgument,
+            $userFullName
         );
 
         $cbtimestamp =
@@ -632,7 +650,7 @@ CB_View_Moment2
 
             <div class="CB_View_Moment2_nameAndDate_element">
 
-                <div>${userFullNameAsHTML}</div>
+                <div>${userFullNameLinkHTML}</div>
                 <div>${timestampElementAsHTML}</div>
 
             </div>
