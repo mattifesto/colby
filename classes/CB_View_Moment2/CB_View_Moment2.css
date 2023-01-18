@@ -104,6 +104,18 @@ img
 
 
 
+.CB_View_Moment2_nameAndDate_element
+a
+{
+    color:
+    var(--CBTextColor3);
+
+    text-decoration:
+    none;
+}
+
+
+
 .CB_View_Moment2_links_element
 {
     color:
