@@ -1,8 +1,8 @@
 <?php
 
 final class
-CB_Configuration {
-
+CB_Configuration
+{
         /* -- accessors -- */
 
 
