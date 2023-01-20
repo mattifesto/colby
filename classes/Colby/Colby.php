@@ -1155,10 +1155,17 @@ Colby
     mysqli(
     ) // -> mixed
     {
-        if (null === Colby::$mysqli) {
-            $mysqlHost = CBSitePreferences::mysqlHost();
+        if (
+            null ===
+            Colby::$mysqli
+        ) {
+            $mysqlHost =
+            CBSitePreferences::mysqlHost();
 
-            if ($mysqlHost === null) {
+            if (
+                $mysqlHost ===
+                null
+            ) {
                 return null;
             }
 
