@@ -1169,13 +1169,49 @@ Colby
                 return null;
             }
 
+            $databasePort =
+            null;
+
             $mysqli =
-            new mysqli(
-                $mysqlHost,
-                CBSitePreferences::mysqlUser(),
-                CBSitePreferences::mysqlPassword(),
-                CBSitePreferences::mysqlDatabase()
-            );
+            null;
+
+            $configurationSpec =
+            CB_Configuration::fetchConfigurationSpec();
+
+            if (
+                $configurationSpec !==
+                null
+            ) {
+                $databasePort =
+                CB_Configuration::getDatabasePort(
+                    $configurationSpec
+                );
+            }
+
+            if (
+                $databasePort ===
+                null
+            ) {
+                $mysqli =
+                new mysqli(
+                    $mysqlHost,
+                    CBSitePreferences::mysqlUser(),
+                    CBSitePreferences::mysqlPassword(),
+                    CBSitePreferences::mysqlDatabase()
+                );
+            }
+
+            else
+            {
+                $mysqli =
+                new mysqli(
+                    $mysqlHost,
+                    CBSitePreferences::mysqlUser(),
+                    CBSitePreferences::mysqlPassword(),
+                    CBSitePreferences::mysqlDatabase(),
+                    $databasePort
+                );
+            }
 
             if (
                 $mysqli->connect_error
