@@ -119,6 +119,47 @@ CB_Configuration
 
 
         /**
+         * @param object $configurationModelArgument
+         *
+         * @return int|null
+         */
+        static function
+        getDatabasePort(
+            stdClass $configurationModelArgument
+        ): ?int
+        {
+            $databasePort =
+            CBModel::valueAsInt(
+                $configurationModelArgument,
+                'CB_Configuration_databasePort'
+            );
+
+            return $databasePort;
+        }
+        // getDatabasePort()
+
+
+
+        /**
+         * @param object $configurationModelArgument
+         * @param int|null $newDatabasePortArgument
+         *
+         * @return void
+         */
+        static function
+        setDatabasePort(
+            stdClass $configurationModelArgument,
+            ?int $newDatabasePortArgument
+        ): void
+        {
+            $configurationModelArgument->CB_Configuration_databasePort =
+            $newDatabasePortArgument;
+        }
+        // setDatabasePort()
+
+
+
+        /**
          * @param object $model
          *
          * @return string
