@@ -1151,7 +1151,10 @@ Colby
      *      This function returns null if the site does not have MySQL user
      *      information set up yet.
      */
-    static function mysqli() {
+    static function
+    mysqli(
+    ) // -> mixed
+    {
         if (null === Colby::$mysqli) {
             $mysqlHost = CBSitePreferences::mysqlHost();
 
