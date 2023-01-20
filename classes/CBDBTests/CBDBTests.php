@@ -316,16 +316,35 @@ final class CBDBTests {
     /**
      * @return object
      */
-    static function CBTest_SQLToValue2(): stdClass {
-        $tableName = 'CBTest_SQLToValue2_' . CBID::generateRandomCBID();
-        $SQL = <<<EOT
+    static function
+    CBTest_SQLToValue2(
+    ): stdClass
+    {
+        $tableName =
+        'CBTest_SQLToValue2_' .
+        CBID::generateRandomCBID();
+
+        $SQL =
+        <<<EOT
 
             CREATE TEMPORARY TABLE {$tableName}
             (
-                binarycol BINARY(20),
-                nullcol BIGINT,
-                numcol BIGINT,
-                stringcol VARCHAR(80)
+                binarycol
+                BINARY(20),
+
+                nullcol
+                BIGINT,
+
+                numcol
+                BIGINT,
+
+                stringcol
+                VARCHAR(80),
+
+                PRIMARY KEY
+                (
+                    binarycol
+                )
             )
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
