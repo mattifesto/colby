@@ -76,12 +76,10 @@ final class CBLogTable {
      *
      * Indexes:
      *
-     *      UNIQUE KEY serial (serial)
+     *      PRIMARY KEY (serial)
      *
-     *          This is automatically created by using the SERIAL data type for
-     *          the "serial" column. It is the most important index because we
-     *          usually list log entries in order of creation ascending or
-     *          descending.
+     *          This is an important index because we usually list log entries
+     *          in order of creation ascending or descending.
      *
      *      KEY processID_serial (processID, serial)
      *
@@ -96,27 +94,71 @@ final class CBLogTable {
      *
      * @return void
      */
-    static function CBInstall_install(): void {
-        $SQL = <<<EOT
+    static function
+    CBInstall_install(
+    ): void
+    {
+        $SQL =
+        <<<EOT
 
-            CREATE TABLE IF NOT EXISTS `CBLog` (
-                message             TEXT NOT NULL,
-                modelID             BINARY(20),
-                processID           BINARY(20),
-                serial              SERIAL,
-                severity            TINYINT NOT NULL,
-                sourceClassName     VARCHAR(80) NOT NULL,
-                sourceID            BINARY(20),
-                timestamp           BIGINT NOT NULL,
-                KEY processID_serial (processID, serial),
-                KEY sourceClassName_serial (sourceClassName, serial)
+            CREATE TABLE
+            IF NOT EXISTS
+            CBLog
+            (
+                message
+                TEXT NOT NULL,
+
+                modelID
+                BINARY(20),
+
+                processID
+                BINARY(20),
+
+                serial
+                BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+
+                severity
+                TINYINT NOT NULL,
+
+                sourceClassName
+                VARCHAR(80) NOT NULL,
+
+                sourceID
+                BINARY(20),
+
+                timestamp
+                BIGINT NOT NULL,
+
+
+
+                PRIMARY KEY
+                (
+                    serial
+                ),
+
+                KEY
+                processID_serial
+                (
+                    processID,
+                    serial
+                ),
+
+                KEY
+                sourceClassName_serial (
+                    sourceClassName,
+                    serial
+                )
             )
             ENGINE=InnoDB
             DEFAULT CHARSET=utf8mb4
             COLLATE=utf8mb4_unicode_520_ci
 
-EOT;
+        EOT;
 
-        Colby::query($SQL);
+        Colby::query(
+            $SQL
+        );
     }
+    // CBInstall_install()
+
 }
