@@ -425,6 +425,14 @@ CBAdminPageForUpdate
             CBSitePreferences::mysqlDatabase()
         );
 
+        $configurationSpec =
+        CB_Configuration::fetchConfigurationSpec();
+
+        $databasePortArgument =
+        CBAdminPageForUpdate::getDatabasePortArgument(
+            $configurationSpec
+        );
+
         $output =
         [];
 
@@ -451,6 +459,7 @@ CBAdminPageForUpdate
             ' ',
             [
                 "{$command} -h {$host} -u {$user} --password={$password}",
+                $databasePortArgument,
                 "--databases {$database}",
                 "--add-drop-database",
                 "--extended-insert=FALSE",
@@ -493,6 +502,45 @@ CBAdminPageForUpdate
         }
     }
     /* backupDatabase() */
+
+
+
+    /**
+     * @param object|null $configurationSpec
+     *
+     * @return string
+     *
+     *      This function returns the port argument for the mysqldump command
+     *      as "--port 12345" or "" if no port is specified in the configuration
+     *      of this website.
+     */
+    private static function
+    getDatabasePortArgument(
+        ?stdClass $configurationSpec
+    ): string
+    {
+        if (
+            $configurationSpec ===
+            null
+        ) {
+            return '';
+        }
+
+        $databasePort =
+        CB_Configuration::getDatabasePort(
+            $configurationSpec
+        );
+
+        if (
+            $databasePort ===
+            null
+        ) {
+            return '';
+        }
+
+        return "--port {$databasePort}";
+    }
+    // getPortArgument()
 
 
 
