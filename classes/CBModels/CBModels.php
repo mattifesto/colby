@@ -1363,9 +1363,9 @@ CBModels {
             SELECT
 
             CONCAT(
-                "https://${domainAsSQL}/",
+                'https://${domainAsSQL}/',
                 URI,
-                "/"
+                '/'
             )
             AS CBModels_sitemapInformation_URL,
 
@@ -1394,7 +1394,7 @@ CBModels {
             SELECT
 
             CONCAT(
-                "https://${domainAsSQL}",
+                'https://${domainAsSQL}',
                 CBModels2_URLPath_column
             )
             AS CBModels_sitemapInformation_URL,
