@@ -70,6 +70,10 @@ CBModelsTests {
                 'type' => 'server',
             ],
             (object)[
+                'name' => 'fetchSitemapInformaton',
+                'type' => 'server',
+            ],
+            (object)[
                 'name' => 'saveSpecWithoutID',
                 'type' => 'server',
             ],
@@ -537,6 +541,21 @@ CBModelsTests {
         ];
     }
     /* CBTest_fetchModelsByID2_maintainPositions() */
+
+
+
+    /**
+     * @return void
+     */
+    static function
+    fetchSitemapInformaton(
+    ): void
+    {
+        $sitemapInformation  =
+        CBModels::fetchSitemapInformaton();
+    }
+    // fetchSitemapInformaton()
+
 
 
     /**
