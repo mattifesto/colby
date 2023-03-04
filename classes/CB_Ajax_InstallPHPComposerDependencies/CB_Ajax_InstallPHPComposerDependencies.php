@@ -17,17 +17,26 @@ CB_Ajax_InstallPHPComposerDependencies
         $originalDirectory =
         getcwd();
 
-        $documentRootDirectory =
-        cb_document_root_directory();
-
         chdir(
-            $documentRootDirectory
+            cb_document_root_directory()
         );
+
+
 
         try
         {
+            $userInformation =
+            posix_getpwuid(
+                posix_getuid()
+            );
+
+            $userHomeDirectory =
+            $userInformation[
+                'dir'
+            ];
+
             putenv(
-                "COMPOSER_HOME={$documentRootDirectory}"
+                "HOME={$userHomeDirectory}"
             );
 
             $command =
