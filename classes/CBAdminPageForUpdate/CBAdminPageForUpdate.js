@@ -736,43 +736,72 @@
     /**
      * @return Promise
      */
-    function
+    async function
     promiseToUpdateSite(
     ) // -> Promise -> undefined
     {
-        let expander =
-        CBUIExpander.create();
+        let expander;
 
-        expander.title =
-        "website update in progress";
+        try
+        {
+            expander =
+            CBUIExpander.create();
 
-        expander.timestamp =
-        Date.now() / 1000;
+            shared_outputElement.appendChild(
+                expander.element
+            );
 
-        shared_outputElement.appendChild(
-            expander.element
-        );
+            expander.element.scrollIntoView();
 
-        expander.element.scrollIntoView();
 
-        let promise =
-        CBAjax.call(
-            "CBAdminPageForUpdate",
-            "update"
-        ).then(
-            function ()
-            {
-                expander.title =
-                "website update completed";
 
-                expander.timestamp =
-                Date.now() / 1000;
-            }
-        );
+            expander.title =
+            "installing PHP composer dependencies";
 
-        return promise;
+            expander.timestamp =
+            Date.now() / 1000;
+
+            await CBAjax.call2(
+                "CB_Ajax_InstallPHPComposerDependencies"
+            );
+
+
+
+            expander.title =
+            "website update in progress";
+
+            expander.timestamp =
+            Date.now() / 1000;
+
+            await CBAjax.call(
+                "CBAdminPageForUpdate",
+                "update"
+            );
+
+
+
+            expander.title =
+            "website update completed";
+
+            expander.timestamp =
+            Date.now() / 1000;
+        }
+
+        catch (
+            error
+        ) {
+            expander.title =
+            "website update failed";
+
+            expander.timestamp =
+            Date.now() / 1000;
+
+            CBUIPanel.displayAndReportError(
+                error
+            );
+        }
     }
-    /* promiseToUpdateSite() */
+    // promiseToUpdateSite()
 
 
 
