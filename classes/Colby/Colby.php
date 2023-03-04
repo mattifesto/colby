@@ -915,6 +915,8 @@ Colby
         Colby::$libraryDirectories[] = cb_document_root_directory();
         Colby::$libraryDirectories[] = cbsysdir();
 
+
+
         /**
          * Set up autoloading. Autoloading is used by error handling. Colby used
          * to try to make sure error handling used no other files, but when
@@ -935,6 +937,24 @@ Colby
         spl_autoload_register(
             'Colby::autoload'
         );
+
+        $composerAutoloaderFilepath =
+        cb_document_root_directory() .
+        '/vendor/autoload.php';
+
+        $composerAutoloaderExists =
+        file_exists(
+            $composerAutoloaderFilepath
+        );
+
+        if (
+            $composerAutoloaderExists
+        ) {
+            require_once(
+                $composerAutoloaderFilepath
+            );
+        }
+
 
 
         /**
