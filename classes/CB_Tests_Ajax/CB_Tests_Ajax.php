@@ -18,7 +18,7 @@ CB_Tests_Ajax
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_08_09_1660089575',
+                '2023_03_04_1677965732',
                 'js',
                 cbsysurl()
             ),
