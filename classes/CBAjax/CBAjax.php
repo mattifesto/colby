@@ -426,7 +426,7 @@ CBAjax
             $error
         );
 
-        $response =
+        $ajaxResponseSpec =
         (object)[
             'className' =>
             'CBAjaxResponse',
@@ -455,7 +455,7 @@ CBAjax
          * that has one message for developers and one for users.
          */
 
-        $response->message =
+        $ajaxResponseSpec->message =
         $error->getMessage();
 
         $isDeveloper =
@@ -466,7 +466,14 @@ CBAjax
         if (
             $isDeveloper
         ) {
-            $response->stackTrace =
+            CBAjaxResponse::setCBMessage(
+                $ajaxResponseSpec,
+                CBException::throwableToCBMessage(
+                    $error
+                )
+            );
+
+            $ajaxResponseSpec->stackTrace =
             CBErrorHandler::throwableToPlainTextIteratedStackTrace(
                 $error
             );
@@ -475,7 +482,7 @@ CBAjax
         echo
         json_encode(
             CBModel::build(
-                $response
+                $ajaxResponseSpec
             )
         );
     }
