@@ -1,6 +1,8 @@
 <?php
 
-final class CBAjaxResponse {
+final class
+CBAjaxResponse
+{
     // -- CBHTMLOutput interfaces
 
 
@@ -94,7 +96,9 @@ final class CBAjaxResponse {
     CBModel_build(
         object $ajaxResponseSpec
     ): stdClass {
-        return (object)[
+        $ajaxResponseModel =
+        (object)
+        [
             'message' => CBModel::valueToString(
                 $ajaxResponseSpec,
                 'message'
@@ -125,7 +129,64 @@ final class CBAjaxResponse {
                 'wasSuccessful'
             ),
         ];
+
+        $cbmessage =
+        CBAjaxResponse::getCBMessage(
+            $ajaxResponseSpec
+        );
+
+        CBAjaxResponse::setCBMessage(
+            $ajaxResponseModel,
+            $cbmessage
+        );
+
+        return $ajaxResponseModel;
     }
     /* CBModel_build() */
+
+
+
+    // -- accessors
+
+
+
+    /**
+     * @param object $ajaxResponseModelArgument
+     *
+     * @return string
+     */
+    static function
+    getCBMessage(
+        stdClass $ajaxResponseModelArgument
+    ): string
+    {
+        $cbmessage =
+        CBModel::valueToString(
+            $ajaxResponseModelArgument,
+            'CBAjaxResponse_cbmessage_property'
+        );
+
+        return $cbmessage;
+    }
+    // getCBMessage()
+
+
+
+    /**
+     * @param object $ajaxResponseModelArgument
+     * @param string $cbmessageArgument
+     *
+     * @return void
+     */
+    static function
+    setCBMessage(
+        stdClass $ajaxResponseModelArgument,
+        string $cbmessageArgument
+    ): void
+    {
+        $ajaxResponseModelArgument->CBAjaxResponse_cbmessage_property =
+        $cbmessageArgument;
+    }
+    // setCBMessage()
 
 }
