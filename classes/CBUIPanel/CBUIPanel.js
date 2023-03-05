@@ -1,4 +1,5 @@
 /* global
+    CBAjaxResponse,
     CBConvert,
     CBErrorHandler,
     CBException,
@@ -480,6 +481,29 @@
         /* message */
 
 
+        /* cbmessage */
+        {
+            let cbmessage =
+            CBAjaxResponse.getCBMessage(
+                ajaxResponse
+            );
+
+            if (
+                cbmessage !== ""
+            ) {
+                let cbmessageElement =
+                CBUIPanel_createCBMessageElement(
+                    cbmessage
+                );
+
+                element.append(
+                    cbmessageElement
+                );
+            }
+        }
+        /* cbmessage */
+
+
         /* button */
         {
             let buttonElement;
@@ -878,11 +902,16 @@
             return;
         }
 
+        let ajaxResponse =
+        CBAjaxResponse.fromError(
+            error
+        );
+
         if (
-            error.ajaxResponse
+            ajaxResponse !== undefined
         ) {
             return CBUIPanel_displayAjaxResponse2(
-                error.ajaxResponse
+                ajaxResponse
             );
         }
 

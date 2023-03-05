@@ -45,16 +45,21 @@ CBUIPanel
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
-            Colby::flexpath(
+    ): array
+    {
+        $javaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.60.js',
+                '2023_03_05_1677991324',
+                'js',
                 cbsysurl()
             ),
         ];
+
+        return $javaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
@@ -65,6 +70,7 @@ CBUIPanel
     CBHTMLOutput_requiredClassNames(
     ): array {
         return [
+            'CBAjaxResponse',
             'CBConvert',
             'CBErrorHandler',
             'CBException',
