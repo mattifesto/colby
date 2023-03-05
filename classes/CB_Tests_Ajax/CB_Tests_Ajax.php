@@ -40,7 +40,10 @@ CB_Tests_Ajax
         $requiredClassNames =
         [
             'CBAjax',
+            'CBAjaxResponse',
+            'CBConvert',
             'CBException',
+            'CBTest',
         ];
 
         return $requiredClassNames;
@@ -59,6 +62,11 @@ CB_Tests_Ajax
     {
         $tests =
         [
+            (object)
+            [
+                'name' =>
+                'checkErrorAjaxResponseProperties'
+            ],
             (object)
             [
                 'name' =>
