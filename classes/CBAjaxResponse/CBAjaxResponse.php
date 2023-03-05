@@ -1,6 +1,50 @@
 <?php
 
 final class CBAjaxResponse {
+    // -- CBHTMLOutput interfaces
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
+        $javaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2023_03_04_1677967513',
+                'js',
+                cbsysurl()
+            ),
+        ];
+
+        return $javaScriptURLs;
+    }
+    // CBHTMLOutput_JavaScriptURLs()
+
+
+
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        $requiredClassNames =
+        [
+            'CBModel',
+        ];
+
+        return $requiredClassNames;
+    }
+    /* CBHTMLOutput_requiredClassNames() */
+
+
 
     /* -- CBModel interfaces -- */
 
