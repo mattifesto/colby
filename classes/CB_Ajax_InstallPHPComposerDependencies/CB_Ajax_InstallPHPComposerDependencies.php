@@ -39,34 +39,67 @@ CB_Ajax_InstallPHPComposerDependencies
                 "HOME={$userHomeDirectory}"
             );
 
-            $command =
-            'composer install';
+            $commands;
 
-            $output =
-            [];
+            $sitePreferencesModel =
+            CBSitePreferences::model();
 
-            $exitCode;
-
-            CBExec::exec(
-                $command,
-                $output,
-                $exitCode
+            $siteEnvironment =
+            CBSitePreferences::getEnvironment(
+                $sitePreferencesModel
             );
 
+            $commands;
+
             if (
-                $exitCode !== 0
+                $siteEnvironment === 'CBSitePreferences_environment_development'
             ) {
-                $outputAsText =
-                implode(
-                    "\n",
-                    $output
+                $commands =
+                [
+                    'composer require aws/aws-sdk-php:^3.258',
+                    'composer require erusev/parsedown:^1.7',
+                    'composer update',
+                ];
+            }
+
+            else
+            {
+                $commands =
+                [
+                    'composer install',
+                ];
+            }
+
+            foreach (
+                $commands as
+                $command
+            ) {
+                $output =
+                [];
+
+                $exitCode;
+
+                CBExec::exec(
+                    $command,
+                    $output,
+                    $exitCode
                 );
 
-                throw new CBExceptionWithValue(
-                    'composer install failed',
-                    $outputAsText,
-                    'd8d71ef9485c9c9df3ca0d724f76fdc448ed3aca'
-                );
+                if (
+                    $exitCode !== 0
+                ) {
+                    $outputAsText =
+                    implode(
+                        "\n",
+                        $output
+                    );
+
+                    throw new CBExceptionWithValue(
+                        'installing php composer dependencies failed',
+                        $outputAsText,
+                        'd8d71ef9485c9c9df3ca0d724f76fdc448ed3aca'
+                    );
+                }
             }
         }
 
