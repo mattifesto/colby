@@ -43,7 +43,7 @@ CBTCommand_create_database {
 
         create user
         {$databaseUsername}@localhost
-        identified with mysql_native_password by
+        identified with caching_sha2_password by
         '{$databasePassword}';
 
         grant all on
