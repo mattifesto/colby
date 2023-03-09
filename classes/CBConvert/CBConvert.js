@@ -57,38 +57,89 @@
     CBConvert_centsToDollars(
         cents
     ) {
-        let isNegative = false;
-        let centsAsInt = CBConvert_valueAsInt(cents);
+        let isNegative =
+        false;
 
-        if (centsAsInt === undefined) {
-            throw new TypeError("The cents parameter is not a valid integer.");
+        let centsAsInt =
+        CBConvert_valueAsInt(
+            cents
+        );
+
+        if (
+            centsAsInt ===
+            undefined
+        ) {
+            let message =
+            CBConvert_stringToCleanLine(`
+
+                The cents parameter is not a valid integer.
+
+            `);
+
+            throw new TypeError(
+                message
+            );
         }
 
-        if (centsAsInt < 0) {
-            isNegative = true;
-            centsAsInt = Math.abs(centsAsInt);
+        if (
+            centsAsInt <
+            0
+        ) {
+            isNegative =
+            true;
+
+            centsAsInt =
+            Math.abs(
+                centsAsInt
+            );
         }
 
         /**
          * Convert to a string.
          */
 
-        let centsAsString = CBConvert_valueToString(centsAsInt);
+        let centsAsString =
+        CBConvert_valueToString(
+            centsAsInt
+        );
 
         /**
          * Pad with zeros until the string is at least 3 digits long.
          */
 
-        while (centsAsString.length < 3) {
-            centsAsString = "0" + centsAsString;
+        while (
+            centsAsString.length <
+            3
+        ) {
+            centsAsString =
+            "0" +
+            centsAsString;
         }
 
-        return (
-            (isNegative ? "-" : "") +
-            centsAsString.substr(0, centsAsString.length - 2) +
-            "." +
-            centsAsString.substr(-2)
+        let potentialMinusSignAsString =
+        isNegative ?
+        "-" :
+        "";
+
+        let dollarsPortionAsString =
+        centsAsString.substring(
+            0,
+            centsAsString.length - 2
         );
+
+        let centsPortionAsString =
+        centsAsString.substring(
+            centsAsString.length - 2,
+            centsAsString.length
+        );
+
+        let dollarsAndCentsAsString =
+        potentialMinusSignAsString +
+        dollarsPortionAsString +
+        "." +
+        centsPortionAsString;
+
+        return dollarsAndCentsAsString;
     }
     /* CBConvert_centsToDollars() */
 
