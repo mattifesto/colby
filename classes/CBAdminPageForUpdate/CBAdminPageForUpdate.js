@@ -110,6 +110,48 @@
 
 
     /**
+     * @param {string} ajaxFunctionNameArgument
+     *
+     * @returns {*}
+     */
+    async function
+    CBAdminPageForUpdate_callAjaxFunction(
+        ajaxFunctionNameArgument
+    ) // -> mixed
+    {
+        let expander =
+        CBUIExpander.create();
+
+        shared_outputElement.appendChild(
+            expander.element
+        );
+
+        expander.element.scrollIntoView();
+
+        expander.title =
+        `${ajaxFunctionNameArgument} is processing`;
+
+        expander.timestamp =
+        Date.now() / 1000;
+
+        let value =
+        await CBAjax.call2(
+            ajaxFunctionNameArgument
+        );
+
+        expander.title =
+        `${ajaxFunctionNameArgument} has completed`;
+
+        expander.timestamp =
+        Date.now() / 1000;
+
+        return value;
+    }
+    // CBAdminPageForUpdate_callAjaxFunction()
+
+
+
+    /**
      * @param string submodulePath
      *
      * @return undefined
@@ -740,62 +782,37 @@
     promiseToUpdateSite(
     ) // -> Promise -> undefined
     {
-        let expander;
-
         try
         {
-            expander =
-            CBUIExpander.create();
-
-            shared_outputElement.appendChild(
-                expander.element
+            let ajaxFunctions =
+            await
+            CBAdminPageForUpdate_callAjaxFunction(
+                "CB_Ajax_Update_FetchAjaxFunctions"
             );
 
-            expander.element.scrollIntoView();
+            for (
+                let index = 0;
+                index < ajaxFunctions.length;
+                index += 1
+            ) {
+                let ajaxFunction =
+                ajaxFunctions[
+                    index
+                ];
 
+                let ajaxFunctionName =
+                ajaxFunction.CB_Ajax_Update_FetchAjaxFunctions_functionName_property;
 
-
-            expander.title =
-            "installing PHP composer dependencies";
-
-            expander.timestamp =
-            Date.now() / 1000;
-
-            await CBAjax.call2(
-                "CB_Ajax_InstallPHPComposerDependencies"
-            );
-
-
-
-            expander.title =
-            "website update in progress";
-
-            expander.timestamp =
-            Date.now() / 1000;
-
-            await CBAjax.call(
-                "CBAdminPageForUpdate",
-                "update"
-            );
-
-
-
-            expander.title =
-            "website update completed";
-
-            expander.timestamp =
-            Date.now() / 1000;
+                await
+                CBAdminPageForUpdate_callAjaxFunction(
+                    ajaxFunctionName
+                );
+            }
         }
 
         catch (
             error
         ) {
-            expander.title =
-            "website update failed";
-
-            expander.timestamp =
-            Date.now() / 1000;
-
             CBUIPanel.displayAndReportError(
                 error
             );
