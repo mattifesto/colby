@@ -167,25 +167,6 @@ CBAdminPageForUpdate
 
 
 
-    /**
-     * @return void
-     */
-    static function CBAjax_update(): void {
-        CBAdminPageForUpdate::update();
-    }
-    /* CBAjax_update() */
-
-
-
-    /**
-     * @return string
-     */
-    static function CBAjax_update_getUserGroupClassName(): string {
-        return 'CBDevelopersUserGroup';
-    }
-
-
-
     // -- CBHTMLOutput interfaces
 
 
