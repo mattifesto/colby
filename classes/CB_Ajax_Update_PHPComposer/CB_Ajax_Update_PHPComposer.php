@@ -1,7 +1,7 @@
 <?php
 
 final class
-CB_Ajax_InstallPHPComposerDependencies
+CB_Ajax_Update_PHPComposer
 {
     // -- CBAjax interfaces
 
@@ -134,7 +134,7 @@ CB_Ajax_InstallPHPComposerDependencies
         $userIsAnAdministrator =
         CBUserGroup::userIsMemberOfUserGroup(
             $callingUserModelCBID,
-            'CBAdministratorsUserGroup'
+            'CBDevelopersUserGroup'
         );
 
         return $userIsAnAdministrator;
