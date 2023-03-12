@@ -95,8 +95,10 @@ CBEqualizePageSettingsPart
 
         EOT;
 
-        $codeSearchSpec->regex =
-        '\bCBTextColor\b';
+        CBCodeSearch::setRegularExpression(
+            $codeSearchSpec,
+            '\bCBTextColor\b'
+        );
 
         $codeSearchSpec->severity =
         4;
