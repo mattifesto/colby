@@ -28,7 +28,6 @@ CBCodeSearch
      *
      *          '--ignore-file=is:CBCodeSearch.php'
      *
-     *      regex
      *      severity
      *      title
      *
@@ -41,195 +40,196 @@ CBCodeSearch
      *      filetype -> CBCodeSearch_fileType_property
      *      noticeStartDate -> CBCodeSearch_noticeVersion_property
      *      noticeVersion -> CBCodeSearch_noticeVersion_property
+     *      regex -> CBCodeSearch_regularExpression_property
      *      warningStartDate -> CBCodeSearch_warningVersion_property
      */
 
 
 
-     // -- CBHTMLOutput interfaces
+    // -- CBHTMLOutput interfaces
 
 
 
-     /**
-      * @return [string]
-      */
-     static function
-     CBHTMLOutput_JavaScriptURLs(
-     ): array
-     {
-         $javaScriptURLs =
-         [
-             CBLibrary::buildLibraryClassFilePath(
-                 __CLASS__,
-                 '2022_10_08_1665246592',
-                 'js',
-                 cbsysurl()
-             ),
-         ];
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
+        $javaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2022_10_08_1665246592',
+                'js',
+                cbsysurl()
+            ),
+        ];
 
-         return $javaScriptURLs;
-     }
-     // CBHTMLOutput_JavaScriptURLs()
-
-
-
-     /**
-      * @return [string]
-      */
-     static function
-     CBHTMLOutput_requiredClassNames(
-     ): array
-     {
-         $requiredClassNames =
-         [
-             'CBModel',
-         ];
-
-         return $requiredClassNames;
-     }
-     // CBHTMLOutput_requiredClassNames()
+        return $javaScriptURLs;
+    }
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
-     // -- accessors
+    /**
+     * @return [string]
+     */
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        $requiredClassNames =
+        [
+            'CBModel',
+        ];
+
+        return $requiredClassNames;
+    }
+    // CBHTMLOutput_requiredClassNames()
 
 
 
-     /**
-      * @param object $codeSearchModelArgument
-      *
-      * @return void
-      */
-     static function
-     getAckArguments(
-         stdClass $codeSearchModelArgument
-     ): string
-     {
-         $ackArguments =
-         CBModel::valueToString(
-             $codeSearchModelArgument,
-             'CBCodeSearch_ackArguments_property'
-         );
-
-         if (
-             $ackArguments === ''
-         ) {
-             $ackArguments =
-             CBModel::valueToString(
-                 $codeSearchModelArgument,
-                 'args'
-             );
-         }
-
-         return $ackArguments;
-     }
-     // getAckArguments()
+    // -- accessors
 
 
 
-     /**
-      * @param object $codeSearchModel
-      * @param string $newErrorVersion
-      *
-      * @return void
-      */
-     static function
-     setAckArguments(
-         stdClass $codeSearchModel,
-         string $newAckArguments
-     ): void
-     {
-         $codeSearchModel->CBCodeSearch_ackArguments_property =
-         $newAckArguments;
+    /**
+     * @param object $codeSearchModelArgument
+     *
+     * @return void
+     */
+    static function
+    getAckArguments(
+        stdClass $codeSearchModelArgument
+    ): string
+    {
+        $ackArguments =
+        CBModel::valueToString(
+            $codeSearchModelArgument,
+            'CBCodeSearch_ackArguments_property'
+        );
 
-         unset(
-             $codeSearchModel->args
-         );
-     }
-     // setAckArguments()
+        if (
+            $ackArguments === ''
+        ) {
+            $ackArguments =
+            CBModel::valueToString(
+                $codeSearchModelArgument,
+                'args'
+            );
+        }
 
-
-
-     /**
-      * @param object $codeSearchModelArgument
-      *
-      * @return void
-      */
-     static function
-     getCBMessage(
-         stdClass $codeSearchModelArgument
-     ): string
-     {
-         if (
-             isset(
-                 $codeSearchModelArgument->CBCodeSearch_cbmessage_property
-             )
-         ) {
-             $cbmessage =
-             CBModel::valueToString(
-                 $codeSearchModelArgument,
-                 "CBCodeSearch_cbmessage_property"
-             );
-         }
-         // if
-
-         else
-         {
-             // @deprecated 2022_10_08_1665245776
-
-             $cbmessage =
-             CBModel::valueToString(
-                 $codeSearchModelArgument,
-                 'cbmessage'
-             );
-         }
-
-         return $cbmessage;
-     }
-     // getCBMessage()
+        return $ackArguments;
+    }
+    // getAckArguments()
 
 
 
-     /**
-      * @param object $codeSearchModelArgument
-      * @param string $cbmessageArgument
-      *
-      * @return void
-      */
-     static function
-     setCBMessage(
-         stdClass $codeSearchModelArgument,
-         string $cbmessageArgument
-     ): void
-     {
-         $codeSearchModelArgument->CBCodeSearch_cbmessage_property =
-         $cbmessageArgument;
+    /**
+     * @param object $codeSearchModel
+     * @param string $newErrorVersion
+     *
+     * @return void
+     */
+    static function
+    setAckArguments(
+        stdClass $codeSearchModel,
+        string $newAckArguments
+    ): void
+    {
+        $codeSearchModel->CBCodeSearch_ackArguments_property =
+        $newAckArguments;
 
-         unset(
-             $codeSearchModelArgument->cbmessage
-         );
-     }
-     // setCBMessage()
+        unset(
+            $codeSearchModel->args
+        );
+    }
+    // setAckArguments()
 
 
 
-     /**
-      * @param object $codeSearchModel
-      * @param string $newErrorVersion
-      *
-      * @return void
-      */
-     static function
-     setErrorVersion(
-         stdClass $codeSearchModel,
-         string $newErrorVersion
-     ): void
-     {
-         $codeSearchModel->
-         CBCodeSearch_errorVersion_property =
-         $newErrorVersion;
-     }
-     // setErrorVersion()
+    /**
+     * @param object $codeSearchModelArgument
+     *
+     * @return void
+     */
+    static function
+    getCBMessage(
+        stdClass $codeSearchModelArgument
+    ): string
+    {
+        if (
+            isset(
+                $codeSearchModelArgument->CBCodeSearch_cbmessage_property
+            )
+        ) {
+            $cbmessage =
+            CBModel::valueToString(
+                $codeSearchModelArgument,
+                "CBCodeSearch_cbmessage_property"
+            );
+        }
+        // if
+
+        else
+        {
+            // @deprecated 2022_10_08_1665245776
+
+            $cbmessage =
+            CBModel::valueToString(
+                $codeSearchModelArgument,
+                'cbmessage'
+            );
+        }
+
+        return $cbmessage;
+    }
+    // getCBMessage()
+
+
+
+    /**
+     * @param object $codeSearchModelArgument
+     * @param string $cbmessageArgument
+     *
+     * @return void
+     */
+    static function
+    setCBMessage(
+        stdClass $codeSearchModelArgument,
+        string $cbmessageArgument
+    ): void
+    {
+        $codeSearchModelArgument->CBCodeSearch_cbmessage_property =
+        $cbmessageArgument;
+
+        unset(
+            $codeSearchModelArgument->cbmessage
+        );
+    }
+    // setCBMessage()
+
+
+
+    /**
+     * @param object $codeSearchModel
+     * @param string $newErrorVersion
+     *
+     * @return void
+     */
+    static function
+    setErrorVersion(
+        stdClass $codeSearchModel,
+        string $newErrorVersion
+    ): void
+    {
+        $codeSearchModel->
+        CBCodeSearch_errorVersion_property =
+        $newErrorVersion;
+    }
+    // setErrorVersion()
 
 
 
@@ -296,42 +296,108 @@ CBCodeSearch
     // setFileType()
 
 
-     /**
-      * @param object $codeSearchModel
-      * @param string $newNoticeVersion
-      *
-      * @return void
-      */
-     static function
-     setNoticeVersion(
-         stdClass $codeSearchModel,
-         string $newNoticeVersion
-     ): void
-     {
-         $codeSearchModel->
-         CBCodeSearch_noticeVersion_property =
-         $newNoticeVersion;
-     }
-     // setNoticeVersion()
+    /**
+     * @param object $codeSearchModel
+     * @param string $newNoticeVersion
+     *
+     * @return void
+     */
+    static function
+    setNoticeVersion(
+        stdClass $codeSearchModel,
+        string $newNoticeVersion
+    ): void
+    {
+        $codeSearchModel->
+        CBCodeSearch_noticeVersion_property =
+        $newNoticeVersion;
+    }
+    // setNoticeVersion()
 
 
 
-     /**
-      * @param object $codeSearchModel
-      * @param string $newWarningVersion
-      *
-      * @return void
-      */
-     static function
-     setWarningVersion(
-         stdClass $codeSearchModel,
-         string $newWarningVersion
-     ): void
-     {
-         $codeSearchModel->
-         CBCodeSearch_warningVersion_property =
-         $newWarningVersion;
-     }
-     // setWarningVersion()
+    /**
+     * @param object $codeSearchModelArgument
+     *
+     * @return void
+     */
+    static function
+    getRegularExpression(
+        stdClass $codeSearchModelArgument
+    ): string
+    {
+        $aValueForTheNewPropertyNameHasBeenSet =
+        isset(
+            $codeSearchModelArgument->CBCodeSearch_regularExpression_property
+        );
+
+        if (
+            $aValueForTheNewPropertyNameHasBeenSet
+        ) {
+            $regularExpressionValue =
+            CBModel::valueToString(
+                $codeSearchModelArgument,
+                "CBCodeSearch_regularExpression_property"
+            );
+        }
+        // if
+
+        else
+        {
+            // @deprecated 2023_03_12_1678648389
+
+            $regularExpressionValue =
+            CBModel::valueToString(
+                $codeSearchModelArgument,
+                'regex'
+            );
+        }
+
+        return $regularExpressionValue;
+    }
+    // getRegularExpression()
+
+
+
+    /**
+     * @param object $codeSearchModelArgument
+     * @param string $newRegularExpressionArgument
+     *
+     * @return void
+     */
+    static function
+    setRegularExpression(
+        stdClass $codeSearchModelArgument,
+        string $newRegularExpressionArgument
+    ): void
+    {
+        $codeSearchModelArgument->CBCodeSearch_regularExpression_property =
+        $newRegularExpressionArgument;
+
+        unset(
+            $codeSearchModelArgument->regex
+        );
+    }
+    // setRegularExpression()
+
+
+
+    /**
+     * @param object $codeSearchModel
+     * @param string $newWarningVersion
+     *
+     * @return void
+     */
+    static function
+    setWarningVersion(
+        stdClass $codeSearchModel,
+        string $newWarningVersion
+    ): void
+    {
+        $codeSearchModel->
+        CBCodeSearch_warningVersion_property =
+        $newWarningVersion;
+    }
+    // setWarningVersion()
 
 }
