@@ -399,16 +399,25 @@ CB_CBAdmin_Code
         stdClass $searchModel
     ): string
     {
+        $regularExpression =
+        CBCodeSearch::getRegularExpression(
+            $searchModel
+        );
+
         $searchCommand =
         implode(
             ' ',
             [
                 'ack',
+
                 '--heading',
+
                 // '--underline', (enable only if ack v3 is available)
+
                 '--match',
-                escapeshellarg($searchModel->regex),
-                //"--match '{$searchModel->regex}'",
+
+                escapeshellarg($regularExpression),
+
                 '--ignore-dir=data',
 
                 /**
