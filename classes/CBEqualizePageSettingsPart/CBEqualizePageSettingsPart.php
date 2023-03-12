@@ -88,12 +88,10 @@ CBEqualizePageSettingsPart
             '2022_06_21_1655783609'
         );
 
-        $codeSearchSpec->cbmessage =
-        <<<EOT
-
-            Use CBTextColor1
-
-        EOT;
+        CBCodeSearch::setCBMessage(
+            $codeSearchSpec,
+            'Use CBTextColor1'
+        );
 
         CBCodeSearch::setRegularExpression(
             $codeSearchSpec,
