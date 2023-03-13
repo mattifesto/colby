@@ -383,6 +383,59 @@ CBCodeSearch
 
 
     /**
+     * @param object $codeSearchModelArgument
+     *
+     * @return void
+     */
+    static function
+    getSeverity(
+        stdClass $codeSearchModelArgument
+    ): int
+    {
+        $severityValue =
+        null;
+
+        $aValueForTheNewPropertyNameHasBeenSet =
+        isset(
+            $codeSearchModelArgument->CBCodeSearch_severity_property
+        );
+
+        if (
+            $aValueForTheNewPropertyNameHasBeenSet
+        ) {
+            $severityValue =
+            CBModel::valueAsInt(
+                $codeSearchModelArgument,
+                "CBCodeSearch_severity_property"
+            );
+        }
+
+        else
+        {
+            // @deprecated 2023_03_12_1678648389
+
+            $severityValue =
+            CBModel::valueAsInt(
+                $codeSearchModelArgument,
+                'severity'
+            );
+        }
+
+        if (
+            $severityValue ===
+            null
+        ) {
+            $severityValue =
+            3;
+        }
+
+        return $severityValue;
+    }
+    // getSeverity()
+
+
+
+    /**
      * @param object $codeSearchModel
      * @param string $newWarningVersion
      *
