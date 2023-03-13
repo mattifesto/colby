@@ -215,13 +215,20 @@
             "results"
         );
 
-        if (searchResults.length === 0) {
+        if (
+            searchResults.length ===
+            0
+        ) {
             expander.severity = 6;
             searchResults = "";
-        } else {
+        }
+
+        else
+        {
             expander.severity =
-            codeSearchModel.severity ||
-            3;
+            CBCodeSearch.getSeverity(
+                codeSearchModel
+            );
 
             let updatedSearchResults = [];
 
