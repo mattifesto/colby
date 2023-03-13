@@ -436,6 +436,29 @@ CBCodeSearch
 
 
     /**
+     * @param object $codeSearchModelArgument
+     * @param string $newSeverityArgument
+     *
+     * @return void
+     */
+    static function
+    setSeverity(
+        stdClass $codeSearchModelArgument,
+        int $newSeverityArgument
+    ): void
+    {
+        $codeSearchModelArgument->CBCodeSearch_severity_property =
+        $newSeverityArgument;
+
+        unset(
+            $codeSearchModelArgument->severity
+        );
+    }
+    // setSeverity()
+
+
+
+    /**
      * @param object $codeSearchModel
      * @param string $newWarningVersion
      *
