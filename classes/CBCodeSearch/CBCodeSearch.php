@@ -61,7 +61,7 @@ CBCodeSearch
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_10_08_1665246592',
+                '2023_03_13_1678748637',
                 'js',
                 cbsysurl()
             ),
