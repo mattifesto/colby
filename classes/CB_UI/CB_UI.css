@@ -3,6 +3,16 @@
  *
  *      This file currently works together with CBEqualizePageSettingsPart. See
  *      that file for more informaton.
+ *
+ *
+ * @NOTE 2023_03_14_1678824737
+ *
+ *      The concepts of "surface" and "paper" are being introduced today. See
+ *      the documentation for this class to learn more.
+ *
+ *      The variable --CB_UI_paperColor will eventually be changed to
+ *      --CB_UI_surfaceColor.  The variable --CB_UI_accentPaperColorGray will
+ *      eventually become --CB_UI_paperColor (or something like that.)
  */
 
 
