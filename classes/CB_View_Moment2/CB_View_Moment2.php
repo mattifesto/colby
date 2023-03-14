@@ -94,7 +94,7 @@ CB_View_Moment2
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2023_01_18_1674049885',
+                '2023_03_14_1678827449',
                 'css',
                 cbsysurl()
             ),
@@ -117,7 +117,7 @@ CB_View_Moment2
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_10_18_1666102028',
+                '2023_03_14_1678827474',
                 'js',
                 cbsysurl()
             ),
