@@ -63,33 +63,6 @@
 
 
         /**
-         * @param Element rootElementArgument
-         *
-         * @return Element
-         */
-        function
-        CB_View_Moment2_createContentElement(
-        ) // -> Element
-        {
-            let contentElement =
-            document.createElement(
-                "div"
-            );
-
-            contentElement.className =
-            "CB_View_Moment2_content_element";
-
-            shared_rootElement.append(
-                contentElement
-            );
-
-            return contentElement;
-        }
-        // CB_View_Moment2_createContentElement()
-
-
-
-        /**
          * @param Element contentElementArgument
          *
          * @return undefined
@@ -493,6 +466,34 @@
 
 
         /**
+         * @param Element parentElementArgument
+         *
+         * @return Element
+         */
+        function
+        CB_View_Moment2_createTextCardElement(
+            parentElementArgument
+        ) // -> Element
+        {
+            let textCardElement =
+            document.createElement(
+                "div"
+            );
+
+            textCardElement.className =
+            "CB_View_Moment2_textCard_element";
+
+            parentElementArgument.append(
+                textCardElement
+            );
+
+            return textCardElement;
+        }
+        // CB_View_Moment2_createTextCardElement()
+
+
+
+        /**
          * @param Element contentElementArgument
          *
          * @return undefined
@@ -553,23 +554,25 @@
                 return;
             }
 
-            let contentElement =
-            CB_View_Moment2_createContentElement();
-
             CB_View_Moment2_createImageElement(
-                contentElement
+                shared_rootElement
+            );
+
+            let textCardElement =
+            CB_View_Moment2_createTextCardElement(
+                shared_rootElement
             );
 
             CB_View_Moment2_createTextElement(
-                contentElement
+                textCardElement
             );
 
             CB_View_Moment2_createNameAndDateElement(
-                contentElement
+                textCardElement
             );
 
             CB_View_Moment2_createLinksElement(
-                contentElement
+                textCardElement
             );
         }
         // -- api functions
