@@ -1,10 +1,13 @@
 .CB_View_Moment2_root_element
 {
+    align-items:
+    center;
+
     display:
     flex;
 
-    justify-content:
-    center;
+    flex-direction:
+    column;
 
     box-sizing:
     border-box;
@@ -38,6 +41,15 @@ a:hover
 
     color:
     var(--CBTextColorForLinks);
+}
+
+
+
+.CB_View_Moment2_root_element >
+a + div
+{
+    margin-top:
+    40px;
 }
 
 
@@ -83,6 +95,31 @@ img
 
     white-space:
     pre-wrap;
+}
+
+
+
+.CB_View_Moment2_textCard_element
+{
+    background-color:
+    var(--CB_UI_accentPaperColorGray);
+
+    border:
+    1px
+    solid
+    var(--CB_UI_borderColor);
+
+    border-radius:
+    3px;
+
+    box-sizing:
+    border-box;
+
+    max-width:
+    100%;
+
+    padding:
+    10px 20px;
 
     width:
     480px;
