@@ -224,13 +224,19 @@ CB_View_Moment2
         echo <<<EOT
 
             <div class="CB_View_Moment2_root_element">
-                <div class="CB_View_Moment2_content_element">
 
         EOT;
 
         CB_View_Moment2::renderImage(
             $momentModel
         );
+
+        echo
+        CBConvert::stringToCleanLine(<<< EOT
+
+            <div class="CB_View_Moment2_textCard_element">
+
+        EOT);
 
         CB_View_Moment2::renderText(
             $momentModel
