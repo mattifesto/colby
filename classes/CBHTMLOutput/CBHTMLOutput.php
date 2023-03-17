@@ -801,6 +801,8 @@ CBHTMLOutput {
                     EOT;
                 }
 
+                CBHTMLOutput::renderAdSenseHeadHTML();
+
                 CBPageSettings::renderHeadElementHTML(
                     $requiredPageSettingsClassNames
                 );
@@ -907,6 +909,55 @@ CBHTMLOutput {
 
         exit;
     }
+
+
+
+    /**
+     * This function renders any HTML content of the head element that AdSense
+     * requires.
+     *
+     * @TODO 2023_03_17_1679076667
+     *
+     *      Provide a way for this to be disabled for the current rendering so
+     *      that some pages can specify that there should be no ads.
+     *
+     * @return void
+     */
+    private static function
+    renderAdSenseHeadHTML(
+    ): void
+    {
+        $adSensePublisherID =
+        CBSitePreferences::getAdSensePublisherID(
+            CBSitePreferences::model()
+        );
+
+        if (
+            $adSensePublisherID === ''
+        ) {
+            return;
+        }
+
+        $client =
+        "ca-{$adSensePublisherID}";
+
+        $scriptSrcAttributeValue =
+        'https://pagead2.googlesyndication.com' .
+        '/pagead/js/adsbygoogle.js' .
+        "?client={$client}";
+
+        echo CBConvert::stringToCleanLine(<<<EOT
+
+            <script
+                async
+                src="{$scriptSrcAttributeValue}"
+                crossorigin="anonymous"
+            >
+            </script>
+
+        EOT);
+    }
+    // renderAdSenseHeadHTML()
 
 
 
