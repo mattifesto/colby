@@ -699,8 +699,8 @@ CBViewPage {
     static function
     CBPage_render(
         $model
-    ): void {
-
+    ): void
+    {
         /**
          * @NOTE 2019_12_12
          *
@@ -708,33 +708,46 @@ CBViewPage {
          *      CBPage::render() to handle all page rendering errors.
          */
 
-        set_exception_handler('CBViewPage::CBPage_render_handleError');
+        set_exception_handler(
+            'CBViewPage::CBPage_render_handleError'
+        );
 
-        try {
-            $publicationTimeStamp = CBModel::value(
+        try
+        {
+            $publicationTimeStamp =
+            CBModel::value(
                 $model,
                 'publicationTimeStamp'
             );
 
-            $title = CBModel::valueToString(
+            $title =
+            CBModel::valueToString(
                 $model,
                 'title'
             );
 
-            $description = CBModel::valueToString(
+            $description =
+            CBModel::valueToString(
                 $model,
                 'description'
             );
 
-            CBViewPage::initializePageInformation($model);
+            CBViewPage::initializePageInformation(
+                $model
+            );
+
             CBHTMLOutput::begin();
 
-            $frameClassName = CBModel::valueAsName(
+            $frameClassName =
+            CBModel::valueAsName(
                 $model,
                 'frameClassName'
             );
 
-            if ($frameClassName !== null) {
+            if (
+                $frameClassName !==
+                null
+            ) {
 
                 /**
                  * @TODO 2018_04_07
@@ -747,10 +760,14 @@ CBViewPage {
                  *      specifying the "custom" class name manually.
                  */
 
-                $renderContent = function () use ($model) {
+                $renderContent =
+                function () use (
+                    $model
+                ) {
                     echo '<main class="CBViewPage CBViewPage_default">';
 
-                    $views = CBViewPage::getViews(
+                    $views =
+                    CBViewPage::getViews(
                         $model
                     );
 
@@ -759,44 +776,67 @@ CBViewPage {
                         function (
                             $viewModel
                         ) {
-                            CBView::render($viewModel);
+                            CBView::render(
+                                $viewModel
+                            );
                         }
                     );
 
                     echo '</main>';
                 };
 
-                CBPageFrame::render($frameClassName, $renderContent);
-            } else {
-                $renderContentCallback = function () use ($model) {
-                    $viewModels = CBViewPage::getViews(
+                CBPageFrame::render(
+                    $frameClassName,
+                    $renderContent
+                );
+            }
+            else
+            {
+                $renderContentCallback =
+                function () use (
+                    $model
+                ) {
+                    $viewModels =
+                    CBViewPage::getViews(
                         $model
                     );
 
                     array_walk(
                         $viewModels,
-                        function ($viewModel) {
-                            CBView::render($viewModel);
+                        function (
+                            $viewModel
+                        ) {
+                            CBView::render(
+                                $viewModel
+                            );
                         }
                     );
                 };
 
-                $layoutClassName = CBModel::valueAsName(
+                $layoutClassName =
+                CBModel::valueAsName(
                     $model,
                     'layout.className'
                 );
 
-                CBHTMLOutput::requireClassName($layoutClassName);
+                CBHTMLOutput::requireClassName(
+                    $layoutClassName
+                );
 
-                $renderLayoutFunctionName = "{$layoutClassName}::render";
+                $renderLayoutFunctionName =
+                "{$layoutClassName}::render";
 
-                if (is_callable($renderLayoutFunctionName)) {
+                if (
+                    is_callable($renderLayoutFunctionName)
+                ) {
                     call_user_func(
                         $renderLayoutFunctionName,
                         $model->layout,
                         $renderContentCallback
                     );
-                } else {
+                }
+                else
+                {
                     call_user_func(
                         $renderContentCallback
                     );
@@ -804,10 +844,14 @@ CBViewPage {
             }
 
             CBHTMLOutput::render();
-        } catch (Throwable $renderError) {
+        }
+        catch (
+            Throwable $renderError
+        ) {
             CBHTMLOutput::reset();
 
-            $pageError = new CBExceptionWithValue(
+            $pageError =
+            new CBExceptionWithValue(
                 CBConvert::stringToCleanLine(<<<EOT
 
                     This CBViewPage model generated an error while it was
@@ -825,7 +869,7 @@ CBViewPage {
 
         restore_exception_handler();
     }
-    /* CBPage_render() */
+    // CBPage_render()
 
 
 
