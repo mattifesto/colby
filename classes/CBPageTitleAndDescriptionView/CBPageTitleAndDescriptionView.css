@@ -41,7 +41,7 @@
 /* light text colors (deprecated) */
 
 .CBPageTitleAndDescriptionView_default.light {
-    color: hsla(0, 0%, 100%, 0.9); /* CBTextColor for CBDarkTheme */
+    color: hsla(0, 0%, 100%, 0.9); /* CBTextColor1 for CBDarkTheme */
 }
 
 .CBPageTitleAndDescriptionView_default.light > .description {
