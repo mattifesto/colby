@@ -39,7 +39,7 @@
 
 /* deprecated: use CBLightTheme to get dark text */
 .CBTextView2StandardLayout.dark {
-    color: hsla(0, 0%, 0%, 0.9); /* CBTextColor for CBLightTheme */
+    color: hsla(0, 0%, 0%, 0.9); /* CBTextColor1 for CBLightTheme */
 }
 
 .CBTextView2StandardLayout.justify {
@@ -48,7 +48,7 @@
 
 /* deprecated: use CBDarkTheme to get dark text */
 .CBTextView2StandardLayout.light {
-    color: hsla(0, 0%, 100%, 0.9); /* CBTextColor for CBDarkTheme */
+    color: hsla(0, 0%, 100%, 0.9); /* CBTextColor1 for CBDarkTheme */
 }
 
 .CBTextView2StandardLayout.right {
