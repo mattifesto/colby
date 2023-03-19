@@ -10,11 +10,23 @@ CBPageTitleAndDescriptionView
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'v458.css', cbsysurl()),
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
+        $arrayOfCSSURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2023_03_19_1679252420',
+                'css',
+                cbsysurl()
+            ),
         ];
+
+        return $arrayOfCSSURLs;
     }
+    // CBHTMLOutput_CSSURLs()
 
 
 
