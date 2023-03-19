@@ -67,21 +67,43 @@ CBPageTitleAndDescriptionView
      *
      * @return ?object
      */
-    static function CBModel_build(stdClass $spec): ?stdClass {
-        $colorForProperty = function ($propertyName) use ($spec) {
-            return CBModel::value($spec, $propertyName, null, 'CBConvert::stringToCSSColor');
+    static function CBModel_build(stdClass $spec): ?stdClass
+    {
+        $colorForProperty =
+        function ($propertyName) use ($spec)
+        {
+            return CBModel::value(
+                $spec,
+                $propertyName,
+                null,
+                'CBConvert::stringToCSSColor'
+            );
         };
 
-        $model = (object)[
-            'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
-            'showPublicationDate' => CBModel::value($spec, 'showPublicationDate', false, 'boolval'),
+        $model =
+        (object)[
+            'CSSClassNames' =>
+            CBModel::valueToNames($spec, 'CSSClassNames'),
+
+            'showPublicationDate' =>
+            CBModel::value($spec, 'showPublicationDate', false, 'boolval'),
 
             /* the following properties are all deprecated */
-            'descriptionColor' => $colorForProperty('descriptionColor'),
-            'hideDescription' => CBModel::value($spec, 'hideDescription', false, 'boolval'),
-            'publishedColor' => $colorForProperty('publishedColor'),
-            'titleColor' => $colorForProperty('titleColor'),
-            'useLightTextColors' => CBModel::value($spec, 'useLightTextColors', false, 'boolval'),
+
+            'descriptionColor' =>
+            $colorForProperty('descriptionColor'),
+
+            'hideDescription' =>
+            CBModel::value($spec, 'hideDescription', false, 'boolval'),
+
+            'publishedColor' =>
+            $colorForProperty('publishedColor'),
+
+            'titleColor' =>
+            $colorForProperty('titleColor'),
+
+            'useLightTextColors' =>
+            CBModel::value($spec, 'useLightTextColors', false, 'boolval'),
         ];
 
         // localCSS (uses nonstandard stylesCSS property for this view)
@@ -90,11 +112,18 @@ CBPageTitleAndDescriptionView
         if (!empty($localCSSTemplate)) {
             $localCSSClassName = 'ID_' . CBID::generateRandomCBID();
             $model->CSSClassNames[] = $localCSSClassName;
-            $model->stylesCSS = CBView::localCSSTemplateToLocalCSS($localCSSTemplate, 'view', ".{$localCSSClassName}");
+
+            $model->stylesCSS =
+            CBView::localCSSTemplateToLocalCSS(
+                $localCSSTemplate,
+                'view',
+                ".{$localCSSClassName}"
+            );
         }
 
         return $model;
     }
+    // CBModel_build()
 
 
 
@@ -159,7 +188,10 @@ CBPageTitleAndDescriptionView
                     <?php
                 }
 
-                if (!empty($info->description) && empty($model->hideDescription)) {
+                if (
+                    !empty($info->description) &&
+                    empty($model->hideDescription)
+                ) {
                     if (empty($model->descriptionColor)) {
                         $style = '';
                     } else {
