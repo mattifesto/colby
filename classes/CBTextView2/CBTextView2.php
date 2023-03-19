@@ -1,7 +1,8 @@
 <?php
 
-final class CBTextView2 {
-
+final class
+CBTextView2
+{
     /* -- CBAjax interfaces -- -- -- -- -- */
 
 
