@@ -63,6 +63,34 @@
 
 
         /**
+         * @param Element parentElementArgument
+         *
+         * @return Element
+         */
+        function
+        CB_View_Moment2_createContentElement(
+            parentElementArgument
+        ) // -> Element
+        {
+            let contentElement =
+            document.createElement(
+                "div"
+            );
+
+            parentElementArgument.append(
+                contentElement
+            );
+
+            contentElement.className =
+            "CB_View_Moment2_content_element";
+
+            return contentElement;
+        }
+        // CB_View_Moment2_createContentElement()
+
+
+
+        /**
          * @param Element contentElementArgument
          *
          * @return undefined
@@ -554,13 +582,18 @@
                 return;
             }
 
-            CB_View_Moment2_createImageElement(
+            let contentElement =
+            CB_View_Moment2_createContentElement(
                 shared_rootElement
+            );
+
+            CB_View_Moment2_createImageElement(
+                contentElement
             );
 
             let textCardElement =
             CB_View_Moment2_createTextCardElement(
-                shared_rootElement
+                contentElement
             );
 
             CB_View_Moment2_createTextElement(
@@ -575,6 +608,10 @@
                 textCardElement
             );
         }
+        // CB_View_Moment2_refresh()
+
+
+
         // -- api functions
 
 
