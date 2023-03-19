@@ -3,6 +3,93 @@
 final class
 CBPageTitleAndDescriptionView
 {
+    // -- CBHTMLOutput interfaces
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBHTMLOutput_CSSURLs() {
+        return [
+            Colby::flexpath(__CLASS__, 'v458.css', cbsysurl()),
+        ];
+    }
+
+
+
+    /* -- CBInstall interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @return void
+     */
+    static function CBInstall_install(): void {
+        CBViewCatalog::installView(
+            __CLASS__
+        );
+    }
+    /* CBInstall_install() */
+
+
+
+    /**
+     * @return [string]
+     */
+    static function CBInstall_requiredClassNames(): array {
+        return [
+            'CBViewCatalog',
+        ];
+    }
+    /* CBInstall_requiredClassNames() */
+
+
+
+    /* -- CBModel interfaces -- -- -- -- -- */
+
+
+
+    /**
+     * @param model $spec
+     *
+     * @return ?object
+     */
+    static function CBModel_build(stdClass $spec): ?stdClass {
+        $colorForProperty = function ($propertyName) use ($spec) {
+            return CBModel::value($spec, $propertyName, null, 'CBConvert::stringToCSSColor');
+        };
+
+        $model = (object)[
+            'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
+            'showPublicationDate' => CBModel::value($spec, 'showPublicationDate', false, 'boolval'),
+
+            /* the following properties are all deprecated */
+            'descriptionColor' => $colorForProperty('descriptionColor'),
+            'hideDescription' => CBModel::value($spec, 'hideDescription', false, 'boolval'),
+            'publishedColor' => $colorForProperty('publishedColor'),
+            'titleColor' => $colorForProperty('titleColor'),
+            'useLightTextColors' => CBModel::value($spec, 'useLightTextColors', false, 'boolval'),
+        ];
+
+        // localCSS (uses nonstandard stylesCSS property for this view)
+        $localCSSTemplate = CBModel::value($spec, 'stylesTemplate', '', 'trim');
+
+        if (!empty($localCSSTemplate)) {
+            $localCSSClassName = 'ID_' . CBID::generateRandomCBID();
+            $model->CSSClassNames[] = $localCSSClassName;
+            $model->stylesCSS = CBView::localCSSTemplateToLocalCSS($localCSSTemplate, 'view', ".{$localCSSClassName}");
+        }
+
+        return $model;
+    }
+
+
+
+    // -- CBView interfaces
+
+
+
     /**
      * @param string? $model->descriptionColor @deprecated use CSS
      * @param bool? $model->hideDescription  @deprecated use CSS
@@ -105,73 +192,4 @@ CBPageTitleAndDescriptionView
         <?php
     }
 
-    /**
-     * @return [string]
-     */
-    static function CBHTMLOutput_CSSURLs() {
-        return [
-            Colby::flexpath(__CLASS__, 'v458.css', cbsysurl()),
-        ];
-    }
-
-
-    /* -- CBInstall interfaces -- -- -- -- -- */
-
-    /**
-     * @return void
-     */
-    static function CBInstall_install(): void {
-        CBViewCatalog::installView(
-            __CLASS__
-        );
-    }
-    /* CBInstall_install() */
-
-
-    /**
-     * @return [string]
-     */
-    static function CBInstall_requiredClassNames(): array {
-        return [
-            'CBViewCatalog',
-        ];
-    }
-    /* CBInstall_requiredClassNames() */
-
-
-    /* -- CBModel interfaces -- -- -- -- -- */
-
-    /**
-     * @param model $spec
-     *
-     * @return ?object
-     */
-    static function CBModel_build(stdClass $spec): ?stdClass {
-        $colorForProperty = function ($propertyName) use ($spec) {
-            return CBModel::value($spec, $propertyName, null, 'CBConvert::stringToCSSColor');
-        };
-
-        $model = (object)[
-            'CSSClassNames' => CBModel::valueToNames($spec, 'CSSClassNames'),
-            'showPublicationDate' => CBModel::value($spec, 'showPublicationDate', false, 'boolval'),
-
-            /* the following properties are all deprecated */
-            'descriptionColor' => $colorForProperty('descriptionColor'),
-            'hideDescription' => CBModel::value($spec, 'hideDescription', false, 'boolval'),
-            'publishedColor' => $colorForProperty('publishedColor'),
-            'titleColor' => $colorForProperty('titleColor'),
-            'useLightTextColors' => CBModel::value($spec, 'useLightTextColors', false, 'boolval'),
-        ];
-
-        // localCSS (uses nonstandard stylesCSS property for this view)
-        $localCSSTemplate = CBModel::value($spec, 'stylesTemplate', '', 'trim');
-
-        if (!empty($localCSSTemplate)) {
-            $localCSSClassName = 'ID_' . CBID::generateRandomCBID();
-            $model->CSSClassNames[] = $localCSSClassName;
-            $model->stylesCSS = CBView::localCSSTemplateToLocalCSS($localCSSTemplate, 'view', ".{$localCSSClassName}");
-        }
-
-        return $model;
-    }
 }
