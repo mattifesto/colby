@@ -1,7 +1,8 @@
 <?php
 
-final class CBPageTitleAndDescriptionView {
-
+final class
+CBPageTitleAndDescriptionView
+{
     /**
      * @param string? $model->descriptionColor @deprecated use CSS
      * @param bool? $model->hideDescription  @deprecated use CSS
