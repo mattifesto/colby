@@ -42,14 +42,14 @@ CBTCommand_create_database {
         {$databaseName};
 
         create user
-        {$databaseUsername}@localhost
+        '{$databaseUsername}'@'%'
         identified with caching_sha2_password by
         '{$databasePassword}';
 
         grant all on
         {$databaseName}.*
         to
-        {$databaseUsername}@localhost;
+        '{$databaseUsername}'@'%';
 
         flush privileges;
 
