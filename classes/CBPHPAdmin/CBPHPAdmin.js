@@ -1,13 +1,14 @@
-"use strict";
-/* jshint strict: global */
-/* jshint esversion: 6 */
-/* exported CBPHPAdmin */
 /* global
     CBPHPAdmin_iniValues,
     CBUI,
     CBUISectionItem4,
     CBUIStringsPart,
-    Colby */
+    Colby
+*/
+
+(function ()
+{
+    "use strict";
 
 var CBPHPAdmin = {
 
@@ -38,3 +39,6 @@ var CBPHPAdmin = {
 };
 
 Colby.afterDOMContentLoaded(CBPHPAdmin.init);
+
+}
+)() ;
