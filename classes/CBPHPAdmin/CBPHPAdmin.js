@@ -5,7 +5,7 @@
     CBUIStringsPart,
     Colby,
 
-    CBPHPAdmin_iniValues,
+    CBPHPAdmin_values,
 */
 
 (function ()
@@ -43,10 +43,10 @@
             CBUI.createHalfSpace()
         );
 
-        Object.keys(
-            CBPHPAdmin_iniValues
-        ).forEach(
-            function (key)
+        CBPHPAdmin_values.forEach(
+            function (
+                value
+            ) // -> undefined
             {
                 let sectionItem =
                 CBUISectionItem4.create();
@@ -55,10 +55,10 @@
                 CBUIStringsPart.create();
 
                 stringsPart.string1 =
-                key;
+                value.CBPHPAdmin_values_name_property;
 
                 stringsPart.string2 =
-                CBPHPAdmin_iniValues[key] ||
+                value.CBPHPAdmin_values_value_property ||
                 Colby.nonBreakingSpace;
 
                 stringsPart.element.classList.add(
