@@ -62,7 +62,7 @@
                 Colby.nonBreakingSpace;
 
                 stringsPart.element.classList.add(
-                    "keyvalue"
+                    "CBUIStringsPart_leftandright"
                 );
 
                 stringsPart.element.classList.add(
