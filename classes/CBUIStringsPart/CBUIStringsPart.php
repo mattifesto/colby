@@ -1,15 +1,29 @@
 <?php
 
-final class CBUIStringsPart {
+final class
+CBUIStringsPart
+{
+    // -- CBHTMLOutput interfaces
+
+
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_CSSURLs(): array {
-        return [
+    static function
+    CBHTMLOutput_CSSURLs(
+    ): array
+    {
+        $arrayOfCSSURLs =
+        [
             Colby::flexpath(__CLASS__, 'v470.css', cbsysurl()),
         ];
+
+        return $arrayOfCSSURLs;
     }
+    // CBHTMLOutput_CSSURLs()
+
+
 
     /**
      * @return [string]
