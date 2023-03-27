@@ -83,13 +83,19 @@ CBPHPAdmin
     /**
      * @return [[<name>, <value>]]
      */
-    static function CBHTMLOutput_JavaScriptVariables() {
-        return [
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array
+    {
+        $javaScriptVariables =
+        [
             [
                 'CBPHPAdmin_iniValues',
                 ini_get_all(null, false),
             ],
         ];
+
+        return $javaScriptVariables;
     }
     /* CBHTMLOutput_JavaScriptVariables() */
 
