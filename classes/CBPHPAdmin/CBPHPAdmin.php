@@ -58,18 +58,25 @@ CBPHPAdmin
 
 
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+    // -- CBHTMLOutput interfaces
 
 
 
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_JavaScriptURLs() {
-        return [
+    static function
+    CBHTMLOutput_JavaScriptURLs(
+    ): array
+    {
+        $javaScriptURLs =
+        [
             Colby::flexpath(__CLASS__, 'v374.js', cbsysurl()),
         ];
+
+        return $javaScriptURLs;
     }
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
