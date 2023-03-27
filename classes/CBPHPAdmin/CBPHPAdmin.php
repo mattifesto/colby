@@ -104,9 +104,11 @@ CBPHPAdmin
     {
         $arrayOfRequiredClassNames =
         [
+            'CBJavaScript',
             'CBUI',
             'CBUISectionItem4',
             'CBUIStringsPart',
+            'Colby',
         ];
 
         return $arrayOfRequiredClassNames;
