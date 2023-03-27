@@ -31,25 +31,61 @@
     CBPHPAdmin_init(
     ) // -> undefined
     {
-        let mainElement = document.getElementsByTagName("main")[0];
-        let sectionElement = CBUI.createSection();
+        let mainElement =
+        document.getElementsByTagName(
+            "main"
+        )[0];
 
-        mainElement.appendChild(CBUI.createHalfSpace());
+        let sectionElement =
+        CBUI.createSection();
 
-        Object.keys(CBPHPAdmin_iniValues).forEach(function (key) {
-            let sectionItem = CBUISectionItem4.create();
-            let stringsPart = CBUIStringsPart.create();
-            stringsPart.string1 = key;
-            stringsPart.string2 = CBPHPAdmin_iniValues[key] || Colby.nonBreakingSpace;
-            stringsPart.element.classList.add("keyvalue");
-            stringsPart.element.classList.add("selectable");
+        mainElement.appendChild(
+            CBUI.createHalfSpace()
+        );
 
-            sectionItem.appendPart(stringsPart);
-            sectionElement.appendChild(sectionItem.element);
-        });
+        Object.keys(
+            CBPHPAdmin_iniValues
+        ).forEach(
+            function (key)
+            {
+                let sectionItem =
+                CBUISectionItem4.create();
 
-        mainElement.appendChild(sectionElement);
-        mainElement.appendChild(CBUI.createHalfSpace());
+                let stringsPart =
+                CBUIStringsPart.create();
+
+                stringsPart.string1 =
+                key;
+
+                stringsPart.string2 =
+                CBPHPAdmin_iniValues[key] ||
+                Colby.nonBreakingSpace;
+
+                stringsPart.element.classList.add(
+                    "keyvalue"
+                );
+
+                stringsPart.element.classList.add(
+                    "selectable"
+                );
+
+                sectionItem.appendPart(
+                    stringsPart
+                );
+
+                sectionElement.appendChild(
+                    sectionItem.element
+                );
+            }
+        );
+
+        mainElement.appendChild(
+            sectionElement
+        );
+
+        mainElement.appendChild(
+            CBUI.createHalfSpace()
+        );
     }
     // CBPHPAdmin_init()
 
