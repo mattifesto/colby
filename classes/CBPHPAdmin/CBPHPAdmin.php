@@ -1,7 +1,8 @@
 <?php
 
-final class CBPHPAdmin {
-
+final class
+CBPHPAdmin
+{
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
 
