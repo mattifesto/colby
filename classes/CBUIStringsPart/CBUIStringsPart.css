@@ -67,12 +67,24 @@
     color: var(--CBTextColor2);
 }
 
+
+
 .CBUIStringsPart_leftandright {
     align-items: center;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
 }
+
+
+
+.CBUIStringsPart_leftandright > .string1
+{
+    color:
+    var(--CBTextColor2);
+}
+
+
 
 .CBUIStringsPart_leftandright > .string2 {
 
@@ -86,6 +98,8 @@
     text-align: right;
 }
 
+
+
 .CBUIStringsPart.sidebyside {
     align-items: center;
     flex-direction: row;
@@ -95,7 +109,6 @@
 .CBUIStringsPart.action > .string2,
 .CBUIStringsPart.titledescription > .string2,
 .CBUIStringsPart_titledescription_full > .string2 {
-    color: hsla(0, 0%, 0%, 0.6); /* IE11 */
     color: var(--CBTextColor2);
     font-size: 80%;
 }
