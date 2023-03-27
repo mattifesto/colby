@@ -1,21 +1,36 @@
 /* global
-    CBPHPAdmin_iniValues,
+    CBJavaScript,
     CBUI,
     CBUISectionItem4,
     CBUIStringsPart,
-    Colby
+    Colby,
+
+    CBPHPAdmin_iniValues,
 */
 
 (function ()
 {
     "use strict";
 
-var CBPHPAdmin = {
+    CBJavaScript.afterDOMContentLoaded(
+        function ()
+        {
+            CBPHPAdmin_init();
+        }
+    );
+
+
+    // -- private functions
+
+
 
     /**
      * @return undefined
      */
-    init: function () {
+    function
+    CBPHPAdmin_init(
+    ) // -> undefined
+    {
         let mainElement = document.getElementsByTagName("main")[0];
         let sectionElement = CBUI.createSection();
 
@@ -35,10 +50,8 @@ var CBPHPAdmin = {
 
         mainElement.appendChild(sectionElement);
         mainElement.appendChild(CBUI.createHalfSpace());
-    },
-};
-
-Colby.afterDOMContentLoaded(CBPHPAdmin.init);
+    }
+    // CBPHPAdmin_init()
 
 }
 )() ;
