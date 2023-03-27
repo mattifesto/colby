@@ -87,11 +87,48 @@ CBPHPAdmin
     CBHTMLOutput_JavaScriptVariables(
     ): array
     {
+        $values =
+        [
+            (object)
+            [
+                'CBPHPAdmin_values_name_property' =>
+                'loaded extensions',
+
+                'CBPHPAdmin_values_value_property' =>
+                implode(
+                    ', ',
+                    get_loaded_extensions()
+                ),
+            ],
+        ];
+
+        $iniValues =
+        ini_get_all(
+            null,
+            false
+        );
+
+        foreach (
+            $iniValues as $iniValueName => $iniValueValue
+        ) {
+            array_push(
+                $values,
+                (object)
+                [
+                    'CBPHPAdmin_values_name_property' =>
+                    $iniValueName,
+
+                    'CBPHPAdmin_values_value_property' =>
+                    $iniValueValue,
+                ]
+            );
+        }
+
         $javaScriptVariables =
         [
             [
-                'CBPHPAdmin_iniValues',
-                ini_get_all(null, false),
+                'CBPHPAdmin_values',
+                $values,
             ],
         ];
 
