@@ -98,14 +98,20 @@ CBPHPAdmin
     /**
      * @return [string]
      */
-    static function CBHTMLOutput_requiredClassNames() {
-        return [
+    static function
+    CBHTMLOutput_requiredClassNames(
+    ): array
+    {
+        $arrayOfRequiredClassNames =
+        [
             'CBUI',
             'CBUISectionItem4',
             'CBUIStringsPart',
         ];
+
+        return $arrayOfRequiredClassNames;
     }
-    /* CBHTMLOutput_requiredClassNames() */
+    // CBHTMLOutput_requiredClassNames()
 
 
 
