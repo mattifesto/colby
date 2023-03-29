@@ -14,6 +14,7 @@ RewriteBase /
 # Redirect to https
 #
 
+RewriteCond %{ENV:CB_DISABLE_SSL} !^true$
 RewriteCond %{HTTPS} off
 RewriteRule (.*) https://%{SERVER_NAME}/$1 [R=301,L]
 
