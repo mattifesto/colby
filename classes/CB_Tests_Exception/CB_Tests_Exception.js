@@ -40,10 +40,10 @@
 
         let regularExpression = (
             `^"bad stuff happened"` +
-            ` in https://` +
+            ` in https?://` +
             `[^/]+` +
-            `/colby/classes/CB_Tests_Exception/CB_Tests_Exception.v` +
-            `[0-9.]+` +
+            `/colby/classes/CB_Tests_Exception/CB_Tests_Exception.v?` +
+            `[0-9._]+` +
             `js line ` +
             `[0-9]+` +
             `$`
