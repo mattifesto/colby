@@ -280,8 +280,13 @@ ColbyUser
         $domain =
         '';
 
+        $sslIsDisabled =
+        getenv('CB_DISABLE_SSL') ===
+        'true';
+
         $secureConnectionsOnly =
-        true;
+        $sslIsDisabled ===
+        false;
 
         setcookie(
             CBUserCookieName,
