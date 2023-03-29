@@ -1,8 +1,8 @@
 <?php
 
 final class
-CB_Tests_Exception {
-
+CB_Tests_Exception
+{
     /* -- CBHTMLOutput interfaces -- -- -- -- -- */
 
 
@@ -12,16 +12,21 @@ CB_Tests_Exception {
      */
     static function
     CBHTMLOutput_JavaScriptURLs(
-    ): array {
-        return [
-            Colby::flexpath(
+    ): array
+    {
+        $javaScriptURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.54.js',
+                '2023_03_29_1680048419',
+                'js',
                 cbsysurl()
             ),
         ];
+
+        return $javaScriptURLs;
     }
-    /* CBHTMLOutput_JavaScriptURLs() */
+    // CBHTMLOutput_JavaScriptURLs()
 
 
 
