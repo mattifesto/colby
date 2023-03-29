@@ -71,7 +71,12 @@ CBPHPAdmin
     {
         $javaScriptURLs =
         [
-            Colby::flexpath(__CLASS__, 'v374.js', cbsysurl()),
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2023_03_27_1679941471',
+                'js',
+                cbsysurl()
+            ),
         ];
 
         return $javaScriptURLs;
