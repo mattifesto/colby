@@ -16,7 +16,12 @@ CBUIStringsPart
     {
         $arrayOfCSSURLs =
         [
-            Colby::flexpath(__CLASS__, 'v470.css', cbsysurl()),
+            CBLibrary::buildLibraryClassFilePath(
+                __CLASS__,
+                '2023_03_27_1679944849',
+                'css',
+                cbsysurl()
+            ),
         ];
 
         return $arrayOfCSSURLs;
