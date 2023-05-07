@@ -321,7 +321,7 @@ CB_Task_CollectYouTubeChannelStatistics
             'CB_Task_CollectYouTubeChannelStatistics',
             $youtubeChannelModelCBID,
             null, /* process ID */
-            null, /* priority */
+            CBTasks2::highPriority,
             $nextRunUnixTimestamp
         );
     }
