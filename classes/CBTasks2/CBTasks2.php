@@ -1074,7 +1074,10 @@ CBTasks2
      * @param string $className
      * @param CBID $ID
      * @param CBID $processID (@deprecated use setID() on CBProcess)
-     * @param int $priority
+     * @param ?int $priority
+     *
+     *      If not specified, the default value for this argument is
+     *      CBTasks2::defaultPriority.
      *
      *      See CBInstall_install() on this class for documentation on these
      *      parameters.
