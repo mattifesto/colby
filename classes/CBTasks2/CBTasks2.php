@@ -1,7 +1,8 @@
 <?php
 
-final class CBTasks2 {
-
+final class
+CBTasks2
+{
     /**
      * Priority values are between 0 and 255 with lower numbers representing
      * higher priority.
