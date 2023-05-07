@@ -320,7 +320,7 @@ CB_Task_CollectYouTubeChannelStatistics
         CBTasks2::updateTask(
             'CB_Task_CollectYouTubeChannelStatistics',
             $youtubeChannelModelCBID,
-            null, /* proccess ID */
+            null, /* process ID */
             null, /* priority */
             $nextRunUnixTimestamp
         );
