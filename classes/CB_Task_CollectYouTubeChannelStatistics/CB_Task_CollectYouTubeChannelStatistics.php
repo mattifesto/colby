@@ -308,7 +308,6 @@ CB_Task_CollectYouTubeChannelStatistics
             CB_Timestamp::getUnixTimestamp(
                 $previouslyRunCBTimestamp
             );
-
         }
         //else
 
