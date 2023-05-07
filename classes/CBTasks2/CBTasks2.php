@@ -9,6 +9,7 @@ CBTasks2
      */
     const defaultPriority = 100;
 
+    const highPriority = 10;
 
 
     /* -- CBAjax interfaces -- -- -- -- -- */
