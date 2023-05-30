@@ -1,3 +1,4 @@
 items:
   - title: CBModelCache::fetchModelByID
     regex: \bCBModelCache::fetchModelByID\b
+    syslogSeverity: 5
