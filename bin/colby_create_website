@@ -1,0 +1,187 @@
+#!/usr/bin/env php
+<?php
+
+echo <<<EOT
+
+    colby_create_website started
+    ----------------------------
+
+
+EOT;
+
+include(
+    $_composer_autoload_path
+);
+
+$mysqlPort = findOpenPort();
+
+echo "debug: available port is $mysqlPort\n";
+
+
+
+/* document_root/data directory */
+
+$dataDirectory = cb_document_root_directory() . '/data';
+
+if (!is_dir($dataDirectory)) {
+    mkdir($dataDirectory);
+}
+
+
+/* document_root/tmp directory */
+
+$tmpDirectory = cb_document_root_directory() . '/tmp';
+
+if (!is_dir($tmpDirectory)) {
+    mkdir($tmpDirectory);
+}
+
+
+
+/* document_root/.gitignore file */
+
+
+$gitignoreFilename = cb_document_root_directory() . '/.gitignore';
+$colbySetupDirectory = cbsysdir() . '/setup';
+
+if (!is_file($gitignoreFilename)) {
+    copy(
+        "{$colbySetupDirectory}/gitignore.template.data",
+        $gitignoreFilename
+    );
+}
+
+
+
+/* document_root/.htaccess file */
+
+$htaccessFilename = cb_document_root_directory() . '/.htaccess';
+
+if (!is_file($htaccessFilename)) {
+    copy(
+        "{$colbySetupDirectory}/htaccess.template.data",
+        $htaccessFilename
+    );
+}
+
+
+
+/* document_root/index.php file */
+
+$indexphpFilename = cb_document_root_directory() . '/index.php';
+
+if (!is_file($indexphpFilename)) {
+    copy(
+        "{$colbySetupDirectory}/index.template.data",
+        $indexphpFilename
+    );
+}
+
+
+
+/* document_root/site-configuration.php file */
+
+$siteconfigurationFilename = (
+    cb_document_root_directory() .
+    '/site-configuration.php'
+);
+
+if (!is_file($siteconfigurationFilename)) {
+    copy(
+        "{$colbySetupDirectory}/site-configuration.template.data",
+        $siteconfigurationFilename
+    );
+}
+
+
+
+/* empty favicon files */
+
+touch(
+    cb_document_root_directory() .
+    '/favicon.gif'
+);
+
+touch(
+    cb_document_root_directory() .
+    '/favicon.ico'
+);
+
+
+
+/* version.php */
+
+$websiteVersionFilepath = (
+    cb_document_root_directory() .
+    '/version.php'
+);
+
+if (!is_file($websiteVersionFilepath)) {
+    copy(
+        "{$colbySetupDirectory}/version.template.data",
+        $websiteVersionFilepath
+    );
+}
+
+
+
+file_put_contents(
+    cb_document_root_directory() .
+    '/docker-compose.yml',
+    CB_TestingDockerComposeFileCreator::create()
+);
+
+
+
+//CBInstall::install();
+
+
+
+echo <<<EOT
+
+    ------------------------------
+    colby_create_website completed
+
+
+EOT;
+
+
+
+function
+findOpenPort()
+{
+    $port = null;
+
+    do
+    {
+        $potentialPort =
+        random_int(
+            49152,
+            65535
+        );
+
+        $arrayOfOutputLines = [];
+
+        CBExec::exec(
+            "nc -z 127.0.0.1 $potentialPort",
+            $arrayOfOutputLines,
+            $exitCode
+        );
+
+        if (
+            $exitCode === 1
+        ) {
+            $port = $potentialPort;
+        }
+        else if (
+            $exitCode !== 0
+        ) {
+            echo implode("\n", $arrayOfOutputLines), "\n";
+            exit(1);
+        }
+    }
+    while ($port === null);
+
+    return $port;
+}
+// findOpenPort()
