@@ -184,26 +184,79 @@ cb_array_map_assoc(
  *
  *      When Colby moves we may need a different approach.
  *
+ * @NOTE 2023_06_11
+ *
+ *      Colby is in the process of being moved to a PHP Composer package.
+ *      Therefore this function has changed to support that. Eventually that
+ *      will be the only way Colby is used and the other methods of implementing
+ *      this function will be removed.
+ *
  * @return string
  */
 function
 cb_document_root_directory(
-): string {
+): string
+{
     static $documentRootDirectory = null;
 
-    if ($documentRootDirectory === null) {
-        $testDocumentRootDirectory = getenv(
-            'CB_TEST_DOCUMENT_ROOT_DIRECTORY'
+    if (
+        $documentRootDirectory !==
+        null
+    ) {
+        return $documentRootDirectory;
+    }
+
+
+
+    /**
+     * @TODO 2023_06_10
+     * Matt Calkins
+     *
+     *      This comment should document the purpose and use cases of
+     *      CB_TEST_DOCUMENT_ROOT_DIRECTORY. If they no longer exist, this code
+     *      should be removed.
+     */
+
+    $testDocumentRootDirectory =
+    getenv(
+        'CB_TEST_DOCUMENT_ROOT_DIRECTORY'
+    );
+
+    if (
+        $testDocumentRootDirectory !==
+        false
+    ) {
+        $documentRootDirectory =
+        $testDocumentRootDirectory;
+
+        return $documentRootDirectory;
+    }
+
+
+
+    if (
+        class_exists('\\Composer\\InstalledVersions')
+    ) {
+        $rootPackageInformation =
+        \Composer\InstalledVersions::getRootPackage();
+
+        $rootPackageInstallPath =
+        $rootPackageInformation['install_path'];
+
+        $documentRootDirectory =
+        realpath(
+            $rootPackageInstallPath
         );
 
-        if ($testDocumentRootDirectory === false) {
-            $documentRootDirectory = dirname(
-                __DIR__
-            );
-        } else {
-            $documentRootDirectory = $testDocumentRootDirectory;
-        }
+        return $documentRootDirectory;
     }
+
+
+
+    $documentRootDirectory =
+    dirname(
+        __DIR__
+    );
 
     return $documentRootDirectory;
 }
