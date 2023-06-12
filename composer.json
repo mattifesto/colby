@@ -1,0 +1,21 @@
+{
+    "authors": [
+        {
+            "name": "Matt Calkins"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "init.php"
+        ]
+    },
+    "bin": [
+        "bin/colby_create_website"
+    ],
+    "description": "content management system",
+    "license": "MIT",
+    "name": "mattcalkins/colby",
+    "require": {
+    },
+    "type": "library"
+}
