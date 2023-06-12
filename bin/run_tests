@@ -1,0 +1,202 @@
+#!/usr/bin/env php
+<?php
+
+include_once __DIR__ . '/../init.php';
+
+RunTests::go();
+
+final class
+RunTests
+{
+    static function
+    go(
+    ): void
+    {
+        $separator =
+        "\n\n\n    -    -    -    -    -    -    -    -    \n\n\n";
+
+        echo $separator;
+
+        $projectName =
+        date("Y_m_d_U") .
+        "_test";
+
+        $absoluteTestProjectsContainerDirectory =
+        realpath(
+            cbsysdir() .
+            '/..'
+        );
+
+        $absoluteTestProjectDirectory =
+        "$absoluteTestProjectsContainerDirectory/$projectName";
+
+        mkdir(
+            $absoluteTestProjectDirectory,
+            0777,
+            true
+        );
+
+
+        echo
+        "absoluteTestProjectDirectory: $absoluteTestProjectDirectory",
+        $separator;
+
+        chdir(
+            $absoluteTestProjectDirectory
+        );
+
+        $composerJSON =
+        (object)
+        [
+            'description' =>
+            "test project ${projectName}",
+
+            'repositories' =>
+            [
+                (object)
+                [
+                    'type' =>
+                    'path',
+
+                    'url' =>
+                    cb_document_root_directory() .
+                    '/colby',
+
+                    'options' =>
+                    (object)
+                    [
+                        'symlink' =>
+                        false,
+                    ],
+                ],
+            ],
+        ];
+
+        // NOTE: you can just do a composer require to
+        // generate a composer.json file
+
+        file_put_contents(
+            "${absoluteTestProjectDirectory}/composer.json",
+            json_encode(
+                $composerJSON,
+                JSON_PRETTY_PRINT
+            )
+        );
+
+        $arrayOfOutputLines = [];
+
+        CBExec::exec(
+            'composer require mattcalkins/colby:dev-dev',
+            $arrayOfOutputLines,
+            $exitCode
+        );
+
+        echo
+        implode("\n", $arrayOfOutputLines),
+        $separator;
+
+        $arrayOfOutputLines = [];
+
+        CBExec::exec(
+            './vendor/bin/colby_create_website',
+            $arrayOfOutputLines,
+            $exitCode
+        );
+
+        echo
+        implode("\n", $arrayOfOutputLines),
+        $separator;
+
+
+
+        $arrayOfOutputLines = [];
+
+        CBExec::exec(
+            'docker compose up -d',
+            $arrayOfOutputLines,
+            $exitCode
+        );
+
+        echo
+        implode("\n", $arrayOfOutputLines),
+        $separator;
+
+        if(
+            $exitCode !==
+            0
+        ) {
+            echo
+            'TEST FAILED',
+            $separator;
+
+            exit;
+        }
+
+
+
+        /**
+         * @TODO 2023_08_11
+         * Matt Calkins
+         *
+         *      At this point a number of tests should run and if they don't
+         *      succeed, the test containers and directory should not be
+         *      removed.
+         */
+
+        // give the containers time to initialize
+        sleep(2);
+
+        $arrayOfOutputLines = [];
+
+        CBExec::exec(
+            'curl http://localhost:8082',
+            $arrayOfOutputLines,
+            $exitCode
+        );
+
+        echo
+        implode("\n", $arrayOfOutputLines),
+        $separator;
+
+        if(
+            $exitCode !==
+            0
+        ) {
+            echo
+            'TEST FAILED',
+            $separator;
+
+            exit;
+        }
+
+
+
+        $arrayOfOutputLines = [];
+
+        CBExec::exec(
+            'docker compose down',
+            $arrayOfOutputLines,
+            $exitCode
+        );
+
+        echo
+        implode("\n", $arrayOfOutputLines),
+        $separator;
+
+
+
+        $arrayOfOutputLines = [];
+
+        CBExec::exec(
+            "rm -rf $absoluteTestProjectDirectory",
+            $arrayOfOutputLines,
+            $exitCode
+        );
+
+        echo
+        implode("\n", $arrayOfOutputLines),
+        $separator;
+    }
+    // go()
+
+}
