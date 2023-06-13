@@ -1,3 +1,5 @@
 items:
   - title: CBTextColor
+    message: Use CBTextColor1
     regex: \bCBTextColor\b
+    syslogSeverity: 4
