@@ -31,9 +31,9 @@ CB_TestingDockerComposeFileCreator
 
             db:
                 environment:
-                    MYSQL_ROOT_PASSWORD: $mysqlRootPassword
-                    MYSQL_USER: $mysqlUserUsername
-                    MYSQL_PASSWORD: $mysqlUserPassword
+                    MYSQL_ROOT_PASSWORD: "$mysqlRootPassword"
+                    MYSQL_USER: "$mysqlUserUsername"
+                    MYSQL_PASSWORD: "$mysqlUserPassword"
                     MYSQL_DATABASE: thedatabase
                 image: mysql
                 ports:
