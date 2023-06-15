@@ -12,6 +12,8 @@ CB_TestingDockerComposeFileCreator
      */
     static function
     create(
+        int $mysqlPort,
+        int $websitePort,
     ): string
     {
         $mysqlRootPassword =
@@ -22,6 +24,8 @@ CB_TestingDockerComposeFileCreator
 
         $mysqlUserPassword =
         CBDB::generateDatabasePassword();
+
+
 
         $my =
         <<<EOT
@@ -37,20 +41,19 @@ CB_TestingDockerComposeFileCreator
                     MYSQL_DATABASE: thedatabase
                 image: mysql
                 ports:
-                    - "51635:3306"
+                    - "$mysqlPort:3306"
                 restart: always
 
 
             web:
-                container_name: web_container_23
                 image: php:8.0-apache
                 ports:
-                    - "8082:80"
+                    - "$websitePort:80"
 
         EOT;
 
         return $my;
     }
-    // go()
+    // create()
 
 }
