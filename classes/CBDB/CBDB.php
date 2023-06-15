@@ -61,14 +61,25 @@ CBDB {
      */
     static function
     generateDatabasePassword(
-    ): string {
+    ): string
+    {
         $generatedPassword = '';
+
+        /**
+         * @NOTE 2023_06_14
+         * Matt Calkins
+         *
+         *      $   was removed as a potential character because of its use in
+         *          docker compose files. The only way to escape it is to add
+         *          another dollar sign which means you can't just simply copy
+         *          the password.
+         */
 
         $characterSets = [
             'abcdefghijklmnopqrstuvwxyz',
             'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
             '0123456789',
-            '~!@#$%^&*()_-+={}[]/<>,.;?:|'
+            '~!@#%^&*()_-+={}[]/<>,.;?:|'
         ];
 
         for (
@@ -220,7 +231,8 @@ CBDB {
 
         while ($row = $result->fetch_array(MYSQLI_NUM)) {
             if (count($row) > 1) {
-                $values[$row[0]] = $valueIsJSON ? json_decode($row[1]) : $row[1];
+                $values[$row[0]] =
+                $valueIsJSON ? json_decode($row[1]) : $row[1];
             } else {
                 $values[] = $valueIsJSON ? json_decode($row[0]) : $row[0];
             }
