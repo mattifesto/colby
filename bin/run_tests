@@ -107,6 +107,17 @@ RunTests
         implode("\n", $arrayOfOutputLines),
         $separator;
 
+        array_shift(
+            $arrayOfOutputLines
+        );
+
+        $ports =
+        CBConvert::JSONToValue(
+            implode(
+                "\n",
+                $arrayOfOutputLines
+            )
+        );
 
 
         $arrayOfOutputLines = [];
@@ -149,7 +160,7 @@ RunTests
         $arrayOfOutputLines = [];
 
         CBExec::exec(
-            'curl http://localhost:8082',
+            "curl http://localhost:{$ports->websitePort}",
             $arrayOfOutputLines,
             $exitCode
         );
