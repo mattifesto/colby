@@ -1,21 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-echo <<<EOT
-
-    colby_create_website started
-    ----------------------------
-
-
-EOT;
-
 include(
     $_composer_autoload_path
 );
-
-$mysqlPort = findOpenPort();
-
-echo "debug: available port is $mysqlPort\n";
 
 
 
@@ -125,25 +113,46 @@ if (!is_file($websiteVersionFilepath)) {
 
 
 
+$mysqlPort =
+findOpenPort();
+
+$websitePort =
+null;
+
+do
+{
+    $websitePort =
+    findOpenPort();
+}
+while (
+    $websitePort ===
+    $mysqlPort
+);
+
 file_put_contents(
     cb_document_root_directory() .
     '/docker-compose.yml',
-    CB_TestingDockerComposeFileCreator::create()
+    CB_TestingDockerComposeFileCreator::create(
+        $mysqlPort,
+        $websitePort,
+    )
 );
 
 
 
-//CBInstall::install();
+echo
+json_encode(
+    (object)
+    [
+        'mysqlPort' =>
+        $mysqlPort,
 
-
-
-echo <<<EOT
-
-    ------------------------------
-    colby_create_website completed
-
-
-EOT;
+        'websitePort' =>
+        $websitePort,
+    ],
+    JSON_PRETTY_PRINT
+),
+"\n";
 
 
 
