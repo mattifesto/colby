@@ -46,9 +46,14 @@ CB_TestingDockerComposeFileCreator
 
 
             web:
-                image: php:8.0-apache
+                build:
+                    context: .
+                    dockerfile_inline: |
+                        FROM php:8.0-apache
+                        COPY . /var/www/html
                 ports:
                     - "$websitePort:80"
+                restart: always
 
         EOT;
 
