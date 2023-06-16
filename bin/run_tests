@@ -182,6 +182,17 @@ RunTests
 
 
 
+        $shouldLeaveTheTestWebsiteRunning =
+        false;
+
+        if (
+            $shouldLeaveTheTestWebsiteRunning
+        ) {
+            return;
+        }
+
+
+
         $arrayOfOutputLines = [];
 
         CBExec::exec(
