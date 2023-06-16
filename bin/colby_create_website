@@ -60,7 +60,7 @@ $indexphpFilename = cb_document_root_directory() . '/index.php';
 
 if (!is_file($indexphpFilename)) {
     copy(
-        "{$colbySetupDirectory}/index.template.data",
+        "{$colbySetupDirectory}/index_composer.template.data",
         $indexphpFilename
     );
 }
