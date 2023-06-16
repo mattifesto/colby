@@ -18,7 +18,7 @@ RunTests
         echo $separator;
 
         $projectName =
-        'colby_test_' .
+        'test_' .
         date("Y_m_d_U");
 
         $absoluteTestProjectsContainerDirectory =
