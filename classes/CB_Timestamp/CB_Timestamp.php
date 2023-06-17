@@ -434,6 +434,51 @@ CB_Timestamp {
 
 
     /**
+     * @return [<unix timestamp>, <microseconds>]
+     *
+     *      Returns the current time as an array of two integers.  The second
+     *      integer is the number of microseconds. There are one million
+     *      microseconds in a second so the second number is in the range
+     *      0 - 999,999.
+     */
+    static function
+    getCurrentUnixTimestampAndMicroseconds(
+    ): array
+    {
+        $microtime =
+        microtime();
+
+        preg_match(
+            '/ ([0-9]+)/',
+            $microtime,
+            $matches
+        );
+
+        $unixTimestamp = $matches[1];
+
+        preg_match(
+            '/^0\.([0-9]{6})/',
+            $microtime,
+            $matches
+        );
+
+        $microseconds = intval(
+            $matches[1]
+        );
+
+        $array =
+        [
+            $unixTimestamp,
+            $microseconds,
+        ];
+
+        return $array;
+    }
+    // getCurrentUnixTimestampAndMicroseconds()
+
+
+
+    /**
      *
      */
     static function
