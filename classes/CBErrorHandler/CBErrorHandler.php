@@ -248,7 +248,7 @@ CBErrorHandler {
 
         <?php
     }
-    /* renderErrorReportPageForInnerError() */
+    /* renderErrorReportPageForInnerErrorAndExit() */
 
 
 
