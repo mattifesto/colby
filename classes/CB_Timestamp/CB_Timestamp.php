@@ -171,7 +171,7 @@ CB_Timestamp {
                 CBConvert::stringToCleanLine(<<<EOT
 
                     The femtoseconds argument must be between 0 and
-                    999999999999999 inclusive.
+                    999,999,999,999,999 inclusive.
 
                 EOT),
                 $femtoseconds,
