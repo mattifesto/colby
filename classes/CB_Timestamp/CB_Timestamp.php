@@ -190,6 +190,49 @@ CB_Timestamp {
 
 
     /**
+     * @return string
+     */
+    static function
+    convertToISO8601(
+        stdClass $cbtimestampModel
+    ): string
+    {
+        $unixTimestamp =
+        CB_Timestamp::getUnixTimestamp(
+            $cbtimestampModel
+        );
+
+        $dateString =
+        gmdate(
+            'Ymd' // when upgraded to PHP 8.2 use X instead of Y
+        );
+
+        $timeString =
+        gmdate(
+            'His'
+        );
+
+        $femtoseconds =
+        CB_Timestamp::getFemtoseconds(
+            $cbtimestampModel
+        );
+
+        $femtosecondsString =
+        sprintf(
+            '%015d',
+            $femtoseconds
+        );
+
+        $iso8601 =
+        "{$dateString}T{$timeString}.{$femtosecondsString}Z";
+
+        return $iso8601;
+    }
+    // convertToISO8601()
+
+
+
+    /**
      * This function is used for administrative and testing purposes and does
      * not have clear uses outside of that. Unused cbtimestamps will
      * automatically be removed by the system.
