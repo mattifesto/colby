@@ -531,6 +531,66 @@ CB_Timestamp {
 
 
 
+    /**
+     * This function is the equivalent of:
+     *
+     *      $cbtimestampModel1 < $cbtimestampModel2
+     *
+     * @return bool
+     */
+    static function
+    isLessThan(
+        stdClass $cbtimestampModel1,
+        stdClass $cbtimestampModel2
+    ): bool
+    {
+        $unixTimestamp1 =
+        CB_Timestamp::getUnixTimestamp(
+            $cbtimestampModel1
+        );
+
+        $unixTimestamp2 =
+        CB_Timestamp::getUnixTimestamp(
+            $cbtimestampModel2
+        );
+
+        if (
+            $unixTimestamp1 <
+            $unixTimestamp2
+        ) {
+            return true;
+        }
+
+        if (
+            $unixTimestamp1 >
+            $unixTimestamp2
+        ) {
+            return false;
+        }
+
+        $femtoseconds1 =
+        CB_Timestamp::getFemtoseconds(
+            $cbtimestampModel1
+        );
+
+        $femtoseconds2 =
+        CB_Timestamp::getFemtoseconds(
+            $cbtimestampModel2
+        );
+
+        if (
+            $femtoseconds1 <
+            $femtoseconds2
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+    // isLessThan()
+
+
+
      */
     static function
     register(
