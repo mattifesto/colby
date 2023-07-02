@@ -591,6 +591,68 @@ CB_Timestamp {
 
 
 
+    /**
+     * @return CB_Timestamp
+     */
+    static function
+    now(
+    ): stdClass
+    {
+        static $previousCBTimestampModel =
+        null;
+
+        $currentUnixTimestampAndMicroseconds =
+        CB_Timestamp::getCurrentUnixTimestampAndMicroseconds();
+
+        $currentUnixTimestamp =
+        $currentUnixTimestampAndMicroseconds[0];
+
+        $currentMicroseconds =
+        $currentUnixTimestampAndMicroseconds[1];
+
+        $currentFemtoseconds =
+        $currentMicroseconds
+        * 1000
+        * 1000
+        * 1000;
+
+        $currentCBTimestampModel =
+        CB_Timestamp::from(
+            $currentUnixTimestamp,
+            $currentFemtoseconds,
+        );
+
+        if (
+            $previousCBTimestampModel !==
+            null &&
+            (
+                CB_Timestamp::isLessThan(
+                    $currentCBTimestampModel,
+                    $previousCBTimestampModel
+                ) ||
+                CB_Timestamp::isEqualTo(
+                    $currentCBTimestampModel,
+                    $previousCBTimestampModel
+                )
+            )
+        ) {
+            $currentCBTimestampModel =
+            CB_Timestamp::nudgeUp(
+                $previousCBTimestampModel
+            );
+        }
+
+        $previousCBTimestampModel =
+        $currentCBTimestampModel;
+
+        return $currentCBTimestampModel;
+    }
+    // now()
+
+
+
+    /**
+     *
      */
     static function
     register(
