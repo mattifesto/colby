@@ -256,4 +256,37 @@ RunTests
     }
     // go()
 
+
+
+    /**
+     * @return void
+     */
+    static function
+    printErrorFiles(
+    ): void
+    {
+        $arrayOfOutputLines = [];
+        $exitCode;
+
+        $testSiteURL =
+        RunTests::getTestSiteURL();
+
+        echo "test site url: $testSiteURL\n\n";
+
+        $apiURL =
+        "$testSiteURL/api/v1/errors/";
+
+        echo "api url: $apiURL\n\n";
+
+        CBExec::exec(
+            "curl $apiURL",
+            $arrayOfOutputLines,
+            $exitCode
+        );
+
+        echo
+        implode("\n", $arrayOfOutputLines);
+    }
+    // printErrorFiles()
+
 }
