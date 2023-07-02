@@ -131,7 +131,7 @@ while (
 
 file_put_contents(
     cb_document_root_directory() .
-    '/docker-compose.yml',
+    '/compose.yaml',
     CB_TestingDockerComposeFileCreator::create(
         $mysqlPort,
         $websitePort,
