@@ -683,25 +683,14 @@ CB_Timestamp {
     reserveNow(
         $rootModelCBID
     ): stdClass {
-        $microtime = microtime();
+        $currentUnixTimestampAndMicroseconds =
+        CB_Timestamp::getCurrentUnixTimestampAndMicroseconds();
 
-        preg_match(
-            '/ ([0-9]+)/',
-            $microtime,
-            $matches
-        );
+        $unixTimestamp =
+        $currentUnixTimestampAndMicroseconds[0];
 
-        $unixTimestamp = $matches[1];
-
-        preg_match(
-            '/^0\.([0-9]{6})/',
-            $microtime,
-            $matches
-        );
-
-        $microseconds = intval(
-            $matches[1]
-        );
+        $microseconds =
+        $currentUnixTimestampAndMicroseconds[1];
 
         $femtoseconds = (
             $microseconds
