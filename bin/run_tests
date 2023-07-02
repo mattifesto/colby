@@ -8,6 +8,36 @@ RunTests::go();
 final class
 RunTests
 {
+    private static
+    $testSiteURL =
+    '';
+
+
+
+    // -- accessors
+
+
+
+    static function
+    getTestSiteURL(
+    ): string
+    {
+        return RunTests::$testSiteURL;
+    }
+
+
+
+    static function
+    setTestSiteURL(
+        string $testSiteURLArgument
+    ): void
+    {
+        RunTests::$testSiteURL =
+        $testSiteURLArgument;
+    }
+
+
+
     static function
     go(
     ): void
