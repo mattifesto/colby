@@ -168,6 +168,34 @@ CBErrorHandler {
             ob_end_clean();
         }
 
+        $originalErrorText =
+        CB_ErrorTextGenerator::generateErrorText(
+            $originalError
+        );
+
+        $errorFileBasename =
+        CB_Timestamp::convertToISO8601(
+            CB_Timestamp::now()
+        );
+
+        $absoluteErrorsDirectory =
+        cb_document_root_directory() .
+        '/errors';
+
+        if (
+           !is_dir($absoluteErrorsDirectory)
+        ) {
+            mkdir($absoluteErrorsDirectory);
+        }
+
+        $absoluteErrorFileFilepath =
+        "$absoluteErrorsDirectory/{$errorFileBasename}.txt";
+
+        file_put_contents(
+            $absoluteErrorFileFilepath,
+            $originalErrorText
+        );
+
         $isDeveloper = CBUserGroup::userIsMemberOfUserGroup(
             ColbyUser::getCurrentUserCBID(),
             'CBDevelopersUserGroup'
@@ -196,13 +224,50 @@ CBErrorHandler {
 
             $method = __METHOD__;
 
+            /**
+             * 2023_06_16
+             * Matt Calkins
+             *
+             *      I'm going over night because these errors are not communicating
+             *      to me in the right way.
+             *
+             *      1. When the user is not a dev and there's no way to communicate
+             *          the system should tell every user an error file has been
+             *          created and an admin should look at it.
+             *
+             *      2. The error file should be text. And that should be the way
+             *          every error is shown. Text in a <pre> if shown on a web page.
+             *
+             *      3. Call stacks should be very clear text like:
+             *
+             *          function 1 was called
+             *          then function 2 was called
+             *          then function 3 was called
+             *          then function 4 was called
+             *          in function 4 and exeption was thrown...
+             *
+             *          This text should say very clearly exactly what happened.
+             *          Often call stacks are confusing and they shouldn't be any more.
+             */
             $messageAsHTML = <<<EOT
 
                 <p>This page was rendered by {$method}()
 
+                <p>absolute error file filepath: $absoluteErrorFileFilepath
+
+
+
+                <h3>Original Error Text</h3>
+
+                <pre>$originalErrorText</pre>
+
+
+
                 <h3>Original Error</h3>
 
                 <pre>{$oneLineErrorReportsForOriginalError}</pre>
+
+
 
                 <h3>Inner Error</h3>
 
