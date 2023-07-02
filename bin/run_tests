@@ -149,6 +149,11 @@ RunTests
             )
         );
 
+        RunTests::setTestSiteURL(
+            "http://localhost:{$ports->websitePort}"
+        );
+
+
 
         $arrayOfOutputLines = [];
 
