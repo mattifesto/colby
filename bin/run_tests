@@ -217,6 +217,18 @@ RunTests
 
 
 
+        RunTests::printErrorFiles();
+
+        echo $separator;
+
+
+
+        /**
+         *      -- end of test site tests
+         */
+
+
+
         $shouldLeaveTheTestWebsiteRunning =
         false;
 
