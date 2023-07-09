@@ -274,8 +274,33 @@ CBErrorHandler {
                 <pre>{$oneLineErrorReportsForInnerError}</pre>
 
             EOT;
-        } else {
-            $messageAsHTML = cbhtml(
+        }
+        else
+        {
+            $messageAsHTML =
+            cbhtml(
+
+                /**
+                 * @TODO 20230709
+                 * Matt Calkins
+                 *
+                 *      This function should be changed to determine if we are
+                 *      in an okay situation to give more information. We don't
+                 *      because it might be public. But it raw development
+                 *      cases we should set an environment variable or something
+                 *      to indicate that we can say more.
+                 *
+                 *      We could also have the default message say what that
+                 *      environment variable is. It's okay because only a dev
+                 *      would be able to do that anyway.
+                 *
+                 *      "To see more set IM_A_DEV=1 in container."
+                 */
+
+                // CBException::throwableToOneLineErrorReport(
+                //     $innerError
+                // )
+
                 'An error has occurred.'
             );
         }
