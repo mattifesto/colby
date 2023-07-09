@@ -1337,8 +1337,25 @@ Colby
      *
      * @return mysqli_result | boolean
      */
-    static function query($SQL, $retryOnDeadlock = false) {
-        $mysqli = Colby::mysqli();
+    static function
+    query(
+        $SQL,
+        $retryOnDeadlock = false
+    ) {
+        $mysqli =
+        Colby::mysqli();
+
+        if (
+            $mysqli ===
+            null
+        ) {
+            throw new CBException(
+                'No database connection is available.',
+                '',
+                'c1ad5f5e96192b9de04def0549185eabcc4f9997'
+            );
+        }
+
         $countOfDeadlocks = 0;
         $maxDeadlocks = 5;
 
