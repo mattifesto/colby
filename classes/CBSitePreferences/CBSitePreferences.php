@@ -1530,7 +1530,8 @@ CBSitePreferences {
      */
     static function
     mysqlHost(
-    ): ?string {
+    ): ?string
+    {
         $databaseHost = '';
         $configurationSpec = CB_Configuration::fetchConfigurationSpec();
 
@@ -1539,6 +1540,19 @@ CBSitePreferences {
                 $configurationSpec
             );
         }
+
+        $host =
+        getenv(
+            'MYSQL_HOST'
+        );
+
+        if (
+            $host !==
+            false
+        ) {
+            return $host;
+        }
+
 
         if (defined('CBMySQLHost')) {
             return CBMySQLHost;
