@@ -1274,8 +1274,25 @@ Colby
      *
      * @return void
      */
-    static function queries($sql) {
-        $mysqli = Colby::mysqli();
+    static function
+    queries(
+        $sql
+    ): void
+    {
+        $mysqli =
+        Colby::mysqli();
+
+        if (
+            $mysqli ===
+            null
+        ) {
+            throw new CBException(
+                'No database connection is available.',
+                '',
+                '60699b472b6c1db75d0d3dfa89c81b5d4618441a'
+            );
+        }
+
         $indexOfTheSQLStatementWithAnError = 0;
         $theFirstSQLStatementWasSuccessful = $mysqli->multi_query($sql);
 
