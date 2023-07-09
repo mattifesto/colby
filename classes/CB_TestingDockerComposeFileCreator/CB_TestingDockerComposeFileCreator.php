@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * @TODO 20230709
+ * Matt Calkins
+ *
+ *      I remove the one use of this class today. I don't want to remove it yet
+ *      because I'm still working on related changes. This file should probably
+ *      be removed or deprecated then removed.
+ */
 final class
 CB_TestingDockerComposeFileCreator
 {
