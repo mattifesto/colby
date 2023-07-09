@@ -156,3 +156,5 @@ COPY --chown=devuser:devuser ./dev_website /var/www/html
 WORKDIR /var/www/html
 
 RUN git config --global pull.ff only
+
+RUN composer require mattcalkins/colby
