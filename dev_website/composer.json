@@ -1,0 +1,12 @@
+{
+    "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "~/php_composer_repositories/colby",
+            "options": {
+                "symlink": true
+            }
+        }
+    ]
+}
