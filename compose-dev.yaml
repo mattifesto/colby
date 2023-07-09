@@ -1,0 +1,22 @@
+services:
+
+
+  database:
+    env_file:
+      - compose-dev.env
+    expose:
+      - 3306
+    image: mysql
+    restart: always
+
+
+
+  web:
+    build:
+      context: .
+      target: development
+    env_file:
+      - compose-dev.env
+    ports:
+      - 80
+    restart: always
