@@ -1498,7 +1498,20 @@ CBSitePreferences {
      */
     static function
     mysqlDatabase(
-    ): string {
+    ): string
+    {
+        $databaseName =
+        getenv(
+            'MYSQL_DATABASE'
+        );
+
+        if (
+            $databaseName !==
+            false
+        ) {
+            return $databaseName;
+        }
+
         if (defined('CBMySQLDatabase')) {
             return CBMySQLDatabase;
         }
@@ -1507,7 +1520,19 @@ CBSitePreferences {
             return COLBY_MYSQL_DATABASE;
         }
 
-        $configurationSpec = CB_Configuration::fetchConfigurationSpec();
+        $configurationSpec =
+        CB_Configuration::fetchConfigurationSpec();
+
+        if (
+            $configurationSpec ===
+            null
+        ) {
+            throw new CBException(
+                'There is no MySQL database name configured.',
+                '',
+                '329f0f404fa99ae6ac3c259a5f63769e8393f3a5'
+            );
+        }
 
         return CB_Configuration::getDatabaseName(
             $configurationSpec
@@ -1573,7 +1598,20 @@ CBSitePreferences {
      */
     static function
     mysqlPassword(
-    ): string {
+    ): string
+    {
+        $userPassword =
+        getenv(
+            'MYSQL_PASSWORD'
+        );
+
+        if (
+            $userPassword !==
+            false
+        ) {
+            return $userPassword;
+        }
+
         if (defined('CBMySQLPassword')) {
             return CBMySQLPassword;
         }
@@ -1583,7 +1621,19 @@ CBSitePreferences {
         }
 
 
-        $configurationSpec = CB_Configuration::fetchConfigurationSpec();
+        $configurationSpec =
+        CB_Configuration::fetchConfigurationSpec();
+
+        if (
+            $configurationSpec ===
+            null
+        ) {
+            throw new CBException(
+                'There is no MySQL user password configured.',
+                '',
+                '7d9fd741a762ce140b3be97b50b10f11c97e2480'
+            );
+        }
 
         return CB_Configuration::getDatabasePassword(
             $configurationSpec
@@ -1598,7 +1648,20 @@ CBSitePreferences {
      */
     static function
     mysqlUser(
-    ): string {
+    ): string
+    {
+        $username =
+        getenv(
+            'MYSQL_USER'
+        );
+
+        if (
+            $username !==
+            false
+        ) {
+            return $username;
+        }
+
         if (defined('CBMySQLUser')) {
             return CBMySQLUser;
         }
@@ -1607,7 +1670,19 @@ CBSitePreferences {
             return COLBY_MYSQL_USER;
         }
 
-        $configurationSpec = CB_Configuration::fetchConfigurationSpec();
+        $configurationSpec =
+        CB_Configuration::fetchConfigurationSpec();
+
+        if (
+            $configurationSpec ===
+            null
+        ) {
+            throw new CBException(
+                'There is no MySQL user name configured.',
+                '',
+                '0d8f447c2230f14efa1471d00060ea5ec3dbafb4'
+            );
+        }
 
         return CB_Configuration::getDatabaseUsername(
             $configurationSpec
