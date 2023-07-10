@@ -157,4 +157,4 @@ WORKDIR /var/www/html
 
 RUN git config --global pull.ff only
 
-RUN composer require mattcalkins/colby
+RUN composer require mattcalkins/colby:@dev
