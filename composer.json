@@ -16,6 +16,7 @@
     "license": "MIT",
     "name": "mattcalkins/colby",
     "require": {
+        "erusev/parsedown": "^1.7"
     },
     "type": "library"
 }
