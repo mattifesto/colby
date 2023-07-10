@@ -1,6 +1,21 @@
 #!/usr/bin/env php
 <?php
 
+/**
+ * @NOTE 20230709
+ * Matt Calkins
+ *
+ *      The purpose of this file is to get a website running for the first time.
+ *      If it's run a second time or more it should not cause a problem. An
+ *      admin should be able to run the file and get error reports and fix the
+ *      problems then run again until it finally completes.
+ *
+ * Tasks:
+ *
+ *      - create necessary files
+ *      - create database tables
+ */
+
 include(
     $_composer_autoload_path
 );
@@ -110,3 +125,29 @@ if (!is_file($websiteVersionFilepath)) {
         $websiteVersionFilepath
     );
 }
+
+
+
+/**
+ * @NOTE 20230709
+ * Matt Calkins
+ *
+ *      We have left out creating site classes here because I think I want the
+ *      site to at least run without any of those and they can be created after
+ *      site setup.
+ */
+
+
+
+CBInstall::install();
+
+
+
+ /**
+  * @NOTE 20230709
+  * Matt Calkins
+  *
+  *     I'm leaving out admin user creation for now because we want this file
+  *     to contain as little as possible. There should be a separate command to
+  *     create an admin user.
+  */
