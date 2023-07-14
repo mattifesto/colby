@@ -1499,7 +1499,10 @@ cbsiteurl(
 /**
  * @return string
  */
-function cbsysurl(): string {
+function
+cbsysurl(
+): string
+{
     static $value = null;
 
     if ($value === null) {
