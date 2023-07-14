@@ -42,7 +42,9 @@
 
 
 
-cp /com.docker.devenvironments.code/dev_website .
+cp /com.docker.devenvironments.code/dev_website/* /var/www/html
+
+cd /var/www/html
 
 composer require mattcalkins/colby:@dev
 
