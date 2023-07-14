@@ -45,3 +45,5 @@
 cp /com.docker.devenvironments.code/dev_website .
 
 composer require mattcalkins/colby
+
+./vendor/bin/colby_create_website
