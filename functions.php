@@ -379,3 +379,81 @@ function cb_query_string_value(
     }
 }
 /* cb_query_string_value() */
+
+
+
+/**
+ * @param string $pathArgument
+ *
+ * @return string
+ */
+function
+cb_realpath_without_symlink_resolution(
+    string $pathArgument
+): string
+{
+    $firstCharacterOfPathArgument =
+    mb_substr(
+        $pathArgument,
+        0,
+        1
+    );
+
+    if (
+        $firstCharacterOfPathArgument === ''
+    ) {
+        return '';
+    }
+
+    $originalParts =
+    explode(
+        '/',
+        $pathArgument
+    );
+
+    $realpathParts =
+    [];
+
+    foreach (
+        $originalParts as $originalPart
+    ) {
+        if (
+            $originalPart === '' ||
+            $originalPart === '.'
+        ) {
+            continue;
+        }
+
+        else if (
+            $originalPart === '..'
+        ) {
+            array_pop(
+                $realpathParts
+            );
+        }
+
+        else
+        {
+            array_push(
+                $realpathParts,
+                $originalPart
+            );
+        }
+    }
+
+    $realpath =
+    implode(
+        '/',
+        $realpathParts
+    );
+
+    if (
+        $firstCharacterOfPathArgument === '/'
+    ) {
+        $realpath =
+        "/{$realpath}";
+    }
+
+    return $realpath;
+}
+// cb_realpath_without_symlink_resolution()
