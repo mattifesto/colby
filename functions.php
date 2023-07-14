@@ -35,12 +35,45 @@ cbsitedir(
 
 
 /**
+ * @NOTE 2023-07-13
+ * Matt Calkins
+ *
+ *      This function was altered today to return a form of the Colby
+ *      install path provided by PHP Composer, if available. The directory
+ *      will be a true subdirectory of the directory returned by
+ *      cb_document_root_directory().
+ *
  * @return string
  */
 function
 cbsysdir(
-) {
-    return __DIR__;
+): string
+{
+    static $colbyLibraryDirectory = null;
+
+    if (
+        $colbyLibraryDirectory === null
+    ) {
+        if (
+            class_exists('\\Composer\\InstalledVersions')
+        ) {
+            $colbyLibraryInstallPath =
+            \Composer\InstalledVersions::getInstallPath(
+                'mattcalkins/colby'
+            );
+
+            $colbyLibraryDirectory =
+            cb_realpath_without_symlink_resolution(
+                $colbyLibraryInstallPath
+            );
+        }
+        else
+        {
+            $colbyLibraryDirectory = __DIR__;
+        }
+    }
+
+    return $colbyLibraryDirectory;
 }
 /* cbsysdir() */
 
