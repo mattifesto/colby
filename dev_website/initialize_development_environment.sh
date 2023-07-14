@@ -42,4 +42,6 @@
 
 
 
+cp /com.docker.devenvironments.code/dev_website .
+
 composer require mattcalkins/colby
