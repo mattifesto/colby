@@ -8,6 +8,27 @@ error_reporting(
 );
 
 
+
+/**
+ * @TODO 2023-07-13
+ * Matt Calkins
+ *
+ *      This was added because when using Colby in a container the error log is
+ *      hard to find. We're checking to see if we're running with Composer which
+ *      is not the same thing which is why this is a TODO. Figure out where the
+ *      error file is or should be and when.
+ */
+if (
+    class_exists('\\Composer\\InstalledVersions')
+) {
+    ini_set(
+        'error_log',
+        '/var/tmp/errors.log'
+    );
+}
+
+
+
 /**
  * This exception handler is mean to handle exceptions that happen before the
  * true Colby exception handler is set during initialize.
