@@ -149,12 +149,6 @@ RUN chmod 0440 /etc/sudoers.d/$USERNAME
 
 USER $USERNAME
 
-COPY --chown=devuser:devuser . /home/devuser/php_composer_repositories/colby
-
-COPY --chown=devuser:devuser ./dev_website /var/www/html
-
-WORKDIR /var/www/html
-
 RUN git config --global pull.ff only
 
-RUN composer require mattcalkins/colby:@dev
+WORKDIR /var/www/html
