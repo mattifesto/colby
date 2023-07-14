@@ -36,6 +36,9 @@
 #       When you run this in the VSCode terminal you can accept the default
 #       answers to the questions they ask. VSCode will open a web browser on the
 #       host (MacOS or Windows) so the process is very easy.
+#
+#   git config --global user.email "you@example.com"
+#   git config --global user.name "Your Name"
 
 
 
