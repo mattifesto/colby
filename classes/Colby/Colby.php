@@ -1506,12 +1506,38 @@ cbsiteurl(
         return '';
     }
 
-    return (
-        empty($_SERVER['HTTPS']) ?
-        'http://' :
-        'https://'
-    ) .
-    $_SERVER['SERVER_NAME'];
+    /**
+     * @NOTE 2023-07-13
+     * Matt Calkins
+     *
+     *      Returning and empty string from this function makes links generated
+     *      relative links instead of absolute links which is important when
+     *      running from localhost using docker potentially behind a load
+     *      balancer.
+     *
+     *      This change was made out of necessity during development. Some
+     *      thought was put into the concept, enough to feel relatively good
+     *      about it, but if something feels wrong it might be. The old code is
+     *      preserved below.
+     */
+    return '';
+
+
+
+    /**
+     * @TODO 2023-07-13
+     * Matt Calkins
+     *
+     *      This is the old code for this function. When we are very sure that
+     *      using relative links is the right or maybe the only possible way
+     *      this code can be deleted.
+     */
+    // return (
+    //     empty($_SERVER['HTTPS']) ?
+    //     'http://' :
+    //     'https://'
+    // ) .
+    // $_SERVER['SERVER_NAME'];
 }
 /* cbsiteurl() */
 
