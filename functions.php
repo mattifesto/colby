@@ -244,7 +244,7 @@ cb_document_root_directory(
         $rootPackageInformation['install_path'];
 
         $documentRootDirectory =
-        realpath(
+        cb_realpath_without_symlink_resolution(
             $rootPackageInstallPath
         );
 
