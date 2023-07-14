@@ -1550,14 +1550,47 @@ function
 cbsysurl(
 ): string
 {
-    static $value = null;
+    static $colbyLibraryBaseURL = null;
 
-    if ($value === null) {
-        $value = cbsiteurl() . '/colby';
+    if (
+        $colbyLibraryBaseURL === null
+    ) {
+        if (
+            class_exists('\\Composer\\InstalledVersions')
+        ) {
+            $documentRootDirectory =
+            cb_document_root_directory();
+
+            $colbyLibraryDirectory =
+            cbsysdir();
+
+            /**
+             * When the colby library directory is exploded by the document root
+             * directory an array of two values will be produced. The first
+             * value will be an empty string and the second will be the colby
+             * library relative directory (starting with a slash).
+             */
+
+            $colbyLibraryRelativeDirectory =
+            explode(
+                $documentRootDirectory,
+                $colbyLibraryDirectory
+            )[1];
+        }
+        else
+        {
+            $colbyLibraryRelativeDirectory =
+            '/colby';
+        }
+
+        $colbyLibraryBaseURL =
+        cbsiteurl() .
+        $colbyLibraryRelativeDirectory;
     }
 
-    return $value;
+    return $colbyLibraryBaseURL;
 }
+// cbsysurl()
 
 
 
