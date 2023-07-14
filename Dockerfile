@@ -150,5 +150,3 @@ RUN chmod 0440 /etc/sudoers.d/$USERNAME
 USER $USERNAME
 
 RUN git config --global pull.ff only
-
-WORKDIR /var/www/html
