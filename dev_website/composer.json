@@ -2,7 +2,7 @@
     "repositories": [
         {
             "type": "path",
-            "url": "~/php_composer_repositories/colby",
+            "url": "/com.docker.devenvironments.code",
             "options": {
                 "symlink": true
             }
