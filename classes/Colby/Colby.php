@@ -628,6 +628,9 @@ Colby
      * @param string $extension
      * @param string? $flexdir
      *
+     *      See the function CBDataStore::flexpath() for documentation on how
+     *      this argument is interpreted.
+     *
      * @return string
      */
     static function flexpath(
@@ -637,7 +640,9 @@ Colby
     ) {
         $flexpath = "classes/{$className}/{$className}.{$extension}";
 
-        if (empty($flexdir)) {
+        if (
+            $flexdir === null
+        ) {
             return $flexpath;
         } else {
             return "{$flexdir}/{$flexpath}";
