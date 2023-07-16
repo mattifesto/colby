@@ -44,15 +44,94 @@ class CBDataStoreTests {
     /**
      * @return object
      */
-    static function CBTest_URIToFilepath(): stdClass {
-        $relative = '/colby/classes/CBDataStore/CBDataStore.php';
-        $filepath = cbsitedir() . $relative;
+    static function
+    CBTest_URIToFilepath(
+    ): stdClass
+    {
+        /**
+         * This is a real class and we are going to user a file inside the class
+         * directory for these tests.
+         */
+        $testClassName =
+        'CBDataStore';
 
-        $cases = [
-            [cbsiteurl() . $relative, $filepath],
-            [$relative, $filepath],
-            [$filepath, $filepath],
-            ['/foo/bar/', null],
+        /**
+         * It's important that these tests test some URLs with a domain but it
+         * doesn't matter what that domain is. A website can have multiple
+         * domains and they may be known only by the load balancer so it doesn't
+         * matter which specific domain we use in these tests, even if we are
+         * pretty sure it isn't actually ever used.
+         */
+        $testDomain =
+        'example.com';
+
+
+        $relativePathFromDocumentRootToColbyLibrary =
+        CB_Directories::getRelativePathFromDocumentRootToColbyLibrary();
+
+        $relativePathFromColbyLibraryToClassFile =
+        CBLibrary::buildLibraryClassFilePath(
+            $testClassName,
+            '',
+            'php',
+            ''
+        );
+
+        // the error here is that $relative is not a valid file path
+        //$relative = '/colby/classes/CBDataStore/CBDataStore.php';
+        $relativePathFromDocumentRootToClassFile =
+        $relativePathFromDocumentRootToColbyLibrary .
+        '/' .
+        $relativePathFromColbyLibraryToClassFile;
+
+        $filepath =
+        cbsitedir() .
+        '/' .
+        $relativePathFromDocumentRootToClassFile;
+
+        $cases =
+        [
+            [
+                cbsiteurl() . "/$relativePathFromDocumentRootToClassFile",
+                $filepath,
+            ],
+            [
+                "/$relativePathFromDocumentRootToClassFile",
+                $filepath,
+            ],
+            [
+                "//$testDomain/$relativePathFromDocumentRootToClassFile",
+                $filepath,
+            ],
+            [
+                "http://$testDomain/$relativePathFromDocumentRootToClassFile",
+                $filepath,
+            ],
+            [
+                "https://$testDomain/$relativePathFromDocumentRootToClassFile",
+                $filepath,
+            ],
+            [
+                $relativePathFromDocumentRootToClassFile,
+                $filepath,
+                'ad0bfbb5d9459185107cf3b158c3b3d0209c7f2d',
+            ],
+            [
+                "http://$testDomain",
+                null
+            ],
+            [
+                "http://$testDomain/",
+                null,
+            ],
+            [
+                '',
+                null,
+            ],
+            [
+                '/foo/bar/',
+                null,
+            ],
         ];
 
         for (
@@ -61,10 +140,39 @@ class CBDataStoreTests {
             $index += 1
         ) {
             $case = $cases[$index];
-            $actualResult = CBDataStore::URIToFilepath($case[0]);
+
+            try
+            {
+                $actualResult =
+                CBDataStore::URIToFilepath(
+                    $case[0]
+                );
+            }
+            catch (
+                Throwable $throwable
+            ) {
+                $actualSourceCBID =
+                CBException::throwableToSourceCBID(
+                    $throwable
+                );
+
+                $expectedSourceCBID =
+                $case[2];
+
+                if (
+                    $actualSourceCBID === $expectedSourceCBID
+                ) {
+                    continue;
+                }
+
+                throw $throwable;
+            }
+
             $expectedResult = $case[1];
 
-            if ($actualResult !== $expectedResult) {
+            if (
+                $actualResult !== $expectedResult
+            ) {
                 return CBTest::resultMismatchFailure(
                     "test index {$index}",
                     $actualResult,
