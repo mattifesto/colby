@@ -26,8 +26,17 @@ CBLibrary
     ): string
     {
         $intraLibraryPath =
-        "classes/{$className}/" .
-        "{$className}.{$fileVersionNumber}.{$fileExtension}";
+        "classes/{$className}/{$className}";
+
+        if (
+            $fileVersionNumber !== ''
+        ) {
+            $intraLibraryPath .=
+            ".{$fileVersionNumber}";
+        }
+
+        $intraLibraryPath .=
+        ".{$fileExtension}";
 
         if (
             $libraryPath === ''
