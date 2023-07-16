@@ -184,9 +184,20 @@ final class CBTestAdmin {
      *
      * @return string
      */
-    static function testImageFilepath() {
-        return __DIR__ . '/2017.02.02.TestImage.jpg';
+    static function
+    testImageFilepath(
+    ): string
+    {
+        $testImageFilepath =
+        Colby::flexpath(
+            __CLASS__,
+            '2017.02.02.TestImage.jpg',
+            cbsysdir()
+        );
+
+        return $testImageFilepath;
     }
+    // testImageFilepath()
 
 
 
