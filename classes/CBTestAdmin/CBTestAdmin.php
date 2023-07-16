@@ -78,13 +78,23 @@ final class CBTestAdmin {
     /**
      * @return [[<name>, <value>]]
      */
-    static function CBHTMLOutput_JavaScriptVariables() {
-        return [
+    static function
+    CBHTMLOutput_JavaScriptVariables(
+    ): array
+    {
+        $javaScriptVariables =
+        [
+            [
+                'CBTestAdmin_testImageURL',
+                CBTestAdmin::testImageURL(),
+            ],
             [
                 'CBTestAdmin_tests',
                 CBTest::getTests(),
             ],
         ];
+
+        return $javaScriptVariables;
     }
     /* CBHTMLOutput_JavaScriptVariables() */
 
