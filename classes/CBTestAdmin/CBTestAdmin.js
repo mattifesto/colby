@@ -15,6 +15,7 @@
 
     CBTestAdmin,
 
+    CBTestAdmin_testImageURL,
     CBTestAdmin_tests,
 */
 
@@ -173,7 +174,7 @@
             containerElement.className = "container";
 
             var img = document.createElement("img");
-            img.src = "/colby/classes/CBTestAdmin/2017.02.02.TestImage.jpg";
+            img.src = CBTestAdmin_testImageURL;
 
             containerElement.appendChild(img);
             containerElement.appendChild(CBUI.createHalfSpace());
