@@ -242,35 +242,74 @@ final class CBDataStore {
 
 
     /**
-     * This function takes a URI and converts it to a filepath if the file can
+     * This function takes a URL and converts it to a filepath if the file can
      * be confirmed to exist.
      *
-     * @param string $URI
+     * @param string $URL
      *
-     *      The URI can be in the following forms:
+     *      This function has "URI" in it from a time when we were using that
+     *      term instead of URL and would be named using URL now. This function
+     *      only accepts URLs with a domain or absolute URLS. It would not know
+     *      what context to user if given a relative URL. The URL can be in the
+     *      following forms:
      *
      *      http://bob.com/dir/dir/file.ext
-     *      /dir/dir/file.ext (relative to document root)
-     *      /dir/dir/file.ext (absolute)
+     *      /dir/dir/file.ext
      *
      * @return ?string
+     *
+     *      This function will return an absolute path to an existing file or
+     *      null.
      */
     static function
     URIToFilepath(
-        string $URI
-    ): ?string {
-        $path = parse_url($URI, PHP_URL_PATH);
+        string $URL
+    ): ?string
+    {
+        $path =
+        parse_url(
+            $URL,
+            PHP_URL_PATH
+        );
 
-        if (empty($path)) {
+        if (
+            empty($path)
+        ) {
             return null;
         }
 
-        if (is_file($path)) {
-            return $path;
+        $firstCharacterOfPath =
+        mb_substr(
+            $path,
+            0,
+            1
+        );
+
+        if (
+            $firstCharacterOfPath !== '/'
+        ) {
+            throw new CBExceptionWithValue(
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    A relative URL was passed as the \$URL argument when calling
+                    CBDataStore::URIToFilepath(). The URL argument of
+                    CBDataStore::URIToFilepath() must be an absolute URL because
+                    the function does not have the context to interpret relative
+                    URLs.
+
+                EOT),
+                $URL,
+                'ad0bfbb5d9459185107cf3b158c3b3d0209c7f2d'
+            );
         }
 
-        if (is_file(cbsitedir() . $path)) {
-            return cbsitedir() . $path;
+        $absoluteFilePath =
+        cbsitedir() . $path;
+
+        if (
+            is_file($absoluteFilePath)
+        ) {
+            return $absoluteFilePath;
         }
 
         return null;
