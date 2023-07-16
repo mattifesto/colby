@@ -63,7 +63,7 @@ final class CBTestAdmin {
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_08_10_1660090897',
+                '2023_07_15_1689458017',
                 'js',
                 cbsysurl()
             ),
