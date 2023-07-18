@@ -354,72 +354,42 @@ final class CBDataStore {
     /**
      * @deprecated use CBDataStore::URLToCBID()
      *
-     *      It is not generally possible to determine if a data store referenced
-     *      by a URL was intended to reference a data store specific to the
-     *      current site. In specific cases where it may be possible be this
-     *      function does not do it properly anyway.
+     *      2023-07-18
+     *      Matt Calkins
      *
-     * Detects whether the URI represents a local data store and returns the
-     * data store ID. The data store does not have to exist for the function to
-     * return the ID.
+     *      This function used to do some types of verification of the URL that
+     *      were not very effective and not necessarily correct. If you need to
+     *      know if the CBID returned from this function is truly valid, see if
+     *      a model with the CBID exists in the database.
      *
      * @param string $URI
      *
-     *      Local URIs:
+     *      Examples:
      *
      *      http://domain/data/.../
      *      https://domain/data/.../
      *      //domain/data/.../
      *      /data/.../
+     *      .../data/.../
      *
-     *      Absolute directory:
-     *
-     *      <site directory>/data/.../
-     *
-     * @return ID|false
-     *
-     *      If the URI is local and references a data store the data store ID is
-     *      returned; otherwise false.
+     * @return CBID|false
      */
-    static function URIToID($URI) {
-        $components = parse_url($URI);
+    static function
+    URIToID(
+        $URI
+    ) {
+        $CBID =
+        CBDataStore::URLToCBID(
+            $URI
+        );
 
-        if (!empty($components['host'])) {
-            if ($components['host'] !== CBSitePreferences::siteDomainName()) {
-                return false;
-            }
-        }
-
-        if (empty($components['path'])) {
+        if (
+            $CBID === null
+        ) {
             return false;
         }
 
-        $path = $components['path'];
-
-        /**
-         * Test for web addresses
-         */
-
-        $pattern =
-        '%^/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/%';
-
-        if (preg_match($pattern, $path, $matches)) {
-            return "{$matches[1]}{$matches[2]}{$matches[3]}";
-        }
-
-        /**
-         * Test for absolute directories
-         */
-        $siteDirectory = cbsitedir();
-
-        $pattern =
-        "%^{$siteDirectory}/data/([0-9a-f]{2})/([0-9a-f]{2})/([0-9a-f]{36})/%";
-
-        if (preg_match($pattern, $path, $matches)) {
-            return "{$matches[1]}{$matches[2]}{$matches[3]}";
-        }
-
-        return false;
+        return $CBID;
     }
     /* URIToID() */
 
