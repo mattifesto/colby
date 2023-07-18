@@ -26,23 +26,46 @@ CBConfiguration {
          *      current request which may be a secondary domain.
          *
          * @return string
+         *
+         *      2023-07-18
+         *      Matt Calkins
+         *
+         *      This function may now return an empty string if it has no solid
+         *      idea of what its primary domain is. This is the case when it is
+         *      running directly from composer during development or when
+         *      running behind a load balancer which is determining the primary
+         *      domain. In the future, this will probably become the most
+         *      common return value.
          */
         static function
         primaryDomain(
-        ): string {
+        ): string
+        {
             $configurationSpec = CB_Configuration::fetchConfigurationSpec();
 
-            if ($configurationSpec === null) {
-                /* deprecated */
-                return explode(
-                    '//',
-                    CBSiteURL
-                )[1];
-            } else {
-                return CB_Configuration::getPrimaryWebsiteDomain(
+            $primaryDomain = '';
+
+            if (
+                $configurationSpec !== null
+            ) {
+                $primaryDomain =
+                CB_Configuration::getPrimaryWebsiteDomain(
                     $configurationSpec
                 );
             }
+            else if (
+                defined('CBSiteURL')
+            ) {
+                /* deprecated */
+
+                $primaryDomain =
+                explode(
+                    '//',
+                    CBSiteURL
+                )[1];
+            }
+
+            return $primaryDomain;
         }
         /* primaryDomain() */
 
