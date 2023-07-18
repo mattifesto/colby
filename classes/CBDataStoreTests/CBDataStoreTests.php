@@ -297,19 +297,35 @@ class CBDataStoreTests {
     static function CBTest_URIToID(): stdClass {
         $ID = CBID::generateRandomCBID();
         $path = CBDataStore::directoryNameFromDocumentRoot($ID);
-        $siteDomainName = CBSitePreferences::siteDomainName();
+        $exampleDomainName = 'example.com';
         $siteDirectory = CBSitePreferences::siteDirectory();
 
         $tests = [
             ["/{$path}/", $ID],
             ["/$path", false],
-            ["/ff/{$path}/", false],
-            ["http://{$siteDomainName}/{$path}/test.txt", $ID],
-            ["https://{$siteDomainName}:8080/{$path}/thumbnail.jpg", $ID],
-            ["ftp://{$siteDomainName}/{$path}/download.png", $ID],
-            ["//{$siteDomainName}/{$path}/", $ID],
-            ["{$siteDirectory}/{$path}/sub/dir/data.json", $ID],
-            ["http://apple.com/{$path}/main.html", false],
+            [
+                /**
+                 * This test was originally meant to return false but the
+                 * function has changed to stop attempting any validation of
+                 * the URL because the validation was not true validation.
+                 */
+                "/ff/{$path}/",
+                $ID
+            ],
+            ["http://{$exampleDomainName}/{$path}/test.txt", $ID],
+            ["https://{$exampleDomainName}:8080/{$path}/thumbnail.jpg", $ID],
+            ["ftp://{$exampleDomainName}/{$path}/download.png", $ID],
+            ["//{$exampleDomainName}/{$path}/", $ID],
+            ["{$exampleDomainName}/{$path}/sub/dir/data.json", $ID],
+            [
+                /**
+                 * This test was originally meant to return false but the
+                 * function has changed to stop attempting any validation of
+                 * the URL because the validation was not true validation.
+                 */
+                "http://apple.com/{$path}/main.html",
+                $ID
+            ],
         ];
 
         foreach ($tests as $test) {
