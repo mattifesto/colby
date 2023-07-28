@@ -18,7 +18,7 @@ CB_Tests_Exception
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2023_03_29_1680048419',
+                '2023_07_28_1690512940',
                 'js',
                 cbsysurl()
             ),
