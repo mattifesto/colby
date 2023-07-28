@@ -199,7 +199,7 @@ final class CBTestAdmin {
     ): string
     {
         $testImageFilepath =
-        Colby::flexpath(
+        CBLibrary::buildLibraryClassExtraFilePath(
             __CLASS__,
             '2017.02.02.TestImage.jpg',
             cbsysdir()
