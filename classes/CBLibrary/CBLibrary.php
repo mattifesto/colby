@@ -8,6 +8,53 @@ CBLibrary
 
 
     /**
+     * This function builds a path for a file in a library class where the
+     * filename is not the same as the class name.
+     *
+     * @param string $className
+     * @param string $filename
+     * @param ?string $libraryPath
+     *
+     *      If provided, the library path should not have a trailing slash.
+     *
+     *      If this argument is an empty string the file path will be considered
+     *      a root file path and be returned with a beginning slash. This will
+     *      be a relative root URL.
+     *
+     * @return string
+     */
+    static function
+    buildLibraryClassExtraFilePath(
+        string $className,
+        string $filename,
+        ?string $libraryPath = null
+    ): string
+    {
+        $intraLibraryPath =
+        "classes/{$className}";
+
+        $intraLibraryFilePath =
+        "{$intraLibraryPath}/{$filename}";
+
+        if (
+            $libraryPath === null
+        ) {
+            $libraryClassExtraFilePath =
+            $intraLibraryFilePath;
+        }
+        else
+        {
+            $libraryClassExtraFilePath =
+            "{$libraryPath}/{$intraLibraryFilePath}";
+        }
+
+        return $libraryClassExtraFilePath;
+    }
+    // buildLibraryClassExtraFilePath()
+
+
+
+    /**
      * @param string $className
      * @param string $fileVersionNumber
      * @param string $fileExtension
