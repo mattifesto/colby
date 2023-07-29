@@ -1,0 +1,101 @@
+#!/usr/bin/env php
+<?php
+
+include(
+    $_composer_autoload_path
+);
+
+echo "document root: ", cb_document_root_directory(), "\n";
+
+echo cb_project_directory(), "\n";
+
+$options =
+getopt(
+    'e:p:'
+);
+
+if (
+    !isset($options['e'])
+) {
+    echo "The -e option is required.\n" ;
+    exit;
+}
+
+$requestedEmailAddress =
+$options['e'];
+
+if (
+    !isset($options['p'])
+) {
+    echo "The -p option is required.\n" ;
+    exit;
+}
+
+$requestedPassword =
+$options['p'];
+
+echo json_encode($options), "\n";
+
+echo "username: {$requestedEmailAddress} password: {$requestedPassword}\n";
+
+$existingUserCBID =
+CBUser::emailToUserCBID(
+    $requestedEmailAddress
+);
+
+if (
+    $existingUserCBID === null
+) {
+    $userCBID =
+    CBID::generateRandomCBID();
+
+    $userSpec =
+    CBModel::createSpec(
+        'CBUser',
+        $userCBID
+    );
+
+    CBUser::setEmailAddress(
+        $userSpec,
+        $requestedEmailAddress
+    );
+}
+else
+{
+    echo "User exists. Resetting password and adding to admin and dev.\n";
+
+    $userSpec =
+    CBModels::fetchSpecByCBID(
+        $existingUserCBID
+    );
+}
+
+
+$passwordHash =
+password_hash(
+    $requestedPassword,
+    PASSWORD_DEFAULT
+);
+
+CBUser::setPasswordHash(
+    $userSpec,
+    $passwordHash
+);
+
+CBDB::transaction(
+    function () use ($userSpec) {
+        CBModels::save(
+            $userSpec
+        );
+    }
+);
+
+CBUserGroup::addUsers(
+    'CBAdministratorsUserGroup',
+    $userCBID
+);
+
+CBUserGroup::addUsers(
+    'CBDevelopersUserGroup',
+    $userCBID
+);
