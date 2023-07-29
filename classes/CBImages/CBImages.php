@@ -99,6 +99,192 @@ CBImages {
 
 
     /**
+     * @param string $absoluteImageFilePathArgument
+     *
+     *      The function assumes this argument is a valid image file path. If it
+     *      is not, and exception will be thrown.
+     *
+     * @return stdClass
+     *
+     *      This function will return a CBImage model that it either fetched or
+     *      created for the image.
+     */
+    static function
+    absoluteImageFilePathToImageModel(
+        string $absoluteImageFilePathArgument
+    ): stdClass
+    {
+        /**
+         * Step 1:
+         *
+         *      Determine if this file has already been imported. If it has just
+         *      return the existing image model.
+         */
+
+        $imageModelCBID =
+        sha1_file(
+            $absoluteImageFilePathArgument
+        );
+
+        $potentialImageModel =
+        CBModels::fetchModelByCBID(
+            $imageModelCBID
+        );
+
+        if (
+            $potentialImageModel !== null
+        ) {
+            $potentialImageModelClassName =
+            CBModel::getClassName(
+                $potentialImageModel
+            );
+
+            if (
+                $potentialImageModelClassName === 'CBImage'
+            ) {
+                return $potentialImageModel;
+            }
+
+            $exceptionMessage =
+            CBConvert::stringToCleanLine(<<<EOT
+
+                There exists a model with the CBID "{$imageModelCBID}", which
+                would be the CBID for the image with the absolute image file
+                path "{$absoluteImageFilePathArgument}" but the existing model
+                is not a CBImage model. This is an odd situation that has a very
+                low likelyhood of ever happening and requires investigation.
+
+            EOT);
+
+            throw new CBExceptionWithValue(
+                $exceptionMessage,
+                $absoluteImageFilePathArgument,
+                'e715c2b35734b1dd0c562dd78e9f6630982ba5e5'
+            );
+        }
+
+
+
+        /**
+         * Step 2:
+         *
+         *      Atempt to import the image.
+         */
+        $imageSizeData =
+        CBImage::getimagesize(
+            $absoluteImageFilePathArgument
+        );
+
+        if (
+            $imageSizeData === false
+        ) {
+            $exceptionMessage =
+            CBConvert::stringToCleanLine(<<<EOT
+
+                CBImage::getimagesize() returned false when called with the
+                absolute image file path "{$absoluteImageFilePathArgument}" and
+                therefore this is not a valid importable image.
+
+            EOT);
+
+            throw new CBExceptionWithValue(
+                $exceptionMessage,
+                $absoluteImageFilePathArgument,
+                'a39946fa8e494daa80e6a1aea993798bdd5d2934'
+            );
+        }
+
+        $imageHasValidType =
+        in_array(
+            $imageSizeData[2],
+            [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG]
+        );
+
+        if (
+            !$imageHasValidType
+        ) {
+            $exceptionMessage =
+            CBConvert::stringToCleanLine(<<<EOT
+
+                The absolute image file path "{$imageURLAsCBMessage}" has a type
+                that is not allowed to be imported.
+
+            EOT);
+
+            throw new CBExceptionWithValue(
+                $exceptionMessage,
+                $absoluteImageFilePathArgument,
+                '807a5a1e35c980c7a851979d1100f1c372d1ea2a'
+            );
+        }
+
+        $extension =
+        image_type_to_extension(
+            /* type: */ $imageSizeData[2],
+            /* include dot: */ false
+        );
+
+        $filename = "original";
+        $basename = "{$filename}.{$extension}";
+
+        $destinationFilepath = CBDataStore::flexpath(
+            $imageModelCBID,
+            $basename,
+            cbsitedir()
+        );
+
+        $imageSpec =
+        (object)
+        [
+            'className' => 'CBImage',
+            'extension' => $extension,
+            'filename' => $filename,
+            'height' => $imageSizeData[1],
+            'ID' => $imageModelCBID,
+            'width' => $imageSizeData[0],
+        ];
+
+        CBDB::transaction(
+            function () use (
+                $imageSpec
+            ) {
+                /**
+                 * @NOTE 2020_11_15
+                 *
+                 *      We force this save because we may be resaving the model
+                 *      for the original image. This code could probably be
+                 *      changed to better handle this without resaving the
+                 *      model.
+                 */
+
+                CBModels::save(
+                    $imageSpec,
+                    /* force: */ true
+                );
+            }
+        );
+
+        CBDataStore::makeDirectoryForID(
+            $imageModelCBID
+        );
+
+        copy(
+            $absoluteImageFilePathArgument,
+            $destinationFilepath
+        );
+
+        $imageModel =
+        CBModels::fetchModelByCBID(
+            $imageModelCBID
+        );
+
+        return $imageModel;
+    }
+    // absoluteImageFilePathToImageModel()
+
+
+
+    /**
      * This function is called by CBImage::CBModels_willDelete() and shouldn't
      * be called otherwise. To delete an image call
      *
@@ -1049,6 +1235,27 @@ CBImages {
 
 
     /**
+     * @NOTE 2023-07-28
+     * Matt Calkins
+     *
+     *      Today I had to look at this function with an editing eye and decided
+     *      that it should probably be deprecated because it has a "magic"
+     *      parameter $imageURI that can be just about any sort of value.
+     *
+     *      That means this function is resposible for at least two things,
+     *      interpreting the vague idea of "any type of URI" and then finding an
+     *      image related to that URI or creating one.
+     *
+     *      If I spend this much time with a function and am still uncertain it
+     *      means the function is bad.
+     *
+     *      I created a new function on this class:
+     *
+     *          absoluteImageFilePathToImageModel()
+     *
+     *      This function only takes an absolute image file path and finds or
+     *      creates an image model for it.
+     *
      * @NOTE 2022_02_21
      *
      *      This function will import any image file located on the local disk.
@@ -1124,108 +1331,12 @@ CBImages {
             return null;
         }
 
-        $size = CBImage::getimagesize(
+        $imageModel =
+        CBImages::absoluteImageFilePathToImageModel(
             $importedImageFilepath
         );
 
-        if ($size === false) {
-            $imageHasValidExtension = false;
-        } else {
-            $imageHasValidExtension = in_array(
-                $size[2],
-                [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG]
-            );
-        }
-
-        if (
-            $size === false ||
-            !$imageHasValidExtension
-        ) {
-            $imageURLAsCBMessage = CBMessage::stringToMessage(
-                $imageURI
-            );
-
-            $importedImageFilepathAsCBMessage = CBMessage::stringToMessage(
-                $importedImageFilepath
-            );
-
-            CBLog::log(
-                (object)[
-                    'message' => <<<EOT
-
-                        The URL "{$imageURLAsCBMessage}" does not have a CBImage
-                        model and the original image file
-                        "{$importedImageFilepathAsCBMessage}" was found in the
-                        data store but this file is not a valid image file.
-
-                    EOT,
-                    'modelID' => $imageCBID,
-                    'severity' => 3,
-                    'sourceClassName' => __CLASS__,
-                    'sourceID' => 'dc09fcf204e9f0c1c741198fd9cfe30e1822ebcb',
-                ]
-            );
-
-            return null;
-        }
-
-        $extension = image_type_to_extension(
-            /* type: */ $size[2],
-            /* include dot: */ false
-        );
-
-        $ID = sha1_file(
-            $importedImageFilepath
-        );
-
-        $filename = "original";
-        $basename = "{$filename}.{$extension}";
-
-        $destinationFilepath = CBDataStore::flexpath(
-            $ID,
-            $basename,
-            cbsitedir()
-        );
-
-        $spec = (object)[
-            'className' => 'CBImage',
-            'extension' => $extension,
-            'filename' => $filename,
-            'height' => $size[1],
-            'ID' => $ID,
-            'width' => $size[0],
-        ];
-
-        CBDB::transaction(
-            function () use (
-                $spec
-            ) {
-                /**
-                 * @NOTE 2020_11_15
-                 *
-                 *      We force this save because we may be resaving the model
-                 *      for the original image. This code could probably be
-                 *      changed to better handle this without resaving the
-                 *      model.
-                 */
-
-                CBModels::save(
-                    $spec,
-                    /* force: */ true
-                );
-            }
-        );
-
-        CBDataStore::makeDirectoryForID(
-            $ID
-        );
-
-        copy(
-            $importedImageFilepath,
-            $destinationFilepath
-        );
-
-        return $spec;
+        return $imageModel;
     }
     /* URIToCBImage() */
 
