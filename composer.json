@@ -10,6 +10,7 @@
         ]
     },
     "bin": [
+        "bin/colby_add_user",
         "bin/colby_create_website"
     ],
     "description": "content management system",
