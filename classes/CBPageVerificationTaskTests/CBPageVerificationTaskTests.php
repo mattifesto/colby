@@ -714,12 +714,18 @@ CBPageVerificationTaskTests {
             }
         );
 
-        $testImage = CBImages::URIToCBImage(
+        $testImageModel =
+        CBImages::absoluteImageFilePathToImageModel(
             CBTestAdmin::testImageFilepath()
         );
 
+        $testImageCBID =
+        CBModel::getCBID(
+            $testImageModel
+        );
+
         if (
-            $testImage->ID !== CBTestAdmin::testImageID()
+            $testImageCBID !== CBTestAdmin::testImageID()
         ) {
             throw new Exception(
                 '2: The imported test image ID is not what was expected.'
@@ -727,7 +733,7 @@ CBPageVerificationTaskTests {
         }
 
         $testImageURL = CBDataStore::flexpath(
-            $testImage->ID,
+            $testImageCBID,
             'rw640.jpeg',
             cbsiteurl()
         );
