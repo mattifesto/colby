@@ -1,13 +1,36 @@
 <?php
 
 /**
- * This class provides access to the most important site preferences. As such
- * the functions in this class return default values even if the site hasn't
- * been fully or properly installed or updated yet.
+ * @NOTE 2023-07-30
+ * Updated by Matt Calkins
  *
- * Developers should call the functions on this class rather than accessing the
- * model directly so that the use of deprecated properties can be found and the
- * implementation of individual property calculation can change.
+ *      This class provides access to the most important website preferences and
+ *      settings.
+ *
+ *      This class has two kinds of functions. One kind is accessors that return
+ *      values when provided with any CBSitePrefeneces model. The other kind is
+ *      functions that return the value that is considered to be the website's
+ *      current official value for that setting.
+ *
+ *
+ *
+ *      accessor:
+ *
+ *      getEncryptionPassword(
+ *          stdClass $sitePreferencesModelArgument
+ *      ): string
+ *
+ *
+ *
+ *      current value function:
+ *
+ *      getCurrentEncryptionPassword(
+ *      ): string
+ *
+ *
+ *
+ *      The "getCurrent" function naming style is brand new and should be
+ *      propagated in the future.
  */
 final class
 CBSitePreferences {
