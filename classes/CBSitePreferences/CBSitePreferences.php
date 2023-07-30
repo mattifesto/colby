@@ -1319,11 +1319,18 @@ CBSitePreferences {
 
 
     /**
-     * @return ID
+     * @return string
+     *
+     *      Returns the CBID of the website's primary CBSitePreferences model.
      */
-    static function ID(): string {
+    static function
+    ID(
+    ): string
+    {
         return '89b64c9cab5a6c28cfbfe0d2c1c7f97e9821f452';
     }
+    // ID()
+
 
 
     /**
