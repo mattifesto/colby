@@ -151,7 +151,7 @@ CB_SampleImages
             $imageFilepath
         );
 
-        $imageModel = CBImages::URIToCBImage(
+        $imageModel = CBImages::absoluteImageFilePathToImageModel(
             $imageFilepath
         );
 
@@ -244,7 +244,7 @@ CB_SampleImages
             $imageFilepath
         );
 
-        $imageModel = CBImages::URIToCBImage(
+        $imageModel = CBImages::absoluteImageFilePathToImageModel(
             $imageFilepath
         );
 
