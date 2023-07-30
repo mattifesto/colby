@@ -57,6 +57,7 @@ CB_CBView_UserSignIn {
             'CBJavaScript',
             'CBMessageMarkup',
             'CBUIButton',
+            'CBUIPanel',
 
             'CB_UI',
         ];
