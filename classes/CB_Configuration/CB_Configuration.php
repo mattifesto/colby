@@ -197,6 +197,11 @@ CB_Configuration
 
 
         /**
+         * @deprecated
+         *
+         *      2023-07-30 by Matt Calkins
+         *      Use the CBSitePreferences class.
+         *
          * @param object $model
          *
          * @return string
@@ -215,6 +220,11 @@ CB_Configuration
 
 
         /**
+         * @deprecated
+         *
+         *      2023-07-30 by Matt Calkins
+         *      Use the CBSitePreferences class.
+         *
          * @param object $model
          * @param string $encryptionPassword
          *
