@@ -598,6 +598,13 @@ CBSitePreferences {
             )
         );
 
+        CBSitePreferences::setEncryptionPassword(
+            $model,
+            CBSitePreferences::getEncryptionPassword(
+                $spec
+            )
+        );
+
         CBSitePreferences::setEnvironment(
             $model,
             CBSitePreferences::getEnvironment(
@@ -815,6 +822,56 @@ CBSitePreferences {
         $sitePreferencesModel->CBSitePreferences_appearance = $newAppearance;
     }
     /* setAppearance() */
+
+
+
+    /**
+     * @param object $sitePreferencesModelArgument
+     *
+     * @return string
+     *
+     *      Returns an empty string if no encryption password has been set on
+     *      the model.
+     */
+    static function
+    getEncryptionPassword(
+        stdClass $sitePreferencesModelArgument
+    ): string
+    {
+        $propertyName =
+        'CBSitePreferences_encryptionPassword_property';
+
+        $encryptionPassword =
+        CBModel::valueToString(
+            $sitePreferencesModelArgument,
+            $propertyName
+        );
+
+        return $encryptionPassword;
+    }
+    // getEncryptionPassword()
+
+
+
+    /**
+     * @param object $sitePreferencesModelArgument
+     * @param string $newEncryptionPasswordArgument
+     *
+     * @return void
+     */
+    static function
+    setEncryptionPassword(
+        stdClass $sitePreferencesModelArgument,
+        string $newEncryptionPasswordArgument
+    ): void
+    {
+        $propertyName =
+        'CBSitePreferences_encryptionPassword_property';
+
+        $sitePreferencesModelArgument->$propertyName =
+        $newEncryptionPasswordArgument;
+    }
+    // setEncryptionPassword()
 
 
 
