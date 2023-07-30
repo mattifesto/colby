@@ -49,12 +49,19 @@ CBID {
 
 
     /**
-     * @return CBID
+     * @return string
+     *
+     *      Returns a new cryptographically random CBID.
      */
-    static function generateRandomCBID(): string {
+    static function
+    generateRandomCBID(
+    ): string
+    {
         $bytes = openssl_random_pseudo_bytes(20);
+
         return bin2hex($bytes);
     }
+    // generateRandomCBID()
 
 
 
