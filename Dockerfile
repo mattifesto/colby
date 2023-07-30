@@ -71,6 +71,7 @@ ENV LANG en_US.utf8
 
 # ack
 
+RUN apt-get update
 RUN apt-get install -y ack
 
 
