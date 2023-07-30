@@ -493,7 +493,8 @@ CBSitePreferences {
     static function
     CBModel_build(
         stdClass $spec
-    ): stdClass {
+    ): stdClass
+    {
         $model = (object)[
             'custom' => CBKeyValuePair::valueToObject($spec, 'custom'),
             'disallowRobots' => CBModel::valueToBool($spec, 'disallowRobots'),
