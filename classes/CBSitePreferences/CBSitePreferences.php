@@ -1111,6 +1111,104 @@ CBSitePreferences {
 
 
     /**
+     * @return string
+     */
+    static function
+    getCurrentEncryptionPassword(
+    ): string
+    {
+        $encryptionPassword = '';
+
+        if (
+            defined('CBEncryptionPassword')
+        ) {
+            // @deprecated 2021-06-07
+
+            $encryptionPassword =
+            constant(
+                'CBEncryptionPassword'
+            );
+        }
+
+        if (
+            $encryptionPassword === ''
+        ) {
+            // @deprecated 2023-07-30
+
+            $configurationSpec =
+            CB_Configuration::fetchConfigurationSpec();
+
+            if (
+                $configurationSpec !== null
+            )
+            {
+                $encryptionPassword =
+                CB_Configuration::getEncryptionPassword(
+                    $configurationSpec
+                );
+            }
+        }
+
+        if (
+            $encryptionPassword === ''
+        ) {
+            $sitePreferencesModel =
+            CBSitePreferences::model();
+
+            $encryptionPassword =
+            CBSitePreferences::getEncryptionPassword(
+                $sitePreferencesModel
+            );
+        }
+
+        if (
+            $encryptionPassword === ''
+        ) {
+            /**
+             * @NOTE
+             * 2023-07-30 Created by Matt Calkins
+             *
+             *      If there is no value for this property, a value will be
+             *      generated now. This is implemented this way so that a new
+             *      website doesn't have to manually set this property since
+             *      the actual value usually doesn't matter except that it is
+             *      unique.
+             */
+
+            $updater =
+            new CBModelUpdater(
+                CBSitePreferences::ID()
+            );
+
+            $sitePreferencesSpec =
+            $updater->getSpec();
+
+            $encryptionPassword =
+            CBID::generateRandomCBID();
+
+            CBSitePreferences::setEncryptionPassword(
+                $sitePreferencesSpec,
+                $encryptionPassword
+            );
+
+            CBDB::transaction(
+                function () use (
+                    $updater
+                ) {
+                    $updater->save2();
+                }
+            );
+
+            CBSitePreferences::$model = null;
+        }
+
+        return $encryptionPassword;
+    }
+    // getCurrentEncryptionPassword()
+
+
+
+    /**
      * @param string $key
      *
      * @return mixed|null
