@@ -419,14 +419,8 @@ Colby
             );
         }
 
-        if (defined('CBEncryptionPassword')) {
-            /* 2021_06_07 deprecated */
-            $encryptionPassword = CBEncryptionPassword;
-        } else {
-            $encryptionPassword = CB_Configuration::getEncryptionPassword(
-                CB_Configuration::fetchConfigurationSpec()
-            );
-        }
+        $encryptionPassword =
+        CBSitePreferences::getCurrentEncryptionPassword();
 
         $serializedData = openssl_decrypt(
             $cipherData->ciphertext,
@@ -487,14 +481,8 @@ Colby
             Colby::countOfInitializationVectorBytes
         );
 
-        if (defined('CBEncryptionPassword')) {
-            /* 2021_06_07 deprecated */
-            $encryptionPassword = CBEncryptionPassword;
-        } else {
-            $encryptionPassword = CB_Configuration::getEncryptionPassword(
-                CB_Configuration::fetchConfigurationSpec()
-            );
-        }
+        $encryptionPassword =
+        CBSitePreferences::getCurrentEncryptionPassword();
 
         $cipherData->ciphertext = openssl_encrypt(
             $serializedData,
