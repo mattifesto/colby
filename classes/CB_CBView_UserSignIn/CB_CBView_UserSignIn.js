@@ -232,6 +232,10 @@
                 CBErrorHandler.report(
                     error
                 );
+
+                CBUIPanel.displayError2(
+                    error
+                );
             }
         }
         /* CB_CBView_UserSignIn_handleSignInButtonClickEvent() */
