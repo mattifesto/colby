@@ -53,10 +53,31 @@ FROM base AS development
 
 
 
-# install git
+# prepare for installs
 
-RUN apt-get -y update
-RUN apt-get -y install git
+RUN apt-get update
+
+
+
+# make the "en_US.UTF-8" locale so postgres will be utf-8 enabled by default
+# https://hub.docker.com/_/debian
+
+RUN apt-get install -y locales
+RUN rm -rf /var/lib/apt/lists/*
+RUN localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+ENV LANG en_US.utf8
+
+
+
+# ack
+
+RUN apt-get install -y ack
+
+
+
+# Git
+
+RUN apt-get install -y git
 
 
 
@@ -122,6 +143,16 @@ RUN apt-get install -y docker-ce-cli
 RUN apt-get install -y containerd.io
 RUN apt-get install -y docker-buildx-plugin
 RUN apt-get install -y docker-compose-plugin
+
+
+
+# Node.js, JSHint
+# https://github.com/nodesource/distributions#debinstall
+
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
+
+RUN npm install -g jshint
 
 
 
