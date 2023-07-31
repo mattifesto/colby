@@ -16,138 +16,151 @@
  *      - create database tables
  */
 
-include(
-    $_composer_autoload_path
-);
-
-
-
-/* document_root/data directory */
-
-$dataDirectory = cb_document_root_directory() . '/data';
-
-if (!is_dir($dataDirectory)) {
-    mkdir($dataDirectory);
-}
-
-
-/* document_root/tmp directory */
-
-$tmpDirectory = cb_document_root_directory() . '/tmp';
-
-if (!is_dir($tmpDirectory)) {
-    mkdir($tmpDirectory);
-}
-
-
-
-/* document_root/.gitignore file */
-
-
-$gitignoreFilename = cb_document_root_directory() . '/.gitignore';
-$colbySetupDirectory = cbsysdir() . '/setup';
-
-if (!is_file($gitignoreFilename)) {
-    copy(
-        "{$colbySetupDirectory}/gitignore.template.data",
-        $gitignoreFilename
+try
+{
+    include(
+        $_composer_autoload_path
     );
-}
+
+
+    /* document_root/data directory */
+
+    $dataDirectory = cb_document_root_directory() . '/data';
+
+    if (!is_dir($dataDirectory)) {
+        mkdir($dataDirectory);
+    }
+
+
+    /* document_root/tmp directory */
+
+    $tmpDirectory = cb_document_root_directory() . '/tmp';
+
+    if (!is_dir($tmpDirectory)) {
+        mkdir($tmpDirectory);
+    }
 
 
 
-/* document_root/.htaccess file */
+    /* document_root/.gitignore file */
 
-$htaccessFilename = cb_document_root_directory() . '/.htaccess';
 
-if (!is_file($htaccessFilename)) {
-    copy(
-        "{$colbySetupDirectory}/htaccess.template.data",
-        $htaccessFilename
+    $gitignoreFilename = cb_document_root_directory() . '/.gitignore';
+    $colbySetupDirectory = cbsysdir() . '/setup';
+
+    if (!is_file($gitignoreFilename)) {
+        copy(
+            "{$colbySetupDirectory}/gitignore.template.data",
+            $gitignoreFilename
+        );
+    }
+
+
+
+    /* document_root/.htaccess file */
+
+    $htaccessFilename = cb_document_root_directory() . '/.htaccess';
+
+    if (!is_file($htaccessFilename)) {
+        copy(
+            "{$colbySetupDirectory}/htaccess.template.data",
+            $htaccessFilename
+        );
+    }
+
+
+
+    /* document_root/index.php file */
+
+    $indexphpFilename = cb_document_root_directory() . '/index.php';
+
+    if (!is_file($indexphpFilename)) {
+        copy(
+            "{$colbySetupDirectory}/index_composer.template.data",
+            $indexphpFilename
+        );
+    }
+
+
+
+    /* document_root/site-configuration.php file */
+
+    $siteconfigurationFilename = (
+        cb_document_root_directory() .
+        '/site-configuration.php'
     );
-}
+
+    if (!is_file($siteconfigurationFilename)) {
+        copy(
+            "{$colbySetupDirectory}/site-configuration.template.data",
+            $siteconfigurationFilename
+        );
+    }
 
 
 
-/* document_root/index.php file */
+    /* empty favicon files */
 
-$indexphpFilename = cb_document_root_directory() . '/index.php';
-
-if (!is_file($indexphpFilename)) {
-    copy(
-        "{$colbySetupDirectory}/index_composer.template.data",
-        $indexphpFilename
+    touch(
+        cb_document_root_directory() .
+        '/favicon.gif'
     );
-}
 
-
-
-/* document_root/site-configuration.php file */
-
-$siteconfigurationFilename = (
-    cb_document_root_directory() .
-    '/site-configuration.php'
-);
-
-if (!is_file($siteconfigurationFilename)) {
-    copy(
-        "{$colbySetupDirectory}/site-configuration.template.data",
-        $siteconfigurationFilename
+    touch(
+        cb_document_root_directory() .
+        '/favicon.ico'
     );
-}
 
 
 
-/* empty favicon files */
+    /* version.php */
 
-touch(
-    cb_document_root_directory() .
-    '/favicon.gif'
-);
-
-touch(
-    cb_document_root_directory() .
-    '/favicon.ico'
-);
-
-
-
-/* version.php */
-
-$websiteVersionFilepath = (
-    cb_document_root_directory() .
-    '/version.php'
-);
-
-if (!is_file($websiteVersionFilepath)) {
-    copy(
-        "{$colbySetupDirectory}/version.template.data",
-        $websiteVersionFilepath
+    $websiteVersionFilepath = (
+        cb_document_root_directory() .
+        '/version.php'
     );
+
+    if (!is_file($websiteVersionFilepath)) {
+        copy(
+            "{$colbySetupDirectory}/version.template.data",
+            $websiteVersionFilepath
+        );
+    }
+
+
+
+    /**
+     * @NOTE 20230709
+     * Matt Calkins
+     *
+     *      We have left out creating site classes here because I think I want
+     *      the site to at least run without any of those and they can be
+     *      created after site setup.
+     */
+
+
+
+    CBInstall::install();
+
+
+
+    /**
+     * @NOTE 2023-07-09
+     * Matt Calkins
+     *
+     *     I'm leaving out admin user creation for now because we want this file
+     *     to contain as little as possible. Use colby_add_user to create an
+     *     admin user.
+     */
 }
+catch (
+    Throwable $throwable
+) {
+    echo "An error occurred:\n\n";
 
+    $plainText = CBErrorHandler::throwableToPlainTextIteratedStackTrace(
+        $throwable
+    );
 
-
-/**
- * @NOTE 20230709
- * Matt Calkins
- *
- *      We have left out creating site classes here because I think I want the
- *      site to at least run without any of those and they can be created after
- *      site setup.
- */
-
-
-
-CBInstall::install();
-
-
-
- /**
-  * @NOTE 20230709
-  * Matt Calkins
-  *
-  *     I'm leaving out admin user creation for now because we want this file
-  *     to contain as little as possible. There should be a separate command to
-  *     create an admin user.
-  */
+    echo "{$plainText}\n\n";
+}
