@@ -17,7 +17,8 @@
     "license": "MIT",
     "name": "mattcalkins/colby",
     "require": {
-        "erusev/parsedown": "^1.7"
+        "erusev/parsedown": "^1.7",
+        "swiftmailer/swiftmailer": "^5.4.12"
     },
     "type": "library"
 }
