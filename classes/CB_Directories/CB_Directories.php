@@ -23,8 +23,23 @@ CB_Directories
         if (
             $relativePathFromDocumentRootToColbyLibrary === null
         ) {
+            $theColbyComposerLibraryIsInstalled =
+            false;
+
+            $theInstalledVersionsClassExists =
+            class_exists('\\Composer\\InstalledVersions');
+
             if (
-                class_exists('\\Composer\\InstalledVersions')
+                $theInstalledVersionsClassExists
+            ) {
+                $theColbyComposerLibraryIsInstalled =
+                \Composer\InstalledVersions::isInstalled(
+                    'mattcalkins/colby'
+                );
+            }
+
+            if (
+                $theColbyComposerLibraryIsInstalled
             ) {
                 $absoluteInstallPathOfColbyLibrary =
                 \Composer\InstalledVersions::getInstallPath(
