@@ -46,6 +46,6 @@ cp /com.docker.devenvironments.code/dev_website/* /var/www/html
 
 cd /var/www/html
 
-composer require mattcalkins/colby:@dev
+composer require mattifesto/colby:@dev
 
 ./vendor/bin/colby_create_website
