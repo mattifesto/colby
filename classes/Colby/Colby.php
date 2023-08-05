@@ -1468,16 +1468,29 @@ cbmessage(
  * For web scenarios this function returns the root website URL using the same
  * domain as the current request in the following form:
  *
- *      http[s]://<request domain>
+ *      http[s]://<request domain>[:port]
  *
  * Whenever code is constructing a URL for the website it should call this
  * function.
  *
- * @NOTE 2021_05_09
+ * @NOTE 2023-07-13 (editied on 2023-08-05)
+ * Matt Calkins
  *
- *      This function underwent some large changes when support for secondary
- *      domains was added. In some ways that support made this function less
- *      compelling.
+ *      When using Colby in a docker instance where the website is accessed via
+ *      an IP Address and a port, this function was not returning the correct
+ *      value. Rather than adding the port, I decided to return an empty string
+ *      which would make all URLs produced using this function relative instead
+ *      of absolute.
+ *
+ * @NOTE 2023-08-05
+ * Matt Calkins
+ *
+ *      This worked fine for most URLs but an error popped up when an order was
+ *      created and we needed to produce a URL that would work from outside the
+ *      website.
+ *
+ *      Returning and empty string was not going to work. So the next iteration
+ *      is to bring back the previous code and alter it to include the port.
  *
  * @return string
  *
@@ -1493,44 +1506,41 @@ cbsiteurl(
      * interface there is conceptually no site URL so an empty string is
      * returned.
      */
+
     if (
         php_sapi_name() === 'cli'
     ) {
         return '';
     }
 
-    /**
-     * @NOTE 2023-07-13
-     * Matt Calkins
-     *
-     *      Returning and empty string from this function makes links generated
-     *      relative links instead of absolute links which is important when
-     *      running from localhost using docker potentially behind a load
-     *      balancer.
-     *
-     *      This change was made out of necessity during development. Some
-     *      thought was put into the concept, enough to feel relatively good
-     *      about it, but if something feels wrong it might be. The old code is
-     *      preserved below.
-     */
-    return '';
 
 
+    $http =
+    empty($_SERVER['HTTPS']) ?
+    'http' :
+    'https';
 
-    /**
-     * @TODO 2023-07-13
-     * Matt Calkins
-     *
-     *      This is the old code for this function. When we are very sure that
-     *      using relative links is the right or maybe the only possible way
-     *      this code can be deleted.
-     */
-    // return (
-    //     empty($_SERVER['HTTPS']) ?
-    //     'http://' :
-    //     'https://'
-    // ) .
-    // $_SERVER['SERVER_NAME'];
+    $name =
+    $_SERVER['SERVER_NAME'];
+
+    $port =
+    $_SERVER['SERVER_PORT'];
+
+    if (
+        $port == 443 ||
+        $port == 80
+    ) {
+        $port = '';
+    }
+    else
+    {
+        $port = ":{$port}";
+    }
+
+    $siteurl =
+    "{$http}://{$name}{$port}";
+
+    return $siteurl;
 }
 /* cbsiteurl() */
 
