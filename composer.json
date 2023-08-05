@@ -15,7 +15,7 @@
     ],
     "description": "content management system",
     "license": "MIT",
-    "name": "mattcalkins/colby",
+    "name": "mattifesto/colby",
     "require": {
         "erusev/parsedown": "^1.7",
         "swiftmailer/swiftmailer": "^5.4.12"

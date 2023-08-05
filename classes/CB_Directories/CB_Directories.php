@@ -11,7 +11,6 @@ CB_Directories
      * Typical values return by this function are:
      *
      *      colby
-     *      vendor/mattcalkins/colby
      *      vendor/mattifesto/colby
      */
     static function
@@ -34,7 +33,7 @@ CB_Directories
             ) {
                 $theColbyComposerLibraryIsInstalled =
                 \Composer\InstalledVersions::isInstalled(
-                    'mattcalkins/colby'
+                    'mattifesto/colby'
                 );
             }
 
@@ -43,7 +42,7 @@ CB_Directories
             ) {
                 $absoluteInstallPathOfColbyLibrary =
                 \Composer\InstalledVersions::getInstallPath(
-                    'mattcalkins/colby'
+                    'mattifesto/colby'
                 );
 
                 $absoluteRealPathOfColbyLibrary =

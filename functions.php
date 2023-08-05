@@ -59,7 +59,7 @@ cbsysdir(
         ) {
             $colbyLibraryInstallPath =
             \Composer\InstalledVersions::getInstallPath(
-                'mattcalkins/colby'
+                'mattifesto/colby'
             );
 
             $colbyLibraryDirectory =

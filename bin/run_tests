@@ -116,7 +116,7 @@ RunTests
         $arrayOfOutputLines = [];
 
         CBExec::exec(
-            'composer require mattcalkins/colby:dev-dev',
+            'composer require mattifesto/colby:dev-dev',
             $arrayOfOutputLines,
             $exitCode
         );
