@@ -17,6 +17,7 @@
     "license": "MIT",
     "name": "mattifesto/colby",
     "require": {
+        "php": "^8.0",
         "erusev/parsedown": "^1.7",
         "swiftmailer/swiftmailer": "^5.4.12"
     },
