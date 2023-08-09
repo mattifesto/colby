@@ -32,7 +32,7 @@ CB_Upgrade_Parsedown
             $output =
             [];
 
-            $exitCode;
+            $exitCode = null;
 
             CBExec::exec(
                 $command,
