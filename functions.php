@@ -327,6 +327,28 @@ cb_logs_directory(
 
 
 /**
+ * This function exists to aid in the transition to using PHP Composer for all
+ * Colby websites. It may not be necessary forever.
+ *
+ * @return bool
+ *
+ *      Returns true if PHP Composer has been installed.
+ */
+function
+cb_php_composer_is_installed(
+): bool
+{
+    $theInstalledVersionsClassExists =
+    class_exists('\\Composer\\InstalledVersions');
+
+    return $theInstalledVersionsClassExists;
+}
+// cb_php_composer_is_installed()
+
+
+
+
+/**
  * @param string $name
  * @param mixed $default
  * @param callable $transform
