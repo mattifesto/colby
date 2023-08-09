@@ -347,6 +347,43 @@ cb_php_composer_is_installed(
 
 
 
+/**
+ * This function exists to aid in the transition to using PHP Composer for all
+ * Colby websites. It may not be necessary forever.
+ *
+ * @return bool
+ *
+ *      Returns true if the Colby library has been installed using PHP Composer.
+ */
+function
+cb_php_composer_colby_library_is_installed(
+): bool
+{
+    static $thePHPComposerColbyLibraryIsInstalled =
+    null;
+
+    if (
+        $thePHPComposerColbyLibraryIsInstalled === null
+    ) {
+        if (
+            cb_php_composer_is_installed() !== true
+        ) {
+            $thePHPComposerColbyLibraryIsInstalled = false;
+
+            return $thePHPComposerColbyLibraryIsInstalled;
+        }
+
+        $thePHPComposerColbyLibraryIsInstalled =
+        \Composer\InstalledVersions::isInstalled(
+            'mattifesto/colby'
+        );
+    }
+
+    return $thePHPComposerColbyLibraryIsInstalled;
+}
+// cb_php_composer_colby_library_is_installed()
+
+
 
 /**
  * @param string $name
