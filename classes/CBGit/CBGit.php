@@ -63,7 +63,7 @@ final class CBGit {
         $pwd = getcwd();
 
         chdir(
-            cbsitedir()
+            cb_document_root_directory()
         );
 
         try {
