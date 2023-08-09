@@ -55,7 +55,7 @@ cbsysdir(
         $colbyLibraryDirectory === null
     ) {
         if (
-            class_exists('\\Composer\\InstalledVersions')
+            cb_php_composer_is_installed()
         ) {
             $colbyLibraryInstallPath =
             \Composer\InstalledVersions::getInstallPath(
