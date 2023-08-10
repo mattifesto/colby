@@ -105,7 +105,7 @@ CBTCommand_setup {
 
         if (!is_file($indexphpFilename)) {
             copy(
-                "{$colbySetupDirectory}/index.template.data",
+                "{$colbySetupDirectory}/template-index.php",
                 $indexphpFilename
             );
         }
