@@ -340,12 +340,12 @@ class ColbyInstaller {
 
             if (ColbyInstaller::shouldPerformAFullInstallation()) {
                 copy(
-                    __DIR__ . '/index.template.data',
+                    __DIR__ . '/template-index.php',
                     ColbyInstaller::$indexFilename
                 );
             } else {
                 copy(
-                    __DIR__ . '/index.template.data',
+                    __DIR__ . '/template-index.php',
                     ColbyInstaller::$colbyFilename
                 );
             }
