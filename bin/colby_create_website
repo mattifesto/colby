@@ -76,7 +76,7 @@ try
 
     if (!is_file($indexphpFilename)) {
         copy(
-            "{$colbySetupDirectory}/index_composer.template.data",
+            "{$colbySetupDirectory}/template-index.php",
             $indexphpFilename
         );
     }
