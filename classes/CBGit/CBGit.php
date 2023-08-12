@@ -1,7 +1,8 @@
 <?php
 
-final class CBGit {
-
+final class
+CBGit
+{
     /* -- functions -- */
 
 
