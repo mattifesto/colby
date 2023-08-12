@@ -1518,7 +1518,7 @@ CBModel
                     ) === null
                 ) {
                     throw new Exception(
-                        "{$function}() returned an invalid model"
+                        "{$callable}() returned an invalid model"
                     );
                 }
 
