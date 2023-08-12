@@ -93,7 +93,7 @@ CBModel
     /**
      * @param object $model
      *
-     * @return CBID|null
+     * @return string|null
      */
     static function
     getCBID(
@@ -110,7 +110,7 @@ CBModel
 
     /**
      * @param object $spec
-     * @param CBID $CBID
+     * @param string $CBID
      *
      * @return void
      */
@@ -423,7 +423,7 @@ CBModel
      *
      *      The spec to copy.
      *
-     * @param CBID $newSpecCBID
+     * @param string $newSpecCBID
      *
      *      The ID for the copy.
      *
@@ -541,7 +541,7 @@ CBModel
 
     /**
      * @param string|null $className
-     * @param CBID|null $CBID
+     * @param string|null $CBID
      */
     static function
     createSpec(
@@ -1614,7 +1614,7 @@ CBModel
      *                "images.[2].alternativeText.text"
      *
      * @param mixed $defaultValue (deprecated)
-     * @param function $transform (deprecated)
+     * @param callable $transform (deprecated)
      *
      * @return mixed
      */
@@ -1730,7 +1730,7 @@ CBModel
      * @param mixed $model
      * @param string $keyPath
      *
-     * @return CBID|null
+     * @return string|null
      */
     static function valueAsCBID($model, string $keyPath): ?string {
         $value = CBModel::value($model, $keyPath);
