@@ -8,8 +8,9 @@ if (file_exists($filename)) {
 
 
 
-final class CBEmail {
-
+final class
+CBEmail
+{
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
 
@@ -17,7 +18,10 @@ final class CBEmail {
     /**
      * @return [string]
      */
-    static function CBAdmin_getIssueMessages(): array {
+    static function
+    CBAdmin_getIssueMessages(
+    ): array
+    {
         $cbmessages = [];
 
         if (!file_exists(
