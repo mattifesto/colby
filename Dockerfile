@@ -45,6 +45,28 @@ RUN a2enmod rewrite
 
 
 
+# Debian - Install Git (MC v1)
+
+RUN apt-get update
+RUN apt-get -y install git
+
+
+
+# 2023-08-11
+# Matt Calkins
+#
+#       Colby uses Git during setup and tests and potentially other times. This
+#       is under question currently. Further decisions will be made when all
+#       installations are running in a Docker container. Update this comment
+#       when decisions are made.
+#
+#       This command allows git to run without error when running in a Docker
+#       container.
+
+RUN git config --system --add safe.directory /var/www/html
+
+
+
 #
 # - - - - - - - - - - development - - - - - - - - - -
 #
@@ -78,12 +100,6 @@ ENV LANG en_US.utf8
 
 RUN apt-get update
 RUN apt-get install -y ack
-
-
-
-# Git
-
-RUN apt-get install -y git
 
 
 
