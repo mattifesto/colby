@@ -191,7 +191,7 @@ CBEmail
         ?stdClass $cbemailsender = null
     ): void {
         if ($cbemailsender === null) {
-            $cbemailsender = CBModelCache::fetchModelByID(
+            $cbemailsender = CBModelCache::fetchModelByCBID(
                 CBEmailSender::websiteEmailSenderCBID()
             );
 
