@@ -117,10 +117,13 @@ final class CBEmailSender {
 
 
     /**
-     * @return CBID
+     * @return string
      */
-    static function websiteEmailSenderCBID(): string {
+    static function
+    websiteEmailSenderCBID(
+    ): string
+    {
         return '244c25a0f46ac37d9a3845efed5574bd20064401';
     }
-
+    // websiteEmailSenderCBID()
 }
