@@ -28,14 +28,14 @@ CB_Upgrade_ColbySubmodules
         $deprecatedColbyLibraryDirectory =
         'colby';
 
-        CB_Upgrade_ColbySubmodules::deleteDeprecatedSubmoduleDirectory(
+        CB_Upgrade_ColbySubmodules::cleanUpSubmodule(
             $deprecatedColbyLibraryDirectory
         );
 
         $deprecatedSwiftMailerDirectory =
         'swiftmailer';
 
-        CB_Upgrade_ColbySubmodules::deleteDeprecatedSubmoduleDirectory(
+        CB_Upgrade_ColbySubmodules::cleanUpSubmodule(
             $deprecatedSwiftMailerDirectory
         );
     }
@@ -53,7 +53,7 @@ CB_Upgrade_ColbySubmodules
      * @return void
      */
     private static function
-    deleteDeprecatedSubmoduleDirectory(
+    cleanUpSubmodule(
         string $documentRootRelativeSubmoduleDirectoryArgument
     ): void
     {
