@@ -39,8 +39,6 @@ CB_Ajax_Update_PHPComposer
                 "HOME={$userHomeDirectory}"
             );
 
-            $commands;
-
             $sitePreferencesModel =
             CBSitePreferences::model();
 
@@ -49,15 +47,11 @@ CB_Ajax_Update_PHPComposer
                 $sitePreferencesModel
             );
 
-            $commands;
-
             if (
                 $siteEnvironment === 'CBSitePreferences_environment_development'
             ) {
                 $commands =
                 [
-                    'composer require aws/aws-sdk-php:^3.258',
-                    'composer require erusev/parsedown:^1.7',
                     'composer update',
                 ];
             }
@@ -74,10 +68,8 @@ CB_Ajax_Update_PHPComposer
                 $commands as
                 $command
             ) {
-                $output =
-                [];
-
-                $exitCode;
+                $output = [];
+                $exitCode = null;
 
                 CBExec::exec(
                     $command,
