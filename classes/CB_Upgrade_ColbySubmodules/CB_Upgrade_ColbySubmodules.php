@@ -94,120 +94,137 @@ CB_Upgrade_ColbySubmodules
 
 
 
-        /**
-         * Step 1 of 3 (steps can be run in any order)
-         * Remove submodule folder.
-         */
+        $pwd =
+        getcwd();
 
-        $command = "rm -rf {$absoluteDirectoryPath} 2>&1";
-        $arrayOfOutputLines = [];
-        $exitCode = null;
-
-        CBExec::exec(
-            $command,
-            $arrayOfOutputLines,
-            $exitCode
+        chdir(
+            cb_document_root_directory()
         );
 
-        CB_Upgrade_ColbySubmodules::checkForAndReportError(
-            $command,
-            $arrayOfOutputLines,
-            $exitCode
-        );
-
-
-
-        /**
-         * Step 2 of 3 (steps can be run in any order)
-         * Remove submodule folder.
-         */
-
-        $absoluteGitModuleDirectory =
-        cb_document_root_directory() .
-        "/.git/modules/{$documentRootRelativeSubmoduleDirectoryArgument}";
-
-        $command = "rm -rf {$absoluteGitModuleDirectory} 2>&1";
-        $arrayOfOutputLines = [];
-        $exitCode = null;
-
-        CBExec::exec(
-            $command,
-            $arrayOfOutputLines,
-            $exitCode
-        );
-
-        CB_Upgrade_ColbySubmodules::checkForAndReportError(
-            $command,
-            $arrayOfOutputLines,
-            $exitCode
-        );
-
-
-
-        /**
-         * Step 3 of 3 (steps can be run in any order)
-         * Remove submodule folder.
-         */
-
-        $command =
-        CBConvert::stringToCleanLine(<<<EOT
-
-            git config --get
-            submodule.{$documentRootRelativeSubmoduleDirectoryArgument}.url
-            2>&1
-
-        EOT);
-
-        $arrayOfOutputLines = [];
-        $exitCode = null;
-
-        CBExec::exec(
-            $command,
-            $arrayOfOutputLines,
-            $exitCode
-        );
-
-        if (
-            $exitCode === 1
-        ) {
+        try
+        {
             /**
-             * An exit code of 1 means the key was not found which means we have
-             * no more work to do.
+             * Step 1 of 3 (steps can be run in any order)
+             * Remove submodule folder.
              */
 
-            return;
+            $command = "rm -rf {$absoluteDirectoryPath} 2>&1";
+            $arrayOfOutputLines = [];
+            $exitCode = null;
+
+            CBExec::exec(
+                $command,
+                $arrayOfOutputLines,
+                $exitCode
+            );
+
+            CB_Upgrade_ColbySubmodules::checkForAndReportError(
+                $command,
+                $arrayOfOutputLines,
+                $exitCode
+            );
+
+
+
+            /**
+             * Step 2 of 3 (steps can be run in any order)
+             * Remove submodule folder.
+             */
+
+            $absoluteGitModuleDirectory =
+            cb_document_root_directory() .
+            "/.git/modules/{$documentRootRelativeSubmoduleDirectoryArgument}";
+
+            $command = "rm -rf {$absoluteGitModuleDirectory} 2>&1";
+            $arrayOfOutputLines = [];
+            $exitCode = null;
+
+            CBExec::exec(
+                $command,
+                $arrayOfOutputLines,
+                $exitCode
+            );
+
+            CB_Upgrade_ColbySubmodules::checkForAndReportError(
+                $command,
+                $arrayOfOutputLines,
+                $exitCode
+            );
+
+
+
+            /**
+             * Step 3 of 3 (steps can be run in any order)
+             * Remove submodule folder.
+             */
+
+            $command =
+            CBConvert::stringToCleanLine(<<<EOT
+
+                git config --get
+                submodule.{$documentRootRelativeSubmoduleDirectoryArgument}.url
+                2>&1
+
+            EOT);
+
+            $arrayOfOutputLines = [];
+            $exitCode = null;
+
+            CBExec::exec(
+                $command,
+                $arrayOfOutputLines,
+                $exitCode
+            );
+
+            if (
+                $exitCode === 1
+            ) {
+                /**
+                 * An exit code of 1 means the key was not found which means we have
+                 * no more work to do.
+                 */
+
+                return;
+            }
+
+            CB_Upgrade_ColbySubmodules::checkForAndReportError(
+                $command,
+                $arrayOfOutputLines,
+                $exitCode
+            );
+
+
+
+            $command =
+            CBConvert::stringToCleanLine(<<<EOT
+
+                git config --remove-section
+                submodule.{$documentRootRelativeSubmoduleDirectoryArgument}
+
+            EOT);
+
+            $arrayOfOutputLines = [];
+            $exitCode = null;
+
+            CBExec::exec(
+                $command,
+                $arrayOfOutputLines,
+                $exitCode
+            );
+
+            CB_Upgrade_ColbySubmodules::checkForAndReportError(
+                $command,
+                $arrayOfOutputLines,
+                $exitCode
+            );
         }
 
-        CB_Upgrade_ColbySubmodules::checkForAndReportError(
-            $command,
-            $arrayOfOutputLines,
-            $exitCode
-        );
-
-
-
-        $command =
-        CBConvert::stringToCleanLine(<<<EOT
-
-            git config --remove-section
-            submodule.{$documentRootRelativeSubmoduleDirectoryArgument}
-
-        EOT);
-
-        $arrayOfOutputLines = [];
-        $exitCode = null;
-
-        CBExec::exec(
-            $command,
-            $arrayOfOutputLines,
-            $exitCode
-        );
-
-        CB_Upgrade_ColbySubmodules::checkForAndReportError(
-            $command,
-            $arrayOfOutputLines,
-            $exitCode
-        );
+        finally
+        {
+            chdir(
+                $pwd
+            );
+        }
     }
     // cleanUpSubmodule()
 
