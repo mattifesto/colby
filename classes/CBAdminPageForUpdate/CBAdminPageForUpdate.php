@@ -115,7 +115,35 @@ CBAdminPageForUpdate
      */
     static function
     CBAjax_pullColby(
-    ): stdClass {
+    ): stdClass
+    {
+        $documentRootRelativeSubmoduleDirectoryPaths =
+        CBGit::submodules();
+
+        if (
+            !in_array(
+                'colby',
+                $documentRootRelativeSubmoduleDirectoryPaths
+            )
+        ) {
+            /**
+             * If colby isn't a submodule then we don't need to do anything in
+             * this function.
+             */
+
+            $result =
+            (object)
+            [
+                'output' =>
+                'Colby is not a submodule of this website.',
+
+                'succeeded' =>
+                true,
+            ];
+
+            return $result;
+        }
+
         $originalDirectory = getcwd();
 
         if ($originalDirectory === false) {
@@ -126,7 +154,9 @@ CBAdminPageForUpdate
             );
         }
 
-        $colbyDirectory = cbsysdir();
+        $colbyDirectory =
+        cb_document_root_directory() .
+        '/colby';
 
         $output = [
             "$ cd {$colbyDirectory}",
@@ -137,14 +167,20 @@ CBAdminPageForUpdate
             $colbyDirectory
         );
 
-        CBGit::pull(
-            $output,
-            $exitCode
-        );
+        try
+        {
+            CBGit::pull(
+                $output,
+                $exitCode
+            );
+        }
 
-        chdir(
-            $originalDirectory
-        );
+        finally
+        {
+            chdir(
+                $originalDirectory
+            );
+        }
 
         return (object)[
             'output' => implode("\n", $output),
@@ -432,7 +468,7 @@ CBAdminPageForUpdate
 
         $command =
         defined('CBMySQLDirectory') ?
-        CBMySQLDirectory . "/{$command}" :
+        constant('CBMySQLDirectory') . "/{$command}" :
         $command;
 
         $command =
