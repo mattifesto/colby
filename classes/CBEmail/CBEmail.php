@@ -24,17 +24,28 @@ CBEmail
     {
         $cbmessages = [];
 
-        if (!file_exists(
-            CBEmail::getSwiftmailerIncludeFilename()
-        )) {
+        $documentRootRelativeSubmoduleDirectoryPaths =
+        CBGit::submodules();
+
+        if (
+            !in_array(
+                'swiftmailer',
+                $documentRootRelativeSubmoduleDirectoryPaths
+            )
+        ) {
+            $cbmessage =
+            <<<EOT
+
+                SwiftMailer exists as a submodule of this website. Once the site
+                has been upgraded to use Colby as a PHP Composer library and all
+                instances of the site have been verified to function properly
+                remove this submodule.
+
+            EOT;
+
             array_push(
                 $cbmessages,
-                <<<EOT
-
-                    Swiftmailer is not installed in the correct location for
-                    this website.
-
-                EOT
+                $cbmessage
             );
         }
 
