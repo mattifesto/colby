@@ -141,6 +141,73 @@ CB_Upgrade_ColbySubmodules
             $arrayOfOutputLines,
             $exitCode
         );
+
+
+
+        /**
+         * Step 3 of 3 (steps can be run in any order)
+         * Remove submodule folder.
+         */
+
+        $command =
+        CBConvert::stringToCleanLine(<<<EOT
+
+            git config --get
+            submodule.{$documentRootRelativeSubmoduleDirectoryArgument}.url
+            2>&1
+
+        EOT);
+
+        $arrayOfOutputLines = [];
+        $exitCode = null;
+
+        CBExec::exec(
+            $command,
+            $arrayOfOutputLines,
+            $exitCode
+        );
+
+        if (
+            $exitCode === 1
+        ) {
+            /**
+             * An exit code of 1 means the key was not found which means we have
+             * no more work to do.
+             */
+
+            return;
+        }
+
+        CB_Upgrade_ColbySubmodules::checkForAndReportError(
+            $command,
+            $arrayOfOutputLines,
+            $exitCode
+        );
+
+
+
+        $command =
+        CBConvert::stringToCleanLine(<<<EOT
+
+            git config --remove-section
+            submodule.{$documentRootRelativeSubmoduleDirectoryArgument}
+
+        EOT);
+
+        $arrayOfOutputLines = [];
+        $exitCode = null;
+
+        CBExec::exec(
+            $command,
+            $arrayOfOutputLines,
+            $exitCode
+        );
+
+        CB_Upgrade_ColbySubmodules::checkForAndReportError(
+            $command,
+            $arrayOfOutputLines,
+            $exitCode
+        );
     }
     // cleanUpSubmodule()
 
