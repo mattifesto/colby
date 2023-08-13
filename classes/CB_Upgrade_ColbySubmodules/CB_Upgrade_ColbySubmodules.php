@@ -92,25 +92,12 @@ CB_Upgrade_ColbySubmodules
         cb_document_root_directory() .
         "/{$documentRootRelativeSubmoduleDirectoryArgument}";
 
-        $directoryNoLongerExists =
-        !is_dir($absoluteDirectoryPath);
 
-        if (
-            $directoryNoLongerExists
-        ) {
-            return;
-        }
 
-        $directoryStillContainsAnActiveGitSubmodule =
-        CBGit::absoluteDirectoryPathIsASubmodule(
-            $absoluteDirectoryPath
-        );
-
-        if (
-            $directoryStillContainsAnActiveGitSubmodule
-        ) {
-            return;
-        }
+        /**
+         * Step 1 of 3
+         * Remove submodule folder.
+         */
 
         $command = "rm -rf {$absoluteDirectoryPath}";
         $output = [];
