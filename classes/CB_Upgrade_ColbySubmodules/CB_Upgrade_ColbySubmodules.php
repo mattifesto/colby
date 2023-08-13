@@ -43,7 +43,8 @@ CB_Upgrade_ColbySubmodules
 
 
 
-     // -- functions
+    // -- functions
+
 
 
     /**
@@ -53,12 +54,33 @@ CB_Upgrade_ColbySubmodules
      */
     private static function
     deleteDeprecatedSubmoduleDirectory(
-        string $documentRootRelativeSubmoduleDirectory
+        string $documentRootRelativeSubmoduleDirectoryArgument
     ): void
     {
+        if (
+            !in_array(
+                $documentRootRelativeSubmoduleDirectoryArgument,
+                ['colby', 'swiftmailer']
+            )
+        ) {
+            $message =
+            CBConvert::stringToCleanLine(<<<EOT
+
+                The string "{$documentRootRelativeSubmoduleDirectoryArgument}"
+                is not a valid argument value.
+
+            EOT);
+
+            throw new CBExceptionWithValue(
+                $message,
+                $documentRootRelativeSubmoduleDirectoryArgument,
+                'bad7c26852c2806aa9fa088a57708aae8b58c040'
+            );
+        }
+
         $absoluteDirectoryPath =
         cb_document_root_directory() .
-        "/{$documentRootRelativeSubmoduleDirectory}";
+        "/{$documentRootRelativeSubmoduleDirectoryArgument}";
 
         $directoryNoLongerExists =
         !is_dir($absoluteDirectoryPath);
