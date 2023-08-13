@@ -18,6 +18,7 @@ CB_Upgrade_ColbySubmodules
          * The operations of this function should only be run if Colby is
          * currently installed as a PHP Composer library.
          */
+
         if (
             cb_php_composer_colby_library_is_installed() !== true
         ) {
@@ -25,14 +26,14 @@ CB_Upgrade_ColbySubmodules
         }
 
         $deprecatedColbyLibraryDirectory =
-        cb_document_root_directory() . '/colby';
+        'colby';
 
         CB_Upgrade_ColbySubmodules::deleteDeprecatedSubmoduleDirectory(
             $deprecatedColbyLibraryDirectory
         );
 
         $deprecatedSwiftMailerDirectory =
-        cb_document_root_directory() . '/swiftmailer';
+        'swiftmailer';
 
         CB_Upgrade_ColbySubmodules::deleteDeprecatedSubmoduleDirectory(
             $deprecatedSwiftMailerDirectory
@@ -46,13 +47,19 @@ CB_Upgrade_ColbySubmodules
 
 
     /**
+     * @param string $documentRootRelativeSubmoduleDirectory
+     *
      * @return void
      */
     private static function
     deleteDeprecatedSubmoduleDirectory(
-        string $absoluteDirectoryPath
+        string $documentRootRelativeSubmoduleDirectory
     ): void
     {
+        $absoluteDirectoryPath =
+        cb_document_root_directory() .
+        "/{$documentRootRelativeSubmoduleDirectory}";
+
         $directoryNoLongerExists =
         !is_dir($absoluteDirectoryPath);
 
