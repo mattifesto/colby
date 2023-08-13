@@ -95,11 +95,38 @@ CB_Upgrade_ColbySubmodules
 
 
         /**
-         * Step 1 of 3
+         * Step 1 of 3 (steps can be run in any order)
          * Remove submodule folder.
          */
 
         $command = "rm -rf {$absoluteDirectoryPath} 2>&1";
+        $arrayOfOutputLines = [];
+        $exitCode = null;
+
+        CBExec::exec(
+            $command,
+            $arrayOfOutputLines,
+            $exitCode
+        );
+
+        CB_Upgrade_ColbySubmodules::checkForAndReportError(
+            $command,
+            $arrayOfOutputLines,
+            $exitCode
+        );
+
+
+
+        /**
+         * Step 2 of 3 (steps can be run in any order)
+         * Remove submodule folder.
+         */
+
+        $absoluteGitModuleDirectory =
+        cb_document_root_directory() .
+        "/.git/modules/{$documentRootRelativeSubmoduleDirectoryArgument}";
+
+        $command = "rm -rf {$absoluteGitModuleDirectory} 2>&1";
         $arrayOfOutputLines = [];
         $exitCode = null;
 
