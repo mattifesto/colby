@@ -14,6 +14,10 @@ CB_Upgrade_ColbySubmodules
     CBInstall_install(
     ): void
     {
+        /**
+         * The operations of this function should only be run if Colby is
+         * currently installed as a PHP Composer library.
+         */
         if (
             cb_php_composer_colby_library_is_installed() !== true
         ) {
