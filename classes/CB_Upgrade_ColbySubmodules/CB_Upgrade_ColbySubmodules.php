@@ -72,6 +72,22 @@ CB_Upgrade_ColbySubmodules
             );
         }
 
+        $arrayOfDocumentRootRelativeSubmoduleDirectories =
+        CBGit::submodules();
+
+        if (
+            in_array(
+                $documentRootRelativeSubmoduleDirectoryArgument,
+                $arrayOfDocumentRootRelativeSubmoduleDirectories
+            )
+        ) {
+            /**
+             * Don't clean up the submodule if it's still active.
+             */
+
+            return;
+        }
+
         $absoluteDirectoryPath =
         cb_document_root_directory() .
         "/{$documentRootRelativeSubmoduleDirectoryArgument}";
