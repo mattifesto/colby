@@ -25,18 +25,12 @@ CB_Upgrade_ColbySubmodules
             return;
         }
 
-        $deprecatedColbyLibraryDirectory =
-        'colby';
-
         CB_Upgrade_ColbySubmodules::cleanUpSubmodule(
-            $deprecatedColbyLibraryDirectory
+            'colby'
         );
 
-        $deprecatedSwiftMailerDirectory =
-        'swiftmailer';
-
         CB_Upgrade_ColbySubmodules::cleanUpSubmodule(
-            $deprecatedSwiftMailerDirectory
+            'swiftmailer'
         );
     }
     // CBInstall_install()
