@@ -88,75 +88,6 @@ CBGit
 
 
     /**
-     * @param string $absoluteDirectoryPathArgument
-     *
-     * @return bool
-     *
-     *      Returns true if the absolute directory path argument represents
-     *      a directory that is a submodule.
-     */
-    static function
-    absoluteDirectoryPathIsASubmodule(
-        string $absoluteDirectoryPathArgument
-    ): bool
-    {
-        $theAbsoluteDirectoryPathIsNotADirectory =
-        !is_dir($absoluteDirectoryPathArgument);
-
-        if (
-            $theAbsoluteDirectoryPathIsNotADirectory
-        ) {
-            return false;
-        }
-
-        $resultCode = null;
-
-        $pwd = getcwd();
-
-        chdir(
-            $absoluteDirectoryPathArgument
-        );
-
-        try
-        {
-            $command =
-            'git rev-parse --show-toplevel';
-
-            exec(
-                $command,
-                $arrayOfOutputLines,
-                $resultCode
-            );
-        }
-        finally
-        {
-            chdir($pwd);
-        }
-
-        if (
-            $resultCode !== 0
-        ) {
-            return false;
-        }
-
-        $resultDirectoryPath =
-        $arrayOfOutputLines[0];
-
-        if (
-            $resultDirectoryPath === $absoluteDirectoryPathArgument
-        ) {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    // absoluteDirectoryPathIsASubmodule()
-
-
-
-    /**
      * @param string $command
      * @param [string] &$output
      * @param mixed &$exitCode
@@ -223,7 +154,7 @@ CBGit
         getcwd();
 
         chdir(
-            cbsitedir()
+            cb_document_root_directory()
         );
 
         try
@@ -234,9 +165,11 @@ CBGit
                     git submodule foreach
                     --recursive --quiet
                     'echo \$displaypath'
+                    2>&1
 
                 EOT),
-                $relativeSubmodulePaths
+                $arrayOfOutputLines,
+                $resultCode
             );
         }
 
@@ -247,7 +180,18 @@ CBGit
             );
         }
 
-        return $relativeSubmodulePaths;
+        if (
+            $resultCode !== 0
+        ) {
+            throw new Exception(
+                implode(
+                    ', ',
+                    $arrayOfOutputLines
+                )
+            );
+        }
+
+        return $arrayOfOutputLines;
     }
     /* submodules() */
 
