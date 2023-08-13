@@ -99,45 +99,67 @@ CB_Upgrade_ColbySubmodules
          * Remove submodule folder.
          */
 
-        $command = "rm -rf {$absoluteDirectoryPath}";
-        $output = [];
+        $command = "rm -rf {$absoluteDirectoryPath} 2>&1";
+        $arrayOfOutputLines = [];
         $exitCode = null;
 
         CBExec::exec(
             $command,
-            $output,
+            $arrayOfOutputLines,
             $exitCode
         );
 
-        if (
-            $exitCode !== 0
-        ) {
-            $outputAsText =
-            implode(
-                "\n",
-                $output
-            );
-
-            $outputAsCBMessage =
-            CBMessageMarkup::stringToMessage(
-                $outputAsText
-            );
-
-
-            $exceptionCBMessage =
-            <<<EOT
-
-                --- pre\n{$outputAsCBMessage}
-                ---
-
-            EOT;
-
-            throw new CBException(
-                "The following command failed: {$command}.",
-                $exceptionCBMessage,
-                'be6d629248be53822da4a4766393a52430e7bbb9'
-            );
-        }
+        CB_Upgrade_ColbySubmodules::checkForAndReportError(
+            $command,
+            $arrayOfOutputLines,
+            $exitCode
+        );
     }
-    // deleteDeprecatedSubmoduleDirectory()
+    // cleanUpSubmodule()
+
+
+
+    /**
+     *
+     */
+    private static function
+    checkForAndReportError(
+        string $command,
+        array $arrayOfOutputLines,
+        int $exitCode
+    ): void
+    {
+        if (
+            $exitCode === 0
+        ) {
+            return;
+        }
+
+        $outputAsText =
+        implode(
+            "\n",
+            $arrayOfOutputLines
+        );
+
+        $outputAsCBMessage =
+        CBMessageMarkup::stringToMessage(
+            $outputAsText
+        );
+
+
+        $exceptionCBMessage =
+        <<<EOT
+
+            --- pre\n{$outputAsCBMessage}
+            ---
+
+        EOT;
+
+        throw new CBException(
+            "The following command failed: {$command}.",
+            $exceptionCBMessage,
+            'be6d629248be53822da4a4766393a52430e7bbb9'
+        );
+    }
+    // reportError()
 }
