@@ -28,7 +28,7 @@ CBEmail
         CBGit::submodules();
 
         if (
-            !in_array(
+            in_array(
                 'swiftmailer',
                 $documentRootRelativeSubmoduleDirectoryPaths
             )
