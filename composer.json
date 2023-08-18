@@ -19,7 +19,8 @@
     "require": {
         "php": "^8.0",
         "erusev/parsedown": "^1.7",
-        "swiftmailer/swiftmailer": "^5.4.12"
+        "swiftmailer/swiftmailer": "^5.4.12",
+        "aws/aws-sdk-php": "^3.278"
     },
     "type": "library"
 }
