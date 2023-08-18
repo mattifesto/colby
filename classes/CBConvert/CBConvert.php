@@ -1001,7 +1001,7 @@ CBConvert
         $potentialNames = preg_split(
             '/[\s,]+/',
             $stringValue,
-            null,
+            -1,
             PREG_SPLIT_NO_EMPTY
         );
 
@@ -1340,7 +1340,7 @@ CBConvert
         $names = preg_split(
             '/[^A-Za-z0-9_]+/',
             $value,
-            null,
+            -1,
             PREG_SPLIT_NO_EMPTY
         );
 
