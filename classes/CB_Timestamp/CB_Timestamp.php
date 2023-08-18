@@ -635,7 +635,9 @@ CB_Timestamp {
 
 
     /**
-     * @return CB_Timestamp
+     * @return stdClass
+     *
+     *      Returns a CB_Timestamp model.
      */
     static function
     now(
