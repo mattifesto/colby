@@ -844,7 +844,7 @@ CB_Timestamp {
 
     /**
      * @param object $cbtimestampModel
-     * @param CBID $rootModelCBID
+     * @param string $rootModelCBID
      *
      * @return object
      *
