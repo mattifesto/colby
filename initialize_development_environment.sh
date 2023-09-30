@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-# NOTE 20230708
+# 2023-07-08
 # Matt Calkins
 #
 #   This script is a set of commands that I would like to have in the Dockerfile
@@ -17,11 +17,6 @@
 #
 #   apache2ctl start
 #
-#       Do not use sudo to run this command. The container is set up to run as
-#       devuser, if you run as root it won't have the environment variables set
-#       by Docker build. Also if you run using sudo and the switch a session
-#       file in the /tmp directory will have to be deleted.
-#
 #       https://github.com/docker-library/php/blob/master/8.0/bullseye/apache/Dockerfile
 #
 #       The PHP docker image uses "apache2-foreground" to run Apache which has
@@ -31,7 +26,7 @@
 #       The command "apache2ctl start" does not have this issue. They give a
 #       reason for not using this command by default.
 #
-#   gh auth login
+#   gh auth login (usually not needed)
 #
 #       When you run this in the VSCode terminal you can accept the default
 #       answers to the questions they ask. VSCode will open a web browser on the
@@ -39,6 +34,16 @@
 #
 #   git config --global user.email "you@example.com"
 #   git config --global user.name "Your Name"
+
+
+
+# 2023-09-29
+# Matt Calkins
+#
+#   Switch to the user www-data before running this command using the following
+#   command:
+#
+#       su www-data -s /bin/bash
 
 
 
