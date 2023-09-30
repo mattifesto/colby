@@ -204,6 +204,4 @@ RUN apt-get install -y sudo
 RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME
 RUN chmod 0440 /etc/sudoers.d/$USERNAME
 
-USER $USERNAME
-
 RUN git config --global pull.ff only
