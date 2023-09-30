@@ -47,7 +47,7 @@
 
 
 
-cp /com.docker.devenvironments.code/dev_website/* /var/www/html
+cp -r /com.docker.devenvironments.code/dev_website/. /var/www/html
 
 cd /var/www/html
 
