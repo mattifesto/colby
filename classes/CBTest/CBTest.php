@@ -23,8 +23,12 @@ CBTest
      *
      * @return object
      */
-    static function CBAjax_run($args): stdClass {
-        try {
+    static function
+    CBAjax_run($args)
+    : stdClass
+    {
+        try
+        {
             $className = CBModel::valueToString(
                 $args,
                 'className'
@@ -104,9 +108,14 @@ CBTest
                         $function
                     );
 
-                    $result = (object)[
-                        'succeeded' => false,
-                        'message' => <<<EOT
+                    $result =
+                    (object)
+                    [
+                        'succeeded' =>
+                        false,
+
+                        'message' =>
+                        <<<EOT
 
                             This test failed because the function
                             ({$functionAsMarkup}\(\) (code)) did not return an
@@ -117,7 +126,9 @@ CBTest
 
                         EOT
                     ];
-                } else {
+                }
+                else
+                {
                     foreach (
                         $testLogEntries as $testLogEntry
                     ) {
@@ -142,10 +153,17 @@ CBTest
                         }
                     }
                 }
-            } else {
-                $result = (object)[
-                    'succeeded' => false,
-                    'message' => <<<EOT
+            }
+            else
+            {
+                $result =
+                (object)
+                [
+                    'succeeded' =>
+                    false,
+
+                    'message' =>
+                    <<<EOT
 
                         No test is available to run for:
 
@@ -155,12 +173,17 @@ CBTest
                     EOT
                 ];
             }
-        } catch (
-            Throwable $throwable
-        ) {
-            $result = (object)[
-                'succeeded' => false,
-                'message' => CBException::throwableToErrorReportAsCBMessage(
+        }
+        catch (Throwable $throwable)
+        {
+            $result =
+            (object)
+            [
+                'succeeded' =>
+                false,
+
+                'message' =>
+                CBException::throwableToErrorReportAsCBMessage(
                     $throwable
                 ),
             ];
