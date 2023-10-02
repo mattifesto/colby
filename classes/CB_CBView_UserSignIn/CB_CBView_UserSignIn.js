@@ -6,6 +6,7 @@
     CBJavaScript,
     CBMessageMarkup,
     CBUIButton,
+    CBUIPanel,
 */
 
 
