@@ -61,10 +61,29 @@ CBTest
             ) {
                 CBLog::bufferStart();
 
-                $result =
-                call_user_func(
-                    $functionName
-                );
+                try
+                {
+                    ob_start();
+
+                    try
+                    {
+                        $result =
+                        call_user_func(
+                            $functionName
+                        );
+                    }
+                    finally
+                    {
+                        $testGeneratedOutput =
+                        ob_get_clean();
+                    }
+                }
+                finally
+                {
+                    $testLogEntries = CBLog::bufferContents();
+
+                    CBLog::bufferEndClean();
+                }
 
                 /**
                  * @NOTE 2022_06_18
@@ -90,10 +109,6 @@ CBTest
                         true,
                     ];
                 }
-
-                $testLogEntries = CBLog::bufferContents();
-
-                CBLog::bufferEndClean();
 
                 if (
                     !is_object(
@@ -129,6 +144,9 @@ CBTest
                 }
                 else
                 {
+                    $result->CBTest_result_generatedOutput =
+                    $testGeneratedOutput;
+
                     foreach (
                         $testLogEntries as $testLogEntry
                     ) {
