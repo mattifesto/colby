@@ -36,7 +36,7 @@ CB_CBView_UserSignIn {
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2023_07_29_1690672987',
+                'v2023.1.8',
                 'js',
                 cbsysurl()
             ),
