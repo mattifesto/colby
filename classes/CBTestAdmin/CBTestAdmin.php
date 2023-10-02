@@ -1,7 +1,8 @@
 <?php
 
-final class CBTestAdmin {
-
+final class
+CBTestAdmin
+{
     /* -- CBAdmin interfaces -- -- -- -- -- */
 
 
