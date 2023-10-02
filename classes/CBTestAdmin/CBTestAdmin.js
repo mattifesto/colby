@@ -565,17 +565,48 @@
 
 
 
-            if (typeof value === "object") {
-                if (value.succeeded) {
+            if (
+                typeof value === "object"
+            ) {
+                if (
+                    value.succeeded
+                ) {
                     status = "passed";
-                } else {
+                }
+                else
+                {
                     status = "failed";
                     CBTestAdmin.errorCount += 1;
                     expander.severity = 3;
                 }
 
-                message = value.message || status;
-            } else {
+                let outputText = "";
+
+                let generatedOutput =
+                CBModel.valueToString(
+                    value,
+                    "CBTest_result_generatedOutput"
+                );
+
+                if (
+                    generatedOutput !== ""
+                ) {
+                    outputText = `
+
+                        (Generated Output (b))
+
+                        --- pre\n${generatedOutput}
+                        ---
+
+                    `;
+                }
+
+                message =
+                (value.message || status) +
+                outputText;
+            }
+            else
+            {
                 CBTestAdmin.errorCount += 1;
                 expander.severity = 3;
                 message = `
