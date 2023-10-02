@@ -41,7 +41,7 @@ CBUIExpander
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2022_10_27_1666889444',
+                'v2023.1.8',
                 'js',
                 cbsysurl()
             ),
