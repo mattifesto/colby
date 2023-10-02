@@ -246,25 +246,42 @@
              * set the title property to first paragraph of the message when
              * converted to text.
              *
-             * @param string value
+             * @param string cbmessage
              */
-            set message(value) {
-                value = CBConvert.valueToString(value);
+            set message(
+                cbmessageArgument
+            ) {
+                let cbmessage =
+                CBConvert.valueToString(
+                    cbmessageArgument
+                );
 
-                if (expanderController.title === "") {
-                    let firstLineOfMessage = CBMessageMarkup.messageToText(value);
-                    firstLineOfMessage = firstLineOfMessage.split("\n\n", 1)[0];
+                if (
+                    expanderController.title === ""
+                ) {
+                    let firstLineOfMessage =
+                    CBMessageMarkup.messageToText(cbmessage);
 
-                    expanderController.title = firstLineOfMessage;
+                    firstLineOfMessage =
+                    firstLineOfMessage.split("\n\n", 1)[0];
+
+                    expanderController.title =
+                    firstLineOfMessage;
                 }
 
-                let contentElement = document.createElement("div");
-                contentElement.className = "CBUIExpander_message CBContentStyleSheet";
-                contentElement.innerHTML = CBMessageMarkup.messageToHTML(value);
+                let contentElement =
+                document.createElement("div");
 
-                expanderController.contentElement = contentElement;
+                contentElement.className =
+                "CBUIExpander_message CBContentStyleSheet";
 
-                message = value;
+                contentElement.innerHTML =
+                CBMessageMarkup.messageToHTML(cbmessage);
+
+                expanderController.contentElement =
+                contentElement;
+
+                message = cbmessage;
             },
 
             /**
