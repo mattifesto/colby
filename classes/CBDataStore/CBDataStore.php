@@ -40,15 +40,27 @@ CBDataStore
      *
      * @return null
      */
-    static function create($ID) {
-        $directory = CBDataStore::directoryForID($ID);
+    static function
+    create(
+        string $CBID
+    ) {
+        $directory = CBDataStore::directoryForID($CBID);
 
-        if (!is_dir($directory)) {
-            mkdir($directory, /* mode: */ 0777, /* recursive: */ true);
+        if (
+            !is_dir($directory)
+        ) {
+            mkdir(
+                $directory,
+                0777 /* mode: */,
+                true /* recursive: */
+            );
         }
 
-        CBDataStores::update($ID);
+        CBDataStores::update($CBID);
     }
+    // create()
+
+
 
     /**
      * Deletes a data store with "delete if exists" semantics.
