@@ -12,9 +12,12 @@
  * class or any PHP code unless it is database related. The file locking
  * functionality of PHP isn't very certain and that fact is well documented.
  */
-final class CBDataStore {
+final class
+CBDataStore
+{
+    // -- CBHTMLOutput interfaces
 
-    /* -- CBHTMLOutput interfaces -- -- -- -- -- */
+
 
     /**
      * @return [string]
@@ -27,7 +30,10 @@ final class CBDataStore {
     /* CBHTMLOutput_JavaScriptURLs() */
 
 
-    /* -- functions -- -- -- -- -- */
+
+    // -- functions
+
+
 
     /**
      * This function has "create if not exists" semantics.
