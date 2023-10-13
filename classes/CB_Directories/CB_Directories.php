@@ -4,6 +4,106 @@ final class
 CB_Directories
 {
     /**
+     * This function creates a new directory that will be writeable by the
+     * www-data user regardless of what user runs the function.
+     *
+     * @param string $absoluteDirectoryPathArgument
+     *
+     * @return void
+     */
+    static function
+    createWwwDataWriteableDirectory(
+        string $absoluteDirectoryPathArgument
+    ): void
+    {
+        /**
+         * Walk backward through the directories until you find the first one
+         * that exists and then create all the ones that didn't.
+         */
+        $directoriesToCreate = [];
+        $currentDirectory = $absoluteDirectoryPathArgument;
+
+        while (
+            !is_dir($currentDirectory)
+        ) {
+            array_unshift(
+                $directoriesToCreate,
+                $currentDirectory
+            );
+
+            $currentDirectory = dirname(
+                $currentDirectory
+            );
+        }
+
+        foreach (
+            $directoriesToCreate as $directoryToCreate
+        ) {
+            $result =
+            mkdir(
+                $directoryToCreate
+            );
+
+            if (
+                $result !== true
+            ) {
+                $message =
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    Unable to create the "{$directoryToCreate}"
+                    directory.
+
+                EOT);
+
+                throw new Exception($message);
+            }
+
+            $result =
+            chgrp(
+                $directoryToCreate,
+                'www-data'
+            );
+
+            if (
+                $result !== true
+            ) {
+                $message =
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    Unable change the group of the
+                    "{$directoryToCreate}" directory to "www-data".
+
+                EOT);
+
+                throw new Exception($message);
+            }
+
+            $result =
+            chmod(
+                $directoryToCreate,
+                0775
+            );
+
+            if (
+                $result !== true
+            ) {
+                $message =
+                CBConvert::stringToCleanLine(<<<EOT
+
+                    Unable change the permissions of the
+                    "{$directoryToCreate}" directory to 0775.
+
+                EOT);
+
+                throw new Exception($message);
+            }
+        }
+    }
+    // createWwwDataWriteableDirectory()
+
+
+
+    /**
      * This function returns the directory path that leads from the document
      * root directory to the colby library directory. The returned value has no
      * slash at the beginning or the end of the string.
