@@ -1001,7 +1001,8 @@ CBModel
      *      Any CBID generation must be done for a spec before it is used with
      *      this function.
      *
-     *      @deprecated 2018_12_21 (edited 2021_01_15)
+     *      deprecated functionality
+     *      2018_12_21 (edited 2021_01_15)
      *
      *          This function is setting the "title" property on the model even
      *          though the "title" property is not an official property of all
