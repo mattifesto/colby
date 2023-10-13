@@ -44,19 +44,18 @@ CBDataStore
     create(
         string $CBID
     ) {
-        $directory = CBDataStore::directoryForID($CBID);
+        $directory =
+        CBDataStore::directoryForID(
+            $CBID
+        );
 
-        if (
-            !is_dir($directory)
-        ) {
-            mkdir(
-                $directory,
-                0777 /* mode: */,
-                true /* recursive: */
-            );
-        }
+        CB_Directories::createWwwDataWriteableDirectory(
+            $directory
+        );
 
-        CBDataStores::update($CBID);
+        CBDataStores::update(
+            $CBID
+        );
     }
     // create()
 
@@ -105,6 +104,9 @@ CBDataStore
 
         CBDataStores::deleteByID($ID);
     }
+    // deleteByID()
+
+
 
     /**
      * @return string
