@@ -1,10 +1,24 @@
 # Colby
 
-A content management system for software developers and engineers, and of
-course, the businesses that fund them.
+Colby is a content management system.
 
-Get started developing today! You will create multiple instances of your site
-for development, testing, and production.
+### To develop and create a test website:
 
-For full start to end detailed project creation and deployment instructions go
-to https://devs.mattifesto.com.
+- step 1:
+    - start a Docker development environment with this git repository
+
+- step 2:
+    - read `initialize_development_environment.sh`
+    - follow instructions
+    - run `initialize_development_environment.sh` as root
+
+### To reset development environment:
+
+- step 1:
+    - delete all files in /var/www/html
+
+- step 2:
+    - start a terminal session in the MySQL container
+    - log in to MySQL as root
+    - drop the `website_database` database
+    - create the `website_database` database
