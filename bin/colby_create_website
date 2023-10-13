@@ -16,30 +16,53 @@
  *      - create database tables
  */
 
+
+
 try
 {
     include(
         $_composer_autoload_path
     );
 
+    $username =
+    posix_getpwuid(
+        posix_geteuid()
+    )['name'];
+
+    echo "colby_create_website is running as the user: {$username}\n";
+
+    if (
+        $username === 'www-data'
+    ) {
+        echo "error: colby_create_website should not be run as {$username}\n";
+        echo "colby_create_website cancelled\n";
+
+        exit(1);
+    }
 
     /* document_root/data directory */
 
     $dataDirectory = cb_document_root_directory() . '/data';
 
-    if (!is_dir($dataDirectory)) {
-        mkdir($dataDirectory);
-    }
-
+    CB_Directories::createWwwDataWriteableDirectory(
+        $dataDirectory
+    );
 
     /* document_root/tmp directory */
 
     $tmpDirectory = cb_document_root_directory() . '/tmp';
 
-    if (!is_dir($tmpDirectory)) {
-        mkdir($tmpDirectory);
-    }
+    CB_Directories::createWwwDataWriteableDirectory(
+        $tmpDirectory
+    );
 
+    /* document_root/logs directory */
+
+    $logsDirectory = cb_document_root_directory() . '/logs';
+
+    CB_Directories::createWwwDataWriteableDirectory(
+        $logsDirectory
+    );
 
 
     /* document_root/.gitignore file */
