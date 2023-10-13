@@ -1583,53 +1583,36 @@ CBSitePreferences {
 
 
     /**
-     * This function fetches the CBSitePreferences model from a file instead of
-     * the database which has historically been how this model is intended to be
-     * accessed.
-     *
-     * @NOTE 2018_09_01
-     *
-     *      I think this pattern was to allow site preferences to be available
-     *      even if the database is down. Or maybe it was to reduce the database
-     *      calls required per request since this model is requested every time.
-     *
-     *      Either way, add documentation here including scenarios for why this
-     *      behavior is necessary. It actually may not be a good idea.
-     *
-     * @TODO 2021_08_24
-     *
-     *      Non-standard code slows us down every time. This code is bad. If the
-     *      database is down that's a red hot bug that needs to be fixed and
-     *      there isn't likely much to be done until it is. This function should
-     *      be replaced with CBModelCache::fetchModelByID().
-     *
      * @return object
      *
      *      The current CBSitePreferences model.
      */
     static function
-    model(
-    ): stdClass {
-        if (empty(CBSitePreferences::$model)) {
-            $filepath = CBDataStore::flexpath(
-                CBSitePreferences::ID(),
-                'site-preferences.json',
-                cbsitedir()
+    model()
+    : stdClass
+    {
+        if (
+            empty(CBSitePreferences::$model)
+        ) {
+            $sitePreferencesModel =
+            CBModels::fetchModelByCBID(
+                CBSitePreferences::ID()
             );
 
-            if (is_file($filepath)) {
-                $model = json_decode(
-                    file_get_contents($filepath)
-                );
-            } else {
-                $model = CBModel::build(
-                    (object)[
-                        'className' => 'CBSitePreferences',
+            if (
+                $sitePreferencesModel === null
+            ) {
+                $sitePreferencesModel =
+                CBModel::build(
+                    (object)
+                    [
+                        'className' =>
+                        'CBSitePreferences',
                     ]
                 );
             }
 
-            CBSitePreferences::$model = $model;
+            CBSitePreferences::$model = $sitePreferencesModel;
         }
 
         return CBSitePreferences::$model;
@@ -1638,40 +1621,13 @@ CBSitePreferences {
 
 
     /**
-     * This function saves the model to disk so that the database doesn't have
-     * to be involved to use the information. Since this data is such core
-     * system data this also avoids race conditions. For instance, if the
-     * database is down we can still get the information needed to send an
-     * alert email.
-     *
-     * @NOTE 2021_08_24
-     *
-     *      This code will eventually be removed. I'm not sure what "race
-     *      conditions" the above comment is referring to and if sending emails
-     *      without a database becomes important, which it has not been, it
-     *      should be implemented specifically with tests.
-     *
      * @return void
      */
     static function
     CBModels_willSave(
         array $models
-    ): void {
-        array_map(
-            function ($model) {
-                $filepath = CBDataStore::flexpath(
-                    $model->ID,
-                    'site-preferences.json',
-                    cbsitedir()
-                );
-
-                CBDataStore::create($model->ID);
-
-                file_put_contents($filepath, json_encode($model));
-            },
-            $models
-        );
-
+    ): void
+    {
         /**
          * Clear the cached model.
          */
