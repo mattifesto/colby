@@ -40,8 +40,8 @@
 # 2023-09-29
 # Matt Calkins
 #
-#   Switch to the user www-data before running this command using the following
-#   command:
+#       This is how you switch to the user www-data.
+#       This script should NOT be run as www-data.
 #
 #       su www-data -s /bin/bash
 
