@@ -1557,8 +1557,9 @@ CBSitePreferences {
      * @return void
      */
     static function
-    initialize(
-    ): void {
+    initialize()
+    : void
+    {
         $path = CBModel::valueToString(
             CBSitePreferences::model(),
             'path'
