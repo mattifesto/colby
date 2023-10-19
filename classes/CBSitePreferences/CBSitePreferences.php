@@ -1535,6 +1535,17 @@ CBSitePreferences {
 
 
     /**
+     * @NOTE 2023-10-18
+     * Matt Calkins
+     *
+     *      Currently the entire purpose of this function is to grap the "path"
+     *      value from the CBSitePreferences model and append it to the PATH
+     *      environment variable. For some sites there is a situation in which
+     *      the default PATH does not give access to all the executables needed
+     *      by the website.
+     *
+     *      The default "path" property value is an empty string.
+     *
      * @NOTE 2019_08_15
      *
      *      The putenv() and getenv() functions are very odd in the following
@@ -1560,10 +1571,43 @@ CBSitePreferences {
     initialize()
     : void
     {
-        $path = CBModel::valueToString(
-            CBSitePreferences::model(),
-            'path'
-        );
+        try
+        {
+            $path =
+            CBModel::valueToString(
+                CBSitePreferences::model(),
+                'path'
+            );
+        }
+        catch (Throwable $throwable)
+        {
+            $mysqli =
+            Colby::mysqli();
+
+            if (
+                $mysqli->errno === 1146
+            ) {
+                /**
+                 * 2023-10-18
+                 * Matt Calkins
+                 *
+                 * When a Colby website is being creating this function will be
+                 * called before the tables exist. If this is the case, we set
+                 * the path to its default value, an empty string.
+                 *
+                 * If this error is caught by this function after the website
+                 * has been created that would be a legitimate error but will
+                 * be thrown elsewhere as well, so it won't go unnoticed even
+                 * though this function is ignoring it.
+                 */
+
+                $path = '';
+            }
+            else
+            {
+                throw $throwable;
+            }
+        }
 
         if ($path === '') {
             return;
