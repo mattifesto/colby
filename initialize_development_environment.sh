@@ -13,6 +13,29 @@
 
 
 
+# 2023-10-18
+# Matt Calkins
+#
+#   To remove the current development website to reset or test this script:
+#
+#       cd /var/www/html
+#       rm -r *
+#       rm -r .*
+#
+#   go to Docker Desktop
+#   go to the mysql container started with this development environment
+#   go to the "Exec" tab which is a command line for that container
+#
+#   You will need the root password and the database name located in the
+#   compose-dev.env file of the Colby Git repository.
+#
+#       mysql -u root -p
+#       (enter <root-password>)
+#       drop database <database-name>
+#       create database <database-name>
+
+
+
 # Run these commands manually in a VSCode terminal before running this script.
 #
 #   apache2ctl start
