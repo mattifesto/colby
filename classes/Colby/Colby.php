@@ -1057,7 +1057,27 @@ Colby
             '/cb_configuration.json'
         );
 
-        if (
+
+
+        /**
+         * 2023-11-11
+         * Matt Calkins
+         *
+         *      Environment variables are the latest way of configuring a Colby
+         *      website. We make an assumption that if one is set, the rest are
+         *      also. Maybe want to check that assumption in the future.
+         */
+
+        $databaseName = getenv('MYSQL_DATABASE');
+
+        if ($databaseName !== false)
+        {
+            define(
+                'CBSiteIsConfigured',
+                true
+            );
+        }
+        else if (
             file_exists($deprecatedConfigurationFilepath)
         ) {
             include_once(
