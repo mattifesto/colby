@@ -163,6 +163,9 @@
         arrayOfValuesArgument
     ) // -> undefined
     {
+        let barClassName = "CB_View_SVGBarChart1_color_gray";
+        let previousBarHeight = 0;
+
         let minimumValue =
         Math.min(...arrayOfValuesArgument);
 
@@ -218,12 +221,31 @@
                 maximumBarHeight
             );
 
+            if (
+                barIndex > 0 &&
+                previousBarHeight < barHeight
+            ) {
+                barClassName = "CB_View_SVGBarChart1_color_green";
+            }
+            else if (
+                barIndex > 0 &&
+                previousBarHeight > barHeight
+            ) {
+                barClassName = "CB_View_SVGBarChart1_color_red";
+            }
+            else
+            {
+                barClassName = "CB_View_SVGBarChart1_color_gray";
+            }
+
             CB_View_SVGBarChart1_renderBar(
                 svg2ElementArgument,
-                "CB_View_SVGBarChart1_color_gray",
+                barClassName,
                 barIndex,
                 barHeight
             );
+
+            previousBarHeight = barHeight;
         }
     }
     // CB_View_SVGBarChart1_renderSVG2Element()
