@@ -214,11 +214,15 @@
             ) +
             minimumBarHeight;
 
-            CB_View_SVGBarChart1_renderBar(
-                svg2ElementArgument,
+            let barElement =
+            CB_View_SVGBarChart1_createBarElement(
                 "CB_View_SVGBarChart1_barBackground_element",
                 barIndex,
                 maximumBarHeight
+            );
+
+            svg2ElementArgument.appendChild(
+                barElement
             );
 
             if (
@@ -238,11 +242,15 @@
                 barClassName = "CB_View_SVGBarChart1_color_gray";
             }
 
-            CB_View_SVGBarChart1_renderBar(
-                svg2ElementArgument,
+            barElement =
+            CB_View_SVGBarChart1_createBarElement(
                 barClassName,
                 barIndex,
                 barHeight
+            );
+
+            svg2ElementArgument.appendChild(
+                barElement
             );
 
             previousBarHeight = barHeight;
@@ -253,16 +261,22 @@
 
 
     /**
-     * @param Element svg2ElementArgument
+     * This function creates vertical bar elements in the form of SVG Rect
+     * elements that are used as both the background bars and the foreground
+     * bars on top of them.
+     *
+     * @param string classNameArgument
+     * @param int barIndexElement
+     * @param int barHeightArgument
+     *
+     * @return SVGRectElement
      */
     function
-    CB_View_SVGBarChart1_renderBar(
-        svg2ElementArgument,
+    CB_View_SVGBarChart1_createBarElement(
         classNameArgument,
         barIndexArgument,
-        barHeightArgument,
-    ) // -> undefined
-    {
+        barHeightArgument
+    ) {
         let x =
         (
             10 *
@@ -311,11 +325,8 @@
             classNameArgument
         );
 
-        svg2ElementArgument.appendChild(
-            rectElement
-        );
+        return rectElement;
     }
-    // CB_View_SVGBarChart1_renderRect()
 
 }
 )();
