@@ -182,6 +182,12 @@ RUN npm install -g jshint
 
 
 
+# Install ESLint (MC v1)
+
+RUN npm install -g eslint
+
+
+
 # add developer user
 # https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user
 
