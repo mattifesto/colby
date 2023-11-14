@@ -1,3 +1,4 @@
 {
-    "window.title": "colby"
+    "window.title": "colby",
+    "php.validate.executablePath": "/usr/local/bin/php"
 }
