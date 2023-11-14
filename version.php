@@ -2,5 +2,5 @@
 
 define(
     'CBSystemVersionNumber',
-    '2023.2.3'
+    '2023.2.4'
 );
