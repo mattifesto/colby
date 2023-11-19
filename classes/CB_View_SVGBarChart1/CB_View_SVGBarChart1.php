@@ -3,6 +3,84 @@
 final class
 CB_View_SVGBarChart1
 {
+    // -- CBAdmin_CBDocumentationForClass interfaces
+
+
+
+    /**
+     * This function renders some key samples of this view used for develoopment
+     * purposes.
+     *
+     * @return void
+     */
+    static function
+    CBAdmin_CBDocumentationForClass_render()
+    : void
+    {
+        $spec = CBModel::createSpec(
+            'CB_View_SVGBarChart1'
+        );
+
+        CB_View_SVGBarChart1::setTitles(
+            $spec,
+            [
+                '06-19', '06-20', '06-21', '06-22', '06-23',
+                '06-24', '06-25', '06-26', '06-27', '06-28',
+                '06-29', '06-30', '07-01', '07-02', '07-03',
+                '07-04', '07-05', '07-06', '07-07', '07-08',
+                '07-09', '07-10', '07-11', '07-12', '07-13',
+                '07-14', '07-15', '07-16',
+            ]
+        );
+
+        CB_View_SVGBarChart1::setValues(
+            $spec,
+            [
+                null, null, 5, 5, 5,
+                10, 5, 1, 8, 9,
+                10, 11, 12, 13, 14,
+                10, 11, 12, 13, 14,
+                10, 11, 12, 13, 14,
+                15, 16, 17,
+            ]
+        );
+
+        CBView::renderSpec($spec);
+
+        $spec = CBModel::createSpec(
+            'CB_View_SVGBarChart1'
+        );
+
+        CB_View_SVGBarChart1::setTitles(
+            $spec,
+            [
+                '06-19', '06-20', '06-21', '06-22', '06-23',
+                '06-24', '06-25', '06-26', '06-27', '06-28',
+                '06-29', '06-30', '07-01', '07-02', '07-03',
+                '07-04', '07-05', '07-06', '07-07', '07-08',
+                '07-09', '07-10', '07-11', '07-12', '07-13',
+                '07-14', '07-15', '07-16',
+            ]
+        );
+
+        CB_View_SVGBarChart1::setValues(
+            $spec,
+            [
+                null, null, null, null, null,
+                null, null, null, null, null,
+                null, null, null, null, null,
+                null, null, null, null, null,
+                null, null, 702000, 702000, 702000,
+                703000, 703000, 703000,
+            ]
+        );
+
+        CBView::renderSpec($spec);
+    }
+    // CBAdmin_CBDocumentationForClass_render()
+
+
+
     // -- CBHTMLOutput interfaces
 
 
