@@ -2,6 +2,7 @@
     CB_UI,
     CBDevelopersUserGroup,
     CBJavaScript,
+    Chart,
 */
 
 (function ()
@@ -78,6 +79,16 @@
         rootElement
     ) // -> undefined
     {
+        let values =
+        JSON.parse(
+            rootElement.dataset.values
+        );
+
+        let titles =
+        JSON.parse(
+            rootElement.dataset.titles
+        );
+
         let svg2Element =
         rootElement.getElementsByClassName(
             "CB_View_SVGBarChart1_svg2_element"
@@ -87,14 +98,34 @@
             svg2Element !==
             null
         ) {
-            let values =
-            JSON.parse(
-                rootElement.dataset.values
-            );
-
             CB_View_SVGBarChart1_renderSVG2Element(
                 svg2Element,
                 values
+            );
+        }
+
+        let chartjsContainerElement =
+        rootElement.getElementsByClassName(
+            "CB_View_SVGBarChart1_chartjs_container_element"
+        ).item(0);
+
+        if (chartjsContainerElement !== null)
+        {
+            new Chart(
+                chartjsContainerElement,
+                {
+                    type: 'line',
+                    data: {
+                        labels: titles,
+                        datasets: [
+                            {
+                                label: 'subscribers',
+                                data: values,
+                                borderWidth: 1
+                            }
+                        ]
+                    }
+                }
             );
         }
 

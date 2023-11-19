@@ -45,6 +45,7 @@ CB_View_SVGBarChart1
                 'js',
                 cbsysurl()
             ),
+            'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js',
         ];
 
         return $arrayOfJavaScriptURLs;
@@ -239,11 +240,19 @@ CB_View_SVGBarChart1
             )
         );
 
+        $titlesAsJSONAsHTML =
+        cbhtml(
+            json_encode(
+                $titles
+            )
+        );
+
         echo <<<EOT
 
             <div
                 class="CB_View_SVGBarChart1_root_element"
-                data-values="${valuesAsJSONAsHTML}"
+                data-values="{$valuesAsJSONAsHTML}"
+                data-titles="{$titlesAsJSONAsHTML}"
             >
                 <div class="CB_View_SVGBarChart1_content_element">
                     <svg
@@ -389,6 +398,11 @@ CB_View_SVGBarChart1
                     viewBox="0 0 280 ${graphHeightAsPixels}"
                 >
                 </svg>
+
+                <canvas
+                    class="CB_View_SVGBarChart1_chartjs_container_element"
+                >
+                </canvas>
 
             EOT;
         }
