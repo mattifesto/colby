@@ -329,13 +329,13 @@ CB_CBAdmin_Social
 
                 $dateString =
                 gmdate(
-                    'Y/m/d',
+                    'm-d',
                     $timestamp
                 );
 
                 array_push(
                     $titles,
-                    "$dateString $subscriberCount"
+                    "$dateString"
                 );
             }
             // if
@@ -349,7 +349,7 @@ CB_CBAdmin_Social
 
                 array_push(
                     $titles,
-                    "No Data"
+                    ""
                 );
             }
             // else
