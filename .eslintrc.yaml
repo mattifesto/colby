@@ -1,6 +1,6 @@
 env:
   browser: true
-  es6: true
+  es2017: true
 rules:
   no-undef: error
   no-unused-vars: error
