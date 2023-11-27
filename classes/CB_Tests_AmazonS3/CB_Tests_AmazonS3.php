@@ -51,7 +51,7 @@ CB_Tests_AmazonS3
      */
     static function
     test1()
-    : void
+    : ?stdClass
     {
         /**
          * 2023-11-12
@@ -68,6 +68,18 @@ CB_Tests_AmazonS3
 
         $awsDefaultRegion =
         getenv('AWS_DEFAULT_REGION');
+
+        if (
+            $awsDefaultRegion === false
+        ) {
+            $returnValue =
+            (object)
+            [
+                'succeeded' => 'skipped',
+            ];
+
+            return $returnValue;
+        }
 
         $s3Client =
         new S3Client(
