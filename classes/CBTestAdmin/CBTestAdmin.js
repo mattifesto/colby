@@ -29,6 +29,7 @@
     window.CBTestAdmin =
     {
         errorCount: 0,
+        skippedCount: 0,
         testImageID: "3dd8e721048bbe8ea5f0c043fab73277a0b0044c",
 
 
@@ -409,15 +410,21 @@
 
             let expander = CBUIExpander.create();
 
-            if (CBTestAdmin.errorCount > 0) {
+            if (CBTestAdmin.errorCount > 0)
+            {
                 expander.severity = 3;
-                expander.title = (
-                    `Finished running tests, ` +
-                    `${CBTestAdmin.errorCount} failed`
-                );
-            } else {
-                expander.title = "All tests completed successfully";
             }
+            else if (CBTestAdmin.skippedCount > 0)
+            {
+                expander.severity = 5;
+            }
+
+            expander.title = CBConvert.stringToCleanLine(`
+
+                failed: ${CBTestAdmin.errorCount},
+                skipped: ${CBTestAdmin.skippedCount}
+
+            `);
 
             CBTestAdmin.status.element.appendChild(expander.element);
             expander.element.scrollIntoView();
@@ -568,7 +575,12 @@
             if (
                 typeof value === "object"
             ) {
-                if (
+                if (value.succeeded === "skipped") {
+                    status = "skipped";
+                    expander.severity = 5;
+                    CBTestAdmin.skippedCount += 1;
+                }
+                else if (
                     value.succeeded
                 ) {
                     status = "passed";

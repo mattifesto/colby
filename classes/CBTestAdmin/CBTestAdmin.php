@@ -64,7 +64,7 @@ CBTestAdmin
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v2023.1.8',
+                'v2023.3.0',
                 'js',
                 cbsysurl()
             ),
