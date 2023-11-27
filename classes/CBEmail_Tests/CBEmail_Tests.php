@@ -28,8 +28,19 @@ final class CBEmail_Tests {
     /**
      * @return object
      */
-    static function CBTest_sendCBMessage(
-    ): stdClass {
+    static function CBTest_sendCBMessage(): stdClass
+    {
+        if (CBEmail::getIsConfigured() !== true)
+        {
+            $returnValue =
+            (object)
+            [
+                'succeeded' => 'skipped',
+            ];
+
+            return $returnValue;
+        }
+
         $currentUserCBID = ColbyUser::getCurrentUserCBID();
 
         if ($currentUserCBID === null) {
