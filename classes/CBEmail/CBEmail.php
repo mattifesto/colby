@@ -60,6 +60,33 @@ CBEmail
 
 
     /**
+     * Returns true if the site settings are configured to be able to send
+     * emails; otherwise false.
+     *
+     * @return bool
+     */
+    static function getIsConfigured(): bool
+    {
+        $cbemailsender = CBModelCache::fetchModelByCBID(
+            CBEmailSender::websiteEmailSenderCBID()
+        );
+
+        $SMTPServerHostname = CBModel::valueToString(
+            $cbemailsender,
+            'SMTPServerHostname'
+        );
+
+        if ($SMTPServerHostname === '') {
+            return false;
+        }
+
+        return true;
+    }
+    // getIsConfigured()
+
+
+
+    /**
      * @return string
      */
     static function getSwiftmailerIncludeFilename(): string {
