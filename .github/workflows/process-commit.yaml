@@ -2,6 +2,7 @@ name: process commit
 on: push
 jobs:
   welcome:
+    runs-on: ubuntu-latest
     steps:
       - name: say hello
         run: echo "hello"
