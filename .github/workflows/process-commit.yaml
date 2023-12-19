@@ -1,0 +1,7 @@
+name: process commit
+on: push
+jobs:
+  welcome:
+    steps:
+      - name: say hello
+        run: echo "hello"
