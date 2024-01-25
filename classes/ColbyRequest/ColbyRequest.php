@@ -1,9 +1,12 @@
 <?php
 
 /**
- * @deprecated use CBRequest
+ * NOTE 2024-01-24
+ * Matt Calkins
  *
- *      Move the functionality of this file into the CBRequest class.
+ * At one time I was trying to deprecate this class in favor of CBRequest. This
+ * is a fairly large task which will take a while and I'm not sure it is a good
+ * idea anymore.
  */
 final class
 ColbyRequest {
