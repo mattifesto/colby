@@ -534,6 +534,16 @@ CB_Moment
             )
         );
 
+        if (
+            $textAsCleanLine === ''
+        ) {
+            $textAsCleanLine = CBConvert::stringToCleanLine(
+                CB_Moment::getImageAlternativeText(
+                    $momentModel
+                )
+            );
+        }
+
         return "{$authorFullName} moment: \"{$textAsCleanLine}\"";
     }
     /* CBModel_getTitle() */
@@ -921,7 +931,7 @@ CB_Moment
     /**
      * @param object $momentModel
      *
-     * @return CBID|null
+     * @return ?string
      */
     static function
     getAuthorUserModelCBID(
@@ -1147,7 +1157,7 @@ CB_Moment
 
 
     /**
-     * @param CBID $userModelCBIDArgument
+     * @param string $userModelCBIDArgument
      * @param int $maximumResultCountArgument
      *
      * @return [CBID]
@@ -1188,7 +1198,7 @@ CB_Moment
 
 
     /**
-     * @param CBID $userModelCBID
+     * @param string $userModelCBID
      * @param int|null $maxModelsCount
      * @param object|null $maxCBTimestamp
      *
