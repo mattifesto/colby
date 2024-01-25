@@ -549,9 +549,16 @@ CB_Moment
     CBModel_toSearchText(
         stdClass $momentModel
     ): string {
-        return CB_Moment::getText(
-            $momentModel
-        );
+        $searchText =
+            CB_Moment::getText(
+                $momentModel
+            ) .
+            ' ' .
+            CB_Moment::getImageAlternativeText(
+                $momentModel
+            );
+
+        return $searchText;
     }
     /* CBModel_toSearchText() */
 
@@ -660,11 +667,17 @@ CB_Moment
          * The model version date is updated whenever changes are made that
          * will require existing model to be rebuilt.
          *
-         * 2021_11_25 Implemented CBModel_toSearchText()
-         * 2021_12_04 Implemented CBModel_toURLPath()
+         * 2021_11_25
+         * Implemented CBModel_toSearchText()
+         *
+         * 2021_12_04
+         * Implemented CBModel_toURLPath()
+         *
+         * 2021-01-24 2046
+         * Added the image alternative text to CBModel_toSearchText()
          */
 
-        $momentSpec->CB_Moment_modelVersionDate = '2021_12_04';
+        $momentSpec->CB_Moment_modelVersionDate = '2024-01-24 2046';
 
         return $momentSpec;
     }
