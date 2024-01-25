@@ -520,7 +520,7 @@ CB_Moment
             $momentModel
         );
 
-        $authorUserModel = CBModelCache::fetchModelByID(
+        $authorUserModel = CBModelCache::fetchModelByCBID(
             $authorUserModelCBID
         );
 
