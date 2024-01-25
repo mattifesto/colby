@@ -45,7 +45,7 @@ ColbyUser
 
 
     /**
-     * @return CBID|null
+     * @return ?string
      *
      *      Returns the current user's CBID if a user is logged in; otherwise
      *      null.
