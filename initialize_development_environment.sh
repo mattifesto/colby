@@ -79,3 +79,5 @@ git init .
 composer require mattifesto/colby:@dev
 
 ./vendor/bin/colby_create_website
+
+./vendor/bin/colby_create_php_ini.sh
