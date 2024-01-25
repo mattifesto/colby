@@ -30,13 +30,17 @@ CB_UI_StringEditor {
     static function
     CBHTMLOutput_CSSURLs(
     ) {
-        return [
-            Colby::flexpath(
+        $arrayOfCSSURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.53.css',
+                '2024_01_25_1222',
+                'css',
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfCSSURLs;
     }
     /* CBHTMLOutput_CSSURLs() */
 
