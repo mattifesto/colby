@@ -1283,7 +1283,7 @@ CBSitePreferences {
      *
      *      Deprecate this function and use the accessors.
      *
-     * @return CBID|null
+     * @return ?string
      */
     static function
     frontPageID(
