@@ -64,7 +64,7 @@ html
 
 
     --CB_UI_borderColor:
-    hsla(0, 0%, 0%, 0.05);
+    hsla(0, 0%, 0%, 0.1);
 
     --CB_UI_spotColor:
     hsl(210, 80%, 50%);
