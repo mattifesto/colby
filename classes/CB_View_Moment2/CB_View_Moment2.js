@@ -150,9 +150,9 @@
             let pictureElement =
             CBImage.createPictureElementWithMaximumDisplayWidthAndHeight(
                 imageModel,
-                "rh800rw2560",
-                1280,
-                400,
+                "rw1280rh1600",
+                640,
+                800,
                 alternativeText
             );
 

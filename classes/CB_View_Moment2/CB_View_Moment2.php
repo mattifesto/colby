@@ -94,7 +94,7 @@ CB_View_Moment2
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2023_03_19_1679185765',
+                '2024_01_25_1227',
                 'css',
                 cbsysurl()
             ),
@@ -117,7 +117,7 @@ CB_View_Moment2
         [
             CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                '2023_03_19_1679185784',
+                '2024_01_25_1227',
                 'js',
                 cbsysurl()
             ),
@@ -537,9 +537,9 @@ CB_View_Moment2
 
         CBImage::renderPictureElementWithMaximumDisplayWidthAndHeight(
             $imageModel,
-            'rh800rw2560',
-            1280,
-            400,
+            'rw1280rh1600',
+            640,
+            800,
             $alternativeText
         );
 
