@@ -68,10 +68,19 @@ CBSitePreferences {
         /**
          * @NOTE 2022_10_05_1664989774
          *
-         *      This operation was added to support the CB_View_Moment2 class.
-         *      We probaby need a way to register resize operations.
+         * This operation was added to support the CB_View_Moment2 class but is
+         * now deprecated. It was intended to support potentially very wider
+         * display of images which has now been disallowed.
          */
         'rh800rw2560',
+
+        /**
+         * @NOTE 2024-01-24 1902
+         *
+         * This operation is the currently used operation of the CB_View_Moment2
+         * class.
+         */
+        'rw1280rh1600',
     ];
 
     private static $model = null;
