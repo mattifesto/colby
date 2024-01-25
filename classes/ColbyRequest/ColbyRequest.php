@@ -191,7 +191,7 @@ ColbyRequest {
                 if (
                     isset($frontPageID)
                 ) {
-                    $model = CBModels::fetchModelByID(
+                    $model = CBModels::fetchModelByCBID(
                         $frontPageID
                     );
 
