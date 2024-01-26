@@ -12,16 +12,21 @@ CB_CBView_AdSense {
      */
     static function
     CBHTMLOutput_CSSURLs(
-    ) {
-        return [
-            Colby::flexpath(
+    ): array
+    {
+        $arrayOfCSSURLs =
+        [
+            CBLibrary::buildLibraryClassFilePath(
                 __CLASS__,
-                'v675.39.css',
+                '2024_01_26_0649',
+                'css',
                 cbsysurl()
             ),
         ];
+
+        return $arrayOfCSSURLs;
     }
-    /* CBHTMLOutput_CSSURLs() */
+    // CBHTMLOutput_CSSURLs()
 
 
 
