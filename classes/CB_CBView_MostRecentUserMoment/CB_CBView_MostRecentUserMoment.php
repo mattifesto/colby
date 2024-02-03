@@ -174,7 +174,7 @@ CB_CBView_MostRecentUserMoment
     /**
      * @param object $viewModel
      *
-     * @return CBID|null
+     * @return string|null
      */
     static function
     getUserModelCBID(
@@ -191,7 +191,7 @@ CB_CBView_MostRecentUserMoment
 
     /**
      * @param object $viewModel
-     * @param CBID|null $userModelCBID
+     * @param string|null $userModelCBID
      *
      * @return void
      */
