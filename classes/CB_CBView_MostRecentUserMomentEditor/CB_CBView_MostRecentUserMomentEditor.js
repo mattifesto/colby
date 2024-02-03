@@ -38,7 +38,7 @@
         let spec = args.spec;
         let specChangedCallback = args.specChangedCallback;
         let isCurrentlyLookingUpUsername = false;
-        let usernameHasChanged = false;
+        let theUsernamesWereChangedWhilePreviousChangesWereBeingHandled = false;
 
         let rootEditorElement = document.createElement(
             "div"
@@ -115,7 +115,7 @@
                 if (
                     isCurrentlyLookingUpUsername
                 ) {
-                    usernameHasChanged =
+                    theUsernamesWereChangedWhilePreviousChangesWereBeingHandled =
                     true;
 
                     return;
@@ -155,9 +155,9 @@
                 false;
 
                 if (
-                    usernameHasChanged
+                    theUsernamesWereChangedWhilePreviousChangesWereBeingHandled
                 ) {
-                    usernameHasChanged =
+                    theUsernamesWereChangedWhilePreviousChangesWereBeingHandled =
                     false;
 
                     handleUsernameChanged();
