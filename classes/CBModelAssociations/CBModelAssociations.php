@@ -585,7 +585,12 @@ CBModelAssociations {
 
 
     /**
-     * @param CBID $firstCBID
+     * @param string|null $firstCBID
+     *
+     *     If null, this value will return associations without taking into
+     *     account the first CBID. The first scenario that prompted this change
+     *     was fetching the most recent CB_Moments created by any user.
+     *
      * @param string $associationKey
      * @param string $sortingOrder
      *
@@ -605,7 +610,7 @@ CBModelAssociations {
      */
     static function
     fetchModelAssociationsByFirstCBIDAndAssociationKey(
-        string $firstCBID,
+        ?string $firstCBID,
         string $associationKey,
         string $sortingOrder = 'ascending',
         int $maximumResultCount = 10,
@@ -631,15 +636,17 @@ CBModelAssociations {
 
         $whereClauses = [];
 
-        array_push(
-            $whereClauses,
-            (
-                'ID = ' .
-                CBID::toSQL(
-                    $firstCBID
+        if ($firstCBID !== null) {
+            array_push(
+                $whereClauses,
+                (
+                    'ID = ' .
+                    CBID::toSQL(
+                        $firstCBID
+                    )
                 )
-            )
-        );
+            );
+        }
 
         array_push(
             $whereClauses,
