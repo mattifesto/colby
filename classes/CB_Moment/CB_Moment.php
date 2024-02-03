@@ -1160,6 +1160,45 @@ CB_Moment
      * @param string $userModelCBIDArgument
      * @param int $maximumResultCountArgument
      *
+     * @return [string]
+     */
+    static function
+    fetchMostRecentMomentModelCBIDs(
+        int $maximumResultCountArgument = 10,
+    ): array {
+        $modelAssociations =
+            CBModelAssociations::fetchModelAssociationsByFirstCBIDAndAssociationKey(
+                null,
+                'CB_Moment_userMoments',
+                'descending',
+                $maximumResultCountArgument
+            );
+
+        $mostRecentMomentModelCBIDs =
+            array_map(
+                function (
+                    stdClass $modelAssociation
+                ) {
+                    $mostRecentMomentModelCBID =
+                    CB_ModelAssociation::getSecondCBID(
+                        $modelAssociation
+                    );
+
+                    return $mostRecentMomentModelCBID;
+                },
+                $modelAssociations
+            );
+
+        return $mostRecentMomentModelCBIDs;
+    }
+    // fetchMostRecentMomentModelCBIDs()
+
+
+
+    /**
+     * @param string $userModelCBIDArgument
+     * @param int $maximumResultCountArgument
+     *
      * @return [CBID]
      */
     static function
